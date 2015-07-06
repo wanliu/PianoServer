@@ -1,11 +1,12 @@
+
+
 class PromotionsController < ApplicationController
   before_action :set_promotion, only: [:show, :update, :destroy]
 
   # GET /promotions
   # GET /promotions.json
   def index
-    @promotions = Promotion.get(:active)["promotions"]
-
+    @promotions = Promotion.find(:all, from: :active)
   end
 
   # GET /promotions/1
