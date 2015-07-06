@@ -8,3 +8,5 @@ system:
     image: 
       avatar_url: //static.wanliu.biz/images/logo.png
       preview_url: //static.wanliu.biz/images/logo.png
+wanliu: 
+  backend: http://www.wanliu.biz/api/v1/
