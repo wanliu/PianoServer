@@ -1,6 +1,20 @@
 .promotion {
+	background-color: #fff;
+	padding: 5px;
+	margin: 5px;
+
 	img {
 	    height: auto;
 	    max-width: 100%;
 	}
+
+	a {
+		text-decoration: none;
+	}
+
+	a:hover {
+		/*text-decoration: none;*/
+		color: #ddd;
+	}
+
 }
