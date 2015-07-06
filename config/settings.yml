@@ -1,0 +1,10 @@
+system:
+  agent:
+    id: 0
+    username: system
+    nickname: 系统小助理
+    email: service@wanliu.biz
+    mobile: 0734-83888168
+    image: 
+      avatar_url: //static.wanliu.biz/images/logo.png
+      preview_url: //static.wanliu.biz/images/logo.png

@@ -1,0 +1,121 @@
+# encoding: UTF-8
+# This file is auto-generated from the current state of the database. Instead
+# of editing this file, please use the migrations feature of Active Record to
+# incrementally modify your database, and then regenerate this schema definition.
+#
+# Note that this schema.rb definition is the authoritative source for your
+# database schema. If you need to create the application database on another
+# system, you should be using db:schema:load, not running all the migrations
+# from scratch. The latter is a flawed and unsustainable approach (the more migrations
+# you'll amass, the slower it'll run and the greater likelihood for issues).
+#
+# It's strongly recommended that you check this file into your version control system.
+
+ActiveRecord::Schema.define(version: 20150701084537) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+  enable_extension "hstore"
+
+  create_table "items", force: :cascade do |t|
+    t.integer  "itemable_id"
+    t.string   "itemable_type"
+    t.string   "title"
+    t.hstore   "data"
+    t.integer  "iid"
+    t.string   "item_type"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.hstore   "image"
+  end
+
+  create_table "logs", force: :cascade do |t|
+    t.integer  "loggable_id"
+    t.string   "loggable_type"
+    t.integer  "operator_id"
+    t.hstore   "data"
+    t.string   "action"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.integer  "messable_id"
+    t.string   "messable_type"
+    t.text     "text"
+    t.string   "type"
+    t.integer  "from_id"
+    t.integer  "reply_id"
+    t.hstore   "mentions"
+    t.boolean  "read",          default: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.integer  "image_ref_id"
+    t.hstore   "image"
+  end
+
+  create_table "notifies", force: :cascade do |t|
+    t.integer  "notifiable_id"
+    t.integer  "user_id"
+    t.string   "text"
+    t.string   "target"
+    t.string   "type"
+    t.hstore   "image"
+    t.hstore   "data"
+    t.boolean  "read",          default: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+  end
+
+  create_table "orders", force: :cascade do |t|
+    t.integer  "buyer_id"
+    t.integer  "seller_id"
+    t.integer  "suppiler_id"
+    t.string   "send_address"
+    t.string   "delivery_address"
+    t.string   "contacts"
+    t.integer  "business_type"
+    t.integer  "bid"
+    t.integer  "sid"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+  end
+
+  create_table "rooms", force: :cascade do |t|
+    t.integer  "roomable_id"
+    t.string   "roomable_type"
+    t.string   "name"
+    t.integer  "target_id"
+    t.integer  "owner_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.hstore   "data"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string   "email",                  default: "", null: false
+    t.string   "encrypted_password",     default: "", null: false
+    t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer  "sign_in_count",          default: 0,  null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.inet     "current_sign_in_ip"
+    t.inet     "last_sign_in_ip"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "mobile"
+    t.string   "username"
+    t.string   "authentication_token"
+    t.hstore   "image"
+    t.string   "nickname"
+  end
+
+  add_index "users", ["authentication_token"], name: "index_users_on_authentication_token", unique: true, using: :btree
+  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
+  add_index "users", ["mobile"], name: "index_users_on_mobile", unique: true, using: :btree
+  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+  add_index "users", ["username"], name: "index_users_on_username", unique: true, using: :btree
+
+end
