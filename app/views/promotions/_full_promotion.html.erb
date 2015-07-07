@@ -1,4 +1,4 @@
-<div class="promotion-detail-container">
+<div class="promotion-detail-container" data-promotion-id=<% promotion.id %> >
   <%= image_tag(promotion.image_url, class: "promotion-poster") %>
   <p class="promotion-title"><%= promotion.title %></p>
 
@@ -12,7 +12,8 @@
   <p class="origin-price">价格：<s><%= promotion.product_price %></s></p>
   <p class="sale-count">月销量&nbsp;1000&nbsp;笔</p>
 
-  <!--<div class="shop-brief">
+  <!--
+  <div class="shop-brief">
     <div class="logo-name">
       <div class="shop-logo">
          
@@ -39,13 +40,26 @@
     </div>
     <div class="into-shop">
       <span class="button-icon glyphicon glyphicon-home"></span>
-      <div class="button-text">店铺</div>
+      <div class="button-text">商家</div>
     </div>
-    <div class="fav-button">
-      <span class="button-icon glyphicon glyphicon-star-empty"></span>
-      <div class="button-text">收藏</div>
+    <div class="fav-button ">
+      <% if promotion.favorited %>
+        <span class="button-icon glyphicon glyphicon-star"></span>
+        <div class="button-text">已收藏</div>
+      <% else %>
+        <span class="button-icon glyphicon glyphicon-star-empty"></span>
+        <div class="button-text">收藏</div>
+      <% end %>
     </div>
     <div class="into-cart">加入购物车</div>
     <div class="buy-now">立即购买</div>
   </div>
 </div>
+
+<script type="text/javascript">
+  $(function() {
+    $('.fav-button').click(function() {
+
+    });
+  });
+</script>

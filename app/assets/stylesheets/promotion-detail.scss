@@ -15,6 +15,7 @@
   .discount-price{
     font-size: 1.5em;
     color: #F37C3F;
+    font-weight: 700;
   }
 
   .discount-wrap{
@@ -38,6 +39,7 @@
       width: 14%;
       text-align: center;
       border-right: 1px solid #DDDDDD;
+      cursor: pointer;
 
       .button-text{
         text-align: center;
@@ -55,6 +57,7 @@
       line-height: 100%;
       color: #FFFFFF;
       text-align: center;
+      cursor: pointer;
     }
 
     .into-cart{
