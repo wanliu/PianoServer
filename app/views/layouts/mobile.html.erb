@@ -35,6 +35,23 @@
     <%= favicon_link_tag 'favicon.ico', :rel => 'shortcut icon' %>
 
     <%= javascript_include_tag "application" %>
+
+    <script type="text/javascript">
+      (function() {
+        var user = <% if current_user.present? %>
+          {id: <%= current_user.id %>, chat_token: "<%= current_user.chat_token %>"};
+        <% else %>
+          {}
+        <% end %>
+
+        var socket = socketCluster.connect({
+          hostname: "<%= Settings.wanliu.socket_host %>",
+          port: <%= Settings.wanliu.socket_port %>
+        });
+
+        window.userSocket = new UserSocket({user: user, socket: socket});
+      })();
+    </script>
   </head>
   <body>
 
@@ -74,45 +91,4 @@
       new QRCode(document.getElementById("qrcode"), '<%= request.url %>' );
     </script>
   </body>
-  <script type="text/javascript">
-    var channelId;
-    var chatToken;
-    var socket = socketCluster.connect({
-      hostname: '192.168.0.155',
-      port: 8000
-    });
-
-    <% if current_user.present? %>
-      channelId = 'p' + <%= current_user.id %>;
-      chatToken = '<%= current_user.chat_token %>';
-    <% else %>
-      getLocalUser(function (err, options) {
-        if (err) return;
-
-        channelId = 'p' + options.id;
-        chatToken = options.chat_token;
-        debugger;
-      });
-    <% end %>
-
-    // function getCookieChannelId () {
-    //   var cookieName = 'chlId';
-    //   var start = document.cookie.indexOf(cookieName + '=');
-    //   if (~start) {
-    //     start = start + cookieName.length + 1;
-    //     var end = document.cookie.indexOf(';', start);
-    //     if (end == -1) end = document.cookie.length;
-    //     return document.cookie.substring(start, end);
-    //   } else {
-    //     var path = ';path=/',
-    //         date = new Date();
-
-    //     date.setTime(date.getTime()+(60*60*24*30*1000));
-
-    //     var expires = "; expires=" + date.toGMTString();
-
-    //     document.cookie = cookieName + '=' + 'true' + expires + path;
-    //   }
-    // }
-  </script>
 </html>

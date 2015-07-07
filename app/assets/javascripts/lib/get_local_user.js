@@ -13,7 +13,7 @@ function getLocalUser(callback) {
         setLocalUser(data);
         callback(null, data);
       })
-      .fails(function (xhr, status, error) {
+      .fail(function (xhr, status, error) {
         var err = status + ", " + error;
         callback(err, {});
       })
@@ -22,5 +22,5 @@ function getLocalUser(callback) {
 
 function setLocalUser(options) {
   window.localStorage.setItem(ID_KEY, options.id);
-  window.localStorage.setItem(CHAT_TOKEN_KEY, optoins.chat_token);
+  window.localStorage.setItem(CHAT_TOKEN_KEY, options.chat_token);
 }
