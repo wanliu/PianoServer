@@ -7,26 +7,49 @@
 	var delayedTime = 200;
 	var pulling = false;
 
-	$(document).on('scroll:bottom', function(e) {
-		if (!pulling) { 
-			pulling = true;
+	$(function() {
+		var parseURL = window.parseURL;
 
-			var url = [ 'promotions.json', $.param({ page: page++, inline: true }) ].join('?');
-
+		function displayLoading()  {
 			$('.page-loading').text('正在载入...');
-			$.get(url).then(function(data, status, e) {
-				$('.page-loading').text('');
-				var promotions = data['promotions'].map(function(promotion) {
-					return promotion.html;
+		}
+
+		function clearLoading() {
+			$('.page-loading').text('');
+		}
+
+		function loadingPromotions() {
+
+			if (!pulling) { 
+				pulling = true;
+
+				var url = [ 'promotions.json', $.param({ page: page++, inline: true }) ].join('?');
+				displayLoading();
+				
+				$.get(url).then(function(data, status, e) {
+					clearLoading();
+					var promotions = data['promotions'].map(function(promotion) {
+						return promotion.html;
+					});
+
+					$('.promotions-list').append(promotions);
+
 				});
 
-				$('.promotions-list').append(promotions);
-
-			});
-
-			setTimeout(function() {
-				pulling = false;
-			}, delayedTime);			
+				setTimeout(function() {
+					pulling = false;
+				}, delayedTime);			
+			}
 		}
-	});
+
+		$(document).on('page:change', function(e) {
+			var url = parseURL(e.target.URL);
+			if (url.pathname === '/') {
+				$(document).on('scroll:bottom', loadingPromotions);
+			} else {
+				$(document).off('scroll:bottom');
+				clearLoading();
+			}
+		});
+	})
 </script>
