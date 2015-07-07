@@ -22,8 +22,10 @@ module PianoServer
     # RailsConfig::Integration::Rails::Railtie.preload
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
-    config.less.paths << "#{Rails.root}/app/assets/stylesheets"
-    config.less.compress = true
+    # config.less.paths << "#{Rails.root}/app/assets/stylesheets"
+    # config.less.compress = true
+    # config.assets.paths << "#{Rails.root}/vendor/assets/fonts"
+    # config.assets.precompile += %w( *.svg *.eot *.woff *.ttf )
     config.middleware.insert_before 0, "Rack::Cors" do
       allow do
         origins '*'
