@@ -13,7 +13,9 @@
 
 			var url = [ 'promotions.json', $.param({ page: page++, inline: true }) ].join('?');
 
+			$('.page-loading').text('正在载入...');
 			$.get(url).then(function(data, status, e) {
+				$('.page-loading').text('');
 				var promotions = data['promotions'].map(function(promotion) {
 					return promotion.html;
 				});

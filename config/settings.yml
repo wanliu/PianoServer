@@ -1,5 +1,6 @@
 app:
   title: 万流电商社区
+  footer: "&copy; Wanliu.biz 2015  湘ICP备：13005289号-1"
 system:
   agent:
     id: 0
