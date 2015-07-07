@@ -1,6 +1,6 @@
 class Scroller
   constructor: (@options = {}) ->
-    @options.scrollBottom ||= 0;
+    @options.scrollBottom ||= 45;
     $(document).scroll(@onScroll.bind(@))
     $(window).on('mousewheel', @onScroll.bind(@))
     @onScroll()
