@@ -1,32 +1,34 @@
 <div class="col-xs-6 promotion-wrap">
   <div class="promotion">
-    <% if promotion.type == 'promotions/discount' %>
-      <img src="<%= image_path 'discount.png'%>" class="type-flag">
-    <% elsif promotion.type == 'promotions/time_limited_sale' %>
-      <img src="<%= image_path 'limit-time.png'%>" class="type-flag">
-    <% else %>
-      <img src="<%= image_path 'full-present.png'%>" class="type-flag">
-    <% end %>
-    <%= image_tag promotion.image_url %>
-    <p class="promotion-title">
-      <% if promotion.title.length > 30 %>
-        <%= promotion.title[0, 29] %>...
-      <% else %>
-        <%= promotion.title %>
-      <% end %>
-    </p>
-    <p>
-      <span class="disount-price">￥<%= promotion.discount_price %></span>
-      <span class="origin-price"><s>￥<%= promotion.product_price %></s></span>
+  	<%= link_to promotion_path(promotion) do %>
+	    <% if promotion.type == 'promotions/discount' %>
+	      <img src="<%= image_path 'discount.png'%>" class="type-flag">
+	    <% elsif promotion.type == 'promotions/time_limited_sale' %>
+	      <img src="<%= image_path 'limit-time.png'%>" class="type-flag">
+	    <% else %>
+	      <img src="<%= image_path 'full-present.png'%>" class="type-flag">
+	    <% end %>
+	    <%= image_tag promotion.image_url %>
+	    <p class="promotion-title">
+	      <% if promotion.title.length > 30 %>
+	        <%= promotion.title[0, 29] %>...
+	      <% else %>
+	        <%= promotion.title %>
+	      <% end %>
+	    </p>
+	    <p>
+	      <span class="disount-price">￥<%= promotion.discount_price %></span>
+	      <span class="origin-price"><s>￥<%= promotion.product_price %></s></span>
 
-      <% if promotion.type == 'promotions/discount' %>
-        <span class="discount-wrap"><%= promotion.discount %></span>
-      <% end %>
-    <p>
-    <p>
-      <span class="related">收藏 <%=  promotion.favoriters_count %></span>
-      <span class="related">点赞 <%= promotion.likers_count%></span>
-    </p>
+	      <% if promotion.type == 'promotions/discount' %>
+	        <span class="discount-wrap"><%= promotion.discount %></span>
+	      <% end %>
+	    <p>
+	    <p>
+	      <span class="related">收藏 <%=  promotion.favoriters_count %></span>
+	      <span class="related">点赞 <%= promotion.likers_count%></span>
+	    </p>
+	<% end %>
     <div class="provider">
       <div class="provider-name">
         <%= promotion.shop_name%>
