@@ -1,12 +1,11 @@
-
-
 class PromotionsController < ApplicationController
   before_action :set_promotion, only: [:show, :update, :destroy]
 
+  respond_to :json, :html
   # GET /promotions
   # GET /promotions.json
   def index
-    @promotions = Promotion.find(:all, from: :active)
+    @promotions = Promotion.find(:all, from: :active, params: query_params)
   end
 
   # GET /promotions/1
@@ -55,5 +54,13 @@ class PromotionsController < ApplicationController
 
     def promotion_params
       params[:promotion]
+    end
+
+    def query_params
+      @query_params = {
+        page: params[:page] || 1,
+        category_id: params[:category_id],
+        inline: params[:inline]
+      }
     end
 end
