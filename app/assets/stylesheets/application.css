@@ -13,9 +13,7 @@
  *
  *= require_tree .
  *= require_self
- *= require bootstrap_and_overrides.less
  */
-
 
 body {
 	background: url(bj.jpg);

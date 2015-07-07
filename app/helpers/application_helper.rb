@@ -9,5 +9,19 @@ module ApplicationHelper
     md5.update(user.email || user.username || user.mobile)
     md5.hexdigest
     "//www.gravatar.com/avatar/#{md5.hexdigest}?s=#{s}&default=identicon".html_safe
-  end    
+  end
+
+  def bootstrap_flash
+    flash_class = {
+      'notice' => 'success',
+      'alert' => 'warning',
+      'error' => 'danger'
+    }
+
+    flash.map do |k, title|
+      <<-HTML 
+        <div class="alert alert-#{flash_class[k]}" role="alert">#{title}</div>
+      HTML
+    end.join('').html_safe
+  end
 end
