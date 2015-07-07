@@ -35,7 +35,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :promotionsmember do 
+  resources :promotions do 
     member do
       put "favorited", to: "promotions#favrited"
     end
