@@ -1,3 +1,32 @@
-<!-- <ul class="unstyled "> -->
+<div class="promotions-list">
 	<%= render partial: "promotion", collection: @promotions %>
-<!-- </ul> -->
+</div>
+
+<script type="text/javascript">
+	var page = 1;
+	var delayedTime = 200;
+	var pulling = false;
+
+	$(document).on('scroll:bottom', function(e) {
+		if (!pulling) { 
+			pulling = true;
+
+			var url = [ 'promotions.json', $.param({ page: page++, inline: true }) ].join('?');
+
+			$('.page-loading').text('正在载入...');
+			$.get(url).then(function(data, status, e) {
+				$('.page-loading').text('');
+				var promotions = data['promotions'].map(function(promotion) {
+					return promotion.html;
+				});
+
+				$('.promotions-list').append(promotions);
+
+			});
+
+			setTimeout(function() {
+				pulling = false;
+			}, delayedTime);			
+		}
+	});
+</script>
