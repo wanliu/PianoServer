@@ -26,7 +26,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem "therubyracer", :platforms => :ruby
 gem "less-rails" #Sprockets (what Rails 3.1 uses for its asset pipeline) supports LESS
-gem "twitter-bootstrap-rails"  
+gem 'bootstrap-sass', '~> 3.3.5'
 
 gem 'activeresource'
 
@@ -43,6 +43,7 @@ gem 'nio4r'
 gem "mini_magick"
 
 gem 'poseidon'
+gem 'google-analytics-rails'
 
 gem "rails_config"
 

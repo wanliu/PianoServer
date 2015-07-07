@@ -36,6 +36,8 @@
 
     <%= javascript_include_tag "application" %>
 
+    <%= analytics_init if Rails.env.production? %>
+
     <script type="text/javascript">
       (function() {
         var user = <% if current_user.present? %>
