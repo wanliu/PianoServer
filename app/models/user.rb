@@ -22,7 +22,7 @@ class User < ActiveRecord::Base
     super || login
   end
 
-  def live_token
+  def chat_token
     JWT.encode({id: id}, JWT_TOKEN)
   end
 
