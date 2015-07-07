@@ -46,6 +46,10 @@ class PromotionsController < ApplicationController
     head :no_content
   end
 
+  def favorited
+    
+  end
+
   private
 
     def set_promotion

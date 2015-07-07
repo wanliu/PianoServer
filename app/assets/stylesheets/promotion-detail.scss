@@ -1,0 +1,72 @@
+.promotion-detail-container{
+  padding: 10px;
+
+  .promotion-poster{
+    height: auto;
+    max-width: 100%;
+  }
+
+  .promotion-title{
+    max-height: 2.6em;
+    overflow: hidden;
+    margin-top: 1em;
+  }
+
+  .discount-price{
+    font-size: 1.5em;
+    color: #F37C3F;
+    font-weight: 700;
+  }
+
+  .discount-wrap{
+    margin-left: 0.2em;
+    background-color: #F37C3F;
+    padding: 2px 2px 0;
+    color: #FFFFFF;
+  }
+
+  .navbar-bottom{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #FFFFFF;
+    border-top: 1px solid #DDDDDD;
+    display: table;
+
+    .chat-button, .into-shop, .fav-button{
+      display: table-cell;
+      width: 14%;
+      text-align: center;
+      border-right: 1px solid #DDDDDD;
+      cursor: pointer;
+      padding-top: 0.5em;
+
+      .button-text{
+        text-align: center;
+      }
+    }
+
+    .fav-button{
+      border-right: none;
+    }
+
+    .into-cart, .buy-now{
+      display: table-cell;
+      width: 29%;
+      vertical-align: middle;
+      line-height: 100%;
+      color: #FFFFFF;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .into-cart{
+      background-color: #F37C3F;
+    }
+
+    .buy-now{
+      background-color: #F42B2B;
+    }
+  }
+}
