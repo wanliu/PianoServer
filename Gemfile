@@ -43,6 +43,7 @@ gem 'nio4r'
 gem "mini_magick"
 
 gem 'poseidon'
+gem 'google-analytics-rails'
 
 gem "rails_config"
 
