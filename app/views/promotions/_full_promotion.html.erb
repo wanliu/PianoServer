@@ -1,4 +1,4 @@
-<div class="promotion-detail-container" data-promotion-id=<% promotion.id %> >
+<div class="promotion-detail-container" data-promotion-id="<%= promotion.id %>" >
   <%= image_tag(promotion.image_url, class: "promotion-poster") %>
   <p class="promotion-title"><%= promotion.title %></p>
 
@@ -42,15 +42,19 @@
       <span class="button-icon glyphicon glyphicon-home"></span>
       <div class="button-text">商家</div>
     </div>
-    <div class="fav-button ">
-      <% if promotion.favorited %>
+    
+    <% if promotion.favorited %>
+      <div class="fav-button favorited">
         <span class="button-icon glyphicon glyphicon-star"></span>
         <div class="button-text">已收藏</div>
-      <% else %>
+      </div>
+    <% else %>
+      <div class="fav-button">
         <span class="button-icon glyphicon glyphicon-star-empty"></span>
         <div class="button-text">收藏</div>
-      <% end %>
-    </div>
+      </div>
+    <% end %>
+    
     <div class="into-cart">加入购物车</div>
     <div class="buy-now">立即购买</div>
   </div>
@@ -59,7 +63,22 @@
 <script type="text/javascript">
   $(function() {
     $('.fav-button').click(function() {
-
+      var $this = $(this),
+          promotionId = $('.promotion-detail-container').data('promotionId'),
+          isFavorited = $this.hasClass('favorited');
+      
+      $.ajax({
+        type: 'PUT',
+        url: '/promotions/' + promotionId + '/favorited',
+        dataType: 'json'
+      }).done(function() {
+        $this.toggleClass('favorited')
+             .find('.button-icon')
+             .toggleClass('glyphicon-star glyphicon-star-empty')
+             .end()
+             .find('.button-text')
+             .text(isFavorited ? '收藏' : '已收藏');
+      });
     });
   });
 </script>
