@@ -50,7 +50,8 @@
           <ul class="nav navbar-nav">
             <li><%= link_to "Link1", "/path1"  %></li>
             <li><%= link_to "Link2", "/path2"  %></li>
-            <li><%= link_to "Link3", "/path3"  %></li>
+            <li><%= link_to "二维码", "/qrcode" %></li>
+            <li><div id="qrcode"></div></li>
           </ul>
         </div>
       </div>
@@ -67,6 +68,8 @@
       </footer>
 
     </div> <!-- /container -->
-
+    <script type="text/javascript">
+      new QRCode(document.getElementById("qrcode"), '<%= request.url %>' );
+    </script>
   </body>
 </html>
