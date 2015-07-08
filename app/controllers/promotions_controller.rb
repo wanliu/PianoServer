@@ -1,5 +1,5 @@
 class PromotionsController < ApplicationController
-  before_action :set_promotion, only: [:show, :update, :destroy]
+  before_action :set_promotion, only: [:show, :update, :destroy, :chat]
 
   respond_to :json, :html
   # GET /promotions
@@ -11,6 +11,10 @@ class PromotionsController < ApplicationController
   # GET /promotions/1
   # GET /promotions/1.json
   def show
+    @promotion
+  end
+
+  def chat
     @promotion
   end
 
