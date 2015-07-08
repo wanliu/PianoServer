@@ -1,4 +1,5 @@
 class User < ActiveRecord::Base
+  include DefaultImage
   # Include default devise modules. Others available are:	
   before_save :ensure_authentication_token
   
@@ -10,6 +11,8 @@ class User < ActiveRecord::Base
   # has_many :memberings, :dependent => :destroy
 
   validates :username, uniqueness: true
+
+  image_token -> { self.username || self.email || self.mobile }
   attr_accessor :login
 
   JWT_TOKEN = ::YAML.load_file("#{::Rails.root}/config/secrets.yml")[::Rails.env]["live_key_base"]
