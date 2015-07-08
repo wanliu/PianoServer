@@ -1,16 +1,51 @@
 .chat-list {
 	background-color: #fff;
 	position: absolute;
-	top: 45px;
-	bottom: 45px;
+	top: 50px;
+	bottom: 50px;
 	left: 0;
 	right: 0;
 	overflow: auto;
+	padding: 10px;
 
 	.form-group {
 
 		max-width: 100%;
 		margin-right: 100px;
+	}
+
+	.chat {
+		&.me {
+			padding-left: 75px;
+			
+			&>img:first-child {
+				position: absolute;
+				left: 10px;
+				width: 40px;
+				height: 40px;
+			}			
+		}
+
+		min-height: 75px;
+		&> h2 {
+			margin: 0px;
+			font-size: 16px;
+		}
+
+		&.you {
+			padding-right: 75px;
+
+			&>h2 {
+				text-align: right;
+			}
+
+			&>img:first-child {
+				position: absolute;
+				right: 10px;
+				width: 40px;
+				height: 40px;
+			}			
+		}
 	}
 }
 

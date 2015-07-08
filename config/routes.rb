@@ -42,7 +42,7 @@ Rails.application.routes.draw do
   resources :promotions do 
     member do
       put "favorited", to: "promotions#favrited"
-      put 'chat'
+      get 'chat'
     end
   end
 
