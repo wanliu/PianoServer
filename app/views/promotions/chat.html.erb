@@ -1,8 +1,19 @@
 <div class="chat-list">
-	<div class="bubble you">
-		<%= image_tag current_user.image.avatar_url %>
-		<p>msg</p>
-	</div>
+    <div class="chat me" >
+      	<%= image_tag current_user.image.avatar_url %>
+        <h2><%= current_user.nickname %></h2>
+        <div class="bubble me">
+          <p>你好啊，有货吗</p>
+        </div>
+    </div>
+
+    <div class="chat you" >
+      	<%= image_tag current_user.image.avatar_url %>
+        <h2><%= current_user.nickname %></h2>
+        <div class="bubble you">
+          <p>有啊你要多少？</p>
+        </div>
+    </div>
 
 	<nav class="navbar navbar-default navbar-fixed-bottom">
 	  <div class="container">
