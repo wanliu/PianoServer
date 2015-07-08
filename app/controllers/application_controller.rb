@@ -23,13 +23,13 @@ class ApplicationController < ActionController::Base
 
   def set_meta_user_data
     if current_user.present?
-      set_meta_tags user_id: "w#{current_user.id}", chat_token: current_user.chat_token 
+      set_meta_tags userId: "w#{current_user.id}", chatToken: current_user.chat_token 
     else
       anonymous_id = "-w#{Time.now.to_i}.#{rand(10000)}"
       anonymous_token = JWT.encode({id: anonymous_id}, User::JWT_TOKEN)
-      set_meta_tags user_id: anonymous_id, chat_token: anonymous_token
+      set_meta_tags userId: anonymous_id, chatToken: anonymous_token
     end
 
-    set_meta_tags pusher_host: Settings.pusher.socket_host, pusher_port: Settings.pusher.socket_port
+    set_meta_tags pusherHost: Settings.pusher.socket_host, pusherPort: Settings.pusher.socket_port
   end
 end

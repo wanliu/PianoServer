@@ -24,25 +24,23 @@
     this.socket = options.socket;
 
     var user = options.user;
-    this.userId = user.id;
-    this.chatToken = user.chat_token;
 
-    var _this = this;
+    if (this.isAnonymousUser(user)) {
+      var options = getLocalUser(user);
 
-    if (this.userId && this.chatToken) {
-      this.userChannelId = this.getUserChannelId();
-      this.loginAndSubscribe();
+      this.userId = options.id;
+      this.chatToken = options.chatToken;
     } else {
-      getLocalUser(function (err, options) {
-        if (err) return;
-
-        _this.userId = options.id;
-        _this.chatToken = options.chat_token;
-        _this.userChannelId = _this.getUserChannelId();
-
-        _this.loginAndSubscribe();
-      });
+      this.userId = user.id;
+      this.chatToken = user.chatToken;
     }
+
+    this.userChannelId = this.getUserChannelId();
+    this.loginAndSubscribe();
+  }
+
+  UserSocket.prototype.isAnonymousUser = function (userOptions) {
+    return userOptions.id && ~userOptions.id.indexOf('-');
   }
 
   // publish to other users
@@ -120,12 +118,12 @@
 
 
 $(function() {
-  var userId = $('meta[name=user_id]').attr('content');
-  var chatToken = $('meta[name=chat_token]').attr('content');
-  var user = { userId: userId, chatToken: chatToken };
+  var userId = $('meta[name=userId]').attr('content');
+  var chatToken = $('meta[name=chatToken]').attr('content');
+  var user = { id: userId, chatToken: chatToken };
 
-  var hostname = $('meta[name=pusher_host]').attr('content');
-  var hostport = $('meta[name=pusher_port]').attr('content');
+  var hostname = $('meta[name=pusherHost]').attr('content');
+  var hostport = $('meta[name=pusherPort]').attr('content');
   var socket = socketCluster.connect({
     hostname: hostname,
     port: hostport
