@@ -51,7 +51,8 @@
           port: <%= Settings.pusher.socket_port %>
         });
 
-        window.userSocket = new UserSocket({user: user, socket: socket});
+        // window.userSocket = new UserSocket({user: user, socket: socket});
+        window.userSocket.config({user: user, socket: socket});
       })();
     </script>
   </head>
