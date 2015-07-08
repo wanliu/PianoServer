@@ -50,6 +50,8 @@ gem "rails_config"
 gem 'jwt'
 
 gem 'rest-client'
+
+gem 'meta-tags'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 

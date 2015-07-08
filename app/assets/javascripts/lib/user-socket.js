@@ -9,7 +9,7 @@
 
   UserSocket.prototype.getUserChannelId = function () {
     if (this.userId) {
-      return 'pw' + this.userId;
+      return 'p' + this.userId;
     }
   }
 
@@ -117,3 +117,19 @@
 
   window.userSocket = new UserSocket();
 })();
+
+
+$(function() {
+  var userId = $('meta[name=user_id]').attr('content');
+  var chatToken = $('meta[name=chat_token]').attr('content');
+  var user = { userId: userId, chatToken: chatToken };
+
+  var hostname = $('meta[name=pusher_host]').attr('content');
+  var hostport = $('meta[name=pusher_port]').attr('content');
+  var socket = socketCluster.connect({
+    hostname: hostname,
+    port: hostport
+  });
+
+  window.userSocket.config({user: user, socket: socket});
+});
