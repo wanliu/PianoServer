@@ -28,12 +28,19 @@ function UserSocket (options) {
 
 UserSocket.prototype.getUserChannelId = function () {
   if (this.userId) {
-    return 'p' + this.userId;
+    return 'pw' + this.userId;
   }
 }
 
+/*
+  callback: function(message) {.....}
+*/
 UserSocket.prototype.onPersonMessage = function (callback) {
   this.personCallbacks.push(callback);
+}
+
+UserSocket.prototype.publish = function (channelId, data, callback) {
+  this.socket.publish(channelId, data, callback);
 }
 
 UserSocket.prototype.loginAndSubscribe = function () {
@@ -56,39 +63,3 @@ UserSocket.prototype.loginAndSubscribe = function () {
     });
   });
 }
-
-
-// function bindUserToSocket(user, socket) {
-//   var userId = user.id;
-//   var chatToken = user.chat_token;
-//   var channelId;
-
-//   if (userId && chatToken) {
-//     channelId = personChannelId(userId);
-
-//     socket.emit('login', chatToken, loginListener);
-//   } else {
-//     getLocalUser(function (err, options) {
-//       if (err) return;
-
-//       userId = options.id;
-//       chatToken = options.chat_token;
-//       channelId = personChannelId(userId);
-
-//       socket.emit('login', chatToken, loginListener);
-//     });
-//   }
-
-//   function loginListener(err) {
-//     if (err) return console.log('login fails', err);
-
-//     var personalChannel = socket.subscribe(channelId);
-//     personalChannel.watch(function (message) {
-//       console.log('Message:', message);
-//     });
-//   }
-// }
-
-// function personChannelId (userId) {
-//   return 'p' + userId;
-// }

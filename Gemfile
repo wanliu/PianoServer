@@ -48,6 +48,8 @@ gem 'google-analytics-rails'
 gem "rails_config"
 
 gem 'jwt'
+
+gem 'rest-client'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
