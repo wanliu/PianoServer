@@ -35,7 +35,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :promotions
+  resources :promotions do 
+    member do
+      put "favorited", to: "promotions#favrited"
+    end
+  end
 
   resources :users, only: [] do
     collection do

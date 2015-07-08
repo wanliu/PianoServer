@@ -1,12 +1,84 @@
-<div class="promotion">
-	<%= link_to promotion_path(promotion) do %>
-	<h3><%= promotion.title %></h3>
-	<%= image_tag   promotion.image_url %>
-	<span>收藏 <%=  promotion.favoriters_count %></span>
-	<span>点赞 <%= promotion.likers_count%></span>
-	<% end %>
-	<h2>
-	<span class="glyphicon glyphicon-plus"></span>
-	<span class="glyphicon glyphicon-asterisk"></span>
-	</h2>
+<div class="promotion-detail-container" data-promotion-id="<%= promotion.id %>" >
+  <%= image_tag(promotion.image_url, class: "promotion-poster") %>
+  <p class="promotion-title"><%= promotion.title %></p>
+
+  <p>
+    <span class="discount-price">￥<%= promotion.discount_price %></span>
+
+    <% if promotion.type == 'promotions/discount' %>
+      <span class="discount-wrap"><%= promotion.discount %></span>
+    <% end %>
+  </p>
+  <p class="origin-price">价格：<s><%= promotion.product_price %></s></p>
+  <p class="sale-count">月销量&nbsp;1000&nbsp;笔</p>
+
+  <!--
+  <div class="shop-brief">
+    <div class="logo-name">
+      <div class="shop-logo">
+         
+      </div>
+      <div class="shop-name"></div>
+    </div>
+
+    <div class="shop-contact">
+      <div class="product-count">
+        <div>50</div>
+        <div>全部宝贝</div>
+      </div>
+      <div class="follow-count">
+        <div><%= promotion.followers_count %></div>
+        <div>关注人数</div>
+      </div>
+    </div>
+  </div>-->
+
+  <div class="navbar-bottom">
+    <div class="chat-button">
+      <span class="button-icon glyphicon glyphicon-earphone"></span>
+      <div class="button-text">客服</div>
+    </div>
+    <div class="into-shop">
+      <span class="button-icon glyphicon glyphicon-home"></span>
+      <div class="button-text">商家</div>
+    </div>
+    
+    <% if promotion.favorited %>
+      <div class="fav-button favorited">
+        <span class="button-icon glyphicon glyphicon-star"></span>
+        <div class="button-text">已收藏</div>
+      </div>
+    <% else %>
+      <div class="fav-button">
+        <span class="button-icon glyphicon glyphicon-star-empty"></span>
+        <div class="button-text">收藏</div>
+      </div>
+    <% end %>
+    
+    <div class="into-cart">加入购物车</div>
+    <div class="buy-now">立即购买</div>
+  </div>
 </div>
+
+<script type="text/javascript">
+  $(function() {
+    $('.fav-button').click(function() {
+      var $this = $(this),
+          promotionId = $('.promotion-detail-container').data('promotionId'),
+          isFavorited = $this.hasClass('favorited');
+      
+      $.ajax({
+        type: 'PUT',
+        url: '/promotions/' + promotionId + '/favorited',
+        dataType: 'json'
+      }).done(function() {
+        $this.toggleClass('favorited')
+             .find('.button-icon')
+             .toggleClass('glyphicon-star glyphicon-star-empty')
+             .end()
+             .find('.button-text')
+             .text(isFavorited ? '收藏' : '已收藏');
+      });
+    });
+  });
+</script>
