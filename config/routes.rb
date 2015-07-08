@@ -15,6 +15,10 @@ Rails.application.routes.draw do
     end
   end
 
+  # concern :chatable do 
+  #   resources :chats
+  # end
+
   devise_for :users, controllers: {
       sessions: 'users/sessions',
       registrations: 'users/registrations'
@@ -28,16 +32,17 @@ Rails.application.routes.draw do
 
     get "suggestion", :to => "suggestion#index"
 
-    resources :business, concerns: :roomable do 
-      member do
-        post :add_participant
-      end
-    end
+    # resources :business, concerns: :roomable do 
+    #   member do
+    #     post :add_participant
+    #   end
+    # end
   end
 
   resources :promotions do 
     member do
       put "favorited", to: "promotions#favrited"
+      put 'chat'
     end
   end
 
