@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
   include DefaultImage
+  include AnonymousUser
   # Include default devise modules. Others available are:	
   before_save :ensure_authentication_token
   
@@ -10,7 +11,7 @@ class User < ActiveRecord::Base
 
   # has_many :memberings, :dependent => :destroy
 
-  image_token -> { self.username || self.email || self.mobile }
+  image_token -> { self.email || self.username || self.mobile }
   validates :username, presence: true, uniqueness: true
 
   after_commit :sync_to_pusher
@@ -27,8 +28,12 @@ class User < ActiveRecord::Base
     super || login
   end
 
+  def wid
+    id > 0 ? "w#{id}" : "-w#{id.abs}"
+  end
+
   def chat_token
-    JWT.encode({id: "w#{id}"}, JWT_TOKEN)
+    JWT.encode({id: wid}, JWT_TOKEN)
   end
 
   def self.find_for_database_authentication(warden_conditions)
