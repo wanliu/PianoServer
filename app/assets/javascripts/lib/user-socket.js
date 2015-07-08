@@ -59,7 +59,7 @@
   // listen socket events
   UserSocket.prototype.on = function () {
     if (this.personChannelReady) {
-      this.socket.on.apply(this, arguments);
+      this.socket.on.apply(this.socket, arguments);
     } else {
       this.eventListeners.push(arguments);
     }
@@ -68,7 +68,7 @@
   // emit socket events
   UserSocket.prototype.emit = function () {
     if (this.personChannelReady) {
-      this.socket.emit.apply(this, arguments);
+      this.socket.emit.apply(this.socket, arguments);
     } else {
       this.emiters.push(arguments);
     }
