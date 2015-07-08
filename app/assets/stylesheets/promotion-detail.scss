@@ -51,7 +51,7 @@
       border-right: none;
     }
 
-    .into-cart, .buy-now{
+    .into-cart, .buy-now, .chat{
       display: table-cell;
       width: 29%;
       vertical-align: middle;
@@ -66,6 +66,10 @@
     }
 
     .buy-now{
+      background-color: #F42B2B;
+    }
+
+    .chat {
       background-color: #F42B2B;
     }
   }
