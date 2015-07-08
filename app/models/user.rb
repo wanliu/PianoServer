@@ -9,6 +9,9 @@ class User < ActiveRecord::Base
 
   # has_many :memberings, :dependent => :destroy
 
+  validates :username, presence: true, uniqueness: true
+
+  after_commit :sync_to_pusher
 
   attr_accessor :login
 
@@ -23,7 +26,7 @@ class User < ActiveRecord::Base
   end
 
   def chat_token
-    JWT.encode({id: id}, JWT_TOKEN)
+    JWT.encode({id: "w#{id}"}, JWT_TOKEN)
   end
 
   def self.find_for_database_authentication(warden_conditions)
@@ -47,6 +50,22 @@ class User < ActiveRecord::Base
     loop do
       token = Devise.friendly_token
       break token unless User.where(authentication_token: token).first
+    end
+  end
+
+  def sync_to_pusher
+    return unless persisted?
+
+    pusher_url = Settings.pusher.pusher_url.clone
+    pusher_token = Settings.pusher.pusher_token.clone
+    pusher_url << 'users'
+
+    options = {id: "w#{id}", token: pusher_token, login: username, realname: username, avatar_url: (image && image[:avatar_url]) }
+
+    begin
+      RestClient.post pusher_url, options
+    rescue Errno::ECONNREFUSED => e
+      # TODO what to do when sync fails?
     end
   end
 end

@@ -47,8 +47,8 @@
         <% end %>
 
         var socket = socketCluster.connect({
-          hostname: "<%= Settings.wanliu.socket_host %>",
-          port: <%= Settings.wanliu.socket_port %>
+          hostname: "<%= Settings.pusher.socket_host %>",
+          port: <%= Settings.pusher.socket_port %>
         });
 
         window.userSocket = new UserSocket({user: user, socket: socket});
