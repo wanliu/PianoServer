@@ -1,0 +1,11 @@
+<% content_for :title do %>
+	<%= @shop.name %>
+<% end %>
+
+<% content_for :module, :shop %>
+
+<div class="brand-board">
+	<%= image_tag @shop.image.src, class: 'shop-logo' %>
+	<h2><%= @shop.name %></h2>
+
+</div>
