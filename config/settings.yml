@@ -14,7 +14,7 @@ system:
 wanliu: 
   backend: http://www.wanliu.biz/api/v1/
 pusher:
-  socket_host: 192.168.0.155
+  socket_host: 192.168.0.161
   socket_port: 8000
-  pusher_url: http://192.168.0.155:8000/api/v1/
+  pusher_url: http://192.168.0.161:8000/api/v1/
   pusher_token: '666666'
