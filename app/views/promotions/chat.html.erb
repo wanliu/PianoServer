@@ -1,19 +1,19 @@
 <div class="chat-list">
-    <div class="chat me" >
-      	<%= image_tag User.anonymous.image.avatar_url %>
-        <h2><%= User.anonymous.nickname %></h2>
-        <div class="bubble me">
-          <p>你好啊，有货吗</p>
-        </div>
-    </div>
+  <div class="chat me" >
+    	<%= image_tag current_user.image.avatar_url %>
+      <h2><%= current_user.nickname %></h2>
+      <div class="bubble me">
+        <p>你好啊，有货吗</p>
+      </div>
+  </div>
 
-    <div class="chat you" >
-      	<%= image_tag User.anonymous.image.avatar_url %>
-        <h2><%= User.anonymous.nickname %></h2>
-        <div class="bubble you">
-          <p>有啊你要多少？</p>
-        </div>
-    </div>
+  <div class="chat you" >
+    	<%= image_tag current_user.image.avatar_url %>
+      <h2><%= current_user.nickname %></h2>
+      <div class="bubble you">
+        <p>有啊你要多少？</p>
+      </div>
+  </div>
 
 	<nav class="navbar navbar-default navbar-fixed-bottom">
 	  <div class="container">
@@ -25,4 +25,57 @@
 		</form>
 	  </div>
 	</nav>
+  <nav class="navbar navbar-default navbar-fixed-bottom">
+    <div class="container">
+      <form class="navbar-form navbar-left" role="search" onsubmit="return false;">
+        <button type="submit" class="btn btn-default pull-right">Submit</button>
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search" name="chat-text">
+        </div>
+      </form>
+    </div>
+  </nav>
 </div>
+
+<script type="text/javascript">
+  $(function() {
+    var ownerId = "<%= shop.owner_id %>",
+        ownId = window.userSocket.userId,
+        $list = $('.chat-list');
+
+    function insertMessage (message) {
+      var senderId = message.senderId,
+          isOwnSend = ownId === senderId,
+          content = message.content,
+          avatar = message.senderAvatar,
+          username = message.senderLogin || '游客',
+          toAddClass = isOwnSend ? 'me' : 'you',
+          avatar = avatar === '' ? '../assets/images/avatar.gif' : avatar,
+          htmlAry = ['<div class="chat ', toAddClass '"><img src="', avatar, '">',
+            '<h2>', username, '</h2><div class="bubble ', toAddClass '"><p>',
+            content, '</p></div></div>'];
+
+      $(htmlAry.join('')).appendTo($list);
+    }
+
+    $('.chat-list button').click(function() {
+      var $input = $("input[name='chat-text']"),
+          text = $.trim($input.val()),
+          channelId = 'w' + ownerId;
+
+      $input.val('');
+
+      if (text.length > 0) {
+        var socket = window.userSocket;
+
+        socket.publish(channelId, text, function(err, message) {
+          if (err) {
+            return;
+          }
+
+          insertMessage(message);
+        });
+      }
+    });
+  });
+</script>
