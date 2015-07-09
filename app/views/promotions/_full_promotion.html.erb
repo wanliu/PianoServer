@@ -34,19 +34,15 @@
   </div>-->
 
   <div class="navbar-bottom">
-    <div class="chat-button">
-      <span class="button-icon glyphicon glyphicon-earphone"></span>
-      <div class="button-text">客服</div>
-    </div>
     <%= link_to shop_path(promotion.shop_id), class: "into-shop" do %>
       <span class="button-icon glyphicon glyphicon-home"></span>
       <div class="button-text">商家</div>
     <% end %>
-    
+  
     <% if promotion.favorited %>
       <div class="fav-button favorited">
         <span class="button-icon glyphicon glyphicon-star"></span>
-        <div class="button-text">已收藏</div>
+        <div class="button-text">已收</div>
       </div>
     <% else %>
       <div class="fav-button">
