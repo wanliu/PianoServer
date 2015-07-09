@@ -8,7 +8,7 @@
 	    <% else %>
 	      <img src="<%= image_path 'full-present.png'%>" class="type-flag">
 	    <% end %>
-	    <%= image_tag promotion.image_url %>
+	    <%= image_tag promotion.image_mobile_url %>
 	    <p class="promotion-title">
 	      <% if promotion.title.length > 30 %>
 	        <%= promotion.title[0, 29] %>...
