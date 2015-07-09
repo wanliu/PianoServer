@@ -38,10 +38,10 @@
       <span class="button-icon glyphicon glyphicon-earphone"></span>
       <div class="button-text">客服</div>
     </div>
-    <div class="into-shop">
+    <%= link_to shop_path(promotion.shop_id), class: "into-shop" do %>
       <span class="button-icon glyphicon glyphicon-home"></span>
       <div class="button-text">商家</div>
-    </div>
+    <% end %>
     
     <% if promotion.favorited %>
       <div class="fav-button favorited">
