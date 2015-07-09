@@ -2,11 +2,19 @@
   <div class="promotion">
   	<%= link_to promotion_path(promotion) do %>
 	    <% if promotion.type == 'promotions/discount' %>
-	      <img src="<%= image_path 'discount.png'%>" class="type-flag">
+        <div class="type-flag discount">
+	        <img src="<%= image_path 'discount.png'%>">
+          <div class="type-text"><%= promotion.discount %></div>
+        </div>
 	    <% elsif promotion.type == 'promotions/time_limited_sale' %>
-	      <img src="<%= image_path 'limit-time.png'%>" class="type-flag">
+        <div class="type-flag limit-time">
+	        <img src="<%= image_path 'limit-time.png'%>">
+          <div class="type-text">限时</div>
+        </div>
 	    <% else %>
-	      <img src="<%= image_path 'full-present.png'%>" class="type-flag">
+        <div class="type-flag full-present">
+	        <img src="<%= image_path 'full-present.png'%>">
+        </div>
 	    <% end %>
 	    <%= image_tag promotion.image_mobile_url %>
 	    <p class="promotion-title">
@@ -19,10 +27,6 @@
 	    <p>
 	      <span class="disount-price">￥<%= promotion.discount_price %></span>
 	      <span class="origin-price"><s>￥<%= promotion.product_price %></s></span>
-
-	      <% if promotion.type == 'promotions/discount' %>
-	        <span class="discount-wrap"><%= promotion.discount %></span>
-	      <% end %>
 	    <p>
 	    <p>
 	      <span class="related">收藏 <%=  promotion.favoriters_count %></span>
