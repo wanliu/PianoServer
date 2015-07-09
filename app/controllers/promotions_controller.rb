@@ -16,6 +16,7 @@ class PromotionsController < ApplicationController
 
   def chat
     @promotion
+    @shop = Shop.find(@promotion.shop_id)
   end
 
   # POST /promotions
