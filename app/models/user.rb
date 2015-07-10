@@ -18,7 +18,7 @@ class User < ActiveRecord::Base
 
   attr_accessor :login
 
-  JWT_TOKEN = ::YAML.load_file("#{::Rails.root}/config/secrets.yml")[::Rails.env]["live_key_base"]
+  JWT_TOKEN = Rails.application.secrets.live_key_base
 
   def login
     @login || self.username || self.email || self.mobile
