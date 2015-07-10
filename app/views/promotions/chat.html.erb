@@ -28,7 +28,7 @@
           avatar = message.senderAvatar,
           username = message.senderLogin || '游客',
           toAddClass = isOwnSend ? 'you' : 'me',
-          avatar = avatar === '' ? '../assets/images/avatar.gif' : avatar,
+          avatar = avatar === '' ? '<%= image_path "avatar.gif" %>' : avatar,
           htmlAry = ['<div class="chat ', toAddClass, '"><img src="', avatar, '">',
             '<h2>', username, '</h2><div class="bubble ', toAddClass, '"><p>',
             content, '</p></div></div>'];
