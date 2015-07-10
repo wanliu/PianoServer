@@ -3,18 +3,17 @@
 
 <div class="chat-list">
   <div class="chat-content-wrap"></div>
-
-  <nav class="navbar navbar-default navbar-fixed-bottom">
-    <div class="container">
-      <form class="navbar-form navbar-left" role="search" onsubmit="return false;">
-        <button type="submit" class="btn btn-default pull-right">发送</button>
-        <div class="form-group">
-          <input type="text" class="form-control" placeholder="输入您要说的话..." name="chat-text">
-        </div>
-      </form>
-    </div>
-  </nav>
 </div>
+<nav class="chat-navbar navbar navbar-default navbar-fixed-bottom">
+  <div class="container">
+    <form class="navbar-form navbar-left" role="search" onsubmit="return false;">
+      <button type="submit" class="btn btn-default pull-right">发送</button>
+      <div class="form-group">
+        <input type="text" class="form-control" placeholder="输入您要说的话..." name="chat-text">
+      </div>
+    </form>
+  </div>
+</nav>
 
 <script type="text/javascript">
   $(function() {
@@ -39,7 +38,7 @@
       $(htmlAry.join('')).appendTo($list);
     }
 
-    $('.chat-list button').click(function() {
+    $('.chat-navbar button').click(function() {
       var $input = $("input[name='chat-text']"),
           text = $.trim($input.val()),
           channelId = 'p' + ownerId;
@@ -47,13 +46,19 @@
       $input.val('');
 
       if (text.length > 0) {
+      <% if Settings.debug %>
+        insertMessage(text);
+      <% else %>
         var socket = window.userSocket;
 
         socket.publish(channelId, {
           'content': text,
           'attachs': {}
-        });
+        });      
+      <% end %>        
       }
+
+
     });
   });
 </script>
