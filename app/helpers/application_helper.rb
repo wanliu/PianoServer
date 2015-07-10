@@ -24,4 +24,16 @@ module ApplicationHelper
       HTML
     end.join('').html_safe
   end
+
+  def icon(name)
+    raw "<span class=\"button-icon glyphicon glyphicon-#{name}\"></span>"
+  end
+
+  def nav_back_button
+    content_for :back do 
+      raw '<li>' + link_to(:back) {
+            icon :'chevron-left'
+          } + '<li>'
+    end
+  end
 end

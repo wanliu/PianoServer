@@ -16,8 +16,28 @@
  */
 
 body {
-	background-image: image-url('bj.jpg');
+  background-image: image-url('bj.jpg');
 }
 
 
 
+@media (max-width: 768px) {
+  .navbar-static-top {
+    .navbar-left {
+      float: left !important;
+    }
+  }
+
+  .navbar-nav {
+    margin: 0px;
+  }
+
+  .navbar-nav > li {
+    float: left;
+  }
+
+  .navbar-nav > li > a {
+      padding-top: 15px;
+      padding-bottom: 15px;
+  }
+}
