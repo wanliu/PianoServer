@@ -49,7 +49,12 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="/"><%= content_for?(:title) ? yield(:title) : Settings.app.title %></a>
+        <ul class="nav navbar-nav navbar-left">        
+          <%= yield :back %>
+        </ul>
+        <%= link_to root_path, class: "navbar-brand" do %>
+          <%= content_for?(:title) ? yield(:title) : Settings.app.title %>          
+        <% end %>
         <div class="navbar-collapse collapse navbar-responsive-collapse">
           <ul class="nav navbar-nav">
             <li><%= link_to "Link1", "/path1"  %></li>

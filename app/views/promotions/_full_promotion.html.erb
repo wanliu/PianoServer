@@ -1,3 +1,5 @@
+<%= content_for :title, @shop.name %>
+<%= nav_back_button %>
 <div class="promotion-detail-container" data-promotion-id="<%= promotion.id %>" >
   <%= image_tag(promotion.image_url, class: "promotion-poster") %>
   <p class="promotion-title"><%= promotion.title %></p>

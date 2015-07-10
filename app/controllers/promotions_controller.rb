@@ -12,6 +12,7 @@ class PromotionsController < ApplicationController
   # GET /promotions/1.json
   def show
     @promotion
+    @shop = Shop.find(@promotion.shop_id)
   end
 
   def chat
