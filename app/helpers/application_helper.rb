@@ -29,9 +29,9 @@ module ApplicationHelper
     raw "<span class=\"button-icon glyphicon glyphicon-#{name}\"></span>"
   end
 
-  def nav_back_button
+  def nav_back_button(link = :back)
     content_for :back do 
-      raw '<li>' + link_to(:back) {
+      raw '<li>' + link_to(link) {
             icon :'chevron-left'
           } + '<li>'
     end
