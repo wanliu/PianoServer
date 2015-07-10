@@ -10,7 +10,7 @@ class AdjustPromotionImage
 
 	recalcWidth: () ->
 		image = $('.promotions-list .promotion:first .promotion-image')
-		$('.promotions-list .promotion-image').height(image.width())
+		$('.promotions-list .promotion-image').height(image.width() || 200)
 
 
 

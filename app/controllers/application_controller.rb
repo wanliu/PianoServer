@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  include DebugMode
   # include TokenAuthenticatable
   layout "mobile"
   # Prevent CSRF attacks by raising an exception.
