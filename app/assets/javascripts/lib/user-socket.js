@@ -1,6 +1,7 @@
 (function () {
   function UserSocket (options) {
     this.personChannelReady = false;
+    this.anonymous = false;
     this.personCallbacks = [];
 
     this.eventListeners = [];
@@ -23,11 +24,12 @@
   UserSocket.prototype.config = function (options) {
     this.socket = options.socket;
 
-    var user = options.user;
+    var user = this.user = options.user;
 
     if (this.isAnonymousUser(user)) {
       var options = getLocalUser(user);
 
+      this.anonymous = true;
       this.userId = options.id;
       this.chatToken = options.chatToken;
     } else {
@@ -35,7 +37,7 @@
       this.chatToken = user.chatToken;
     }
 
-    this.userChannelId = this.getUserChannelId();
+    // this.userChannelId = this.getUserChannelId();
     this.loginAndSubscribe();
   }
 
@@ -91,25 +93,49 @@
     socket.emit('login', this.chatToken, function (err) {
       if (err) {
         _this.personChannelReady = false;
+
+        // 当后端token更换之后，前端需要同步更新(使用最近一次的模板数据)
+        if (_this.anonymous) {
+          _this.userId = _this.user.id;
+          _this.chatToken = _this.user.chatToken;
+          _this.userChannelId = _this.getUserChannelId();
+          socket.emit('login', _this.chatToken, function (err) {
+            if (err) {
+              console.error('login fails!');
+            } else {
+              setLocalUser(_this.user);
+              _this.readyAndSubscribe();
+            }
+          });
+        } else {
+          console.error('login fails!');
+        }
+
         return;
       }
 
-      _this.personChannelReady = true;
+      _this.readyAndSubscribe();
+    });
+  }
 
-      var personalChannel = socket.subscribe(_this.userChannelId);
-      personalChannel.watch(function (message) {
-        _this.personCallbacks.forEach(function (callback) {
-          callback(message);
-        })
-      });
+  UserSocket.prototype.readyAndSubscribe = function () {
+    var _this = this;
+    this.userChannelId = this.getUserChannelId();
+    this.personChannelReady = true;
 
-      _this.eventListeners.forEach(function (args) {
-        socket.on.apply(_this.socket, args);
+    var personalChannel = this.socket.subscribe(this.userChannelId);
+    personalChannel.watch(function (message) {
+      _this.personCallbacks.forEach(function (callback) {
+        callback(message);
       })
+    });
 
-      _this.emiters.forEach(function (args) {
-        socket.emit.apply(_this.socket, args);
-      })
+    this.eventListeners.forEach(function (args) {
+      socket.on.apply(_this.socket, args);
+    });
+
+    this.emiters.forEach(function (args) {
+      socket.emit.apply(_this.socket, args);
     });
   }
 
