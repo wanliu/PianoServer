@@ -56,6 +56,10 @@ class PromotionsController < ApplicationController
     
   end
 
+  def saled_product_count
+
+  end
+
   private
 
     def set_promotion

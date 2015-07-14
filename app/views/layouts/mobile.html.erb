@@ -40,9 +40,8 @@
 
     <%= analytics_init if Rails.env.production? %>
   </head>
-  <body>
-
-    <div class="<%=yield :module %> navbar navbar-default navbar-static-top">
+  <body class="<%= yield :module %>">
+    <div class="navbar navbar-default navbar-fixed-top">
       <div class="container">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
           <span class="icon-bar"></span>

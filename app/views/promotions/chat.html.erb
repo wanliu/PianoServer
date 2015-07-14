@@ -1,8 +1,9 @@
 <%= content_for :title, @shop.name %>
 <%= nav_back_button %>
+<%= content_for :module, :piano %>
 
 <div class="chat-list">
-  <div class="chat-content-wrap"></div>
+  
 </div>
 <nav class="chat-navbar navbar navbar-default navbar-fixed-bottom">
   <div class="container">
@@ -19,7 +20,7 @@
   $(function() {
     var ownerId = "<%= @shop.owner_id %>",
         ownId = window.userSocket.userId,
-        $list = $('.chat-content-wrap');
+        $list = $('.chat-list');
 
     userSocket.onPersonMessage(insertMessage);
 
@@ -36,6 +37,15 @@
             content, '</p></div></div>'];
 
       $(htmlAry.join('')).appendTo($list);
+
+      var ele = $list[0],
+          clientHeight = ele.clientHeight,
+          scrollHeight = ele.scrollHeight,
+          offset = scrollHeight - clientHeight;
+
+      if (offset > 0) {
+        ele.scrollTop = offset;
+      }
     }
 
     $('.chat-navbar button').click(function() {

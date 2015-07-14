@@ -17,12 +17,19 @@
 
 body {
   background-image: image-url('bj.jpg');
+
+  &.piano >.container, &.detail > .container{
+    margin-top: 50px;
+  }
+}
+
+.detail .navbar-fixed-top{
+  background: #FFFFFF;
 }
 
 
-
 @media (max-width: 768px) {
-  .navbar-static-top {
+  .navbar-fixed-top {
     .navbar-left {
       float: left !important;
     }

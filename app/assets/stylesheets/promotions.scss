@@ -1,13 +1,19 @@
-.promotion-wrap{
+/**.promotion-wrap{
   padding: 0 5px;
-}
+}*/
+$border-color: #CCCCCC;
 
 .promotion {
   background: #FFFFFF;
-  margin-bottom: 10px;
+  //margin-bottom: 10px;
   padding: 10px;
   position: relative;
-  box-shadow: 0 2px 2px #DDDDDD;
+  //box-shadow: 0 2px 2px #DDDDDD;
+  border-bottom: 1px solid $border-color;
+
+  &:nth-child(odd) {
+    border-right: 1px solid $border-color;
+  }
 
   img {
     height: auto;
@@ -44,16 +50,6 @@
     }
   }
 
-  .disount-price {
-    color: #F37C3F;
-    font-size: 1.5em;
-    font-weight: 700;
-  }
-
-  .origin-price{
-    color: #999999;
-  }
-
   .promotion-title{
     max-height: 2.6em;
     height: 2.6em;
@@ -67,24 +63,62 @@
     color: #FFFFFF;
   }
 
-  .provider{
-    border-top: 1px solid #CCCCCC;
-    display: table;
-    width: 100%;
-    padding-top: 10px;
+  .provider-wrap{
+    margin: 0 -10px;
+    border-top: 1px solid $border-color;
+    padding: 10px 10px 0;
 
-    .provider-name{
-      vertical-align: middle;
-      display: table-cell;
+    .provider{
+      display: table;
+      width: 100%;
+
+      .provider-name{
+        vertical-align: middle;
+        display: table-cell;
+      }
+
+      .avatar-wrap{
+        display: table-cell;
+        width: 35px;
+
+        .publish-avatar{
+          width: 35px;
+          height: 35px;
+        }
+      }
+    }
+  }
+
+  .price-board{
+    background: #F12A39;
+    padding: 5px;
+    margin-bottom: 10px;
+
+    .snap-up{
+      float: right;
+      color: #FFFFFF;
+      vertical-align: top;
+
+      &:visited{
+        color: #FFFFFF;
+      }
+
+      &:hover{
+        background: transparent;
+      }
     }
 
-    .avatar-wrap{
-      display: table-cell;
-      width: 35px;
+    .prices{
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: #FFFFFF;
+      font-size: 0.8em;
+      font-family: Impact, Charcoal, sans-serif;
 
-      .publish-avatar{
-        width: 35px;
-        height: 35px;
+      .disount-price {
+        font-weight: 700;
+        font-size: 1.2em;
       }
     }
   }
