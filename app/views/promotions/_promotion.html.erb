@@ -33,6 +33,7 @@
 	      <span class="related">点赞 <%= promotion.likers_count%></span>
 	    </p>
 	<% end %>
+	<%= link_to shop_path(promotion.shop_id) do %>
     <div class="provider">
       <div class="provider-name">
         <%= promotion.shop_name %>
@@ -41,5 +42,6 @@
         <%= image_tag(promotion.publisher_avatar, class: "publish-avatar") %>
       </div>
     </div>
+    <% end %>
   </div>
 </div>

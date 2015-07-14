@@ -29,11 +29,19 @@ module ApplicationHelper
     raw "<span class=\"button-icon glyphicon glyphicon-#{name}\"></span>"
   end
 
-  def nav_back_button(link = :back)
+  def nav_back_button
+    content_for :back do 
+      raw '<li>' + link_to('javascript:history.back()') {
+            icon :'chevron-left'
+          } + '</li>'
+    end
+  end
+
+  def nav_button(link)
     content_for :back do 
       raw '<li>' + link_to(link) {
             icon :'chevron-left'
-          } + '<li>'
-    end
+          } + '</li>'
+    end    
   end
 end
