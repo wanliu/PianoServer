@@ -1,5 +1,6 @@
 <%= content_for :title, @shop.name %>
 <%= nav_back_button %>
+<%= content_for :module, :detail %>
 
 <div class="promotion-detail-container" data-promotion-id="<%= promotion.id %>" >
   <%= image_tag(promotion.image_url, class: "promotion-poster") %>
@@ -126,25 +127,6 @@
              .find('.button-text')
              .text(isFavorited ? '收藏' : '已收藏');
       });
-    });
-
-    $(document).on('scroll', function() {
-      var $this = $(this),
-          scrollTop = $(this).scrollTop(),
-          $nav = $('.navbar-static-top'),
-          prevScrollTop = $(this).data('scroll_top') || 0,
-          opacity;
-
-      if (scrollTop < 50) {
-        var _opacity = $nav.css('opacity');
-        opacity = +_opacity * 100 - (scrollTop - prevScrollTop);
-        $this.data('scroll_top', scrollTop);
-      } else {
-        opacity = 50;
-        $this.data('scroll_top', 50);
-      }
-
-      $nav.css('opacity', opacity / 100);
     });
   });
 </script>

@@ -1,3 +1,5 @@
+<%= content_for :module, :piano %>
+
 <div class="promotions-list">
 	<%= render partial: "promotion", collection: @promotions %>
 </div>
@@ -42,12 +44,31 @@
 			}
 		}
 
+		function scrollPage() {
+			var $this = $(document),
+          scrollTop = $(this).scrollTop(),
+          $nav = $('.navbar-fixed-top'),
+          prevScrollTop = $(this).data('scroll_top') || 0,
+          opacity;
+
+      if (scrollTop < 50) {
+        var _opacity = $nav.css('opacity');
+        opacity = +_opacity * 100 - (scrollTop - prevScrollTop);
+        $this.data('scroll_top', scrollTop);
+      } else {
+        opacity = 50;
+        $this.data('scroll_top', 50);
+      }
+
+      $nav.css('opacity', opacity / 100);
+		}
+
 		$(document).on('page:change', function(e) {
 			var url = parseURL(e.target.URL);
 			if (url.pathname === '/') {
-				$(document).on('scroll:bottom', loadingPromotions);
+				$(document).on('scroll:bottom', loadingPromotions).off('scroll.page');
 			} else {
-				$(document).off('scroll:bottom');
+				$(document).off('scroll:bottom').on('scroll.page', scrollPage);
 				clearLoading();
 			}
 		});
