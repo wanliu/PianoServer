@@ -27,11 +27,11 @@
     var user = this.user = options.user;
 
     if (this.isAnonymousUser(user)) {
-      var options = getLocalUser(user);
+      var anonymous = getLocalUser(user);
 
       this.anonymous = true;
-      this.userId = options.id;
-      this.chatToken = options.chatToken;
+      this.userId = anonymous.id;
+      this.chatToken = anonymous.chatToken;
     } else {
       this.userId = user.id;
       this.chatToken = user.chatToken;
