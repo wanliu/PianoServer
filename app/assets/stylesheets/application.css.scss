@@ -19,14 +19,23 @@ body {
   background-image: image-url('bj.jpg');
 }
 
+.content-container{
+  margin-top: 50px;
+  //border-top: 1px solid #CCCCCC;
+}
+
+.navbar.navbar-static-top{
+  margin-bottom: 0;
+  //border-bottom: none;
+  background: #FFFFFF;
+  position: fixed;
+  width: 100%;
+  top: 0;
+}
 
 
 @media (max-width: 768px) {
   .navbar-static-top {
-    position: fixed;
-    width: 100%;
-    border-bottom: none;
-
     .navbar-left {
       float: left !important;
     }

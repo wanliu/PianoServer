@@ -128,7 +128,7 @@
       });
     });
 
-    $(window).scroll(function() {
+    $(document).on('scroll', function() {
       var $this = $(this),
           scrollTop = $(this).scrollTop(),
           $nav = $('.navbar-static-top'),
@@ -148,3 +148,4 @@
     });
   });
 </script>
+`
