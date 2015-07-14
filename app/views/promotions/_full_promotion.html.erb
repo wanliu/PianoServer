@@ -1,41 +1,88 @@
 <%= content_for :title, @shop.name %>
 <%= nav_back_button %>
+
 <div class="promotion-detail-container" data-promotion-id="<%= promotion.id %>" >
   <%= image_tag(promotion.image_url, class: "promotion-poster") %>
-  <p class="promotion-title"><%= promotion.title %></p>
-
-  <p>
-    <span class="discount-price">￥<%= promotion.discount_price %></span>
-
-    <% if promotion.type == 'promotions/discount' %>
-      <span class="discount-wrap"><%= promotion.discount %></span>
+  
+  <div class="price-period clearfix">
+    <div class="price-desc">
+      <div class="promotion-price">
+        ￥<%= promotion.discount_price %>
+      </div>
+      <div class="dicount-desc">
+        <p><s>￥<%= promotion.product_price %></s></p>
+        <span class="desc-text">
+          <% if promotion.type == 'promotions/discount' %>
+            <%= promotion.discount %>销售
+          <% elsif promotion.type == 'promotions/time_limited_sale' %>
+            限时抢购
+          <% end %>
+        </span>
+      </div>
+    </div>
+    
+    <% if promotion.status === 'Published' %>
+    <div class="period-desc not-started">
+      <div class="desc-wrap">
+        <p>活动开始时间</p>
+        <%= promotion.start_time.to_datetime.in_time_zone('Beijing').strftime('%Y/%m/%d %H:%M')%>
+      </div>
+    </div>
+    <% elsif promotion.status === 'Active' %>
+    <div class="period-desc started">
+      <div class="desc-wrap">
+        <% if promotion.type == 'promotions/time_limited_sale'%>
+          <p>距活动结束</p>
+        <% else %>
+          <p>库存剩余<%= promotion.product_inventory %>件</p>
+        <% end %>
+      </div>
+    </div>
+    <% else %>
+    <div class="period-desc finished">
+      <div class="desc-wrap">
+        活动结束
+      </div>
+    </div>
     <% end %>
-  </p>
-  <p class="origin-price">价格：<s><%= promotion.product_price %></s></p>
-  <p class="sale-count">月销量&nbsp;1000&nbsp;笔</p>
+  </div>
 
-  <!--
-  <div class="shop-brief">
-    <div class="logo-name">
-      <div class="shop-logo">
-         
-      </div>
-      <div class="shop-name"></div>
+  <div class="title-contact">
+    <div class="promotion-title"><%= promotion.title %></div>
+    <div class="promotion-favors">
+      <p>收藏</p>
+      <%= promotion.likers_count%>
+    </div>
+    <div class="promotion-likers">
+      <p>赞</p>
+      <%= promotion.favoriters_count %>
+    </div>
+  </div>
+
+  <div class="shop-brief clearfix">
+    <div class="shop-logo">
+       <%= image_tag shop.logo_url %>
     </div>
 
-    <div class="shop-contact">
-      <div class="product-count">
-        <div>50</div>
-        <div>全部宝贝</div>
-      </div>
-      <div class="follow-count">
-        <div><%= promotion.followers_count %></div>
-        <div>关注人数</div>
-      </div>
+    <div class="shop-desc">
+      <p>供应商:<%= shop.name %></p>
+      <p>地址:<%= shop.address %></p>
+      <p>关注:100<button class="btn btn-follow"><span class="glyphicon glyphicon-plus"/>关注</button></p>
     </div>
-  </div>-->
+  </div>
 
-  <div class="navbar-bottom">
+  <div class="product-brief">
+    <div class="brief-row clearfix">
+      <div class="row-left">品&nbsp;&nbsp;牌：高端大气上档次</div>
+      <div class="row-right">活动销量：1000</div>
+    </div>
+    <div class="brief-row clearfix">
+      <div class="row-left">数&nbsp;&nbsp;量：</div>
+      <div class="row-right">库存：<%= promotion.product_inventory %>件</div>
+    </div>
+  </div>
+
+  <div class="navbar-bottom navbar navbar-default navbar-fixed-bottom">
     <%= link_to shop_path(promotion.shop_id), class: "into-shop" do %>
       <span class="button-icon glyphicon glyphicon-home"></span>
       <div class="button-text">商家</div>
@@ -79,6 +126,25 @@
              .find('.button-text')
              .text(isFavorited ? '收藏' : '已收藏');
       });
+    });
+
+    $(window).scroll(function() {
+      var $this = $(this),
+          scrollTop = $(this).scrollTop(),
+          $nav = $('.navbar-static-top'),
+          prevScrollTop = $(this).data('scroll_top') || 0,
+          opacity;
+
+      if (scrollTop < 50) {
+        var _opacity = $nav.css('opacity');
+        opacity = +_opacity * 100 - (scrollTop - prevScrollTop);
+        $this.data('scroll_top', scrollTop);
+      } else {
+        opacity = 50;
+        $this.data('scroll_top', 50);
+      }
+
+      $nav.css('opacity', opacity / 100);
     });
   });
 </script>

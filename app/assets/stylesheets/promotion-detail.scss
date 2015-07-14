@@ -1,16 +1,145 @@
 .promotion-detail-container{
-  padding: 10px;
-  margin-bottom: 30px;
+  margin-bottom: 2em;
 
   .promotion-poster{
     height: auto;
     max-width: 100%;
   }
 
-  .promotion-title{
-    max-height: 2.6em;
-    overflow: hidden;
-    margin-top: 1em;
+  .price-period{
+    display: table;
+    width: 100%;
+
+    .price-desc{
+      display: table-cell;
+      background-color: #F12A39;
+      color: #FFFFFF;
+      padding: 10px;
+
+      .promotion-price{
+        float: left;
+        font-size: 2em;
+        font-weight: 700;
+        line-height: 1.5em;
+      }
+
+      .dicount-desc{
+        float: left;
+        padding-left: 1em;
+
+        p {
+          margin: 0;
+          padding-top: 0.2em;
+        }
+
+        .desc-text{
+          background: #DC0A29;
+          display: inline-block;
+          padding: 2px 5px 0;
+          border-radius: 5px;
+        }
+      }
+    }
+
+    .period-desc{
+      display: table-cell;
+      width: 30%;
+      vertical-align: middle;
+      background: #F6D33C;
+      color: #FF2B2B;
+
+      &.finished{
+        background: #2A2A2A;
+        font-size: 1.5em;
+        text-align: center;
+        color: #FFFFFF;
+      } 
+
+      .desc-wrap{
+        padding: 0 10px;
+
+        p{
+          margin: 0;
+        }
+      }
+    }
+  }
+
+  .title-contact{
+    margin: 1.5em 0;
+    display: table;
+    width: 100%;
+
+    .promotion-title{
+      display: table-cell;
+      vertical-align: middle;
+      padding: 0 15px;
+    }
+
+    .promotion-favors, .promotion-likers{
+      display: table-cell;
+      width: 18%;
+      text-align: center;
+      vertical-align: middle;
+      color: #666666;
+      border-left: 1px solid #DDDDDD;
+
+      p{
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .shop-brief{
+    width: 100%;
+    padding: 15px;
+    border-width: 1px 0;
+    border-style: solid;
+    border-color: #CCCCCC;
+
+    .shop-logo{
+      float: left;
+      width: 75px;
+      height: 75px;
+
+      img{
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    .shop-desc{
+      margin-left: 90px;
+
+      p{
+        margin-bottom: 5px;
+      }
+
+      .btn-follow{
+        background: #EC2A39;
+        color: #FFF;
+        padding: 2px 5px;
+        border-radius: 2px;
+        margin-left: 5px;
+      }
+    }
+  }
+
+  .product-brief{
+    padding: 15px;
+    border-bottom: 1px solid #CCCCCC;
+
+    .brief-row{
+      .row-left{
+        float: left;
+        width: 70%;
+      }
+
+      .row-right{
+        text-align: right;
+        margin-left: 70%;
+      }
+    }
   }
 
   .discount-price{

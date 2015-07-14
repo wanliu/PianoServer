@@ -23,6 +23,10 @@ body {
 
 @media (max-width: 768px) {
   .navbar-static-top {
+    position: fixed;
+    width: 100%;
+    border-bottom: none;
+
     .navbar-left {
       float: left !important;
     }
