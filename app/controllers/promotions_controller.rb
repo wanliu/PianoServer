@@ -18,6 +18,18 @@ class PromotionsController < ApplicationController
   def chat
     @promotion
     @shop = Shop.find(@promotion.shop_id)
+    bid = Order.last_bid(current_anonymous_or_user.id) + 1
+    @order = Order
+      .where(supplier_id: @shop.id, buyer_id: current_anonymous_or_user.id)
+      .first_or_create({
+        title: @promotion.title,
+        supplier_id: @shop.id, 
+        buyer_id: current_anonymous_or_user.id, 
+        bid: bid
+      }) do |order|
+        order.items.build_with_promotion(@promotion)
+      end
+    # @order = 
   end
 
   # POST /promotions

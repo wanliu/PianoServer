@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150701084537) do
+ActiveRecord::Schema.define(version: 20150715035526) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,9 +24,14 @@ ActiveRecord::Schema.define(version: 20150701084537) do
     t.hstore   "data"
     t.integer  "iid"
     t.string   "item_type"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
     t.hstore   "image"
+    t.decimal  "price",         precision: 15, scale: 2
+    t.decimal  "amount",        precision: 15, scale: 8
+    t.decimal  "sub_total",     precision: 16, scale: 2
+    t.integer  "unit"
+    t.string   "unit_title"
   end
 
   create_table "logs", force: :cascade do |t|
@@ -70,15 +75,17 @@ ActiveRecord::Schema.define(version: 20150701084537) do
   create_table "orders", force: :cascade do |t|
     t.integer  "buyer_id"
     t.integer  "seller_id"
-    t.integer  "suppiler_id"
+    t.integer  "supplier_id"
     t.string   "send_address"
     t.string   "delivery_address"
     t.string   "contacts"
     t.integer  "business_type"
     t.integer  "bid"
     t.integer  "sid"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
+    t.string   "title"
+    t.decimal  "total",            precision: 18, scale: 2
   end
 
   create_table "rooms", force: :cascade do |t|
