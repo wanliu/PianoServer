@@ -40,16 +40,18 @@
 	      <span class="related">点赞 <%= promotion.likers_count%></span>
 	    </p>-->
 	  <% end %>
-    <div class="provider-wrap">
-      <div class="provider">
-        <div class="provider-name">
-          <%= promotion.shop_name %>
-          <div><%= promotion.created_at.to_datetime.in_time_zone('Beijing').strftime('%Y/%m/%d %H:%M') %></div>
-        </div>
-        <div class="avatar-wrap">
-          <%= image_tag(promotion.publisher_avatar, class: "publish-avatar") %>
-        </div>
-      </div>
+  	<div class="provider-wrap">
+    	<%= link_to shop_path(promotion.shop_id) do %>
+	      <div class="provider">
+	        <div class="provider-name">
+	          <%= promotion.shop_name %>
+	          <div><%= promotion.created_at.to_datetime.in_time_zone('Beijing').strftime('%Y/%m/%d %H:%M') %></div>
+	        </div>
+	        <div class="avatar-wrap">
+	          <%= image_tag(promotion.publisher_avatar, class: "publish-avatar") %>
+	        </div>
+	      </div>
+	     <% end %>
     </div>
   </div>
 </div>
