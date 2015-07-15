@@ -25,11 +25,39 @@
 <script type="text/javascript">
   $(function() {
     var ownerId = "<%= @shop.owner_id %>",
-        ownId = window.userSocket.userId,
-        $list = $('.chat-list .chat-inner'),
         StatusLoadUrl = window.StatusLoadUrl;
+        promotionId = "<%= @promotion.id %>",
+        userSocket = window.userSocket,
+        ownId = userSocket.userId,
+        channelId = userSocket.getUserChannelId(),
+        chatChannelId = 'p' + ownerId,
+        $list = $('.chat-list'),
+        fromTime;
 
+    userSocket.offPersonMessage(insertMessage);
     userSocket.onPersonMessage(insertMessage);
+
+    userSocket.emit('getChannelMessage', {
+      'channelId': chatChannelId,
+      'type': 'index',
+      'start': 0
+    }, function(err, messages) {
+      if (err || messages.length === 0) {
+        return;
+      }
+
+      for(var i=0; i <messages.length; i++) {
+        insertMessage(messages[i]);
+      }
+
+      if (messages.length < 10) {
+        $list.find('.load-more').remove();
+      } else {
+        fromTime = messages[0].time;
+        insertLoadMore();
+      }
+    });
+
 
     function insertMessage (message) {
       var senderId = message.senderId,
@@ -41,15 +69,59 @@
           avatar = avatar === '' ? '<%= image_path "avatar.gif" %>' : avatar,
           htmlAry = ['<div class="chat ', toAddClass, '"><img src="', avatar, '">',
             '<h2>', username, '</h2><div class="bubble ', toAddClass, '"><p>',
-            content, '</p></div></div>'];
+            content, '</p></div></div>'],
+          pathname = window.location.pathname;
 
-      $(htmlAry.join('')).appendTo($list);
+      if (pathname === '/promotions/' + promotionId + '/chat') {
+        $(htmlAry.join('')).appendTo($list);
 
+        resetScroll();
+      } else {
+        window.noticeCenter.addNotice(senderId, username, promotionId);
+      }
+    }
+
+    function insertLoadMore() {
+      $('<div class="load-more">查看更多消息</div>')
+        .click(function() {
+          $(this).hide().parent().prepend('<div class="record-loading"><span class="loading-icon"/>正在加载聊天记录</div>');
+
+          userSocket.emit('getChannelMessage', {
+            'channelId': chatChannelId,
+            'type': 'time',
+            'start': fromTime
+          }, function(err, messages) {
+            if (err) {
+              return;
+            }
+
+            $list.find('.record-loading').remove();  
+
+            if (messages.length < 10) {
+              $list.find('.more-record').remove();
+
+              if( messages.length === 0) {
+                return;
+              }
+            }
+
+            for(var i=messages.length-1; i>=0; i--) {
+              insertMessage(messages[i]);
+            }
+
+            $list[0].scrollTop = 0;
+
+            fromTime = messages[0].time;
+          });
+        }).prependTo($list);
+    }
+
+    function resetScroll() {
       var ele = $list[0],
           clientHeight = ele.clientHeight,
           scrollHeight = ele.scrollHeight,
           offset = scrollHeight - clientHeight;
-
+          
       if (offset > 0) {
         ele.scrollTop = offset;
       }
@@ -70,6 +142,7 @@
 
         socket.publish(channelId, {
           'content': text,
+          'promotionId': promotionId,
           'attachs': {}
         });      
       <% end %>        
