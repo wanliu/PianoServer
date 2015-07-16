@@ -40,7 +40,16 @@ module ThumbImages
       url = image[:avatar_url] || image[:preview_url] 
     end
 
-    CombinationImagesJob.perform_later owner, urls, options.to_json
+    store_field = options[:store_field] || options[:field]
+    CombinationImagesJob.perform_later owner, urls, task_option(store_field)
+  end
+
+  def task_option(store_field, filename = nil, size = {"width" => 100, "height" => 100})
+    {
+      "store_field" => store_field.to_s,
+      "size" => size,
+      "filename" => filename
+    }
   end
 
   def _thumbs_association(name)

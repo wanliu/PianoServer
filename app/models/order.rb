@@ -25,8 +25,10 @@ class Order < ActiveRecord::Base
     end
 
     def add_promotion(promotion)
-      where("data -> 'product_id' = :product_id", product_id: promotion.product_id.to_s)
-        .first_or_create({
+      item = where("data -> 'product_id' = :product_id", product_id: promotion.product_id.to_s).first
+
+      if item.nil?
+        proxy_association.create({
           title: promotion.title,
           price: promotion.discount_price,
           amount: promotion.try(:amount) || MIN_AMOUNT,
@@ -39,7 +41,10 @@ class Order < ActiveRecord::Base
             avatar_url: promotion.image_url,
             preview_url: promotion.preview_url
           }
-        })
+        }) 
+      else
+        item
+      end
     end
 
     def owner

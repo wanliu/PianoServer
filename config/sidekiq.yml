@@ -5,4 +5,4 @@
 :queues:
   - default
   - [high_priority, 2]
-:daemon: true
+:daemon: false

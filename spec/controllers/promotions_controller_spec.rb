@@ -52,108 +52,108 @@ RSpec.describe PromotionsController, type: :controller do
     end
   end
 
-  describe "GET #new" do
-    it "assigns a new promotion as @promotion" do
-      get :new, {}, valid_session
-      expect(assigns(:promotion)).to be_a_new(Promotion)
-    end
-  end
+  # describe "GET #new" do
+  #   it "assigns a new promotion as @promotion" do
+  #     get :new, {}, valid_session
+  #     expect(assigns(:promotion)).to be_a_new(Promotion)
+  #   end
+  # end
 
-  describe "GET #edit" do
-    it "assigns the requested promotion as @promotion" do
-      promotion = Promotion.create! valid_attributes
-      get :edit, {:id => promotion.to_param}, valid_session
-      expect(assigns(:promotion)).to eq(promotion)
-    end
-  end
+  # describe "GET #edit" do
+  #   it "assigns the requested promotion as @promotion" do
+  #     promotion = Promotion.create! valid_attributes
+  #     get :edit, {:id => promotion.to_param}, valid_session
+  #     expect(assigns(:promotion)).to eq(promotion)
+  #   end
+  # end
 
-  describe "POST #create" do
-    context "with valid params" do
-      it "creates a new Promotion" do
-        expect {
-          post :create, {:promotion => valid_attributes}, valid_session
-        }.to change(Promotion, :count).by(1)
-      end
+  # describe "POST #create" do
+  #   context "with valid params" do
+  #     it "creates a new Promotion" do
+  #       expect {
+  #         post :create, {:promotion => valid_attributes}, valid_session
+  #       }.to change(Promotion, :count).by(1)
+  #     end
 
-      it "assigns a newly created promotion as @promotion" do
-        post :create, {:promotion => valid_attributes}, valid_session
-        expect(assigns(:promotion)).to be_a(Promotion)
-        expect(assigns(:promotion)).to be_persisted
-      end
+  #     it "assigns a newly created promotion as @promotion" do
+  #       post :create, {:promotion => valid_attributes}, valid_session
+  #       expect(assigns(:promotion)).to be_a(Promotion)
+  #       expect(assigns(:promotion)).to be_persisted
+  #     end
 
-      it "redirects to the created promotion" do
-        post :create, {:promotion => valid_attributes}, valid_session
-        expect(response).to redirect_to(Promotion.last)
-      end
-    end
+  #     it "redirects to the created promotion" do
+  #       post :create, {:promotion => valid_attributes}, valid_session
+  #       expect(response).to redirect_to(Promotion.last)
+  #     end
+  #   end
 
-    context "with invalid params" do
-      it "assigns a newly created but unsaved promotion as @promotion" do
-        post :create, {:promotion => invalid_attributes}, valid_session
-        expect(assigns(:promotion)).to be_a_new(Promotion)
-      end
+  #   context "with invalid params" do
+  #     it "assigns a newly created but unsaved promotion as @promotion" do
+  #       post :create, {:promotion => invalid_attributes}, valid_session
+  #       expect(assigns(:promotion)).to be_a_new(Promotion)
+  #     end
 
-      it "re-renders the 'new' template" do
-        post :create, {:promotion => invalid_attributes}, valid_session
-        expect(response).to render_template("new")
-      end
-    end
-  end
+  #     it "re-renders the 'new' template" do
+  #       post :create, {:promotion => invalid_attributes}, valid_session
+  #       expect(response).to render_template("new")
+  #     end
+  #   end
+  # end
 
-  describe "PUT #update" do
-    context "with valid params" do
-      let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
-      }
+  # describe "PUT #update" do
+  #   context "with valid params" do
+  #     let(:new_attributes) {
+  #       skip("Add a hash of attributes valid for your model")
+  #     }
 
-      it "updates the requested promotion" do
-        promotion = Promotion.create! valid_attributes
-        put :update, {:id => promotion.to_param, :promotion => new_attributes}, valid_session
-        promotion.reload
-        skip("Add assertions for updated state")
-      end
+  #     it "updates the requested promotion" do
+  #       promotion = Promotion.create! valid_attributes
+  #       put :update, {:id => promotion.to_param, :promotion => new_attributes}, valid_session
+  #       promotion.reload
+  #       skip("Add assertions for updated state")
+  #     end
 
-      it "assigns the requested promotion as @promotion" do
-        promotion = Promotion.create! valid_attributes
-        put :update, {:id => promotion.to_param, :promotion => valid_attributes}, valid_session
-        expect(assigns(:promotion)).to eq(promotion)
-      end
+  #     it "assigns the requested promotion as @promotion" do
+  #       promotion = Promotion.create! valid_attributes
+  #       put :update, {:id => promotion.to_param, :promotion => valid_attributes}, valid_session
+  #       expect(assigns(:promotion)).to eq(promotion)
+  #     end
 
-      it "redirects to the promotion" do
-        promotion = Promotion.create! valid_attributes
-        put :update, {:id => promotion.to_param, :promotion => valid_attributes}, valid_session
-        expect(response).to redirect_to(promotion)
-      end
-    end
+  #     it "redirects to the promotion" do
+  #       promotion = Promotion.create! valid_attributes
+  #       put :update, {:id => promotion.to_param, :promotion => valid_attributes}, valid_session
+  #       expect(response).to redirect_to(promotion)
+  #     end
+  #   end
 
-    context "with invalid params" do
-      it "assigns the promotion as @promotion" do
-        promotion = Promotion.create! valid_attributes
-        put :update, {:id => promotion.to_param, :promotion => invalid_attributes}, valid_session
-        expect(assigns(:promotion)).to eq(promotion)
-      end
+  #   context "with invalid params" do
+  #     it "assigns the promotion as @promotion" do
+  #       promotion = Promotion.create! valid_attributes
+  #       put :update, {:id => promotion.to_param, :promotion => invalid_attributes}, valid_session
+  #       expect(assigns(:promotion)).to eq(promotion)
+  #     end
 
-      it "re-renders the 'edit' template" do
-        promotion = Promotion.create! valid_attributes
-        put :update, {:id => promotion.to_param, :promotion => invalid_attributes}, valid_session
-        expect(response).to render_template("edit")
-      end
-    end
-  end
+  #     it "re-renders the 'edit' template" do
+  #       promotion = Promotion.create! valid_attributes
+  #       put :update, {:id => promotion.to_param, :promotion => invalid_attributes}, valid_session
+  #       expect(response).to render_template("edit")
+  #     end
+  #   end
+  # end
 
-  describe "DELETE #destroy" do
-    it "destroys the requested promotion" do
-      promotion = Promotion.create! valid_attributes
-      expect {
-        delete :destroy, {:id => promotion.to_param}, valid_session
-      }.to change(Promotion, :count).by(-1)
-    end
+  # describe "DELETE #destroy" do
+  #   it "destroys the requested promotion" do
+  #     promotion = Promotion.create! valid_attributes
+  #     expect {
+  #       delete :destroy, {:id => promotion.to_param}, valid_session
+  #     }.to change(Promotion, :count).by(-1)
+  #   end
 
-    it "redirects to the promotions list" do
-      promotion = Promotion.create! valid_attributes
-      delete :destroy, {:id => promotion.to_param}, valid_session
-      expect(response).to redirect_to(promotions_url)
-    end
-  end
+  #   it "redirects to the promotions list" do
+  #     promotion = Promotion.create! valid_attributes
+  #     delete :destroy, {:id => promotion.to_param}, valid_session
+  #     expect(response).to redirect_to(promotions_url)
+  #   end
+  # end
 
 end
