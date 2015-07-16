@@ -33,11 +33,11 @@ class Order < ActiveRecord::Base
           item_type: 'product',
           iid: Item.last_iid(owner) + 1,
           data: {
-            product_id: promotion.product_id,
-            image: {
-              avatar_url: promotion.image_url,
-              preview_url: promotion.preview_url
-            }
+            product_id: promotion.product_id
+          },
+          image: {
+            avatar_url: promotion.image_url,
+            preview_url: promotion.preview_url
           }
         })
     end

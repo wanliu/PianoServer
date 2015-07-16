@@ -34,11 +34,10 @@ module ThumbImages
 
   def _generate_thumbimages(association, owner, options)
     association = [association] unless association.is_a?(ActiveRecord::Associations::CollectionProxy)
-    association.each do |item|
+    urls = association.map do |item|
       attribute_name = options[:field]
-      image = item.send(attribute_name) || {}
+      image = (item.send(attribute_name) || {}).with_indifferent_access
       url = image[:avatar_url] || image[:preview_url] 
-      pp url
     end
   end
 
