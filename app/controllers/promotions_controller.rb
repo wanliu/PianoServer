@@ -26,9 +26,8 @@ class PromotionsController < ApplicationController
         supplier_id: @shop.id, 
         buyer_id: current_anonymous_or_user.id, 
         bid: bid
-      }) do |order|
-        order.items.build_with_promotion(@promotion)
-      end
+      })
+    @order.items.add_promotion(@promotion)
     # @order = 
   end
 

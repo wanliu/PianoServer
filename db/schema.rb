@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150715035526) do
+ActiveRecord::Schema.define(version: 20150716050531) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,11 +21,11 @@ ActiveRecord::Schema.define(version: 20150715035526) do
     t.integer  "itemable_id"
     t.string   "itemable_type"
     t.string   "title"
-    t.hstore   "data"
+    t.json     "data",                                   default: {}, null: false
     t.integer  "iid"
     t.string   "item_type"
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
+    t.datetime "created_at",                                          null: false
+    t.datetime "updated_at",                                          null: false
     t.hstore   "image"
     t.decimal  "price",         precision: 15, scale: 2
     t.decimal  "amount",        precision: 15, scale: 8
