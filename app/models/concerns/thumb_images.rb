@@ -39,6 +39,8 @@ module ThumbImages
       image = (item.send(attribute_name) || {}).with_indifferent_access
       url = image[:avatar_url] || image[:preview_url] 
     end
+
+    CombinationImagesJob.perform_later owner, urls, options.to_json
   end
 
   def _thumbs_association(name)
