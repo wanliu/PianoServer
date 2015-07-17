@@ -10,9 +10,11 @@
 
 	.chat-order {
 		padding-left: 120px;
-
+		min-height: 120px;
+		
 		.chat-order-image {
-			float: left;
+			position: absolute;
+			left: 10px;
 			width: 100px;
 			height: 100px;
 		}

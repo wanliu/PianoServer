@@ -1,8 +1,8 @@
 module CombinationImages
 
-  def composite_images(filename, image_urls, options = { "size" => { "width" => 100, "height" => 100}})
+  def composite_images1(filename, image_paths, options = { "size" => { "width" => 100, "height" => 100}})
 
-    rows       = cols = current_vector(image_urls.count)
+    rows       = cols = current_vector(image_paths.count)
     space      = 1
     width      = options["size"]["width"]
     height     = options["size"]["height"]
@@ -10,8 +10,8 @@ module CombinationImages
     sub_height = (height + space) / cols
     size       = "#{sub_width}x#{sub_height}"
 
-    images = image_urls.map do |url| 
-      MiniMagick::Image.new(url) do |b|
+    images = image_paths.map do |path| 
+      MiniMagick::Image.new(path) do |b|
         b.resize size
       end
     end
@@ -30,9 +30,8 @@ module CombinationImages
     results.write(filename)
   end
 
-  def composite_images2(filename, image_urls, options = { "size" => { "width" => 100, "height" => 100}})
-
-    rows       = cols = current_vector(image_urls.count)
+  def composite_images2(filename, image_paths, options = { "size" => { "width" => 100, "height" => 100}})
+    rows       = cols = current_vector(image_paths.count)
     space      = 1
     width      = options["size"]["width"]
     height     = options["size"]["height"]
@@ -41,14 +40,45 @@ module CombinationImages
     size       = "#{sub_width}x#{sub_height}"
 
     MiniMagick::Tool::Montage.new do |montage|
-      image_urls.each do |url|
-        montage << url
+      image_paths.each do |path|
+        montage << path
       end
       montage.tile "#{rows}x#{cols}"
       montage.geometry "#{size}+#{space}+#{space}"
-      # montage.background "#dddddd"
+      # montage << "-background #dddddd"
       montage << filename
     end
+  end
+
+  def composite_images3(filename, image_paths, options = { "size" => { "width" => 100, "height" => 100}})
+    rows        = cols = current_vector(image_paths.count)
+    space       = image_paths.count ? 1 : 0
+    width       = options["size"]["width"]
+    height      = options["size"]["height"]
+    sub_width   = width / cols
+    sub_height  = height / rows
+    real_width  = (width - ((cols + 1) * space)) / cols
+    real_height = (height - ((rows + 1) * space)) / rows
+    size        = "#{real_width}x#{real_height}"
+
+    MiniMagick::Tool::Convert.new do |convert|
+      convert.size "#{width}x#{height}"
+      convert.xc '#ddd'
+      (rows * cols).times do |i|
+        path = image_paths[i]
+        x = (i % cols) * sub_width + space
+        y = (i / rows) * sub_height + space
+        convert << (path.nil? ? "xc:#ccc" : path)
+        convert.geometry "#{size}+#{x}+#{y}"
+        convert.composite
+        # convert.draw "'image over #{x},#{y} #{sub_width},#{sub_width} #{path}'"
+      end
+      convert << filename
+    end
+
+    # alias composite_images composite_images3
+    # alias_method :composite_images, :composite_images3
+    # alias :comp
   end
 
   def concat_images(images, &block)

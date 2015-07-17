@@ -1,4 +1,5 @@
 class PromotionsController < ApplicationController
+  include DefaultAssetHost
   before_action :set_promotion, only: [:show, :update, :destroy, :chat]
 
   respond_to :json, :html

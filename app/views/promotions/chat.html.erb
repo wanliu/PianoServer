@@ -4,6 +4,7 @@
 
 <div class="chat-list">
   <div class="chat-order">
+    <%= image_tag @order.avatar_url, class: "chat-order-image" %>
     <h2><%= @order.title %></h2>
     <%= @order.id %>
   </div>  

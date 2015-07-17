@@ -3,9 +3,10 @@ module ThumbImages
 
   included do 
     include DynamicAssociationCallback
-    cattr_accessor :thumb_association_options
+    cattr_accessor :thumb_association_options, :thumbimages_asset_host
 
     @@thumb_association_options = {}
+
   end
 
   module ClassMethods
@@ -41,6 +42,7 @@ module ThumbImages
     end
 
     store_field = options[:store_field] || options[:field]
+    pp task_option(store_field)
     CombinationImagesJob.perform_later owner, urls, task_option(store_field)
   end
 
@@ -48,7 +50,8 @@ module ThumbImages
     {
       "store_field" => store_field.to_s,
       "size" => size,
-      "filename" => filename
+      "filename" => filename,
+      "asset_path" => self.class.thumbimages_asset_host || Thread.current[:default_asset_host]
     }
   end
 
@@ -56,4 +59,6 @@ module ThumbImages
     self.thumb_association_options[name]
     # send(self.)
   end
+
+
 end

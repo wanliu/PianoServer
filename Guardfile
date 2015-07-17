@@ -5,7 +5,7 @@
 directories %w(app lib config spec)
 
 ## Uncomment to clear the screen before every task
-# clearing :on
+clearing :on
 
 ## Guard internally checks for changes in the Guardfile and exits.
 ## If you want Guard to automatically start up again, run guard in a
@@ -39,7 +39,7 @@ directories %w(app lib config spec)
 # zeus: false                          # enables zeus gem.
 # CLI: 'rails server'                  # customizes runner command. Omits all options except `pid_file`!
 
-guard 'rails' do
+guard 'rails', host: '0.0.0.0' do
   watch('Gemfile.lock')
   watch(%r{^(config|lib)/.*})
 end
@@ -95,4 +95,15 @@ guard :rspec, cmd: "bundle exec rspec" do
   watch(%r{^spec/acceptance/steps/(.+)_steps\.rb$}) do |m|
     Dir[File.join("**/#{m[1]}.feature")][0] || "spec/acceptance"
   end
+end
+
+### Guard::Sidekiq
+#  available options:
+#  - :verbose
+#  - :queue (defaults to "default") can be an array
+#  - :concurrency (defaults to 1)
+#  - :timeout
+#  - :environment (corresponds to RAILS_ENV for the Sidekiq worker)
+guard 'sidekiq', :environment => 'development' do
+  watch(%r{^app/jobs/(.+)\.rb$})
 end

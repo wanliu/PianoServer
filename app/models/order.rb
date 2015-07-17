@@ -1,5 +1,7 @@
 class Order < ActiveRecord::Base
   include ThumbImages
+  store_accessor :image, :avatar_url
+
   MIN_AMOUNT = 6
 
   belongs_to :user

@@ -13,7 +13,7 @@ RSpec.describe CombinationImages, type: :job do
   let(:images_urls) { [image_1, image_2, image_3, image_4, image_5 ] }
 
 
-  it "generation images" do 
+  it "generation images algorithm 2" do 
     # time_str = Time.now.strftime("%Y_%m_%d_%H_%M_%S")
     # FileUtils.mkdir_p Rails.root.join('public/assets/generatings')
     # tmp = Tempfile.new(['test_' + time_str, '.jpg'], Rails.root.join('public/assets/generatings'))
@@ -24,4 +24,16 @@ RSpec.describe CombinationImages, type: :job do
     # `open #{tmp.path}`
     # tmp.unlink
   end
+
+  it "generation images algorithm 3" do 
+    # time_str = Time.now.strftime("%Y_%m_%d_%H_%M_%S")
+    # FileUtils.mkdir_p Rails.root.join('public/assets/generatings')
+    # tmp = Tempfile.new(['test_' + time_str, '.jpg'], Rails.root.join('public/assets/generatings'))
+    # puts "generating image file #{tmp.path}..."
+
+    composite_images3 Rails.root.join('public/assets/generatings/output.jpg'), images_urls
+    # tmp.close
+    # `open #{tmp.path}`
+    # tmp.unlink
+  end  
 end
