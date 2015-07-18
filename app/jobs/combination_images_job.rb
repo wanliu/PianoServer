@@ -15,7 +15,8 @@ class CombinationImagesJob < ActiveJob::Base
     asset_path = options["asset_path"] || "/"
     url = File.join(asset_path, path_2_url(output_filename))
     pp url
-    record.update_attributes image: { avatar_url: File.join(asset_path, path_2_url(output_filename)) }
+    record.update_attributes image: { avatar_url: File.join(asset_path, path_2_url(output_filename)).to_s }
+    record.create_status state: :done
 
   rescue Exception => ex
     puts ex.message

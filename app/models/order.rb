@@ -30,6 +30,8 @@ class Order < ActiveRecord::Base
       item = where("data -> 'product_id' = :product_id", product_id: promotion.product_id.to_s).first
 
       if item.nil?
+        owner.create_status state: :pending
+
         proxy_association.create({
           title: promotion.title,
           price: promotion.discount_price,
@@ -52,10 +54,12 @@ class Order < ActiveRecord::Base
     def owner
       proxy_association.owner
     end
-
   end
+  has_one :status, as: :stateable, dependent: :destroy
 
   thumb_association :items
+
+  delegate :state, to: :status, allow_nil: true
 
   scope :last_bid, -> (buyer_id) {
     where(buyer_id: buyer_id).order(:bid).last.try(:bid) || 0

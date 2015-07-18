@@ -3,8 +3,8 @@
 <%= content_for :module, :piano %>
 
 <div class="chat-list">
-  <div class="chat-order">
-    <%= image_tag @order.avatar_url, class: "chat-order-image" %>
+  <div class="chat-order" data-order-id="<%= @order.id %>">
+    <%= image_tag @order.avatar_url, class: "chat-order-image", "state-load-url" => status_of_promotion_path(@promotion, @order) %>
     <h2><%= @order.title %></h2>
     <%= @order.id %>
   </div>  
@@ -26,7 +26,8 @@
   $(function() {
     var ownerId = "<%= @shop.owner_id %>",
         ownId = window.userSocket.userId,
-        $list = $('.chat-list .chat-inner');
+        $list = $('.chat-list .chat-inner'),
+        StatusLoadUrl = window.StatusLoadUrl;
 
     userSocket.onPersonMessage(insertMessage);
 
@@ -73,8 +74,10 @@
         });      
       <% end %>        
       }
-
-
     });
+
+    // var orderId = $('.chat-order ').data("orderId");
+    var $img = $('.chat-order>img:first-child')[0];
+    var stateLoad = new StatusLoadUrl($img);
   });
 </script>

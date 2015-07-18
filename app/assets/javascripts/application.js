@@ -14,6 +14,8 @@
 //= require jquery_ujs
 //= require bootstrap-sprockets
 //= require turbolinks
+//= require nprogress
+//= require nprogress-turbolinks
 //= require lib/socketcluster-client
 //= require lib/get_local_user
 //= require lib/user-socket

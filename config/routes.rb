@@ -43,6 +43,7 @@ Rails.application.routes.draw do
     member do
       put "favorited", to: "promotions#favrited"
       get 'chat'
+      get 'status/:order_id', to: "promotions#status", as: :status_of
     end
   end
     
