@@ -3,17 +3,19 @@
 }*/
 $border-color: #CCCCCC;
 
+.promotion-wrap:nth-child(odd) {
+  border-right: 1px solid $border-color;
+  overflow: hidden;
+}
+
 .promotion {
   background: #FFFFFF;
   //margin-bottom: 10px;
   padding: 10px;
   position: relative;
+  overflow: hidden;
   //box-shadow: 0 2px 2px #DDDDDD;
   border-bottom: 1px solid $border-color;
-
-  &:nth-child(odd) {
-    border-right: 1px solid $border-color;
-  }
 
   img {
     height: auto;

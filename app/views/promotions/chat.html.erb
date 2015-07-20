@@ -70,14 +70,15 @@
           htmlAry = ['<div class="chat ', toAddClass, '"><img src="', avatar, '">',
             '<h2>', username, '</h2><div class="bubble ', toAddClass, '"><p>',
             content, '</p></div></div>'],
-          pathname = window.location.pathname;
+          pathname = window.location.pathname,
+          isChatPage = pathname === '/promotions/' + promotionId + '/chat';
 
-      if (pathname === '/promotions/' + promotionId + '/chat') {
+      if (isChatPage && (isOwnSend || senderId === ownerId)) {
         $(htmlAry.join('')).appendTo($list);
 
         resetScroll();
       } else {
-        window.noticeCenter.addNotice(senderId, username, promotionId);
+        window.noticeCenter.addNotice(senderId, username, message.orderId);
       }
     }
 
@@ -152,5 +153,6 @@
     // var orderId = $('.chat-order ').data("orderId");
     var $img = $('.chat-order>img:first-child')[0];
     var stateLoad = new StatusLoadUrl($img);
+    $(window).on('resize', resetScroll);
   });
 </script>

@@ -44,8 +44,12 @@ body {
     color: #FFFFFF;
     cursor: pointer;
 
-    &:hover{
+    span{
       text-decoration: underline;
+
+      &.ignore{
+        margin-left: 15px;
+      }
     }
   }
 }

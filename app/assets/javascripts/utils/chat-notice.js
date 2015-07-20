@@ -3,7 +3,7 @@
     this.noticeMap = {};
   }
 
-  NoticeCenter.prototype.addNotice = function(senderId, senderUsername, promotionId) {
+  NoticeCenter.prototype.addNotice = function(senderId, senderUsername, orderId) {
     var noticeContainer = $('.chat-notices'),
         noticeMap = this.noticeMap,
         noticeObj = this._findNoticeObj(senderId),
@@ -18,7 +18,7 @@
         notice = new Notice({
           'senderId': senderId,
           'container': this,
-          'promotionId': promotionId,
+          'orderId': orderId,
           'containment': noticeContainer,
           'senderUsername': senderUsername
         });
@@ -32,7 +32,7 @@
      }
    };
 
-  NoticeCenter.prototype.removeNotice = function(senderId, promotionId) {
+  NoticeCenter.prototype.removeNotice = function(senderId, orderId, redirect) {
     var noticeObj = this._findNoticeObj(senderId);
 
     if (noticeObj) {
@@ -42,7 +42,9 @@
       noticeObj = null;
     }
 
-    window.location.href = '/promotions/' + promotionId + '/chat';
+    if (redirect) {
+      window.location.href = '/chat/' + orderId;
+    }
   };
 
   NoticeCenter.prototype._findNoticeObj = function(senderId) {
@@ -52,7 +54,7 @@
   function Notice(options) {
     options = options || {};
 
-    if (!options.senderId || !options.promotionId || !options.containment || !options.senderUsername || !options.container) {
+    if (!options.senderId || !options.orderId || !options.containment || !options.senderUsername || !options.container) {
       return;
     }
 
@@ -66,13 +68,17 @@
         containment = options.containment,
         senderId = options.senderId,
         senderUsername = options.senderUsername,
-        promotionId = options.promotionId;
+        orderId = options.orderId;
         
-    this.element = $('<div class="chat-notice">您有<span class="unreadCount">1</span>条来自'+ senderUsername +'的未读聊天消息</div>')
-      .click(function() {
-        container.removeNotice(senderId, promotionId);
-      })
+    this.element = $('<div class="chat-notice"><span class="show-notice">您有<span class="unreadCount">1</span>条来自' + 
+      senderUsername +'的未读聊天消息</span><span class="ignore">忽略</span></div>')
       .appendTo(containment);
+
+    this.element.find('.show-notice').click(function() {
+      container.removeNotice(senderId, orderId, true);
+    }).end().find('.ignore').click(function() {
+      container.removeNotice(senderId, orderId, false);
+    });
   }
 
   Notice.prototype.destroy = function() {
