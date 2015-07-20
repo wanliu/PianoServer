@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150701084537) do
+ActiveRecord::Schema.define(version: 20150718031822) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,22 +21,27 @@ ActiveRecord::Schema.define(version: 20150701084537) do
     t.integer  "itemable_id"
     t.string   "itemable_type"
     t.string   "title"
-    t.hstore   "data"
+    t.jsonb    "data",                                   default: {}, null: false
     t.integer  "iid"
     t.string   "item_type"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
-    t.hstore   "image"
+    t.datetime "created_at",                                          null: false
+    t.datetime "updated_at",                                          null: false
+    t.jsonb    "image",                                  default: {}, null: false
+    t.decimal  "price",         precision: 15, scale: 2
+    t.decimal  "amount",        precision: 15, scale: 8
+    t.decimal  "sub_total",     precision: 16, scale: 2
+    t.integer  "unit"
+    t.string   "unit_title"
   end
 
   create_table "logs", force: :cascade do |t|
     t.integer  "loggable_id"
     t.string   "loggable_type"
     t.integer  "operator_id"
-    t.hstore   "data"
+    t.jsonb    "data",          default: {}, null: false
     t.string   "action"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
   end
 
   create_table "messages", force: :cascade do |t|
@@ -46,12 +51,12 @@ ActiveRecord::Schema.define(version: 20150701084537) do
     t.string   "type"
     t.integer  "from_id"
     t.integer  "reply_id"
-    t.hstore   "mentions"
+    t.jsonb    "mentions",      default: {},    null: false
     t.boolean  "read",          default: false
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
     t.integer  "image_ref_id"
-    t.hstore   "image"
+    t.jsonb    "image",         default: {},    null: false
   end
 
   create_table "notifies", force: :cascade do |t|
@@ -60,8 +65,8 @@ ActiveRecord::Schema.define(version: 20150701084537) do
     t.string   "text"
     t.string   "target"
     t.string   "type"
-    t.hstore   "image"
-    t.hstore   "data"
+    t.jsonb    "image",         default: {},    null: false
+    t.jsonb    "data",          default: {},    null: false
     t.boolean  "read",          default: false
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
@@ -70,15 +75,18 @@ ActiveRecord::Schema.define(version: 20150701084537) do
   create_table "orders", force: :cascade do |t|
     t.integer  "buyer_id"
     t.integer  "seller_id"
-    t.integer  "suppiler_id"
+    t.integer  "supplier_id"
     t.string   "send_address"
     t.string   "delivery_address"
     t.string   "contacts"
     t.integer  "business_type"
     t.integer  "bid"
     t.integer  "sid"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
+    t.string   "title"
+    t.decimal  "total",            precision: 18, scale: 2
+    t.jsonb    "image"
   end
 
   create_table "rooms", force: :cascade do |t|
@@ -87,9 +95,17 @@ ActiveRecord::Schema.define(version: 20150701084537) do
     t.string   "name"
     t.integer  "target_id"
     t.integer  "owner_id"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
-    t.hstore   "data"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.jsonb    "data",          default: {}, null: false
+  end
+
+  create_table "statuses", force: :cascade do |t|
+    t.integer  "stateable_id"
+    t.string   "stateable_type"
+    t.integer  "state"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
   end
 
   create_table "users", force: :cascade do |t|
@@ -108,7 +124,7 @@ ActiveRecord::Schema.define(version: 20150701084537) do
     t.string   "mobile"
     t.string   "username"
     t.string   "authentication_token"
-    t.hstore   "image"
+    t.jsonb    "image",                  default: {}, null: false
     t.string   "nickname"
   end
 

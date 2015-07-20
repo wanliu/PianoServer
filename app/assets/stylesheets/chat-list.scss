@@ -6,7 +6,25 @@
 	left: 0;
 	right: 0;
 	overflow: auto;
-	padding: 10px;
+
+
+	.chat-order {
+		padding-left: 120px;
+		min-height: 120px;
+		
+		.chat-order-image {
+			position: absolute;
+			left: 10px;
+			width: 100px;
+			height: 100px;
+		}
+	}
+
+
+	.chat-inner {
+		padding: 10px;
+	}
+	// padding: 10px;
 
 	.chat {
 		width: 100%;

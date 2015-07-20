@@ -33,6 +33,7 @@ module PianoServer
       end
     end
 
+    config.active_job.queue_adapter = :sidekiq
     config.api_only = false
   end
 end
