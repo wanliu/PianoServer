@@ -1,0 +1,24 @@
+
+<div class="line-items">
+  <div class='text-center'>
+    本店主营系列
+  </div>
+  <ul style='padding-left: 0;'>
+    <% @items.each_slice(9) do |items| %>
+      <div class='groups'>
+        <% items.each_with_index do |item, index| %>
+        <a href='/items/<%= item.id %>'>
+          <% class_name = 'text-center line-item' %>
+          <% class_name << ' first-row' if index < 3 %>
+          <% class_name << ' first-col' if index % 3 == 0 %>
+          <li class='<%= class_name %>'>
+            <%= item.name %>
+          </li>
+        </a>
+        <% end %>
+        <div style='clear: both;'></div>
+      </div>
+    <% end %>
+  </ul>
+  <div style='clear: both;'></div>
+</div>

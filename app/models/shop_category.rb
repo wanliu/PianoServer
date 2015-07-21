@@ -1,17 +1,18 @@
 require 'active_resource'
+require 'active_support/json'
 
-class ItemCollection < ActiveResource::Collection
+module ShopCategoryJsonFormat
   include ActiveResource::Formats::JsonFormat
-  # extend self
+  extend self
 
   def decode(_json)
     json = ActiveSupport::JSON.decode(_json)
-    shop_json = json["items"]
+    shop_json = json["shop_categories"]
     shop_json
   end
 end
 
-class Item < ActiveResource::Base
+class ShopCategory < ActiveResource::Base
   self.site = Settings.wanliu.backend
-  self.collection_parser = ItemCollection
+  self.format = ShopCategoryJsonFormat
 end

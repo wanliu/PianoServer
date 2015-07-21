@@ -5,7 +5,31 @@
 <% content_for :module, :shop %>
 
 <div class="brand-board">
-	<%= image_tag @shop.image.src, class: 'shop-logo' %>
+	<%= image_tag @shop.image.try(:src), class: 'shop-logo' %>
 	<h2><%= @shop.name %></h2>
 
+</div>
+
+<div class="line-items">
+  <div class='text-center'>
+    本店主营系列
+  </div>
+  <ul>
+    <% @shop_categories.each_slice(9) do |categories| %>
+      <div class='groups'>
+        <% categories.each_with_index do |cate, index| %>
+          <%= link_to shop_category_path(cate) do %>
+            <% class_name = 'text-center line-item' %>
+            <% class_name << ' first-row' if index < 3 %>
+            <% class_name << ' first-col' if index % 3 == 0 %>
+            <li class='<%= class_name %>'>
+              <%= cate.name %>
+            </li>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+    <div style='clear: both;'></div>
+  </ul>
+  <div style='clear: both;'></div>
 </div>

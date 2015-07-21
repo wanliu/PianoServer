@@ -12,3 +12,35 @@
 		height: 100px;
 	}
 }
+
+.line-items {
+  padding: 20px;
+  margin-bottom: 20px;
+  
+  ul {
+    padding-left: 0;
+
+    .groups {
+      margin: 20px 0;
+
+      li.line-item {
+        display: block;
+        float: left;
+        border-bottom: 1px solid #e1e1e1;
+        border-right: 1px solid #e1e1e1;
+        width: 33%;
+        font-size: 12px;
+        height: 50px;
+        line-height: 50px;
+
+        &.first-row {
+          border-top: 1px solid #e1e1e1;
+        }
+
+        &.first-col {
+          border-left: 1px solid #e1e1e1;
+        }
+      }
+    }
+  }
+}

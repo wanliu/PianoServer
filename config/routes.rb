@@ -47,6 +47,7 @@ Rails.application.routes.draw do
   end
     
   resources :shops, only: [ :show ]
+  resources :shop_categories, only: [ :index, :show ]
   ## shop route
   #
   match ':shop_name', :to => 'shops#show_by_name', via: [ :get ]
