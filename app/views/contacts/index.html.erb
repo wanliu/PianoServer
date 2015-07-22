@@ -1,0 +1,24 @@
+<h1>申请开店信息列表</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>用户姓名</th>
+      <th>用户手机号码</th>
+      <th>申请信息</th>
+      <th></th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @contacts.each do |contact| -%>
+      <tr id="<%= dom_id(contact)%>">
+        <td><%= contact.name %></td>
+        <td><%= contact.mobile %></td>
+        <td><%= contact.message %></td>
+        <td><%= link_to "删除", contact_path(contact), method: "delete", data: {confirm: "确定删除?"} %></td>
+      </tr>
+    <% end -%>
+  </tbody>
+</table>
