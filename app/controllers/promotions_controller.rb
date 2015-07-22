@@ -29,7 +29,6 @@ class PromotionsController < ApplicationController
         bid: bid
       })
     @order.items.add_promotion(@promotion)
-    pp @order.items
     # @order = 
   end
 
