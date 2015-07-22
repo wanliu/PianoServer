@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :contacts, only: [:new, :index, :show, :create, :destroy]
+  resources :contacts, only: [:new, :show, :create, :destroy]
 
   concern :messable do
     resources :messages
@@ -22,12 +22,13 @@ Rails.application.routes.draw do
   # end
 
   devise_for :users, controllers: {
-      sessions: 'users/sessions',
-      registrations: 'users/registrations'
-    }
+    sessions: 'users/sessions',
+    registrations: 'users/registrations'
+  }
 
   namespace :admin do
     resources :dashboards
+    get 'contacts' => 'contacts#index'
   end
 
   namespace :api do

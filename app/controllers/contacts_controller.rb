@@ -1,9 +1,5 @@
 class ContactsController < ApplicationController
 
-  def index
-    @contacts = Contact.all
-  end
-
   def new
     @contact = Contact.new
   end
@@ -20,6 +16,7 @@ class ContactsController < ApplicationController
   def destroy
     @contact = Contact.find(params[:id])
     @contact.destroy
-    redirect_to contacts_url, notice: '成功删除了提交信息.'
+
+    redirect_to admin_contacts_url, notice: '成功删除了提交信息.'
   end
 end
