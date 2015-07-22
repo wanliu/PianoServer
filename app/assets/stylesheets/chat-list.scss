@@ -23,6 +23,81 @@
 
 	.chat-inner {
 		padding: 10px;
+    display: none;
+
+    .item-preview-url{
+      width: 100px;
+      height: 100px;
+    }
+
+    h4, p {
+      word-break: break-all;
+    }
+
+    p{
+      position: relative;
+
+      .inventory{
+        position: absolute;
+        right: 0;
+        top: 0;
+        line-height: 22px;
+      }
+    }
+
+    .input-wrap{
+      display: inline-block;
+      position: relative;
+      padding: 0 20px;
+
+      input[type="text"]{
+        width: 35px;
+        text-align: center;
+        display: inline-block;
+        border: 1px solid #CCCCCC;
+      }
+
+      .icon-wrap{
+        position: absolute;
+        top: 0;
+        width: 20px;
+        line-height: 20px;
+        text-align: center;
+        border-radius: 0;
+        padding: 0;
+
+
+        &.left{
+          left: 0;
+          border-right: none;
+        }
+
+        &.right{
+          right: 0;
+          border-left: none;
+        }
+      }
+    }
+
+    .media{
+      .media-right{
+        display: table-cell;
+        width: 30px;
+        font-size: 15px;
+
+        .remove-btn{
+          cursor: pointer;
+
+          &:hover{
+            color: #FF2B2B;
+          }
+        }
+      }
+
+      .media-body{
+        width: auto;
+      }
+    }
 	}
 	// padding: 10px;
 

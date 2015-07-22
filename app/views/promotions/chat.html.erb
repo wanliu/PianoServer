@@ -9,6 +9,46 @@
     <%= @order.id %>
   </div>  
   <div class="chat-inner" >
+    <ul class="list-group" order-id="<%= @order.id%>">
+    <% @order.items.each do |item| %>
+      <li class="list-group-item" item-id= "<%= item.id %>">
+        <div class="media">
+          <div class="media-left media-middle">
+            <a href="javascript:void(0);">
+              <%= image_tag item.image['preview_url'], class: 'item-preview-url' %>
+            </a>
+          </div>
+          <div class="media-body media-middle">
+            <h4><%= item.title %></h4>
+            <p>单价: <%= number_to_currency(item.price, unit:'￥') %></p>
+            <p>数量:
+              <span class="input-wrap">
+                <button class="btn btn-default icon-wrap left" >
+                  <span class="glyphicon glyphicon-minus"></span>
+                </button>
+                <input type="text" value="<%= number_to_human(item.amount) %>" >
+                <button class="btn btn-default icon-wrap right">
+                  <span class="glyphicon glyphicon-plus"></span>
+                </button>
+              </span>
+
+              <span class="inventory">库存: <%= item.data['product_inventory'] %>件</span>
+            </p>
+          </div>
+          <div class="media-right media-middle">
+            <span class="glyphicon glyphicon-trash remove-btn" data-toggle="tooltip" data-placement="bottom" title="删除"></span>
+          </div>
+        </div>
+      </li>
+    <% end %>
+    <% if @order.items.length > 0 %>
+      <li class="list-group-item disabled">
+        <div class="">
+          此订单中共有<%= @order.items.length %>种商品,合计<%= number_to_currency(@order.total, unit:'￥') %>元
+        </div>
+      </li>
+    <% end %>
+    </ul>
   </div>
 </div>
 <nav class="chat-navbar navbar navbar-default navbar-fixed-bottom">
@@ -17,7 +57,7 @@
       <button type="submit" class="btn btn-default pull-right">发送</button>
       <div class="form-group">
         <input type="text" class="form-control" placeholder="输入您要说的话..." name="chat-text">
-      </div>
+      </div> 
     </form>
   </div>
 </nav>
@@ -25,17 +65,20 @@
 <script type="text/javascript">
   $(function() {
     var ownerId = "<%= @shop.owner_id %>",
-        StatusLoadUrl = window.StatusLoadUrl;
+        StatusLoadUrl = window.StatusLoadUrl,
         promotionId = "<%= @promotion.id %>",
         userSocket = window.userSocket,
         ownId = userSocket.userId,
         channelId = userSocket.getUserChannelId(),
         chatChannelId = 'p' + ownerId,
         $list = $('.chat-list'),
+        MIN_AMOUNT = 6,
         fromTime;
 
     userSocket.offPersonMessage(insertMessage);
     userSocket.onPersonMessage(insertMessage);
+
+    $('[data-toggle="tooltip"]').tooltip();
 
     userSocket.emit('getChannelMessage', {
       'channelId': chatChannelId,
@@ -154,5 +197,50 @@
     var $img = $('.chat-order>img:first-child')[0];
     var stateLoad = new StatusLoadUrl($img);
     $(window).on('resize', resetScroll);
+
+    $list.on('click', '.icon-wrap.left', function() {
+      var $this = $(this),
+          $li = $this.parents('li:first'),
+          itemId = $li.attr('item-id'),
+          orderId = $li.parent().attr('order-id'),
+          $input = $this.siblings('input:first'),
+          amount = $.trim($input.val());
+
+      if (isNaN(amount) || +amount <= MIN_AMOUNT) {
+        return;
+      }
+
+      amount = +amount - 1;
+
+      $input.val(amount);
+
+      //send request to modify item amount
+    }).on('click', '.icon-wrap.right', function() {
+      var $this = $(this),
+          $li = $this.parents('li:first'),
+          itemId = $li.attr('item-id'),
+          orderId = $li.parent().attr('order-id'),
+          $input = $this.siblings('input:first'),
+          amount = $.trim($input.val());
+
+      if (isNaN(amount)) {
+        return;
+      }
+
+      amount = +amount + 1;
+
+      $input.val(amount);
+      //check whether amount+1 is greater than inventory
+    }).on('click', '.remove-btn', function() {
+      var $this = $(this),
+          $li = $this.parents('li:first'),
+          itemId = $li.attr('item-id'),
+          orderId = $li.parent().attr('order-id');
+
+      $li.remove();
+      //send request to remove item from order
+    }).on('click', '.chat-order img', function() {
+      $('.chat-inner').toggle();
+    });
   });
 </script>

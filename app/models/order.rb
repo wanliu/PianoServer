@@ -18,6 +18,7 @@ class Order < ActiveRecord::Base
         iid: Item.last_iid(owner) + 1,
         data: {
           product_id: promotion.product_id,
+          product_inventory: promotion.product_inventory,
           image: {
             avatar_url: promotion.image_url,
             preview_url: promotion.preview_url
@@ -39,7 +40,8 @@ class Order < ActiveRecord::Base
           item_type: 'product',
           iid: Item.last_iid(owner) + 1,
           data: {
-            product_id: promotion.product_id
+            product_id: promotion.product_id,
+            product_inventory: promotion.product_inventory
           },
           image: {
             avatar_url: promotion.image_url,
