@@ -40,11 +40,12 @@ class ApplicationController < ActionController::Base
 
   def set_meta_user_data
     if current_user.present?
-      set_meta_tags userId: current_user.wid, chatToken: current_user.chat_token 
+      set_meta_tags chatId: current_user.wid, chatToken: current_user.chat_token 
     else 
-      set_meta_tags userId: anonymous.wid, chatToken: anonymous.chat_token
+      set_meta_tags chatId: anonymous.wid, chatToken: anonymous.chat_token
     end
 
     set_meta_tags pusherHost: Settings.pusher.socket_host, pusherPort: Settings.pusher.socket_port
+    set_meta_tags user: current_user.as_json(include_methods: :avatar_url )
   end
 end

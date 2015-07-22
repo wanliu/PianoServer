@@ -9,7 +9,7 @@
     <%= @order.id %>
   </div>  
   <div class="chat-inner" >
-    <ul class="list-group" order-id="<%= @order.id%>">
+    <ul class="chat-items list-group" order-id="<%= @order.id%>">
     <% @order.items.each do |item| %>
       <li class="list-group-item" item-id= "<%= item.id %>">
         <div class="media">
@@ -66,6 +66,7 @@
   $(function() {
     var ownerId = "<%= @shop.owner_id %>",
         StatusLoadUrl = window.StatusLoadUrl,
+        MiniTable = window.MiniTable,
         promotionId = "<%= @promotion.id %>",
         userSocket = window.userSocket,
         ownId = userSocket.userId,
@@ -239,8 +240,8 @@
 
       $li.remove();
       //send request to remove item from order
-    }).on('click', '.chat-order img', function() {
-      $('.chat-inner').toggle();
     });
+
+    var miniTable = new MiniTable($('.chat-order'), $('.chat-items'));
   });
 </script>
