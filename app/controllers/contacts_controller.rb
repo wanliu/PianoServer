@@ -17,6 +17,10 @@ class ContactsController < ApplicationController
     @contact = Contact.find(params[:id])
     @contact.destroy
 
-    redirect_to admin_contacts_url, notice: '成功删除了提交信息.'
+    respond_to do |format|
+      format.html { redirect_to admin_contacts_url, notice: '成功删除了提交信息.' }
+      format.json { head :non_content }
+      format.js
+    end
   end
 end

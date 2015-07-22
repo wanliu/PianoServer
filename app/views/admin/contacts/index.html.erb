@@ -17,7 +17,7 @@
         <td><%= contact.name %></td>
         <td><%= contact.mobile %></td>
         <td><%= contact.message %></td>
-        <td><%= link_to "删除", contact_path(contact), method: "delete", data: {confirm: "确定删除?"} %></td>
+        <td><%= link_to "删除", contact_path(contact), method: "delete", data: {confirm: "确定删除?"}, remote: true %></td>
       </tr>
     <% end -%>
   </tbody>
