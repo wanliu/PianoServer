@@ -38,21 +38,29 @@ class @MetaDataParser
 					parent[name] = @convertDataType(value)
 				else
 					parent[name] = {}
+					parent = parent[name]	
 
 	writeMeta: (obj, key, value) ->
 		obj[key] = value
 
 	convertDataType: (value) ->
 		return null	unless value?
+		ret = null
 
 		reISO = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.{0,1}\d*))(?:Z|(\+|-)([\d|:]*))?$/;
-		a = reISO.exec(value);
-		if a
-            new Date(value)
-        else if typeof value == 'string'
-        	value
-        else
-        	JSON.parse(value)
+		try 
+			a = reISO.exec(value);
+			ret = if a
+				new Date(value)
+			else if value.trim() == ''
+				null
+			else
+				JSON.parse(value)
+		catch 
+			ret = value
+			
+		ret 
+
 
 	# read: (obj, key) ->
 
