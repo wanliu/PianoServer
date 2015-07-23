@@ -46,6 +46,7 @@ class ApplicationController < ActionController::Base
     end
 
     set_meta_tags pusherHost: Settings.pusher.socket_host, pusherPort: Settings.pusher.socket_port
-    set_meta_tags user: current_user.as_json(include_methods: :avatar_url )
+    set_meta_tags user: current_anonymous_or_user.as_json(include_methods: :avatar_url )
+    set_meta_tags debug: Settings.debug
   end
 end
