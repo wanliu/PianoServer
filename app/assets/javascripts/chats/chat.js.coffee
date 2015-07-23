@@ -1,5 +1,5 @@
 #= require lib/user-socket
-#
+#= require lib/metadata
 class @Chat
 
     @defaultsOptions: {
@@ -19,6 +19,7 @@ class @Chat
         
         @boundOnMessage = @onMessage.bind(@)
         @userSocket.onPersonMessage(@boundOnMessage)
+        @metadata = window.metadata
 
         $(document).bind 'page:before-unload', =>
             @_clearEventListners()
@@ -82,7 +83,8 @@ class @Chat
         @resetScroll() if @options.isMessageScroll
 
     _isOwnMessage: (message) ->
-
+        metadata.user.id == message.senderId
+        
     _insertLoadMore: () ->
 
 
