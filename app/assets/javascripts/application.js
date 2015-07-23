@@ -19,4 +19,5 @@
 //= require lib/socketcluster-client
 //= require lib/get_local_user
 //= require lib/user-socket
+//= require china_city/jquery.china_city
 //= require_tree .

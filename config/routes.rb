@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  mount ChinaCity::Engine => '/china_city'  
+
   concern :messable do
     resources :messages
   end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150718031822) do
+ActiveRecord::Schema.define(version: 20150723061003) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,6 +32,19 @@ ActiveRecord::Schema.define(version: 20150718031822) do
     t.decimal  "sub_total",     precision: 16, scale: 2
     t.integer  "unit"
     t.string   "unit_title"
+  end
+
+  create_table "locations", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "province_id"
+    t.integer  "city_id"
+    t.integer  "region_id"
+    t.string   "road"
+    t.string   "zipcode"
+    t.string   "contact"
+    t.string   "contact_phone"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
   end
 
   create_table "logs", force: :cascade do |t|
