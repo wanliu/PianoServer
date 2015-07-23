@@ -6,7 +6,6 @@ class Order < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :seller, class_name: 'User'
-  belongs_to :supplier, class_name: 'Shop'
 
   has_many :items, as: :itemable, dependent: :destroy do 
     def build_with_promotion(promotion)
@@ -57,6 +56,7 @@ class Order < ActiveRecord::Base
       proxy_association.owner
     end
   end
+
   has_one :status, as: :stateable, dependent: :destroy
 
   thumb_association :items
@@ -66,4 +66,8 @@ class Order < ActiveRecord::Base
   scope :last_bid, -> (buyer_id) {
     where(buyer_id: buyer_id).order(:bid).last.try(:bid) || 0
   }
+
+  def supplier
+    Shop.find(supplier_id)
+  end
 end
