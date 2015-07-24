@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  mount ChinaCity::Engine => '/china_city'  
   resources :contacts, only: [:new, :show, :create, :destroy]
 
   concern :messable do

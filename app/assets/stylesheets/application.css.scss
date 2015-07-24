@@ -29,6 +29,31 @@ body {
   background: #FFFFFF;
 }
 
+.chat-notices{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+
+  .chat-notice{
+    background: #333333;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    color: #FFFFFF;
+    cursor: pointer;
+
+    span{
+      text-decoration: underline;
+
+      &.ignore{
+        margin-left: 15px;
+      }
+    }
+  }
+}
+
 
 @media (max-width: 768px) {
   .navbar-fixed-top {

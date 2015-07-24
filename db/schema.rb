@@ -42,6 +42,19 @@ ActiveRecord::Schema.define(version: 20150722063821) do
     t.string   "unit_title"
   end
 
+  create_table "locations", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "province_id"
+    t.integer  "city_id"
+    t.integer  "region_id"
+    t.string   "road"
+    t.string   "zipcode"
+    t.string   "contact"
+    t.string   "contact_phone"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
   create_table "logs", force: :cascade do |t|
     t.integer  "loggable_id"
     t.string   "loggable_type"

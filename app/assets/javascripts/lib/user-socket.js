@@ -21,6 +21,15 @@
     this.personCallbacks.push(callback);
   }
 
+  UserSocket.prototype.offPersonMessage = function(callback) {
+    var callbacks = this.personCallbacks,
+        index = callbacks.indexOf(callback);
+
+    if (index > -1) {
+      callbacks.splice(index, 1);
+    }
+  }
+
   UserSocket.prototype.config = function (options) {
     this.socket = options.socket;
 
@@ -119,11 +128,13 @@
   }
 
   UserSocket.prototype.readyAndSubscribe = function () {
-    var _this = this;
+    var _this = this,
+        socket = this.socket;
+
     this.userChannelId = this.getUserChannelId();
     this.personChannelReady = true;
 
-    var personalChannel = this.socket.subscribe(this.userChannelId);
+    var personalChannel = socket.subscribe(this.userChannelId);
     personalChannel.watch(function (message) {
       _this.personCallbacks.forEach(function (callback) {
         callback(message);
@@ -131,11 +142,11 @@
     });
 
     this.eventListeners.forEach(function (args) {
-      socket.on.apply(_this.socket, args);
+      socket.on.apply(socket, args);
     });
 
     this.emiters.forEach(function (args) {
-      socket.emit.apply(_this.socket, args);
+      socket.emit.apply(socket, args);
     });
   }
 

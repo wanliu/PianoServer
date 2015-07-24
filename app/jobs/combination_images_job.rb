@@ -14,7 +14,6 @@ class CombinationImagesJob < ActiveJob::Base
     composite_images3 output_filename, image_files, options
     asset_path = options["asset_path"] || "/"
     url = File.join(asset_path, path_2_url(output_filename))
-    pp url
     record.update_attributes image: { avatar_url: File.join(asset_path, path_2_url(output_filename)).to_s }
     record.create_status state: :done
 
