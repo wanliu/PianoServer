@@ -14,18 +14,18 @@
   <div class='text-center'>
     本店主营系列
   </div>
-  <ul>
+  <ul class='shop-categories'>
     <% @shop_categories.each_slice(9) do |categories| %>
       <div class='groups'>
         <% categories.each_with_index do |cate, index| %>
-          <%= link_to shop_category_path(cate) do %>
             <% class_name = 'text-center line-item' %>
             <% class_name << ' first-row' if index < 3 %>
             <% class_name << ' first-col' if index % 3 == 0 %>
             <li class='<%= class_name %>'>
-              <%= cate.name %>
+              <%= link_to shop_category_path(cate), class: 'text-center' do %>
+                <%= cate.name %>
+              <% end %>
             </li>
-          <% end %>
         <% end %>
       </div>
     <% end %>
@@ -33,3 +33,4 @@
   </ul>
   <div style='clear: both;'></div>
 </div>
+

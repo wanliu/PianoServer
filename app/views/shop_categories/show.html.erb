@@ -3,18 +3,18 @@
   <div class='text-center'>
     本店主营系列
   </div>
-  <ul style='padding-left: 0;'>
+  <ul class='shop-categories'>
     <% @items.each_slice(9) do |items| %>
       <div class='groups'>
         <% items.each_with_index do |item, index| %>
-        <a href='/items/<%= item.id %>'>
           <% class_name = 'text-center line-item' %>
           <% class_name << ' first-row' if index < 3 %>
           <% class_name << ' first-col' if index % 3 == 0 %>
           <li class='<%= class_name %>'>
-            <%= item.name %>
+            <a href='/items/<%= item.id %>'>
+              <%= item.name %>
+            </a>
           </li>
-        </a>
         <% end %>
         <div style='clear: both;'></div>
       </div>
@@ -22,3 +22,43 @@
   </ul>
   <div style='clear: both;'></div>
 </div>
+
+<button class='fetch-items'>Fetch</button>
+
+<script type="text/template" id='template-shop-category'>
+  <div class='groups'>
+    {{ _.each(items, function (item, index) { }}
+      {{ class_name = 'text-center line-item' }}
+      {{ if (index < 3) class_name += ' first-row' }}
+      {{ if (index % 3 == 0) class_name += ' first-col'  }}
+      <li class='{{= class_name }}'>
+        <a href='/items/' + item.id>
+          {{= item.name }}
+        </a>
+      </li>
+    {{ }) }}
+    <div style='clear: both;'></div>
+  </div>
+</script>
+
+<script type="text/javascript">
+  var per = 9;
+  var page = 1;
+  var id = <%= @shop_category.id %>;
+  var all_fetched = <%= @items.length %> < per;
+  var template = _.template($('#template-shop-category').html());
+
+  $(function () {
+    $('button.fetch-items').click(function () {
+      if (all_fetched) return;
+
+      $.getJSON("/shop_categories/" + id + ".json?page=" + (page + 1) + "&per=9")
+        .success(function (data, status) {
+          all_fetched = data.length < per;
+          page += 1;
+          var html = template({ items: data });
+          $('ul.shop-categories').append(html);
+        });
+    });
+  })
+</script>

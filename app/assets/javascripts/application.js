@@ -17,4 +17,6 @@
 //= require lib/socketcluster-client
 //= require lib/get_local_user
 //= require lib/user-socket
+//= require lib/underscore
+//= require lib/underscore-template
 //= require_tree .

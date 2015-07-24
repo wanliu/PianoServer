@@ -125,6 +125,9 @@ GEM
     json (1.8.3)
     jwt (0.1.11)
       multi_json (>= 1.5)
+    kaminari (0.16.2)
+      actionpack (>= 3.0.0)
+      activesupport (>= 3.0.0)
     less (2.6.0)
       commonjs (~> 0.2.7)
     less-rails (2.6.0)
@@ -272,6 +275,7 @@ DEPENDENCIES
   jbuilder (~> 2.0)
   jquery-rails
   jwt
+  kaminari
   less-rails
   meta-tags
   mini_magick

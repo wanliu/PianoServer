@@ -48,6 +48,7 @@ Rails.application.routes.draw do
     
   resources :shops, only: [ :show ]
   resources :shop_categories, only: [ :index, :show ]
+  resources :items, only: [ :index, :show ]
   ## shop route
   #
   match ':shop_name', :to => 'shops#show_by_name', via: [ :get ]

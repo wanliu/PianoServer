@@ -29,9 +29,20 @@
         border-bottom: 1px solid #e1e1e1;
         border-right: 1px solid #e1e1e1;
         width: 33%;
-        font-size: 12px;
-        height: 50px;
-        line-height: 50px;
+        height: 80px;
+        overflow: hidden;
+        // line-height: 50px;
+
+        a {
+          // display: inline-block;
+          // line-height: 50px;
+          overflow: hidden;
+          width: 100%;
+          font-size: 12px;
+          height: 82px;
+          display: table-cell;
+          vertical-align: middle;
+        }
 
         &.first-row {
           border-top: 1px solid #e1e1e1;
