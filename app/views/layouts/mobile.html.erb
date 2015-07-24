@@ -48,16 +48,15 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <ul class="nav navbar-nav navbar-left">        
+        <ul class="nav navbar-nav navbar-left">
           <%= yield :back %>
         </ul>
         <%= link_to root_path, class: "navbar-brand" do %>
-          <%= content_for?(:title) ? yield(:title) : Settings.app.title %>          
+          <%= content_for?(:title) ? yield(:title) : Settings.app.title %>
         <% end %>
         <div class="navbar-collapse collapse navbar-responsive-collapse">
           <ul class="nav navbar-nav">
-            <li><%= link_to "Link1", "/path1"  %></li>
-            <li><%= link_to "Link2", "/path2"  %></li>
+            <li><%= link_to "关于我们", "about"  %></li>
             <li><%= link_to "二维码", "/qrcode" %></li>
             <li><div id="qrcode"></div></li>
           </ul>
@@ -75,13 +74,17 @@
 
       <footer>
         <span class="page-loading pull-right"></span>
-        <p><%= raw Settings.app.footer %></p>
-
+        <p><%= raw Settings.app.footer %> ver <%= PianoServer::VERSION unless Rails.env.production? %></p>
       </footer>
 
     </div> <!-- /container -->
     <script type="text/javascript">
       new QRCode(document.getElementById("qrcode"), '<%= request.url %>' );
+    </script>
+    <script type="text/javascript">
+      <% unless Rails.env.production? %>
+        console.log('development version: <%= PianoServer::VERSION %>')
+      <% end %>
     </script>
   </body>
 </html>
