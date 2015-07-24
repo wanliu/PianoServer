@@ -14,9 +14,12 @@
 //= require jquery_ujs
 //= require bootstrap-sprockets
 //= require turbolinks
+//= require nprogress
+//= require nprogress-turbolinks
 //= require lib/socketcluster-client
 //= require lib/get_local_user
 //= require lib/user-socket
 //= require lib/underscore
 //= require lib/underscore-template
+//= require china_city/jquery.china_city
 //= require_tree .

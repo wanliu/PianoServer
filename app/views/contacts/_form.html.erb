@@ -1,0 +1,31 @@
+<%= form_for(@contact) do |f| %>
+
+  <% if @contact and  @contact.errors.any? -%>
+    <div id="error_explanation">
+      <h2>存在以下错误: </h2>
+
+      <ul>
+        <% @contact.errors.full_messages.each do |msg| -%>
+          <li><%= msg %></li>
+        <% end -%>
+      </ul>
+    </div>
+  <% end -%>
+
+  <fieldset>
+    <legend>申请开店</legend>
+
+    <label for="name">您的姓名:</label><br />
+    <%= f.text_field :name %><br />
+    <label for="mobile">您的移动电话:</label><br />
+    <%= f.text_field :mobile %><br />
+    <label for="message">输入开店申请信息:</label><br />
+    <%= f.text_area :message %>
+
+    <div class="actions">
+      <%= f.submit "立即提交申请" %>
+    </div>
+
+  </fieldset>
+
+<% end %>

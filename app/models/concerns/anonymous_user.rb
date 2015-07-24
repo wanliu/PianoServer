@@ -3,8 +3,16 @@ module AnonymousUser
 
   included do 
 
-    scope :anonymous, -> (&block) do 
-      User.new(id: -(Time.now.to_i + rand(10000)), &block)
+    scope :anonymous, -> (id = nil, &block) do
+      User.new id: id.nil? ? (-Time.now.to_i + rand(10000)) : id do |u|
+        u.created_at = Time.now
+        u.updated_at = Time.now
+        u.username = "游客#{u.id.abs}"
+
+        self.instance_eval {
+          block.call(u) unless block.nil?
+        }
+      end
     end
   end
 end

@@ -14,9 +14,23 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_meta_user_data
 
-  # helper_method :current_user
+  helper_method :current_anonymous_or_user
 
   protected
+
+  def current_anonymous_or_user
+    current_user || anonymous
+  end
+
+  def anonymous
+    if session[:anonymous] 
+      @anonymous = User.anonymous(session[:anonymous])
+    else
+      @anonymous = User.anonymous
+      session[:anonymous] = @anonymous.id
+    end
+    @anonymous
+  end
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:username, :email, :mobile, :password, :password_confirmation, :remember_me) }
@@ -26,12 +40,13 @@ class ApplicationController < ActionController::Base
 
   def set_meta_user_data
     if current_user.present?
-      set_meta_tags userId: current_user.wid, chatToken: current_user.chat_token 
+      set_meta_tags chatId: current_user.wid, chatToken: current_user.chat_token 
     else 
-      anonymous = User.anonymous
-      set_meta_tags userId: anonymous.wid, chatToken: anonymous.chat_token
+      set_meta_tags chatId: anonymous.wid, chatToken: anonymous.chat_token
     end
 
     set_meta_tags pusherHost: Settings.pusher.socket_host, pusherPort: Settings.pusher.socket_port
+    set_meta_tags user: current_anonymous_or_user.as_json(include_methods: :avatar_url )
+    set_meta_tags debug: Settings.debug
   end
 end

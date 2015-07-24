@@ -12,6 +12,8 @@
  *
  *
  *= require_tree .
+ *= require nprogress
+ *= require nprogress-bootstrap
  *= require_self
  */
 
@@ -25,6 +27,31 @@ body {
 
 .detail .navbar-fixed-top{
   background: #FFFFFF;
+}
+
+.chat-notices{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+
+  .chat-notice{
+    background: #333333;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    color: #FFFFFF;
+    cursor: pointer;
+
+    span{
+      text-decoration: underline;
+
+      &.ignore{
+        margin-left: 15px;
+      }
+    }
+  }
 }
 
 
