@@ -82,6 +82,30 @@
       new QRCode(document.getElementById("qrcode"), '<%= request.url %>' );
     </script>
     <script type="text/javascript">
+      $(function() {
+        var inChats = {}
+
+        userSocket.onPersonMessage(function(message) {
+          var channelId = message.channelId;
+          var senderId = message.senderId;
+          var senderLogin = message.senderLogin;
+          if (!inChats[channelId]) {
+            window.noticeCenter.addNotice(senderId, senderLogin, 1);
+            // todo process
+          }
+
+        });
+
+        $(document).on('inchats:enter', function(e, channelId) {
+          inChats[channelId] = true
+        });
+
+        $(document).on('inchats:leave', function(e, channelId) {
+          delete inChats[channelId];
+        });
+      });
+    </script>
+    <script type="text/javascript">
       <% unless Rails.env.production? %>
         console.log('development version: <%= PianoServer::VERSION %>')
       <% end %>
