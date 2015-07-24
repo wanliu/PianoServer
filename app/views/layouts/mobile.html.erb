@@ -81,5 +81,10 @@
     <script type="text/javascript">
       new QRCode(document.getElementById("qrcode"), '<%= request.url %>' );
     </script>
+    <script type="text/javascript">
+      <% unless Rails.env.production? %>
+        console.log('development version: <%= PianoServer::VERSION %>')
+      <% end %>
+    </script>
   </body>
 </html>
