@@ -1,24 +1,27 @@
+<% content_for :title do %>
+  <%= @shop.name %>
+<% end %>
+
+<% content_for :module, :shop %>
+
+<div class="brand-board">
+  <%= image_tag @shop.image.try(:src), class: 'shop-logo' %>
+  <h2><%= @shop.name %></h2>
+</div>
 
 <div class="line-items">
   <div class='text-center'>
     本店主营系列
   </div>
   <ul class='shop-categories'>
-    <% @items.each_slice(9) do |items| %>
-      <div class='groups'>
-        <% items.each_with_index do |item, index| %>
-          <% class_name = 'text-center line-item' %>
-          <% class_name << ' first-row' if index < 3 %>
-          <% class_name << ' first-col' if index % 3 == 0 %>
-          <li class='<%= class_name %>'>
-            <a href='/items/<%= item.id %>'>
-              <%= item.name %>
-            </a>
-          </li>
-        <% end %>
-        <div style='clear: both;'></div>
-      </div>
+    <% @items.each_with_index do |item, index| %>
+      <li class='text-center line-item'>
+        <a href='/items/<%= item.id %>'>
+          <%= item.name %>
+        </a>
+      </li>
     <% end %>
+    <div style='clear: both;'></div>
   </ul>
   <div style='clear: both;'></div>
 </div>
@@ -26,19 +29,13 @@
 <button class='fetch-items'>Fetch</button>
 
 <script type="text/template" id='template-shop-category'>
-  <div class='groups'>
-    {{ _.each(items, function (item, index) { }}
-      {{ class_name = 'text-center line-item' }}
-      {{ if (index < 3) class_name += ' first-row' }}
-      {{ if (index % 3 == 0) class_name += ' first-col'  }}
-      <li class='{{= class_name }}'>
-        <a href='/items/' + item.id>
-          {{= item.name }}
-        </a>
-      </li>
-    {{ }) }}
-    <div style='clear: both;'></div>
-  </div>
+  {{ _.each(items, function (item, index) { }}
+    <li class='text-center line-item'>
+      <a href='/items/' + item.id>
+        {{= item.name }}
+      </a>
+    </li>
+  {{ }) }}
 </script>
 
 <script type="text/javascript">
@@ -52,7 +49,7 @@
     $('button.fetch-items').click(function () {
       if (all_fetched) return;
 
-      $.getJSON("/shop_categories/" + id + ".json?page=" + (page + 1) + "&per=9")
+      $.getJSON("/shop_categories/" + id + ".json?page=" + (page + 1) + "&per=9&shop_id=<%= @shop.id %>")
         .success(function (data, status) {
           all_fetched = data.length < per;
           page += 1;

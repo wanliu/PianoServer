@@ -6,6 +6,7 @@
 	height: 300px;
 	background: green;
 	padding: 20px;
+  margin-top: 50px;
 
 	.shop-logo {
 		width: 100px;
@@ -14,43 +15,41 @@
 }
 
 .line-items {
-  padding: 20px;
+  margin-top: 20px;
   margin-bottom: 20px;
   
   ul {
     padding-left: 0;
+    margin-right: 0;
+    width: 103%;
+    margin-left: -3%;
 
-    .groups {
-      margin: 20px 0;
+    li.line-item {
+      display: block;
+      float: left;
+      border: 1px solid #e1e1e1;
+      width: 30%;
+      margin-left: 3%;
+      margin-bottom: 20px;
+      height: 80px;
+      overflow: hidden;
+      line-height: 80px;
 
-      li.line-item {
-        display: block;
-        float: left;
-        border-bottom: 1px solid #e1e1e1;
-        border-right: 1px solid #e1e1e1;
-        width: 33%;
-        height: 80px;
+      a {
+        display: inline-block;
+        line-height: 82px;
         overflow: hidden;
-        // line-height: 50px;
+        width: 100%;
+        font-size: 12px;
+        height: 82px;
+      }
 
-        a {
-          // display: inline-block;
-          // line-height: 50px;
-          overflow: hidden;
-          width: 100%;
-          font-size: 12px;
-          height: 82px;
-          display: table-cell;
-          vertical-align: middle;
-        }
+      &.first-row {
+        border-top: 1px solid #e1e1e1;
+      }
 
-        &.first-row {
-          border-top: 1px solid #e1e1e1;
-        }
-
-        &.first-col {
-          border-left: 1px solid #e1e1e1;
-        }
+      &.first-col {
+        border-left: 1px solid #e1e1e1;
       }
     }
   }

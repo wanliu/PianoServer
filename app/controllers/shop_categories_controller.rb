@@ -4,6 +4,8 @@ class ShopCategoriesController < ApplicationController
   end
 
   def show
+    @shop = Shop.find(params[:shop_id])
+
     page = params[:page].presence || 1
     per = params[:per].presence || 9
 

@@ -15,19 +15,12 @@
     本店主营系列
   </div>
   <ul class='shop-categories'>
-    <% @shop_categories.each_slice(9) do |categories| %>
-      <div class='groups'>
-        <% categories.each_with_index do |cate, index| %>
-            <% class_name = 'text-center line-item' %>
-            <% class_name << ' first-row' if index < 3 %>
-            <% class_name << ' first-col' if index % 3 == 0 %>
-            <li class='<%= class_name %>'>
-              <%= link_to shop_category_path(cate), class: 'text-center' do %>
-                <%= cate.name %>
-              <% end %>
-            </li>
+    <% @shop_categories.each_with_index do |cate, index| %>
+      <li class='text-center line-item'>
+        <%= link_to shop_category_path(cate, shop_id: @shop.id), class: 'text-center' do %>
+          <%= cate.name %>
         <% end %>
-      </div>
+      </li>
     <% end %>
     <div style='clear: both;'></div>
   </ul>
