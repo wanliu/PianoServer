@@ -6,7 +6,11 @@ class @OrderTable
 		for item in @$items
 			new OrderItem(item, @element)
 
-		@$().find('.item-list').on('click', @onClicked.bind(@))
+		@itemList = @$().find('.item-list')
+		@itemList.on('click', @onClicked.bind(@))
+		@itemList.on('change', 'input[type=range]', @onChanged.bind(@))
+		@itemList.on('keyup', '.amount', @amountChanged.bind(@))
+		@itemList.on('keyup', '.price', @priceChanged.bind(@))
 
 	$: () ->
 		$(@element)
@@ -50,6 +54,45 @@ class @OrderTable
 
    	else
   		toggleMidItem($target)
+
+  onChanged: (event) ->
+  	$input = $(event.target)
+  	value = $.trim($input.val())
+  	$input.parents('.edit-item:first').find('input[type=text]').val(value)
+
+  amountChanged: (event) ->
+  	$input = $(event.target)
+  	amount = $input.val()
+  	$parent = $input.parent()
+  	$range = $parent.find('input[type=range]')
+  	max = $range.attr('max')
+  	reg = /^[1-9]\d*$/
+
+  	unless (reg.test(amount))
+  		return
+
+  	if (+amount > +max)
+  		alert('库存不足!')
+  		return
+
+  	$range.val(amount)
+
+  priceChanged: (event) ->
+  	$this = $(event.target)
+  	price = $this.val()
+  	$parent = $this.parent()
+  	$range = $parent.find('input[type=range]')
+  	max = $range.attr('max')
+  	reg = /^[1-9]\d*(.\d{1,2})?$/
+
+  	unless (reg.test(price))
+  		return
+
+  	if (+price > +max)
+  		alert('你设置的价格超出了合理范围')
+  		return
+
+  	$range.val(price)
 
   isEditField: (target) ->
   	target.is('.edit-fieldset') or target.parents('.edit-fieldset').length > 0
