@@ -29,6 +29,7 @@
       font-size: 16px;
       line-height: 1.5;
       padding-left: 10px;
+      word-break: break-all;
     }
 	}
 
@@ -288,7 +289,39 @@
     line-height: 28px;
   }
 	// padding: 10px;
+  .order-buttons{
+    margin: 20px 0;
 
+    .btn-wrap {
+      width: 50%;
+      float: left;
+
+      &.left{
+        padding-right: 10px;
+      }
+
+      &.right{
+        padding-left: 10px;
+      }
+
+      .btn-agrees, .btn-disagrees{
+        width: 100%;
+        padding: 5px 0;
+        text-align: center;
+        color: #FFFFFF;
+        font-size: 16px;
+      }
+
+      .btn-agrees{
+        background: #F12A39;
+      }
+
+      .btn-disagrees{
+        background: #AC62F9;
+      }
+    }
+  } 
+  
 	.chat {
 		width: 100%;
 		&.me {

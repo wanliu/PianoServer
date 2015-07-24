@@ -34,13 +34,14 @@
         </div>
         收货地址
       </li>
+      <!--
       <li class="list-group-item">
       <div class="city-group">
         <%= select(:location, :province, options_for_select(ChinaCity.list), {prompt: '--省份--'}, {class: "city-select"}) %>
         <%= select(:location, :city, [], {prompt: "--城市--"}, { class: "city-select" } ) %>
         <%= select(:location, :region, [], {prompt: "--地区--"}, { class: "city-select" } ) %>
       </div>
-      </li>
+      </li>-->
       <li class="list-group-item">
         <div class="desc-value">
           <div class="dropdown">
@@ -121,6 +122,16 @@
         合计
       </li>
     </ul>
+
+    <div class="order-buttons clearfix">
+      <div class="btn-wrap left">
+        <button class="btn btn-agrees">Ta 未同意</button>
+      </div>
+      
+      <div class="btn-wrap right">
+        <button class="btn btn-disagrees">Ni 同意</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -255,11 +266,13 @@
     }
 
     function resetScroll() {
+     // $(htmlAry.join('')).appendTo($list);
+
       var ele = $list[0],
           clientHeight = ele.clientHeight,
           scrollHeight = ele.scrollHeight,
           offset = scrollHeight - clientHeight;
-          
+
       if (offset > 0) {
         ele.scrollTop = offset;
       }

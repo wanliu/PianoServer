@@ -65,7 +65,8 @@
 
 		$(document).on('page:change', function(e) {
 			var url = parseURL(e.target.URL);
-			if (url.pathname === '/' || url.pathname === '/promotions') {
+			
+      if (/promotions\/\d+\/chat/.test(url)) {
 				$(document).on('scroll:bottom', loadingPromotions).off('scroll.page');
 			} else {
 				$(document).off('scroll:bottom').on('scroll.page', scrollPage);
