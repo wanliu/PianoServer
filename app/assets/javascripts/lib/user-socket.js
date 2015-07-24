@@ -1,5 +1,5 @@
-(function () {
-  function UserSocket (options) {
+(function() {
+  function UserSocket(options) {
     this.personChannelReady = false;
     this.anonymous = false;
     this.personCallbacks = [];
@@ -8,7 +8,7 @@
     this.emiters = [];
   }
 
-  UserSocket.prototype.getUserChannelId = function () {
+  UserSocket.prototype.getUserChannelId = function() {
     if (this.userId) {
       return 'p' + this.userId;
     }
@@ -17,20 +17,20 @@
   /*
     callback: function(message) {.....}
   */
-  UserSocket.prototype.onPersonMessage = function (callback) {
+  UserSocket.prototype.onPersonMessage = function(callback) {
     this.personCallbacks.push(callback);
   }
 
   UserSocket.prototype.offPersonMessage = function(callback) {
     var callbacks = this.personCallbacks,
-        index = callbacks.indexOf(callback);
+      index = callbacks.indexOf(callback);
 
     if (index > -1) {
       callbacks.splice(index, 1);
     }
   }
 
-  UserSocket.prototype.config = function (options) {
+  UserSocket.prototype.config = function(options) {
     this.socket = options.socket;
 
     var user = this.user = options.user;
@@ -50,12 +50,12 @@
     this.loginAndSubscribe();
   }
 
-  UserSocket.prototype.isAnonymousUser = function (userOptions) {
+  UserSocket.prototype.isAnonymousUser = function(userOptions) {
     return userOptions.id && ~userOptions.id.indexOf('-');
   }
 
   // publish to other users
-  UserSocket.prototype.publish = function (channelId, data, callback) {
+  UserSocket.prototype.publish = function(channelId, data, callback) {
     if (this.personChannelReady) {
       this.socket.publish(channelId, data, callback)
     } else {
@@ -66,7 +66,7 @@
   }
 
   // listen socket events
-  UserSocket.prototype.on = function () {
+  UserSocket.prototype.on = function() {
     if (this.personChannelReady) {
       this.socket.on.apply(this.socket, arguments);
     } else {
@@ -75,7 +75,7 @@
   }
 
   // emit socket events
-  UserSocket.prototype.emit = function () {
+  UserSocket.prototype.emit = function() {
     if (this.personChannelReady) {
       this.socket.emit.apply(this.socket, arguments);
     } else {
@@ -83,23 +83,23 @@
     }
   }
 
-  UserSocket.prototype.getSocket = function () {
+  UserSocket.prototype.getSocket = function() {
     return this.socket;
   }
 
-  UserSocket.prototype.logout = function (callback) {
-    callback || (callback = function () {});
+  UserSocket.prototype.logout = function(callback) {
+    callback || (callback = function() {});
 
     if (this.personChannelReady) {
       this.socket.emit('logout', callback);
     }
   }
 
-  UserSocket.prototype.loginAndSubscribe = function () {
+  UserSocket.prototype.loginAndSubscribe = function() {
     var _this = this;
     var socket = this.socket;
 
-    socket.emit('login', this.chatToken, function (err) {
+    socket.emit('login', this.chatToken, function(err) {
       if (err) {
         _this.personChannelReady = false;
 
@@ -108,7 +108,7 @@
           _this.userId = _this.user.id;
           _this.chatToken = _this.user.chatToken;
           _this.userChannelId = _this.getUserChannelId();
-          socket.emit('login', _this.chatToken, function (err) {
+          socket.emit('login', _this.chatToken, function(err) {
             if (err) {
               console.error('login fails!');
             } else {
@@ -127,25 +127,25 @@
     });
   }
 
-  UserSocket.prototype.readyAndSubscribe = function () {
+  UserSocket.prototype.readyAndSubscribe = function() {
     var _this = this,
-        socket = this.socket;
+      socket = this.socket;
 
     this.userChannelId = this.getUserChannelId();
     this.personChannelReady = true;
 
     var personalChannel = socket.subscribe(this.userChannelId);
-    personalChannel.watch(function (message) {
-      _this.personCallbacks.forEach(function (callback) {
+    personalChannel.watch(function(message) {
+      _this.personCallbacks.forEach(function(callback) {
         callback(message);
       })
     });
 
-    this.eventListeners.forEach(function (args) {
+    this.eventListeners.forEach(function(args) {
       socket.on.apply(socket, args);
     });
 
-    this.emiters.forEach(function (args) {
+    this.emiters.forEach(function(args) {
       socket.emit.apply(socket, args);
     });
   }
@@ -155,9 +155,12 @@
 
 
 $(function() {
-  var userId = $('meta[name=userId]').attr('content');
+  var chatId = $('meta[name=chatId]').attr('content');
   var chatToken = $('meta[name=chatToken]').attr('content');
-  var user = { id: userId, chatToken: chatToken };
+  var user = {
+    id: chatId,
+    chatToken: chatToken
+  };
 
   var hostname = $('meta[name=pusherHost]').attr('content');
   var hostport = $('meta[name=pusherPort]').attr('content');
@@ -166,5 +169,8 @@ $(function() {
     port: hostport
   });
 
-  window.userSocket.config({user: user, socket: socket});
+  window.userSocket.config({
+    user: user,
+    socket: socket
+  });
 });

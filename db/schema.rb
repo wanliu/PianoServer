@@ -17,6 +17,14 @@ ActiveRecord::Schema.define(version: 20150723061003) do
   enable_extension "plpgsql"
   enable_extension "hstore"
 
+  create_table "contacts", force: :cascade do |t|
+    t.string   "name"
+    t.string   "mobile"
+    t.text     "message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "items", force: :cascade do |t|
     t.integer  "itemable_id"
     t.string   "itemable_type"

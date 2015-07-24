@@ -35,7 +35,15 @@
 
 	.chat-inner {
 		padding: 10px;
-    display: none;
+
+    .chat-items {
+      display: none;
+    }
+    
+    .item-preview-url{
+      width: 100px;
+      height: 100px;
+    }
     
     .list-group{
       font-size: 16px;
@@ -50,6 +58,8 @@
       }
 
       &.first {
+        margin-top: 0;
+
         .list-group-item:last-child{
           border-bottom-left-radius: 0;
           border-bottom-right-radius: 0;
