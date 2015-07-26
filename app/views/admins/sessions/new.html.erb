@@ -1,6 +1,7 @@
-<h2>Log in</h2>
 
-<%= form_for(resource, as: resource_name, url: session_path(resource_name), class: "form-signin") do |f| %>
+<%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "form-signin" }) do |f| %>
+	<h2 class="form-signin-heading">Log in</h2>
+
   <div><%= f.label :email, class: "sr-only" %><br />
   <%= f.email_field :email, autofocus: true, class: 'form-control', placeholder: "Email address"  %></div>
 
@@ -12,6 +13,7 @@
   <% end -%>
 
   <div><%= f.submit "Log in", class: "btn btn-lg btn-primary btn-block" %></div>
+	<%= render "admins/shared/links" %>
+
 <% end %>
 
-<%= render "admins/shared/links" %>

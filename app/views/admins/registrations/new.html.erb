@@ -1,18 +1,22 @@
-<h2>Sign up</h2>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: {
+	class: "form-signin"
+	}) do |f| %>
+	<h2>Sign up</h2>
   <%= devise_error_messages! %>
 
-  <div><%= f.label :email %><br />
-  <%= f.email_field :email, autofocus: true %></div>
+  <div><%= f.label :email, class: "sr-only" %><br />
+  <%= f.email_field :email, autofocus: true, class: 'form-control',  placeholder: "Email address" %></div>
 
-  <div><%= f.label :password %> <% if @validatable %><i>(<%= @minimum_password_length %> characters minimum)</i><% end %><br />
-    <%= f.password_field :password, autocomplete: "off" %></div>
+  <div><%= f.label :password, class: "sr-only" %> <% if @validatable %><i>(<%= @minimum_password_length %> characters minimum)</i><% end %><br />
+    <%= f.password_field :password, autocomplete: "off", class: 'form-control', placeholder: "Password" %></div>
 
-  <div><%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "off" %></div>
+  <div><%= f.label :password_confirmation, class: "sr-only" %><br />
+    <%= f.password_field :password_confirmation, autocomplete: "off", class: 'form-control',  placeholder: "Password Confirmation"  %></div>
 
-  <div><%= f.submit "Sign up" %></div>
+  <div><%= f.submit "Sign up", class: "btn btn-lg btn-primary btn-block" %></div>
+	<%= render "admins/shared/links" %>
+
 <% end %>
 
-<%= render "admins/shared/links" %>
