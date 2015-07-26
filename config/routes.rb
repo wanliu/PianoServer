@@ -33,8 +33,14 @@ Rails.application.routes.draw do
 
 
 
-  namespace :admin do
+  namespace :admins do
     resources :dashboards
+    resources :accounts, except: [:new, :edit] do
+      collection do
+        get 'search_wanliu_user', to: 'accounts#search_wanliu_user'
+      end
+    end
+
     get 'contacts' => 'contacts#index'
   end
 

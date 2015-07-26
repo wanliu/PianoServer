@@ -47,6 +47,7 @@ gem "mini_magick", '~> 4.2.7'
 
 gem 'poseidon'
 gem 'google-analytics-rails'
+gem 'kaminari'
 
 gem "rails_config"
 
@@ -59,6 +60,8 @@ gem 'meta-tags'
 gem 'sidekiq'
 
 gem 'china_city'
+gem 'table_cloth'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
@@ -72,7 +75,7 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
   gem 'guard-rails'
-  gem 'guard-rspec', require: false  
+  gem 'guard-rspec', require: false
   gem 'guard-sidekiq'
   # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'web-console', '~> 2.0'

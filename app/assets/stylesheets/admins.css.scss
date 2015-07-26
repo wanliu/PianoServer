@@ -3,11 +3,20 @@
  *= require nprogress
  *= require nprogress-bootstrap
  *= require_tree ./admins
- *= require_self*
+ *= require_self
 */
 
 body {
-  padding-top: 40px;
+  padding-top: 50px;
   padding-bottom: 40px;
-  background-color: #eee;
+  background: #fff;
+}
+
+
+body[module="signup"] {
+	background: #ddd;
+}
+
+.content {
+	padding-top: 20px;
 }

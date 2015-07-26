@@ -1,4 +1,4 @@
-class Admins::DashboardsController < ApplicationController
+class Admins::DashboardsController < Admins::BaseController
   before_action :set_admin_dashboard, only: [:show, :edit, :update, :destroy]
 
   # GET /admin/dashboards

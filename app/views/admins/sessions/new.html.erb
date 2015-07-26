@@ -1,9 +1,10 @@
+<% content_for :module, :signup %>
 
 <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "form-signin" }) do |f| %>
 	<h2 class="form-signin-heading">Log in</h2>
 
-  <div><%= f.label :email, class: "sr-only" %><br />
-  <%= f.email_field :email, autofocus: true, class: 'form-control', placeholder: "Email address"  %></div>
+  <div><%= f.label :login, class: "sr-only" %><br />
+  <%= f.email_field :login, autofocus: true, class: 'form-control', placeholder: "Email address"  %></div>
 
   <div><%= f.label :password, class: "sr-only" %><br />
     <%= f.password_field :password, autocomplete: "off", class: 'form-control', placeholder: "Password" %></div>
