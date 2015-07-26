@@ -4,6 +4,7 @@
 
 <div class="chat-list">
   <div class="container">
+  <div class="row">
   <div class="chat-order" data-order-id="<%= @order.id %>">
     <div class="chat-image-wrap">
       <%= image_tag @order.avatar_url, class: "chat-order-image", "state-load-url" => status_of_promotion_path(@promotion, @order) %>
@@ -11,7 +12,7 @@
     <div class="chat-order-title">
       <%= @order.title %>
     </div>
-  </div>  
+  </div>
   <div class="chat-inner" >
     <div class="chat-items" >
       <ul class="list-group first" order-id="<%= @order.id%>">
@@ -128,6 +129,7 @@
     </div>
   </div>
   </div>
+  </div>
 </div>
 
 <!--div class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel">
@@ -140,7 +142,7 @@
       <div class="modal-body">
         <div class="container-fluid">
           <div class="row">
-            
+
           </div>
         </div>
       </div>
@@ -158,7 +160,7 @@
       <button type="submit" class="btn btn-default pull-right btn-send">发送</button>
       <div class="form-group">
         <input type="text" class="form-control" placeholder="输入您要说的话..." name="chat-text">
-      </div> 
+      </div>
     </form>
   </div>
 </nav>
@@ -242,7 +244,7 @@
     //           return;
     //         }
 
-    //         $list.find('.record-loading').remove();  
+    //         $list.find('.record-loading').remove();
 
     //         if (messages.length < 10) {
     //           $list.find('.more-record').remove();
@@ -268,7 +270,7 @@
     //       clientHeight = ele.clientHeight,
     //       scrollHeight = ele.scrollHeight,
     //       offset = scrollHeight - clientHeight;
-          
+
     //   if (offset > 0) {
     //     ele.scrollTop = offset;
     //   }
@@ -291,8 +293,8 @@
     //       'content': text,
     //       'promotionId': promotionId,
     //       'attachs': {}
-    //     });      
-    //   <% end %>        
+    //     });
+    //   <% end %>
     //   }
     // });
 
@@ -404,8 +406,8 @@
     //     $parent.next().toggleClass('radius-top');
     //     $target.prev().toggleClass('radius-bottom')
     //     return;
-    //   } 
-        
+    //   }
+
     //   $target.prev().toggleClass('radius-bottom').end().next().toggleClass('radius-top');
     // });
 

@@ -1,5 +1,15 @@
 Rails.application.routes.draw do
-  mount ChinaCity::Engine => '/china_city'  
+  devise_for :admins, controllers: {
+    sessions: 'admins/sessions',
+    registrations: 'admins/registrations'
+  }
+
+  devise_for :users, controllers: {
+    sessions: 'users/sessions',
+    registrations: 'users/registrations'
+  }
+
+  mount ChinaCity::Engine => '/china_city'
   resources :contacts, only: [:new, :show, :create, :destroy]
 
   concern :messable do
@@ -7,13 +17,12 @@ Rails.application.routes.draw do
   end
 
   concern :roomable do
-    resources :rooms, concerns: :messable do
+    resources :rooms do
       collection do
-        put "negotiate_with/:user_id", to: "rooms#negotiate_with"
-      end
-
-      member do
-        put "accepting", to: "rooms#accepting"
+        get 'channel/:channel_id', to: 'rooms#channel', as: :channel
+        get 'owner/:owner_id', to: 'rooms#owner', as: :owner
+        get 'target/:target_id', to: 'rooms#target', as: :target
+        get 'token/:token_id', to: 'rooms#token'
       end
     end
   end
@@ -22,10 +31,7 @@ Rails.application.routes.draw do
   #   resources :chats
   # end
 
-  devise_for :users, controllers: {
-    sessions: 'users/sessions',
-    registrations: 'users/registrations'
-  }
+
 
   namespace :admin do
     resources :dashboards
@@ -43,15 +49,17 @@ Rails.application.routes.draw do
     # end
   end
 
-  resources :promotions do
+  resources :promotions, concerns: :roomable do
     member do
       put "favorited", to: "promotions#favrited"
       get 'chat'
       get 'status/:order_id', to: "promotions#status", as: :status_of
+      get 'shop/:shop_id', to: "promotions#shop", as: :shop
     end
   end
 
-  resources :shops, only: [ :show ]
+  resources :shops, concerns: :roomable, only: [ :show ]
+  resources :rooms
   ## shop route
   #
   get '/about' => 'home#about'

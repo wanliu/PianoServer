@@ -1,0 +1,9 @@
+//= require jquery
+//= require jquery_ujs
+//= require bootstrap-sprockets
+//= require turbolinks
+//= require nprogress
+//= require nprogress-turbolinks
+//= require china_city/jquery.china_city
+//= require_tree ./admins
+//= require_self

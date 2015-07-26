@@ -7,7 +7,7 @@ class Order < ActiveRecord::Base
   belongs_to :user
   belongs_to :seller, class_name: 'User'
 
-  has_many :items, as: :itemable, dependent: :destroy do 
+  has_many :items, as: :itemable, dependent: :destroy do
     def build_with_promotion(promotion)
       build({
         title: promotion.title,
@@ -46,7 +46,7 @@ class Order < ActiveRecord::Base
             avatar_url: promotion.image_url,
             preview_url: promotion.preview_url
           }
-        }) 
+        })
       else
         item
       end
@@ -65,6 +65,10 @@ class Order < ActiveRecord::Base
 
   scope :last_bid, -> (buyer_id) {
     where(buyer_id: buyer_id).order(:bid).last.try(:bid) || 0
+  }
+
+  scope :available, -> (shop_id, user_id) {
+    where(supplier_id: shop_id, buyer_id: user_id)
   }
 
   def supplier
