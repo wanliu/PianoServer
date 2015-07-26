@@ -23,7 +23,7 @@ class RoomsController < ApplicationController
 	    @room.order_id = @order.id
 	    @room.save
 	  end
-		# render :show
+		render :show
 	end
 
 	def target

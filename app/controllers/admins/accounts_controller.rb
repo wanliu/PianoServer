@@ -1,6 +1,7 @@
 class Admins::AccountsController < Admins::BaseController
   before_action :set_admins_account, only: [:show, :update, :destroy]
 
+  respond_to :js
   # GET /admins/accounts
   # GET /admins/accounts.json
   def index
@@ -19,6 +20,10 @@ class Admins::AccountsController < Admins::BaseController
     end
   end
 
+  def import
+    pp params[:wanliu_user_id]
+    render :import, :handlers => [:erb], :formats => [:js]
+  end
 
   # GET /admins/accounts/1
   # GET /admins/accounts/1.json

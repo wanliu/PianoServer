@@ -1,8 +1,15 @@
 <div class="left-sidebar">
 	<ul class="nav nav-sidebar">
 	  <li class="active"><a href="#">仪表盘 <span class="sr-only">(current)</span></a></li>
-	  <li><a href="#">帐号</a></li>
-	  <li><a href="#">Analytics</a></li>
+	  <li><%= link_to '帐号', admins_accounts_path %></li>
+	  <li><%= link_to '推广', admins_promotions_path %></li>
 	  <li><a href="#">Export</a></li>
 	</ul>
 </div>
+
+<script type="text/javascript">
+	$(function() {
+		var LeftSideBar = window.LeftSideBar;
+		var leftSidebar = new LeftSideBar($('.left-sidebar'));
+	})
+</script>

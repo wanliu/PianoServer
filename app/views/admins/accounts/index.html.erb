@@ -1,7 +1,11 @@
 <div class="row">
 	<div class="col-sm-12">
+		<h1 class="page-header">本地帐号</h1>
 		<%= simple_table_for @accounts, with: UserTable %>
 		<%= paginate @accounts %>
+
+   	<h1 class="page-header">万流帐号</h1>
+
 		<%= form_tag(search_wanliu_user_admins_accounts_path, method: "get", id: 'search_wanliu_users') do %>
       <div class="input-group col-sm-4">
 	 			<span class="input-group-addon">
@@ -14,6 +18,7 @@
 
       </div>
 		<% end %>
+
 		<div class="search_wanliu_users">
 		</div>
 		<script type="text/javascript">

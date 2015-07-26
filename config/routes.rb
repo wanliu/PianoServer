@@ -38,8 +38,10 @@ Rails.application.routes.draw do
     resources :accounts, except: [:new, :edit] do
       collection do
         get 'search_wanliu_user', to: 'accounts#search_wanliu_user'
+        put 'import/:wanliu_user_id', to: 'accounts#import', as: :import
       end
     end
+    resources :promotions
 
     get 'contacts' => 'contacts#index'
   end
