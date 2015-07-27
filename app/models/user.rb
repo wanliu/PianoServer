@@ -37,12 +37,8 @@ class User < ActiveRecord::Base
     super || login
   end
 
-  def wid
-    id > 0 ? "w#{id}" : "-w#{id.abs}"
-  end
-
   def chat_token
-    JWT.encode({id: wid}, JWT_TOKEN)
+    JWT.encode({id: id}, JWT_TOKEN)
   end
 
   def self.find_for_database_authentication(warden_conditions)
@@ -76,7 +72,7 @@ class User < ActiveRecord::Base
     pusher_token = Settings.pusher.pusher_token.clone
     pusher_url << 'users'
 
-    options = {id: "w#{id}", token: pusher_token, login: username, realname: username, avatar_url: (image && image[:avatar_url]) }
+    options = {id: "#{id}", token: pusher_token, login: username, realname: username, avatar_url: (image && image[:avatar_url]) }
 
     begin
       RestClient.post pusher_url, options
