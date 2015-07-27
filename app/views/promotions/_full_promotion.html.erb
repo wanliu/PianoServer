@@ -84,27 +84,29 @@
   </div>
 
   <div class="navbar-bottom navbar navbar-default navbar-fixed-bottom">
-    <%= link_to shop_path(promotion.shop_id), class: "into-shop" do %>
-      <span class="button-icon glyphicon glyphicon-home"></span>
-      <div class="button-text">商家</div>
-    <% end %>
+    <div class="link-table">
+      <%= link_to shop_path(promotion.shop_id), class: "into-shop" do %>
+        <span class="button-icon glyphicon glyphicon-home"></span>
+        <div class="button-text">商家</div>
+      <% end %>
 
-    <% if promotion.favorited %>
-      <div class="fav-button favorited">
-        <span class="button-icon glyphicon glyphicon-star"></span>
-        <div class="button-text">已收</div>
-      </div>
-    <% else %>
-      <div class="fav-button">
-        <span class="button-icon glyphicon glyphicon-star-empty"></span>
-        <div class="button-text">收藏</div>
-      </div>
-    <% end %>
+      <% if promotion.favorited %>
+        <div class="fav-button favorited">
+          <span class="button-icon glyphicon glyphicon-star"></span>
+          <div class="button-text">已收藏</div>
+        </div>
+      <% else %>
+        <div class="fav-button">
+          <span class="button-icon glyphicon glyphicon-star-empty"></span>
+          <div class="button-text">收藏</div>
+        </div>
+      <% end %>
 
 <!--     <div class="into-cart">加入购物车</div>
     <div class="buy-now">立即购买</div>
  -->
- 	<%= link_to '洽谈', shop_promotion_path(promotion, @shop.id), class: "chat" %>
+ 	    <%= link_to '洽谈', chat_promotion_path(promotion), class: "chat" %>
+    </div>
   </div>
 </div>
 
@@ -130,4 +132,3 @@
     });
   });
 </script>
-`
