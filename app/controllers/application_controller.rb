@@ -1,3 +1,4 @@
+require 'active_resource'
 class ApplicationController < ActionController::Base
   include DebugMode
   # include TokenAuthenticatable
@@ -5,7 +6,7 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :null_session
-  # protect_from_forgery 
+  # protect_from_forgery
   # protect_from_forgery with: :exception
   # skip_before_filter :verify_authenticity_token, only: [ :create ]
 
@@ -15,6 +16,8 @@ class ApplicationController < ActionController::Base
   before_action :set_meta_user_data
 
   helper_method :current_anonymous_or_user
+  rescue_from ActionController::RoutingError, :with => :render_404
+  rescue_from ActiveResource::ResourceNotFound, :with => :render_404
 
   protected
 
@@ -23,7 +26,7 @@ class ApplicationController < ActionController::Base
   end
 
   def anonymous
-    if session[:anonymous] 
+    if session[:anonymous]
       @anonymous = User.anonymous(session[:anonymous])
     else
       @anonymous = User.anonymous
@@ -40,13 +43,22 @@ class ApplicationController < ActionController::Base
 
   def set_meta_user_data
     if current_user.present?
-      set_meta_tags chatId: current_user.wid, chatToken: current_user.chat_token 
-    else 
-      set_meta_tags chatId: anonymous.wid, chatToken: anonymous.chat_token
+      set_meta_tags chatId: current_user.id, chatToken: current_user.chat_token
+    else
+      set_meta_tags chatId: anonymous.id, chatToken: anonymous.chat_token
     end
 
     set_meta_tags pusherHost: Settings.pusher.socket_host, pusherPort: Settings.pusher.socket_port
     set_meta_tags user: current_anonymous_or_user.as_json(include_methods: :avatar_url )
     set_meta_tags debug: Settings.debug
+  end
+
+  private
+  def render_404(exception = nil)
+    if exception
+        logger.info "Rendering 404: #{exception.message}"
+    end
+
+    render :file => "#{Rails.root}/public/404.html", :status => 404, :layout => false
   end
 end

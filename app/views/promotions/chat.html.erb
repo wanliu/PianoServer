@@ -4,35 +4,35 @@
 
 <div class="chat-list">
   <div class="container">
-    <div class="chat-order" data-order-id="<%= @order.id %>">
-      <div class="chat-image-wrap">
-        <%= image_tag @order.avatar_url, class: "chat-order-image", "state-load-url" => status_of_promotion_path(@promotion, @order) %>
-      </div>
-      <div class="chat-order-title">
-        <%= @order.title %>
-      </div>
+  <div class="row">
+  <div class="chat-order" data-order-id="<%= @order.id %>">
+    <div class="chat-image-wrap">
+      <%= image_tag @order.avatar_url, class: "chat-order-image", "state-load-url" => status_of_promotion_path(@promotion, @order) %>
     </div>
-    <div class="chat-inner" >
-      <div class="chat-items" >
-        <ul class="list-group first" order-id="<%= @order.id%>">
-          <li class="list-group-item">
-            <div class="desc-value">
-              <%= @order.supplier.name %>
-            </div>
-            卖方
-          </li>
-          <li class="list-group-item">
-            <div class="desc-value">
-              <div class="dropdown">
-                <span class="toggle-button" data-toggle="dropdown" role="button">
-                  <span class="button-text">选择收货地址</span>
-                  <span class="caret"></span>
-                </span>
+    <div class="chat-order-title">
+      <%= @order.title %>
+    </div>
+  </div>
+  <div class="chat-inner" >
+    <div class="chat-items" >
+      <ul class="list-group first" order-id="<%= @order.id%>">
+        <li class="list-group-item">
+          <div class="desc-value">
+            <%= @order.supplier.name %>
+          </div>
+          卖方
+        </li>
+        <li class="list-group-item">
+          <div class="desc-value">
+            <div class="dropdown">
+              <span class="toggle-button" data-toggle="dropdown" role="button">
+                <span class="button-text">选择收货地址</span>
+                <span class="caret"></span>
+              </span>
 
-                <ul class="dropdown-menu address-menu">
-                  <li><a href="javascript:void(0);" class="add-address">新增收货地址</a></li>
-                </ul>
-              </div>
+              <ul class="dropdown-menu address-menu">
+                <li><a href="javascript:void(0);" class="add-address">新增收货地址</a></li>
+              </ul>
             </div>
             收货地址
           </li>
@@ -128,8 +128,7 @@
           <div class="btn-wrap left">
             <button class="btn btn-agrees">Ta 未同意</button>
           </div>
-
-          <div class="btn-wrap right">
+         <div class="btn-wrap right">
             <button class="btn btn-disagrees">Ni 同意</button>
           </div>
         </div>
@@ -168,240 +167,9 @@
         fromTime;
 
     Chat.defaultOptions.avatarDefault = '<%= image_path "avatar.gif" %>';
-    // userSocket.offPersonMessage(insertMessage);
-    // userSocket.onPersonMessage(insertMessage);
 
-    // $('[data-toggle="tooltip"]').tooltip();
-
-    // userSocket.emit('getChannelMessage', {
-    //   'channelId': chatChannelId,
-    //   'type': 'index',
-    //   'start': 0
-    // }, function(err, messages) {
-    //   if (err || messages.length === 0) {
-    //     return;
-    //   }
-
-    //   for(var i=0; i <messages.length; i++) {
-    //     insertMessage(messages[i]);
-    //   }
-
-    //   if (messages.length < 10) {
-    //     $list.find('.load-more').remove();
-    //   } else {
-    //     fromTime = messages[0].time;
-    //     insertLoadMore();
-    //   }
-    // });
-
-    // function insertMessage (message) {
-    //   var senderId = message.senderId,
-    //       isOwnSend = ownId === senderId,
-    //       content = message.content,
-    //       avatar = message.senderAvatar,
-    //       username = message.senderLogin || '游客',
-    //       toAddClass = isOwnSend ? 'you' : 'me',
-    //       avatar = avatar === '' ? '<%= image_path "avatar.gif" %>' : avatar,
-    //       htmlAry = ['<div class="chat ', toAddClass, '"><img src="', avatar, '">',
-    //         '<h2>', username, '</h2><div class="bubble ', toAddClass, '"><p>',
-    //         content, '</p></div></div>'],
-    //       pathname = window.location.pathname,
-    //       isChatPage = pathname === '/promotions/' + promotionId + '/chat';
-
-    //   if (isChatPage && (isOwnSend || senderId === ownerId)) {
-    //     $(htmlAry.join('')).appendTo($list);
-
-    //     resetScroll();
-    //   } else {
-    //     window.noticeCenter.addNotice(senderId, username, message.orderId);
-    //   }
-    // }
-
-    // function insertLoadMore() {
-    //   $('<div class="load-more">查看更多消息</div>')
-    //     .click(function() {
-    //       $(this).hide().parent().prepend('<div class="record-loading"><span class="loading-icon"/>正在加载聊天记录</div>');
-
-    //       userSocket.emit('getChannelMessage', {
-    //         'channelId': chatChannelId,
-    //         'type': 'time',
-    //         'start': fromTime
-    //       }, function(err, messages) {
-    //         if (err) {
-    //           return;
-    //         }
-
-    //         $list.find('.record-loading').remove();
-
-    //         if (messages.length < 10) {
-    //           $list.find('.more-record').remove();
-
-    //           if( messages.length === 0) {
-    //             return;
-    //           }
-    //         }
-
-    //         for(var i=messages.length-1; i>=0; i--) {
-    //           insertMessage(messages[i]);
-    //         }
-
-    //         $list[0].scrollTop = 0;
-
-    //         fromTime = messages[0].time;
-    //       });
-    //     }).prependTo($list);
-    // }
-
-    // function resetScroll() {
-    //   var ele = $list[0],
-    //       clientHeight = ele.clientHeight,
-    //       scrollHeight = ele.scrollHeight,
-    //       offset = scrollHeight - clientHeight;
-
-    //   if (offset > 0) {
-    //     ele.scrollTop = offset;
-    //   }
-    // }
-
-    // $('.chat-navbar button').click(function() {
-    //   var $input = $("input[name='chat-text']"),
-    //       text = $.trim($input.val()),
-    //       channelId = 'p' + ownerId;
-
-    //   $input.val('');
-
-    //   if (text.length > 0) {
-    //   <% if Settings.debug %>
-    //     insertMessage(text);
-    //   <% else %>
-    //     var socket = window.userSocket;
-
-    //     socket.publish(channelId, {
-    //       'content': text,
-    //       'promotionId': promotionId,
-    //       'attachs': {}
-    //     });
-    //   <% end %>
-    //   }
-    // });
-
-    // var orderId = $('.chat-order ').data("orderId");
     var $img = $('.chat-order-image')[0];
     var stateLoad = new StatusLoadUrl($img);
-    // $(window).on('resize', resetScroll);
-
-
-    // $list.on('click', '.payment-menu a', function () {
-    //   var $this = $(this),
-    //       $parent = $this.parent(),
-    //       text = $this.text();
-
-    //   if ($parent.hasClass('selected')) {
-    //     return;
-    //   }
-
-    //   $parent.addClass('selected').siblings().removeClass('selected');
-
-    //   $parent.parents('.dropdown:first').find('.button-text').text(text);
-    // }).on('keyup', '.order-item-amount .amount', function() {
-    //   var $this = $(this),
-    //       amount = $this.val(),
-    //       $parent = $this.parent(),
-    //       $range = $parent.find('input[type=range]'),
-    //       max = $range.attr('max'),
-    //       reg = /^[1-9]\d*$/;
-
-    //   if (!reg.test(amount)) {
-    //     return;
-    //   }
-
-    //   if (+amount > +max) {
-    //     alert('库存不足!');
-    //     return;
-    //   }
-
-    //   $range.val(amount);
-    // }).on('keyup', '.order-item-price .price', function() {
-    //   var $this = $(this),
-    //       price = $this.val(),
-    //       $parent = $this.parent(),
-    //       $range = $parent.find('input[type=range]'),
-    //       max = $range.attr('max'),
-    //       reg = /^[1-9]\d*(.\d{1,2})?$/;
-
-    //   if (!reg.test(price)) {
-    //     return;
-    //   }
-
-    //   if (+price > +max) {
-    //     alert('库存不足!');
-    //     return;
-    //   }
-
-    //   $range.val(price);
-    // }).on('change', 'input[type=range]', function() {
-    //   var $this = $(this),
-    //       value = $this.val();
-
-    //   $this.parents('.edit-item:first').find('input[type=text]').val(value);
-    // });
-
-    // $list.find('.item-list').on('click', function(event) {
-    //   event.stopPropagation();
-
-    //   var $target = $(event.target);
-
-    //   if ($target.is('.edit-fieldset') || $target.parents('.edit-fieldset').length > 0) {
-    //     return;
-    //   }
-
-    //   if ($target.is('.remove-btn')) {
-    //     var $li = $target.parents('li:first'),
-    //         itemId = $li.attr('item-id'),
-    //         orderId = $li.parent().attr('order-id');
-
-    //     $li.remove();
-    //     //send request to remove item from order
-    //     return;
-    //   } else if ($target.is('img')) {
-    //     return;
-    //   }
-
-    //   if (!$target.is('li')) {
-    //     $target = $target.parents('li:first');
-    //   }
-
-    //   $target.toggleClass('open');
-
-    //   var index = $target.index(),
-    //       $parent = $target.parent(),
-    //       length = $parent.find('li').length;
-
-    //   if (length === 1) {
-    //     $parent.prev().toggleClass('radius-bottom').end().next().toggleClass('radius-top');
-
-    //     return;
-    //   }
-
-    //   if (index === 0) {
-    //     $parent.prev().toggleClass('radius-bottom');
-    //     $target.next().toggleClass('radius-top');
-    //     return;
-    //   }
-
-    //   if (index === length - 1){
-    //     $parent.next().toggleClass('radius-top');
-    //     $target.prev().toggleClass('radius-bottom')
-    //     return;
-    //   }
-
-    //   $target.prev().toggleClass('radius-bottom').end().next().toggleClass('radius-top');
-    // });
-
-    // $('.add-address .add-address').click(function() {
-
-    //   $li.remove();
-    // });
 
     var miniTable = new MiniTable($('.chat-order'), $('.chat-items'));
     var chat = new Chat($('.chat-order'), chatChannelId, {

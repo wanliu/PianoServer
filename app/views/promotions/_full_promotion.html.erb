@@ -4,7 +4,7 @@
 
 <div class="promotion-detail-container" data-promotion-id="<%= promotion.id %>" >
   <%= image_tag(promotion.image_url, class: "promotion-poster") %>
-  
+
   <div class="price-period clearfix">
     <div class="price-desc">
       <div class="promotion-price">
@@ -21,7 +21,7 @@
         </span>
       </div>
     </div>
-    
+
     <% if promotion.status === 'Published' %>
     <div class="period-desc not-started">
       <div class="desc-wrap">
@@ -89,7 +89,7 @@
         <span class="button-icon glyphicon glyphicon-home"></span>
         <div class="button-text">商家</div>
       <% end %>
-    
+
       <% if promotion.favorited %>
         <div class="fav-button favorited">
           <span class="button-icon glyphicon glyphicon-star"></span>
@@ -101,12 +101,12 @@
           <div class="button-text">收藏</div>
         </div>
       <% end %>
-    
+
 <!--     <div class="into-cart">加入购物车</div>
     <div class="buy-now">立即购买</div>
- -->    
+ -->
  	    <%= link_to '洽谈', chat_promotion_path(promotion), class: "chat" %>
-    </div>  
+    </div>
   </div>
 </div>
 
@@ -116,7 +116,7 @@
       var $this = $(this),
           promotionId = $('.promotion-detail-container').data('promotionId'),
           isFavorited = $this.hasClass('favorited');
-      
+
       $.ajax({
         type: 'PUT',
         url: '/promotions/' + promotionId + '/favorited',
@@ -132,4 +132,3 @@
     });
   });
 </script>
-`

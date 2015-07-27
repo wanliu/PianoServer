@@ -4,15 +4,10 @@ class Room < ActiveRecord::Base
   belongs_to :target, class_name: 'User'
   has_many :messages, as: :messable
 
-  store_accessor :data, :acceptings
-  # 
-  # store :data, accessors: [ :acceptings ], coder: JSON
+  store_accessor :data, :order_id
 
-  def acceptings=(value)
-    super(value.to_json)
-  end
+  scope :both, -> (owner_id, target_id) {
+    where(owner_id: owner_id, target_id: target_id)
+  }
 
-  def acceptings
-    JSON.parse(super || "{}")
-  end
 end

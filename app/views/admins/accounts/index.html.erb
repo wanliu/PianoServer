@@ -1,0 +1,48 @@
+<div class="row">
+	<div class="col-sm-12">
+		<h1 class="page-header">本地帐号</h1>
+		<%= form_tag(admins_accounts_path, method: "get", id: 'search_users') do %>
+      <div class="input-group col-sm-4">
+	 			<span class="input-group-addon">
+			  <%= label_tag(:q, "查找用户") %>
+			  </span>
+			  <%= text_field_tag(:q, nil, placeholder: 'Login', class: "form-control") %>
+			  <span class="input-group-btn">
+					<%= submit_tag("搜索", class: "btn btn-default") %>
+	      </span>
+
+      </div>
+		<% end %>
+
+		<%= simple_table_for @accounts, with: UserTable %>
+		<%= paginate @accounts %>
+
+   	<h1 class="page-header">万流帐号</h1>
+
+		<%= form_tag(search_wanliu_user_admins_accounts_path, method: "get", id: 'search_wanliu_users') do %>
+      <div class="input-group col-sm-4">
+	 			<span class="input-group-addon">
+			  <%= label_tag(:q, "查找万流用户") %>
+			  </span>
+			  <%= text_field_tag(:q, nil, placeholder: 'Login', class: "form-control") %>
+			  <span class="input-group-btn">
+					<%= submit_tag("搜索", class: "btn btn-default") %>
+	      </span>
+
+      </div>
+		<% end %>
+
+		<div class="search_wanliu_users">
+		</div>
+		<script type="text/javascript">
+			$(function() {
+				$("#search_wanliu_users").submit(function(e) {
+					e.preventDefault();
+					var url = '<%= search_wanliu_user_admins_accounts_path %>';
+					$(".search_wanliu_users").load(url, $(this).serialize());
+				});
+			})
+		</script>
+	</div>
+
+</div>

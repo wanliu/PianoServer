@@ -16,8 +16,14 @@
 //= require turbolinks
 //= require nprogress
 //= require nprogress-turbolinks
+//= require china_city/jquery.china_city
 //= require lib/socketcluster-client
 //= require lib/get_local_user
 //= require lib/user-socket
-//= require china_city/jquery.china_city
-//= require_tree .
+//= require _common/qrcode
+//= require_tree ./application
+//= require_tree ./chats
+//= require_tree ./orders
+//= require_tree ./promotions
+//= require_tree ./utils
+//= require_self

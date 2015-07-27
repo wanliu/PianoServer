@@ -1,0 +1,32 @@
+.left-sidebar {
+  width: 240px;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  top: 51px;
+  background-color: #ddd;
+  z-index: 1050;
+}
+
+.nav-sidebar {
+  // margin-right: -21px;
+  margin-bottom: 20px;
+  // margin-left: -20px;
+
+}
+
+.nav-sidebar > .active > a, .nav-sidebar > .active > a:hover, .nav-sidebar > .active > a:focus {
+  color: #fff;
+  background-color: #428bca;
+}
+
+.normal-layout {
+	padding-left: 240px;
+}
+
+
+@media (max-width: 768px) {
+  .normal-layout {
+    padding-left: 0px;
+  }
+}

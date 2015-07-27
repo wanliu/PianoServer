@@ -25,7 +25,7 @@ clearing :on
 
 # Guard-Rails supports a lot options with default values:
 # daemon: false                        # runs the server as a daemon.
-# debugger: false                      # enable ruby-debug gem.
+# debugger: true                       # enable ruby-debug gem.
 # environment: 'development'           # changes server environment.
 # force_run: false                     # kills any process that's holding the listen port before attempting to (re)start Rails.
 # pid_file: 'tmp/pids/[RAILS_ENV].pid' # specify your pid_file.
@@ -39,7 +39,7 @@ clearing :on
 # zeus: false                          # enables zeus gem.
 # CLI: 'rails server'                  # customizes runner command. Omits all options except `pid_file`!
 
-guard 'rails', host: '0.0.0.0', port: ENV['PORT'] || 3000 do
+guard 'rails', host: '0.0.0.0', port: ENV['PORT'] || 3000, debugger: true, server: :thin do
   watch('Gemfile.lock')
   watch(%r{^(config|lib)/.*})
 end
