@@ -32,6 +32,7 @@ gem "less-rails" #Sprockets (what Rails 3.1 uses for its asset pipeline) support
 gem 'bootstrap-sass', '~> 3.3.5'
 gem 'nprogress-rails'
 gem 'activeresource'
+gem 'scoped_search'
 
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'

@@ -42,9 +42,8 @@ Rails.application.configure do
 
   require 'byebug'
 
-  if ENV['RUBY_DEBUG_PORT']
-    Byebug.start_server 'localhost', ENV['RUBY_DEBUG_PORT'].to_i
-  else
+  if ENV['RUBY_DEBUG']
     Byebug.start_server 'localhost'
+    # Byebug.start_server 'localhost', ENV['RUBY_DEBUG_PORT'].to_i
   end
 end

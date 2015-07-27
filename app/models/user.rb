@@ -1,9 +1,10 @@
 class User < ActiveRecord::Base
   include DefaultImage
   include AnonymousUser
-  # Include default devise modules. Others available are:	
+
+  # Include default devise modules. Others available are:
   before_save :ensure_authentication_token
-  
+
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
@@ -17,6 +18,14 @@ class User < ActiveRecord::Base
   after_commit :sync_to_pusher
 
   attr_accessor :login
+
+  # admin search configure
+  scoped_search on: [:id, :username, :email, :mobile]
+
+  scope :can_import?, -> (id) {
+    found = where(id: id).first
+    return found.nil? ? true : found.provider == 'import'
+  }
 
   JWT_TOKEN = Rails.application.secrets.live_key_base
 
@@ -50,9 +59,9 @@ class User < ActiveRecord::Base
       self.authentication_token = generate_authentication_token
     end
   end
- 
+
   private
-  
+
   def generate_authentication_token
     loop do
       token = Devise.friendly_token

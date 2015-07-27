@@ -20,8 +20,9 @@ module WanliuUserJsonFormat
 end
 
 class WanliuUser < ActiveResource::Base
-	self.site = Settings.wanliu.backend
-	self.element_name = 'users'
+  self.site = Settings.wanliu.backend
+  self.element_name = 'users'
   self.collection_parser = WanliuUserCollection
+  self.headers["Pry_Token"] = Settings.wanliu.pry_token
   # self.format = WanliuUserJsonFormat
 end

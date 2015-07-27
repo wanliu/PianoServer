@@ -42,8 +42,8 @@ Rails.application.routes.draw do
       end
     end
     resources :promotions
-
-    get 'contacts' => 'contacts#index'
+    resources :messages
+    resources :contacts
   end
 
   namespace :api do

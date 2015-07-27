@@ -1,15 +1,35 @@
 <div class="left-sidebar">
 	<ul class="nav nav-sidebar">
-	  <li class="active"><a href="#">仪表盘 <span class="sr-only">(current)</span></a></li>
+	  <li><%= link_to '仪表盘', admins_dashboards_path %></li>
 	  <li><%= link_to '帐号', admins_accounts_path %></li>
-	  <li><%= link_to '推广', admins_promotions_path %></li>
-	  <li><a href="#">Export</a></li>
+	  <li><%= link_to '活动', admins_promotions_path %></li>
+ 	  <li><%= link_to '消息', admins_messages_path %></li>
 	</ul>
 </div>
 
 <script type="text/javascript">
+	var highlightSelected = function() {
+		var current_url = location.pathname;
+
+		$('.nav-sidebar>li').each(function(i, elem) {
+			var $href = $(elem).find('a');
+			if ($href.attr('href') === current_url) {
+				$(elem).addClass('active')
+			} else {
+				$(elem).removeClass('active')
+			}
+		});
+	};
+
 	$(function() {
 		var LeftSideBar = window.LeftSideBar;
 		var leftSidebar = new LeftSideBar($('.left-sidebar'));
-	})
+
+
+		highlightSelected();
+	});
+
+	$(document).on('page:change', highlightSelected)
+
+
 </script>
