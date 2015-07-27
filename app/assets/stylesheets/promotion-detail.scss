@@ -162,10 +162,13 @@
     position: fixed;
     bottom: 0;
     left: 0;
-    width: 100%;
     background: #FFFFFF;
     border-top: 1px solid #DDDDDD;
-    display: table;
+    
+    .link-table{
+      display: table;
+      width: 100%;
+    }
 
     .chat-button, .into-shop, .fav-button{
       display: table-cell;
