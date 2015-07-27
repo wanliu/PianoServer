@@ -41,7 +41,7 @@ class @OrderTable
     length = $parent.find('li').length
 
     if (length == 1)
-    	toggleSingleItem(parent)
+    	@toggleSingleItem($parent)
     	return
 
     if (index == 0)
