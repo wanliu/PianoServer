@@ -1,4 +1,17 @@
-<div>
-	<%= @item.id %>
-	<%= @item.name %>
+<div class="col-xs-6 col-sm-3 promotion-wrap">
+  <div class="promotion">
+    <%= image_tag @item.avatar, class: 'promotion-image' %>
+    <p class="promotion-title">
+      <% if @item.name.length > 30 %>
+        <%= @item.name[0, 29] %>...
+      <% else %>
+        <%= @item.name %>
+      <% end %>
+    </p>
+	<div class="price-board clearfix">
+		<div class="prices">
+		  <span class="origin-price">￥<%= @item.price %></span>
+		</div>
+	</div>
+  </div>
 </div>
