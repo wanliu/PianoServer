@@ -1,5 +1,5 @@
 class Chat < ActiveRecord::Base
-  belongs_to :roomable
+  belongs_to :chatable, polymorphic: true
   belongs_to :owner, class_name: 'User'
   belongs_to :target, class_name: 'User'
   has_many :messages, as: :messable
@@ -15,11 +15,14 @@ class Chat < ActiveRecord::Base
   }
 
   def owner
-    owner_id < 0 ? User.anonymous(owner_id) : super
+    owner_id and 0 < owner_id ? User.anonymous(owner_id) : super
   end
 
   def target
-    target_id < 0 ? User.anonymous(target_id) : super
+    target_id and 0 < target_id ? User.anonymous(target_id) : super
   end
 
+  def chatable
+    chatable_type == 'Shop' ? Shop.find(chatable_id) : super
+  end
 end

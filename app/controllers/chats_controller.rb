@@ -10,33 +10,56 @@ class ChatsController < ApplicationController
     # @chats = current_anonymous_or_user.chats
   end
 
+  def create
+    @chat = if params[:shop_id]
+              create_chat_with_shop
+            elsif params[:user_id]
+              create_chat_with_user
+            end
+
+    @order = if params[:promotion_id]
+               create_order_with_promotion
+             elsif params[:product_id]
+               create_order_with_product
+             end
+
+    @chat.order_id = @order.id if @order
+    @chat.save
+    redirect_to @chat
+  end
+
+
+  def create_chat_with_shop
+    @shop = Shop.find(params[:shop_id])
+    @chat = Chat.where(chatable_type: Shop.name, chatable_id: @shop.id, owner_id: current_anonymous_or_user.id).first_or_create
+  end
+
+  def create_chat_with_user
+    @user = User.find(params[:user_id])
+    @chat = Chat.where(chatable_type: User.name, chatable_id: @user.id, owner_id: current_anonymous_or_user.id).first_or_create
+  end
+
+  def create_order_with_promotion
+    @promotion = Promotion.find(params[:promotion_id])
+    @order = Order
+      .where(supplier_id: @shop.id, buyer_id: current_anonymous_or_user.id)
+      .first_or_create({
+        title: @promotion.title
+      }) do |order|
+        order.bid = Order.last_bid(current_anonymous_or_user.id) + 1
+      end
+    @order.items.add_promotion(@promotion)
+    @order
+  end
+
+  def create_order_with_product
+  end
+
 	def show
 		@chat = Chat.find(params[:id])
 		@order = Order.find(@chat.order_id) if @chat.order_id
-		@target = my_chat? ? @chat.target : @chat.owner
-	end
-
-	def owner
-		@chat = Chat
-			.both(params[:owner_id], current_anonymous_or_user.id)
-			.first_or_create({
-				owner_id: params[:owner_id],
-				target_id: current_anonymous_or_user.id
-			})
-
-		unless @chat.order_id
-	    @chat.order_id = @order.id
-	    @chat.save
-	  end
-		render :show
-	end
-
-	def target
-		render :show
-	end
-
-	def channel
-		render :show
+    @target = @chat.chatable || @chat.target
+		# @target = my_chat? ? @chat.target : @chat.owner
 	end
 
 	def chat_variables

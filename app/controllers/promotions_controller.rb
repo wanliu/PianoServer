@@ -16,22 +16,6 @@ class PromotionsController < ApplicationController
     @shop = Shop.find(@promotion.shop_id)
   end
 
-  def chat
-    @promotion
-    @shop = Shop.find(@promotion.shop_id)
-    bid = Order.last_bid(current_anonymous_or_user.id) + 1
-    @order = Order
-      .where(supplier_id: @shop.id, buyer_id: current_anonymous_or_user.id)
-      .first_or_create({
-        title: @promotion.title,
-        supplier_id: @shop.id,
-        buyer_id: current_anonymous_or_user.id,
-        bid: bid
-      })
-    @order.items.add_promotion(@promotion)
-    # @order =
-  end
-
   def shop
     @shop = Shop.find(params[:shop_id])
     redirect_to owner_promotion_rooms_path(@promotion, @shop.owner_id)

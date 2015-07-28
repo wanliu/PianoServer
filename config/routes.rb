@@ -17,14 +17,7 @@ Rails.application.routes.draw do
   end
 
   concern :chatable do
-    resources :chats do
-      collection do
-        get 'channel/:channel_id', to: 'chats#channel', as: :channel
-        get 'owner/:owner_id', to: 'chats#owner', as: :owner
-        get 'target/:target_id', to: 'chats#target', as: :target
-        get 'token/:token_id', to: 'chats#token'
-      end
-    end
+    resources :chats
   end
 
   namespace :admins do
@@ -51,10 +44,9 @@ Rails.application.routes.draw do
     # end
   end
 
-  resources :promotions do
+  resources :promotions, concerns: [ :chatable ] do
     member do
       put "favorited", to: "promotions#favrited"
-      get 'chat'
       get 'shop/:shop_id', to: "promotions#shop", as: :shop
     end
   end

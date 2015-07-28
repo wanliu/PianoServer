@@ -1,4 +1,4 @@
-<%= content_for :title, @target.nickname %>
+<%= content_for :title, @target.try(:nickname) || @target.try(:name) %>
 <%= nav_back_button %>
 <%= content_for :module, :piano %>
 
