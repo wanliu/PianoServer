@@ -11,6 +11,7 @@ class User < ActiveRecord::Base
          :authentication_keys => [:login]
 
   # has_many :memberings, :dependent => :destroy
+  has_many :chats, foreign_key: 'owner_id'
 
   image_token -> { self.email || self.username || self.mobile }
   validates :username, presence: true, uniqueness: true
@@ -26,6 +27,8 @@ class User < ActiveRecord::Base
     found = where(id: id).first
     return found.nil? ? true : found.provider == 'import'
   }
+
+  store_accessor :image, :avatar_url
 
   JWT_TOKEN = Rails.application.secrets.live_key_base
 
@@ -80,4 +83,6 @@ class User < ActiveRecord::Base
       # TODO what to do when sync fails?
     end
   end
+
+  alias_method :name, :nickname
 end

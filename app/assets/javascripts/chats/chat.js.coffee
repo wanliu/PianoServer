@@ -71,7 +71,9 @@ class @Chat
             'step': @options.maxMessageGroup
         }, (err, messages) =>
             return if err || messages.length == 0
-                
+            
+            messages.reverse()
+
             @_batchInsertMessages(messages, 'up')
             # for message in messages
             #     @_insertMessage(message, 'up')
@@ -80,7 +82,7 @@ class @Chat
             #     @$messageList.find('.load-more').remove();
             # else
 
-            @earlyTime = messages[0].time
+            @earlyTime = messages[messages.length - 1].time
             
             callback.call(@, messages) if $.isFunction(callback)
             
@@ -146,7 +148,7 @@ class @Chat
         @autoScroll(direction) if @options.isMessageScroll        
 
     _isOwnMessage: (message) ->
-        @metadata.chatId == message.senderId
+        @metadata.chatId == message.senderId.toString();
         
     _insertLoadMore: () ->
         $more = $('<div class="load-more">查看更多消息</div>').prependTo(@$messageList)

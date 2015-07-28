@@ -1,0 +1,47 @@
+<%= content_for :title, @target.try(:nickname) || @target.try(:name) %>
+<%= nav_back_button %>
+<%= content_for :module, :piano %>
+
+<div class="chat-list">
+  <div class="container">
+    <div class="row">
+    <%= render "chat_order_header" %>
+
+    <div class="chat-inner" >
+      <%= render "chat_order_table" %>
+      <div class="message-list clearfix">
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<%= render "chat_input" %>
+
+<script type="text/javascript">
+  $(function() {
+    var targetId       = "<%= @target.id %>",
+        StatusLoadUrl = window.StatusLoadUrl,
+        MiniTable     = window.MiniTable,
+        Chat          = window.Chat,
+        userSocket    = window.userSocket,
+        ownId         = userSocket.userId,
+        channelId     = userSocket.getUserChannelId(),
+        chatChannelId = 'p' + targetId,
+        $list         = $('.chat-list'),
+        MIN_AMOUNT    = 6,
+        fromTime;
+
+    Chat.defaultOptions.avatarDefault = '<%= image_path "avatar.gif" %>';
+    var $img = $('.chat-order-image')[0];
+    var stateLoad = new StatusLoadUrl($img);
+    var miniTable = new MiniTable($('.chat-order'), $('.chat-items'));
+    var chat = new Chat($('.chat-order'), chatChannelId, {
+      sendBtn: $('.btn-send')
+    });
+
+    $(document).on('page:before-unload', function() {
+      chat.leave();
+    });
+  });
+</script>

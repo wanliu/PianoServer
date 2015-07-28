@@ -16,22 +16,9 @@ Rails.application.routes.draw do
     resources :messages
   end
 
-  concern :roomable do
-    resources :rooms do
-      collection do
-        get 'channel/:channel_id', to: 'rooms#channel', as: :channel
-        get 'owner/:owner_id', to: 'rooms#owner', as: :owner
-        get 'target/:target_id', to: 'rooms#target', as: :target
-        get 'token/:token_id', to: 'rooms#token'
-      end
-    end
+  concern :chatable do
+    resources :chats
   end
-
-  # concern :chatable do
-  #   resources :chats
-  # end
-
-
 
   namespace :admins do
     resources :dashboards
@@ -57,22 +44,26 @@ Rails.application.routes.draw do
     # end
   end
 
-  resources :promotions, concerns: :roomable do
+  resources :promotions, concerns: [ :chatable ] do
     member do
       put "favorited", to: "promotions#favrited"
-      get 'chat'
-      get 'status/:order_id', to: "promotions#status", as: :status_of
       get 'shop/:shop_id', to: "promotions#shop", as: :shop
     end
   end
 
-  resources :shops, concerns: :roomable, only: [ :show ]
-  resources :rooms
+  resources :shops, only: [ :show ]
+  resources :chats
+  resources :orders do
+    member do
+      get 'status', to: "orders#status", as: :status_of
+    end
+  end
   ## shop route
   #
   get '/about' => 'home#about'
 
   match ':shop_name', :to => 'shops#show_by_name', via: [ :get ]
+  match '@:profile', :to => 'profile#username', as: :profile, via: [ :get ]
 
 
   root to: "promotions#index"

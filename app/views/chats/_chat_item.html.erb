@@ -1,0 +1,7 @@
+
+<%= link_to chat_path(chat_item), class: "chat-item" do %>
+  <% other_side = chat_item.other_side(current_anonymous_or_user) %>
+  <%= avatar_image_tag other_side.avatar_url, class: 'chat-item-avatar' %>
+  <h2><%= other_side.name %></h2>
+  <p><%= chat_item.try :last_message %></p>
+<% end %>

@@ -62,7 +62,7 @@
 
   <div class="shop-brief clearfix">
     <div class="shop-logo">
-       <%= image_tag shop.image.src %>
+       <%= image_tag shop.image.try(:src) %>
     </div>
 
     <div class="shop-desc">
@@ -105,7 +105,7 @@
 <!--     <div class="into-cart">加入购物车</div>
     <div class="buy-now">立即购买</div>
  -->
- 	    <%= link_to '洽谈', chat_promotion_path(promotion), class: "chat" %>
+ 	    <%= link_to '洽谈', promotion_chats_path(promotion, shop_id: @shop.id), class: "chat", method: 'POST' %>
     </div>
   </div>
 </div>

@@ -1,0 +1,14 @@
+<% unless @order.nil? %>
+<div class="chat-items" >
+  <ul class="list-group first" order-id="<%= @order.id%>">
+    <%= render "chats/orders/header_target" %>
+    <%= render "chats/orders/header_location" %>
+    <%= render "chats/orders/header_type" %>
+  </ul>
+  <%= render "order_items" %>
+  <ul class="list-group last">
+    <%= render "chats/orders/append_product" %>
+    <%= render "chats/orders/footer" %>
+  </ul>
+</div>
+<% end %>

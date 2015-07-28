@@ -19,7 +19,7 @@ module ApplicationHelper
     }
 
     flash.map do |k, title|
-      <<-HTML 
+      <<-HTML
         <div class="alert alert-#{flash_class[k]}" role="alert">#{title}</div>
       HTML
     end.join('').html_safe
@@ -30,7 +30,7 @@ module ApplicationHelper
   end
 
   def nav_back_button
-    content_for :back do 
+    content_for :back do
       raw '<li>' + link_to('javascript:history.back()') {
             icon :'chevron-left'
           } + '</li>'
@@ -38,10 +38,31 @@ module ApplicationHelper
   end
 
   def nav_button(link)
-    content_for :back do 
+    content_for :back do
       raw '<li>' + link_to(link) {
             icon :'chevron-left'
           } + '</li>'
-    end    
+    end
   end
+
+  def avatar_image_tag(url, *args)
+    image_tag url.blank? ? image_path('avatar.gif') : url, *args
+  end
+
+  def user_avatar(user, *args)
+    link_to user_profile_path(user), { class: 'nav-avatar' } do
+      avatar_image_tag(user.avatar_url, *args) + user.nickname
+    end
+  end
+
+  private
+
+  def user_profile_path(user)
+    if user.id < 0
+      '#'
+    else
+      profile_path(user)
+    end
+  end
+
 end

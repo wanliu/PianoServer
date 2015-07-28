@@ -16,15 +16,13 @@
  *= require nprogress-bootstrap
  *= require _common/bubble
  *= require_tree ./application
+ *= require_tree ./chats
  *= require_self
  */
 
 body {
   background-image: image-url('bj.jpg');
-
-  &.piano >.container, &.detail > .container{
-    margin-top: 50px;
-  }
+  padding-top: 50px;
 }
 
 .detail .navbar-fixed-top{
@@ -80,4 +78,13 @@ body {
 
 .navbar-collapse .navbar-nav{
   max-height: 50px;
+}
+
+.nav-avatar {
+  padding-top: 10px!important;
+
+  img {
+    width: 30px;
+    height: 30px;
+  }
 }
