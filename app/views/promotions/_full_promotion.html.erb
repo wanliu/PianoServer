@@ -62,7 +62,7 @@
 
   <div class="shop-brief clearfix">
     <div class="shop-logo">
-       <%= image_tag shop.image.src %>
+       <%= image_tag shop.image.try(:src) %>
     </div>
 
     <div class="shop-desc">
