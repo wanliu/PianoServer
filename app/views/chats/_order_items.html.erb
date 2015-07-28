@@ -1,0 +1,42 @@
+  <ul class="list-group item-list" order-id="<%= @order.id%>">
+    <% @order.items.each do |item| %>
+    <li class="list-group-item" item-id= "<%= item.id %>">
+      <div class="order-item">
+        <div class="order-item-brief">
+          <div class="order-item-left">
+            <a href="javascript:void(0);">
+              <%= image_tag item.image['preview_url'], class: 'item-preview-url' %>
+            </a>
+          </div>
+          <div class="order-item-center">
+            <h4><%= item.title %></h4>
+            <p>单价: <%= number_to_currency(item.price, unit:'￥') %></p>
+          </div>
+          <div class="order-item-right">
+            <span class="glyphicon glyphicon-trash remove-btn" data-toggle="tooltip" data-placement="bottom" title="删除"></span>
+          </div>
+        </div>
+        <div class="edit-fieldset">
+          <div class="order-item-amount edit-item clearfix">
+            <div class="desc-value">
+              <span class="glyphicon glyphicon-menu-left range-left"></span>
+              <input type="range" name="volume" min="6" max="<%= item.data['product_inventory'] %>" value="<%= item.amount.to_i %>">
+              <span class="glyphicon glyphicon-menu-right range-right"></span>
+            </div>
+            数量
+            <input type="text" value="<%= number_to_human(item.amount) %>" class="amount">
+          </div>
+          <div class="order-item-price edit-item clearfix">
+            <div class="desc-value">
+              <span class="glyphicon glyphicon-yen range-left"></span>
+              <input type="range" name="volume" min="<%= item.price*0.5 %>" max="<%= item.price*2 %>" value="<%= item.price %>">
+              <span class="glyphicon glyphicon-yen range-right"></span>
+            </div>
+            价格
+            <input type="text" value="<%= item.price %>" class="price">
+          </div>
+        </div>
+      </div>
+    </li>
+    <% end %>
+  </ul>

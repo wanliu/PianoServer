@@ -58,6 +58,7 @@
           <ul class="nav navbar-nav">
             <li><%= link_to "关于我们", about_path  %></li>
             <li><%= link_to "二维码", "#share-url-qrcode" , "data-toggle"=>"modal" %></li>
+            <li><%= user_avatar(current_anonymous_or_user) %></li>
           </ul>
         </div>
       </div>

@@ -48,4 +48,21 @@ module ApplicationHelper
   def avatar_image_tag(url, *args)
     image_tag url.blank? ? image_path('avatar.gif') : url, *args
   end
+
+  def user_avatar(user, *args)
+    link_to user_profile_path(user), { class: 'nav-avatar' } do
+      avatar_image_tag(user.avatar_url, *args) + user.nickname
+    end
+  end
+
+  private
+
+  def user_profile_path(user)
+    if user.id < 0
+      '#'
+    else
+      profile_path(user)
+    end
+  end
+
 end

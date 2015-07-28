@@ -55,18 +55,23 @@ Rails.application.routes.draw do
     member do
       put "favorited", to: "promotions#favrited"
       get 'chat'
-      get 'status/:order_id', to: "promotions#status", as: :status_of
       get 'shop/:shop_id', to: "promotions#shop", as: :shop
     end
   end
 
   resources :shops, only: [ :show ]
   resources :chats
+  resources :orders do
+    member do
+      get 'status', to: "orders#status", as: :status_of
+    end
+  end
   ## shop route
   #
   get '/about' => 'home#about'
 
   match ':shop_name', :to => 'shops#show_by_name', via: [ :get ]
+  match '@:profile', :to => 'profile#username', as: :profile, via: [ :get ]
 
 
   root to: "promotions#index"
