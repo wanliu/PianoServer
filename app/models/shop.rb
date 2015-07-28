@@ -24,4 +24,7 @@ class Shop < ActiveResource::Base
     Chat.where('chatable_type = ? and chatable_id = ?', self.class.name, id)
   end
 
+  def avatar_url
+    image.try(:src)
+  end
 end

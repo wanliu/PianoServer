@@ -15,14 +15,18 @@ class Chat < ActiveRecord::Base
   }
 
   def owner
-    owner_id and 0 < owner_id ? User.anonymous(owner_id) : super
+    owner_id && owner_id < 0 ? User.anonymous(owner_id) : super
   end
 
   def target
-    target_id and 0 < target_id ? User.anonymous(target_id) : super
+    target_id && target_id < 0 ? User.anonymous(target_id) : super
   end
 
   def chatable
     chatable_type == 'Shop' ? Shop.find(chatable_id) : super
+  end
+
+  def other_side(current_user)
+    target_id.nil? ? chatable : (target_id == current_user.id ? owner : target)
   end
 end
