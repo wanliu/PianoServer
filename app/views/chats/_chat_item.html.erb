@@ -1,0 +1,5 @@
+<div class="chat-item">
+  <%= avatar_image_tag chat_item.owner.avatar_url, class: 'chat-item-avatar' %>
+  <h2><%= chat_item.owner.nickname %></h2>
+  <p><%= chat_item.owner.try :last_message %></p>
+</div>

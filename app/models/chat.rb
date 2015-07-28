@@ -1,4 +1,4 @@
-class Room < ActiveRecord::Base
+class Chat < ActiveRecord::Base
   belongs_to :roomable
   belongs_to :owner, class_name: 'User'
   belongs_to :target, class_name: 'User'
@@ -9,5 +9,10 @@ class Room < ActiveRecord::Base
   scope :both, -> (owner_id, target_id) {
     where(owner_id: owner_id, target_id: target_id)
   }
+
+  scope :in, -> (id) {
+    where("owner_id = ? or target_id = ?", id, id).order(:updated_at)
+  }
+
 
 end

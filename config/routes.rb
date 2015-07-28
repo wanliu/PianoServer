@@ -16,22 +16,16 @@ Rails.application.routes.draw do
     resources :messages
   end
 
-  concern :roomable do
-    resources :rooms do
+  concern :chatable do
+    resources :chats do
       collection do
-        get 'channel/:channel_id', to: 'rooms#channel', as: :channel
-        get 'owner/:owner_id', to: 'rooms#owner', as: :owner
-        get 'target/:target_id', to: 'rooms#target', as: :target
-        get 'token/:token_id', to: 'rooms#token'
+        get 'channel/:channel_id', to: 'chats#channel', as: :channel
+        get 'owner/:owner_id', to: 'chats#owner', as: :owner
+        get 'target/:target_id', to: 'chats#target', as: :target
+        get 'token/:token_id', to: 'chats#token'
       end
     end
   end
-
-  # concern :chatable do
-  #   resources :chats
-  # end
-
-
 
   namespace :admins do
     resources :dashboards
@@ -57,7 +51,7 @@ Rails.application.routes.draw do
     # end
   end
 
-  resources :promotions, concerns: :roomable do
+  resources :promotions do
     member do
       put "favorited", to: "promotions#favrited"
       get 'chat'
@@ -66,8 +60,8 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :shops, concerns: :roomable, only: [ :show ]
-  resources :rooms
+  resources :shops, only: [ :show ]
+  resources :chats
   ## shop route
   #
   get '/about' => 'home#about'

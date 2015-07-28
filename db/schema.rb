@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150727034037) do
+ActiveRecord::Schema.define(version: 20150728030828) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,6 +34,19 @@ ActiveRecord::Schema.define(version: 20150727034037) do
 
   add_index "admins", ["email"], name: "index_admins_on_email", unique: true, using: :btree
   add_index "admins", ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true, using: :btree
+
+  create_table "chats", force: :cascade do |t|
+    t.integer  "roomable_id"
+    t.string   "roomable_type"
+    t.string   "name"
+    t.integer  "target_id"
+    t.integer  "owner_id"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.jsonb    "data",          default: {}, null: false
+    t.string   "channel_id"
+    t.string   "tokens",                                  array: true
+  end
 
   create_table "contacts", force: :cascade do |t|
     t.string   "name"
@@ -126,19 +139,6 @@ ActiveRecord::Schema.define(version: 20150727034037) do
     t.string   "title"
     t.decimal  "total",            precision: 18, scale: 2
     t.jsonb    "image"
-  end
-
-  create_table "rooms", force: :cascade do |t|
-    t.integer  "roomable_id"
-    t.string   "roomable_type"
-    t.string   "name"
-    t.integer  "target_id"
-    t.integer  "owner_id"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
-    t.jsonb    "data",          default: {}, null: false
-    t.string   "channel_id"
-    t.string   "tokens",                                  array: true
   end
 
   create_table "statuses", force: :cascade do |t|

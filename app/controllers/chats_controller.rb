@@ -1,27 +1,32 @@
-class RoomsController < ApplicationController
+class ChatsController < ApplicationController
   include ConcernParentResource
 
   set_parent_param :promotion_id, class_name: 'Promotion'
-  before_action :room_variables, only: [:owner, :target, :channel]
+  before_action :chat_variables, only: [:owner, :target, :channel]
   before_action :get_order, only: [:owner, :target, :channel]
 
+  def index
+    @chats = Chat.in(current_anonymous_or_user.id)
+    # @chats = current_anonymous_or_user.chats
+  end
+
 	def show
-		@room = Room.find(params[:id])
-		@order = Order.find(@room.order_id) if @room.order_id
-		@target = my_room? ? @room.target : @room.owner
+		@chat = Chat.find(params[:id])
+		@order = Order.find(@chat.order_id) if @chat.order_id
+		@target = my_chat? ? @chat.target : @chat.owner
 	end
 
 	def owner
-		@room = Room
+		@chat = Chat
 			.both(params[:owner_id], current_anonymous_or_user.id)
 			.first_or_create({
 				owner_id: params[:owner_id],
 				target_id: current_anonymous_or_user.id
 			})
 
-		unless @room.order_id
-	    @room.order_id = @order.id
-	    @room.save
+		unless @chat.order_id
+	    @chat.order_id = @order.id
+	    @chat.save
 	  end
 		render :show
 	end
@@ -34,7 +39,7 @@ class RoomsController < ApplicationController
 		render :show
 	end
 
-	def room_variables
+	def chat_variables
 		if @parent.is_a? Promotion
 			@target = Shop.find(@parent.shop_id)
 		end
@@ -63,8 +68,8 @@ class RoomsController < ApplicationController
 
 	private
 
-	def my_room?
-		@room.owner_id == current_anonymous_or_user.id
+	def my_chat?
+		@chat.owner_id == current_anonymous_or_user.id
 	end
 
 end
