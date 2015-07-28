@@ -40,6 +40,16 @@
       sendBtn: $('.btn-send')
     });
 
+    chat.on('init', function(e, socket) {
+      var chatId = '<%= @chat.id %>';
+      socket.emit('set', { channelId: chatChannelId, key: 'chat_id', value: chatId });
+
+      <% unless @order.nil? %>
+      var orderId = '<%= @order.id %>';
+      socket.emit('set', { channelId: chatChannelId, key: 'order_id', value: orderId })
+      <% end %>
+    });
+
     $(document).on('page:before-unload', function() {
       chat.leave();
     });
