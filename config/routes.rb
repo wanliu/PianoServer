@@ -56,6 +56,7 @@ Rails.application.routes.draw do
   resources :orders do
     member do
       get 'status', to: "orders#status", as: :status_of
+      get 'diff', to: "orders#diff", as: :diff
     end
   end
   ## shop route

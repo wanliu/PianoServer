@@ -2,7 +2,7 @@
 #
 class @OrderTable
   @defaultOptions = {
-    maxDelaySyncMs: 300
+    maxDelaySyncMs: 1500
   }
 
   constructor: (@element, @orderId = $(@element).data('orderId'), @options = {}) ->
@@ -10,11 +10,13 @@ class @OrderTable
     @items = for item in @$items
       new OrderItem(item, @element)
 
-    @options = $(@options, @defaultOptions)
+    @options = $.extend({}, OrderTable.defaultOptions, @options)
     @itemList = @$().find('.item-list')
     @itemList.on('click', @onClicked.bind(@))
     @itemList.on('change', 'input[name=amount]',@amountChanged.bind(@))
     @itemList.on('change', 'input[name=price]', @priceChanged.bind(@))
+    @itemList.on('keyup', 'input[name=amount]', @amountChanged.bind(@))
+    @itemList.on('keyup', 'input[name=price]', @priceChanged.bind(@))
     @$().on('click', '.payment-menu li', @changePayment.bind(@))
     @patch = []
 
@@ -151,19 +153,31 @@ class @OrderTable
     # hash = {}
     # hash[op] = path
     # hash['value'] = value
-    @patch.push(op: op, path: path, value: value)
-    clearTimeout(@delaySyncId ) if @delaySyncId?
+    last = @patch[@patch.length - 1]
+    if last and last['path'] == path
+      last['value'] = value
+    else
+      @patch.push(op: op, path: path, value: value)
 
-    @delaySyncId = setTimeout () =>
-      $.ajax({
-        url: "/orders/#{@orderId}",
-        type: 'put',
-        data: { patch: @patch }
-      }).success (data) =>
-        @patch = []
-        @parseDiff(data.diff)
+    unless @delaySyncId?
+      delay = () =>
+        queue = []
+        queue.push(@patch.shift()) for ele in @patch
 
-    , @options.maxDelaySyncMs
+        $.ajax({
+          url: "/orders/#{@orderId}",
+          type: 'PATCH',
+          dataType: 'json',
+          contentType: 'application/json',
+          data: JSON.stringify({patch: queue})
+        }).success (data) =>
+          queue.splice(0)
+          clearTimeout(@delaySyncId)
+          @delaySyncId = null
+          @parseDiff(data.diff)
+          delay() if @patch.length
+
+      @delaySyncId = setTimeout(delay, @options.maxDelaySyncMs)
 
   pushTableOp: (op, key, value) ->
     @pushOp(op, key, value)
