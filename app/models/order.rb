@@ -1,6 +1,7 @@
 class Order < ActiveRecord::Base
   include ThumbImages
   store_accessor :image, :avatar_url
+  store_accessor :data, :updates
 
   MIN_AMOUNT = 6
 
@@ -73,5 +74,9 @@ class Order < ActiveRecord::Base
 
   def supplier
     Shop.find(supplier_id)
+  end
+
+  def original_json
+    as_json(include: :items, except: :data)
   end
 end

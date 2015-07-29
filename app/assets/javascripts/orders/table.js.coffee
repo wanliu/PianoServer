@@ -7,15 +7,14 @@ class @OrderTable
 
   constructor: (@element, @orderId = $(@element).data('orderId'), @options = {}) ->
     @$items = @$().find('.item-list > .list-group-item')
-    for item in @$items
+    @items = for item in @$items
       new OrderItem(item, @element)
 
     @options = $(@options, @defaultOptions)
     @itemList = @$().find('.item-list')
     @itemList.on('click', @onClicked.bind(@))
-    @itemList.on('change', 'input[type=range]', @onChanged.bind(@))
-    @itemList.on('keyup', '.amount', @amountChanged.bind(@))
-    @itemList.on('keyup', '.price', @priceChanged.bind(@))
+    @itemList.on('change', 'input[name=amount]',@amountChanged.bind(@))
+    @itemList.on('change', 'input[name=price]', @priceChanged.bind(@))
     @patch = []
 
   $: () ->
@@ -61,13 +60,6 @@ class @OrderTable
     else
       toggleMidItem($target)
 
-  onChanged: (event) ->
-    $input = $(event.target)
-    value = $.trim($input.val())
-    $input.parents('.edit-item:first').find('input[type=text]').val(value)
-    $item = $(event.currentTarget).parents('.list-group-item')
-    @pushItemOp 'replace', @indexOf($item), 'amount', value
-
   amountChanged: (event) ->
     $input = $(event.target)
     amount = $input.val()
@@ -106,6 +98,9 @@ class @OrderTable
 
     $range.val(price)
 
+    $item = $(event.currentTarget).parents('.list-group-item')
+    @pushItemOp 'replace', @indexOf($item), 'price', price
+
   isEditField: (target) ->
     target.is('.edit-fieldset') or target.parents('.edit-fieldset').length > 0
 
@@ -114,6 +109,9 @@ class @OrderTable
 
   isItemImage: (target) ->
     target.is('img')
+
+  send: (event, args...) ->
+    @$().trigger(event, args...)
 
   toggleSingleItem: (parent) ->
     parent.prev().toggleClass('radius-bottom')
@@ -150,8 +148,10 @@ class @OrderTable
         url: "/orders/#{@orderId}",
         type: 'put',
         data: { patch: @patch }
-      }).success () =>
+      }).success (data) =>
         @patch = []
+        @parseDiff(data.diff)
+
     , @options.maxDelaySyncMs
 
   pushTableOp: (op, key, value) ->
@@ -163,4 +163,29 @@ class @OrderTable
 
   indexOf: (item) ->
     $(".item-list .list-group-item").index(item)
+
+  parseDiff: (diffs) ->
+    for [op, path, src, dest] in diffs
+
+      [itemObj, key] = @parsePath(path)
+      switch op
+        when '+'
+          @send('add', {key: key, src: src, dest: dest})
+        when '-'
+          itemObj.send('remove', {key: key, src: src, dest: dest})
+        when '~'
+          itemObj.send('replace', {key: key, src: src, dest: dest})
+
+
+  parsePath: (path) ->
+    ITEMS_REG = /items\[(\d+)\](?:\.(\w+))?/
+    if ITEMS_REG.test(path)
+      [_, index, key] = ITEMS_REG.exec(path)
+      [@items[+index], key]
+
+
+
+
+
+
 
