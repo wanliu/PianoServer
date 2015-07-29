@@ -22,18 +22,23 @@
         </div>
         <div class="edit-fieldset">
           <div class="order-item-amount edit-item clearfix">
-            <div class="desc-value">
+            <div class="edit-item-left">
+              <span class="field-name">数量</span>
+              <input type="number" name="amount" value="<%= number_to_human(item.amount) %>" class="amount" autocomplete="off">
+            </div>
+            <div class="edit-item-right">
 
             </div>
-            数量
-            <input type="number" name="amount" value="<%= number_to_human(item.amount) %>" class="amount">
+
           </div>
           <div class="order-item-price edit-item clearfix">
-            <div class="desc-value">
+            <div class="edit-item-left">
+              <span class="field-name">价格</span>
+              <input type="number" name="price" value="<%= item.price %>" class="price" autocomplete="off">
+            </div>
+            <div class="edit-item-right">
 
             </div>
-            价格
-            <input type="number" name="price" value="<%= item.price %>" class="price">
           </div>
         </div>
       </div>

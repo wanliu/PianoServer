@@ -28,7 +28,14 @@ class @OrderItem
     $value = @$().find(".#{key}")
     $value
       .text(dest)
-    arrow = if +src > +dest then '&darr;' else '&uarr;'
+
+    if +src > +dest
+      arrow = '&darr;'
+    else if +src == +dest
+      arrow = '&#45;'
+    else
+      arrow = '&uarr;'
+    # arrow = if +src > +dest then '&darr;' else '&uarr;'
 
     $title = $value.next('.title')
     $title
