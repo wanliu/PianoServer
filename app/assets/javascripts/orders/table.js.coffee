@@ -2,7 +2,7 @@
 #
 class @OrderTable
   @defaultOptions = {
-    maxDelaySyncMs: 1500
+    maxDelaySyncMs: 800
   }
 
   constructor: (@element, @orderId = $(@element).data('orderId'), @options = {}) ->
