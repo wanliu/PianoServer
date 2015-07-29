@@ -102,12 +102,6 @@ class @OrderTable
     $item = $(event.currentTarget).parents('.list-group-item')
     @pushItemOp 'replace', @indexOf($item), 'price', price
 
-    if (+price > +max)
-      alert('你设置的价格超出了合理范围')
-      return
-
-    $range.val(price)
-
   changePayment: (e) ->
     $target = $(e.currentTarget)
 
