@@ -28,7 +28,7 @@
               <span class="glyphicon glyphicon-menu-right range-right"></span>
             </div>
             数量
-            <input type="text" name="amount" value="<%= number_to_human(item.amount) %>" class="amount">
+            <input type="number" name="amount" value="<%= number_to_human(item.amount) %>" class="amount">
           </div>
           <div class="order-item-price edit-item clearfix">
             <div class="desc-value">
@@ -37,7 +37,7 @@
               <span class="glyphicon glyphicon-yen range-right"></span>
             </div>
             价格
-            <input type="text" name="price" value="<%= item.price %>" class="price">
+            <input type="number" name="price" value="<%= item.price %>" class="price">
           </div>
         </div>
       </div>

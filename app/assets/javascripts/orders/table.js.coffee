@@ -15,6 +15,7 @@ class @OrderTable
     @itemList.on('click', @onClicked.bind(@))
     @itemList.on('change', 'input[name=amount]',@amountChanged.bind(@))
     @itemList.on('change', 'input[name=price]', @priceChanged.bind(@))
+    @$().on('click', '.payment-menu li', @changePayment.bind(@))
     @patch = []
 
   $: () ->
@@ -63,19 +64,19 @@ class @OrderTable
   amountChanged: (event) ->
     $input = $(event.target)
     amount = $input.val()
-    $parent = $input.parent()
-    $range = $parent.find('input[type=range]')
-    max = $range.attr('max')
-    reg = /^[1-9]\d*$/
+    # $parent = $input.parent()
+    # $range = $parent.find('input[type=range]')
+    # max = $range.attr('max')
+    # reg = /^[1-9]\d*$/
 
-    unless (reg.test(amount))
-      return
+    # unless (reg.test(amount))
+    #   return
 
-    if (+amount > +max)
-      alert('库存不足!')
-      return
+    # if (+amount > +max)
+    #   alert('库存不足!')
+    #   return
 
-    $range.val(amount)
+    #$range.val(amount)
     $(event.currentTarget).trigger('item:amount:change', amount)
 
     $item = $(event.currentTarget).parents('.list-group-item')
@@ -84,13 +85,22 @@ class @OrderTable
   priceChanged: (event) ->
     $this = $(event.target)
     price = $this.val()
-    $parent = $this.parent()
-    $range = $parent.find('input[type=range]')
-    max = $range.attr('max')
-    reg = /^[1-9]\d*(.\d{1,2})?$/
+    # $parent = $this.parent()
+    # $range = $parent.find('input[type=range]')
+    # max = $range.attr('max')
+    # reg = /^[1-9]\d*(.\d{1,2})?$/
 
-    unless (reg.test(price))
-      return
+    # unless (reg.test(price))
+    #   return
+
+    # if (+price > +max)
+    #   alert('你设置的价格超出了合理范围')
+    #   return
+
+    #$range.val(price)
+
+    $item = $(event.currentTarget).parents('.list-group-item')
+    @pushItemOp 'replace', @indexOf($item), 'price', price
 
     if (+price > +max)
       alert('你设置的价格超出了合理范围')
@@ -98,8 +108,15 @@ class @OrderTable
 
     $range.val(price)
 
-    $item = $(event.currentTarget).parents('.list-group-item')
-    @pushItemOp 'replace', @indexOf($item), 'price', price
+  changePayment: (e) ->
+    $target = $(e.currentTarget)
+
+    if ($target.hasClass('selected'))
+      return;
+
+    $target.addClass('selected').siblings().removeClass('selected');
+    text = $target.find('a').text()
+    $target.parents('.dropdown:first').find('.button-text').text(text);
 
   isEditField: (target) ->
     target.is('.edit-fieldset') or target.parents('.edit-fieldset').length > 0
@@ -182,10 +199,4 @@ class @OrderTable
     if ITEMS_REG.test(path)
       [_, index, key] = ITEMS_REG.exec(path)
       [@items[+index], key]
-
-
-
-
-
-
 

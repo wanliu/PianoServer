@@ -33,6 +33,7 @@ class @OrderItem
     $title = $value.next('.title')
     $title
       .html("<span class=\"label label-success\">#{arrow} 修改</span>")
+      .stop(true, true)
       .effect('pulsate', times: 3, duration: 1500)
 
   send: (event, args...) ->
