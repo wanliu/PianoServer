@@ -31,7 +31,7 @@ class ChatsController < ApplicationController
 
   def create_chat_with_shop
     @shop = Shop.find(params[:shop_id])
-    @chat = Chat.where(chatable_type: Shop.name, chatable_id: @shop.id, owner_id: current_anonymous_or_user.id).first_or_create
+    @chat = Chat.where(chatable_type: Shop.name, chatable_id: @shop.id, owner_id: current_anonymous_or_user.id).first_or_create target_id: @shop.owner_id
   end
 
   def create_chat_with_user
@@ -58,8 +58,8 @@ class ChatsController < ApplicationController
 	def show
 		@chat = Chat.find(params[:id])
 		@order = Order.find(@chat.order_id) if @chat.order_id
-    @target = @chat.chatable || @chat.target
-		# @target = my_chat? ? @chat.target : @chat.owner
+    #@target = @chat.chatable || @chat.target
+		@target = my_chat? ? @chat.target : @chat.owner
 	end
 
 	def chat_variables

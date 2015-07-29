@@ -20,22 +20,31 @@
 
 <script type="text/javascript">
   $(function() {
-    var targetId       = "<%= @target.id %>",
-        StatusLoadUrl = window.StatusLoadUrl,
+    var StatusLoadUrl = window.StatusLoadUrl,
         MiniTable     = window.MiniTable,
         Chat          = window.Chat,
         userSocket    = window.userSocket,
         ownId         = userSocket.userId,
         channelId     = userSocket.getUserChannelId(),
-        chatChannelId = 'p' + targetId,
-        $list         = $('.chat-list'),
-        MIN_AMOUNT    = 6,
-        fromTime;
+        chatChannelId,
+        targetId;
+
+    <% unless @target.nil? %>
+      targetId  = "<%= @target.id %>";
+      chatChannelId = 'p' + targetId;
+    <% end %>
 
     Chat.defaultOptions.avatarDefault = '<%= image_path "avatar.gif" %>';
     var $img = $('.chat-order-image')[0];
     var stateLoad = new StatusLoadUrl($img);
     var miniTable = new MiniTable($('.chat-order'), $('.chat-items'));
+
+    if (!targetId) {
+      alert('无效的聊天对象！');
+      $('.btn-send').attr('disabled', 'disabled');
+      return;
+    }
+
     var chat = new Chat($('.chat-order'), chatChannelId, {
       sendBtn: $('.btn-send')
     });
