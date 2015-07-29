@@ -19,10 +19,21 @@
  *= require_tree ./chats
  *= require_self
  */
+html{
+  position: relative;
+  min-height: 100%;
+
+  footer{
+    position: absolute;
+    bottom: 0;
+    word-break: break-all;
+  }
+}
 
 body {
   background-image: image-url('bj.jpg');
   padding-top: 50px;
+  margin-bottom: 60px;
 }
 
 .detail .navbar-fixed-top{
