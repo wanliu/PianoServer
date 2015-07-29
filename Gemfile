@@ -33,6 +33,8 @@ gem 'bootstrap-sass', '~> 3.3.5'
 gem 'nprogress-rails'
 gem 'activeresource'
 gem 'scoped_search'
+gem 'json-patch'
+gem 'easy_diff'
 
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'

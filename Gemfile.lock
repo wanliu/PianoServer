@@ -87,6 +87,7 @@ GEM
       thread_safe (~> 0.1)
       warden (~> 1.2.3)
     diff-lcs (1.2.5)
+    easy_diff (0.0.4)
     elasticsearch (1.0.12)
       elasticsearch-api (= 1.0.12)
       elasticsearch-transport (= 1.0.12)
@@ -157,6 +158,7 @@ GEM
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
     json (1.8.3)
+    json-patch (1.0.0)
     jwt (0.1.11)
       multi_json (>= 1.5)
     kaminari (0.16.3)
@@ -344,6 +346,7 @@ DEPENDENCIES
   china_city
   coffee-rails (~> 4.1.0)
   devise (= 3.4.0)
+  easy_diff
   elasticsearch-model
   elasticsearch-persistence
   elasticsearch-rails
@@ -354,6 +357,7 @@ DEPENDENCIES
   guard-sidekiq
   jbuilder (~> 2.0)
   jquery-rails
+  json-patch
   jwt
   kaminari
   less-rails

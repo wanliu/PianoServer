@@ -1,6 +1,6 @@
   <ul class="list-group item-list" order-id="<%= @order.id%>">
     <% @order.items.each do |item| %>
-    <li class="list-group-item" item-id= "<%= item.id %>">
+    <li class="list-group-item" data-item-id= "<%= item.id %>">
       <div class="order-item">
         <div class="order-item-brief">
           <div class="order-item-left">

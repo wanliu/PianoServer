@@ -1,5 +1,5 @@
 <% unless @order.nil? %>
-<div class="chat-items" >
+<div class="chat-items" data-order-id="<%= @order.id%>" >
   <ul class="list-group first" order-id="<%= @order.id%>">
     <%= render "chats/orders/header_target" %>
     <%= render "chats/orders/header_location" %>
