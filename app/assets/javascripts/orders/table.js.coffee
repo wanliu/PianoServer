@@ -101,6 +101,7 @@ class @OrderTable
     #   return
 
     #$range.val(price)
+    $(event.currentTarget).trigger('item:price:change', price)
 
     $item = $(event.currentTarget).parents('.list-group-item')
     @pushItemOp 'replace', @indexOf($item), 'price', price
