@@ -1,5 +1,9 @@
 class OrdersController < ApplicationController
-  before_action :set_order_params, only: [:status, :update, :diff ]
+  before_action :set_order_params, only: [:show, :status, :update, :diff ]
+
+  def show
+    render json: { order: @order.origin_hash }
+  end
 
   def status
     response = {
@@ -22,7 +26,7 @@ class OrdersController < ApplicationController
       pp new_json
       # byebug
       # 用差分算法比较两个同的 hash, 返回 diff 数组
-      @diffs = diff_hash @order.origin_hash, new_json
+      @diffs = diff_hash @order.update_hash, new_json
       unless @diffs.blank?
         @order.updates = new_json
         @order.save

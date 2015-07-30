@@ -5,8 +5,7 @@ class @OrderTable extends @Event
   @defaultOptions = {
     maxDelaySyncMs: 800
   }
-
-  constructor: (@element, @order, @options = {}) ->
+  constructor: (@element, @orderId = $(@element).data('orderId'), @options = {}) ->
     super(@element)
     @$items = @$().find('.item-list > .list-group-item')
     @items = for item in @$items
@@ -27,7 +26,7 @@ class @OrderTable extends @Event
     @patch = []
     @on 'init', () =>
       $.ajax({
-        url: "/orders/#{@order.id}/diff",
+        url: "/orders/#{@orderId}/diff",
         type: 'GET',
         dataType: 'json'
       }).success (data) =>
@@ -238,7 +237,7 @@ class @OrderTable extends @Event
         queue.push(@patch.shift()) for ele in @patch
 
         $.ajax({
-          url: "/orders/#{@order.id}",
+          url: "/orders/#{@orderId}",
           type: 'PATCH',
           dataType: 'json',
           contentType: 'application/json',
