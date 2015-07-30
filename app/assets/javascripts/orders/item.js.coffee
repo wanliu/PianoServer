@@ -15,9 +15,10 @@ class @OrderItem
     $(@parent).trigger('item:select', @element)
 
   onPriceChange: (e, newVal) ->
-
+    @$().find('.order-item-price .edit-item-right').text('对方将数量修改为' + newVal)
 
   onAmountChange: (e, newVal) ->
+    @$().find('.order-item-amount .edit-item-right').text('对方将价格修改为' + newVal)
 
   onAddChange: (e, data) ->
 
@@ -28,7 +29,14 @@ class @OrderItem
     $value = @$().find(".#{key}")
     $value
       .text(dest)
-    arrow = if +src > +dest then '&darr;' else '&uarr;'
+
+    if +src > +dest
+      arrow = '&darr;'
+    else if +src == +dest
+      arrow = '&#45;'
+    else
+      arrow = '&uarr;'
+    # arrow = if +src > +dest then '&darr;' else '&uarr;'
 
     $title = $value.next('.title')
     $title

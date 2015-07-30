@@ -50,24 +50,27 @@ class @OrderTable extends @Event
 
     $target.toggleClass('open')
 
-    index = $target.index()
-    $parent = $target.parent()
-    length = $parent.find('li').length
+    @changeRadiusStyles($target)
+
+  changeRadiusStyles: (target) ->
+    index = target.index()
+    parent = target.parent()
+    length = parent.find('li').length
 
     if (length == 1)
-      @toggleSingleItem($parent)
+      @toggleSingleItem(parent)
       return
 
     if (index == 0)
-      @toggleFirstItem($parent, $target)
+      @toggleFirstItem(parent, target)
       return
 
     if (index == length - 1)
-      @toggleLastItem($parent, $target)
+      @toggleLastItem(parent, target)
       return
 
     else
-      toggleMidItem($target)
+      @toggleMidItem(target)
 
   amountChanged: (event) ->
     $input = $(event.target)
@@ -106,6 +109,7 @@ class @OrderTable extends @Event
     #   return
 
     #$range.val(price)
+    $(event.currentTarget).trigger('item:price:change', price)
 
     $item = $(event.currentTarget).parents('.list-group-item')
     @pushItemOp 'replace', @indexOf($item), 'price', price
@@ -151,6 +155,8 @@ class @OrderTable extends @Event
   removeItem: (el) ->
     itemId = el.attr('item-id')
     orderId = el.parent().attr('order-id')
+
+    @changeRadiusStyles(el)
 
     # send request to remove item
     el.remove()
