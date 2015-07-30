@@ -20,6 +20,10 @@ class @OrderTable extends @Event
     @itemList.on('keyup', 'input[name=amount]', @amountChanged.bind(@))
     @itemList.on('keyup', 'input[name=price]', @priceChanged.bind(@))
     @$().on('click', '.payment-menu li', @changePayment.bind(@))
+    @$().on('click', '.order-item-amount .btn-minus', @amountDecreased.bind(@))
+    @$().on('click', '.order-item-amount .btn-plus', @amountIncreased.bind(@))
+    @$().on('click', '.order-item-price .btn-minus', @priceDecreased.bind(@))
+    @$().on('click', '.order-item-price .btn-plus', @priceIncreased.bind(@))
     @patch = []
     @on 'init', () =>
       $.ajax({
@@ -29,9 +33,10 @@ class @OrderTable extends @Event
       }).success (data) =>
         @parseDiff(data.diff)
 
-  onClicked: (event) ->
-    event.stopPropagation()
+  $: () ->
+    $(@element)
 
+  onClicked: (event) ->
     $target = $(event.target)
 
     if @isEditField($target)
@@ -72,6 +77,34 @@ class @OrderTable extends @Event
     else
       @toggleMidItem(target)
 
+  amountDecreased: (event) ->
+    event.stopPropagation()
+    $target = $(event.target)
+    $group = $target.parents('.input-group:first')
+    $input = $group.find('input[name=amount]')
+    amount = $input.val()
+    reg = /^[1-9]\d*$/
+
+    unless (reg.test(amount))
+      return
+
+    amount = +amount - 1
+    $input.val(amount).change()
+
+  amountIncreased: (event) ->
+    event.stopPropagation()
+    $target = $(event.target)
+    $group = $target.parents('.input-group:first')
+    $input = $group.find('input[name=amount]')
+    amount = $input.val()
+    reg = /^[1-9]\d*$/
+
+    unless (reg.test(amount))
+      return
+
+    amount = +amount + 1
+    $input.val(amount).change()
+
   amountChanged: (event) ->
     $input = $(event.target)
     amount = $input.val()
@@ -92,6 +125,34 @@ class @OrderTable extends @Event
 
     $item = $(event.currentTarget).parents('.list-group-item')
     @pushItemOp 'replace', @indexOf($item), 'amount', amount
+
+  priceDecreased: (event) ->
+    event.stopPropagation()
+    $target = $(event.target)
+    $group = $target.parents('.input-group:first')
+    $input = $group.find('input[name=price]')
+    price = $input.val()
+    # reg = /^[1-9]\d*(.\d{1,2})?$/
+
+    # unless (reg.test(price))
+    #   return
+
+    price = +price - 1
+    $input.val(price).change()
+
+  priceIncreased: (event) ->
+    event.stopPropagation()
+    $target = $(event.target)
+    $group = $target.parents('.input-group:first')
+    $input = $group.find('input[name=price]')
+    price = $input.val()
+    # reg = /^[1-9]\d*(.\d{1,2})?$/
+
+    # unless (reg.test(price))
+    #   return
+
+    price = (+price + 1) + '.0'
+    $input.val(price).change()
 
   priceChanged: (event) ->
     $this = $(event.target)

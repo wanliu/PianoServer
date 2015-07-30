@@ -219,6 +219,11 @@
             position: absolute;
             left: 0;
             top: 0;
+            line-height: 34px;
+          }
+
+          .input-group{
+            width: 100%;
           }
 
           input[type="number"]{
@@ -237,6 +242,7 @@
         .edit-item-right{
           margin-left: 50%;
           padding-left: 1em;
+          line-height: 34px;
           // -webkit-transition: color 0.25s ease-in-out 0;
           // transition: color 0.25s ease-in-out 0;
         }
