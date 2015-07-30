@@ -15,10 +15,10 @@ class @OrderItem
     $(@parent).trigger('item:select', @element)
 
   onPriceChange: (e, newVal) ->
-    @$().find('.order-item-amount .edit-item-right').text('对方将数量修改为' + newVal)
+    @$().find('.order-item-price .edit-item-right').text('对方将数量修改为' + newVal)
 
   onAmountChange: (e, newVal) ->
-    @$().find('.order-item-price .edit-item-right').text('对方将价格修改为' + newVal)
+    @$().find('.order-item-amount .edit-item-right').text('对方将价格修改为' + newVal)
 
   onAddChange: (e, data) ->
 
