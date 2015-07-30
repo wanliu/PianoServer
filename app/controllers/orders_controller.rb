@@ -37,7 +37,7 @@ class OrdersController < ApplicationController
   end
 
   def diff
-    @diffs = HashDiff.diff @order.origin_hash, @order.update_hash, strict: false
+    @diffs = diff_hash @order.origin_hash, @order.update_hash
     render json: { diff: @diffs }
   end
 

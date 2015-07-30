@@ -1,11 +1,13 @@
 #= require ./item
-#
-class @OrderTable
+#= require _common/event
+
+class @OrderTable extends @Event
   @defaultOptions = {
     maxDelaySyncMs: 800
   }
 
-  constructor: (@element, @orderId = $(@element).data('orderId'), @options = {}) ->
+  constructor: (@element, @order, @options = {}) ->
+    super(@element)
     @$items = @$().find('.item-list > .list-group-item')
     @items = for item in @$items
       new OrderItem(item, @element)
@@ -19,9 +21,13 @@ class @OrderTable
     @itemList.on('keyup', 'input[name=price]', @priceChanged.bind(@))
     @$().on('click', '.payment-menu li', @changePayment.bind(@))
     @patch = []
-
-  $: () ->
-    $(@element)
+    @on 'init', () =>
+      $.ajax({
+        url: "/orders/#{@order.id}/diff",
+        type: 'GET',
+        dataType: 'json'
+      }).success (data) =>
+        @parseDiff(data.diff)
 
   onClicked: (event) ->
     event.stopPropagation()
@@ -165,7 +171,7 @@ class @OrderTable
         queue.push(@patch.shift()) for ele in @patch
 
         $.ajax({
-          url: "/orders/#{@orderId}",
+          url: "/orders/#{@order.id}",
           type: 'PATCH',
           dataType: 'json',
           contentType: 'application/json',
