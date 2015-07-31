@@ -162,10 +162,10 @@ class @Chat
 
     isVisible = @_checkIsVisible(true)
 
-    if !@_isOwnMessage(message) && !isVisible
+    if @_checkOrderItemIsVisible() || (!@_isOwnMessage(message) && !isVisible)
       @_insertBubbleTip(message)
 
-    if isVisible && @options.isMessageScroll
+    if !@_checkOrderItemIsVisible() && isVisible && @options.isMessageScroll
       @autoScroll(direction)
 
     #@autoScroll(direction) if @options.isMessageScroll
@@ -184,6 +184,9 @@ class @Chat
     scrollTop = chatContainer.scrollTop
 
     return clientHeight + scrollTop  >= scrollHeight - (isInsert ? lastItemHeight + 20 : 20)
+
+  _checkOrderItemIsVisible: () ->
+    @table.isVisible
 
   _insertBubbleTip: (message) ->
     $tip = @$chatContainer.find('.bubble-tip')
