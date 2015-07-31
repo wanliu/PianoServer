@@ -139,7 +139,7 @@ class @OrderTable extends @Event
     # unless (reg.test(price))
     #   return
 
-    price = +price - 1
+    price = +price - 1 + '.0'
     $input.val(price).change()
 
   priceIncreased: (event) ->
