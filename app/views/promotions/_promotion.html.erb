@@ -4,7 +4,7 @@
 	    <% if promotion.type == 'promotions/discount' %>
         <div class="type-flag discount">
         	<%= image_tag 'discount.png' %>
-            <div class="type-text"><%= promotion.discount %></div>
+            <div class="type-text"><%= promotion.discount.gsub('小于', '') %></div>
         </div>
 	    <% elsif promotion.type == 'promotions/time_limited_sale' %>
         <div class="type-flag limit-time">
