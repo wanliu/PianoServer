@@ -11,7 +11,14 @@ class @MiniTable
 
   toggleShow: () ->
     @table ||= new OrderTable(@target, @order)
-    $(@target).slideToggle()
+    $list = $('.chat-list')
+
+    if ($(@target).is(':visible'))
+      $(@target).slideUp()
+      $list.css('overflow', 'auto')
+    else
+      $(@target).slideToggle()
+      $list.css('overflow', 'hidden')
 
   send: (event, data) ->
     if @table?

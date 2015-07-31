@@ -2,17 +2,19 @@
 <%= nav_back_button %>
 <%= content_for :module, :piano %>
 
+<%= render "chat_order_header" %>
+<div class="order-table-wrap">
+  <%= render "chat_order_table" %>
+</div>
+
 <div class="chat-list">
   <div class="container">
     <div class="row">
-    <%= render "chat_order_header" %>
-
-    <div class="chat-inner" >
-      <%= render "chat_order_table" %>
-      <div class="message-list clearfix">
+      <div class="chat-inner" >
+        <div class="message-list clearfix">
+        </div>
       </div>
     </div>
-  </div>
   </div>
 </div>
 
@@ -37,7 +39,7 @@
     Chat.defaultOptions.avatarDefault = '<%= image_path "avatar.gif" %>';
     var $img = $('.chat-order-image')[0];
     var stateLoad = new StatusLoadUrl($img);
-    var miniTable = new MiniTable($('.chat-order'), $('.chat-items'), <%= @order.id %>);
+    var miniTable = new MiniTable($('.chat-order'), $('.order-table-wrap'), <%= @order.id %>);
 
     if (!targetId) {
       alert('无效的聊天对象！');
