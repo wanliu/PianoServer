@@ -2,13 +2,17 @@
 #
 class @MiniTable
 
-	constructor: (@element, @target, @order) ->
+  constructor: (@element, @target, @order) ->
 
-		@$().bind 'click', @toggleShow.bind(@)
+    @$().bind 'click', @toggleShow.bind(@)
 
-	$: () ->
-		$(@element)
+  $: () ->
+    $(@element)
 
-	toggleShow: () ->
-		@table ||= new OrderTable(@target, @order)
-		$(@target).slideToggle()
+  toggleShow: () ->
+    @table ||= new OrderTable(@target, @order)
+    $(@target).slideToggle()
+
+  send: (event, data) ->
+    if @table?
+      @table.send(event, data)

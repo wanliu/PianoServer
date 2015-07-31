@@ -5,6 +5,7 @@ class @OrderTable extends @Event
   @defaultOptions = {
     maxDelaySyncMs: 800
   }
+
   constructor: (@element, @orderId = $(@element).data('orderId'), @options = {}) ->
     super(@element)
     @$items = @$().find('.item-list > .list-group-item')
@@ -31,6 +32,8 @@ class @OrderTable extends @Event
         dataType: 'json'
       }).success (data) =>
         @parseDiff(data.diff)
+
+    @on 'order', @onOrderCommand.bind(@)
 
   $: () ->
     $(@element)
@@ -280,3 +283,6 @@ class @OrderTable extends @Event
       [_, index, key] = ITEMS_REG.exec(path)
       [@items[+index], key]
 
+  onOrderCommand: (e, command) ->
+    if command.diff?
+      @parseDiff(command.diff)

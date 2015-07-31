@@ -49,6 +49,8 @@
       sendBtn: $('.btn-send')
     });
 
+    chat.setTable(miniTable);
+
     chat.on('init', function(e, socket) {
       var chatId = '<%= @chat.id %>';
       socket.emit('set', { channelId: chatChannelId, key: 'chat_id', value: chatId });

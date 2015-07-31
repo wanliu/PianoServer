@@ -1,4 +1,14 @@
 class OrdersController < ApplicationController
+  PROMPTS = {
+    ALL: '$action了 $key 从 $src 至 $dest',
+    ITEMS: '$action了 第 $index 项的 $key 从 $src 至 $dest',
+  }
+
+  PROMPT_MATCHS = {
+    ALL: '*',
+    ITEMS: /items\[(\d+)\]\.(\w+)/
+  }
+
   before_action :set_order_params, only: [:show, :status, :update, :diff ]
 
   def show
@@ -36,6 +46,7 @@ class OrdersController < ApplicationController
       puts ex.backtrace.join("\n")
       @diffs = []
     ensure
+      send_diff_message @diffs
       render json: { diff: @diffs }
     end
   end
@@ -70,4 +81,51 @@ class OrdersController < ApplicationController
     HashDiff.best_diff one, two
   end
 
+  def other_side
+    if @order.buyer_id == current_anonymous_or_user.id
+      @order.seller_id || @order.supplier.owner_id
+    else
+      @order.buyer_id
+    end
+  end
+
+  def send_diff_message(diffs)
+    user_id = current_anonymous_or_user.id
+    index = nil
+    diffs.each do |op, path, src, dest|
+      if path =~ PROMPT_MATCHS[:ITEMS]
+        m = path.match(PROMPT_MATCHS[:ITEMS])
+        index, key = m[1].to_i + 1, m[2]
+        prompt = PROMPTS[:ITEMS]
+      else
+        prompt = PROMPTS[:ALL]
+        index = nil
+        key = path
+      end
+
+      action = case op
+               when '+' then '增加'
+               when '-' then '删除'
+               when '~' then '修改'
+               end
+
+      msg = prompt_template(prompt, {
+        action: action,
+        author: current_anonymous_or_user.name,
+        key: key,
+        src: src,
+        index: index,
+        dest: dest
+      })
+      MessageSystemService.push_message user_id, other_side, msg, to: [other_side], type: 'order'
+    end
+    MessageSystemService.push_command user_id, other_side, {command: 'order', diff: diffs}.to_json
+  end
+
+  def prompt_template(template, context)
+    template.gsub(/(\$\w+)/) do |name|
+      name = name[1..-1].to_sym
+      context[name]
+    end
+  end
 end
