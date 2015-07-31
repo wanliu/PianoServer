@@ -37,7 +37,7 @@
 		padding: 10px;
 
     .chat-items {
-      display: none;
+      //display: none;
     }
 
     .message-list {
@@ -366,6 +366,10 @@
 		width: 100%;
     position: relative;
 
+    >img:first-child{
+      border-radius: 50%;
+    }
+
 		&.me {
 			padding-left: 75px;
 
@@ -427,11 +431,29 @@
   		cursor: pointer;
   	}
   }
+
+  .bubble-tip{
+    position: fixed;
+    bottom: 60px;
+    width: 100%;
+    text-align: center;
+
+    .tip-text{
+      display: inline-block;
+      margin: 0 auto;
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 0 6px #B2B2B2;
+      max-width: 50%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
 }
 
 .chat-navbar {
 	.form-group {
-
 		max-width: 100%;
 		margin-right: 75px;
 	}

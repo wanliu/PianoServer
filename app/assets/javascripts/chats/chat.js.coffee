@@ -29,6 +29,8 @@ class @Chat
     $(document).bind 'page:before-unload', =>
       @_clearEventListners()
 
+    @$chatContainer.bind('scroll', @_clearBubbleTipOnScrollBottom.bind(@))
+
     @earlyTime = @options.earlyTime
     @setSendBtn(@sendBtn)
 
@@ -158,13 +160,47 @@ class @Chat
   _insertMessage: (message, direction = 'down') ->
     @_insertItemMessage(message, direction)
 
-    @autoScroll(direction) if @options.isMessageScroll
+    isVisible = @_checkIsVisible(true)
+
+    if !@_isOwnMessage(message) && !isVisible
+      @_insertBubbleTip(message)
+
+    if isVisible && @options.isMessageScroll
+      @autoScroll(direction)
+
+    #@autoScroll(direction) if @options.isMessageScroll
 
   _batchInsertMessages: (messages, direction = 'down') ->
     for message in messages
       @_insertItemMessage(message, 'up')
 
-    @autoScroll(direction) if @options.isMessageScroll
+    # @autoScroll(direction) if @options.isMessageScroll
+
+  _checkIsVisible: (isInsert) ->
+    chatContainer = @$chatContainer[0]
+    lastItemHeight = @$chatContainer.find('.chat:last').height()
+    scrollHeight = chatContainer.scrollHeight
+    clientHeight = chatContainer.clientHeight
+    scrollTop = chatContainer.scrollTop
+
+    return clientHeight + scrollTop  >= scrollHeight - (isInsert ? lastItemHeight + 20 : 20)
+
+  _insertBubbleTip: (message) ->
+    $tip = @$chatContainer.find('.bubble-tip')
+    {content, senderLogin} = message
+
+    if $tip.length == 0
+      $tip = $('<div class="bubble-tip"><div class="tip-text"></div></div>')
+        .appendTo(@$chatContainer)
+
+    $tip.find('.tip-text').text(senderLogin + '说：' + content)
+
+  _clearBubbleTipOnScrollBottom: () ->
+    if @_checkIsVisible(false)
+      @_clearBubbleTip()
+
+  _clearBubbleTip: () ->
+    @$chatContainer.find('.bubble-tip').remove()
 
   _isOwnMessage: (message) ->
     @metadata.chatId == message.senderId.toString();
