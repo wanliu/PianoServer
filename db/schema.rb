@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150728063742) do
+ActiveRecord::Schema.define(version: 20150729033513) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -139,6 +139,7 @@ ActiveRecord::Schema.define(version: 20150728063742) do
     t.string   "title"
     t.decimal  "total",            precision: 18, scale: 2
     t.jsonb    "image"
+    t.jsonb    "data"
   end
 
   create_table "statuses", force: :cascade do |t|

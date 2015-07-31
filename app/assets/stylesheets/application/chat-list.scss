@@ -208,6 +208,44 @@
 
       .edit-item{
         margin-top: 10px;
+
+        .edit-item-left{
+          float: left;
+          width: 50%;
+          padding-left: 40px;
+          position: relative;
+
+          .field-name{
+            position: absolute;
+            left: 0;
+            top: 0;
+            line-height: 34px;
+          }
+
+          .input-group{
+            width: 100%;
+          }
+
+          input[type="number"]{
+            width: 100%;
+            border-width: 0 0 1px 0;
+            border-color: #CCCCCC;
+            text-align: center;
+
+            &:focus{
+              border-width: 0 0 1px 0;
+              outline: none;
+            }
+          }
+        }
+
+        .edit-item-right{
+          margin-left: 50%;
+          padding-left: 1em;
+          line-height: 34px;
+          // -webkit-transition: color 0.25s ease-in-out 0;
+          // transition: color 0.25s ease-in-out 0;
+        }
       }
 
       .desc-value{
@@ -234,20 +272,7 @@
         }
       }
 
-      input[type="text"]{
-        width: 30%;
-        margin-left: 8px;
-        border-width: 0 0 1px 0;
-        border-color: #CCCCCC;
-        text-align: center;
-
-        &:focus{
-          border-width: 0 0 1px 0;
-          outline: none;
-        }
-      }
-
-      input[type=range]{
+      /**input[type=range]{
         -webkit-appearance: none;
         margin-top: 4px;
       }

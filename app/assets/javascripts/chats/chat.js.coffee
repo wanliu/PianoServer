@@ -24,6 +24,7 @@ class @Chat
     @userSocket.onPersonMessage(@boundOnMessage)
     @metadata = window.metadata
     @ownerChannelId = @options.userChannelId || @userSocket.getUserChannelId()
+    @table = @options.table
 
     $(document).bind 'page:before-unload', =>
       @_clearEventListners()
@@ -93,16 +94,27 @@ class @Chat
 
       callback.call(@, messages) if $.isFunction(callback)
 
+  setTable: (@table) ->
+
   onMessage: (message) ->
     unless @_isEnter
       @_isEnter = true
       @chatChannelId = message.channelId
       @enter()
 
-    @_insertMessage(message)
+    if message.type == 'command'
+      @onCommand(message)
+    else
+      @_insertMessage(message)
+
+  onCommand: (message) ->
+    command = JSON.parse(message.content)
+    if command.command == 'order' and @table?
+        @table.send('order', command)
 
   onHistoryMessage: () ->
     @getHistoryMessage @earlyTime, @_loadMoreProcess
+
 
   # private
   _sendMsg: () ->

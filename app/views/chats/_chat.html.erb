@@ -37,7 +37,7 @@
     Chat.defaultOptions.avatarDefault = '<%= image_path "avatar.gif" %>';
     var $img = $('.chat-order-image')[0];
     var stateLoad = new StatusLoadUrl($img);
-    var miniTable = new MiniTable($('.chat-order'), $('.chat-items'));
+    var miniTable = new MiniTable($('.chat-order'), $('.chat-items'), <%= @order.id %>);
 
     if (!targetId) {
       alert('无效的聊天对象！');
@@ -48,6 +48,8 @@
     var chat = new Chat($('.chat-order'), chatChannelId, {
       sendBtn: $('.btn-send')
     });
+
+    chat.setTable(miniTable);
 
     chat.on('init', function(e, socket) {
       var chatId = '<%= @chat.id %>';

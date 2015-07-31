@@ -1,7 +1,7 @@
 module ThumbImages
   extend ActiveSupport::Concern
 
-  included do 
+  included do
     include DynamicAssociationCallback
     cattr_accessor :thumb_association_options, :thumbimages_asset_host
 
@@ -31,18 +31,18 @@ module ThumbImages
     end
   end
 
-  private 
+  private
 
   def _generate_thumbimages(association, owner, options)
     association = [association] unless association.is_a?(ActiveRecord::Associations::CollectionProxy)
     urls = association.map do |item|
       attribute_name = options[:field]
       image = (item.send(attribute_name) || {}).with_indifferent_access
-      url = image[:avatar_url] || image[:preview_url] 
+      url = image[:avatar_url] || image[:preview_url]
     end
 
     store_field = options[:store_field] || options[:field]
-    pp task_option(store_field)
+    puts task_option(store_field)
     CombinationImagesJob.perform_later owner, urls, task_option(store_field)
   end
 
