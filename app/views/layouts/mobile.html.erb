@@ -55,12 +55,28 @@
           <%= content_for?(:title) ? yield(:title) : Settings.app.title %>
         <% end %>
         <div class="navbar-collapse collapse navbar-responsive-collapse">
-          <ul class="nav navbar-nav">
+          <ul class="nav navbar-nav navbar-right">
             <li><%= link_to "关于我们", about_path  %></li>
             <li><%= link_to "二维码", "#share-url-qrcode" , "data-toggle"=>"modal" %></li>
-            <li><%= user_avatar(current_anonymous_or_user) %></li>
+            <% if current_anonymous_or_user.id < 0 %>
+            <li><%= link_to "登入(#{current_anonymous_or_user.id if Rails.env.development?})", new_user_session_path %></li>
+            <% else %>
+            <li class="dropdown">
+              <%= user_avatar(current_anonymous_or_user, 'data-toggle' => 'dropdown', 'role' => "button" ) %>
+ <!--            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a> -->
+              <ul class="dropdown-menu">
+                <li><%= link_to '我的主页', user_profile_path(current_user) %></li>
+                <li role="separator" class="divider"></li>
+                <li><%= link_to '登出', destroy_user_session_path, method: :delete %>
+              </ul>
+            </li>
+            <% end %>
           </ul>
         </div>
+
+        <ul class="nav navbar-nav navbar-right">
+
+        </ul>
       </div>
     </div>
 
