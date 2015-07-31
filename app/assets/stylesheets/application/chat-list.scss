@@ -37,7 +37,7 @@
 		padding: 10px;
 
     .chat-items {
-      //display: none;
+      display: none;
     }
 
     .message-list {
@@ -210,8 +210,6 @@
         margin-top: 10px;
 
         .edit-item-left{
-          float: left;
-          width: 50%;
           padding-left: 40px;
           position: relative;
 
@@ -240,9 +238,8 @@
         }
 
         .edit-item-right{
-          margin-left: 50%;
-          padding-left: 1em;
           line-height: 34px;
+          padding: 0;
           // -webkit-transition: color 0.25s ease-in-out 0;
           // transition: color 0.25s ease-in-out 0;
         }
