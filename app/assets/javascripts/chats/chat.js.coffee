@@ -168,7 +168,7 @@ class @Chat
     if !@_isOwnMessage(message) && (@_checkChatContentIsOverlayed() || !isVisible)
       @_insertBubbleTip(message)
 
-    if !@_checkChatContentIsOverlayed() || (isVisible && @options.isMessageScroll)
+    if @_checkChatContentIsOverlayed() || (isVisible && @options.isMessageScroll)
       @autoScroll(direction)
 
     #@autoScroll(direction) if @options.isMessageScroll
@@ -188,9 +188,9 @@ class @Chat
     scrollTop = chatContainer.scrollTop
 
     if isInsert
-      clientHeight + scrollTop >= scrollHeight - (lastItemHeight + 20)
+      clientHeight + scrollTop >= scrollHeight - (lastItemHeight + 70)
     else
-      clientHeight + scrollTop >= scrollHeight - 20
+      clientHeight + scrollTop >= scrollHeight - 70
 
     # return clientHeight + scrollTop  >= scrollHeight - (isInsert ? lastItemHeight + 20 : 20)
 
