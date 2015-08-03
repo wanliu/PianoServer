@@ -33,7 +33,6 @@ class OrdersController < ApplicationController
     begin
       # 应用修改记录， 返回一个新的 json
       new_json    = apply_patch_json @order.update_hash
-      pp new_json
       # byebug
       # 用差分算法比较两个同的 hash, 返回 diff 数组
       @diffs = diff_hash @order.update_hash, new_json
