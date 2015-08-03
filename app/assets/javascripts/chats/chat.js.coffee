@@ -18,6 +18,7 @@ class @Chat
     @textElement = @options.textElement || "input[name='chat-text']"
     @$messageList = $(@options.messageList || ".message-list")
     @$chatContainer = $(@options.container || ".chat-list")
+    @$chatWrap = $(@options.container || ".main-content")
     @userSocket = window.userSocket
 
     @boundOnMessage = @onMessage.bind(@)
@@ -187,9 +188,9 @@ class @Chat
     scrollTop = chatContainer.scrollTop
 
     if isInsert
-      clientHeight + scrollTop >= scrollHeight - (lastItemHeight + 60)
+      clientHeight + scrollTop >= scrollHeight - (lastItemHeight + 20)
     else
-      clientHeight + scrollTop >= scrollHeight - 60
+      clientHeight + scrollTop >= scrollHeight - 20
 
     # return clientHeight + scrollTop  >= scrollHeight - (isInsert ? lastItemHeight + 20 : 20)
 
@@ -197,12 +198,12 @@ class @Chat
     @table.chatContentOverlayed
 
   _insertBubbleTip: (message) ->
-    $tip = @$chatContainer.find('.bubble-tip')
+    $tip = @$chatWrap.find('.bubble-tip')
     {content, senderLogin} = message
 
     if $tip.length == 0
       $tip = $('<div class="bubble-tip"><div class="tip-text"></div></div>')
-        .appendTo(@$chatContainer)
+        .prependTo(@$chatWrap)
 
     $tip.find('.tip-text').text(senderLogin + '说：' + content)
 
