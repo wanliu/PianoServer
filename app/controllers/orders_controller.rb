@@ -58,9 +58,8 @@ class OrdersController < ApplicationController
 
   def accept
     if @order.accept_state != "accepting"
-          # CombinationImagesJob.perform_later owner, urls, task_option(store_field)
       @order.update(:accept_state => "accepting")
-      # OrderAcceptingJob.set(wait: 3.seconds).perform_later @order, @order.update_hash.to_json, current_anonymous_or_user.id, other_side
+      MessageSystemService.push_command current_anonymous_or_user.id, other_side, {command: 'order', accept: 'accepting'}.to_json
     else
       throw OrderInvalidState.new("invalid accept_state #{@order.accept_state} in accepting")
     end

@@ -206,19 +206,21 @@ class @OrderTable extends @Event
       @inAccepting = true
       $.post("/orders/#{@orderId}/accept")
         .success () =>
-          @popup = Popup.show """
-            <h3>正在同意订单修改</h3>
-          """
-          @count = 0;
-          maxCount =  @options.maxWaitAccpetingMS / 1000
-          @acceptTickId = setInterval () =>
-            @popup.setHtml """
-              <h3>正在同意订单修改</h3>
-              <h1 class="text-center">#{maxCount - @count}</h1>
-            """
+          @showPopup()
+          # @popup = Popup.show """
+          #   <h3>正在同意订单修改</h3>
+          #   <h1>&nbsp;</h1>
+          # """
+          # @count = 0;
+          # maxCount =  @options.maxWaitAccpetingMS / 1000
+          # @acceptTickId = setInterval () =>
+          #   @popup.setHtml """
+          #     <h3>正在同意订单修改</h3>
+          #     <h1 class="text-center">#{maxCount - @count}</h1>
+          #   """
 
-            @count = if @count >= maxCount then @count else @count + 1
-          , 1000
+          #   @count = if @count >= maxCount then @count else @count + 1
+          # , 1000
 
           setTimeout () =>
             @inAccepting = false
@@ -234,6 +236,23 @@ class @OrderTable extends @Event
       @closePopup()
 
       $.post "/orders/#{@orderId}/cancel", () =>
+
+  showPopup: () ->
+    @popup = Popup.show """
+      <h3>正在同意订单修改</h3>
+      <h1>&nbsp;</h1>
+    """
+    count = 0;
+    maxCount =  @options.maxWaitAccpetingMS / 1000
+    @acceptTickId = setInterval () =>
+      @popup.setHtml """
+        <h3>正在同意订单修改</h3>
+        <h1 class="text-center">#{maxCount - count}</h1>
+      """
+
+      count = if count >= maxCount then count else count + 1
+    , 1000
+    @popup
 
   closePopup: () ->
     @inAccepting = false
@@ -339,3 +358,6 @@ class @OrderTable extends @Event
   onOrderCommand: (e, command) ->
     if command.diff?
       @parseDiff(command.diff)
+
+    else if command.accept? and command.accept == 'accepting'
+      @showPopup()

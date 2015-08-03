@@ -13,8 +13,8 @@ class @Popup extends @Event
     @applyStyle()
     height = $(window).height();
     width = $(window).width();
-    popupWidth = @$().width()
-    popupHeight = @$().height()
+    popupWidth = @$().outerWidth(true)
+    popupHeight = @$().outerHeight(true)
 
     left = (width - popupWidth) / 2
     top = (height - popupHeight) / 2
