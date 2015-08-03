@@ -67,10 +67,12 @@ class @Chat
     $(document).trigger('inchats:leave', @chatChannelId)
 
   autoScroll: (direction = 'down') ->
+    $inner = @$chatContainer.find('.chat-inner')
+
     if direction == 'down'
-      @$chatContainer.scrollTop(@$messageList.innerHeight())
+      $inner.scrollTop(@$messageList.innerHeight())
     else
-      @$chatContainer.scrollTop(0)
+      $inner.scrollTop(0)
 
   getHistoryMessage: (start = @earlyTime, callback) ->
     type = if start == 0 then 'index' else 'time'
@@ -162,10 +164,10 @@ class @Chat
 
     isVisible = @_checkIsVisible(true)
 
-    if !@_isOwnMessage(message) && (@_checkOrderItemIsVisible() || !isVisible)
+    if !@_isOwnMessage(message) && (@_checkChatContentIsOverlayed() || !isVisible)
       @_insertBubbleTip(message)
 
-    if !@_checkOrderItemIsVisible() || (isVisible && @options.isMessageScroll)
+    if !@_checkChatContentIsOverlayed() || (isVisible && @options.isMessageScroll)
       @autoScroll(direction)
 
     #@autoScroll(direction) if @options.isMessageScroll
@@ -177,21 +179,22 @@ class @Chat
     # @autoScroll(direction) if @options.isMessageScroll
 
   _checkIsVisible: (isInsert) ->
-    chatContainer = @$chatContainer[0]
-    lastItemHeight = @$chatContainer.find('.chat:last').height()
+    $inner = @$chatContainer.find('.chat-inner')
+    chatContainer = $inner[0]
+    lastItemHeight = $inner.find('.chat:last').height()
     scrollHeight = chatContainer.scrollHeight
     clientHeight = chatContainer.clientHeight
     scrollTop = chatContainer.scrollTop
 
     if isInsert
-      clientHeight + scrollTop >= scrollHeight - (lastItemHeight + 20)
+      clientHeight + scrollTop >= scrollHeight - (lastItemHeight + 60)
     else
-      clientHeight + scrollTop >= scrollHeight - 20
+      clientHeight + scrollTop >= scrollHeight - 60
 
     # return clientHeight + scrollTop  >= scrollHeight - (isInsert ? lastItemHeight + 20 : 20)
 
-  _checkOrderItemIsVisible: () ->
-    @table.isVisible
+  _checkChatContentIsOverlayed: () ->
+    @table.chatContentOverlayed
 
   _insertBubbleTip: (message) ->
     $tip = @$chatContainer.find('.bubble-tip')

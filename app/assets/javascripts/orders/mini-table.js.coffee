@@ -67,12 +67,14 @@ class @MiniTable
   _hideOrderItems: () ->
     $('.main-content').removeClass('show-order-items')
     @_showChatScroll()
+    @chatContentOverlayed = false
 
   _showChatScroll: () ->
     $('.chat-list .chat-inner').css('overflow', 'auto')
 
   _hideChatScroll: () ->
     $('.chat-list .chat-inner').css('overflow', 'hidden')
+    @chatContentOverlayed = true
 
 
 

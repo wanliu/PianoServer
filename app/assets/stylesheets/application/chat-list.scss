@@ -68,7 +68,7 @@
   bottom: 0;
   overflow: auto;
   display: none;
-  z-index: 1032;
+  z-index: 10;
 
   .order-table{
     padding-bottom: 55px;
@@ -362,7 +362,7 @@
   right: 0;
 	overflow-y: auto;
   overflow-x: hidden;
-  z-index: 1031;
+  z-index: 9;
   padding: 0;
 
 	.chat-inner {
@@ -456,12 +456,11 @@
   }
 
   .bubble-tip{
-    position: fixed;
+    position: absolute;
     bottom: 60px;
     width: 100%;
     text-align: center;
-    background: #FFFFFF;
-    z-index: 1032;
+    z-index: 11;
 
     .tip-text{
       display: inline-block;
