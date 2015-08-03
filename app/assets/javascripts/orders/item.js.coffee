@@ -48,6 +48,7 @@ class @OrderItem
     $title = $value.next('.title')
     $title
       .text(arrow)
+      .addClass('animated fadeOutUp')
 
     $item
       .addClass('change')
