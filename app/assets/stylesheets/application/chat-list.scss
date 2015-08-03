@@ -63,6 +63,50 @@
   display: none;
   z-index: 1032;
 
+  .order-table{
+    padding-bottom: 55px;
+    position: relative;
+    height: 100%;
+    overflow: auto;
+  }
+
+  .order-buttons{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 10px;
+    background: #FFFFFF;
+
+    .btn-wrap {
+      text-align: center;
+
+      &.left{
+        padding-right: 10px;
+      }
+
+      &.right{
+        padding-left: 10px;
+      }
+
+      .btn-agrees, .btn-disagrees{
+        width: 100%;
+        padding: 5px 0;
+        text-align: center;
+        color: #FFFFFF;
+        font-size: 16px;
+      }
+
+      .btn-agrees{
+        background: #F12A39;
+      }
+
+      .btn-disagrees{
+        background: #AC62F9;
+      }
+    }
+  }
+
   .chat-items{
     background: #FFFFFF;
   }
@@ -296,53 +340,24 @@
   .add-item{
     line-height: 28px;
   }
-  // padding: 10px;
-  .order-buttons{
-    margin: 20px 0;
-
-    .btn-wrap {
-      width: 50%;
-      float: left;
-
-      &.left{
-        padding-right: 10px;
-      }
-
-      &.right{
-        padding-left: 10px;
-      }
-
-      .btn-agrees, .btn-disagrees{
-        width: 100%;
-        padding: 5px 0;
-        text-align: center;
-        color: #FFFFFF;
-        font-size: 16px;
-      }
-
-      .btn-agrees{
-        background: #F12A39;
-      }
-
-      .btn-disagrees{
-        background: #AC62F9;
-      }
-    }
-  }
 }
 
 .chat-list {
 	background-color: #FFFFFF;
 	position: absolute;
 	top: 0;
-	bottom: 50px;
+	bottom: 0;
   right: 0;
 	overflow-y: auto;
   overflow-x: hidden;
   z-index: 1031;
+  padding: 0;
 
 	.chat-inner {
-		//padding: 10px;
+		position: relative;
+    height: 100%;
+    overflow: auto;
+    padding: 0 15px 60px 15px;
 
     .message-list {
       position: relative;
@@ -350,6 +365,13 @@
     }
   }
 
+  .chat-navbar{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0;
+  }
 
 	.chat {
 		width: 100%;
@@ -458,8 +480,14 @@
 }
 
 @media (max-width: 1200px) and (min-width: 768px) {
-  .main-content.show-order-items .order-table-wrap{
-    width: 100%;
+  .main-content.show-order-items{
+    .order-table-wrap{
+      width: 100%;
+    }
+
+    .chat-list{
+      border-left: none;
+    }
   }
 }
 

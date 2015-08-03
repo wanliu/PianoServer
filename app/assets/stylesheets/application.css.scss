@@ -19,16 +19,16 @@
  *= require_tree ./chats
  *= require_self
  */
-/**html{
+html{
   position: relative;
   min-height: 100%;
 
-  footer{
+  /**footer{
     position: absolute;
     bottom: 0;
     word-break: break-all;
-  }
-}*/
+  }*/
+}
 
 body {
   background-image: image-url('bj.jpg');
