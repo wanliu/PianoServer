@@ -140,7 +140,6 @@ class @Chat
       $("div[data-message-id=#{id}] p.content").text(content)
       return
 
-
     toAddClass = if @_isOwnMessage(message) then 'you' else 'me'
 
     senderAvatar = @options.avatarDefault if senderAvatar == '' or senderAvatar?
