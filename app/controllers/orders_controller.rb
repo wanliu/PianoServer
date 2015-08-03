@@ -92,6 +92,7 @@ class OrdersController < ApplicationController
   def send_diff_message(diffs)
     user_id = current_anonymous_or_user.id
     index = nil
+
     diffs.each do |op, path, src, dest|
       if path =~ PROMPT_MATCHS[:ITEMS]
         m = path.match(PROMPT_MATCHS[:ITEMS])
@@ -117,7 +118,7 @@ class OrdersController < ApplicationController
         index: index,
         dest: dest
       })
-      MessageSystemService.push_message user_id, other_side, msg, to: [other_side], type: 'order'
+      MessageSystemService.push_message user_id, other_side, msg, to: [other_side], type: 'order', key: path
     end
     MessageSystemService.push_command user_id, other_side, {command: 'order', diff: diffs}.to_json
   end
