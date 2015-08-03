@@ -95,71 +95,53 @@ class Order < ActiveRecord::Base
   end
 
   def origin_hash
-    # dont use symbol of key please, because attributes, jsonb data all is string keys
-    hash = {
-      "id" => id,
-      "buyer_id" => buyer_id,
-      "seller_id" => seller_id,
-      "supplier_id" => supplier_id,
-      "send_address" => send_address,
-      "delivery_address" => delivery_address,
-      "business_type" => business_type,
-      "title" => title,
-      "contacts" => contacts,
-      "bid" => bid,
-      "sid" => sid,
-      "total" => total
-    }
-    hash["items"] = items.map do |item|
-      {
-        "id" => item.id,
-        "title" => item.title,
-        "iid" => item.iid,
-        "item_type" => item.item_type,
-        "price" => item.price,
-        "amount" => item.amount,
-        "sub_total" => item.sub_total,
-        "unit" => item.unit,
-        "unit_title" => item.unit_title
-      }
-    end
-    hash
+    attrs = attributes
+    attrs["items"] = items.map {|item| item.attributes }
+    to_hash(attrs)
   end
 
   def update_hash
     if updates.nil?
       origin_hash
     else
-      h = updates || {}
-      hash = {
-        "id" => h["id"],
-        "buyer_id" => h["buyer_id"],
-        "seller_id" => h["seller_id"],
-        "supplier_id" => h["supplier_id"],
-        "send_address" => h["send_address"],
-        "delivery_address" => h["delivery_address"],
-        "business_type" => h["business_type"],
-        "title" => h["title"],
-        "contacts" => h["contacts"],
-        "bid" => h["bid"],
-        "sid" => h["sid"],
-        "total" => n(h["total"])
-      }
-      hash["items"] = (h["items"] || []).map do |item|
-        {
-          "id" => item["id"],
-          "title" => item["title"],
-          "iid" => item["iid"],
-          "item_type" => item["item_type"],
-          "price" => n(item["price"]),
-          "amount" => n(item["amount"]),
-          "sub_total" => n(item["sub_total"]),
-          "unit" => item["unit"],
-          "unit_title" => item["unit_title"]
-        }
-      end
-      hash
+      to_hash(updates)
     end
+  end
+
+  def to_hash(target)
+    h = target || {}
+    hash = {
+      "id" => h["id"],
+      "buyer_id" => h["buyer_id"],
+      "seller_id" => h["seller_id"],
+      "supplier_id" => h["supplier_id"],
+      "send_address" => h["send_address"],
+      "delivery_address" => h["delivery_address"],
+      "business_type" => h["business_type"],
+      "title" => h["title"],
+      "contacts" => h["contacts"],
+      "bid" => h["bid"],
+      "sid" => h["sid"],
+      "total" => n(h["total"])
+    }
+    hash["items"] = (h["items"] || []).map do |item|
+      {
+        "id" => item["id"],
+        "title" => item["title"],
+        "iid" => item["iid"],
+        "item_type" => item["item_type"],
+        "price" => n(item["price"]),
+        "amount" => n(item["amount"]),
+        "sub_total" => n(item["sub_total"]),
+        "unit" => item["unit"],
+        "unit_title" => item["unit_title"]
+      }
+    end
+    hash
+  end
+
+  def apply_patch(patchs)
+    to_hash(JSON::Patch.new(update_hash, patchs).call)
   end
 
   private
