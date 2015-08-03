@@ -9,14 +9,13 @@ class @MiniTable
   constructor: (@element, @target, @order) ->
     @isVisible = false
     $(window).on('resize', @_resizeHandler.bind(@))
-
+    @table ||= new OrderTable(@target, @order)
     @_checkWindowWidth()
 
   $: () ->
     $(@element)
 
   toggleShow: () ->
-    @table ||= new OrderTable(@target, @order)
     $fixedBottom = $('.navbar-fixed-bottom')
 
     if (@isVisible)
