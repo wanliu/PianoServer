@@ -9,16 +9,14 @@
             </a>
           </div>
           <div class="order-item-center">
-            <h4><%= item.title %></h4>
-            <p>
-              单价: <span class="price"><%= number_to_currency(item.price, unit:'￥') %></span><span class="title"></span>
-              数量: <span class="amount"><%= number_to_human(item.amount) %></span>
-              <span class="title"></span>
-            </p>
+            <h6><%= item.title %></h6>
           </div>
           <div class="order-item-right">
-            <span class="glyphicon glyphicon-trash remove-btn" data-toggle="tooltip" data-placement="bottom" title="删除"></span>
-          </div>
+            <p class="price"><%= number_to_currency(item.price, unit:'￥') %></p>
+            <p class="amount">x<%= number_to_human(item.amount) %></p>
+
+<!--             <span class="glyphicon glyphicon-trash remove-btn" data-toggle="tooltip" data-placement="bottom" title="删除"></span>
+ -->          </div>
         </div>
         <div class="edit-fieldset">
           <div class="order-item-price edit-item clearfix">

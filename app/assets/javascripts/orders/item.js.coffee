@@ -44,6 +44,7 @@ class @OrderItem
       .stop(true, true)
       .effect('pulsate', times: 3, duration: 1500)
 
+    @$().addClass('order-item-modify')
   send: (event, args...) ->
     @$().trigger(event, args...)
 
