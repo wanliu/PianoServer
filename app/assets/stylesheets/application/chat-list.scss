@@ -257,6 +257,7 @@
           line-height: 22px;
         }
       }
+
     }
 
     .order-item-right{
@@ -272,6 +273,10 @@
         &:hover{
           color: #FF2B2B;
         }
+      }
+
+      .change {
+        color: #5cb85c;
       }
     }
   }

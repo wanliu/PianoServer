@@ -26,21 +26,31 @@ class @OrderItem
 
   onReplaceChange: (e, data) ->
     {key, src, dest} = data
-    $value = @$().find(".#{key}")
+    $item = @$().find(".#{key}");
+    $value = @$().find(".#{key}>.text")
+    prefix = switch key
+             when 'price'
+               '￥'
+             when 'amount'
+               'x'
+
     $value
-      .text(dest)
+      .text(prefix + dest)
 
     if +src > +dest
-      arrow = '&darr;'
-    else if +src == +dest
-      arrow = '&#45;'
+      arrow = '↓'
+    # else if +src == +dest
+    #   arrow = '&#45;'
     else
-      arrow = '&uarr;'
+      arrow = '↑'
     # arrow = if +src > +dest then '&darr;' else '&uarr;'
 
     $title = $value.next('.title')
     $title
-      .html("<span class=\"label label-success\">#{arrow} 修改</span>")
+      .text(arrow)
+
+    $item
+      .addClass('change')
       .stop(true, true)
       .effect('pulsate', times: 3, duration: 1500)
 

@@ -5,7 +5,7 @@ class Order < ActiveRecord::Base
 
   MIN_AMOUNT = 6
 
-  belongs_to :user
+  belongs_to :buyer, class_name: 'User'
   belongs_to :seller, class_name: 'User'
 
   # default_scope do
@@ -88,6 +88,10 @@ class Order < ActiveRecord::Base
 
   def supplier
     Shop.find(supplier_id)
+  end
+
+  def buyer
+    buyer_id && buyer_id < 0 ? User.anonymous(buyer_id) : super
   end
 
   def origin_hash
