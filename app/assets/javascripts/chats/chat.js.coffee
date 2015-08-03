@@ -136,8 +136,8 @@ class @Chat
   _insertItemMessage: (message, direction = 'down') ->
     {id, senderId, content, senderAvatar, senderLogin} = message
 
-    if $("div[data-chat-id=#{id}]").length > 0
-      $("div[data-chat-id=#{id}] p.content").text(content)
+    if $("div[data-message-id=#{id}]").length > 0
+      $("div[data-message-id=#{id}] p.content").text(content)
       return
 
 
@@ -146,7 +146,7 @@ class @Chat
     senderAvatar = @options.avatarDefault if senderAvatar == '' or senderAvatar?
 
     template = """
-      <div class="chat #{toAddClass}" data-chat-id="#{id}">
+      <div class="chat #{toAddClass}" data-message-id="#{id}">
         <img src="#{senderAvatar}" />
         <h2>#{senderLogin}</h2>
         <div class="bubble #{toAddClass}">
