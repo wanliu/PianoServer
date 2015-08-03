@@ -9,14 +9,13 @@ class @MiniTable
   constructor: (@element, @target, @order) ->
     @isVisible = false
     $(window).on('resize', @_resizeHandler.bind(@))
-
+    @table ||= new OrderTable(@target, @order)
     @_checkWindowWidth()
 
   $: () ->
     $(@element)
 
   toggleShow: () ->
-    @table ||= new OrderTable(@target, @order)
     $fixedBottom = $('.navbar-fixed-bottom')
 
     if (@isVisible)
@@ -63,9 +62,11 @@ class @MiniTable
 
   _showOrderItems: () ->
     $('.main-content').addClass('show-order-items')
+    @_hideChatScroll()
 
   _hideOrderItems: () ->
     $('.main-content').removeClass('show-order-items')
+    @_showChatScroll()
 
   _showChatScroll: () ->
     $('.chat-list .chat-inner').css('overflow', 'auto')
