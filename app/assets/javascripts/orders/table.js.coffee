@@ -84,10 +84,10 @@ class @OrderTable extends @Event
     $target = $(event.target)
     $group = $target.parents('.input-group:first')
     $input = $group.find('input[name=amount]')
-    amount = $input.val()
+    amount = $.trim($input.val())
     reg = /^[1-9]\d*$/
 
-    unless (reg.test(amount))
+    if (!reg.test(amount) || +amount <= 1)
       return
 
     amount = +amount - 1
@@ -98,7 +98,7 @@ class @OrderTable extends @Event
     $target = $(event.target)
     $group = $target.parents('.input-group:first')
     $input = $group.find('input[name=amount]')
-    amount = $input.val()
+    amount = $.trim($input.val())
     reg = /^[1-9]\d*$/
 
     unless (reg.test(amount))
@@ -133,7 +133,11 @@ class @OrderTable extends @Event
     $target = $(event.target)
     $group = $target.parents('.input-group:first')
     $input = $group.find('input[name=price]')
-    price = $input.val()
+    price = $.trim($input.val())
+    reg = /^[1-9]\d*(.\d{1,2})?$/
+
+    if (!reg.test(price) || +price <= 1)
+      return
     # reg = /^[1-9]\d*(.\d{1,2})?$/
 
     # unless (reg.test(price))
@@ -147,13 +151,13 @@ class @OrderTable extends @Event
     $target = $(event.target)
     $group = $target.parents('.input-group:first')
     $input = $group.find('input[name=price]')
-    price = $input.val()
+    price = $.trim($input.val())
     # reg = /^[1-9]\d*(.\d{1,2})?$/
 
-    # unless (reg.test(price))
+    # if (!reg.test(price) || +price <= 1)
     #   return
 
-    price = (+price + 1) + '.0'
+    price = +price + 1 + '.0'
     $input.val(price).change()
 
   priceChanged: (event) ->

@@ -11,16 +11,47 @@ class @MiniTable
 
   toggleShow: () ->
     @table ||= new OrderTable(@target, @order)
-    $list = $('.chat-list')
+    $content = $('.main-content')
+    $list = $content.find('.chat-list')
+    $fixedBottom = $('.navbar-fixed-bottom')
 
     if (@isVisible)
       @isVisible = false
-      $(@target).slideUp()
-      $list.css('overflow', 'auto')
+      $content.removeClass('show-order-items')
+      $fixedBottom.slideDown(() ->
+        $list.css({
+          'overflow': 'auto',
+          'bottom': '55px'
+        })
+      )
+
+      # $(@target).slideUp(() ->
+      #   $fixedBottom.slideDown(() ->
+      #     $list.css({
+      #       'overflow': 'auto',
+      #       'bottom': '55px'
+      #     })
+      #   )
+      # )
+
     else
       @isVisible = true
-      $(@target).slideDown()
-      $list.css('overflow', 'hidden')
+      $content.addClass('show-order-items')
+      $fixedBottom.slideUp(() ->
+        $list.css({
+          'overflow': 'hidden',
+          'bottom': '0'
+        })
+      )
+
+      # $(@target).slideDown(() ->
+      #   $fixedBottom.slideUp(() ->
+      #     $list.css({
+      #       'overflow': 'hidden',
+      #       'bottom': '0'
+      #     })
+      #   )
+      # )
 
   send: (event, data) ->
     if @table?

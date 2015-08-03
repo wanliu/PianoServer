@@ -25,16 +25,41 @@
   }
 }
 
-.order-table-wrap{
-  position: fixed;
+.main-content{
+  position: absolute;
   top: 170px;
-  z-index: 10;
+  bottom: 0;
+  overflow: hidden;
+  background: #FFFFFF;
+
+  .chat-list{
+    width: 100%;
+  }
+
+  &.show-order-items{
+    .order-table-wrap {
+      display: block;
+    }
+
+    .chat-list{
+      border-left: 1px dashed #CCCCCC;
+    }
+  }
+}
+
+.order-table-wrap{
+  position: absolute;
+  padding: 0 10px;
   left: 0;
-  right: 0;
-  padding: 0 5px;
-  bottom: 60px;
+  top: 0;
+  bottom: 0;
   overflow: auto;
   display: none;
+  z-index: 1032;
+
+  .chat-items{
+    background: #FFFFFF;
+  }
 
   .item-preview-url{
     width: 100px;
@@ -231,6 +256,7 @@
       .edit-item-right{
         line-height: 34px;
         padding: 0;
+        clear: left;
         // -webkit-transition: color 0.25s ease-in-out 0;
         // transition: color 0.25s ease-in-out 0;
       }
@@ -258,16 +284,6 @@
         top: 0;
         cursor: pointer;
       }
-    }
-
-
-
-    input[type=range]:focus {
-      outline: none;
-    }
-
-    input[type=range]:focus::-webkit-slider-runnable-track {
-      background: #ccc;
     }
   }
 
@@ -312,11 +328,12 @@
 .chat-list {
 	background-color: #FFFFFF;
 	position: absolute;
-	top: 170px;
+	top: 0;
 	bottom: 50px;
-	left: 0;
-	right: 0;
-	overflow: auto;
+  right: 0;
+	overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 1031;
 
 	.chat-inner {
 		//padding: 10px;
@@ -404,7 +421,7 @@
     width: 100%;
     text-align: center;
     background: #FFFFFF;
-    z-index: 11;
+    z-index: 1032;
 
     .tip-text{
       display: inline-block;
@@ -425,7 +442,19 @@
 		max-width: 100%;
 		margin-right: 75px;
 	}
+}
 
+@media (min-width: 1200px) {
+  .main-content.show-order-items .chat-list{
+    width: 50%;
+    border-left: 1px dashed #CCCCCC;
+  }
+}
+
+@media (max-width: 1200px) and (min-width: 768px) {
+  .main-content.show-order-items .order-table-wrap{
+    width: 100%;
+  }
 }
 
 @media (max-width: 768px) {
@@ -440,6 +469,15 @@
   	 	margin-top: 0px;
   		margin-bottom: 0px;
 	}
+
+  .main-content{
+    width: 100%;
+
+    &.show-order-items .chat-list{
+      width: 100%;
+      border-left: none;
+    }
+  }
 }
 
 @media (min-width: 768px) {
