@@ -25,8 +25,8 @@ class @MiniTable
     else
       @isVisible = true
       @_showOrderItems()
+      @_hideChatScroll()
       $fixedBottom.slideUp()
-
 
   send: (event, data) ->
     if @table?
@@ -62,7 +62,6 @@ class @MiniTable
 
   _showOrderItems: () ->
     $('.main-content').addClass('show-order-items')
-    @_hideChatScroll()
 
   _hideOrderItems: () ->
     $('.main-content').removeClass('show-order-items')
