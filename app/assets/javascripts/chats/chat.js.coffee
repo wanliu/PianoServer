@@ -201,11 +201,19 @@ class @Chat
     $tip = @$chatWrap.find('.bubble-tip')
     {content, senderLogin} = message
 
+    if @bubbleTimeout
+      clearTimeout(@bubbleTimeout)
+      @bubbleTimeout = null
+
     if $tip.length == 0
       $tip = $('<div class="bubble-tip"><div class="tip-text"></div></div>')
         .prependTo(@$chatWrap)
 
     $tip.find('.tip-text').text(senderLogin + '说：' + content)
+
+    @bubbleTimeout = setTimeout(() =>
+      $tip.remove()
+    , 2000)
 
   _clearBubbleTipOnScrollBottom: () ->
     if @_checkIsVisible(false)
