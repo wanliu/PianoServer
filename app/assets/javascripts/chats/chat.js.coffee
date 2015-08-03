@@ -168,7 +168,7 @@ class @Chat
     if !@_isOwnMessage(message) && (@_checkChatContentIsOverlayed() || !isVisible)
       @_insertBubbleTip(message)
 
-    if !@_checkChatContentIsOverlayed() || (isVisible && @options.isMessageScroll)
+    if @_checkChatContentIsOverlayed() || (isVisible && @options.isMessageScroll)
       @autoScroll(direction)
 
     #@autoScroll(direction) if @options.isMessageScroll
@@ -188,9 +188,9 @@ class @Chat
     scrollTop = chatContainer.scrollTop
 
     if isInsert
-      clientHeight + scrollTop >= scrollHeight - (lastItemHeight + 20)
+      clientHeight + scrollTop >= scrollHeight - (lastItemHeight + 70)
     else
-      clientHeight + scrollTop >= scrollHeight - 20
+      clientHeight + scrollTop >= scrollHeight - 70
 
     # return clientHeight + scrollTop  >= scrollHeight - (isInsert ? lastItemHeight + 20 : 20)
 
@@ -201,11 +201,19 @@ class @Chat
     $tip = @$chatWrap.find('.bubble-tip')
     {content, senderLogin} = message
 
+    if @bubbleTimeout
+      clearTimeout(@bubbleTimeout)
+      @bubbleTimeout = null
+
     if $tip.length == 0
       $tip = $('<div class="bubble-tip"><div class="tip-text"></div></div>')
         .prependTo(@$chatWrap)
 
     $tip.find('.tip-text').text(senderLogin + '说：' + content)
+
+    @bubbleTimeout = setTimeout(() =>
+      $tip.remove()
+    , 2000)
 
   _clearBubbleTipOnScrollBottom: () ->
     if @_checkIsVisible(false)

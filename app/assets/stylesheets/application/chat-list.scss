@@ -52,7 +52,8 @@
   .bubble-tip{
     position: absolute;
     bottom: 60px;
-    width: 100%;
+    left: 0;
+    right: 0;
     text-align: center;
     z-index: 11;
 
@@ -257,11 +258,11 @@
       display: table-cell;
       max-width: 0px;
       padding: 0 10px;
+      vertical-align: middle;
 
-      h4 {
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
+      .item-title {
+        font-size: 18px;
+        margin: 0;
       }
 
       p{
@@ -406,6 +407,12 @@
     left: 0;
     right: 0;
     margin: 0;
+    border-radius: 0;
+
+    .form-group {
+      max-width: 100%;
+      margin-right: 75px;
+    }
   }
 
 	.chat {
@@ -479,13 +486,6 @@
   }
 }
 
-.chat-navbar {
-	.form-group {
-		max-width: 100%;
-		margin-right: 75px;
-	}
-}
-
 @media (min-width: 1200px) {
   .main-content.show-order-items .chat-list{
     width: 50%;
@@ -525,6 +525,10 @@
       width: 100%;
       border-left: none;
     }
+  }
+
+  .order-table-wrap .order-item-brief .order-item-center .item-title{
+    font-size: 12px;
   }
 
   .order-table-wrap .edit-fieldset .edit-item-right {
