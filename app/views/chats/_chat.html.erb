@@ -3,13 +3,13 @@
 <%= content_for :module, :piano %>
 
 <%= render "chat_order_header" %>
-<div class="order-table-wrap">
-  <%= render "chat_order_table" %>
-</div>
+<div class="container main-content">
+  <div class="row">
+    <div class="order-table-wrap col-sm-6 col-xs-12">
+      <%= render "chat_order_table" %>
+    </div>
 
-<div class="chat-list">
-  <div class="container">
-    <div class="row">
+    <div class="chat-list col-sm-6 col-xs-12">
       <div class="chat-inner" >
         <div class="message-list clearfix">
         </div>
@@ -17,6 +17,7 @@
     </div>
   </div>
 </div>
+
 
 <%= render "chat_input" %>
 
