@@ -54,9 +54,11 @@ class @OrderItem
     $title = $value.next('.title')
     $title
       .text(arrow)
+      .removeClass('fadeOutUp fadeOutDown')
       .addClass("animated #{animateClass}")
 
     $item
+      .removeClass('change-down change-up')
       .addClass(changeClass)
       .stop(true, true)
       .effect('pulsate', times: 3, duration: 1500)
