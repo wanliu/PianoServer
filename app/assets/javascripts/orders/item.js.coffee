@@ -39,19 +39,25 @@ class @OrderItem
 
     if +src > +dest
       arrow = '↓'
+      direction = 'down'
+      changeClass = 'change-down'
+      animateClass = 'fadeOutDown'
     # else if +src == +dest
     #   arrow = '&#45;'
     else
       arrow = '↑'
+      direction = 'up'
+      changeClass = 'change-up'
+      animateClass = 'fadeOutUp'
     # arrow = if +src > +dest then '&darr;' else '&uarr;'
 
     $title = $value.next('.title')
     $title
       .text(arrow)
-      .addClass('animated fadeOutUp')
+      .addClass("animated #{animateClass}")
 
     $item
-      .addClass('change')
+      .addClass(changeClass)
       .stop(true, true)
       .effect('pulsate', times: 3, duration: 1500)
 
