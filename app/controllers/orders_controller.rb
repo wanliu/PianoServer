@@ -9,7 +9,9 @@ class OrdersController < ApplicationController
     ITEMS: /items\[(\d+)\]\.(\w+)/
   }
 
-  before_action :set_order_params, only: [:show, :status, :update, :diff ]
+  class OrderInvalidState < StandardError; end
+
+  before_action :set_order_params, only: [:show, :status, :update, :diff, :accept, :ensure, :cancel, :reject ]
 
   def show
     render json: { order: @order.origin_hash }
@@ -55,10 +57,42 @@ class OrdersController < ApplicationController
   end
 
   def accept
+    if @order.accept_state != "accepting"
+          # CombinationImagesJob.perform_later owner, urls, task_option(store_field)
+      @order.update(:accept_state => "accepting")
+      # OrderAcceptingJob.set(wait: 3.seconds).perform_later @order, @order.update_hash.to_json, current_anonymous_or_user.id, other_side
+    else
+      throw OrderInvalidState.new("invalid accept_state #{@order.accept_state} in accepting")
+    end
+    render json: { accept_state: @order.accept_state }
+  end
 
+  def ensure
+    update_hash = @order.update_hash
+    if @order.accept_state == 'accepting'
+      update_hash["accept_state"] = "accept"
+      pp update_hash
+      @order.update(accept_state: "accept")
+      # @order.update(update_hash)
+      MessageSystemService.push_command current_anonymous_or_user.id, other_side, {command: 'order', accept: 'accept'}.to_json
+    else
+      throw OrderInvalidState.new 'This accepting order job is cancel.'
+    end
+
+    render json: { accept_state: @order.accept_state }
+  end
+
+  def cancel
+    @order.update(:accept_state => "cancel")
+    MessageSystemService.push_command current_anonymous_or_user.id, other_side, {command: 'order', accept: 'cancel'}.to_json
+    render json: { accept_state: @order.accept_state }
   end
 
   def reject
+    @order.update(:accept_state => "reject")
+    @order.update(updates: nil)
+    MessageSystemService.push_command current_anonymous_or_user.id, other_side, {command: 'order', accept: 'reject'}.to_json
+    render json: { accept_state: @order.accept_state }
   end
 
   private

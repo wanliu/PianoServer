@@ -1,9 +1,12 @@
 #= require ./item
 #= require _common/event
+#= require _common/popup
 
+Popup = @Popup
 class @OrderTable extends @Event
   @defaultOptions = {
-    maxDelaySyncMs: 800
+    maxDelaySyncMs: 800,
+    maxWaitAccpetingMS: 3000
   }
 
   constructor: (@element, @orderId = $(@element).data('orderId'), @options = {}) ->
@@ -24,6 +27,12 @@ class @OrderTable extends @Event
     @$().on('click', '.order-item-amount .btn-plus', @amountIncreased.bind(@))
     @$().on('click', '.order-item-price .btn-minus', @priceDecreased.bind(@))
     @$().on('click', '.order-item-price .btn-plus', @priceIncreased.bind(@))
+    captureOrderChangeBound = @captureOrderChange.bind(@)
+    releaseOrderChangeBound = @releaseOrderChange.bind(@)
+    @$().on('mousedown', '.btn-agrees',captureOrderChangeBound);
+    @$().on('mouseup', '.btn-agrees', releaseOrderChangeBound);
+    @$().on('touchstart', '.btn-agrees', captureOrderChangeBound);
+    @$().on('touchend', '.btn-agrees', releaseOrderChangeBound);
     @patch = []
     @on 'init', () =>
       $.ajax({
@@ -190,6 +199,46 @@ class @OrderTable extends @Event
     $target.addClass('selected').siblings().removeClass('selected');
     text = $target.find('a').text()
     $target.parents('.dropdown:first').find('.button-text').text(text);
+
+  captureOrderChange: (e) ->
+    e.preventDefault()
+    unless @inAccepting
+      @inAccepting = true
+      $.post("/orders/#{@orderId}/accept")
+        .success () =>
+          @popup = Popup.show """
+            <h3>正在同意订单修改</h3>
+          """
+          @count = 0;
+          maxCount =  @options.maxWaitAccpetingMS / 1000
+          @acceptTickId = setInterval () =>
+            @popup.setHtml """
+              <h3>正在同意订单修改</h3>
+              <h1 class="text-center">#{maxCount - @count}</h1>
+            """
+
+            @count = if @count >= maxCount then @count else @count + 1
+          , 1000
+
+          setTimeout () =>
+            @inAccepting = false
+            $.post "/orders/#{@orderId}/ensure", () =>
+              @closePopup()
+
+          , @options.maxWaitAccpetingMS + 500
+        .fail () =>
+          @closePopup()
+
+  releaseOrderChange: (e) ->
+    if @inAccepting
+      @closePopup()
+
+      $.post "/orders/#{@orderId}/cancel", () =>
+
+  closePopup: () ->
+    @inAccepting = false
+    @popup.close() if @popup?
+    clearInterval(@acceptTickId)
 
   isEditField: (target) ->
     target.is('.edit-fieldset') or target.parents('.edit-fieldset').length > 0

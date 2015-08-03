@@ -1,7 +1,7 @@
 class Order < ActiveRecord::Base
   include ThumbImages
   store_accessor :image, :avatar_url
-  store_accessor :data, :updates
+  store_accessor :data, :updates, :accept_state
 
   MIN_AMOUNT = 6
 
