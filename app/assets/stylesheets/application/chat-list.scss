@@ -319,7 +319,6 @@
       .edit-item-right{
         line-height: 34px;
         padding: 0;
-        clear: left;
         // -webkit-transition: color 0.25s ease-in-out 0;
         // transition: color 0.25s ease-in-out 0;
       }
@@ -524,6 +523,10 @@
       width: 100%;
       border-left: none;
     }
+  }
+
+  .order-table-wrap .edit-fieldset .edit-item-right {
+    clear: left;
   }
 }
 
