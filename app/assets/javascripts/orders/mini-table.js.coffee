@@ -38,6 +38,7 @@ class @MiniTable
     if (width >= MiniTable.defaultOptions.mdscreenWidth)
       @_removeClickListener()
       @_showChatScroll()
+      @_showOrderItems()
     else
       @_addClickListener()
       @_hideChatScroll()
