@@ -70,9 +70,8 @@ class OrdersController < ApplicationController
     update_hash = @order.update_hash
     if @order.accept_state == 'accepting'
       update_hash["accept_state"] = "accept"
-      pp update_hash
-      @order.update(accept_state: "accept")
-      # @order.update(update_hash)
+      # @order.update(accept_state: "accept")
+      @order.update(update_hash)
       MessageSystemService.push_command current_anonymous_or_user.id, other_side, {command: 'order', accept: 'accept'}.to_json
     else
       throw OrderInvalidState.new 'This accepting order job is cancel.'

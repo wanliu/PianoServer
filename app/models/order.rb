@@ -162,6 +162,11 @@ class Order < ActiveRecord::Base
     super.nil? ? calc_total : super
   end
 
+  # override update method
+  def update(attrs)
+    super(attrs)
+  end
+
   private
 
   def n(num)

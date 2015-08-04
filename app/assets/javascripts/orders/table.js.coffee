@@ -264,7 +264,7 @@ class @OrderTable extends @Event
           #   @count = if @count >= maxCount then @count else @count + 1
           # , 1000
 
-          setTimeout () =>
+          @ensureTickId = setTimeout () =>
             @inAccepting = false
             $.post "/orders/#{@orderId}/ensure", () =>
               @closePopup()
@@ -279,11 +279,11 @@ class @OrderTable extends @Event
 
       $.post "/orders/#{@orderId}/cancel", () =>
 
-  showPopup: () ->
+  showPopup: (options) ->
     @popup = Popup.show """
       <h3>正在同意订单修改</h3>
       <h1>&nbsp;</h1>
-    """
+    """, options
     count = 0;
     maxCount =  @options.maxWaitAccpetingMS / 1000
     @acceptTickId = setInterval () =>
@@ -300,6 +300,7 @@ class @OrderTable extends @Event
     @inAccepting = false
     @popup.close() if @popup?
     clearInterval(@acceptTickId)
+    clearTimeout(@ensureTickId)
 
   isEditField: (target) ->
     target.is('.edit-fieldset') or target.parents('.edit-fieldset').length > 0
@@ -403,5 +404,16 @@ class @OrderTable extends @Event
     if command.diff?
       @parseDiff(command.diff)
 
-    else if command.accept? and command.accept == 'accepting'
-      @showPopup()
+    else if command.accept?
+      switch command.accept
+        when 'accepting'
+          @showPopup(modal: true)
+          $('.chat-order')
+            .effect('pulsate', times: 3, duration: 1500)
+        when 'cancel'
+          @closePopup()
+        when 'ensure'
+          @closePopup()
+
+        else
+          @closePopup()

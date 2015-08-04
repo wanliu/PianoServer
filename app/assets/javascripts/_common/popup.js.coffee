@@ -1,13 +1,29 @@
 #= require ./event
 
 class @Popup extends @Event
-  constructor: (@element) ->
+  constructor: (@element, @options = {}) ->
     super(@element)
+    @modal = @options['modal'] || false
+    @addModal() if @modal
     @recalcLayout()
 
   setHtml: (html) ->
     @$().html(html)
+    @addModal() if @modal
     @recalcLayout()
+
+  addModal: () ->
+    $backdrop = $('<div class="popup-modal"></div>').appendTo(@$())
+    $backdrop.css({
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: '#000',
+      opacity: 0.3
+    })
+    $backdrop
 
   recalcLayout: () ->
     @applyStyle()
@@ -31,9 +47,9 @@ class @Popup extends @Event
   close: () ->
     @$().remove();
 
-  @show: (html) ->
+  @show: (html, options) ->
     container = "<div class=\"popup-container\">#{html}</div>"
     $html = $(container).appendTo('body');
-    new Popup($html)
+    new Popup($html, options)
 
 
