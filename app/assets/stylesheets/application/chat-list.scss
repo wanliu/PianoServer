@@ -311,17 +311,16 @@
   display: none;
 
   .edit-items{
-    margin: 10px 0;
+    padding-bottom: 10px;
 
     .edit-item{
-      padding-left: 40px;
+      padding: 10px 15px 0 40px;
       position: relative;
 
       .field-name{
         position: absolute;
         left: 0;
-        top: 0;
-        line-height: 34px;
+        top: 40%;
       }
 
       .input-group{
@@ -531,7 +530,7 @@
     font-size: 12px;
   }
 
-  .order-table-wrap .edit-fieldset .edit-item-right {
+  .order-table-wrap .edit-fieldset .order-item-amount {
     clear: left;
   }
 }
