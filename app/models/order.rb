@@ -110,6 +110,8 @@ class Order < ActiveRecord::Base
 
   def to_hash(target)
     h = target || {}
+
+    total = 0
     hash = {
       "id" => h["id"],
       "buyer_id" => h["buyer_id"],
@@ -122,26 +124,42 @@ class Order < ActiveRecord::Base
       "contacts" => h["contacts"],
       "bid" => h["bid"],
       "sid" => h["sid"],
-      "total" => n(h["total"])
     }
     hash["items"] = (h["items"] || []).map do |item|
+      price = n(item["price"])
+      amount = n(item["amount"])
+      sub_total = n(item["sub_total"].nil? ? price * amount : item["sub_total"])
+      sub_total = price * amount
+      total += sub_total
       {
         "id" => item["id"],
         "title" => item["title"],
         "iid" => item["iid"],
         "item_type" => item["item_type"],
-        "price" => n(item["price"]),
-        "amount" => n(item["amount"]),
-        "sub_total" => n(item["sub_total"]),
+        "price" => price,
+        "amount" => amount,
+        "sub_total" => sub_total,
         "unit" => item["unit"],
         "unit_title" => item["unit_title"]
       }
     end
+    hash["total"] = n(h["total"].nil? ? total : h["total"])
+    hash["total"] = total
     hash
   end
 
   def apply_patch(patchs)
     to_hash(JSON::Patch.new(update_hash, patchs).call)
+  end
+
+  def calc_total
+    items.inject(0) do |s, item |
+      s += item.sub_total
+    end
+  end
+
+  def total
+    super.nil? ? calc_total : super
   end
 
   private

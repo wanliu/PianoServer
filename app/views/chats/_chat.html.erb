@@ -49,7 +49,11 @@
     Chat.defaultOptions.avatarDefault = '<%= image_path "avatar.gif" %>';
     var $img = $('.chat-order-image')[0];
     var stateLoad = new StatusLoadUrl($img);
-    var miniTable = new MiniTable($('.chat-order'), $('.order-table-wrap'), <%= @order.id %>);
+
+    <% unless @order.nil? %>
+    var order = <%=raw @order.origin_hash.to_json %>;
+    var miniTable = new MiniTable($('.chat-order'), $('.order-table-wrap'), order);
+    <% end %>
 
     if (!targetId) {
       alert('无效的聊天对象！');

@@ -9,12 +9,13 @@ class @OrderTable extends @Event
     maxWaitAccpetingMS: 3000
   }
 
-  constructor: (@element, @orderId = $(@element).data('orderId'), @options = {}) ->
+  constructor: (@element, @order, @options = {}) ->
     super(@element)
     @$items = @$().find('.item-list > .list-group-item')
     @items = for item in @$items
       new OrderItem(item, @element)
 
+    @orderId = @order.id
     @options = $.extend({}, OrderTable.defaultOptions, @options)
     @itemList = @$().find('.item-list')
     @itemList.on('click', @onClicked.bind(@))
@@ -33,6 +34,11 @@ class @OrderTable extends @Event
     @$().on('mouseup', '.btn-agrees', releaseOrderChangeBound);
     @$().on('touchstart', '.btn-agrees', captureOrderChangeBound);
     @$().on('touchend', '.btn-agrees', releaseOrderChangeBound);
+
+    @$().bind('add', @onAddChange.bind(@))
+    @$().bind('remove', @onRemoveChange.bind(@))
+    @$().bind('replace', @onReplaceChange.bind(@))
+
     @patch = []
     @on 'init', () =>
       $.ajax({
@@ -200,6 +206,42 @@ class @OrderTable extends @Event
     text = $target.find('a').text()
     $target.parents('.dropdown:first').find('.button-text').text(text);
 
+  onAddChange: (e, data) ->
+  onRemoveChange: (e, data) ->
+
+  onReplaceChange: (e, data) ->
+    {key, src, dest} = data
+    if key == 'total'
+      $total = @$().find('.total')
+      $value = $total.find('.text')
+      $value.text(dest)
+
+      $title = $value.next('.title')
+
+      if +src > +dest
+        arrow = '↓'
+        direction = 'down'
+        changeClass = 'change-down'
+        animateClass = 'fadeOutDown'
+      # else if +src == +dest
+      #   arrow = '&#45;'
+      else
+        arrow = '↑'
+        direction = 'up'
+        changeClass = 'change-up'
+        animateClass = 'fadeOutUp'
+
+      $title
+        .text(arrow)
+        .removeClass('fadeOutUp fadeOutDown')
+        .addClass("animated #{animateClass}")
+
+      $total
+        .removeClass('change-down change-up')
+        .addClass(changeClass)
+        .stop(true, true)
+        .effect('pulsate', times: 3, duration: 1500)
+
   captureOrderChange: (e) ->
     e.preventDefault()
     unless @inAccepting
@@ -354,6 +396,8 @@ class @OrderTable extends @Event
     if ITEMS_REG.test(path)
       [_, index, key] = ITEMS_REG.exec(path)
       [@items[+index], key]
+    else
+      [this, path]
 
   onOrderCommand: (e, command) ->
     if command.diff?

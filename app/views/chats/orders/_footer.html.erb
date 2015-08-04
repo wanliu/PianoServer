@@ -1,6 +1,7 @@
     <li class="list-group-item">
-      <div class="desc-value">
-        <%= number_to_currency(@order.total, unit:'￥') %>元
+      <div class="desc-value total">
+        <span class="text"><%= number_to_currency(@order.total, unit:'￥') %>元</span>
+        <span class="title"></span>
       </div>
       合计
     </li>
