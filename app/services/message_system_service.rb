@@ -8,6 +8,7 @@ module MessageSystemService
   # 私有消息接口，1 对 1 聊天
   def push_message(author_id, target_id, content, options = {})
     type = options[:type] || 'info'
+    key = options[:key]
     to = options[:to] || [author_id, target_id]
 
     channel_id = 'p:' + [author_id.to_s, target_id.to_s].sort.join(':')
@@ -16,7 +17,8 @@ module MessageSystemService
       channelId: channel_id,
       content: content,
       type: type,
-      to: to.to_json
+      to: to.to_json,
+      key: key
     }
 
     send('messages', msg )
