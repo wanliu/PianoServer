@@ -134,17 +134,22 @@ class @Chat
         )
 
   _insertItemMessage: (message, direction = 'down') ->
-    {senderId, content, senderAvatar, senderLogin} = message
+    {id, senderId, content, senderAvatar, senderLogin} = message
+
+    if $("div[data-message-id=#{id}]").length > 0
+      $("div[data-message-id=#{id}] p.content").text(content)
+      return
+
     toAddClass = if @_isOwnMessage(message) then 'you' else 'me'
 
     senderAvatar = @options.avatarDefault if senderAvatar == '' or senderAvatar?
 
     template = """
-      <div class="chat #{toAddClass}">
+      <div class="chat #{toAddClass}" data-message-id="#{id}">
         <img src="#{senderAvatar}" />
         <h2>#{senderLogin}</h2>
         <div class="bubble #{toAddClass}">
-          <p>#{content}</p>
+          <p class="content">#{content}</p>
         </div>
       </div>
     """
