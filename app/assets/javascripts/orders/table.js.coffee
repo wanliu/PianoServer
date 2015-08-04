@@ -306,7 +306,8 @@ class @OrderTable extends @Event
 
           @ensureTickId = setTimeout () =>
             @inAccepting = false
-            $.post "/orders/#{@orderId}/ensure", () =>
+            $.post "/orders/#{@orderId}/ensure", (json) =>
+              $('.order-table').html(json.html) if json.html?
               @closePopup()
 
           , @options.maxWaitAccpetingMS + 500
@@ -452,8 +453,10 @@ class @OrderTable extends @Event
             .effect('pulsate', times: 3, duration: 1500)
         when 'cancel'
           @closePopup()
-        when 'ensure'
+        when 'accept'
           @closePopup()
+          $.get "/orders/#{@orderId}", {inline: true}, (json) =>
+            $('.order-table').html(json.html) if json.html?
 
         else
           @closePopup()

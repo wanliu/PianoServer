@@ -5,10 +5,21 @@
     <%= render "chats/orders/header_location" %>
     <%= render "chats/orders/header_type" %>
   </ul>
-  <%= render "order_items" %>
+  <%= render "chats/order_items" %>
   <ul class="list-group last">
     <%= render "chats/orders/append_product" %>
     <%= render "chats/orders/footer" %>
   </ul>
 </div>
+<% if params[:inline] %>
+<script type="text/javascript">
+  $(function () {
+    var OrderTable = window.OrderTable;
+    var order = <%=raw @order.origin_hash.to_json %>;
+    var table = new OrderTable($('.order-table-wrap'), order);
+    $(document).trigger('table:change', table);
+  });
+
+</script>
+<% end %>
 <% end %>

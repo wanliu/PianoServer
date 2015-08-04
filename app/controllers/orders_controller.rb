@@ -14,7 +14,11 @@ class OrdersController < ApplicationController
   before_action :set_order_params, only: [:show, :status, :update, :diff, :accept, :ensure, :cancel, :reject ]
 
   def show
-    render json: { order: @order.origin_hash }
+    # if params[:inline]
+    #   render json: { order: @order, html: :partial => "order"
+    # else
+    #   render json: { order: @order.origin_hash }
+    # end
   end
 
   def status
@@ -70,14 +74,21 @@ class OrdersController < ApplicationController
     update_hash = @order.update_hash
     if @order.accept_state == 'accepting'
       update_hash["accept_state"] = "accept"
-      # @order.update(accept_state: "accept")
-      @order.update(update_hash)
+      pp update_hash
+      @order.update(accept_state: "accept")
+      @order.update_patch(update_hash)
+      # @order.items_attributes = update_hash["items"]
+      # @order.save
+
       MessageSystemService.push_command current_anonymous_or_user.id, other_side, {command: 'order', accept: 'accept'}.to_json
     else
       throw OrderInvalidState.new 'This accepting order job is cancel.'
     end
 
-    render json: { accept_state: @order.accept_state }
+    params[:inline] = true
+    render :show, formats: [:json]
+
+    # render json: { accept_state: @order.accept_state }
   end
 
   def cancel

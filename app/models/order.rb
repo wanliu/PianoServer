@@ -162,9 +162,19 @@ class Order < ActiveRecord::Base
     super.nil? ? calc_total : super
   end
 
-  # override update method
-  def update(attrs)
-    super(attrs)
+  def update_patch(attrs)
+    Order.transaction do
+      _items = attrs.delete "items" || []
+
+      update_attributes(attrs)
+      items.destroy_all
+
+      _items.each do |item|
+        items.build item
+      end
+      data[:updates] = nil
+      save
+    end
   end
 
   private
