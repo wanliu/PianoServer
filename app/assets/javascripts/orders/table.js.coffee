@@ -21,6 +21,7 @@ class @OrderTable extends @Event
     @itemList.on('click', @onClicked.bind(@))
     @itemList.on('change', 'input[name=amount]',@amountChanged.bind(@))
     @itemList.on('change', 'input[name=price]', @priceChanged.bind(@))
+    @$().on('change', 'input[name=total]', @totalChanged.bind(@))
     @itemList.on('keyup', 'input[name=amount]', @amountChanged.bind(@))
     @itemList.on('keyup', 'input[name=price]', @priceChanged.bind(@))
     @$().on('click', '.payment-menu li', @changePayment.bind(@))
@@ -28,16 +29,21 @@ class @OrderTable extends @Event
     @$().on('click', '.order-item-amount .btn-plus', @amountIncreased.bind(@))
     @$().on('click', '.order-item-price .btn-minus', @priceDecreased.bind(@))
     @$().on('click', '.order-item-price .btn-plus', @priceIncreased.bind(@))
+    @$().on('click', '.order-total-edit .btn-minus', @totalDecreased.bind(@))
+    @$().on('click', '.order-total-edit .btn-plus', @totalIncreased.bind(@))
+
     captureOrderChangeBound = @captureOrderChange.bind(@)
     releaseOrderChangeBound = @releaseOrderChange.bind(@)
-    @$().on('mousedown', '.btn-agrees',captureOrderChangeBound);
-    @$().on('mouseup', '.btn-agrees', releaseOrderChangeBound);
-    @$().on('touchstart', '.btn-agrees', captureOrderChangeBound);
-    @$().on('touchend', '.btn-agrees', releaseOrderChangeBound);
+    @$().on('mousedown', '.btn-agrees',captureOrderChangeBound)
+    @$().on('mouseup', '.btn-agrees', releaseOrderChangeBound)
+    @$().on('touchstart', '.btn-agrees', captureOrderChangeBound)
+    @$().on('touchend', '.btn-agrees', releaseOrderChangeBound)
+    @$().on('click', '.order-table-total', @changeOrderTotal.bind(@))
 
     @$().bind('add', @onAddChange.bind(@))
     @$().bind('remove', @onRemoveChange.bind(@))
     @$().bind('replace', @onReplaceChange.bind(@))
+    # @$().bind('order:total:change', )
 
     @patch = []
     @on 'init', () =>
@@ -67,7 +73,7 @@ class @OrderTable extends @Event
       @removeItem($target.parents('li:first'))
       return
 
-    if (!$target.is('li'))
+    unless $target.is('li')
       $target = $target.parents('li:first')
 
     $target.toggleClass('open')
@@ -93,6 +99,40 @@ class @OrderTable extends @Event
 
     else
       @toggleMidItem(target)
+
+  totalDecreased: (event) ->
+    event.stopPropagation()
+    $target = $(event.target)
+    $group = $target.parents('.input-group:first')
+    $input = $group.find('input[name=total]')
+    total = $.trim($input.val())
+    reg = /^[1-9]\d*(.\d{1,2})?$/
+
+    if (!reg.test(total) || +total <= 1)
+      return
+
+    total = +total - 1
+    $input.val(total).change()
+
+  totalIncreased: (event) ->
+    event.stopPropagation()
+    $target = $(event.target)
+    $group = $target.parents('.input-group:first')
+    $input = $group.find('input[name=total]')
+    total = $.trim($input.val())
+    reg = /^[1-9]\d*(.\d{1,2})?$/
+
+    unless (reg.test(total))
+      return
+
+    total = +total + 1
+    $input.val(total).change()
+
+  totalChanged: (event) ->
+    $input = $(event.target)
+    total = $input.val()
+
+    @pushTableOp('replace', '/total', total)
 
   amountDecreased: (event) ->
     event.stopPropagation()
@@ -405,3 +445,15 @@ class @OrderTable extends @Event
 
     else if command.accept? and command.accept == 'accepting'
       @showPopup()
+
+  changeOrderTotal: (e) ->
+    $target = $(e.target)
+
+    if @isEditField($target)
+      return
+
+    unless $target.is('li')
+      $target = $target.parents('li:first')
+
+    $target.toggleClass('open').prev().toggleClass('radius-bottom');
+
