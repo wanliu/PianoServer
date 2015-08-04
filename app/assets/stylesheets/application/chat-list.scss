@@ -175,6 +175,11 @@
         border-top-right-radius: 0;
       }
 
+      .list-group-item.radius-bottom:first-child{
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+      }
+
       &.radius-top .list-group-item:first-child{
         border-top-left-radius: 4px;
         border-top-right-radius: 4px;
@@ -191,26 +196,26 @@
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
       }
+    }
 
-      .list-group-item{
-        &.open{
-          border-radius: 4px;
-          margin: 20px 0;
+    .list-group-item{
+      &.open{
+        border-radius: 4px;
+        margin: 20px 0;
 
-          .edit-fieldset{
-            display: block;
-          }
+        .edit-fieldset{
+          display: block;
         }
+      }
 
-        &.radius-bottom{
-          border-bottom-left-radius: 4px;
-          border-bottom-right-radius: 4px;
-        }
+      &.radius-bottom{
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+      }
 
-        &.radius-top{
-          border-top-left-radius: 4px;
-          border-top-right-radius: 4px;
-        }
+      &.radius-top{
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
       }
     }
   }
@@ -296,76 +301,75 @@
     }
   }
 
-  .edit-fieldset{
-    border-top: 1px dashed #CCCCCC;
-    display: none;
+  .add-item{
+    line-height: 28px;
+  }
+}
+
+.edit-fieldset{
+  border-top: 1px dashed #CCCCCC;
+  display: none;
+
+  .edit-items{
+    padding-bottom: 10px;
 
     .edit-item{
-      margin-top: 10px;
+      padding: 10px 15px 0 40px;
+      position: relative;
 
-      .edit-item-left{
-        padding-left: 40px;
-        position: relative;
-
-        .field-name{
-          position: absolute;
-          left: 0;
-          top: 0;
-          line-height: 34px;
-        }
-
-        .input-group{
-          width: 100%;
-        }
-
-        input[type="number"]{
-          width: 100%;
-          border-width: 0 0 1px 0;
-          border-color: #CCCCCC;
-          text-align: center;
-
-          &:focus{
-            border-width: 0 0 1px 0;
-            outline: none;
-          }
-        }
+      .field-name{
+        position: absolute;
+        left: 0;
+        top: 40%;
       }
 
-      .edit-item-right{
-        line-height: 34px;
-        padding: 0;
-        // -webkit-transition: color 0.25s ease-in-out 0;
-        // transition: color 0.25s ease-in-out 0;
+      .input-group{
+        width: 100%;
+      }
+
+      input[type="number"]{
+        width: 100%;
+        border-width: 0 0 1px 0;
+        border-color: #CCCCCC;
+        text-align: center;
+
+        &:focus{
+          border-width: 0 0 1px 0;
+          outline: none;
+        }
       }
     }
 
-    .desc-value{
-      width: 50%;
-      padding: 0 20px;
-      position: relative;
-
-      .range-left{
-        position: absolute;
-        left: 0;
-        top: 0;
-        cursor: pointer;
-
-        &.glyphicon-yen{
-          color: #999999;
-        }
-      }
-
-      .range-right{
-        position: absolute;
-        right: 0;
-        top: 0;
-        cursor: pointer;
-      }
+    .edit-item-right{
+      line-height: 34px;
+      padding: 0;
+      // -webkit-transition: color 0.25s ease-in-out 0;
+      // transition: color 0.25s ease-in-out 0;
     }
   }
 
-  .add-item{
-    line-height: 28px;
+  .desc-value{
+    width: 50%;
+    padding: 0 20px;
+    position: relative;
+
+    .range-left{
+      position: absolute;
+      left: 0;
+      top: 0;
+      cursor: pointer;
+
+      &.glyphicon-yen{
+        color: #999999;
+      }
+    }
+
+    .range-right{
+      position: absolute;
+      right: 0;
+      top: 0;
+      cursor: pointer;
+    }
   }
 }
 
@@ -477,6 +481,10 @@
   }
 }
 
+.order-total-edit{
+  margin-top: 10px;
+}
+
 @media (min-width: 1200px) {
   .main-content.show-order-items .chat-list{
     width: 50%;
@@ -522,7 +530,7 @@
     font-size: 12px;
   }
 
-  .order-table-wrap .edit-fieldset .edit-item-right {
+  .order-table-wrap .edit-fieldset .order-item-amount {
     clear: left;
   }
 }
