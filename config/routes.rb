@@ -1,35 +1,36 @@
 Rails.application.routes.draw do
-  mount ChinaCity::Engine => '/china_city'  
-  resources :contacts, only: [:new, :show, :create, :destroy]
-
-  concern :messable do
-    resources :messages
-  end
-
-  concern :roomable do
-    resources :rooms, concerns: :messable do
-      collection do
-        put "negotiate_with/:user_id", to: "rooms#negotiate_with"
-      end
-
-      member do
-        put "accepting", to: "rooms#accepting"
-      end
-    end
-  end
-
-  # concern :chatable do
-  #   resources :chats
-  # end
+  devise_for :admins, controllers: {
+    sessions: 'admins/sessions',
+    registrations: 'admins/registrations'
+  }
 
   devise_for :users, controllers: {
     sessions: 'users/sessions',
     registrations: 'users/registrations'
   }
 
-  namespace :admin do
+  mount ChinaCity::Engine => '/china_city'
+  resources :contacts, only: [:new, :show, :create, :destroy]
+
+  concern :messable do
+    resources :messages
+  end
+
+  concern :chatable do
+    resources :chats
+  end
+
+  namespace :admins do
     resources :dashboards
-    get 'contacts' => 'contacts#index'
+    resources :accounts, except: [:new, :edit] do
+      collection do
+        get 'search_wanliu_user', to: 'accounts#search_wanliu_user'
+        put 'import/:wanliu_user_id', to: 'accounts#import', as: :import
+      end
+    end
+    resources :promotions
+    resources :messages
+    resources :contacts
   end
 
   namespace :api do
@@ -43,22 +44,29 @@ Rails.application.routes.draw do
     # end
   end
 
-  resources :promotions do
+  resources :promotions, concerns: [ :chatable ] do
     member do
       put "favorited", to: "promotions#favrited"
-      get 'chat'
-      get 'status/:order_id', to: "promotions#status", as: :status_of
+      get 'shop/:shop_id', to: "promotions#shop", as: :shop
     end
   end
 
   resources :shops, only: [ :show ]
   resources :shop_categories, only: [ :index, :show ]
   resources :items, only: [ :index, :show ]
+  resources :chats
+  resources :orders do
+    member do
+      get 'status', to: "orders#status", as: :status_of
+      get 'diff', to: "orders#diff", as: :diff
+    end
+  end
   ## shop route
   #
   get '/about' => 'home#about'
 
   match ':shop_name', :to => 'shops#show_by_name', via: [ :get ]
+  match '@:profile', :to => 'profile#username', as: :profile, via: [ :get ]
 
 
   root to: "promotions#index"

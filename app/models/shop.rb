@@ -17,4 +17,14 @@ end
 class Shop < ActiveResource::Base
   self.site = Settings.wanliu.backend
   self.format = ShopJsonFormat
+
+  has_one :user
+
+  def chats
+    Chat.where('chatable_type = ? and chatable_id = ?', self.class.name, id)
+  end
+
+  def avatar_url
+    image.try(:src)
+  end
 end

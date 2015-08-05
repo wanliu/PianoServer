@@ -56,8 +56,9 @@
         <% end %>
         <div class="navbar-collapse collapse navbar-responsive-collapse">
           <ul class="nav navbar-nav">
-            <li><%= link_to "关于我们", "about"  %></li>
+            <li><%= link_to "关于我们", about_path  %></li>
             <li><%= link_to "二维码", "#share-url-qrcode" , "data-toggle"=>"modal" %></li>
+            <li><%= user_avatar(current_anonymous_or_user) %></li>
           </ul>
         </div>
       </div>
@@ -72,29 +73,41 @@
       </div><!--/row-->
 
       <footer>
-        <span class="page-loading pull-right"></span>
-        <p><%= raw Settings.app.footer %> ver <%= PianoServer::VERSION unless Rails.env.production? %></p>
+        <div class="container">
+          <span class="page-loading pull-right"></span>
+          <p><%= raw Settings.app.footer %> ver <%= PianoServer::VERSION unless Rails.env.production? %></p>
+        </div>
       </footer>
       <%= render "qrcode" %>
     </div> <!-- /container -->
 
     <script type="text/javascript">
       $(function() {
-        var inChats = {}
+        var inChats = {};
 
         userSocket.onPersonMessage(function(message) {
-          var channelId = message.channelId;
-          var senderId = message.senderId;
-          var senderLogin = message.senderLogin;
-          if (!inChats[channelId]) {
-            window.noticeCenter.addNotice(senderId, senderLogin, 1);
+          var channelId = message.channelId,
+              senderId = message.senderId,
+              senderLogin = message.senderLogin,
+              ownChannelId = window.userSocket.getUserChannelId(),
+              chatChannelId = 'p' + senderId;
+
+          if (!inChats[channelId] && (chatChannelId !== ownChannelId)) {
+            userSocket.emit('get', {
+              channelId: chatChannelId,
+              key: 'chat_id'
+            }, function(err, chatId) {
+              if (!err && chatId) {
+                window.noticeCenter.addNotice(senderId, senderLogin, chatId);
+              }
+            });
             // todo process
           }
 
         });
 
         $(document).on('inchats:enter', function(e, channelId) {
-          inChats[channelId] = true
+          inChats[channelId] = true;
         });
 
         $(document).on('inchats:leave', function(e, channelId) {

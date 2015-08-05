@@ -1,0 +1,68 @@
+<%= content_for :title, @target.try(:nickname) || @target.try(:name) %>
+<%= nav_back_button %>
+<%= content_for :module, :piano %>
+
+<div class="chat-list">
+  <div class="container">
+    <div class="row">
+    <%= render "chat_order_header" %>
+
+    <div class="chat-inner" >
+      <%= render "chat_order_table" %>
+      <div class="message-list clearfix">
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<%= render "chat_input" %>
+
+<script type="text/javascript">
+  $(function() {
+    var StatusLoadUrl = window.StatusLoadUrl,
+        MiniTable     = window.MiniTable,
+        Chat          = window.Chat,
+        userSocket    = window.userSocket,
+        ownId         = userSocket.userId,
+        channelId     = userSocket.getUserChannelId(),
+        chatChannelId,
+        targetId;
+
+    <% unless @target.nil? %>
+      targetId  = "<%= @target.id %>";
+      chatChannelId = 'p' + targetId;
+    <% end %>
+
+    Chat.defaultOptions.avatarDefault = '<%= image_path "avatar.gif" %>';
+    var $img = $('.chat-order-image')[0];
+    var stateLoad = new StatusLoadUrl($img);
+    var miniTable = new MiniTable($('.chat-order'), $('.chat-items'), <%= @order.id %>);
+
+    if (!targetId) {
+      alert('无效的聊天对象！');
+      $('.btn-send').attr('disabled', 'disabled');
+      return;
+    }
+
+    var chat = new Chat($('.chat-order'), chatChannelId, {
+      sendBtn: $('.btn-send')
+    });
+
+    chat.setTable(miniTable);
+
+    chat.on('init', function(e, socket) {
+      var chatId = '<%= @chat.id %>';
+      socket.emit('set', { channelId: chatChannelId, key: 'chat_id', value: chatId });
+
+      <% unless @order.nil? %>
+      var orderId = '<%= @order.id %>';
+      socket.emit('set', { channelId: chatChannelId, key: 'order_id', value: orderId })
+      <% end %>
+    });
+
+    $(document).on('page:before-unload', function() {
+      chat.leave();
+    });
+  });
+</script>

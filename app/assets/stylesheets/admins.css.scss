@@ -1,0 +1,22 @@
+/*
+ *= require bootstrap-launcher
+ *= require nprogress
+ *= require nprogress-bootstrap
+ *= require_tree ./admins
+ *= require_self
+*/
+
+body {
+  padding-top: 50px;
+  padding-bottom: 40px;
+  background: #fff;
+}
+
+
+body[module="signup"] {
+	background: #ddd;
+}
+
+.content {
+	padding-top: 20px;
+}

@@ -1,15 +1,17 @@
 class User < ActiveRecord::Base
   include DefaultImage
   include AnonymousUser
-  # Include default devise modules. Others available are:	
+
+  # Include default devise modules. Others available are:
   before_save :ensure_authentication_token
-  
+
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable,
+  devise :database_authenticatable, :registerable, :timeoutable,
          :recoverable, :rememberable, :trackable, :validatable,
          :authentication_keys => [:login]
 
   # has_many :memberings, :dependent => :destroy
+  has_many :chats, foreign_key: 'owner_id'
 
   image_token -> { self.email || self.username || self.mobile }
   validates :username, presence: true, uniqueness: true
@@ -17,6 +19,16 @@ class User < ActiveRecord::Base
   after_commit :sync_to_pusher
 
   attr_accessor :login
+
+  # admin search configure
+  scoped_search on: [:id, :username, :email, :mobile]
+
+  scope :can_import?, -> (id) {
+    found = where(id: id).first
+    return found.nil? ? true : found.provider == 'import'
+  }
+
+  store_accessor :image, :avatar_url
 
   JWT_TOKEN = Rails.application.secrets.live_key_base
 
@@ -28,12 +40,8 @@ class User < ActiveRecord::Base
     super || login
   end
 
-  def wid
-    id > 0 ? "w#{id}" : "-w#{id.abs}"
-  end
-
   def chat_token
-    JWT.encode({id: wid}, JWT_TOKEN)
+    JWT.encode({id: id}, JWT_TOKEN)
   end
 
   def self.find_for_database_authentication(warden_conditions)
@@ -50,9 +58,9 @@ class User < ActiveRecord::Base
       self.authentication_token = generate_authentication_token
     end
   end
- 
+
   private
-  
+
   def generate_authentication_token
     loop do
       token = Devise.friendly_token
@@ -67,7 +75,7 @@ class User < ActiveRecord::Base
     pusher_token = Settings.pusher.pusher_token.clone
     pusher_url << 'users'
 
-    options = {id: "w#{id}", token: pusher_token, login: username, realname: username, avatar_url: (image && image[:avatar_url]) }
+    options = {id: "#{id}", token: pusher_token, login: username, realname: username, avatar_url: (image && image[:avatar_url]) }
 
     begin
       RestClient.post pusher_url, options
@@ -75,4 +83,6 @@ class User < ActiveRecord::Base
       # TODO what to do when sync fails?
     end
   end
+
+  alias_method :name, :nickname
 end

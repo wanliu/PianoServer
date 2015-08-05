@@ -3,3 +3,17 @@
 
 bundle install
 guard
+
+== 远程调试
+
+```
+# 启动服务器
+RUBY_DEBUG=true guard
+```
+
+```
+# 启动客户端
+bundle exec byebug -R localhost:8989
+```
+
+在文本中加入 `byebug`

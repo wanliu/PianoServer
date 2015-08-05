@@ -39,4 +39,11 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
   config.autoload_paths += %W(#config.root/lib)
+
+  require 'byebug'
+
+  if ENV['RUBY_DEBUG']
+    Byebug.start_server 'localhost'
+    # Byebug.start_server 'localhost', ENV['RUBY_DEBUG_PORT'].to_i
+  end
 end

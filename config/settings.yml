@@ -1,6 +1,8 @@
 app:
   title: 万流电商社区
   footer: "&copy; Wanliu.biz 2015  湘ICP备：13005289号-1"
+admin:
+  title: 万流工作平台
 system:
   agent:
     id: 0
@@ -8,11 +10,12 @@ system:
     nickname: 系统小助理
     email: service@wanliu.biz
     mobile: 0734-83888168
-    image: 
+    image:
       avatar_url: //static.wanliu.biz/images/logo.png
       preview_url: //static.wanliu.biz/images/logo.png
-wanliu: 
+wanliu:
   backend: http://www.wanliu.biz/api/v1/
+  pry_token: 87c87f8ef9699391e15202ca63cf1ebeb46314e04f2f6de002047c2f42ad57d936dc068888cb4e96c9be46b5bdb86de09fc5a00fce7092adf09f269d243af6c2
 pusher:
   socket_host: www.wanliu.biz
   socket_port: 8000

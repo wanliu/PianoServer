@@ -1,0 +1,4 @@
+<% if @contacts.length > 0%>
+	<h1 class"page-header">新客户提交资料</h1>
+	<%= simple_table_for @contacts, with: ContactTable %>
+<% end %>

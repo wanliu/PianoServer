@@ -2,174 +2,200 @@
 #= require lib/metadata
 class @Chat
 
-    @defaultOptions: {
-        sendBtn: null,
-        isMessageScroll: true,
-        maxMessageGroup: 10,
-        earlyTime: 0,
-        avatarDefault: '/assets/ava1tar.gif'
-        # autoEnter: true
-    }
+  @defaultOptions: {
+    sendBtn: null,
+    isMessageScroll: true,
+    maxMessageGroup: 10,
+    earlyTime: 0,
+    avatarDefault: '/assets/ava1tar.gif'
+    # autoEnter: true
+  }
 
-    constructor: (@element, @channelId, @options = {} ) ->
-        @options = $.extend(Chat.defaultOptions, @options)
-        console.warn('must set sentBtn param in options') unless @options.sendBtn?
-        @sendBtn = @options.sendBtn
-        @textElement = @options.textElement || "input[name='chat-text']"
-        @$messageList = $(@options.messageList || ".message-list")
-        @$chatContainer = $(@options.container || ".chat-list")
-        @userSocket = window.userSocket
+  constructor: (@element, @channelId, @options = {} ) ->
+    @options = $.extend(Chat.defaultOptions, @options)
+    console.warn('must set sentBtn param in options') unless @options.sendBtn?
+    @sendBtn = @options.sendBtn
+    @textElement = @options.textElement || "input[name='chat-text']"
+    @$messageList = $(@options.messageList || ".message-list")
+    @$chatContainer = $(@options.container || ".chat-list")
+    @userSocket = window.userSocket
 
-        @boundOnMessage = @onMessage.bind(@)
-        @userSocket.onPersonMessage(@boundOnMessage)
-        @metadata = window.metadata
-        @ownerChannelId = @options.userChannelId || @userSocket.getUserChannelId()
+    @boundOnMessage = @onMessage.bind(@)
+    @userSocket.onPersonMessage(@boundOnMessage)
+    @metadata = window.metadata
+    @ownerChannelId = @options.userChannelId || @userSocket.getUserChannelId()
+    @table = @options.table
 
-        $(document).bind 'page:before-unload', =>
-            @_clearEventListners()
+    $(document).bind 'page:before-unload', =>
+      @_clearEventListners()
 
-        @earlyTime = @options.earlyTime
-        @setSendBtn(@sendBtn)
+    @earlyTime = @options.earlyTime
+    @setSendBtn(@sendBtn)
 
-        @getHistoryMessage(0, @_loadMoreProcess)
-        # setTimeout () =>
-        #     @enter() if @options.autoEnter
-        # , 100
+    @getHistoryMessage(0, @_loadMoreProcess)
 
-    setSendBtn: (btnElement) ->
-        @sendBtn = $(btnElement)
-        @sendBtn.click(@_sendMsg.bind(@))
+    setTimeout () =>
+      @$().trigger('chat:init', @userSocket)
+    , 10
 
-    getText: () ->
-        @$textElement ||= $(@textElement)
-        @$textElement.val()
+  $: () ->
+    $(@element)
 
-    clearText: () ->
-        @$textElement ||= $(@textElement)
-        @$textElement.val('')
+  on: (event_name, callback) ->
+    @$().on('chat:' + event_name, callback)
 
-    send: (msg) ->
+  setSendBtn: (btnElement) ->
+    @sendBtn = $(btnElement)
+    @sendBtn.click(@_sendMsg.bind(@))
 
-    enter: () ->
-        $(document).trigger('inchats:enter', @chatChannelId)
+  getText: () ->
+    @$textElement ||= $(@textElement)
+    @$textElement.val()
 
-    leave: () ->
-        $(document).trigger('inchats:leave', @chatChannelId)
+  clearText: () ->
+    @$textElement ||= $(@textElement)
+    @$textElement.val('')
 
-    autoScroll: (direction = 'down') ->
-        if direction == 'down'
-            @$chatContainer.scrollTop(@$messageList.innerHeight())
-        else 
-            @$chatContainer.scrollTop(0)
+  send: (msg) ->
 
-    getHistoryMessage: (start = @earlyTime, callback) ->
-        type = if start == 0 then 'index' else 'time'
-        @userSocket.emit 'getChannelMessage', {
-            'channelId': @channelId,
-            'type': type,
-            'start': start,
-            'step': @options.maxMessageGroup
-        }, (err, messages) =>
-            return if err || messages.length == 0
-                
-            @_batchInsertMessages(messages, 'up')
-            # for message in messages
-            #     @_insertMessage(message, 'up')
+  enter: () ->
+    $(document).trigger('inchats:enter', @chatChannelId)
 
-            # if messages.length < @options.maxMessageGroup
-            #     @$messageList.find('.load-more').remove();
-            # else
+  leave: () ->
+    $(document).trigger('inchats:leave', @chatChannelId)
 
-            @earlyTime = messages[0].time
-            
-            callback.call(@, messages) if $.isFunction(callback)
-            
-    onMessage: (message) ->
-        unless @_isEnter
-            @_isEnter = true
-            @chatChannelId = message.channelId
-            @enter()
+  autoScroll: (direction = 'down') ->
+    if direction == 'down'
+      @$chatContainer.scrollTop(@$messageList.innerHeight())
+    else
+      @$chatContainer.scrollTop(0)
 
-        @_insertMessage(message)
+  getHistoryMessage: (start = @earlyTime, callback) ->
+    type = if start == 0 then 'index' else 'time'
+    @userSocket.emit 'getChannelMessage', {
+      'channelId': @channelId,
+      'type': type,
+      'start': start,
+      'step': @options.maxMessageGroup
+    }, (err, messages) =>
+      return if err || messages.length == 0
 
-    onHistoryMessage: () ->
-        @getHistoryMessage @earlyTime, @_loadMoreProcess
+      messages.reverse()
 
-    # private 
-    _sendMsg: () ->
-        text = @getText()
+      @_batchInsertMessages(messages, 'up')
+      # for message in messages
+      #     @_insertMessage(message, 'up')
 
-        if text.length > 0
+      # if messages.length < @options.maxMessageGroup
+      #     @$messageList.find('.load-more').remove();
+      # else
 
-            if @metadata.debug
-                @_insertMessage(text);
-            else
-                @userSocket.publish(@channelId, {
-                    'content': text,
-                    # 'promotionId': promotionId,
-                    'attachs': {}
-                }, (err) =>
-                    @clearText() unless err?
-                )
+      @earlyTime = messages[messages.length - 1].time
 
-    _insertItemMessage: (message, direction = 'down') ->
-        {senderId, content, senderAvatar, senderLogin} = message
-        toAddClass = if @_isOwnMessage(message) then 'you' else 'me'
+      callback.call(@, messages) if $.isFunction(callback)
 
-        senderAvatar = @options.avatarDefault if senderAvatar == '' or senderAvatar?
+  setTable: (@table) ->
 
-        template = """
-            <div class="chat #{toAddClass}">
-                <img src="#{senderAvatar}" />
-                <h2>#{senderLogin}</h2>
-                <div class="bubble #{toAddClass}">
-                    <p>#{content}</p>
-                </div>
-            </div>
-        """
+  onMessage: (message) ->
+    unless @_isEnter
+      @_isEnter = true
+      @chatChannelId = message.channelId
+      @enter()
 
-        if @$messageList?
-            if direction == 'down'
-                $(template).appendTo(@$messageList) 
-            else
-                $(template).prependTo(@$messageList)
+    if message.type == 'command'
+      @onCommand(message)
+    else
+      @_insertMessage(message)
 
-    _insertMessage: (message, direction = 'down') ->
-        @_insertItemMessage(message, direction)
+  onCommand: (message) ->
+    command = JSON.parse(message.content)
+    if command.command == 'order' and @table?
+        @table.send('order', command)
 
-        @autoScroll(direction) if @options.isMessageScroll
-
-    _batchInsertMessages: (messages, direction = 'down') ->
-        for message in messages
-            @_insertItemMessage(message, 'up')
-
-        @autoScroll(direction) if @options.isMessageScroll        
-
-    _isOwnMessage: (message) ->
-        @metadata.chatId == message.senderId
-        
-    _insertLoadMore: () ->
-        $more = $('<div class="load-more">查看更多消息</div>').prependTo(@$messageList)
-
-        $more.click () =>
-            @_removeLoadMore()
-            $('<div class="record-loading"><span class="loading-icon"/>正在加载聊天记录</div>').prependTo(@$messageList)
-            @getHistoryMessage(@earlyTime, @_loadMoreProcess)
+  onHistoryMessage: () ->
+    @getHistoryMessage @earlyTime, @_loadMoreProcess
 
 
-    _removeLoadMore: () ->
-        @$messageList.find('.load-more').remove()
+  # private
+  _sendMsg: () ->
+    text = @getText()
+
+    if text.length > 0
+
+      if @metadata.debug
+        @_insertMessage(text);
+      else
+        @userSocket.publish(@channelId, {
+          'content': text,
+          # 'promotionId': promotionId,
+          'attachs': {}
+        }, (err) =>
+          @clearText() unless err?
+        )
+
+  _insertItemMessage: (message, direction = 'down') ->
+    {id, senderId, content, senderAvatar, senderLogin} = message
+
+    if $("div[data-message-id=#{id}]").length > 0
+      $("div[data-message-id=#{id}] p.content").text(content)
+      return
+
+    toAddClass = if @_isOwnMessage(message) then 'you' else 'me'
+
+    senderAvatar = @options.avatarDefault if senderAvatar == '' or senderAvatar?
+
+    template = """
+      <div class="chat #{toAddClass}" data-message-id="#{id}">
+        <img src="#{senderAvatar}" />
+        <h2>#{senderLogin}</h2>
+        <div class="bubble #{toAddClass}">
+          <p class="content">#{content}</p>
+        </div>
+      </div>
+    """
+
+    if @$messageList?
+      if direction == 'down'
+        $(template).appendTo(@$messageList)
+      else
+        $(template).prependTo(@$messageList)
+
+  _insertMessage: (message, direction = 'down') ->
+    @_insertItemMessage(message, direction)
+
+    @autoScroll(direction) if @options.isMessageScroll
+
+  _batchInsertMessages: (messages, direction = 'down') ->
+    for message in messages
+      @_insertItemMessage(message, 'up')
+
+    @autoScroll(direction) if @options.isMessageScroll
+
+  _isOwnMessage: (message) ->
+    @metadata.chatId == message.senderId.toString();
+
+  _insertLoadMore: () ->
+    $more = $('<div class="load-more">查看更多消息</div>').prependTo(@$messageList)
+
+    $more.click () =>
+      @_removeLoadMore()
+      $('<div class="record-loading"><span class="loading-icon"/>正在加载聊天记录</div>').prependTo(@$messageList)
+      @getHistoryMessage(@earlyTime, @_loadMoreProcess)
 
 
-    _clearEventListners: () ->
-        @userSocket.offPersonMessage(@boundOnMessage)
+  _removeLoadMore: () ->
+    @$messageList.find('.load-more').remove()
 
-    _loadMoreProcess: (messages) ->
-        @$messageList.find('.record-loading').remove()
-        if messages.length < @options.maxMessageGroup
-            @_removeLoadMore()
-        else
-            @_insertLoadMore()
+
+  _clearEventListners: () ->
+    @userSocket.offPersonMessage(@boundOnMessage)
+
+  _loadMoreProcess: (messages) ->
+    @$messageList.find('.record-loading').remove()
+    if messages.length < @options.maxMessageGroup
+      @_removeLoadMore()
+    else
+      @_insertLoadMore()
 
 
 

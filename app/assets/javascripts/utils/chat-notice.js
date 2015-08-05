@@ -3,7 +3,7 @@
     this.noticeMap = {};
   }
 
-  NoticeCenter.prototype.addNotice = function(senderId, senderUsername, orderId) {
+  NoticeCenter.prototype.addNotice = function(senderId, senderUsername, chatId) {
     var noticeContainer = $('.chat-notices'),
         noticeMap = this.noticeMap,
         noticeObj = this._findNoticeObj(senderId),
@@ -18,7 +18,7 @@
         notice = new Notice({
           'senderId': senderId,
           'container': this,
-          'orderId': orderId,
+          'chatId': chatId,
           'containment': noticeContainer,
           'senderUsername': senderUsername
         });
@@ -32,7 +32,7 @@
      }
    };
 
-  NoticeCenter.prototype.removeNotice = function(senderId, orderId, redirect) {
+  NoticeCenter.prototype.removeNotice = function(senderId, chatId, redirect) {
     var noticeObj = this._findNoticeObj(senderId);
 
     if (noticeObj) {
@@ -43,7 +43,7 @@
     }
 
     if (redirect) {
-      window.location.href = '/chat/' + orderId;
+      window.location.href = '/chats/' + chatId;
     }
   };
 
@@ -54,7 +54,7 @@
   function Notice(options) {
     options = options || {};
 
-    if (!options.senderId || !options.orderId || !options.containment || !options.senderUsername || !options.container) {
+    if (!options.senderId || (!options.orderId && !options.chatId) || !options.containment || !options.senderUsername || !options.container) {
       return;
     }
 
@@ -68,16 +68,16 @@
         containment = options.containment,
         senderId = options.senderId,
         senderUsername = options.senderUsername,
-        orderId = options.orderId;
-        
-    this.element = $('<div class="chat-notice"><span class="show-notice">您有<span class="unreadCount">1</span>条来自' + 
+        chatId = options.chatId;
+
+    this.element = $('<div class="chat-notice"><span class="show-notice">您有<span class="unreadCount">1</span>条来自' +
       senderUsername +'的未读聊天消息</span><span class="ignore">忽略</span></div>')
       .appendTo(containment);
 
     this.element.find('.show-notice').click(function() {
-      container.removeNotice(senderId, orderId, true);
+      container.removeNotice(senderId, chatId, true);
     }).end().find('.ignore').click(function() {
-      container.removeNotice(senderId, orderId, false);
+      container.removeNotice(senderId, chatId, false);
     });
   }
 

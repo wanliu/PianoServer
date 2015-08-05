@@ -1,6 +1,6 @@
 class PromotionsController < ApplicationController
   include DefaultAssetHost
-  before_action :set_promotion, only: [:show, :update, :destroy, :chat]
+  before_action :set_promotion, only: [:show, :update, :destroy, :chat, :shop]
 
   respond_to :json, :html
   # GET /promotions
@@ -16,21 +16,9 @@ class PromotionsController < ApplicationController
     @shop = Shop.find(@promotion.shop_id)
   end
 
-  def chat
-    @promotion
-    @shop = Shop.find(@promotion.shop_id)
-    bid = Order.last_bid(current_anonymous_or_user.id) + 1
-    @order = Order
-      .where(supplier_id: @shop.id, buyer_id: current_anonymous_or_user.id)
-      .first_or_create({
-        title: @promotion.title,
-        supplier_id: @shop.id, 
-        buyer_id: current_anonymous_or_user.id, 
-        bid: bid
-      })
-    @order.items.add_promotion(@promotion)
-    pp @order
-    # @order = 
+  def shop
+    @shop = Shop.find(params[:shop_id])
+    redirect_to owner_promotion_rooms_path(@promotion, @shop.owner_id)
   end
 
   # POST /promotions
@@ -42,21 +30,6 @@ class PromotionsController < ApplicationController
       render json: @promotion, status: :created, location: @promotion
     else
       render json: @promotion.errors, status: :unprocessable_entity
-    end
-  end
-
-  def status
-    @order = Order.find(params[:order_id])
-    response = {
-      state: @order.state
-    }
-    
-    response.merge!(url: @order.avatar_url) if @order.state == :done or @order.state == "done"
-
-    respond_to do |format|
-      format.json do 
-        render json: response
-      end
     end
   end
 
@@ -81,7 +54,7 @@ class PromotionsController < ApplicationController
   end
 
   def favorited
-    
+
   end
 
   def saled_product_count

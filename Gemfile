@@ -22,6 +22,7 @@ gem 'jbuilder', '~> 2.0'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
+gem 'jquery-ui-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -32,6 +33,9 @@ gem "less-rails" #Sprockets (what Rails 3.1 uses for its asset pipeline) support
 gem 'bootstrap-sass', '~> 3.3.5'
 gem 'nprogress-rails'
 gem 'activeresource'
+gem 'scoped_search'
+gem 'json-patch'
+gem 'hashdiff'
 
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'
@@ -47,6 +51,7 @@ gem "mini_magick", '~> 4.2.7'
 
 gem 'poseidon'
 gem 'google-analytics-rails'
+gem 'kaminari'
 
 gem "rails_config"
 
@@ -56,11 +61,10 @@ gem 'rest-client'
 
 gem 'meta-tags'
 
-gem 'kaminari'
-
 gem 'sidekiq'
 
 gem 'china_city'
+gem 'table_cloth'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -75,7 +79,7 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
   gem 'guard-rails'
-  gem 'guard-rspec', require: false  
+  gem 'guard-rspec', require: false
   gem 'guard-sidekiq'
   # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'web-console', '~> 2.0'
