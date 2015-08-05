@@ -105,7 +105,11 @@
 <!--     <div class="into-cart">加入购物车</div>
     <div class="buy-now">立即购买</div>
  -->
- 	    <%= link_to '洽谈', promotion_chats_path(promotion, shop_id: @shop.id), class: "chat", method: 'POST' %>
+      <% if shop.owner.id === current_anonymous_or_user.id %>
+ 	      <div class="chat">正在浏览自己的店铺</div>
+      <% else %>
+        <%= link_to '洽谈', promotion_chats_path(promotion, shop_id: @shop.id), class: "chat", method: 'POST' %>
+      <% end %>
     </div>
   </div>
 </div>
