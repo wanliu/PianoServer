@@ -100,7 +100,8 @@ class OrdersController < ApplicationController
     @order.update(:accept_state => "reject")
     @order.update(updates: nil)
     MessageSystemService.push_command current_anonymous_or_user.id, other_side, {command: 'order', accept: 'reject'}.to_json
-    render json: { accept_state: @order.accept_state }
+
+    render :show, formats: [:json]
   end
 
   private

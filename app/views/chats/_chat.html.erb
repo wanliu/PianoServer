@@ -10,11 +10,21 @@
         <%= render "chat_order_table" %>
       </div>
       <div class="order-buttons clearfix">
-        <div class="col-sm-6 col-xs-6 btn-wrap left">
-          <button class="btn btn-agrees">按住 同意</button>
+        <div class="buttons-execute">
+          <div class="col-sm-6 col-xs-6 btn-wrap left">
+            <button class="btn btn-confirm-order">确认订单</button>
+          </div>
+          <div class="col-sm-6 col-xs-6 btn-wrap right">
+            <button class="btn btn-help">帮助</button>
+          </div>
         </div>
-        <div class="col-sm-6 col-xs-6 btn-wrap right">
-          <button class="btn btn-disagrees">拒绝</button>
+        <div class="buttons-consult">
+          <div class="col-sm-6 col-xs-6 btn-wrap left">
+            <button class="btn btn-agrees">按住3S同意</button>
+          </div>
+          <div class="col-sm-6 col-xs-6 btn-wrap right">
+            <button class="btn btn-disagrees">拒绝</button>
+          </div>
         </div>
       </div>
     </div>

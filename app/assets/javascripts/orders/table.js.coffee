@@ -38,6 +38,7 @@ class @OrderTable extends @Event
     @$().on('mouseup', '.btn-agrees', releaseOrderChangeBound)
     @$().on('touchstart', '.btn-agrees', captureOrderChangeBound)
     @$().on('touchend', '.btn-agrees', releaseOrderChangeBound)
+    @$().on('click', '.btn-disagrees', @rejectOrderChanges.bind(@))
     @$().on('click', '.order-table-total', @changeOrderTotal.bind(@))
 
     @$().bind('add', @onAddChange.bind(@))
@@ -52,7 +53,9 @@ class @OrderTable extends @Event
         type: 'GET',
         dataType: 'json'
       }).success (data) =>
-        @parseDiff(data.diff)
+        diffs = data.diff
+        @parseDiff(diffs)
+        @checkDiff(diffs)
 
     @on 'order', @onOrderCommand.bind(@)
 
@@ -318,7 +321,12 @@ class @OrderTable extends @Event
     if @inAccepting
       @closePopup()
 
-      $.post "/orders/#{@orderId}/cancel", () =>
+      $.post "/orders/#{@orderId}/cancel", (data) =>
+
+  rejectOrderChanges: () ->
+    $.post "/orders/#{@orderId}/reject", { inline: true }, (json) =>
+      $('.order-table').html(json.html) if json.html?
+      @hideConsultButtons()
 
   showPopup: (options) ->
     @popup = Popup.show """
@@ -444,6 +452,7 @@ class @OrderTable extends @Event
   onOrderCommand: (e, command) ->
     if command.diff?
       @parseDiff(command.diff)
+      @showConsultButtons()
 
     else if command.accept?
       switch command.accept
@@ -455,11 +464,11 @@ class @OrderTable extends @Event
           @closePopup()
         when 'accept'
           @closePopup()
-          $.get "/orders/#{@orderId}", {inline: true}, (json) =>
-            $('.order-table').html(json.html) if json.html?
+          @resetTable()
 
         else
           @closePopup()
+          @resetTable()
 
   changeOrderTotal: (e) ->
     $target = $(e.target)
@@ -470,5 +479,27 @@ class @OrderTable extends @Event
     unless $target.is('li')
       $target = $target.parents('li:first')
 
-    $target.toggleClass('open').prev().toggleClass('radius-bottom');
+    $target.toggleClass('open').prev().toggleClass('radius-bottom')
+
+  checkDiff: (diffs) ->
+    if diffs.length > 0
+      @showConsultButtons()
+
+  showConsultButtons: () ->
+    @$().find('.buttons-execute')
+        .hide()
+        .next()
+        .show()
+
+  hideConsultButtons: () ->
+    @$().find('.buttons-execute')
+        .show()
+        .next()
+        .hide()
+
+  resetTable: () ->
+    @hideConsultButtons()
+
+    $.get "/orders/#{@orderId}", {inline: true}, (json) =>
+      $('.order-table').html(json.html) if json.html?
 
