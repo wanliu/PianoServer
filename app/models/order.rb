@@ -7,6 +7,8 @@ class Order < ActiveRecord::Base
 
   belongs_to :buyer, class_name: 'User'
   belongs_to :seller, class_name: 'User'
+  belongs_to :delivery_location, class_name: 'Location'
+  belongs_to :send_location, class_name: 'Location'
 
   # default_scope do
   #   where(shadow_id: nil)

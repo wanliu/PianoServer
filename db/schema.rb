@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150729033513) do
+ActiveRecord::Schema.define(version: 20150805053947) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -128,18 +128,18 @@ ActiveRecord::Schema.define(version: 20150729033513) do
     t.integer  "buyer_id"
     t.integer  "seller_id"
     t.integer  "supplier_id"
-    t.string   "send_address"
-    t.string   "delivery_address"
     t.string   "contacts"
     t.integer  "business_type"
     t.integer  "bid"
     t.integer  "sid"
-    t.datetime "created_at",                                null: false
-    t.datetime "updated_at",                                null: false
+    t.datetime "created_at",                                    null: false
+    t.datetime "updated_at",                                    null: false
     t.string   "title"
-    t.decimal  "total",            precision: 18, scale: 2
+    t.decimal  "total",                precision: 18, scale: 2
     t.jsonb    "image"
     t.jsonb    "data"
+    t.integer  "delivery_location_id"
+    t.integer  "send_location_id"
   end
 
   create_table "statuses", force: :cascade do |t|
