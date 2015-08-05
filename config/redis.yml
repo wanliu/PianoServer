@@ -1,0 +1,13 @@
+#config/redis.yml
+default: &default
+  port: 6379
+
+development:
+  <<: *default
+  host: localhost
+test:
+  <<: *default
+  host: localhost
+production:
+  <<: *default
+  host: <%= ENV['REDIS_PORT_6379_TCP_ADDR'] || 'localhost' %>
