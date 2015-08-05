@@ -15,10 +15,10 @@ class @OrderItem
     $(@parent).trigger('item:select', @element)
 
   onPriceChange: (e, newVal) ->
-    @$().find('.order-item-price .edit-item-right').text('对方将价格修改为' + newVal)
+    # @$().find('.order-item-price .edit-item-right').text('对方将价格修改为' + newVal)
 
   onAmountChange: (e, newVal) ->
-    @$().find('.order-item-amount .edit-item-right').text('对方将数量修改为' + newVal)
+    # @$().find('.order-item-amount .edit-item-right').text('对方将数量修改为' + newVal)
 
   onAddChange: (e, data) ->
 
@@ -26,24 +26,44 @@ class @OrderItem
 
   onReplaceChange: (e, data) ->
     {key, src, dest} = data
-    $value = @$().find(".#{key}")
+    $item = @$().find(".#{key}");
+    $value = @$().find(".#{key}>.text")
+    prefix = switch key
+             when 'price'
+               '￥'
+             when 'amount'
+               'x'
+
     $value
-      .text(dest)
+      .text(prefix + dest)
 
     if +src > +dest
-      arrow = '&darr;'
-    else if +src == +dest
-      arrow = '&#45;'
+      arrow = '↓'
+      direction = 'down'
+      changeClass = 'change-down'
+      animateClass = 'fadeOutDown'
+    # else if +src == +dest
+    #   arrow = '&#45;'
     else
-      arrow = '&uarr;'
+      arrow = '↑'
+      direction = 'up'
+      changeClass = 'change-up'
+      animateClass = 'fadeOutUp'
     # arrow = if +src > +dest then '&darr;' else '&uarr;'
 
     $title = $value.next('.title')
     $title
-      .html("<span class=\"label label-success\">#{arrow} 修改</span>")
+      .text(arrow)
+      .removeClass('fadeOutUp fadeOutDown')
+      .addClass("animated #{animateClass}")
+
+    $item
+      .removeClass('change-down change-up')
+      .addClass(changeClass)
       .stop(true, true)
       .effect('pulsate', times: 3, duration: 1500)
 
+    @$().addClass('order-item-modify')
   send: (event, args...) ->
     @$().trigger(event, args...)
 

@@ -18,6 +18,7 @@ class @Chat
     @textElement = @options.textElement || "input[name='chat-text']"
     @$messageList = $(@options.messageList || ".message-list")
     @$chatContainer = $(@options.container || ".chat-list")
+    @$chatWrap = $(@options.container || ".main-content")
     @userSocket = window.userSocket
 
     @boundOnMessage = @onMessage.bind(@)
@@ -28,6 +29,8 @@ class @Chat
 
     $(document).bind 'page:before-unload', =>
       @_clearEventListners()
+
+    @$chatContainer.bind('scroll', @_clearBubbleTipOnScrollBottom.bind(@))
 
     @earlyTime = @options.earlyTime
     @setSendBtn(@sendBtn)
@@ -65,10 +68,12 @@ class @Chat
     $(document).trigger('inchats:leave', @chatChannelId)
 
   autoScroll: (direction = 'down') ->
+    $inner = @$chatContainer.find('.chat-inner')
+
     if direction == 'down'
-      @$chatContainer.scrollTop(@$messageList.innerHeight())
+      $inner.scrollTop(@$messageList.innerHeight())
     else
-      @$chatContainer.scrollTop(0)
+      $inner.scrollTop(0)
 
   getHistoryMessage: (start = @earlyTime, callback) ->
     type = if start == 0 then 'index' else 'time'
@@ -163,13 +168,64 @@ class @Chat
   _insertMessage: (message, direction = 'down') ->
     @_insertItemMessage(message, direction)
 
-    @autoScroll(direction) if @options.isMessageScroll
+    isVisible = @_checkIsVisible(true)
+
+    if !@_isOwnMessage(message) && (@_checkChatContentIsOverlayed() || !isVisible)
+      @_insertBubbleTip(message)
+
+    if @_checkChatContentIsOverlayed() || (isVisible && @options.isMessageScroll)
+      @autoScroll(direction)
+
+    #@autoScroll(direction) if @options.isMessageScroll
 
   _batchInsertMessages: (messages, direction = 'down') ->
     for message in messages
       @_insertItemMessage(message, 'up')
 
-    @autoScroll(direction) if @options.isMessageScroll
+    # @autoScroll(direction) if @options.isMessageScroll
+
+  _checkIsVisible: (isInsert) ->
+    $inner = @$chatContainer.find('.chat-inner')
+    chatContainer = $inner[0]
+    lastItemHeight = $inner.find('.chat:last').height()
+    scrollHeight = chatContainer.scrollHeight
+    clientHeight = chatContainer.clientHeight
+    scrollTop = chatContainer.scrollTop
+
+    if isInsert
+      clientHeight + scrollTop >= scrollHeight - (lastItemHeight + 70)
+    else
+      clientHeight + scrollTop >= scrollHeight - 70
+
+    # return clientHeight + scrollTop  >= scrollHeight - (isInsert ? lastItemHeight + 20 : 20)
+
+  _checkChatContentIsOverlayed: () ->
+    @table.chatContentOverlayed
+
+  _insertBubbleTip: (message) ->
+    $tip = @$chatWrap.find('.bubble-tip')
+    {content, senderLogin} = message
+
+    if @bubbleTimeout
+      clearTimeout(@bubbleTimeout)
+      @bubbleTimeout = null
+
+    if $tip.length == 0
+      $tip = $('<div class="bubble-tip"><div class="tip-text"></div></div>')
+        .prependTo(@$chatWrap)
+
+    $tip.find('.tip-text').text(senderLogin + '说：' + content)
+
+    @bubbleTimeout = setTimeout(() =>
+      $tip.remove()
+    , 2000)
+
+  _clearBubbleTipOnScrollBottom: () ->
+    if @_checkIsVisible(false)
+      @_clearBubbleTip()
+
+  _clearBubbleTip: () ->
+    @$chatContainer.find('.bubble-tip').remove()
 
   _isOwnMessage: (message) ->
     @metadata.chatId == message.senderId.toString();

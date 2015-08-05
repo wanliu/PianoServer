@@ -1,6 +1,29 @@
-    <li class="list-group-item">
-      <div class="desc-value">
-        <%= number_to_currency(@order.total, unit:'￥') %>元
+    <li class="list-group-item order-table-total">
+      <div class="order-total-desc">
+        <div class="desc-value total">
+          <span class="text"><%= number_to_currency(@order.total, unit:'￥') %>元</span>
+          <span class="title"></span>
+        </div>
+        合计
       </div>
-      合计
+      <div class="order-total-edit edit-fieldset clearfix">
+        <div class="edit-items">
+          <div class="col-xs-12 col-sm-6 edit-item">
+            <span class="field-name">总价</span>
+            <div class="input-group">
+              <div class="input-group-btn">
+                <button type="button" class="btn btn-info btn-minus">
+                  <span class="glyphicon glyphicon-minus"></span>
+                </button>
+              </div>
+              <input type="text" name="total" class="form-control input-number" value="<%= @order.total %>" autocomplete="off">
+              <div class="input-group-btn">
+                <button type="button" class="btn btn-primary btn-plus">
+                  <span class="glyphicon glyphicon-plus"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </li>

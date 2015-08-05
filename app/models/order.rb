@@ -1,11 +1,11 @@
 class Order < ActiveRecord::Base
   include ThumbImages
   store_accessor :image, :avatar_url
-  store_accessor :data, :updates
+  store_accessor :data, :updates, :accept_state
 
   MIN_AMOUNT = 6
 
-  belongs_to :user
+  belongs_to :buyer, class_name: 'User'
   belongs_to :seller, class_name: 'User'
 
   # default_scope do
@@ -90,71 +90,90 @@ class Order < ActiveRecord::Base
     Shop.find(supplier_id)
   end
 
+  def buyer
+    buyer_id && buyer_id < 0 ? User.anonymous(buyer_id) : super
+  end
+
   def origin_hash
-    # dont use symbol of key please, because attributes, jsonb data all is string keys
-    hash = {
-      "id" => id,
-      "buyer_id" => buyer_id,
-      "seller_id" => seller_id,
-      "supplier_id" => supplier_id,
-      "send_address" => send_address,
-      "delivery_address" => delivery_address,
-      "business_type" => business_type,
-      "title" => title,
-      "contacts" => contacts,
-      "bid" => bid,
-      "sid" => sid,
-      "total" => total
-    }
-    hash["items"] = items.map do |item|
-      {
-        "id" => item.id,
-        "title" => item.title,
-        "iid" => item.iid,
-        "item_type" => item.item_type,
-        "price" => item.price,
-        "amount" => item.amount,
-        "sub_total" => item.sub_total,
-        "unit" => item.unit,
-        "unit_title" => item.unit_title
-      }
-    end
-    hash
+    attrs = attributes
+    attrs["items"] = items.map {|item| item.attributes }
+    to_hash(attrs)
   end
 
   def update_hash
     if updates.nil?
       origin_hash
     else
-      h = updates || {}
-      hash = {
-        "id" => h["id"],
-        "buyer_id" => h["buyer_id"],
-        "seller_id" => h["seller_id"],
-        "supplier_id" => h["supplier_id"],
-        "send_address" => h["send_address"],
-        "delivery_address" => h["delivery_address"],
-        "business_type" => h["business_type"],
-        "title" => h["title"],
-        "contacts" => h["contacts"],
-        "bid" => h["bid"],
-        "sid" => h["sid"],
-        "total" => n(h["total"])
+      to_hash(updates)
+    end
+  end
+
+  def to_hash(target)
+    h = target || {}
+
+    total = 0
+    hash = {
+      "id" => h["id"],
+      "buyer_id" => h["buyer_id"],
+      "seller_id" => h["seller_id"],
+      "supplier_id" => h["supplier_id"],
+      "send_address" => h["send_address"],
+      "delivery_address" => h["delivery_address"],
+      "business_type" => h["business_type"],
+      "title" => h["title"],
+      "contacts" => h["contacts"],
+      "bid" => h["bid"],
+      "sid" => h["sid"],
+    }
+    hash["items"] = (h["items"] || []).map do |item|
+      price = n(item["price"])
+      amount = n(item["amount"])
+      sub_total = n(item["sub_total"].nil? ? price * amount : item["sub_total"])
+      sub_total = price * amount
+      total += sub_total
+      {
+        "id" => item["id"],
+        "title" => item["title"],
+        "iid" => item["iid"],
+        "item_type" => item["item_type"],
+        "price" => price,
+        "amount" => amount,
+        "sub_total" => sub_total,
+        "unit" => item["unit"],
+        "unit_title" => item["unit_title"]
       }
-      hash["items"] = (h["items"] || []).map do |item|
-        {
-          "id" => item["id"],
-          "title" => item["title"],
-          "iid" => item["iid"],
-          "item_type" => item["item_type"],
-          "price" => n(item["price"]),
-          "amount" => n(item["amount"]),
-          "sub_total" => n(item["sub_total"]),
-          "unit" => item["unit"],
-          "unit_title" => item["unit_title"]
-        }
+    end
+    hash["total"] = n(h["total"].nil? ? total : h["total"])
+    hash["total"] = total
+    hash
+  end
+
+  def apply_patch(patchs)
+    to_hash(JSON::Patch.new(update_hash, patchs).call)
+  end
+
+  def calc_total
+    items.inject(0) do |s, item |
+      s += item.sub_total
+    end
+  end
+
+  def total
+    super.nil? ? calc_total : super
+  end
+
+  def update_patch(attrs)
+    Order.transaction do
+      _items = attrs.delete "items" || []
+
+      update_attributes(attrs)
+      items.destroy_all
+
+      _items.each do |item|
+        items.build item
       end
-      hash
+      data[:updates] = nil
+      save
     end
   end
 
