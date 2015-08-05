@@ -74,7 +74,6 @@ class OrdersController < ApplicationController
     update_hash = @order.update_hash
     if @order.accept_state == 'accepting'
       update_hash["accept_state"] = "accept"
-      pp update_hash
       @order.update(accept_state: "accept")
       @order.update_patch(update_hash)
       # @order.items_attributes = update_hash["items"]
