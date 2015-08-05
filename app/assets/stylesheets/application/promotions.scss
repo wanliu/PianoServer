@@ -19,9 +19,9 @@ $border-color: #CCCCCC;
 
   img {
     height: auto;
-    max-width: 100%;
+    width: 100%;
   }
-  
+
   a:hover {
     color: #ddd;
   }
@@ -122,6 +122,17 @@ $border-color: #CCCCCC;
         font-weight: 700;
         font-size: 1.2em;
       }
+    }
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .promotion-wrap{
+    border-right: 1px solid $border-color;
+    overflow: hidden;
+
+    &:nth-child(4n) {
+      border-right: none;
     }
   }
 }

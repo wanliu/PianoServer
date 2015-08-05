@@ -35,18 +35,9 @@
 
     var user = this.user = options.user;
 
-    if (this.isAnonymousUser(user)) {
-      var anonymous = getLocalUser(user);
+    this.userId = user.id;
+    this.chatToken = user.chatToken;
 
-      this.anonymous = true;
-      this.userId = anonymous.id;
-      this.chatToken = anonymous.chatToken;
-    } else {
-      this.userId = user.id;
-      this.chatToken = user.chatToken;
-    }
-
-    // this.userChannelId = this.getUserChannelId();
     this.loginAndSubscribe();
   }
 
@@ -102,23 +93,7 @@
     socket.emit('login', this.chatToken, function(err) {
       if (err) {
         _this.personChannelReady = false;
-
-        // 当后端token更换之后，前端需要同步更新(使用最近一次的模板数据)
-        if (_this.anonymous) {
-          _this.userId = _this.user.id;
-          _this.chatToken = _this.user.chatToken;
-          _this.userChannelId = _this.getUserChannelId();
-          socket.emit('login', _this.chatToken, function(err) {
-            if (err) {
-              console.error('login fails!');
-            } else {
-              setLocalUser(_this.user);
-              _this.readyAndSubscribe();
-            }
-          });
-        } else {
-          console.error('login fails!');
-        }
+        console.error('login fails!');
 
         return;
       }
