@@ -59,6 +59,10 @@ Rails.application.routes.draw do
     member do
       get 'status', to: "orders#status", as: :status_of
       get 'diff', to: "orders#diff", as: :diff
+      post 'accept', to: "orders#accept", as: :accept
+      post 'ensure', to: "orders#ensure", as: :ensure
+      post 'cancel', to: "orders#cancel", as: :cancel
+      post 'reject', to: "orders#reject", as: :reject
     end
   end
   ## shop route

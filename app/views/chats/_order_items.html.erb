@@ -9,20 +9,23 @@
             </a>
           </div>
           <div class="order-item-center">
-            <h4><%= item.title %></h4>
-            <p>
-              单价: <span class="price"><%= number_to_currency(item.price, unit:'￥') %></span><span class="title"></span>
-              数量: <span class="amount"><%= number_to_human(item.amount) %></span>
-              <span class="title"></span>
-            </p>
+            <p class="item-title"><%= item.title %></p>
           </div>
           <div class="order-item-right">
-            <span class="glyphicon glyphicon-trash remove-btn" data-toggle="tooltip" data-placement="bottom" title="删除"></span>
-          </div>
+            <p class="price">
+              <span class="text"><%= number_to_currency(item.price, unit:'￥') %></span>
+              <span class="title"></span>
+            </p>
+            <p class="amount">
+              <span class="text"><%= number_to_human(item.amount) %></span>
+              <span class="title"></span>
+            </p>
+<!--             <span class="glyphicon glyphicon-trash remove-btn" data-toggle="tooltip" data-placement="bottom" title="删除"></span>
+ -->          </div>
         </div>
         <div class="edit-fieldset">
-          <div class="order-item-price edit-item clearfix">
-            <div class="edit-item-left">
+          <div class="edit-items clearfix">
+            <div class="col-xs-12 col-sm-6 edit-item order-item-price">
               <span class="field-name">价格</span>
               <div class="input-group">
                 <span class="input-group-btn">
@@ -38,12 +41,7 @@
                 </span>
               </div>
             </div>
-            <div class="edit-item-right">
-
-            </div>
-          </div>
-          <div class="order-item-amount edit-item clearfix">
-            <div class="edit-item-left">
+            <div class="col-sx-12 col-sm-6 edit-item order-item-amount">
               <span class="field-name">数量</span>
               <div class="input-group">
                 <span class="input-group-btn">
@@ -58,9 +56,6 @@
                   </button>
                 </span>
               </div>
-            </div>
-            <div class="edit-item-right">
-
             </div>
           </div>
         </div>

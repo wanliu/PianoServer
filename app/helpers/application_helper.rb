@@ -50,9 +50,35 @@ module ApplicationHelper
   end
 
   def user_avatar(user, *args)
-    link_to user_profile_path(user), { class: 'nav-avatar' } do
-      avatar_image_tag(user.avatar_url, *args) + user.nickname
+    options = args.extract_options!
+    link_class = options[:class] ||= []
+    link_class = link_class.is_a?(Array) ? link_class : [ link_class ]
+    link_class.push 'nav-avatar'
+    args.push options
+
+    link_to user_profile_path(user), *args do
+      avatar_image_tag(user.avatar_url) + user.nickname + caret
     end
+  end
+
+  def caret
+    raw "<span class=\"caret\"></span>"
+  end
+
+  def cx(class_or_options, *args)
+    html_class = ActiveSupport::HashWithIndifferentAccess.new
+
+    case class_or_options
+    when String
+      class_or_options.split(' ').each { |cls| html_class[cls] = true }
+      args.each { |cls| html_class[cls] = true }
+    when Symbol
+      args.unshift(class_or_options).each { |cls| html_class[cls] = true }
+    when Hash
+      class_or_options.each { |k, v| html_class[k] = v }
+    end
+
+    html_class.select {|k,v| v }.map { |k,v| k }.join(' ')
   end
 
   private

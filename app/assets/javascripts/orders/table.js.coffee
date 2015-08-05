@@ -1,22 +1,27 @@
 #= require ./item
 #= require _common/event
+#= require _common/popup
 
+Popup = @Popup
 class @OrderTable extends @Event
   @defaultOptions = {
-    maxDelaySyncMs: 800
+    maxDelaySyncMs: 800,
+    maxWaitAccpetingMS: 3000
   }
 
-  constructor: (@element, @orderId = $(@element).data('orderId'), @options = {}) ->
+  constructor: (@element, @order, @options = {}) ->
     super(@element)
     @$items = @$().find('.item-list > .list-group-item')
     @items = for item in @$items
       new OrderItem(item, @element)
 
+    @orderId = @order.id
     @options = $.extend({}, OrderTable.defaultOptions, @options)
     @itemList = @$().find('.item-list')
     @itemList.on('click', @onClicked.bind(@))
     @itemList.on('change', 'input[name=amount]',@amountChanged.bind(@))
     @itemList.on('change', 'input[name=price]', @priceChanged.bind(@))
+    @$().on('change', 'input[name=total]', @totalChanged.bind(@))
     @itemList.on('keyup', 'input[name=amount]', @amountChanged.bind(@))
     @itemList.on('keyup', 'input[name=price]', @priceChanged.bind(@))
     @$().on('click', '.payment-menu li', @changePayment.bind(@))
@@ -24,6 +29,22 @@ class @OrderTable extends @Event
     @$().on('click', '.order-item-amount .btn-plus', @amountIncreased.bind(@))
     @$().on('click', '.order-item-price .btn-minus', @priceDecreased.bind(@))
     @$().on('click', '.order-item-price .btn-plus', @priceIncreased.bind(@))
+    @$().on('click', '.order-total-edit .btn-minus', @totalDecreased.bind(@))
+    @$().on('click', '.order-total-edit .btn-plus', @totalIncreased.bind(@))
+
+    captureOrderChangeBound = @captureOrderChange.bind(@)
+    releaseOrderChangeBound = @releaseOrderChange.bind(@)
+    @$().on('mousedown', '.btn-agrees',captureOrderChangeBound)
+    @$().on('mouseup', '.btn-agrees', releaseOrderChangeBound)
+    @$().on('touchstart', '.btn-agrees', captureOrderChangeBound)
+    @$().on('touchend', '.btn-agrees', releaseOrderChangeBound)
+    @$().on('click', '.order-table-total', @changeOrderTotal.bind(@))
+
+    @$().bind('add', @onAddChange.bind(@))
+    @$().bind('remove', @onRemoveChange.bind(@))
+    @$().bind('replace', @onReplaceChange.bind(@))
+    # @$().bind('order:total:change', )
+
     @patch = []
     @on 'init', () =>
       $.ajax({
@@ -52,7 +73,7 @@ class @OrderTable extends @Event
       @removeItem($target.parents('li:first'))
       return
 
-    if (!$target.is('li'))
+    unless $target.is('li')
       $target = $target.parents('li:first')
 
     $target.toggleClass('open')
@@ -79,15 +100,49 @@ class @OrderTable extends @Event
     else
       @toggleMidItem(target)
 
+  totalDecreased: (event) ->
+    event.stopPropagation()
+    $target = $(event.target)
+    $group = $target.parents('.input-group:first')
+    $input = $group.find('input[name=total]')
+    total = $.trim($input.val())
+    reg = /^[1-9]\d*(.\d{1,2})?$/
+
+    if (!reg.test(total) || +total <= 1)
+      return
+
+    total = +total - 1
+    $input.val(total).change()
+
+  totalIncreased: (event) ->
+    event.stopPropagation()
+    $target = $(event.target)
+    $group = $target.parents('.input-group:first')
+    $input = $group.find('input[name=total]')
+    total = $.trim($input.val())
+    reg = /^[1-9]\d*(.\d{1,2})?$/
+
+    unless (reg.test(total))
+      return
+
+    total = +total + 1
+    $input.val(total).change()
+
+  totalChanged: (event) ->
+    $input = $(event.target)
+    total = $input.val()
+
+    @pushTableOp('replace', '/total', total)
+
   amountDecreased: (event) ->
     event.stopPropagation()
     $target = $(event.target)
     $group = $target.parents('.input-group:first')
     $input = $group.find('input[name=amount]')
-    amount = $input.val()
+    amount = $.trim($input.val())
     reg = /^[1-9]\d*$/
 
-    unless (reg.test(amount))
+    if (!reg.test(amount) || +amount <= 1)
       return
 
     amount = +amount - 1
@@ -98,7 +153,7 @@ class @OrderTable extends @Event
     $target = $(event.target)
     $group = $target.parents('.input-group:first')
     $input = $group.find('input[name=amount]')
-    amount = $input.val()
+    amount = $.trim($input.val())
     reg = /^[1-9]\d*$/
 
     unless (reg.test(amount))
@@ -133,7 +188,11 @@ class @OrderTable extends @Event
     $target = $(event.target)
     $group = $target.parents('.input-group:first')
     $input = $group.find('input[name=price]')
-    price = $input.val()
+    price = $.trim($input.val())
+    reg = /^[1-9]\d*(.\d{1,2})?$/
+
+    if (!reg.test(price) || +price <= 1)
+      return
     # reg = /^[1-9]\d*(.\d{1,2})?$/
 
     # unless (reg.test(price))
@@ -147,13 +206,13 @@ class @OrderTable extends @Event
     $target = $(event.target)
     $group = $target.parents('.input-group:first')
     $input = $group.find('input[name=price]')
-    price = $input.val()
+    price = $.trim($input.val())
     # reg = /^[1-9]\d*(.\d{1,2})?$/
 
-    # unless (reg.test(price))
+    # if (!reg.test(price) || +price <= 1)
     #   return
 
-    price = (+price + 1) + '.0'
+    price = +price + 1 + '.0'
     $input.val(price).change()
 
   priceChanged: (event) ->
@@ -186,6 +245,103 @@ class @OrderTable extends @Event
     $target.addClass('selected').siblings().removeClass('selected');
     text = $target.find('a').text()
     $target.parents('.dropdown:first').find('.button-text').text(text);
+
+  onAddChange: (e, data) ->
+  onRemoveChange: (e, data) ->
+
+  onReplaceChange: (e, data) ->
+    {key, src, dest} = data
+    if key == 'total'
+      $total = @$().find('.total')
+      $value = $total.find('.text')
+      $value.text(dest)
+
+      $title = $value.next('.title')
+
+      if +src > +dest
+        arrow = '↓'
+        direction = 'down'
+        changeClass = 'change-down'
+        animateClass = 'fadeOutDown'
+      # else if +src == +dest
+      #   arrow = '&#45;'
+      else
+        arrow = '↑'
+        direction = 'up'
+        changeClass = 'change-up'
+        animateClass = 'fadeOutUp'
+
+      $title
+        .text(arrow)
+        .removeClass('fadeOutUp fadeOutDown')
+        .addClass("animated #{animateClass}")
+
+      $total
+        .removeClass('change-down change-up')
+        .addClass(changeClass)
+        .stop(true, true)
+        .effect('pulsate', times: 3, duration: 1500)
+
+  captureOrderChange: (e) ->
+    e.preventDefault()
+    unless @inAccepting
+      @inAccepting = true
+      $.post("/orders/#{@orderId}/accept")
+        .success () =>
+          @showPopup()
+          # @popup = Popup.show """
+          #   <h3>正在同意订单修改</h3>
+          #   <h1>&nbsp;</h1>
+          # """
+          # @count = 0;
+          # maxCount =  @options.maxWaitAccpetingMS / 1000
+          # @acceptTickId = setInterval () =>
+          #   @popup.setHtml """
+          #     <h3>正在同意订单修改</h3>
+          #     <h1 class="text-center">#{maxCount - @count}</h1>
+          #   """
+
+          #   @count = if @count >= maxCount then @count else @count + 1
+          # , 1000
+
+          @ensureTickId = setTimeout () =>
+            @inAccepting = false
+            $.post "/orders/#{@orderId}/ensure", (json) =>
+              $('.order-table').html(json.html) if json.html?
+              @closePopup()
+
+          , @options.maxWaitAccpetingMS + 500
+        .fail () =>
+          @closePopup()
+
+  releaseOrderChange: (e) ->
+    if @inAccepting
+      @closePopup()
+
+      $.post "/orders/#{@orderId}/cancel", () =>
+
+  showPopup: (options) ->
+    @popup = Popup.show """
+      <h3>正在同意订单修改</h3>
+      <h1>&nbsp;</h1>
+    """, options
+    count = 0;
+    maxCount =  @options.maxWaitAccpetingMS / 1000
+    @acceptTickId = setInterval () =>
+      @popup.setHtml """
+        <h3>正在同意订单修改</h3>
+        <h1 class="text-center">#{maxCount - count}</h1>
+      """
+
+      count = if count >= maxCount then count else count + 1
+    , 1000
+    @popup
+
+  closePopup: () ->
+    @inAccepting = false
+    @popup.close() if @popup?
+    clearInterval(@acceptTickId)
+    clearTimeout(@ensureTickId)
 
   isEditField: (target) ->
     target.is('.edit-fieldset') or target.parents('.edit-fieldset').length > 0
@@ -282,7 +438,37 @@ class @OrderTable extends @Event
     if ITEMS_REG.test(path)
       [_, index, key] = ITEMS_REG.exec(path)
       [@items[+index], key]
+    else
+      [this, path]
 
   onOrderCommand: (e, command) ->
     if command.diff?
       @parseDiff(command.diff)
+
+    else if command.accept?
+      switch command.accept
+        when 'accepting'
+          @showPopup(modal: true)
+          $('.chat-order')
+            .effect('pulsate', times: 3, duration: 1500)
+        when 'cancel'
+          @closePopup()
+        when 'accept'
+          @closePopup()
+          $.get "/orders/#{@orderId}", {inline: true}, (json) =>
+            $('.order-table').html(json.html) if json.html?
+
+        else
+          @closePopup()
+
+  changeOrderTotal: (e) ->
+    $target = $(e.target)
+
+    if @isEditField($target)
+      return
+
+    unless $target.is('li')
+      $target = $target.parents('li:first')
+
+    $target.toggleClass('open').prev().toggleClass('radius-bottom');
+

@@ -9,10 +9,16 @@ class OrdersController < ApplicationController
     ITEMS: /items\[(\d+)\]\.(\w+)/
   }
 
-  before_action :set_order_params, only: [:show, :status, :update, :diff ]
+  class OrderInvalidState < StandardError; end
+
+  before_action :set_order_params, only: [:show, :status, :update, :diff, :accept, :ensure, :cancel, :reject ]
 
   def show
-    render json: { order: @order.origin_hash }
+    # if params[:inline]
+    #   render json: { order: @order, html: :partial => "order"
+    # else
+    #   render json: { order: @order.origin_hash }
+    # end
   end
 
   def status
@@ -32,9 +38,7 @@ class OrdersController < ApplicationController
   def update
     begin
       # 应用修改记录， 返回一个新的 json
-      new_json    = apply_patch_json @order.update_hash
-      pp new_json
-      # byebug
+      new_json    = @order.apply_patch(patch_params)
       # 用差分算法比较两个同的 hash, 返回 diff 数组
       @diffs = diff_hash @order.update_hash, new_json
       unless @diffs.blank?
@@ -56,6 +60,50 @@ class OrdersController < ApplicationController
     render json: { diff: @diffs }
   end
 
+  def accept
+    if @order.accept_state != "accepting"
+      @order.update(:accept_state => "accepting")
+      MessageSystemService.push_command current_anonymous_or_user.id, other_side, {command: 'order', accept: 'accepting'}.to_json
+    else
+      throw OrderInvalidState.new("invalid accept_state #{@order.accept_state} in accepting")
+    end
+    render json: { accept_state: @order.accept_state }
+  end
+
+  def ensure
+    update_hash = @order.update_hash
+    if @order.accept_state == 'accepting'
+      update_hash["accept_state"] = "accept"
+      pp update_hash
+      @order.update(accept_state: "accept")
+      @order.update_patch(update_hash)
+      # @order.items_attributes = update_hash["items"]
+      # @order.save
+
+      MessageSystemService.push_command current_anonymous_or_user.id, other_side, {command: 'order', accept: 'accept'}.to_json
+    else
+      throw OrderInvalidState.new 'This accepting order job is cancel.'
+    end
+
+    params[:inline] = true
+    render :show, formats: [:json]
+
+    # render json: { accept_state: @order.accept_state }
+  end
+
+  def cancel
+    @order.update(:accept_state => "cancel")
+    MessageSystemService.push_command current_anonymous_or_user.id, other_side, {command: 'order', accept: 'cancel'}.to_json
+    render json: { accept_state: @order.accept_state }
+  end
+
+  def reject
+    @order.update(:accept_state => "reject")
+    @order.update(updates: nil)
+    MessageSystemService.push_command current_anonymous_or_user.id, other_side, {command: 'order', accept: 'reject'}.to_json
+    render json: { accept_state: @order.accept_state }
+  end
+
   private
 
   # 获取 order 对象
@@ -66,15 +114,6 @@ class OrdersController < ApplicationController
   #将 params 数字为 key 的 hash 转换成 Array
   def patch_params
     params[:patch] # .map { |k, v| v }
-  end
-
-  def apply_patch(_json)
-    json = _json.dup
-    JSON::Patch.new(json, patch_params).call
-  end
-
-  def apply_patch_json(json)
-    Order.new(apply_patch(json)).origin_hash
   end
 
   def diff_hash(one, two)
