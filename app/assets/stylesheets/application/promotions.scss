@@ -17,7 +17,7 @@ $border-color: #CCCCCC;
   //box-shadow: 0 2px 2px #DDDDDD;
   border-bottom: 1px solid $border-color;
 
-  img {
+  .promotion-image {
     height: auto;
     width: 100%;
   }
@@ -53,7 +53,6 @@ $border-color: #CCCCCC;
   }
 
   .promotion-title{
-    max-height: 2.6em;
     height: 2.6em;
     overflow: hidden;
   }
