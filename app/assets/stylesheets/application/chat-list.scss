@@ -69,10 +69,6 @@
   }
 
   &.show-order-items{
-    .order-table-wrap {
-      display: block;
-    }
-
     .chat-list{
       border-left: 1px dashed #CCCCCC;
     }
@@ -81,7 +77,7 @@
 
 .order-table-wrap{
   position: absolute;
-  padding: 0 10px;
+  padding: 10px;
   left: 0;
   top: 0;
   bottom: 0;
@@ -90,7 +86,7 @@
   z-index: 10;
 
   .order-table{
-    padding-bottom: 55px;
+    padding-bottom: 45px;
     position: relative;
     height: 100%;
     overflow: auto;
@@ -378,18 +374,18 @@
 }
 
 .chat-list {
-	background-color: #FFFFFF;
-	position: absolute;
-	top: 0;
-	bottom: 0;
+  background-color: #FFFFFF;
+  position: absolute;
+  top: 0;
+  bottom: 0;
   right: 0;
-	overflow-y: auto;
+  overflow-y: auto;
   overflow-x: hidden;
   z-index: 9;
   padding: 0;
 
-	.chat-inner {
-		position: relative;
+  .chat-inner {
+    position: relative;
     height: 100%;
     overflow: auto;
     padding: 0 15px 0 15px;
@@ -414,48 +410,48 @@
     }
   }
 
-	.chat {
-		width: 100%;
+  .chat {
+    width: 100%;
     position: relative;
 
     >img:first-child{
       border-radius: 50%;
     }
 
-		&.me {
-			padding-left: 75px;
+    &.me {
+      padding-left: 75px;
 
-			&>img:first-child {
-				position: absolute;
-				left: 10px;
-				width: 40px;
-				height: 40px;
-			}
-		}
+      &>img:first-child {
+        position: absolute;
+        left: 10px;
+        width: 40px;
+        height: 40px;
+      }
+    }
 
-		min-height: 75px;
-		&> h2 {
-			margin: 0px;
-			font-size: 16px;
-		}
+    min-height: 75px;
+    &> h2 {
+      margin: 0px;
+      font-size: 16px;
+    }
 
-		&.you {
-			padding-right: 75px;
+    &.you {
+      padding-right: 75px;
 
-			&>h2 {
-				text-align: right;
-			}
+      &>h2 {
+        text-align: right;
+      }
 
-			&>img:first-child {
-				position: absolute;
-				right: 10px;
-				width: 40px;
-				height: 40px;
-			}
-		}
-	}
+      &>img:first-child {
+        position: absolute;
+        right: 10px;
+        width: 40px;
+        height: 40px;
+      }
+    }
+  }
 
-	.record-loading {
+  .record-loading {
     height: 30px;
     line-height: 30px;
     text-align: center;
@@ -472,16 +468,16 @@
   }
 
   .load-more{
-  	height: 30px;
+    height: 30px;
     line-height: 30px;
     text-align: center;
     color: #9F9F9F;
 
-  	&:hover{
-  		color: #FF6363;
-  		text-decoration: underline;
-  		cursor: pointer;
-  	}
+    &:hover{
+      color: #FF6363;
+      text-decoration: underline;
+      cursor: pointer;
+    }
   }
 }
 
@@ -509,17 +505,18 @@
 }
 
 @media (max-width: 768px) {
-	.navbar-form .form-group {
-		display: block;
-		margin-bottom: 0;
-		vertical-align: middle;
-	}
+  .navbar-form .form-group {
+    display: block;
+    margin-bottom: 0;
+    vertical-align: middle;
+  }
 
-	.navbar-form {
-		display: block;
-  	 	margin-top: 0px;
-  		margin-bottom: 0px;
-	}
+  .navbar-form {
+    padding: 8px 15px;
+    display: block;
+    margin-top: 0px;
+    margin-bottom: 0px;
+  }
 
   .main-content{
     width: 100%;
@@ -540,21 +537,21 @@
 }
 
 @media (min-width: 768px) {
-	.navbar-form {
-		float: none !important;
-		// display: block;
-		// max-width: 100%;
-	}
+  .navbar-form {
+    float: none !important;
+    // display: block;
+    // max-width: 100%;
+  }
 
-	.navbar-form .form-group {
-		display: block;
-		max-width: 100%;
-	}
+  .navbar-form .form-group {
+    display: block;
+    max-width: 100%;
+  }
 
-	.navbar-form .form-control {
-		display: block;
-		width: 100%;
-	}
+  .navbar-form .form-control {
+    display: block;
+    width: 100%;
+  }
 }
 
 

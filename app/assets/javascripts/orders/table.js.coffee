@@ -59,9 +59,6 @@ class @OrderTable extends @Event
 
     @on 'order', @onOrderCommand.bind(@)
 
-  $: () ->
-    $(@element)
-
   onClicked: (event) ->
     $target = $(event.target)
 
