@@ -152,7 +152,6 @@ class @Chat
     template = """
       <div class="chat #{toAddClass}" data-message-id="#{id}">
         <img src="#{senderAvatar}" />
-        <h2>#{senderLogin}</h2>
         <div class="bubble #{toAddClass}">
           <p class="content">#{content}</p>
         </div>
