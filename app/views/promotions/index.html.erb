@@ -51,13 +51,13 @@
           prevScrollTop = $(this).data('scroll_top') || 0,
           opacity;
 
-      if (scrollTop < 50) {
+      if (scrollTop < 100) {
         var _opacity = $nav.css('opacity');
-        opacity = +_opacity * 100 - (scrollTop - prevScrollTop);
+        opacity = +_opacity * 100 - (scrollTop - prevScrollTop) * 10 / 100;
         $this.data('scroll_top', scrollTop);
       } else {
-        opacity = 50;
-        $this.data('scroll_top', 50);
+        opacity = 90;
+        $this.data('scroll_top', 90);
       }
 
       $nav.css('opacity', opacity / 100);
