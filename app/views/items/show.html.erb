@@ -68,7 +68,7 @@
         <div class="button-text">收藏</div>
       </div>
 
-      <%= link_to '洽谈', root_path, class: "chat" %>
+      <%= link_to '洽谈', chats_path(item_id: @item, shop_id: @shop), class: "chat", method: 'POST' %>
     </div>
   </div>
 </div>

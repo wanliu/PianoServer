@@ -1,6 +1,6 @@
 require_relative '../serializers/hash_serializer'
 
-class Item < ActiveRecord::Base
+class OrderItem < ActiveRecord::Base
   self.table_name = "items"
 
   belongs_to :itemable, polymorphic: true
