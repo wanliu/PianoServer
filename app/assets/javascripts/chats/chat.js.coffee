@@ -7,7 +7,9 @@ class @Chat
     isMessageScroll: true,
     maxMessageGroup: 10,
     earlyTime: 0,
-    avatarDefault: '/assets/ava1tar.gif'
+    avatarDefault: '/assets/ava1tar.gif',
+    displayUserName: false,
+    miniTimeGroupPeriod: 1000 * 180
     # autoEnter: true
   }
 
@@ -139,7 +141,8 @@ class @Chat
         )
 
   _insertItemMessage: (message, direction = 'down') ->
-    {id, senderId, content, senderAvatar, senderLogin} = message
+
+    {id, senderId, content, senderAvatar, senderLogin, time} = message
 
     if $("div[data-message-id=#{id}]").length > 0
       $("div[data-message-id=#{id}] p.content").text(content)
@@ -148,11 +151,19 @@ class @Chat
     toAddClass = if @_isOwnMessage(message) then 'you' else 'me'
 
     senderAvatar = @options.avatarDefault if senderAvatar == '' or senderAvatar?
+    senderName = if @options.displayUserName then "<h2>#{senderLogin}</h2>" else ''
+    prefixSection = if @lastTime? and Math.abs(time - @lastTime) > @options.miniTimeGroupPeriod
+                      """
+                      <div class="time"><span class="text-center">#{new Date(time)}</span></div>
+                      """
+                    else
+                      ''
 
     template = """
+      #{prefixSection}
       <div class="chat #{toAddClass}" data-message-id="#{id}">
         <img src="#{senderAvatar}" />
-        <h2>#{senderLogin}</h2>
+        #{senderName}
         <div class="bubble #{toAddClass}">
           <p class="content">#{content}</p>
         </div>
@@ -164,6 +175,7 @@ class @Chat
         $(template).appendTo(@$messageList)
       else
         $(template).prependTo(@$messageList)
+    @lastTime = time
 
   _insertMessage: (message, direction = 'down') ->
     @_insertItemMessage(message, direction)

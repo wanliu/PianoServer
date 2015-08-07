@@ -25,6 +25,7 @@
 //= require lib/socketcluster-client
 //= require lib/user-socket
 //= require _common/qrcode
+//= require _common/timeago
 //= require_tree ./application
 //= require_tree ./chats
 //= require_tree ./orders
