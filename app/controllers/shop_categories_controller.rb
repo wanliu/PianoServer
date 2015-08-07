@@ -11,7 +11,7 @@ class ShopCategoriesController < ApplicationController
     @shop = Shop.find(@shop_category.shop_id)
 
     if @shop_category.has_children
-      @shop_categories = ShopCategory.where(parent: @shop_category)
+      @shop_categories = ShopCategory.where(parent_id: @shop_category)
       @items = []
     else
       @items = Item.where(shop_category_id: params[:id], page: page, per: per)
