@@ -4,12 +4,18 @@ class ShopCategoriesController < ApplicationController
   end
 
   def show
-    @shop = Shop.find(params[:shop_id])
-
     page = params[:page].presence || 1
     per = params[:per].presence || 9
 
     @shop_category = ShopCategory.find(params[:id])
-    @items = Item.where(shop_category_id: params[:id], page: page, per: per)
+    @shop = Shop.find(@shop_category.shop_id)
+
+    if @shop_category.has_children
+      @shop_categories = ShopCategory.where(parent: @shop_category)
+      @items = []
+    else
+      @items = Item.where(shop_category_id: params[:id], page: page, per: per)
+      @shop_categories = []
+    end
   end
 end

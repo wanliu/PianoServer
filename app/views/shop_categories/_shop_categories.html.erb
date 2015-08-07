@@ -1,0 +1,14 @@
+<div class="container-fluid">
+  <% shop_categories.each_slice(3) do |categories| %>
+    <div class="row">
+      <% categories.each do |cate| %>
+        <div class="col-xs-4 col-ms-3 cate">
+          <%= link_to shop_category_path(cate), class: 'text-center' do %>
+            <%= cate.name %>
+          <% end %>
+          <span class='text text-center'><%= cate.name %></span>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

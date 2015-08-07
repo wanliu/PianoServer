@@ -6,7 +6,6 @@
 	height: 200px;
 	background: #008080;
 	padding: 20px;
-  margin-top: 50px;
   position: relative;
 
   .shop-info {
@@ -45,48 +44,66 @@
 
 }
 
-.line-items {
-  margin-top: 20px;
-  margin-bottom: 20px;
+.cate-items-list {
+  color: #6c6c6c;
 
   .title {
-    font-size: 18px;
-    margin: 10px 0;
+    padding: 10px 20px;
+    height: 40px;
+    border-bottom: 1px solid #e1e1e1;
+    margin-bottom: 20px;
+
+    span {
+      display: inline-block;
+      line-height: 20px;
+      font-size: 12px;
+    }
   }
   
-  ul {
-    padding-left: 0;
-    margin-right: 0;
-    width: 103%;
-    margin-left: -3%;
+  .cate {
+    margin-bottom: 20px;
+    height: 120px;
+    overflow: hidden;
 
-    li.line-item {
-      display: block;
-      float: left;
+    a {
       border: 1px solid #e1e1e1;
-      width: 30%;
-      margin-left: 3%;
-      margin-bottom: 20px;
-      height: 60px;
+      display: inline-block;
+      line-height: 92px;
       overflow: hidden;
-      line-height: 60px;
+      width: 100%;
+      font-size: 12px;
+      height: 92px;
+    }
 
-      a {
-        display: inline-block;
-        line-height: 62px;
-        overflow: hidden;
-        width: 100%;
-        font-size: 12px;
-        height: 62px;
-      }
+    span.text {
+      display: block;
+      line-height: 15px;
+      font-size: 12px;
+    }
+  }
 
-      &.first-row {
-        border-top: 1px solid #e1e1e1;
-      }
+  .item {
+    margin-bottom: 20px;
+    height: 240px;
+    overflow: hidden;
 
-      &.first-col {
-        border-left: 1px solid #e1e1e1;
+    a {
+      border: 1px solid #e1e1e1;
+      display: block;
+      overflow: hidden;
+      height: 200px;
+      margin: 5px 20px;
+
+      img.item-avatar {
+        height: 200px;
+        max-width: 100%;
       }
+    }
+
+    span.text {
+      display: block;
+      line-height: 15px;
+      font-size: 12px;
     }
   }
 }

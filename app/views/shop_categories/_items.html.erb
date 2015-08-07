@@ -1,0 +1,14 @@
+<div class="container-fluid">
+  <% items.each_slice(2) do |couple_item| %>
+    <div class="row">
+      <% couple_item.each do |item| %>
+        <div class="col-xs-6 col-ms-4 item">
+          <%= link_to item_path(item), class: 'text-center' do %>
+            <%= image_tag item.avatar, class: 'item-avatar' %>
+          <% end %>
+          <span class='text text-center'><%= item.name %></span>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>
