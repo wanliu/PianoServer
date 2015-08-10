@@ -155,29 +155,9 @@
       }
     }
 
-    .order-item-modify {
-      border-color: #5cb85c;
-      background: #FCFFF8;
-      // border: 1px solid #5cb85c;
-      /**box-shadow: inset 0 0 15px #5cb85c;*/
-    }
-
     .order-table-total{
       margin-top: 20px;
     }
-
-    // &.first {
-    //   border-top: 1px solid #CCCCCC;
-    //   border-bottom: 1px solid #CCCCCC;
-    //   background: #FFFFFF;
-
-    //   .list-group-item{
-    //     background: none;
-    //     padding: 10px 0;
-    //     margin: 0 15px;
-    //     border-width: 0 0 1px 0;
-    //   }
-    // }
 
     &.item-list{
       margin: 20px 0;
@@ -207,15 +187,17 @@
 
       .operate-block{
         position: absolute;
-        right: -91px;
+        right: -90px;
         width: 90px;
-        top: 0;
-        bottom: 0;
+        top: -1px;
+        bottom: -1px;
         background: #FF2B2B;
         cursor: pointer;
         text-align: center;
         color: #FFFFFF;
         font-size: 24px;
+        border-top: 1px solid #DDDDDD;
+        border-bottom: 1px solid #DDDDDD;
 
         .remove-wrap{
           display: table;
@@ -225,6 +207,15 @@
           bottom: 0;
           margin: auto;
           line-height: 100%;
+        }
+      }
+
+      &.order-item-modify {
+        border-color: #5cb85c;
+        background: #FCFFF8;
+
+        .operate-block{
+          border-color: #5cb85c;
         }
       }
     }

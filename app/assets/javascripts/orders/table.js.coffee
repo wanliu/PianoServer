@@ -248,6 +248,7 @@ class @OrderTable extends @Event
     $target.parents('.dropdown:first').find('.button-text').text(text);
 
   onAddChange: (e, data) ->
+
   onRemoveChange: (e, data) ->
 
   onReplaceChange: (e, data) ->
@@ -423,6 +424,10 @@ class @OrderTable extends @Event
     path = "/items/#{itemId}/#{key}"
     @pushOp(op, path, value)
 
+  pushRemoveItemOp: (itemId) ->
+    path = "/items/#{itemId}"
+    @pushOp('remove', path, null)
+
   indexOf: (item) ->
     $(".item-list .list-group-item").index(item)
 
@@ -505,11 +510,10 @@ class @OrderTable extends @Event
     confrimation = confirm(' 您确定删除者这个商品项吗?')
 
     if confrimation == true
-      item_id = $(event.target).parents('.list-group-item:first').attr('item-id')
+      $li = $(event.target).parents('.list-group-item:first')
+      item_id = $li.attr('item-id')
+      index = $li.index()
 
-      $.ajax({
-        url: "/orders/#{@orderId}/remove/items/" + item_id,
-        type: 'POST',
-        dataType: 'json'
-      }).success () =>
+      @pushRemoveItemOp(index)
+
 

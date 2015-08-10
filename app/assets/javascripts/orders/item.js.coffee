@@ -33,6 +33,7 @@ class @OrderItem
   onAddChange: (e, data) ->
 
   onRemoveChange: (e, data) ->
+    @$().remove()
 
   onReplaceChange: (e, data) ->
     {key, src, dest} = data

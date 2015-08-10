@@ -55,7 +55,6 @@ Rails.application.routes.draw do
   resources :chats do
     get 'add/shops/:shop_id/items', to: 'chats#shop_items'
     put 'add/shops/:shop_id/items/:item_id', to: 'chats#add_shop_item'
-    post 'remove/items/:item_id', to: 'chats#remove_item'
   end
 
   resources :orders do

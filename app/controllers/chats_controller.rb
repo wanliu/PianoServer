@@ -97,10 +97,6 @@ class ChatsController < ApplicationController
 
   end
 
-  def remove_item
-
-  end
-
 	private
 
 	def my_chat?

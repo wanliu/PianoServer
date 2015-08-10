@@ -139,7 +139,10 @@ class @Chat
         )
 
   _insertItemMessage: (message, direction = 'down') ->
-    {id, senderId, content, senderAvatar, senderLogin} = message
+    {id, senderId, content, senderAvatar, senderLogin, type} = message
+
+    if type == 'command'
+      @onCommand(message)
 
     if $("div[data-message-id=#{id}]").length > 0
       $("div[data-message-id=#{id}] p.content").text(content)
