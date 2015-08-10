@@ -1,3 +1,4 @@
+#= require _common/hammer
 
 class @OrderItem
   constructor: (@element, @parent, @itemId = $(@element).data('itemId')) ->
@@ -7,6 +8,14 @@ class @OrderItem
     @$().bind('add', @onAddChange.bind(@))
     @$().bind('remove', @onRemoveChange.bind(@))
     @$().bind('replace', @onReplaceChange.bind(@))
+
+    hammer = new Hammer.Manager(@$()[0])
+    hammer.add(new Hammer.Swipe({
+      direction: Hammer.DIRECTION_HORIZONTAL,
+      velocity: 0.1
+    }))
+    hammer.on('swipeleft', @onSwipeLeft.bind(@))
+    hammer.on('swiperight', @onSwipeRight.bind(@))
 
   $: () ->
     $(@element)
@@ -66,4 +75,12 @@ class @OrderItem
     @$().addClass('order-item-modify')
   send: (event, args...) ->
     @$().trigger(event, args...)
+
+  onSwipeLeft: (e) ->
+    e.preventDefault()
+    @$().css('left', '-90px')
+
+  onSwipeRight: (e) ->
+    e.preventDefault()
+    @$().css('left', '0')
 

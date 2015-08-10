@@ -31,6 +31,7 @@ class @OrderTable extends @Event
     @$().on('click', '.order-item-price .btn-plus', @priceIncreased.bind(@))
     @$().on('click', '.order-total-edit .btn-minus', @totalDecreased.bind(@))
     @$().on('click', '.order-total-edit .btn-plus', @totalIncreased.bind(@))
+    @$().on('click', '.remove-item-icon', @removeItem.bind(@))
 
     captureOrderChangeBound = @captureOrderChange.bind(@)
     releaseOrderChangeBound = @releaseOrderChange.bind(@)
@@ -499,4 +500,16 @@ class @OrderTable extends @Event
 
     $.get "/orders/#{@orderId}", {inline: true}, (json) =>
       $('.order-table').html(json.html) if json.html?
+
+  removeItem: () ->
+    confrimation = confirm(' 您确定删除者这个商品项吗?')
+
+    if confrimation == true
+      item_id = $(event.target).parents('.list-group-item:first').attr('item-id')
+
+      $.ajax({
+        url: "/orders/#{@orderId}/remove/items/" + item_id,
+        type: 'POST',
+        dataType: 'json'
+      }).success () =>
 

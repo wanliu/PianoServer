@@ -11,7 +11,7 @@ class OrdersController < ApplicationController
 
   class OrderInvalidState < StandardError; end
 
-  before_action :set_order_params, only: [:show, :status, :update, :diff, :accept, :ensure, :cancel, :reject ]
+  before_action :set_order_params, only: [:show, :status, :update, :diff, :accept, :ensure, :cancel, :reject]
 
   def show
     # if params[:inline]

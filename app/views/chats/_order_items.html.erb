@@ -1,6 +1,6 @@
   <ul class="list-group item-list" order-id="<%= @order.id%>">
     <% @order.items.each do |item| %>
-    <li class="list-group-item" data-item-id= "<%= item.id %>">
+    <li class="list-group-item" item-id= "<%= item.id %>">
       <div class="order-item">
         <div class="order-item-brief">
           <div class="order-item-left">
@@ -21,7 +21,7 @@
               <span class="title"></span>
             </p>
 <!--             <span class="glyphicon glyphicon-trash remove-btn" data-toggle="tooltip" data-placement="bottom" title="删除"></span>
- -->          </div>
+ -->      </div>
         </div>
         <div class="edit-fieldset">
           <div class="edit-items clearfix">
@@ -58,6 +58,14 @@
               </div>
             </div>
           </div>
+          <div class="remove-item-icon">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+          </div>
+        </div>
+      </div>
+      <div class="operate-block">
+        <div class="remove-wrap">
+          <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
         </div>
       </div>
     </li>
