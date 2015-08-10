@@ -52,7 +52,11 @@ Rails.application.routes.draw do
   end
 
   resources :shops, only: [ :show ]
-  resources :chats
+  resources :chats do
+    get 'add/shops/:shop_id/items', to: 'chats#shop_items'
+    put 'add/shops/:shop_id/items/:item_id', to: 'chats#add_shop_item'
+  end
+
   resources :orders do
     member do
       get 'status', to: "orders#status", as: :status_of

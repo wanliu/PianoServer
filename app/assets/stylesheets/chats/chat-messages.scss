@@ -1,0 +1,137 @@
+.chat-list {
+  background-color: #F7F7F7;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 9;
+  padding: 0;
+
+  .chat-inner {
+    position: relative;
+    height: 100%;
+    overflow: auto;
+    padding: 0 15px 0 15px;
+
+    .message-list {
+      position: relative;
+      padding: 10px 0 60px 0;
+    }
+  }
+
+  .chat-navbar{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0;
+    border-radius: 0;
+    border-style: solid;
+    border-width: 1px 0 0;
+    background: #FFFFFF;
+
+    .form-group {
+      max-width: 100%;
+      margin-right: 75px;
+    }
+  }
+
+  .chat {
+    width: 100%;
+    position: relative;
+
+    >img:first-child{
+      border-radius: 50%;
+    }
+
+    &.me {
+      padding-left: 75px;
+
+      &>img:first-child {
+        position: absolute;
+        left: 10px;
+        width: 40px;
+        height: 40px;
+      }
+    }
+
+    min-height: 60px;
+
+    &> h2 {
+      margin: 0px;
+      font-size: 16px;
+    }
+
+    &.you {
+      padding-right: 75px;
+
+      &>h2 {
+        text-align: right;
+      }
+
+      &>img:first-child {
+        position: absolute;
+        right: 10px;
+        width: 40px;
+        height: 40px;
+      }
+    }
+  }
+
+  .record-loading {
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    color: #9F9F9F;
+
+    .loading-icon{
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      background-image: image-url('waiting.gif');
+      vertical-align: middle;
+      margin-right: 3px;
+    }
+  }
+
+  .load-more{
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    color: #9F9F9F;
+
+    &:hover{
+      color: #FF6363;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+}
+
+@media (min-width: 1200px) {
+  .chat-order-body.show-order-items .chat-list{
+    width: 50%;
+    border-left: 1px dashed #CCCCCC;
+  }
+}
+
+@media (max-width: 1200px) and (min-width: 768px) {
+  .chat-order-body.show-order-items{
+    .chat-list{
+      border-left: none;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .chat-order-body{
+    width: 100%;
+
+    &.show-order-items .chat-list{
+      width: 100%;
+      border-left: none;
+    }
+  }
+}

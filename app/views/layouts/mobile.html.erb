@@ -58,6 +58,7 @@
           <ul class="nav navbar-nav navbar-right">
             <li><%= link_to "关于我们", about_path  %></li>
             <li><%= link_to "二维码", "#share-url-qrcode" , "data-toggle"=>"modal" %></li>
+            <li><%= link_to "我的收藏", "/favorites" %></li>
             <% if current_anonymous_or_user.id < 0 %>
             <li><%= link_to "登入(#{current_anonymous_or_user.id if Rails.env.development?})", new_user_session_path %></li>
             <% else %>

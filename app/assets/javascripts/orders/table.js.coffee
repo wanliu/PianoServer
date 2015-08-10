@@ -31,6 +31,7 @@ class @OrderTable extends @Event
     @$().on('click', '.order-item-price .btn-plus', @priceIncreased.bind(@))
     @$().on('click', '.order-total-edit .btn-minus', @totalDecreased.bind(@))
     @$().on('click', '.order-total-edit .btn-plus', @totalIncreased.bind(@))
+    @$().on('click', '.remove-item-icon', @removeItem.bind(@))
 
     captureOrderChangeBound = @captureOrderChange.bind(@)
     releaseOrderChangeBound = @releaseOrderChange.bind(@)
@@ -38,6 +39,7 @@ class @OrderTable extends @Event
     @$().on('mouseup', '.btn-agrees', releaseOrderChangeBound)
     @$().on('touchstart', '.btn-agrees', captureOrderChangeBound)
     @$().on('touchend', '.btn-agrees', releaseOrderChangeBound)
+    @$().on('click', '.btn-disagrees', @rejectOrderChanges.bind(@))
     @$().on('click', '.order-table-total', @changeOrderTotal.bind(@))
 
     @$().bind('add', @onAddChange.bind(@))
@@ -52,12 +54,11 @@ class @OrderTable extends @Event
         type: 'GET',
         dataType: 'json'
       }).success (data) =>
-        @parseDiff(data.diff)
+        diffs = data.diff
+        @parseDiff(diffs)
+        @checkDiff(diffs)
 
     @on 'order', @onOrderCommand.bind(@)
-
-  $: () ->
-    $(@element)
 
   onClicked: (event) ->
     $target = $(event.target)
@@ -78,7 +79,7 @@ class @OrderTable extends @Event
 
     $target.toggleClass('open')
 
-    @changeRadiusStyles($target)
+    # @changeRadiusStyles($target)
 
   changeRadiusStyles: (target) ->
     index = target.index()
@@ -247,6 +248,7 @@ class @OrderTable extends @Event
     $target.parents('.dropdown:first').find('.button-text').text(text);
 
   onAddChange: (e, data) ->
+
   onRemoveChange: (e, data) ->
 
   onReplaceChange: (e, data) ->
@@ -318,7 +320,12 @@ class @OrderTable extends @Event
     if @inAccepting
       @closePopup()
 
-      $.post "/orders/#{@orderId}/cancel", () =>
+      $.post "/orders/#{@orderId}/cancel", (data) =>
+
+  rejectOrderChanges: () ->
+    $.post "/orders/#{@orderId}/reject", { inline: true }, (json) =>
+      $('.order-table').html(json.html) if json.html?
+      @hideConsultButtons()
 
   showPopup: (options) ->
     @popup = Popup.show """
@@ -417,6 +424,10 @@ class @OrderTable extends @Event
     path = "/items/#{itemId}/#{key}"
     @pushOp(op, path, value)
 
+  pushRemoveItemOp: (itemId) ->
+    path = "/items/#{itemId}"
+    @pushOp('remove', path, null)
+
   indexOf: (item) ->
     $(".item-list .list-group-item").index(item)
 
@@ -444,6 +455,7 @@ class @OrderTable extends @Event
   onOrderCommand: (e, command) ->
     if command.diff?
       @parseDiff(command.diff)
+      @showConsultButtons()
 
     else if command.accept?
       switch command.accept
@@ -455,11 +467,11 @@ class @OrderTable extends @Event
           @closePopup()
         when 'accept'
           @closePopup()
-          $.get "/orders/#{@orderId}", {inline: true}, (json) =>
-            $('.order-table').html(json.html) if json.html?
+          @resetTable()
 
         else
           @closePopup()
+          @resetTable()
 
   changeOrderTotal: (e) ->
     $target = $(e.target)
@@ -470,5 +482,38 @@ class @OrderTable extends @Event
     unless $target.is('li')
       $target = $target.parents('li:first')
 
-    $target.toggleClass('open').prev().toggleClass('radius-bottom');
+    $target.toggleClass('open').prev().toggleClass('radius-bottom')
+
+  checkDiff: (diffs) ->
+    if diffs.length > 0
+      @showConsultButtons()
+
+  showConsultButtons: () ->
+    @$().find('.buttons-execute')
+        .hide()
+        .next()
+        .show()
+
+  hideConsultButtons: () ->
+    @$().find('.buttons-execute')
+        .show()
+        .next()
+        .hide()
+
+  resetTable: () ->
+    @hideConsultButtons()
+
+    $.get "/orders/#{@orderId}", {inline: true}, (json) =>
+      $('.order-table').html(json.html) if json.html?
+
+  removeItem: () ->
+    confrimation = confirm(' 您确定删除者这个商品项吗?')
+
+    if confrimation == true
+      $li = $(event.target).parents('.list-group-item:first')
+      item_id = $li.attr('item-id')
+      index = @indexOf($li)
+
+      @pushRemoveItemOp(index)
+
 
