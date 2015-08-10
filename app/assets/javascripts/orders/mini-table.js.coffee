@@ -55,7 +55,7 @@ class @MiniTable
       @_hideChatScroll()
       @$().addClass('show-toggle-button')
 
-      unless @isVisible
+      if @isVisible
         @$().find('.order-toggle-button').addClass('toggle-up')
 
   _checkWindowWidth: () ->
