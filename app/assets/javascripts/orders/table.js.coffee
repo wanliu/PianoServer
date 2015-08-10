@@ -512,7 +512,7 @@ class @OrderTable extends @Event
     if confrimation == true
       $li = $(event.target).parents('.list-group-item:first')
       item_id = $li.attr('item-id')
-      index = $li.index()
+      index = @indexOf($li)
 
       @pushRemoveItemOp(index)
 
