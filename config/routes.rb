@@ -55,7 +55,7 @@ Rails.application.routes.draw do
 
   resources :shop_categories, only: [ :index, :show ]
 
-  resources :items, only: [:show ]
+  resources :items, only: [ :index, :show ]
 
   resources :chats do
     get 'add/shops/:shop_id/items', to: 'chats#shop_items'

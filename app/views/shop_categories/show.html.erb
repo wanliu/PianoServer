@@ -26,36 +26,68 @@
   <% end %>
 </div>
 
-<button class='fetch-items'>Fetch</button>
-
-<script type="text/template" id='template-shop-category'>
-  {{ _.each(items, function (item, index) { }}
-    <li class='text-center line-item'>
-      <a href='/items/' + item.id>
-        {{= item.name }}
+<script type="text/template" id='template-shop-categories'>
+  {{ _.each(collection, function (cate, index) { }}
+    <div class="col-xs-6 col-sm-4 cate">
+      <a href="/shop_categories/{{= cate.id }}" class='text-center'>
+        {{= cate.name }}
       </a>
-    </li>
+      <span class='text text-center'>{{= cate.name }}</span>
+    </div>
+  {{ }) }}
+</script>
+
+<script type="text/template" id='template-items'>
+  {{ _.each(collection, function (item, index) { }}
+    <div class="col-xs-6 col-sm-4 item">
+      <a href="/items/{{= item.id }}" class='text-center'>
+        <img src="{{= item.avatar }}" class='item-avatar' />
+      </a>
+      <span class='text text-center'>{{= item.name }}</span>
+    </div>
   {{ }) }}
 </script>
 
 <script type="text/javascript">
-  // var per = 9;
-  // var page = 1;
-  // var id = <%= @shop_category.id %>;
-  // var all_fetched = <%= @items.length %> < per;
-  // var template = _.template($('#template-shop-category').html());
+  var per = 9;
+  var page = 1;
+  var id = <%= @shop_category.id %>;
+  var all_fetched = <%= @shop_category.has_children ? @shop_categories.length : @items.length %> < per;
+  var fetch_locked = false;
 
-  // $(function () {
-  //   $('button.fetch-items').click(function () {
-  //     if (all_fetched) return;
+  var key = '<%= @shop_category.has_children ? "shop_categories" : "items" %>';
 
-  //     $.getJSON("/shop_categories/" + id + ".json?page=" + (page + 1) + "&per=9&shop_id=<%= @shop.id %>")
-  //       .success(function (data, status) {
-  //         all_fetched = data.length < per;
-  //         page += 1;
-  //         var html = template({ items: data });
-  //         $('ul.shop-categories').append(html);
-  //       });
-  //   });
-  // })
+  var template = {
+    shop_categories: _.template($('#template-shop-categories').html()),
+    items: _.template($('#template-items').html())
+  }[key];
+
+  var request_url = {
+    shop_categories: "/shop_categories.json?page=" + (page + 1) + "&per=9&parent_id=<%= @shop_category.id %>",
+    items: "/items.json?page=" + (page + 1) + "&per=9&shop_category_id=<%= @shop_category.id %>"
+  }[key];
+
+
+  $(function () {
+    $(window).scroll(function () {
+      if ($(document).height() < $(window).scrollTop() + $(window).height() + 100) {
+        if (fetch_locked) return;
+        fetch_locked = true;
+
+        if (all_fetched) return;
+
+        $.getJSON(request_url)
+          .success(function (data, status) {
+            page += 1;
+
+            all_fetched = data.length < per;
+            var html = template({ collection: data });
+
+            $('.cate-items-list .' + key).append(html);
+
+            fetch_locked = false;
+          });
+      }
+    });
+  })
 </script>

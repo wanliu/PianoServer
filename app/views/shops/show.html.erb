@@ -23,3 +23,47 @@
     <%= render partial: 'shop_categories/shop_categories', locals: { shop_categories: @shop_categories } %>
   </div>
 </div>
+
+<script type="text/template" id='template-shop-categories'>
+  {{ _.each(collection, function (cate, index) { }}
+    <div class="col-xs-4 col-sm-3 cate">
+      <a href="/shop_categories/{{= cate.id }}" class='text-center'>
+        {{= cate.name }}
+      </a>
+      <span class='text text-center'>{{= cate.name }}</span>
+    </div>
+  {{ }) }}
+</script>
+
+<script type="text/javascript">
+  var per = 9;
+  var page = 1;
+  var id = <%= @shop.id %>;
+  var all_fetched = <%= @shop_categories.length %> < per;
+  var fetch_locked = false;
+
+  var template = _.template($('#template-shop-categories').html());
+
+  $(function () {
+    $(window).scroll(function () {
+      if ($(document).height() < $(window).scrollTop() + $(window).height() + 100) {
+        if (fetch_locked) return;
+        fetch_locked = true;
+
+        if (all_fetched) return;
+
+        $.getJSON("/shop_categories.json?page=" + (page + 1) + "&per=9&shop_id=<%= @shop.id %>")
+          .success(function (data, status) {
+            page += 1;
+
+            all_fetched = data.length < per;
+            var html = template({ collection: data });
+
+            $('.cate-items-list .shop-categories').append(html);
+
+            fetch_locked = false;
+          });
+      }
+    });
+  })
+</script>
