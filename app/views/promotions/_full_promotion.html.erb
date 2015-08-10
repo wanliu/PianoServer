@@ -73,13 +73,21 @@
   </div>
 
   <div class="product-brief">
-    <div class="brief-row clearfix">
-      <div class="row-left">品&nbsp;&nbsp;牌：高端大气上档次</div>
-      <div class="row-right">活动销量：1000</div>
+    <div class="row">
+      <div class="col-xs-7 col-md-7">
+        <p>品&nbsp;&nbsp;牌：高端大气上档次</p>
+      </div>
+      <div class="col-xs-5 col-md-5">
+        <p class="text-right">活动销量：1000</p>
+      </div>
     </div>
-    <div class="brief-row clearfix">
-      <div class="row-left">数&nbsp;&nbsp;量：</div>
-      <div class="row-right">库存：<%= promotion.product_inventory %>件</div>
+    <div class="row">
+      <div class="col-xs-7 col-md-7">
+        <p>数&nbsp;&nbsp;量：</p>
+      </div>
+      <div class="col-xs-5 col-md-5">
+        <p class="text-right">库存：<%= promotion.product_inventory %>件</p>
+      </div>
     </div>
   </div>
 
@@ -102,10 +110,14 @@
         </div>
       <% end %>
 
-<!--     <div class="into-cart">加入购物车</div>
-    <div class="buy-now">立即购买</div>
- -->
- 	    <%= link_to '洽谈', promotion_chats_path(promotion, shop_id: @shop.id), class: "chat", method: 'POST' %>
+    <!--  <div class="into-cart">加入购物车</div>-->
+      <div class="buy-now">立即购买</div>
+
+      <% if shop.owner.id === current_anonymous_or_user.id %>
+ 	      <div class="chat">正在浏览自己的店铺</div>
+      <% else %>
+        <%= link_to '洽谈', promotion_chats_path(promotion, shop_id: @shop.id), class: "chat", method: 'POST' %>
+      <% end %>
     </div>
   </div>
 </div>

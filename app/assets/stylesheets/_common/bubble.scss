@@ -7,6 +7,14 @@
     padding: 10px 18px;
     position: relative;
     vertical-align: top;
+
+    &.you{
+      background: #D1E7F4;
+
+      &:before{
+        background-color: #D1E7F4;
+      }
+    }
 }
 
 .bubble::before {
@@ -30,23 +38,23 @@
 }
 
 .me {
-    float: left;   
-    margin: 5px 45px 5px 0px;         
+    float: left;
+    margin: 5px 45px 5px 0px;
 }
 
 .me::before {
     box-shadow: -2px 2px 2px 0 rgba( 178, 178, 178, .4 );
-    left: -9px;           
+    left: -9px;
 }
 
 .you {
-    float: right;    
-    margin: 5px 0px 5px 45px;         
+    float: right;
+    margin: 5px 0px 5px 45px;
 }
 
 .you::before {
     box-shadow: 2px -2px 2px 0 rgba( 178, 178, 178, .4 );
-    right: -9px;    
+    right: -9px;
 }
 
 // .chat-list>.item-main {
@@ -61,21 +69,21 @@
 // }
 
 // .chat-list .item-avatar-right > .bubble {
-//     float: right;    
-//     margin: 5px 0px 5px 45px;         
+//     float: right;
+//     margin: 5px 0px 5px 45px;
 // }
 
 // .chat-list .item-avatar-right > .bubble::before {
 //     box-shadow: 2px -2px 2px 0 rgba( 178, 178, 178, .4 );
-//     right: -9px;    
+//     right: -9px;
 // }
 
 // .chat-list .item-avatar > .bubble {
-//     float: left;   
-//     margin: 5px 45px 5px 0px;       
+//     float: left;
+//     margin: 5px 45px 5px 0px;
 // }
 
 // .chat-list .item-avatar > .bubble::before {
 //     box-shadow: -2px 2px 2px 0 rgba( 178, 178, 178, .4 );
-//     left: -9px;           
+//     left: -9px;
 // }

@@ -1,6 +1,6 @@
   <ul class="list-group item-list" order-id="<%= @order.id%>">
     <% @order.items.each do |item| %>
-    <li class="list-group-item" data-item-id= "<%= item.id %>">
+    <li class="list-group-item" item-id= "<%= item.id %>">
       <div class="order-item">
         <div class="order-item-brief">
           <div class="order-item-left">
@@ -20,8 +20,12 @@
               <span class="text"><%= number_to_human(item.amount) %></span>
               <span class="title"></span>
             </p>
+            <p class="sub_total">
+              <span class="text"><%= number_to_currency(item.sub_total, unit:'￥') %></span>
+              <span class="title"></span>
+            </p>
 <!--             <span class="glyphicon glyphicon-trash remove-btn" data-toggle="tooltip" data-placement="bottom" title="删除"></span>
- -->          </div>
+ -->      </div>
         </div>
         <div class="edit-fieldset">
           <div class="edit-items clearfix">
@@ -29,13 +33,13 @@
               <span class="field-name">价格</span>
               <div class="input-group">
                 <span class="input-group-btn">
-                  <button type="button" class="btn btn-info btn-minus">
+                  <button type="button" class="btn btn-minus">
                     <span class="glyphicon glyphicon-minus"></span>
                   </button>
                 </span>
                 <input type="text" name="price" class="form-control input-number" value="<%= item.price %>" autocomplete="off">
                 <span class="input-group-btn">
-                  <button type="button" class="btn btn-primary btn-plus">
+                  <button type="button" class="btn btn-plus">
                       <span class="glyphicon glyphicon-plus"></span>
                   </button>
                 </span>
@@ -45,19 +49,27 @@
               <span class="field-name">数量</span>
               <div class="input-group">
                 <span class="input-group-btn">
-                  <button type="button" class="btn btn-info btn-minus">
+                  <button type="button" class="btn btn-minus">
                     <span class="glyphicon glyphicon-minus"></span>
                   </button>
                 </span>
                 <input type="text" name="amount" class="form-control input-number" value="<%= number_to_human(item.amount) %>" autocomplete="off">
                 <span class="input-group-btn">
-                  <button type="button" class="btn btn-primary btn-plus">
+                  <button type="button" class="btn btn-plus">
                       <span class="glyphicon glyphicon-plus"></span>
                   </button>
                 </span>
               </div>
             </div>
           </div>
+          <div class="remove-item-icon">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+          </div>
+        </div>
+      </div>
+      <div class="operate-block">
+        <div class="remove-wrap">
+          <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
         </div>
       </div>
     </li>

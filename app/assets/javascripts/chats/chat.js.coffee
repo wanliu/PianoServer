@@ -18,7 +18,7 @@ class @Chat
     @textElement = @options.textElement || "input[name='chat-text']"
     @$messageList = $(@options.messageList || ".message-list")
     @$chatContainer = $(@options.container || ".chat-list")
-    @$chatWrap = $(@options.container || ".main-content")
+    @$chatWrap = $(@options.container || ".chat-body")
     @userSocket = window.userSocket
 
     @boundOnMessage = @onMessage.bind(@)
@@ -139,7 +139,10 @@ class @Chat
         )
 
   _insertItemMessage: (message, direction = 'down') ->
-    {id, senderId, content, senderAvatar, senderLogin} = message
+    {id, senderId, content, senderAvatar, senderLogin, type} = message
+
+    if type == 'command'
+      @onCommand(message)
 
     if $("div[data-message-id=#{id}]").length > 0
       $("div[data-message-id=#{id}] p.content").text(content)
@@ -152,7 +155,6 @@ class @Chat
     template = """
       <div class="chat #{toAddClass}" data-message-id="#{id}">
         <img src="#{senderAvatar}" />
-        <h2>#{senderLogin}</h2>
         <div class="bubble #{toAddClass}">
           <p class="content">#{content}</p>
         </div>

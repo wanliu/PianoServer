@@ -58,6 +58,7 @@
           <ul class="nav navbar-nav navbar-right">
             <li><%= link_to "关于我们", about_path  %></li>
             <li><%= link_to "二维码", "#share-url-qrcode" , "data-toggle"=>"modal" %></li>
+            <li><%= link_to "我的收藏", "/favorites" %></li>
             <% if current_anonymous_or_user.id < 0 %>
             <li><%= link_to "登入(#{current_anonymous_or_user.id if Rails.env.development?})", new_user_session_path %></li>
             <% else %>
@@ -101,14 +102,23 @@
       $(function() {
         var inChats = {};
 
+        $(document).on('inchats:enter', function(e, channelId) {
+          inChats[channelId] = true;
+        });
+
+        $(document).on('inchats:leave', function(e, channelId) {
+          delete inChats[channelId];
+        });
+
         userSocket.onPersonMessage(function(message) {
           var channelId = message.channelId,
               senderId = message.senderId,
+              type = message.type,
               senderLogin = message.senderLogin,
               ownChannelId = window.userSocket.getUserChannelId(),
               chatChannelId = 'p' + senderId;
 
-          if (!inChats[channelId] && (chatChannelId !== ownChannelId)) {
+          if (type !== 'command' && !inChats[channelId] && (chatChannelId !== ownChannelId)) {
             userSocket.emit('get', {
               channelId: chatChannelId,
               key: 'chat_id'
@@ -120,14 +130,6 @@
             // todo process
           }
 
-        });
-
-        $(document).on('inchats:enter', function(e, channelId) {
-          inChats[channelId] = true;
-        });
-
-        $(document).on('inchats:leave', function(e, channelId) {
-          delete inChats[channelId];
         });
       });
     </script>
