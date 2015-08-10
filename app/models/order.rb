@@ -14,14 +14,14 @@ class Order < ActiveRecord::Base
   #   where(shadow_id: nil)
   # end
 
-  has_many :items, as: :itemable, dependent: :destroy do
+  has_many :items, class_name: 'OrderItem', as: :itemable, dependent: :destroy do
     def build_with_promotion(promotion)
       build({
         title: promotion.title,
         price: promotion.discount_price,
         amount: promotion.try(:amount) || MIN_AMOUNT,
         item_type: 'product',
-        iid: Item.last_iid(owner) + 1,
+        iid: OrderItem.last_iid(owner) + 1,
         data: {
           product_id: promotion.product_id,
           product_inventory: promotion.product_inventory,
@@ -44,7 +44,7 @@ class Order < ActiveRecord::Base
           price: promotion.discount_price,
           amount: promotion.try(:amount) || MIN_AMOUNT,
           item_type: 'product',
-          iid: Item.last_iid(owner) + 1,
+          iid: OrderItem.last_iid(owner) + 1,
           data: {
             product_id: promotion.product_id,
             product_inventory: promotion.product_inventory
@@ -56,6 +56,48 @@ class Order < ActiveRecord::Base
         })
       else
         item
+      end
+    end
+
+    def build_with_shop_product(shop_product)
+      build({
+        title: shop_product.name,
+        price: shop_product.price,
+        amount: shop_product.try(:amount) || MIN_AMOUNT,
+        item_type: 'product',
+        iid: OrderItem.last_iid(owner) + 1,
+        data: {
+          product_id: shop_product.product_id,
+          product_inventory: shop_product.try(:inventory)
+        },
+        image: {
+          avatar_url: shop_product.try(:image_url),
+          preview_url: shop_product.try(:preview_url)
+        }
+      })
+    end
+
+    def add_shop_product(shop_product)
+      item = where("data -> 'product_id' = :product_id", product_id: shop_product.product_id.to_s).first
+
+      if item.blank?
+        owner.create_status state: :pending
+
+        proxy_association.create({
+          title: shop_product.name,
+          price: shop_product.price,
+          amount: shop_product.try(:amount) || MIN_AMOUNT,
+          item_type: 'product',
+          iid: OrderItem.last_iid(owner) + 1,
+          data: {
+            product_id: shop_product.product_id,
+            product_inventory: shop_product.try(:inventory)
+          },
+          image: {
+            avatar_url: shop_product.try(:image_url),
+            preview_url: shop_product.try(:preview_url)
+          }
+        })
       end
     end
 

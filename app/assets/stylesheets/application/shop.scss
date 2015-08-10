@@ -3,12 +3,107 @@
 }
 
 .brand-board {
-	height: 300px;
-	background: green;
+	height: 200px;
+	background: #008080;
 	padding: 20px;
+  position: relative;
 
-	.shop-logo {
-		width: 100px;
-		height: 100px;
-	}
+  .shop-info {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 70px;
+    padding: 10px 0;
+    background:#7f7f7f;
+    background:rgba(0,0,0,0.1);
+
+  	.shop-logo {
+  		width: 50px;
+  		height: 50px;
+      float: left;
+      margin: 0 10px;
+  	}
+
+    .name-address {
+      float: left;
+      color: white;
+
+      span.name {
+        line-height: 25px;
+        margin: 0;
+      }
+
+      span.address {
+        display: inline-block;
+        line-height: 25px;
+        font-size: 13px;
+      }
+    }
+  }
+
+}
+
+.cate-items-list {
+  color: #6c6c6c;
+
+  .title {
+    padding: 10px 20px;
+    height: 40px;
+    border-bottom: 1px solid #e1e1e1;
+    margin-bottom: 20px;
+
+    span {
+      display: inline-block;
+      line-height: 20px;
+      font-size: 12px;
+    }
+  }
+  
+  .cate {
+    margin-bottom: 20px;
+    height: 120px;
+    overflow: hidden;
+
+    a {
+      border: 1px solid #e1e1e1;
+      display: inline-block;
+      line-height: 92px;
+      overflow: hidden;
+      width: 100%;
+      font-size: 12px;
+      height: 92px;
+    }
+
+    span.text {
+      display: block;
+      line-height: 15px;
+      font-size: 12px;
+    }
+  }
+
+  .item {
+    margin-bottom: 20px;
+    height: 240px;
+    overflow: hidden;
+
+    a {
+      border: 1px solid #e1e1e1;
+      display: block;
+      overflow: hidden;
+      height: 200px;
+      margin: 5px 20px;
+
+      img.item-avatar {
+        height: 200px;
+        max-width: 100%;
+      }
+    }
+
+    span.text {
+      display: block;
+      line-height: 15px;
+      font-size: 12px;
+    }
+  }
 }

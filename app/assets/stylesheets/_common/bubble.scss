@@ -13,6 +13,14 @@ $chat-border-color2: #a8d8ef;
     padding: 10px 18px;
     position: relative;
     vertical-align: top;
+
+    &.you{
+      background: #D1E7F4;
+
+      &:before{
+        background-color: #D1E7F4;
+      }
+    }
 }
 
 .bubble::before {
@@ -76,3 +84,18 @@ $chat-border-color2: #a8d8ef;
   border-top: 1px solid $chat-border-color2;
   border-right: 1px solid $chat-border-color2;
 }
+
+// .me::before {
+//     box-shadow: -2px 2px 2px 0 rgba( 178, 178, 178, .4 );
+//     left: -9px;
+// }
+
+// .you {
+//     float: right;
+//     margin: 5px 0px 5px 45px;
+// }
+
+// .you::before {
+//     box-shadow: 2px -2px 2px 0 rgba( 178, 178, 178, .4 );
+//     right: -9px;
+// }

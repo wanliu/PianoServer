@@ -9,6 +9,7 @@ class @MiniTable
   constructor: (@element, @target, @order) ->
     @isVisible = false
     $(window).on('resize', @_resizeHandler.bind(@))
+    @$().on 'click', @toggleShow.bind(@)
 
     @table ||= new OrderTable(@target, @order)
 
@@ -23,17 +24,21 @@ class @MiniTable
   setTable: (@table) ->
 
   toggleShow: () ->
+    width = $(window).width()
     $fixedBottom = $('.navbar-fixed-bottom')
 
-    if (@isVisible)
-      @isVisible = false
-      @_hideOrderItems()
+    unless width < MiniTable.defaultOptions.mdscreenWidth
+      return
+
+    if @isVisible
+      @_hideOrderItems(true)
       $fixedBottom.slideDown()
     else
-      @isVisible = true
-      @_showOrderItems()
+      @_showOrderItems(true)
       @_hideChatScroll()
       $fixedBottom.slideUp()
+
+    @$().find('.order-toggle-button').toggleClass('toggle-up')
 
   send: (event, data) ->
     if @table?
@@ -43,36 +48,52 @@ class @MiniTable
     width = $(event.target).width()
 
     if (width >= MiniTable.defaultOptions.mdscreenWidth)
-      @_removeClickListener()
       @_showChatScroll()
-      @_showOrderItems()
+      @_showOrderItems(false)
+      @$().removeClass('show-toggle-button')
     else
-      @_addClickListener()
       @_hideChatScroll()
+      @$().addClass('show-toggle-button')
 
-  _addClickListener: () ->
-    unless @_clickLinstenerAdded
-      @$().on 'click', @toggleShow.bind(@)
-      @_clickLinstenerAdded = true
-
-  _removeClickListener: () ->
-    if @_clickLinstenerAdded
-      @$().off 'click', @toggleShow.bind(@)
-      @_clickLinstenerAdded = true
+      unless @isVisible
+        @$().find('.order-toggle-button').addClass('toggle-up')
 
   _checkWindowWidth: () ->
     width = $(window).width()
 
     if (width >= MiniTable.defaultOptions.mdscreenWidth)
-      @_showOrderItems()
+      @_showOrderItems(false)
     else
-      @_addClickListener()
+      @$().addClass('show-toggle-button')
 
-  _showOrderItems: () ->
-    $('.main-content').addClass('show-order-items')
+  _showOrderItems: (shouldAnimate) ->
+    $mainContent = $('.chat-order-body').addClass('show-order-items')
+    $tableWrap = $mainContent.find('.order-table-wrap')
 
-  _hideOrderItems: () ->
-    $('.main-content').removeClass('show-order-items')
+    @isVisible = true
+
+    if shouldAnimate
+      $tableWrap.slideDown()
+    else
+      $tableWrap.show()
+
+  _hideOrderItems: (shouldAnimate) ->
+    $mainContent = $('.chat-order-body')
+    $tableWrap = $mainContent.find('.order-table-wrap')
+
+    @isVisible = false
+
+    @$().find('.order-toggle-button').addClass('toggle-up')
+
+    if shouldAnimate
+      $tableWrap.slideUp(() ->
+        $mainContent.removeClass('show-order-items')
+      )
+    else
+      $tableWrap.hide(() ->
+        $mainContent.removeClass('show-order-items')
+      )
+
     @_showChatScroll()
     @chatContentOverlayed = false
 

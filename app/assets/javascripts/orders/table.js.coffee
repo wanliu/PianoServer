@@ -31,6 +31,7 @@ class @OrderTable extends @Event
     @$().on('click', '.order-item-price .btn-plus', @priceIncreased.bind(@))
     @$().on('click', '.order-total-edit .btn-minus', @totalDecreased.bind(@))
     @$().on('click', '.order-total-edit .btn-plus', @totalIncreased.bind(@))
+    @$().on('click', '.remove-item-icon', @removeItem.bind(@))
 
     captureOrderChangeBound = @captureOrderChange.bind(@)
     releaseOrderChangeBound = @releaseOrderChange.bind(@)
@@ -59,9 +60,6 @@ class @OrderTable extends @Event
 
     @on 'order', @onOrderCommand.bind(@)
 
-  $: () ->
-    $(@element)
-
   onClicked: (event) ->
     $target = $(event.target)
 
@@ -81,7 +79,7 @@ class @OrderTable extends @Event
 
     $target.toggleClass('open')
 
-    @changeRadiusStyles($target)
+    # @changeRadiusStyles($target)
 
   changeRadiusStyles: (target) ->
     index = target.index()
@@ -250,6 +248,7 @@ class @OrderTable extends @Event
     $target.parents('.dropdown:first').find('.button-text').text(text);
 
   onAddChange: (e, data) ->
+
   onRemoveChange: (e, data) ->
 
   onReplaceChange: (e, data) ->
@@ -425,6 +424,10 @@ class @OrderTable extends @Event
     path = "/items/#{itemId}/#{key}"
     @pushOp(op, path, value)
 
+  pushRemoveItemOp: (itemId) ->
+    path = "/items/#{itemId}"
+    @pushOp('remove', path, null)
+
   indexOf: (item) ->
     $(".item-list .list-group-item").index(item)
 
@@ -502,4 +505,15 @@ class @OrderTable extends @Event
 
     $.get "/orders/#{@orderId}", {inline: true}, (json) =>
       $('.order-table').html(json.html) if json.html?
+
+  removeItem: () ->
+    confrimation = confirm(' 您确定删除者这个商品项吗?')
+
+    if confrimation == true
+      $li = $(event.target).parents('.list-group-item:first')
+      item_id = $li.attr('item-id')
+      index = @indexOf($li)
+
+      @pushRemoveItemOp(index)
+
 

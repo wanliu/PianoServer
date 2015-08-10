@@ -19,8 +19,8 @@ class ChatsController < ApplicationController
 
     @order = if params[:promotion_id]
                create_order_with_promotion
-             elsif params[:product_id]
-               create_order_with_product
+             elsif params[:item_id]
+               create_order_with_item
              end
 
     @chat.order_id = @order.id if @order
@@ -52,7 +52,17 @@ class ChatsController < ApplicationController
     @order
   end
 
-  def create_order_with_product
+  def create_order_with_item
+    @item = Item.find(params[:item_id])
+    @order = Order
+      .where(supplier_id: @shop.id, buyer_id: current_anonymous_or_user.id)
+      .first_or_create({
+        title: @item.name
+      }) do |order|
+        order.bid = Order.last_bid(current_anonymous_or_user.id) + 1
+      end
+    @order.items.add_shop_product(@item)
+    @order
   end
 
 	def show
@@ -88,6 +98,14 @@ class ChatsController < ApplicationController
 	    @order.items.add_promotion(@promotion)
 	  end
 	end
+
+  def shop_items
+
+  end
+
+  def add_shop_item
+
+  end
 
 	private
 
