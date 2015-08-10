@@ -3,7 +3,7 @@
 <%= content_for :module, :chat %>
 
 <%= render "chat_order_header" %>
-<div class="container main-content">
+<div class="container chat-order-body">
   <div class="row">
     <div class="order-table-wrap col-sm-6 col-xs-12">
       <div class="order-table">
@@ -62,7 +62,7 @@
 
     <% unless @order.nil? %>
     var order = <%=raw @order.origin_hash.to_json %>;
-    var miniTable = new MiniTable($('.chat-order'), $('.order-table-wrap'), order);
+    var miniTable = new MiniTable($('.chat-order-header'), $('.order-table-wrap'), order);
     <% end %>
 
     if (!targetId) {
@@ -71,7 +71,7 @@
       return;
     }
 
-    var chat = new Chat($('.chat-order'), chatChannelId, {
+    var chat = new Chat($('.chat-order-header'), chatChannelId, {
       sendBtn: $('.btn-send')
     });
 

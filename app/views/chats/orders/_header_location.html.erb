@@ -1,5 +1,8 @@
-    <li class="list-group-item">
-      <div class="desc-value">
+<li class="list-group-item">
+  <div class="chat-order-address clearfix">
+    <div class="col-xs-4 col-sm-4">收货地址</div>
+    <div class="col-xs-8 col-sm-8">
+      <div class="text-right">
         <div class="dropdown">
           <span class="toggle-button" data-toggle="dropdown" role="button">
             <span class="button-text">选择收货地址</span>
@@ -10,12 +13,7 @@
           </ul>
         </div>
       </div>
-      收货地址
-    </li>
-    <!-- <li class="list-group-item">
-      <div class="city-group">
-        <%= select(:location, :province, options_for_select(ChinaCity.list), {prompt: '--省份--'}, {class: "city-select"}) %>
-        <%= select(:location, :city, [], {prompt: "--城市--"}, { class: "city-select" } ) %>
-        <%= select(:location, :region, [], {prompt: "--地区--"}, { class: "city-select" } ) %>
-      </div>
-    </li> -->
+    </div>
+  </div>
+</li>
+

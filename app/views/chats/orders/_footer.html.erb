@@ -1,10 +1,14 @@
     <li class="list-group-item order-table-total">
-      <div class="order-total-desc">
-        <div class="desc-value total">
-          <span class="text"><%= number_to_currency(@order.total, unit:'￥') %>元</span>
-          <span class="title"></span>
+      <div class="order-total-desc clearfix">
+        <div class="col-xs-4 col-sm-4">
+          合计
         </div>
-        合计
+        <div class="col-xs-8 col-sm-8 total">
+          <p class="text-right">
+            <span class="text"><%= number_to_currency(@order.total, unit:'￥') %>元</span>
+            <span class="title"></span>
+          </p>
+        </div>
       </div>
       <div class="order-total-edit edit-fieldset clearfix">
         <div class="edit-items">

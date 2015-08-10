@@ -79,7 +79,7 @@ class @OrderTable extends @Event
 
     $target.toggleClass('open')
 
-    @changeRadiusStyles($target)
+    # @changeRadiusStyles($target)
 
   changeRadiusStyles: (target) ->
     index = target.index()

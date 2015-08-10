@@ -18,7 +18,7 @@ class @Chat
     @textElement = @options.textElement || "input[name='chat-text']"
     @$messageList = $(@options.messageList || ".message-list")
     @$chatContainer = $(@options.container || ".chat-list")
-    @$chatWrap = $(@options.container || ".main-content")
+    @$chatWrap = $(@options.container || ".chat-body")
     @userSocket = window.userSocket
 
     @boundOnMessage = @onMessage.bind(@)

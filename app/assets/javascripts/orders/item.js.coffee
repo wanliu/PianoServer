@@ -16,6 +16,7 @@ class @OrderItem
     }))
     hammer.on('swipeleft', @onSwipeLeft.bind(@))
     hammer.on('swiperight', @onSwipeRight.bind(@))
+    hammer.on('dragleft dragright', @onDrag.bind(@))
 
   $: () ->
     $(@element)
@@ -38,7 +39,7 @@ class @OrderItem
     $item = @$().find(".#{key}");
     $value = @$().find(".#{key}>.text")
     prefix = switch key
-             when 'price'
+             when 'price', 'sub_total'
                '￥'
              when 'amount'
                'x'
@@ -83,4 +84,7 @@ class @OrderItem
   onSwipeRight: (e) ->
     e.preventDefault()
     @$().css('left', '0')
+
+  onDrag: () ->
+    return false
 
