@@ -91,5 +91,7 @@ group :development, :test do
 
   gem 'factory_girl_rails'
   gem 'thin'
+  gem "teaspoon-jasmine"
+  gem 'spring-commands-teaspoon'
 end
 
