@@ -1,5 +1,7 @@
 #= require lib/user-socket
 #= require lib/metadata
+DAYS = 24 * 3600 * 1000
+
 class @Chat
 
   @defaultOptions: {
@@ -153,8 +155,14 @@ class @Chat
     senderAvatar = @options.avatarDefault if senderAvatar == '' or senderAvatar?
     senderName = if @options.displayUserName then "<h2>#{senderLogin}</h2>" else ''
     prefixSection = if @lastTime? and Math.abs(time - @lastTime) > @options.miniTimeGroupPeriod
+                      diffDay = Math.floor((time - @lastTime) / DAYS)
+                      time = new Date(time)
+                      timeStr = if diffDay > 0
+                                  "#{time.getFullYears()}-#{time.getMonths()}-#{time.getDays()} #{time.getHours()}:#{time.getMinutes()}"
+                                else
+                                  "#{time.getHours()}:#{time.getMinutes()}"
                       """
-                      <div class="time"><span class="text-center">#{new Date(time)}</span></div>
+                      <div class="time"><p class="text-center">#{timeStr}</p></div>
                       """
                     else
                       ''
