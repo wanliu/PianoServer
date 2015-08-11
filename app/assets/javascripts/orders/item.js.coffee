@@ -5,9 +5,9 @@ class @OrderItem
     @$().click(@onClick.bind(@))
     @$().bind('item:price:change', @onPriceChange.bind(@))
     @$().bind('item:amount:change', @onAmountChange.bind(@))
-    @$().bind('add', @onAddChange.bind(@))
-    @$().bind('remove', @onRemoveChange.bind(@))
-    @$().bind('replace', @onReplaceChange.bind(@))
+    @$().bind('item:add', @onAddChange.bind(@))
+    @$().bind('item:remove', @onRemoveChange.bind(@))
+    @$().bind('item:replace', @onReplaceChange.bind(@))
 
     hammer = new Hammer.Manager(@$()[0])
     hammer.add(new Hammer.Swipe({
@@ -33,7 +33,7 @@ class @OrderItem
   onAddChange: (e, data) ->
 
   onRemoveChange: (e, data) ->
-    @$().remove()
+    @$().addClass('order-item-remove')
 
   onReplaceChange: (e, data) ->
     {key, src, dest} = data

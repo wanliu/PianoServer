@@ -173,11 +173,12 @@
       border-radius: 0;
 
       &.open{
-        // border-radius: 4px;
-        // margin: 20px 0;
-
         .edit-fieldset{
           display: block;
+        }
+
+        &.order-item-remove .edit-fieldset{
+          display: none;
         }
       }
 
@@ -216,6 +217,14 @@
 
         .operate-block{
           border-color: #5cb85c;
+        }
+      }
+
+      &.order-item-remove{
+        border-color: #FF2B2B;
+
+        p{
+          text-decoration: line-through;
         }
       }
     }

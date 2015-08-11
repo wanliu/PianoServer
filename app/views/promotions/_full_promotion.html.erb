@@ -93,30 +93,34 @@
 
   <div class="navbar-bottom navbar navbar-default navbar-fixed-bottom">
     <div class="link-table">
-      <%= link_to shop_path(promotion.shop_id), class: "into-shop" do %>
-        <span class="button-icon glyphicon glyphicon-home"></span>
+      <%= link_to shop_path(promotion.shop_id), class: "contact-button into-shop" do %>
+        <span class="button-icon glyphicon glyphicon-home" aria-hidden="true"></span>
         <div class="button-text">商家</div>
       <% end %>
 
       <% if promotion.favorited %>
-        <div class="fav-button favorited">
-          <span class="button-icon glyphicon glyphicon-star"></span>
+        <div class="fav-button favorited contact-button">
+          <span class="button-icon glyphicon glyphicon-star" aria-hidden="true"></span>
           <div class="button-text">已收藏</div>
         </div>
       <% else %>
-        <div class="fav-button">
-          <span class="button-icon glyphicon glyphicon-star-empty"></span>
+        <div class="fav-button contact-button">
+          <span class="button-icon glyphicon glyphicon-star-empty" aria-hidden="true"></span>
           <div class="button-text">收藏</div>
         </div>
       <% end %>
 
-    <!--  <div class="into-cart">加入购物车</div>-->
-      <div class="buy-now">立即购买</div>
+      <div class="into-cart contact-button">
+        <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>
+        <div class="button-text">购物车</div>
+      </div>
+
+      <div class="buy-now contact-button">购买</div>
 
       <% if shop.owner.id === current_anonymous_or_user.id %>
- 	      <div class="chat">正在浏览自己的店铺</div>
+ 	      <div class="chat contact-button">您的店铺</div>
       <% else %>
-        <%= link_to '洽谈', promotion_chats_path(promotion, shop_id: @shop.id), class: "chat", method: 'POST' %>
+        <%= link_to '洽谈', promotion_chats_path(promotion, shop_id: @shop.id), class: "chat contact-button", method: 'POST' %>
       <% end %>
     </div>
   </div>
