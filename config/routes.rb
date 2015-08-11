@@ -57,11 +57,7 @@ Rails.application.routes.draw do
 
   resources :items, only: [ :index, :show ]
 
-  resources :chats do
-    get 'add/shops/:shop_id/items', to: 'chats#shop_items'
-    put 'add/shops/:shop_id/items/:item_id', to: 'chats#add_shop_item'
-  end
-
+  resources :chats
   resources :orders do
     member do
       get 'status', to: "orders#status", as: :status_of
@@ -70,6 +66,9 @@ Rails.application.routes.draw do
       post 'ensure', to: "orders#ensure", as: :ensure
       post 'cancel', to: "orders#cancel", as: :cancel
       post 'reject', to: "orders#reject", as: :reject
+
+      get 'items', to: 'orders#items'
+      put 'add_item', to: 'orders#add_item'
     end
   end
   ## shop route

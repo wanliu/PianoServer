@@ -99,14 +99,6 @@ class ChatsController < ApplicationController
 	  end
 	end
 
-  def shop_items
-
-  end
-
-  def add_shop_item
-
-  end
-
 	private
 
 	def my_chat?

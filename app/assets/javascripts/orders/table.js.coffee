@@ -5,7 +5,7 @@
 Popup = @Popup
 class @OrderTable extends @Event
   @defaultOptions = {
-    maxDelaySyncMs: 800,
+    maxDelaySyncMs: 300,
     maxWaitAccpetingMS: 3000
   }
 
@@ -18,6 +18,10 @@ class @OrderTable extends @Event
     @orderId = @order.id
     @options = $.extend({}, OrderTable.defaultOptions, @options)
     @itemList = @$().find('.item-list')
+    @patch = []
+    @bindAllEvents()
+
+  bindAllEvents: () ->
     @itemList.on('click', @onClicked.bind(@))
     @itemList.on('change', 'input[name=amount]',@amountChanged.bind(@))
     @itemList.on('change', 'input[name=price]', @priceChanged.bind(@))
@@ -47,7 +51,6 @@ class @OrderTable extends @Event
     @$().bind('replace', @onReplaceChange.bind(@))
     # @$().bind('order:total:change', )
 
-    @patch = []
     @on 'init', () =>
       $.ajax({
         url: "/orders/#{@orderId}/diff",
@@ -59,6 +62,38 @@ class @OrderTable extends @Event
         @checkDiff(diffs)
 
     @on 'order', @onOrderCommand.bind(@)
+
+  unbindAllEvents: () ->
+    @itemList.off('click')
+    @itemList.off('change', 'input[name=amount]')
+    @itemList.off('change', 'input[name=price]')
+    @$().off('change', 'input[name=total]')
+    @itemList.off('keyup', 'input[name=amount]')
+    @itemList.off('keyup', 'input[name=price]')
+    @$().off('click', '.payment-menu li')
+    @$().off('click', '.order-item-amount .btn-minus')
+    @$().off('click', '.order-item-amount .btn-plus')
+    @$().off('click', '.order-item-price .btn-minus')
+    @$().off('click', '.order-item-price .btn-plus')
+    @$().off('click', '.order-total-edit .btn-minus')
+    @$().off('click', '.order-total-edit .btn-plus')
+    @$().off('click', '.remove-item-icon', @removeItem.bind(@))
+
+    captureOrderChangeBound = @captureOrderChange.bind(@)
+    releaseOrderChangeBound = @releaseOrderChange.bind(@)
+    @$().off('mousedown', '.btn-agrees')
+    @$().off('mouseup', '.btn-agrees')
+    @$().off('touchstart', '.btn-agrees')
+    @$().off('touchend', '.btn-agrees')
+    @$().off('click', '.btn-disagrees')
+    @$().off('click', '.order-table-total')
+
+    @$().unbind('add')
+    @$().unbind('remove')
+    @$().unbind('replace')
+    # @$().bind('order:total:change', )
+    @$().off('init')
+    @$().off('order')
 
   onClicked: (event) ->
     $target = $(event.target)
@@ -309,6 +344,9 @@ class @OrderTable extends @Event
           @ensureTickId = setTimeout () =>
             @inAccepting = false
             $.post "/orders/#{@orderId}/ensure", (json) =>
+              @unbindAllEvents()
+              this.hideConsultButtons();
+
               $('.order-table').html(json.html) if json.html?
               @closePopup()
 
@@ -501,6 +539,7 @@ class @OrderTable extends @Event
         .hide()
 
   resetTable: () ->
+    @unbindAllEvents()
     @hideConsultButtons()
 
     $.get "/orders/#{@orderId}", {inline: true}, (json) =>
