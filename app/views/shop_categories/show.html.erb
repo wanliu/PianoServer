@@ -49,38 +49,45 @@
 </script>
 
 <script type="text/javascript">
-  var per = 9;
-  var page = 1;
-  var id = <%= @shop_category.id %>;
-  var all_fetched = <%= @shop_category.has_children ? @shop_categories.length : @items.length %> < per;
-  var fetch_locked = false;
-
-  var key = '<%= @shop_category.has_children ? "shop_categories" : "items" %>';
-
-  var template = {
-    shop_categories: _.template($('#template-shop-categories').html()),
-    items: _.template($('#template-items').html())
-  }[key];
-
-  var request_url = {
-    shop_categories: "/shop_categories.json?page=" + (page + 1) + "&per=9&parent_id=<%= @shop_category.id %>",
-    items: "/items.json?page=" + (page + 1) + "&per=9&shop_category_id=<%= @shop_category.id %>"
-  }[key];
-
-
   $(function () {
-    $(window).scroll(function () {
-      if ($(document).height() < $(window).scrollTop() + $(window).height() + 100) {
-        if (fetch_locked) return;
-        fetch_locked = true;
+    <% if @shop_category.has_children %>
+      var per = 9;
+      var all_fetched = <%= @shop_categories.length %> < per;
+      var key = "shop_categories";
+    <% else %>
+      var per = 8;
+      var all_fetched = <%= @items.length %> < per;
+      var key = "items";
+    <% end %>
 
-        if (all_fetched) return;
+    var page = 1;
+    var id = <%= @shop_category.id %>;
+    var fetch_locked = false;
+
+    var template = {
+      shop_categories: _.template($('#template-shop-categories').html()),
+      items: _.template($('#template-items').html())
+    }[key];
+
+    var request_url = {
+      shop_categories: "/shop_categories.json?page=" + (page + 1) + "&per=" + per + "&parent_id=<%= @shop_category.id %>",
+      items: "/items.json?page=" + (page + 1) + "&per=" + per + "&shop_category_id=<%= @shop_category.id %>"
+    }[key];
+
+    $(document).scroll(function (e) {
+      if (!/shop_categories\/\d+/.test(e.target.URL) || all_fetched || fetch_locked) {
+        return;
+      }
+
+      if ($(document).height() < $(window).scrollTop() + $(window).height() + 100) {
+        fetch_locked = true;
 
         $.getJSON(request_url)
           .success(function (data, status) {
             page += 1;
 
             all_fetched = data.length < per;
+
             var html = template({ collection: data });
 
             $('.cate-items-list .' + key).append(html);
@@ -89,5 +96,5 @@
           });
       }
     });
-  })
+  });
 </script>

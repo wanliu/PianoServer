@@ -36,23 +36,25 @@
 </script>
 
 <script type="text/javascript">
-  var per = 9;
-  var page = 1;
-  var id = <%= @shop.id %>;
-  var all_fetched = <%= @shop_categories.length %> < per;
-  var fetch_locked = false;
-
-  var template = _.template($('#template-shop-categories').html());
-
   $(function () {
-    $(window).scroll(function () {
+    var per = 9;
+    var page = 1;
+    var id = <%= @shop.id %>;
+    var all_fetched = <%= @shop_categories.length %> < per;
+    var fetch_locked = false;
+
+    var template = _.template($('#template-shop-categories').html());
+
+    $(document).scroll(function (e) {
+      if (!/shops\/\d+/.test(e.target.URL) || all_fetched || fetch_locked) {
+        return;
+      }
+
       if ($(document).height() < $(window).scrollTop() + $(window).height() + 100) {
-        if (fetch_locked) return;
         fetch_locked = true;
 
-        if (all_fetched) return;
 
-        $.getJSON("/shop_categories.json?page=" + (page + 1) + "&per=9&shop_id=<%= @shop.id %>")
+        $.getJSON("/shop_categories.json?page=" + (page + 1) + "&per=" + per + "&shop_id=<%= @shop.id %>")
           .success(function (data, status) {
             page += 1;
 
