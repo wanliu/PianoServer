@@ -437,11 +437,11 @@ class @OrderTable extends @Event
       [itemObj, key] = @parsePath(path)
       switch op
         when '+'
-          @send('add', {key: key, src: src, dest: dest})
+          @send('item:add', {key: key, src: src, dest: dest})
         when '-'
-          itemObj.send('remove', {key: key, src: src, dest: dest})
+          itemObj.send('item:remove', {key: key, src: src, dest: dest})
         when '~'
-          itemObj.send('replace', {key: key, src: src, dest: dest})
+          itemObj.send('item:replace', {key: key, src: src, dest: dest})
 
 
   parsePath: (path) ->

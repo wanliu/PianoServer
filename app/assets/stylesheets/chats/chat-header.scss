@@ -46,8 +46,8 @@
     }
 
     .toggle-icon{
-      -webkit-transition: all 0.45s ease-in-out 0;
-      transition: all 0.45s ease-in-out 0;
+      -webkit-transition: all 0.45s ease-in-out 0s;
+      transition: all 0.45s ease-in-out 0s;
     }
 
     &.toggle-up .toggle-icon{
