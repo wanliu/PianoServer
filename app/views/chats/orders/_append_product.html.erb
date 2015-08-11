@@ -4,7 +4,7 @@
   </div>
   <div class="col-xs-8 col-sm-8">
     <p class="text-right">
-      <%= link_to "/chats/#{@chat.id}/add/shops/#{@target.id}/items" do %>
+      <%= link_to items_order_path(order) do %>
         <button class="btn btn-default btn-add">
           <span class="glyphicon glyphicon-plus"></span>
         </button>

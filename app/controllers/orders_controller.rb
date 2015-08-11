@@ -11,7 +11,9 @@ class OrdersController < ApplicationController
 
   class OrderInvalidState < StandardError; end
 
-  before_action :set_order_params, only: [:show, :status, :update, :diff, :accept, :ensure, :cancel, :reject]
+  before_action :set_order_params,
+    only: [:show, :status, :update, :diff, :accept, :ensure,
+            :cancel, :reject, :items, :add_item]
 
   def show
     # if params[:inline]
@@ -102,6 +104,14 @@ class OrdersController < ApplicationController
     MessageSystemService.push_command current_anonymous_or_user.id, other_side, {command: 'order', accept: 'reject'}.to_json
 
     render :show, formats: [:json]
+  end
+
+  def items
+    # @order.supplier.
+    []
+  end
+
+  def add_item
   end
 
   private
