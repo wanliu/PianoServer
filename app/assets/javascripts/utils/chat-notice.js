@@ -39,15 +39,17 @@
       }
 
       if (redirect) {
-        userSocket.emit('readChannel', {
-          channelId: 'p' + senderId
-        }, function(err) {
-          if (err) {
-            return console.error(err);
-          }
+        Turbolinks.visit('/chats/' + chatId);
 
-          Turbolinks.visit('/chats/' + chatId);
-        });
+        // userSocket.emit('readChannel', {
+        //   channelId: 'p' + senderId
+        // }, function(err) {
+        //   if (err) {
+        //     return console.error(err);
+        //   }
+
+        //   Turbolinks.visit('/chats/' + chatId);
+        // });
       }
     }
   };

@@ -25,6 +25,8 @@ class ChatsController < ApplicationController
 
     @chat.order_id = @order.id if @order
     @chat.save
+
+    MessageSystemService.send_read_message current_anonymous_or_user.id, other_side
     redirect_to @chat
   end
 
@@ -104,5 +106,13 @@ class ChatsController < ApplicationController
 	def my_chat?
 		@chat.owner_id == current_anonymous_or_user.id
 	end
+
+  def other_side
+    if @order.buyer_id == current_anonymous_or_user.id
+      @order.seller_id || @order.supplier.owner_id
+    else
+      @order.buyer_id
+    end
+  end
 
 end
