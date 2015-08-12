@@ -182,6 +182,10 @@
         }
       }
 
+      &.swipeleft{
+        left: -90px;
+      }
+
       .btn-add{
         padding: 3px 6px;
       }
@@ -222,6 +226,7 @@
 
       &.order-item-remove{
         border-color: #FF2B2B;
+        background: rgba(255, 43, 43, 0.02);
 
         p{
           text-decoration: line-through;

@@ -14,7 +14,7 @@ class Order < ActiveRecord::Base
   #   where(shadow_id: nil)
   # end
 
-  has_many :items, class_name: 'OrderItem', as: :itemable, dependent: :destroy do
+  has_many :items, class_name: 'OrderItem', as: :itemable, dependent: :destroy, autosave: true do
     def build_with_promotion(promotion)
       build({
         title: promotion.title,
@@ -206,19 +206,56 @@ class Order < ActiveRecord::Base
     super.nil? ? calc_total : super
   end
 
+  ITEMS_CHILDREN_REG = /items\[(\d+)\]\.(\w+)/
+  ITEMS_REG = /items\[(\d+)\]/
+
   def update_patch(attrs)
+    diffs = HashDiff.best_diff origin_hash, attrs
     Order.transaction do
-      _items = attrs.delete "items" || []
 
-      update_attributes(attrs)
-      items.destroy_all
-
-      _items.each do |item|
-        items.build item
+      diffs.each do |op, path, src, dest|
+        case op
+        when '~'
+          if ITEMS_CHILDREN_REG =~ path
+            m = ITEMS_CHILDREN_REG.match(path)
+            index, method = m[1].to_i, m[2]
+            items[index].send(method + '=', dest)
+          else
+            self.send(path + '=', dest)
+          end
+        when '+'
+          if ITEMS_REG =~ path
+            m = ITEMS_REG.match(path)
+            index = m[1]
+            items.push dest
+          end
+        when '-'
+          if ITEMS_REG =~ path
+            m = ITEMS_REG.match(path)
+            index = m[1].to_i
+            item = items[index]
+            items.delete item
+          end
+        end
       end
+
       data[:updates] = nil
+      updates = nil
+
       save
     end
+    # Order.transaction do
+    #   _items = attrs.delete "items" || []
+
+    #   update_attributes(attrs)
+    #   items.destroy_all
+
+    #   _items.each do |item|
+    #     items.build item
+    #   end
+    #   data[:updates] = nil
+    #   save
+    # end
   end
 
   private

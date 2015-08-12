@@ -7,7 +7,7 @@
   </ul>
   <%= render "chats/order_items" %>
   <ul class="list-group last">
-    <%= render "chats/orders/append_product" %>
+    <%= render partial: "chats/orders/append_product", locals: { chat: @chat, order: @order, target: @target } %>
     <%= render "chats/orders/footer" %>
   </ul>
 </div>
