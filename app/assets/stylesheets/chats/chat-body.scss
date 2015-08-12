@@ -1,0 +1,78 @@
+.chat-order-body{
+  position: absolute;
+  top: 120px;
+  bottom: 0;
+  overflow: hidden;
+  background: #FFFFFF;
+
+  .bubble-tip{
+    position: absolute;
+    bottom: 60px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    z-index: 11;
+
+    .tip-text{
+      display: inline-block;
+      margin: 0 auto;
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 0 6px #B2B2B2;
+      max-width: 80%;
+      background: #00E1FF;
+    }
+  }
+
+  .chat-list{
+    width: 100%;
+  }
+
+  &.show-order-items{
+    .chat-list{
+      border-left: 1px dashed #CCCCCC;
+    }
+  }
+
+  .col-xs-4, .col-sm-4, .col-xs-8, .col-sm-8{
+    padding: 0
+  }
+}
+
+.order-total-edit{
+  margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+  .navbar-form .form-group {
+    display: block;
+    margin-bottom: 0;
+    vertical-align: middle;
+  }
+
+  .navbar-form {
+    padding: 8px 15px;
+    display: block;
+    margin-top: 0px;
+    margin-bottom: 0px;
+  }
+}
+
+@media (min-width: 768px) {
+  .navbar-form {
+    float: none !important;
+    // display: block;
+    // max-width: 100%;
+  }
+
+  .navbar-form .form-group {
+    display: block;
+    max-width: 100%;
+  }
+
+  .navbar-form .form-control {
+    display: block;
+    width: 100%;
+  }
+}
+

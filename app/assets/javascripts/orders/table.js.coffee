@@ -5,8 +5,8 @@
 Popup = @Popup
 class @OrderTable extends @Event
   @defaultOptions = {
-    maxDelaySyncMs: 800,
-    maxWaitAccpetingMS: 3000
+    maxDelaySyncMs: 300,
+    maxWaitAccpetingMS: 1500
   }
 
   constructor: (@element, @order, @options = {}) ->
@@ -18,6 +18,10 @@ class @OrderTable extends @Event
     @orderId = @order.id
     @options = $.extend({}, OrderTable.defaultOptions, @options)
     @itemList = @$().find('.item-list')
+    @patch = []
+    @bindAllEvents()
+
+  bindAllEvents: () ->
     @itemList.on('click', @onClicked.bind(@))
     @itemList.on('change', 'input[name=amount]',@amountChanged.bind(@))
     @itemList.on('change', 'input[name=price]', @priceChanged.bind(@))
@@ -31,6 +35,7 @@ class @OrderTable extends @Event
     @$().on('click', '.order-item-price .btn-plus', @priceIncreased.bind(@))
     @$().on('click', '.order-total-edit .btn-minus', @totalDecreased.bind(@))
     @$().on('click', '.order-total-edit .btn-plus', @totalIncreased.bind(@))
+    @$().on('click', '.remove-item-icon', @removeItem.bind(@))
 
     captureOrderChangeBound = @captureOrderChange.bind(@)
     releaseOrderChangeBound = @releaseOrderChange.bind(@)
@@ -38,6 +43,7 @@ class @OrderTable extends @Event
     @$().on('mouseup', '.btn-agrees', releaseOrderChangeBound)
     @$().on('touchstart', '.btn-agrees', captureOrderChangeBound)
     @$().on('touchend', '.btn-agrees', releaseOrderChangeBound)
+    @$().on('click', '.btn-disagrees', @rejectOrderChanges.bind(@))
     @$().on('click', '.order-table-total', @changeOrderTotal.bind(@))
 
     @$().bind('add', @onAddChange.bind(@))
@@ -45,19 +51,47 @@ class @OrderTable extends @Event
     @$().bind('replace', @onReplaceChange.bind(@))
     # @$().bind('order:total:change', )
 
-    @patch = []
     @on 'init', () =>
       $.ajax({
         url: "/orders/#{@orderId}/diff",
         type: 'GET',
         dataType: 'json'
       }).success (data) =>
-        @parseDiff(data.diff)
+        diffs = data.diff
+        @parseDiff(diffs)
+        @checkDiff(diffs)
 
     @on 'order', @onOrderCommand.bind(@)
 
-  $: () ->
-    $(@element)
+  unbindAllEvents: () ->
+    @itemList.off('click')
+    @itemList.off('change', 'input[name=amount]')
+    @itemList.off('change', 'input[name=price]')
+    @$().off('change', 'input[name=total]')
+    @itemList.off('keyup', 'input[name=amount]')
+    @itemList.off('keyup', 'input[name=price]')
+    @$().off('click', '.payment-menu li')
+    @$().off('click', '.order-item-amount .btn-minus')
+    @$().off('click', '.order-item-amount .btn-plus')
+    @$().off('click', '.order-item-price .btn-minus')
+    @$().off('click', '.order-item-price .btn-plus')
+    @$().off('click', '.order-total-edit .btn-minus')
+    @$().off('click', '.order-total-edit .btn-plus')
+    @$().off('click', '.remove-item-icon' )
+
+    @$().off('mousedown', '.btn-agrees')
+    @$().off('mouseup', '.btn-agrees')
+    @$().off('touchstart', '.btn-agrees')
+    @$().off('touchend', '.btn-agrees')
+    @$().off('click', '.btn-disagrees')
+    @$().off('click', '.order-table-total')
+
+    @$().unbind('add')
+    @$().unbind('remove')
+    @$().unbind('replace')
+    # @$().bind('order:total:change', )
+    @$().off('init')
+    @$().off('order')
 
   onClicked: (event) ->
     $target = $(event.target)
@@ -78,7 +112,7 @@ class @OrderTable extends @Event
 
     $target.toggleClass('open')
 
-    @changeRadiusStyles($target)
+    # @changeRadiusStyles($target)
 
   changeRadiusStyles: (target) ->
     index = target.index()
@@ -247,6 +281,7 @@ class @OrderTable extends @Event
     $target.parents('.dropdown:first').find('.button-text').text(text);
 
   onAddChange: (e, data) ->
+
   onRemoveChange: (e, data) ->
 
   onReplaceChange: (e, data) ->
@@ -289,24 +324,13 @@ class @OrderTable extends @Event
       $.post("/orders/#{@orderId}/accept")
         .success () =>
           @showPopup()
-          # @popup = Popup.show """
-          #   <h3>正在同意订单修改</h3>
-          #   <h1>&nbsp;</h1>
-          # """
-          # @count = 0;
-          # maxCount =  @options.maxWaitAccpetingMS / 1000
-          # @acceptTickId = setInterval () =>
-          #   @popup.setHtml """
-          #     <h3>正在同意订单修改</h3>
-          #     <h1 class="text-center">#{maxCount - @count}</h1>
-          #   """
-
-          #   @count = if @count >= maxCount then @count else @count + 1
-          # , 1000
 
           @ensureTickId = setTimeout () =>
             @inAccepting = false
             $.post "/orders/#{@orderId}/ensure", (json) =>
+              @unbindAllEvents()
+              this.hideConsultButtons();
+
               $('.order-table').html(json.html) if json.html?
               @closePopup()
 
@@ -318,7 +342,13 @@ class @OrderTable extends @Event
     if @inAccepting
       @closePopup()
 
-      $.post "/orders/#{@orderId}/cancel", () =>
+      $.post "/orders/#{@orderId}/cancel", (data) =>
+
+  rejectOrderChanges: () ->
+    $.post "/orders/#{@orderId}/reject", { inline: true }, (json) =>
+      @unbindAllEvents()
+      $('.order-table').html(json.html) if json.html?
+      @hideConsultButtons()
 
   showPopup: (options) ->
     @popup = Popup.show """
@@ -327,14 +357,15 @@ class @OrderTable extends @Event
     """, options
     count = 0;
     maxCount =  @options.maxWaitAccpetingMS / 1000
+    startTime = (new Date()).getTime()
     @acceptTickId = setInterval () =>
       @popup.setHtml """
         <h3>正在同意订单修改</h3>
-        <h1 class="text-center">#{maxCount - count}</h1>
+        <h1 class="text-center">#{Math.round(maxCount - count)}</h1>
       """
-
-      count = if count >= maxCount then count else count + 1
-    , 1000
+      time = (new Date()).getTime()
+      count = if count >= maxCount then count else (time - startTime) / 1000
+    , 500
     @popup
 
   closePopup: () ->
@@ -417,6 +448,10 @@ class @OrderTable extends @Event
     path = "/items/#{itemId}/#{key}"
     @pushOp(op, path, value)
 
+  pushRemoveItemOp: (itemId) ->
+    path = "/items/#{itemId}"
+    @pushOp('remove', path, null)
+
   indexOf: (item) ->
     $(".item-list .list-group-item").index(item)
 
@@ -426,11 +461,11 @@ class @OrderTable extends @Event
       [itemObj, key] = @parsePath(path)
       switch op
         when '+'
-          @send('add', {key: key, src: src, dest: dest})
+          @send('item:add', {key: key, src: src, dest: dest})
         when '-'
-          itemObj.send('remove', {key: key, src: src, dest: dest})
+          itemObj.send('item:remove', {key: key, src: src, dest: dest})
         when '~'
-          itemObj.send('replace', {key: key, src: src, dest: dest})
+          itemObj.send('item:replace', {key: key, src: src, dest: dest})
 
 
   parsePath: (path) ->
@@ -444,6 +479,7 @@ class @OrderTable extends @Event
   onOrderCommand: (e, command) ->
     if command.diff?
       @parseDiff(command.diff)
+      @showConsultButtons()
 
     else if command.accept?
       switch command.accept
@@ -455,11 +491,11 @@ class @OrderTable extends @Event
           @closePopup()
         when 'accept'
           @closePopup()
-          $.get "/orders/#{@orderId}", {inline: true}, (json) =>
-            $('.order-table').html(json.html) if json.html?
+          @resetTable()
 
         else
           @closePopup()
+          @resetTable()
 
   changeOrderTotal: (e) ->
     $target = $(e.target)
@@ -470,5 +506,39 @@ class @OrderTable extends @Event
     unless $target.is('li')
       $target = $target.parents('li:first')
 
-    $target.toggleClass('open').prev().toggleClass('radius-bottom');
+    $target.toggleClass('open').prev().toggleClass('radius-bottom')
+
+  checkDiff: (diffs) ->
+    if diffs.length > 0
+      @showConsultButtons()
+
+  showConsultButtons: () ->
+    @$().find('.buttons-execute')
+        .hide()
+        .next()
+        .show()
+
+  hideConsultButtons: () ->
+    @$().find('.buttons-execute')
+        .show()
+        .next()
+        .hide()
+
+  resetTable: () ->
+    @unbindAllEvents()
+    @hideConsultButtons()
+
+    $.get "/orders/#{@orderId}", {inline: true}, (json) =>
+      $('.order-table').html(json.html) if json.html?
+
+  removeItem: () ->
+    confrimation = confirm(' 您确定删除者这个商品项吗?')
+
+    if confrimation == true
+      $li = $(event.target).parents('.list-group-item:first')
+      item_id = $li.attr('item-id')
+      index = @indexOf($li)
+
+      @pushRemoveItemOp(index)
+
 

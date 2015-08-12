@@ -24,6 +24,8 @@
 //= require china_city/jquery.china_city
 //= require lib/socketcluster-client
 //= require lib/user-socket
+//= require lib/underscore
+//= require lib/underscore-template
 //= require _common/qrcode
 //= require _common/local-address
 //= require_tree ./application

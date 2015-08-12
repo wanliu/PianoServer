@@ -1,12 +1,36 @@
+#= require _common/hammer
 
 class @OrderItem
   constructor: (@element, @parent, @itemId = $(@element).data('itemId')) ->
+    @hammer = new Hammer.Manager(@$()[0])
+    @hammer.add(new Hammer.Swipe({
+      direction: Hammer.DIRECTION_HORIZONTAL,
+      velocity: 0.1
+    }))
+
+    @bindAllEvents()
+
+  bindAllEvents: () ->
     @$().click(@onClick.bind(@))
     @$().bind('item:price:change', @onPriceChange.bind(@))
     @$().bind('item:amount:change', @onAmountChange.bind(@))
-    @$().bind('add', @onAddChange.bind(@))
-    @$().bind('remove', @onRemoveChange.bind(@))
-    @$().bind('replace', @onReplaceChange.bind(@))
+    @$().bind('item:add', @onAddChange.bind(@))
+    @$().bind('item:remove', @onRemoveChange.bind(@))
+    @$().bind('item:replace', @onReplaceChange.bind(@))
+    @hammer.on('swipeleft', @onSwipeLeft.bind(@))
+    @hammer.on('swiperight', @onSwipeRight.bind(@))
+    @hammer.on('dragleft dragright', @onDrag.bind(@))
+
+  unbindAllEvents: () ->
+    @$().off('click')
+    @$().unbind('item:price:change')
+    @$().unbind('item:amount:change')
+    @$().unbind('item:add')
+    @$().unbind('item:remove')
+    @$().unbind('item:replace')
+    @hammer.off('swipeleft')
+    @hammer.off('swiperight')
+    @hammer.off('dragleft dragright')
 
   $: () ->
     $(@element)
@@ -23,13 +47,14 @@ class @OrderItem
   onAddChange: (e, data) ->
 
   onRemoveChange: (e, data) ->
+    @$().addClass('order-item-remove')
 
   onReplaceChange: (e, data) ->
     {key, src, dest} = data
     $item = @$().find(".#{key}");
     $value = @$().find(".#{key}>.text")
     prefix = switch key
-             when 'price'
+             when 'price', 'sub_total'
                '￥'
              when 'amount'
                'x'
@@ -66,4 +91,15 @@ class @OrderItem
     @$().addClass('order-item-modify')
   send: (event, args...) ->
     @$().trigger(event, args...)
+
+  onSwipeLeft: (e) ->
+    e.preventDefault()
+    @$().css('left', '-90px')
+
+  onSwipeRight: (e) ->
+    e.preventDefault()
+    @$().css('left', '0')
+
+  onDrag: () ->
+    return false
 

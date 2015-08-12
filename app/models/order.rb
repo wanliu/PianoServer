@@ -14,14 +14,14 @@ class Order < ActiveRecord::Base
   #   where(shadow_id: nil)
   # end
 
-  has_many :items, as: :itemable, dependent: :destroy do
+  has_many :items, class_name: 'OrderItem', as: :itemable, dependent: :destroy, autosave: true do
     def build_with_promotion(promotion)
       build({
         title: promotion.title,
         price: promotion.discount_price,
         amount: promotion.try(:amount) || MIN_AMOUNT,
         item_type: 'product',
-        iid: Item.last_iid(owner) + 1,
+        iid: OrderItem.last_iid(owner) + 1,
         data: {
           product_id: promotion.product_id,
           product_inventory: promotion.product_inventory,
@@ -44,7 +44,7 @@ class Order < ActiveRecord::Base
           price: promotion.discount_price,
           amount: promotion.try(:amount) || MIN_AMOUNT,
           item_type: 'product',
-          iid: Item.last_iid(owner) + 1,
+          iid: OrderItem.last_iid(owner) + 1,
           data: {
             product_id: promotion.product_id,
             product_inventory: promotion.product_inventory
@@ -56,6 +56,48 @@ class Order < ActiveRecord::Base
         })
       else
         item
+      end
+    end
+
+    def build_with_shop_product(shop_product)
+      build({
+        title: shop_product.name,
+        price: shop_product.price,
+        amount: shop_product.try(:amount) || MIN_AMOUNT,
+        item_type: 'product',
+        iid: OrderItem.last_iid(owner) + 1,
+        data: {
+          product_id: shop_product.product_id,
+          product_inventory: shop_product.try(:inventory)
+        },
+        image: {
+          avatar_url: shop_product.try(:image_url),
+          preview_url: shop_product.try(:preview_url)
+        }
+      })
+    end
+
+    def add_shop_product(shop_product)
+      item = where("data -> 'product_id' = :product_id", product_id: shop_product.product_id.to_s).first
+
+      if item.blank?
+        owner.create_status state: :pending
+
+        proxy_association.create({
+          title: shop_product.name,
+          price: shop_product.price,
+          amount: shop_product.try(:amount) || MIN_AMOUNT,
+          item_type: 'product',
+          iid: OrderItem.last_iid(owner) + 1,
+          data: {
+            product_id: shop_product.product_id,
+            product_inventory: shop_product.try(:inventory)
+          },
+          image: {
+            avatar_url: shop_product.try(:image_url),
+            preview_url: shop_product.try(:preview_url)
+          }
+        })
       end
     end
 
@@ -119,8 +161,8 @@ class Order < ActiveRecord::Base
       "buyer_id" => h["buyer_id"],
       "seller_id" => h["seller_id"],
       "supplier_id" => h["supplier_id"],
-      "send_address" => h["send_address"],
-      "delivery_address" => h["delivery_address"],
+      "send_location" => h["send_location"],
+      "delivery_location" => h["delivery_location"],
       "business_type" => h["business_type"],
       "title" => h["title"],
       "contacts" => h["contacts"],
@@ -164,19 +206,56 @@ class Order < ActiveRecord::Base
     super.nil? ? calc_total : super
   end
 
+  ITEMS_CHILDREN_REG = /items\[(\d+)\]\.(\w+)/
+  ITEMS_REG = /items\[(\d+)\]/
+
   def update_patch(attrs)
+    diffs = HashDiff.best_diff origin_hash, attrs
     Order.transaction do
-      _items = attrs.delete "items" || []
 
-      update_attributes(attrs)
-      items.destroy_all
-
-      _items.each do |item|
-        items.build item
+      diffs.each do |op, path, src, dest|
+        case op
+        when '~'
+          if ITEMS_CHILDREN_REG =~ path
+            m = ITEMS_CHILDREN_REG.match(path)
+            index, method = m[1].to_i, m[2]
+            items[index].send(method + '=', dest)
+          else
+            self.send(path + '=', dest)
+          end
+        when '+'
+          if ITEMS_REG =~ path
+            m = ITEMS_REG.match(path)
+            index = m[1]
+            items.push dest
+          end
+        when '-'
+          if ITEMS_REG =~ path
+            m = ITEMS_REG.match(path)
+            index = m[1].to_i
+            item = items[index]
+            items.delete item
+          end
+        end
       end
+
       data[:updates] = nil
+      updates = nil
+
       save
     end
+    # Order.transaction do
+    #   _items = attrs.delete "items" || []
+
+    #   update_attributes(attrs)
+    #   items.destroy_all
+
+    #   _items.each do |item|
+    #     items.build item
+    #   end
+    #   data[:updates] = nil
+    #   save
+    # end
   end
 
   private

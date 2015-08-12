@@ -5,7 +5,67 @@
 <% content_for :module, :shop %>
 
 <div class="brand-board">
-	<%= image_tag @shop.image.src, class: 'shop-logo' %>
-	<h2><%= @shop.name %></h2>
-
+  <div class='shop-info'>
+    <%= image_tag @shop.image.try(:src), class: 'shop-logo' %>
+    <div class='name-address'>
+      <span class='name'><%= @shop.name %></span>
+      <span class='address'><%= @shop.address %></span>
+    </div>
+    <div style='clear:both'></div>
+  </div>
 </div>
+
+<div class="cate-items-list">
+  <div class='title'>
+    <span>本店主营系列</span>
+  </div>
+  <div class="container-fluid">
+    <%= render partial: 'shop_categories/shop_categories', locals: { shop_categories: @shop_categories } %>
+  </div>
+</div>
+
+<script type="text/template" id='template-shop-categories'>
+  {{ _.each(collection, function (cate, index) { }}
+    <div class="col-xs-4 col-sm-3 cate">
+      <a href="/shop_categories/{{= cate.id }}" class='text-center'>
+        {{= cate.name }}
+      </a>
+      <span class='text text-center'>{{= cate.name }}</span>
+    </div>
+  {{ }) }}
+</script>
+
+<script type="text/javascript">
+  $(function () {
+    var per = 9;
+    var page = 1;
+    var id = <%= @shop.id %>;
+    var all_fetched = <%= @shop_categories.length %> < per;
+    var fetch_locked = false;
+
+    var template = _.template($('#template-shop-categories').html());
+
+    $(document).scroll(function (e) {
+      if (!/shops\/\d+/.test(e.target.URL) || all_fetched || fetch_locked) {
+        return;
+      }
+
+      if ($(document).height() < $(window).scrollTop() + $(window).height() + 100) {
+        fetch_locked = true;
+
+
+        $.getJSON("/shop_categories.json?page=" + (page + 1) + "&per=" + per + "&shop_id=<%= @shop.id %>")
+          .success(function (data, status) {
+            page += 1;
+
+            all_fetched = data.length < per;
+            var html = template({ collection: data });
+
+            $('.cate-items-list .shop-categories').append(html);
+
+            fetch_locked = false;
+          });
+      }
+    });
+  })
+</script>

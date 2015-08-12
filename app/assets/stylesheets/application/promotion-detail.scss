@@ -56,7 +56,7 @@
         font-size: 1.5em;
         text-align: center;
         color: #FFFFFF;
-      } 
+      }
 
       .desc-wrap{
         padding: 0 10px;
@@ -164,44 +164,41 @@
     left: 0;
     background: #FFFFFF;
     border-top: 1px solid #DDDDDD;
-    
+
     .link-table{
       display: table;
       width: 100%;
     }
 
-    .chat-button, .into-shop, .fav-button{
+    .contact-button{
       display: table-cell;
       width: 20%;
       text-align: center;
-      border-right: 1px solid #DDDDDD;
       cursor: pointer;
       padding: 0.8em 0;
+      vertical-align: middle;
+      line-height: 100%;
 
       .button-text{
         text-align: center;
+        margin-top: 3px;
       }
     }
 
-    .fav-button{
-      border-right: none;
+    .into-shop, .fav-button{
+      border-right: 1px solid #DDDDDD;
     }
 
-    .into-cart, .buy-now, .chat{
-      display: table-cell;
-      vertical-align: middle;
-      line-height: 100%;
+    .into-shop{
+      color: #333333;
+    }
+
+    .buy-now, .chat{
       color: #FFFFFF;
-      text-align: center;
-      cursor: pointer;
-    }
-
-    .into-cart{
-      background-color: #F37C3F;
     }
 
     .buy-now{
-      background-color: #F42B2B;
+      background-color: #FF7C00;
     }
 
     .chat {

@@ -1,14 +1,17 @@
-    <li class="list-group-item">
-      <% if @order.buyer_id == current_anonymous_or_user.id %>
-        <div class="desc-value">
-          <%= @order.supplier.name %>
-        </div>
-        商店
-      <% else %>
-        <div class="desc-value">
-          <%= @order.buyer.name %>
-        </div>
-        用户
-      <% end %>
-     
-    </li>
+<li class="list-group-item clearfix">
+  <% if @order.buyer_id == current_anonymous_or_user.id %>
+    <div class="col-xs-4 col-sm-4">
+      商店
+    </div>
+    <div class="col-xs-8 col-sm-8 text-right">
+      <%= @order.supplier.name %>
+    </div>
+  <% else %>
+    <div class="col-xs-4 col-sm-4">
+      用户
+    </div>
+    <div class="col-xs-8 col-sm-8 text-right">
+      <%= @order.buyer.name %>
+    </div>
+  <% end %>
+</li>

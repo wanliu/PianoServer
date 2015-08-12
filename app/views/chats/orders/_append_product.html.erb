@@ -1,8 +1,14 @@
-    <li class="list-group-item add-item">
-      <div class="desc-value">
+<li class="list-group-item clearfix">
+  <div class="col-xs-4 col-sm-4 add-item-text">
+    添加商品
+  </div>
+  <div class="col-xs-8 col-sm-8">
+    <p class="text-right">
+      <%= link_to items_order_path(order) do %>
         <button class="btn btn-default btn-add">
-        <span class="glyphicon glyphicon-plus"></span>
+          <span class="glyphicon glyphicon-plus"></span>
         </button>
-      </div>
-      添加商品
-    </li>
+      <% end %>
+    </p>
+  </div>
+</li>

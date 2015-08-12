@@ -1,5 +1,8 @@
-    <li class="list-group-item">
-      <div class="desc-value">
+<li class="list-group-item">
+  <div class="chat-order-address clearfix">
+    <div class="col-xs-4 col-sm-4">收货地址</div>
+    <div class="col-xs-8 col-sm-8">
+      <div class="text-right">
         <div class="dropdown">
           <span class="toggle-button" data-toggle="dropdown" role="button">
             <% if @order.buyer_id == current_anonymous_or_user.id %>
@@ -11,13 +14,13 @@
           </span>
           <ul class="dropdown-menu address-menu locations">
             <%# if @order.buyer_id < 0 %>
-              <!-- <span class="anonymousAddress" id="anonymousAddress"></span> -->
+            <!-- <span class="anonymousAddress" id="anonymousAddress"></span> -->
             <%# else %>
-              <% current_anonymous_or_user.locations.first(5).each do |location| %>
-              <li>
+            <% current_anonymous_or_user.locations.first(5).each do |location| %>
+            <li>
               <%= link_to location, 'javascript:void(0)', :"data-default-location-id" => location.id,:"data-order-id" => @order.id , :"data-location" => location ,:class => "set-default-address" %>
-              </li>
-              <% end %>
+            </li>
+            <% end %>
             <%# end %>
             <li role="separator" class="divider"></li>
             <li>
@@ -26,43 +29,43 @@
           </ul>
         </div>
       </div>
-      收货地址
     </li>
-
+  </div>
+</li>
     
-  <script type="text/javascript">
-    $(function(){
-      var addresses =LocalAddress.getAll() || [];
-      
-      for(i=0;i<addresses.length;i++){
-        var address = addresses[i];
-        var full_address = address.contact + ',' + address.province_name + address.city_name + address.region_name + address.road + ',' + address.contact_phone;
-        var orderId = <%= @order.id %>;
-        var html = '<li><a data-default-location-id="' + address.id + '" data-order-id="' + orderId + '" data-location="' + full_address + '" class="set-default-address" href="javascript:void(0)">' + full_address + '</a></li>';
+<script type="text/javascript">
+  $(function(){
+    var addresses =LocalAddress.getAll() || [];
+    
+    for(i=0;i<addresses.length;i++){
+      var address = addresses[i];
+      var full_address = address.contact + ',' + address.province_name + address.city_name + address.region_name + address.road + ',' + address.contact_phone;
+      var orderId = <%= @order.id %>;
+      var html = '<li><a data-default-location-id="' + address.id + '" data-order-id="' + orderId + '" data-location="' + full_address + '" class="set-default-address" href="javascript:void(0)">' + full_address + '</a></li>';
 
-        $(".locations .divider").before(html);
-      }
+      $(".locations .divider").before(html);
+    }
 
-      $('.set-default-address').click(function (e) {
-        var default_location_id = $(this).data('defaultLocationId') ,
-            order_id = $(this).data('orderId'),
-            location = $(this).data("location"),
-            data =  { "default_location_id": default_location_id , "order_id": order_id, address: address };
+    $('.set-default-address').click(function (e) {
+      var default_location_id = $(this).data('defaultLocationId') ,
+          order_id = $(this).data('orderId'),
+          location = $(this).data("location"),
+          data =  { "default_location_id": default_location_id , "order_id": order_id, address: address };
 
-          if (default_location_id < 0) {
-            var address = LocalAddress.get(default_location_id)
-            data['address'] = address;
-          }
-            
-          $.ajax({
-          url: '/orders/' + order_id + '/default_address/',
-          type: 'PUT',
-          dataType: 'json',
-          data: data,
-          success: function(data) {
-            $('#button-text').html(location);
-          }
-        });
-      })
-    });
-  </script>
+        if (default_location_id < 0) {
+          var address = LocalAddress.get(default_location_id)
+          data['address'] = address;
+        }
+          
+        $.ajax({
+        url: '/orders/' + order_id + '/default_address/',
+        type: 'PUT',
+        dataType: 'json',
+        data: data,
+        success: function(data) {
+          $('#button-text').html(location);
+        }
+      });
+    })
+  });
+</script>

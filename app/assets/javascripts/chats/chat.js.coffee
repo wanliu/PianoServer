@@ -1,5 +1,7 @@
 #= require lib/user-socket
 #= require lib/metadata
+DAYS = 24 * 3600 * 1000
+
 class @Chat
 
   @defaultOptions: {
@@ -7,7 +9,9 @@ class @Chat
     isMessageScroll: true,
     maxMessageGroup: 10,
     earlyTime: 0,
-    avatarDefault: '/assets/ava1tar.gif'
+    avatarDefault: '/assets/ava1tar.gif',
+    displayUserName: false,
+    miniTimeGroupPeriod: 1000 * 180
     # autoEnter: true
   }
 
@@ -18,7 +22,7 @@ class @Chat
     @textElement = @options.textElement || "input[name='chat-text']"
     @$messageList = $(@options.messageList || ".message-list")
     @$chatContainer = $(@options.container || ".chat-list")
-    @$chatWrap = $(@options.container || ".main-content")
+    @$chatWrap = $(@options.container || ".chat-body")
     @userSocket = window.userSocket
 
     @boundOnMessage = @onMessage.bind(@)
@@ -139,7 +143,10 @@ class @Chat
         )
 
   _insertItemMessage: (message, direction = 'down') ->
-    {id, senderId, content, senderAvatar, senderLogin} = message
+    {id, senderId, content, senderAvatar, senderLogin, type, time} = message
+
+    if type == 'command'
+      @onCommand(message)
 
     if $("div[data-message-id=#{id}]").length > 0
       $("div[data-message-id=#{id}] p.content").text(content)
@@ -148,11 +155,25 @@ class @Chat
     toAddClass = if @_isOwnMessage(message) then 'you' else 'me'
 
     senderAvatar = @options.avatarDefault if senderAvatar == '' or senderAvatar?
+    senderName = if @options.displayUserName then "<h2>#{senderLogin}</h2>" else ''
+    prefixSection = if @lastTime? and Math.abs(time - @lastTime) > @options.miniTimeGroupPeriod
+                      diffDay = Math.floor((time - @lastTime) / DAYS)
+                      time = new Date(time)
+                      timeStr = if diffDay > 0
+                                  "#{time.getFullYears()}-#{time.getMonths()}-#{time.getDays()} #{time.getHours()}:#{time.getMinutes()}"
+                                else
+                                  "#{time.getHours()}:#{time.getMinutes()}"
+                      """
+                      <div class="time"><p class="text-center">#{timeStr}</p></div>
+                      """
+                    else
+                      ''
 
     template = """
+      #{prefixSection}
       <div class="chat #{toAddClass}" data-message-id="#{id}">
         <img src="#{senderAvatar}" />
-        <h2>#{senderLogin}</h2>
+        #{senderName}
         <div class="bubble #{toAddClass}">
           <p class="content">#{content}</p>
         </div>
@@ -164,6 +185,7 @@ class @Chat
         $(template).appendTo(@$messageList)
       else
         $(template).prependTo(@$messageList)
+    @lastTime = time
 
   _insertMessage: (message, direction = 'down') ->
     @_insertItemMessage(message, direction)

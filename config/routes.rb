@@ -52,6 +52,11 @@ Rails.application.routes.draw do
   end
 
   resources :shops, only: [ :show ]
+
+  resources :shop_categories, only: [ :index, :show ]
+
+  resources :items, only: [ :index, :show ]
+
   resources :chats
   resources :orders do
     member do
@@ -62,6 +67,8 @@ Rails.application.routes.draw do
       post 'cancel', to: "orders#cancel", as: :cancel
       post 'reject', to: "orders#reject", as: :reject
       put 'default_address', to: "orders#default_address"
+      get 'items', to: 'orders#items'
+      put 'add_item', to: 'orders#add_item'
     end
   end
 
