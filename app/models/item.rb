@@ -6,11 +6,12 @@ class Item < ActiveRecord::Base
   validates :price, presence: true
   validates :product_id, presence: true
 
-  delegate :name, to: :product, prefix: true
+  delegate :name, to: :product
   delegate :price, to: :product, prefix: true
-  delegate :avatar, to: :product, prefix: true
-  delegate :brand_name, to: :product, prefix: true
+  delegate :avatar, to: :product, allow_nil: true
+  delegate :brand_name, to: :product, allow_nil: true
   delegate :category_id, to: :product, prefix: true
+  delegate :additional_fields, to: :product, allow_nil: true
 
   def shop
     Shop.find(shop_id)
