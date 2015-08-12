@@ -23,3 +23,4 @@ pusher:
   pusher_token: '3lfj8845fafda[f]fj394u983tioj5jtoi5j9hp;f4f9dfghr;nnbncxaf[fe;094t45g;jgih='
 elasticsearch:
   url: http://192.168.0.20:9200
+  index_name: pm_products_production

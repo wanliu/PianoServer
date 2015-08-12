@@ -7,7 +7,7 @@ class Product
 
   gateway.client = Elasticsearch::Client.new url: Settings.elasticsearch.url, log: true
 
-  index_name "pm_products_production"
+  index_name Settings.elasticsearch.index_name
 
   attribute :id, Fixnum
   attribute :name, String, mapping: { analyzer: 'ik' }
