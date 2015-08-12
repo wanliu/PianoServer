@@ -75,7 +75,26 @@ Rails.application.routes.draw do
   #
   get '/about' => 'home#about'
 
-  match ':shop_name', :to => 'shops#show_by_name', via: [ :get ]
+  # match ':shop_name', :to => 'shops#show_by_name', via: [ :get ], as: :shop_site
+  # namespace :shops, path: '/',  constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ }, only: []  do
+  #   resources :admin #, module: 'shops'
+  # end
+  resources :shops, path: '/', only: [] do # constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ }
+  # scope '(:shop_name)/', prefix: :shops do
+
+    member do
+      get "/about", to: "shops#about"
+    end
+
+    namespace :admin, module: 'shops/admin' do
+      get "/", to: "dashboard#index", as: :index
+      get "/profile", to: "admin#profile"
+
+      resources :categories
+      resources :items
+    end
+  end
+
   match '@:profile', :to => 'profile#username', as: :profile, via: [ :get ]
 
 

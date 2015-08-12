@@ -150,10 +150,11 @@ ActiveRecord::Schema.define(version: 20150812021207) do
     t.string   "website"
     t.string   "status"
     t.integer  "location_id"
-    t.integer  "phone"
+    t.string   "phone"
     t.integer  "industry_id"
     t.jsonb    "image"
     t.text     "description"
+    t.string   "provider"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
   end

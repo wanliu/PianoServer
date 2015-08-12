@@ -8,10 +8,11 @@ class CreateShops < ActiveRecord::Migration
       t.string :website
       t.string :status
       t.integer :location_id
-      t.integer :phone
+      t.string :phone
       t.integer :industry_id
       t.jsonb :image
       t.text :description
+      t.string :provider
       # t.jsonb :main_scope
       t.timestamps null: false
     end
