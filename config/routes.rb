@@ -53,9 +53,9 @@ Rails.application.routes.draw do
 
   resources :shops, only: [ :show ]
 
-  resources :shop_categories, only: [ :index, :show ]
+  resources :shop_categories
 
-  resources :items, only: [ :index, :show ]
+  resources :items
 
   resources :chats
   resources :orders do

@@ -1,8 +1,6 @@
 require_relative '../serializers/hash_serializer'
 
 class OrderItem < ActiveRecord::Base
-  self.table_name = "items"
-
   belongs_to :itemable, polymorphic: true
   # serialize :data, HashSerializer
   # serialize :image, HashSerializer

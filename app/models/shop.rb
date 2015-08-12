@@ -27,4 +27,12 @@ class Shop < ActiveResource::Base
   def avatar_url
     image.try(:src)
   end
+
+  def shop_categories
+    ShopCategory.where(shop_id: id)
+  end
+
+  def items
+    Items.where(shop_id: id)
+  end
 end

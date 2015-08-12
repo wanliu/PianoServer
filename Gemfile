@@ -66,6 +66,8 @@ gem 'sidekiq'
 gem 'china_city'
 gem 'table_cloth'
 
+gem 'ancestry', '~> 2.1.0'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 

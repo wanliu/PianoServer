@@ -1,18 +1,20 @@
-require 'active_resource'
-require 'active_support/json'
+class ShopCategory < ActiveRecord::Base
+  has_ancestry cache_depth: true
 
-module ShopCategoryJsonFormat
-  include ActiveResource::Formats::JsonFormat
-  extend self
+  validates :name, presence: true, uniqueness: { scope: :shop_id }
+  validates :shop_id, presence: true
 
-  def decode(_json)
-    json = ActiveSupport::JSON.decode(_json)
-    shop_json = json["shop_categories"]
-    shop_json
+  alias_method :has_children, :has_children?
+
+  def shop
+    Shop.find(shop_id)
   end
-end
 
-class ShopCategory < ActiveResource::Base
-  self.site = Settings.wanliu.backend
-  self.format = ShopCategoryJsonFormat
+  def shop=(s)
+    self.shop_id = s.id
+  end
+
+  def chain_name
+    path.map(&:name)
+  end
 end

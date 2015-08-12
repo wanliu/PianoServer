@@ -40,6 +40,8 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
+    ancestry (2.1.0)
+      activerecord (>= 3.0.0)
     arel (6.0.0)
     autoprefixer-rails (5.2.1)
       execjs
@@ -349,6 +351,7 @@ PLATFORMS
 
 DEPENDENCIES
   activeresource
+  ancestry (~> 2.1.0)
   bootstrap-sass (~> 3.3.5)
   byebug
   china_city

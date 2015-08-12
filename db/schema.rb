@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150805053947) do
+ActiveRecord::Schema.define(version: 20150811072726) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -57,20 +57,14 @@ ActiveRecord::Schema.define(version: 20150805053947) do
   end
 
   create_table "items", force: :cascade do |t|
-    t.integer  "itemable_id"
-    t.string   "itemable_type"
-    t.string   "title"
-    t.jsonb    "data",                                   default: {}, null: false
-    t.integer  "iid"
-    t.string   "item_type"
-    t.datetime "created_at",                                          null: false
-    t.datetime "updated_at",                                          null: false
-    t.jsonb    "image",                                  default: {}, null: false
-    t.decimal  "price",         precision: 15, scale: 2
-    t.decimal  "amount",        precision: 15, scale: 8
-    t.decimal  "sub_total",     precision: 16, scale: 2
-    t.integer  "unit"
-    t.string   "unit_title"
+    t.integer  "shop_category_id"
+    t.integer  "shop_id"
+    t.integer  "product_id"
+    t.decimal  "price",            precision: 10, scale: 2
+    t.integer  "inventory"
+    t.boolean  "on_sale",                                   default: true
+    t.datetime "created_at",                                               null: false
+    t.datetime "updated_at",                                               null: false
   end
 
   create_table "locations", force: :cascade do |t|
@@ -124,6 +118,23 @@ ActiveRecord::Schema.define(version: 20150805053947) do
     t.datetime "updated_at",                    null: false
   end
 
+  create_table "order_items", force: :cascade do |t|
+    t.integer  "itemable_id"
+    t.string   "itemable_type"
+    t.string   "title"
+    t.jsonb    "data",                                   default: {}, null: false
+    t.integer  "iid"
+    t.string   "item_type"
+    t.datetime "created_at",                                          null: false
+    t.datetime "updated_at",                                          null: false
+    t.jsonb    "image",                                  default: {}, null: false
+    t.decimal  "price",         precision: 15, scale: 2
+    t.decimal  "amount",        precision: 15, scale: 8
+    t.decimal  "sub_total",     precision: 16, scale: 2
+    t.integer  "unit"
+    t.string   "unit_title"
+  end
+
   create_table "orders", force: :cascade do |t|
     t.integer  "buyer_id"
     t.integer  "seller_id"
@@ -140,6 +151,15 @@ ActiveRecord::Schema.define(version: 20150805053947) do
     t.jsonb    "data"
     t.integer  "delivery_location_id"
     t.integer  "send_location_id"
+  end
+
+  create_table "shop_categories", force: :cascade do |t|
+    t.integer  "shop_id",        null: false
+    t.string   "name",           null: false
+    t.string   "ancestry"
+    t.integer  "ancestry_depth"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
   end
 
   create_table "statuses", force: :cascade do |t|
