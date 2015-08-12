@@ -14,6 +14,13 @@ class Product
   attribute :price, BigDecimal
   attribute :avatar, String
   attribute :status, Fixnum
+  attribute :brand_id, Fixnum
+  attribute :brand_name, String
+  attribute :category_id, Fixnum
+  attribute :creator_id, Fixnum
+  attribute :custom_special, Boolean
+  attribute :image_urls, Array
+  attribute :additional_fields, Hash
 
   def image
     @avatar = Flf.avatar
