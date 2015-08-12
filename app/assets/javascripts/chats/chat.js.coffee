@@ -111,6 +111,8 @@ class @Chat
       @chatChannelId = message.channelId
       @enter()
 
+    @_emitReadEvent()
+
     if message.type == 'command'
       @onCommand(message)
     else
@@ -124,10 +126,10 @@ class @Chat
   onHistoryMessage: () ->
     @getHistoryMessage @earlyTime, @_loadMoreProcess
 
-
   # private
   _sendMsg: () ->
     text = @getText()
+    @sendBtn.blur()
 
     if text.length > 0
 
@@ -209,13 +211,16 @@ class @Chat
   _checkIsVisible: (isInsert) ->
     $inner = @$chatContainer.find('.chat-inner')
     chatContainer = $inner[0]
+    $lastItem = $inner.find('.chat:last')
+    $prev = $lastItem.prev()
     lastItemHeight = $inner.find('.chat:last').height()
+    lastTimeHeight = $prev.is('.time') ? $prev.height() + 10 : 0
     scrollHeight = chatContainer.scrollHeight
     clientHeight = chatContainer.clientHeight
     scrollTop = chatContainer.scrollTop
 
     if isInsert
-      clientHeight + scrollTop >= scrollHeight - (lastItemHeight + 70)
+      clientHeight + scrollTop >= scrollHeight - (lastItemHeight + lastTimeHeight + 70)
     else
       clientHeight + scrollTop >= scrollHeight - 70
 
@@ -274,6 +279,13 @@ class @Chat
       @_removeLoadMore()
     else
       @_insertLoadMore()
+
+  _emitReadEvent: () ->
+    @userSocket.emit 'readChannel', {
+      'channelId': @channelId
+    }, () =>
+      senderId = @channelId.replace('p', '')
+      window.noticeCenter.removeNotice(senderId)
 
 
 

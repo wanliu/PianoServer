@@ -18,6 +18,10 @@
     .message-list {
       position: relative;
       padding: 10px 0 60px 0;
+
+      .time{
+        clear: both;
+      }
     }
   }
 
