@@ -87,7 +87,7 @@ Rails.application.routes.draw do
     end
 
     namespace :admin, module: 'shops/admin' do
-      get "/", to: "dashboard#index", as: :index
+      get "/", to: "admin#dashboard", as: :index
       get "/profile", to: "admin#profile"
 
       resources :categories
