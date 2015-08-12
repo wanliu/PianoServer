@@ -9,9 +9,8 @@ class Item < ActiveRecord::Base
   delegate :name, to: :product, prefix: true
   delegate :price, to: :product, prefix: true
   delegate :avatar, to: :product, prefix: true
-  delegate :status, to: :product, prefix: true
-  delegate :brand, to: :product, prefix: true
-  delegate :category, to: :product, prefix: true
+  delegate :brand_name, to: :product, prefix: true
+  delegate :category_id, to: :product, prefix: true
 
   def shop
     Shop.find(shop_id)
