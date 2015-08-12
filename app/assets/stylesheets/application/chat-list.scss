@@ -230,6 +230,15 @@
     }
   }
 
+  .locations{
+    li{
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
   .payment-menu{
     right: 0;
     min-width: 100px;
@@ -239,7 +248,7 @@
   .address-menu{
     right: 0;
     left: auto;
-    max-width: 100%;
+    max-width: 250px;
     min-width: 100px;
   }
 

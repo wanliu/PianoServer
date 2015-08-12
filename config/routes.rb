@@ -61,8 +61,11 @@ Rails.application.routes.draw do
       post 'ensure', to: "orders#ensure", as: :ensure
       post 'cancel', to: "orders#cancel", as: :cancel
       post 'reject', to: "orders#reject", as: :reject
+      put 'default_address', to: "orders#default_address"
     end
   end
+
+  resources :locations
   ## shop route
   #
   get '/about' => 'home#about'
