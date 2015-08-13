@@ -4,9 +4,9 @@ class ItemsController < ApplicationController
     per = params[:per].presence || 8
 
   	@items = if params[:shop_id].present?
-      Item.where(shop_id: params[:shop_id], page: page, per: per)
+      Item.where(shop_id: params[:shop_id]).page(page).per(per)
   	elsif params[:shop_category_id].present?
-      Item.where(shop_category_id: params[:shop_category_id], page: page, per: per)
+      Item.where(shop_category_id: params[:shop_category_id).page(page).per(per)
   	else
       []
     end
@@ -14,6 +14,6 @@ class ItemsController < ApplicationController
 
   def show
     @item = Item.find(params[:id])
-    @shop = Shop.find(@item.shop_id)
+    @shop = @item.shop
   end
 end
