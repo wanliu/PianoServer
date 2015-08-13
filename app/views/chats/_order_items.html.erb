@@ -24,8 +24,7 @@
               <span class="text"><%= number_to_currency(item.sub_total, unit:'￥') %></span>
               <span class="title"></span>
             </p>
-<!--             <span class="glyphicon glyphicon-trash remove-btn" data-toggle="tooltip" data-placement="bottom" title="删除"></span>
- -->      </div>
+          </div>
         </div>
         <div class="edit-fieldset">
           <div class="edit-items clearfix">
@@ -61,9 +60,11 @@
                 </span>
               </div>
             </div>
-          </div>
-          <div class="remove-item-icon">
-            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            <div class="col-sm-6 col-sm-3 remove-btn">
+              <button class="btn btn-remove">
+                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>删除
+              </button>
+            </div>
           </div>
         </div>
       </div>

@@ -35,7 +35,7 @@ class @OrderTable extends @Event
     @$().on('click', '.order-item-price .btn-plus', @priceIncreased.bind(@))
     @$().on('click', '.order-total-edit .btn-minus', @totalDecreased.bind(@))
     @$().on('click', '.order-total-edit .btn-plus', @totalIncreased.bind(@))
-    @$().on('click', '.remove-item-icon', @removeItem.bind(@))
+    @$().on('click', '.btn-remove', @removeItem.bind(@))
 
     captureOrderChangeBound = @captureOrderChange.bind(@)
     releaseOrderChangeBound = @releaseOrderChange.bind(@)
@@ -46,9 +46,9 @@ class @OrderTable extends @Event
     @$().on('click', '.btn-disagrees', @rejectOrderChanges.bind(@))
     @$().on('click', '.order-table-total', @changeOrderTotal.bind(@))
 
-    @$().bind('table:add', @onAddChange.bind(@))
-    @$().bind('table:remove', @onRemoveChange.bind(@))
-    @$().bind('table:replace', @onReplaceChange.bind(@))
+    @$().bind('item:add', @onAddChange.bind(@))
+    @$().bind('item:remove', @onRemoveChange.bind(@))
+    @$().bind('item:replace', @onReplaceChange.bind(@))
     # @$().bind('order:total:change', )
 
     @on 'init', () =>
@@ -88,9 +88,9 @@ class @OrderTable extends @Event
     @$().off('click', '.btn-disagrees')
     @$().off('click', '.order-table-total')
 
-    @$().unbind('table:add')
-    @$().unbind('table:remove')
-    @$().unbind('table:replace')
+    @$().unbind('item:add')
+    @$().unbind('item:remove')
+    @$().unbind('item:replace')
     # @$().bind('order:total:change', )
     @$().off('init')
     @$().off('order')
