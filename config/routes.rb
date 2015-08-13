@@ -86,7 +86,13 @@ Rails.application.routes.draw do
       get "/", to: "admin#dashboard", as: :index
       get "/profile", to: "admin#profile"
 
-      resources :categories
+      resources :categories do
+        member do
+          get "/:child_id", to: "categories#show_by_child", as: :child
+          post "/:parent_id", to: "categories#create_by_child"
+        end
+      end
+
       resources :items
     end
   end

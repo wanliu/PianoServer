@@ -41,7 +41,24 @@ body[module="signup"] {
   top: 51px;
   // background-color: #ddd;
   z-index: 1050;
+
+  .nav .nav>li>a {
+    padding-left: 30px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+
+  .nav > li > a {
+    border-radius: 4px;
+  }
+
+  .nav > li.active > a, .nav > li.active > a:hover, .nav > li.active > a:focus {
+    color: #fff;
+    background-color: #337ab7;
+  }
 }
+
+
 
 // .nav-sidebar {
 //   // margin-right: -21px;
