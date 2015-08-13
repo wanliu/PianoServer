@@ -6,7 +6,7 @@ class ItemsController < ApplicationController
   	@items = if params[:shop_id].present?
       Item.where(shop_id: params[:shop_id]).page(page).per(per)
   	elsif params[:shop_category_id].present?
-      Item.where(shop_category_id: params[:shop_category_id).page(page).per(per)
+      Item.where(shop_category_id: params[:shop_category_id]).page(page).per(per)
   	else
       []
     end
