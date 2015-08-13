@@ -102,6 +102,21 @@
       $(function() {
         var inChats = {};
 
+        // userSocket.emit('unreadCount', {}, function(err, unreadCounts) {
+        //   if (err) {
+        //     return;
+        //   }
+
+        //   for(var channelId in unreadCounts) {
+        //     var unreadCount = unreadCounts[channelId],
+        //         count = unreadCount.count,
+        //         senderId = unreadCount.user_id,
+        //         username = unreadCount.realname;
+
+        //     window.noticeCenter.addNotice(senderId, username, count);
+        //   }
+        // });
+
         $(document).on('inchats:enter', function(e, channelId) {
           inChats[channelId] = true;
         });
@@ -119,15 +134,7 @@
               chatChannelId = 'p' + senderId;
 
           if (type !== 'command' && !inChats[channelId] && (chatChannelId !== ownChannelId)) {
-            userSocket.emit('get', {
-              channelId: chatChannelId,
-              key: 'chat_id'
-            }, function(err, chatId) {
-              if (!err && chatId) {
-                window.noticeCenter.addNotice(senderId, senderLogin, chatId);
-              }
-            });
-            // todo process
+            window.noticeCenter.addNotice(senderId, senderLogin, 1);
           }
 
         });

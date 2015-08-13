@@ -47,7 +47,7 @@ class @OrderItem
   onAddChange: (e, data) ->
 
   onRemoveChange: (e, data) ->
-    @$().addClass('order-item-remove')
+    @$().addClass('order-item-remove').effect('pulsate', times: 3, duration: 1500)
 
   onReplaceChange: (e, data) ->
     {key, src, dest} = data
@@ -94,11 +94,11 @@ class @OrderItem
 
   onSwipeLeft: (e) ->
     e.preventDefault()
-    @$().css('left', '-90px')
+    @$().addClass('swipeleft')
 
   onSwipeRight: (e) ->
     e.preventDefault()
-    @$().css('left', '0')
+    @$().removeClass('swipeleft')
 
   onDrag: () ->
     return false
