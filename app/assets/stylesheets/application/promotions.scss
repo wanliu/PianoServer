@@ -3,10 +3,19 @@
 }*/
 $border-color: #CCCCCC;
 
+.promotions-list {
+  .promotion-wrap {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+}
+
 .promotion-wrap:nth-child(odd) {
   border-right: 1px solid $border-color;
   overflow: hidden;
 }
+
+
 
 .promotion {
   background: #FFFFFF;

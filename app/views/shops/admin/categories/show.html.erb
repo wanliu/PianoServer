@@ -1,0 +1,45 @@
+<h1><%= @category.name %></h1>
+<% if @category.ancestors.count > 0 %>
+<ol class="breadcrumb">
+  <% @category.self_and_ancestors.each_with_index do |node, i| %>
+    <% if @category.ancestors.count - i == 0 %>
+      <li class="active">
+        <%= node.name %>
+      </li>
+    <% else %>
+      <li>
+        <% url = @root == node ? shop_admin_category_path(@shop.name, @root) : child_shop_admin_category_path(@shop.name, @root, @category) %>
+         <%= link_to node.name, url %>
+      </li>
+    <% end %>
+  <% end %>
+</ol>
+<% end %>
+<div class="category-list row">
+  <%= render partial: "category", collection: @category.children %>
+  <div class="col-xs-6 col-sm-4 col-md-3 new-category">
+    <div class="box">
+      <a href="#" class="thumbnail">
+        <img src="<%= Settings.assets.gray_image %>" alt="new category">
+        <h2>+</h2>
+        <p class="second-title">新增一个分类</p>
+      </a>
+    </div>
+    <%= form_tag shop_admin_categories_path(@shop.name) do %>
+      <input type="hidden" name="category_img" />
+    <% end %>
+    <p class="text-center">新增一个分类</p>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(ready);
+  $(document).on('page:load', ready);
+
+  function ready () {
+    var NewCategory = window.NewCategory;
+    var category = <%=raw @category.to_json %>;
+    var createCategoryUrl = '<%= child_shop_admin_category_path(@shop.name, @root, @category) %>';
+    var newCategory = new NewCategory($('.category-list .new-category'), category, createCategoryUrl);
+  };
+</script>
