@@ -20,10 +20,6 @@
               <span class="text"><%= number_to_human(item.amount) %></span>
               <span class="title"></span>
             </p>
-            <p class="sub_total">
-              <span class="text"><%= number_to_currency(item.sub_total, unit:'￥') %></span>
-              <span class="title"></span>
-            </p>
           </div>
         </div>
         <div class="edit-fieldset">
@@ -60,10 +56,19 @@
                 </span>
               </div>
             </div>
-            <div class="col-sm-6 col-sm-3 remove-btn">
+            <div class="col-xs-12 col-sm-6 remove-btn">
               <button class="btn btn-remove">
                 <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>删除
               </button>
+            </div>
+            <div class="col-xs-12 col-sm-6 item-sub-total">
+              <div class="text-right">
+                <p class="sub_total">
+                  小计：
+                  <span class="text"><%= number_to_currency(item.sub_total, unit:'￥') %></span>
+                  <span class="title"></span>
+                </p>
+              </div>
             </div>
           </div>
         </div>

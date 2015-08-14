@@ -49,7 +49,7 @@ class @OrderTable extends @Event
     @$().bind('item:add', @onAddChange.bind(@))
     @$().bind('item:remove', @onRemoveChange.bind(@))
     @$().bind('item:replace', @onReplaceChange.bind(@))
-    # @$().bind('order:total:change', )
+    @$().bind('order:total:change', @insertRejectMessage.bind(@))
 
     @on 'init', () =>
       $.ajax({
@@ -508,7 +508,6 @@ class @OrderTable extends @Event
         when 'accept'
           @closePopup()
           @resetTable()
-
         else
           @closePopup()
           @resetTable()
@@ -556,5 +555,8 @@ class @OrderTable extends @Event
       index = @indexOf($li)
 
       @pushRemoveItemOp(index)
+
+  insertRejectMessage: () ->
+
 
 

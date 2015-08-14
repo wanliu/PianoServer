@@ -102,7 +102,11 @@ class OrdersController < ApplicationController
   def reject
     @order.update(:accept_state => "reject")
     @order.update(updates: nil)
+    msg = '拒绝了您提交的修改'
+
     MessageSystemService.push_command current_anonymous_or_user.id, other_side, {command: 'order', accept: 'reject'}.to_json
+
+    MessageSystemService.push_message current_anonymous_or_user.id, other_side, msg, to: [other_side], type: 'order'
 
     render :show, formats: [:json]
   end

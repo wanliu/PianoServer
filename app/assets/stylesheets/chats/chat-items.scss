@@ -14,14 +14,6 @@
     position: relative;
     height: 100%;
     overflow: auto;
-
-    .chat-items{
-      overflow: hidden;
-    }
-  }
-
-  p{
-    margin: 0;
   }
 
   .order-buttons{
@@ -148,6 +140,7 @@
 
     &.item-list{
       margin: 20px 0;
+      overflow: hidden;
 
       .list-group-item{
         -webkit-transition: left 0.45s ease-in-out 0;
@@ -234,6 +227,15 @@
     bottom: -5px;
     color: #FF2B2B;
     cursor: pointer;
+  }
+
+  .item-sub-total{
+    margin-top: 15px;
+    line-height: 32px;
+
+    p{
+      margin: 0;
+    }
   }
 
   .remove-btn{
