@@ -120,7 +120,7 @@ class OrdersController < ApplicationController
 
   def items
     # @order.supplier.
-    []
+    @items = []
   end
 
   def add_item

@@ -46,9 +46,9 @@ class @OrderTable extends @Event
     @$().on('click', '.btn-disagrees', @rejectOrderChanges.bind(@))
     @$().on('click', '.order-table-total', @changeOrderTotal.bind(@))
 
-    @$().bind('add', @onAddChange.bind(@))
-    @$().bind('remove', @onRemoveChange.bind(@))
-    @$().bind('replace', @onReplaceChange.bind(@))
+    @$().bind('table:add', @onAddChange.bind(@))
+    @$().bind('table:remove', @onRemoveChange.bind(@))
+    @$().bind('table:replace', @onReplaceChange.bind(@))
     # @$().bind('order:total:change', )
 
     @on 'init', () =>
@@ -86,9 +86,9 @@ class @OrderTable extends @Event
     @$().off('click', '.btn-disagrees')
     @$().off('click', '.order-table-total')
 
-    @$().unbind('add')
-    @$().unbind('remove')
-    @$().unbind('replace')
+    @$().unbind('table:add')
+    @$().unbind('table:remove')
+    @$().unbind('table:replace')
     # @$().bind('order:total:change', )
     @$().off('init')
     @$().off('order')
@@ -109,6 +109,8 @@ class @OrderTable extends @Event
 
     unless $target.is('li')
       $target = $target.parents('li:first')
+
+    $target.removeClass('swipeleft')
 
     $target.toggleClass('open')
 
@@ -378,7 +380,7 @@ class @OrderTable extends @Event
     target.is('.edit-fieldset') or target.parents('.edit-fieldset').length > 0
 
   isRemoveBtn: (target) ->
-    target.is('.remove-btn')
+    target.is('.operate-block')
 
   isItemImage: (target) ->
     target.is('img')
@@ -461,7 +463,7 @@ class @OrderTable extends @Event
       [itemObj, key] = @parsePath(path)
       switch op
         when '+'
-          @send('item:add', {key: key, src: src, dest: dest})
+          @send('table:add', {key: key, src: src, dest: dest})
         when '-'
           itemObj.send('item:remove', {key: key, src: src, dest: dest})
         when '~'
