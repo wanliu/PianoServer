@@ -4,6 +4,19 @@
     border: 1px solid #ddd;
     border-radius: 4px;
     margin-bottom: 20px;
+
+    .actions {
+      display: none;
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+    }
+  }
+
+  .box:hover {
+    .actions {
+      display: block;
+    }
   }
 
   .thumbnail {
@@ -25,6 +38,7 @@
     /* margin-left: -14px; */
     width: 100%;
     text-align: center;
+    cursor: text;
   }
 
   .thumbnail .title-input {
