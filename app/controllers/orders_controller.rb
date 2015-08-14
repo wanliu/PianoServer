@@ -13,7 +13,7 @@ class OrdersController < ApplicationController
 
   before_action :set_order_params,
     only: [:show, :status, :update, :diff, :accept, :ensure,
-            :cancel, :reject, :items, :add_item, :default_address]
+            :cancel, :reject, :items, :add_item, :set_address]
 
   def show
     # if params[:inline]
@@ -57,7 +57,7 @@ class OrdersController < ApplicationController
     end
   end
 
-  def default_address
+  def set_address
     @order = Order.find(params[:order_id])
     if params[:default_location_id].to_i > 0
       @order.delivery_location_id = params[:default_location_id]

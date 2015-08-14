@@ -5,6 +5,11 @@ class LocationsController < ApplicationController
     @location = Location.new(chat_id: params[:chat_id] ,order_id: params[:order_id])
   end
 
+  def show
+    @user = User.find params[:user_id]
+    @location = @user.locations
+  end
+
   def create
     # location = current_anonymous_or_user.locations.build(location_params)
     @location = Location.new(location_params)
@@ -24,6 +29,14 @@ class LocationsController < ApplicationController
 
   def destroy
     location = Location.find params[:id]
+  end
+
+  def user_default_address
+    @user = User.find params[:user_id];
+    @user.latest_location_id = params[:location_id];
+    @user.save
+
+    render json: @user.latest_location
   end
 
   private

@@ -6,7 +6,7 @@
         <div class="dropdown">
           <span class="toggle-button" data-toggle="dropdown" role="button">
             <% if @order.buyer_id == current_anonymous_or_user.id %>
-            <span class="button-text" id="button-text">选择收货地址</span>
+            <span class="button-text" id="button-text"><%= @order.delivery_location || current_anonymous_or_user.latest_location || 选择收货地址 %></span>
             <span class="caret"></span>
             <% else %>
             <span class="button-text">暂无收货地址</span>
@@ -25,6 +25,7 @@
             <li role="separator" class="divider"></li>
             <li>
               <%= link_to '新增收货地址', new_location_path(chat_id: @chat, order_id:@order) %>
+              <%= link_to '管理收货地址', location_path(user_id: current_anonymous_or_user.id) %>
             </li>
           </ul>
         </div>
@@ -58,7 +59,7 @@
         }
           
         $.ajax({
-        url: '/orders/' + order_id + '/default_address/',
+        url: '/orders/' + order_id + '/set_address/',
         type: 'PUT',
         dataType: 'json',
         data: data,
