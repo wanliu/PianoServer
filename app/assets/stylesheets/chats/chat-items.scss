@@ -10,10 +10,14 @@
   background: #F7F7F7;
 
   .order-table{
-    padding-bottom: 55px;
     position: relative;
     height: 100%;
     overflow: auto;
+
+    .chat-items{
+      position: relative;
+      padding-bottom: 65px;
+    }
   }
 
   .order-buttons{
