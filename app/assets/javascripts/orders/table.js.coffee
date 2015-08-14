@@ -178,7 +178,7 @@ class @OrderTable extends @Event
     $group = $target.parents('.input-group:first')
     $input = $group.find('input[name=amount]')
     amount = $.trim($input.val())
-    reg = /^[1-9]\d*$/
+    reg = /^[1-9]\d*(.\d+)*$/
 
     if (!reg.test(amount) || +amount <= 1)
       return
@@ -192,7 +192,7 @@ class @OrderTable extends @Event
     $group = $target.parents('.input-group:first')
     $input = $group.find('input[name=amount]')
     amount = $.trim($input.val())
-    reg = /^[1-9]\d*$/
+    reg = /^[1-9]\d*(.\d+)*$/
 
     unless (reg.test(amount))
       return
