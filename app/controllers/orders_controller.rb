@@ -1,8 +1,8 @@
 class OrdersController < ApplicationController
   PROMPTS = {
     ALL: '$key从 $src 变更为 $dest ',
-    ADD_ITEMS: '添加$name，价格：$price，数量：$amount ',
-    REMOVE_ITEMS: '移除$name，价格：$price，数量：$amount '
+    ADD_ITEMS: '添加 $name ，价格： $price ，数量： $amount ',
+    REMOVE_ITEMS: '移除 $name ，价格： $price ，数量： $amount '
   }
 
   PROMPT_MATCHS = {
@@ -228,17 +228,18 @@ class OrdersController < ApplicationController
 
   def add_order_item_message(src)
     prompt_template(PROMPTS[:ADD_ITEMS], {
-      name: src[:title],
-      price: src[:price],
-      amount: src[:amount]
+      name: src["title"],
+      price: src["price"],
+      amount: src["amount"]
     })
   end
 
   def remove_order_item_message(src)
+    pp src
     prompt_template(PROMPTS[:REMOVE_ITEMS], {
-      name: src[:title],
-      price: src[:price],
-      amount: src[:amount]
+      name: src["title"],
+      price: src["price"],
+      amount: src["amount"]
     })
   end
 
