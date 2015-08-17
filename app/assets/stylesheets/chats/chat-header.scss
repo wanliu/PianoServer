@@ -1,13 +1,17 @@
 .chat-order-header {
-  display: table;
   width: 100%;
   padding: 10px;
   background: #FF2B2B;
   color: #FFFFFF;
   position: relative;
+  height: 70px;
+  overflow: hidden;
+  padding-left: 60px;
 
   .chat-image-wrap{
-    display: table-cell;
+    position: absolute;
+    left: 10px;
+    top: 10px;
     width: 50px;
     vertical-align: middle;
 
@@ -18,12 +22,17 @@
   }
 
   .chat-order-title{
-    display: table-cell;
     vertical-align: middle;
     font-size: 16px;
     line-height: 1.5;
     padding-left: 10px;
     word-break: break-all;
+    max-height: 50px;
+    overflow: hidden;
+    display: block;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
   }
 
   .order-toggle-button{
@@ -58,7 +67,7 @@
 
   &.show-toggle-button{
     .chat-order-title{
-      padding-right: 45px;
+      padding-right: 40px;
     }
 
     .order-toggle-button{
