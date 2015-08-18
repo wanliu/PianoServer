@@ -1,5 +1,5 @@
 class Item < ActiveRecord::Base
-  belongs_to :shop_category
+  belongs_to :shop_category, class_name: 'Category'
 
   validates :shop_category, presence: true
   validates :shop_id, presence: true
