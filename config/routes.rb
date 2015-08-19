@@ -53,9 +53,9 @@ Rails.application.routes.draw do
 
   resources :shops, only: [ :show ]
 
-  resources :shop_categories, only: [ :index, :show ]
+  resources :shop_categories
 
-  resources :items, only: [ :index, :show ]
+  resources :items
 
   resources :chats
   resources :orders do
@@ -75,7 +75,28 @@ Rails.application.routes.draw do
   #
   get '/about' => 'home#about'
 
-  match ':shop_name', :to => 'shops#show_by_name', via: [ :get ]
+  match ':shop_name', :to => 'shops#show_by_name', via: [ :get ], as: :shop_site
+
+  resources :shops, path: '/', only: [] do # constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ }
+    member do
+      get "/about", to: "shops#about"
+    end
+
+    namespace :admin, module: 'shops/admin' do
+      get "/", to: "admin#dashboard", as: :index
+      get "/profile", to: "admin#profile"
+
+      resources :categories do
+        member do
+          get "/:child_id", to: "categories#show_by_child", as: :child
+          post "/:parent_id", to: "categories#create_by_child"
+        end
+      end
+
+      resources :items
+    end
+  end
+
   match '@:profile', :to => 'profile#username', as: :profile, via: [ :get ]
 
 

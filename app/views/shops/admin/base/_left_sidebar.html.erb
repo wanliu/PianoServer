@@ -1,0 +1,47 @@
+<div class="shop left-sidebar">
+
+  <ul class="nav nav-pills nav-stacked">
+    <li><%= link_to '仪表盘', shop_admin_index_path(@shop.name) %></li>
+    <li><%= link_to '档案', shop_admin_profile_path(@shop.name) %></li>
+    <li>
+      <%= link_to '分类', shop_admin_categories_path(@shop.name) %>
+      <% if @shop.categories.count > 0 %>
+        <ul class="nav">
+        <% @shop.categories.each do |category| %>
+          <li><%= link_to category.name, shop_admin_category_path(@shop.name, category) %>
+          </li>
+        <% end %>
+        </ul>
+      <% end %>
+    </li>
+    <li><%= link_to '产品', shop_admin_items_path(@shop.name) %></li>
+    <li><%= link_to '关于', about_shop_path(@shop.name) %></li>
+  </ul>
+</div>
+
+<script type="text/javascript">
+  var highlightSelected = function() {
+    var current_url = location.pathname;
+
+    $('.left-sidebar .nav>li').each(function(i, elem) {
+      var $href = $(elem).find('a');
+      if ($href.attr('href') === current_url) {
+        $(elem).addClass('active')
+      } else {
+        $(elem).removeClass('active')
+      }
+    });
+  };
+
+  $(function() {
+    var LeftSideBar = window.LeftSideBar;
+    var leftSidebar = new LeftSideBar($('.left-sidebar'));
+
+
+    highlightSelected();
+  });
+
+  $(document).on('page:change', highlightSelected)
+
+
+</script>

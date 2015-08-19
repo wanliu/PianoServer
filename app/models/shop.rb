@@ -1,30 +1,13 @@
-require 'active_resource'
-require 'active_support/json'
+class Shop < ActiveRecord::Base
+  belongs_to :location
+  belongs_to :owner, class_name: 'User'
 
-module ShopJsonFormat
-  include ActiveResource::Formats::JsonFormat
-  extend self
+  has_and_belongs_to_many :categories
+  has_many :items
 
-  def decode(_json)
-    json = ActiveSupport::JSON.decode(_json)
-    shop_json = json["shop"]
-    shop_json.merge! "image" => json["images"][0]
-    shop_json.merge! "owner" => json["users"][0]
-    shop_json
-  end
-end
+  store_accessor :image, :avatar_url
 
-class Shop < ActiveResource::Base
-  self.site = Settings.wanliu.backend
-  self.format = ShopJsonFormat
 
-  has_one :user
-
-  def chats
-    Chat.where('chatable_type = ? and chatable_id = ?', self.class.name, id)
-  end
-
-  def avatar_url
-    image.try(:src)
-  end
+  alias_method :address, :location
+  alias_method :logo_url, :avatar_url
 end
