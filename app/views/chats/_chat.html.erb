@@ -41,7 +41,7 @@
 </div>
 
 <script type="text/javascript">
-  (function() {
+  $(function() {
     var StatusLoadUrl = window.StatusLoadUrl,
         MiniTable     = window.MiniTable,
         Chat          = window.Chat,
@@ -91,5 +91,5 @@
     $(document).on('page:before-unload', function() {
       chat.leave();
     });
-  })();
+  });
 </script>
