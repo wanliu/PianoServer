@@ -7,7 +7,7 @@
       <%= link_to '分类', shop_admin_categories_path(@shop.name) %>
       <% if @shop.categories.count > 0 %>
         <ul class="nav">
-        <% @shop.categories.each do |category| %>
+        <% @shop.categories.roots.each do |category| %>
           <li><%= link_to category.name, shop_admin_category_path(@shop.name, category) %>
           </li>
         <% end %>
