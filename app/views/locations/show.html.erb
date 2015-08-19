@@ -1,0 +1,35 @@
+<strong>我的收货地址：</strong></br>
+<% current_anonymous_or_user.locations.first(5).each do |location| %>
+  <div class="show-locations">
+    <div class="col-xs-6 col-sm-3 my-locations">
+      <address>
+       <!--  <%= location %> ,邮编: <%= location.zipcode %> -->
+       <%= link_to location, 'javascript:void(0)', :"data-user-id" => current_anonymous_or_user.id,:"data-location-id" => location.id ,:class => "user-default-address" %>
+      </address>
+    </div>
+  </div>
+<% end %>
+
+<script type="text/javascript">
+  $('.user-default-address').click(function() {
+    $('.user-default-address').removeClass('selected');
+    $(this).addClass("selected");
+    $('.address-choiced').remove();
+    $('.selected').append('<span class="address-choiced glyphicon glyphicon-ok"></span>');
+
+    var user_id = $(this).data('userId') ,
+        location_id = $(this).data('locationId'),
+        data = { "user_id": user_id , "location_id": location_id };
+        console.log(location_id);
+
+    $.ajax({
+      url: '/locations/user_default_address/',
+      type: 'PUT',
+      dataType: 'json',
+      data: data,
+      success: function(data) {
+       console.log(user_id);
+      }
+    });
+  });
+</script>

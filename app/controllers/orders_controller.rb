@@ -14,7 +14,7 @@ class OrdersController < ApplicationController
 
   before_action :set_order_params,
     only: [:show, :status, :update, :diff, :accept, :ensure,
-            :cancel, :reject, :items, :add_item]
+            :cancel, :reject, :items, :add_item, :set_address]
 
   def show
     # if params[:inline]
@@ -56,6 +56,18 @@ class OrdersController < ApplicationController
       send_diff_message @diffs
       render json: { diff: @diffs }
     end
+  end
+
+  def set_address
+    @order = Order.find(params[:order_id])
+    if params[:default_location_id].to_i > 0
+      @order.delivery_location_id = params[:default_location_id]
+      @order.save
+    else
+      @order.create_delivery_location(params.require(:address).permit(:id,:contact,:zipcode,:contact_phone,:province_id,:city_id,:region_id))
+    end
+    render json: @order.delivery_location
+    # head :ok
   end
 
   def diff
