@@ -66,10 +66,12 @@ class @Chat
   send: (msg) ->
 
   enter: () ->
-    $(document).trigger('inchats:enter', @chatChannelId)
+    chatChannelId = 'p' + (@ownerChannelId + @channelId).replace(/p/g, ':')
+    $(document).trigger('inchats:enter', chatChannelId)
 
   leave: () ->
-    $(document).trigger('inchats:leave', @chatChannelId)
+    chatChannelId = 'p' + (@ownerChannelId + @channelId).replace(/p/g, ':')
+    $(document).trigger('inchats:leave', chatChannelId)
 
   autoScroll: (direction = 'down') ->
     $inner = @$chatContainer.find('.chat-inner')

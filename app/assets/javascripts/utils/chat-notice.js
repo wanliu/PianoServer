@@ -26,7 +26,7 @@
   };
 
   NoticeCenter.prototype.removeNotice = function(senderId, redirect) {
-    var notice = this._findNotice(senderId.toString());
+    var notice = this._findNotice(senderId);
 
     if (notice) {
       notice.destroy();
@@ -35,7 +35,7 @@
           chatId = notice.options.chatId;
 
       if (index > -1) {
-        this.notices.splice(notice, 1);
+        this.notices.splice(index, 1);
       }
 
       if (redirect) {
@@ -144,6 +144,8 @@
 
   Notice.prototype.destroy = function() {
     this.element.remove();
+
+
   }
 
   window.noticeCenter = new NoticeCenter();

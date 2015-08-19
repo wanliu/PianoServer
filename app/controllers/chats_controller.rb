@@ -26,7 +26,6 @@ class ChatsController < ApplicationController
     @chat.order_id = @order.id if @order
     @chat.save
 
-    MessageSystemService.send_read_message current_anonymous_or_user.id, other_side
     redirect_to @chat
   end
 
@@ -72,6 +71,9 @@ class ChatsController < ApplicationController
 		@order = Order.find(@chat.order_id) if @chat.order_id
     #@target = @chat.chatable || @chat.target
 		@target = my_chat? ? @chat.target : @chat.owner
+
+    pp 'message sended'
+    MessageSystemService.send_read_message current_anonymous_or_user.id, other_side
 	end
 
 	def chat_variables

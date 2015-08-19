@@ -102,26 +102,26 @@
       $(function() {
         var inChats = {};
 
-        // userSocket.emit('unreadCount', {}, function(err, unreadCounts) {
-        //   if (err) {
-        //     return;
-        //   }
+        userSocket.emit('unreadCount', {}, function(err, unreadCounts) {
+          if (err) {
+            return;
+          }
 
-        //   for(var channelId in unreadCounts) {
-        //     var unreadCount = unreadCounts[channelId],
-        //         count = unreadCount.count,
-        //         senderId = unreadCount.user_id,
-        //         username = unreadCount.realname;
+          for(var channelId in unreadCounts) {
+            var unreadCount = unreadCounts[channelId],
+                count = unreadCount.count,
+                senderId = unreadCount.user_id,
+                username = unreadCount.realname;
 
-        //     window.noticeCenter.addNotice(senderId, username, count);
-        //   }
-        // });
+            window.noticeCenter.addNotice(senderId, username, count);
+          }
+        });
 
-        $(document).on('inchats:enter', function(e, channelId) {
+        $(document).off('inchats:enter').on('inchats:enter', function(e, channelId) {
           inChats[channelId] = true;
         });
 
-        $(document).on('inchats:leave', function(e, channelId) {
+        $(document).off('inchats:leave').on('inchats:leave', function(e, channelId) {
           delete inChats[channelId];
         });
 
@@ -133,7 +133,7 @@
               ownChannelId = window.userSocket.getUserChannelId(),
               chatChannelId = 'p' + senderId;
 
-          if (type !== 'command' && !inChats[channelId] && (chatChannelId !== ownChannelId)) {
+          if ((chatChannelId !== ownChannelId) && type !== 'command' && !inChats[channelId]) {
             window.noticeCenter.addNotice(senderId, senderLogin, 1);
           }
 
