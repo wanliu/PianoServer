@@ -235,7 +235,6 @@ class OrdersController < ApplicationController
   end
 
   def remove_order_item_message(src)
-    pp src
     prompt_template(PROMPTS[:REMOVE_ITEMS], {
       name: src["title"],
       price: src["price"],
@@ -244,7 +243,6 @@ class OrdersController < ApplicationController
   end
 
   def generate_prompt(prompt, key, context)
-    pp context
     prompt_template(prompt, {
       key: OrderItem.human_attribute_name(key),
       src: context[:src],
