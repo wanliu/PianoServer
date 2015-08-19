@@ -66,10 +66,12 @@ class @Chat
   send: (msg) ->
 
   enter: () ->
-    $(document).trigger('inchats:enter', @chatChannelId)
+    chatChannelId = 'p' + (@ownerChannelId + @channelId).replace(/p/g, ':')
+    $(document).trigger('inchats:enter', chatChannelId)
 
   leave: () ->
-    $(document).trigger('inchats:leave', @chatChannelId)
+    chatChannelId = 'p' + (@ownerChannelId + @channelId).replace(/p/g, ':')
+    $(document).trigger('inchats:leave', chatChannelId)
 
   autoScroll: (direction = 'down') ->
     $inner = @$chatContainer.find('.chat-inner')
@@ -162,7 +164,7 @@ class @Chat
                       diffDay = Math.floor((time - @lastTime) / DAYS)
                       time = new Date(time)
                       timeStr = if diffDay > 0
-                                  "#{time.getFullYears()}-#{time.getMonths()}-#{time.getDays()} #{time.getHours()}:#{time.getMinutes()}"
+                                  "#{time.getFullYear()}-#{time.getMonth()}-#{time.getDate()} #{time.getHours()}:#{time.getMinutes()}"
                                 else
                                   "#{time.getHours()}:#{time.getMinutes()}"
                       """
