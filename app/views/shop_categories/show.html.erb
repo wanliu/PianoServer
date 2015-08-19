@@ -20,7 +20,7 @@
     <%= sanitize @shop_category.chain_name.join("<span class='glyphicon glyphicon-menu-right' aria-hidden='true'></span>") %>
   </div>
   <% if @shop_category.has_children %>
-    <%= render partial: 'shop_categories', locals: { shop_categories: @shop_categories } %>
+    <%= render partial: 'shop_categories', locals: { shop: @shop, categories: @shop_categories } %>
   <% else %>
     <%= render partial: 'items', locals: { items: @items } %>
   <% end %>

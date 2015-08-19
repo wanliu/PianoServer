@@ -14,15 +14,7 @@ class Category < ActiveRecord::Base
     Category.exists?(parent_id: id)
   end
 
-  def path
-    if parent_id.present?
-      Category.find(parent_id).path << self
-    else
-      [self]
-    end
-  end
-
   def chain_name
-    path.map(&:name)
+    self_and_ancestors.map(&:name)
   end
 end
