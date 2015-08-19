@@ -1,5 +1,6 @@
 class ShopCategoriesController < ApplicationController
   before_filter :set_shop
+  before_filter :set_shop_category, only: [ :show ]
 
   def index
     @shop_categories = @shop.categories.page(page).per(per)
@@ -7,8 +8,6 @@ class ShopCategoriesController < ApplicationController
 
   def show
     page = params[:page].presence || 1
-
-    @shop_category = Category.find(params[:id])
 
     if @shop_category.has_children
       per = params[:per].presence || 9
@@ -24,5 +23,9 @@ class ShopCategoriesController < ApplicationController
   private
     def set_shop
       @shop = Shop.find_by(name: params[:shop_id])
+    end
+
+    def set_shop_category    
+      @shop_category = @shop.categories.find(params[:id])
     end
 end
