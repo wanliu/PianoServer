@@ -22,30 +22,11 @@
       </div>
     </div>
 
-    <% if promotion.status === 'Published' %>
-    <div class="period-desc not-started">
+    <div class="period-desc">
       <div class="desc-wrap">
-        <p>活动开始时间</p>
-        <%= promotion.start_time.to_datetime.in_time_zone('Beijing').strftime('%Y/%m/%d %H:%M')%>
+
       </div>
     </div>
-    <% elsif promotion.status === 'Active' %>
-    <div class="period-desc started">
-      <div class="desc-wrap">
-        <% if promotion.type == 'promotions/time_limited_sale'%>
-          <p>距活动结束</p>
-        <% else %>
-          <p>库存剩余<%= promotion.product_inventory %>件</p>
-        <% end %>
-      </div>
-    </div>
-    <% else %>
-    <div class="period-desc finished">
-      <div class="desc-wrap">
-        活动结束
-      </div>
-    </div>
-    <% end %>
   </div>
 
   <div class="title-contact">
@@ -132,7 +113,21 @@
   $(function() {
     var shopId = '<%= shop.id %>',
         channelId = '<%= shop.owner.id %>',
-        promotionId = $('.promotion-detail-container').data('promotionId');
+        type = '<%= promotion.type %>',
+        isLimit = type === 'promotions/time_limited_sale',
+        inventory = '<%= promotion.product_inventory %>',
+        status = '<%= promotion.status %>',
+        startTime = '<%= promotion.start_time.to_datetime.in_time_zone("Beijing") %>',
+        startDate = new Date(startTime),
+        promotionId = $('.promotion-detail-container').data('promotionId'),
+        endDate;
+
+    <% if promotion.type == 'promotions/time_limited_sale' %>
+      var endTime = '<%= promotion.end_time.to_datetime.in_time_zone("Beijing") %>';
+      endDate = new Date(endTime);
+    <% end %>
+
+    new CountDown($('.desc-wrap'), isLimit, inventory, status, startDate, endDate);
 
     $('.fav-button').click(function() {
       var $this = $(this),

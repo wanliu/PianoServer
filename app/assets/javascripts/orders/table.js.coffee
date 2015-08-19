@@ -35,7 +35,7 @@ class @OrderTable extends @Event
     @$().on('click', '.order-item-price .btn-plus', @priceIncreased.bind(@))
     @$().on('click', '.order-total-edit .btn-minus', @totalDecreased.bind(@))
     @$().on('click', '.order-total-edit .btn-plus', @totalIncreased.bind(@))
-    @$().on('click', '.remove-item-icon', @removeItem.bind(@))
+    @$().on('click', '.btn-remove', @removeItem.bind(@))
 
     captureOrderChangeBound = @captureOrderChange.bind(@)
     releaseOrderChangeBound = @releaseOrderChange.bind(@)
@@ -46,10 +46,10 @@ class @OrderTable extends @Event
     @$().on('click', '.btn-disagrees', @rejectOrderChanges.bind(@))
     @$().on('click', '.order-table-total', @changeOrderTotal.bind(@))
 
-    @$().bind('table:add', @onAddChange.bind(@))
-    @$().bind('table:remove', @onRemoveChange.bind(@))
-    @$().bind('table:replace', @onReplaceChange.bind(@))
-    # @$().bind('order:total:change', )
+    @$().bind('item:add', @onAddChange.bind(@))
+    @$().bind('item:remove', @onRemoveChange.bind(@))
+    @$().bind('item:replace', @onReplaceChange.bind(@))
+    @$().bind('order:total:change', @insertRejectMessage.bind(@))
 
     @on 'init', () =>
       $.ajax({
@@ -86,9 +86,9 @@ class @OrderTable extends @Event
     @$().off('click', '.btn-disagrees')
     @$().off('click', '.order-table-total')
 
-    @$().unbind('table:add')
-    @$().unbind('table:remove')
-    @$().unbind('table:replace')
+    @$().unbind('item:add')
+    @$().unbind('item:remove')
+    @$().unbind('item:replace')
     # @$().bind('order:total:change', )
     @$().off('init')
     @$().off('order')
@@ -176,7 +176,7 @@ class @OrderTable extends @Event
     $group = $target.parents('.input-group:first')
     $input = $group.find('input[name=amount]')
     amount = $.trim($input.val())
-    reg = /^[1-9]\d*$/
+    reg = /^[1-9]\d*(.\d+)*$/
 
     if (!reg.test(amount) || +amount <= 1)
       return
@@ -190,7 +190,7 @@ class @OrderTable extends @Event
     $group = $target.parents('.input-group:first')
     $input = $group.find('input[name=amount]')
     amount = $.trim($input.val())
-    reg = /^[1-9]\d*$/
+    reg = /^[1-9]\d*(.\d+)*$/
 
     unless (reg.test(amount))
       return
@@ -494,7 +494,6 @@ class @OrderTable extends @Event
         when 'accept'
           @closePopup()
           @resetTable()
-
         else
           @closePopup()
           @resetTable()
@@ -542,5 +541,8 @@ class @OrderTable extends @Event
       index = @indexOf($li)
 
       @pushRemoveItemOp(index)
+
+  insertRejectMessage: () ->
+
 
 

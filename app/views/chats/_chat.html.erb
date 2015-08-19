@@ -46,8 +46,6 @@
         MiniTable     = window.MiniTable,
         Chat          = window.Chat,
         userSocket    = window.userSocket,
-        ownId         = userSocket.userId,
-        channelId     = userSocket.getUserChannelId(),
         buyerId       = '<%= @order.buyer_id %>',
         chatChannelId,
         targetId;
@@ -75,6 +73,8 @@
     var chat = new Chat($('.chat-order-header'), chatChannelId, {
       sendBtn: $('.btn-send')
     });
+
+    chat.enter();
 
     chat.setTable(miniTable);
 
