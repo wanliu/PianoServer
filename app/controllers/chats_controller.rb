@@ -72,7 +72,6 @@ class ChatsController < ApplicationController
     #@target = @chat.chatable || @chat.target
 		@target = my_chat? ? @chat.target : @chat.owner
 
-    pp 'message sended'
     MessageSystemService.send_read_message current_anonymous_or_user.id, other_side
 	end
 

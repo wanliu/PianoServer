@@ -99,8 +99,10 @@
     </div> <!-- /container -->
 
     <script type="text/javascript">
-      $(function() {
-        var inChats = {};
+      var inChats = {};
+
+      if (!window._notificationInited) {
+        window._notificationInited = true;
 
         userSocket.emit('unreadCount', {}, function(err, unreadCounts) {
           if (err) {
@@ -117,11 +119,11 @@
           }
         });
 
-        $(document).off('inchats:enter').on('inchats:enter', function(e, channelId) {
+        $(document).unbind('inchats:enter').bind('inchats:enter', function(e, channelId) {
           inChats[channelId] = true;
         });
 
-        $(document).off('inchats:leave').on('inchats:leave', function(e, channelId) {
+        $(document).unbind('inchats:leave').bind('inchats:leave', function(e, channelId) {
           delete inChats[channelId];
         });
 
@@ -136,9 +138,8 @@
           if ((chatChannelId !== ownChannelId) && type !== 'command' && !inChats[channelId]) {
             window.noticeCenter.addNotice(senderId, senderLogin, 1);
           }
-
         });
-      });
+      }
     </script>
     <script type="text/javascript">
       <% unless Rails.env.production? %>
