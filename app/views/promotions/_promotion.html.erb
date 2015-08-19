@@ -41,7 +41,7 @@
 	    </p>-->
 	  <% end %>
   	<div class="provider-wrap">
-    	<%= link_to shop_path(promotion.shop_id) do %>
+    	<%= link_to shop_site_path(shop_name: promotion.shop_name) do %>
 	      <div class="provider">
 	        <div class="provider-name">
 	          <%= promotion.shop_name %>

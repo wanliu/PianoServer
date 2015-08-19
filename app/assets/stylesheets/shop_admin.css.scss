@@ -1,0 +1,84 @@
+/*
+ *= require bootstrap-launcher
+ *= require nprogress
+ *= require nprogress-bootstrap
+ *= require_tree ./shop_admin
+ *= require_self
+*/
+
+body {
+  padding-top: 50px;
+  padding-bottom: 40px;
+  background: #fff;
+}
+
+
+body[module="signup"] {
+  background: #ddd;
+}
+
+.content {
+  padding-top: 20px;
+  margin-left: 240px;
+}
+
+
+.relative {
+  position: relative;
+}
+
+
+.shop.left-sidebar {
+  position: absolute;
+}
+
+
+.left-sidebar {
+  width: 240px;
+  // position: fixed;
+  left: 0;
+  bottom: 0;
+  top: 51px;
+  // background-color: #ddd;
+  z-index: 1050;
+
+  .nav .nav>li>a {
+    padding-left: 30px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+
+  .nav > li > a {
+    border-radius: 4px;
+  }
+
+  .nav > li.active > a, .nav > li.active > a:hover, .nav > li.active > a:focus {
+    color: #fff;
+    background-color: #337ab7;
+  }
+}
+
+
+
+// .nav-sidebar {
+//   // margin-right: -21px;
+//   margin-bottom: 20px;
+//   // margin-left: -20px;
+
+// }
+
+// .nav-sidebar > .active > a, .nav-sidebar > .active > a:hover, .nav-sidebar > .active > a:focus {
+//   color: #fff;
+//   background-color: #428bca;
+// }
+
+// .normal-layout {
+//   padding-left: 240px;
+// }
+
+
+// @media (max-width: 768px) {
+//   .normal-layout {
+//     padding-left: 0px;
+//   }
+// }
