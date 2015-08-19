@@ -53,8 +53,6 @@ Rails.application.routes.draw do
 
   resources :shops, only: [ :show ]
 
-  resources :items
-
   resources :chats
   resources :orders do
     member do
@@ -81,6 +79,7 @@ Rails.application.routes.draw do
     end
 
     resources :categories, controller: 'shop_categories'
+    resources :items
 
     namespace :admin, module: 'shops/admin' do
       get "/", to: "admin#dashboard", as: :index

@@ -70,8 +70,8 @@
     }[key];
 
     var request_url = {
-      shop_categories: "/shop_categories.json?page=" + (page + 1) + "&per=" + per + "&parent_id=<%= @shop_category.id %>",
-      items: "/items.json?page=" + (page + 1) + "&per=" + per + "&shop_category_id=<%= @shop_category.id %>"
+      shop_categories: "/<%= @shop.name %>/categories.json?page=" + (page + 1) + "&per=" + per + "&parent_id=<%= @shop_category.id %>",
+      items: "/<%= @shop.name %>/items.json?page=" + (page + 1) + "&per=" + per + "&shop_category_id=<%= @shop_category.id %>"
     }[key];
 
     $(document).scroll(function (e) {

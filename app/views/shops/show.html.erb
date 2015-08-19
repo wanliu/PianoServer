@@ -54,7 +54,7 @@
         fetch_locked = true;
 
 
-        $.getJSON("/categories.json?page=" + (page + 1) + "&per=" + per + "&shop_id=<%= @shop.id %>")
+        $.getJSON("/<%= @shop.name %>/categories.json?page=" + (page + 1) + "&per=" + per + "&shop_id=<%= @shop.id %>")
           .success(function (data, status) {
             page += 1;
 
