@@ -33,6 +33,8 @@ module PianoServer
       end
     end
 
+    config.middleware.use 'Rack::RawUpload'
+
     config.active_job.queue_adapter = :sidekiq
     config.api_only = false
     config.autoload_paths += [ Rails.root.join('app/services') ]

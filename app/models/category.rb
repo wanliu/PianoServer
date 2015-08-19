@@ -5,6 +5,9 @@ class Category < ActiveRecord::Base
 
   store_accessor :image, :avatar_url
 
+  mount_uploader :avatar, ImageUploader, mount_on: :avatar_url
+
+
   alias_method :cover_url, :avatar_url
   alias_method :logo_url, :avatar_url
 end

@@ -1,37 +1,41 @@
 #= require _common/event
+#= require admins/edit_category
+EditCategory = @EditCategory
+
 class @NewCategory extends @Event
   events:
-    'click': 'onClick'
-    'click a>h2': 'onClickTitle'
+    'click': 'onClick',
+    'click a>h2': 'onClickTitle',
+    'keypress .title-input': 'enterTitle',
+    'blur .title-input': 'leaveEdit'
 
   constructor: (@element, @category, @url) ->
     super
     @$img = @$().find('form input[name="category_img"]')
+    @$input = @$().find('.title-input')
 
   onClickTitle: (e) ->
+    e.preventDefault()
+
     @$title = $(e.target).hide()
-    @$input = $("""
-      <input type="text" name="name" class="title-input" placeholder="分类名称" />
-    """)
-      .appendTo(@$().find('.thumbnail'))
+    @$input.show()
       .focus()
 
-    @$input
-      .on 'keypress', (e) =>
-        if e.which == 13
-          $.post(@url, {
-            parent_id: @category.id,
-            category: {
-              name: @$input.val(),
-              image_url: @$img.val()
-            }
-          }).success (data) =>
-            @$().before($(data.html))
+  enterTitle: (e) ->
+    if e.which == 13
+      $.post(@url, {
+        parent_id: @category.id,
+        category: {
+          name: @$input.val(),
+          image_url: @$img.val()
+        }
+      }).success (data) =>
+        category = @$().before($(data.html)).prev()
+        new EditCategory(category)
 
-    @$input.blur () =>
-      # @$title.text(@$input.val())
-      @$input.remove()
-      @$title.show()
+  leaveEdit: () ->
+    @$input.hide()
+    @$title.show()
 
   onClick: (e) ->
 

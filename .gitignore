@@ -21,4 +21,5 @@ config/settings/*.local.yml
 config/environments/*.local.yml
 
 /public/assets
+/public/uploads
 .gitver

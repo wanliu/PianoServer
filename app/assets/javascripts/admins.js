@@ -5,5 +5,6 @@
 //= require nprogress
 //= require nprogress-turbolinks
 //= require china_city/jquery.china_city
+//= require _common/fileuploader
 //= require_tree ./admins
 //= require_self

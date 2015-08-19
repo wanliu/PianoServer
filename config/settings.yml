@@ -26,3 +26,7 @@ elasticsearch:
   index_name: pm_products_production
 assets:
   gray_image: "data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+dev:
+  feature:
+    camera: false
+
