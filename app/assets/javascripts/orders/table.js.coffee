@@ -6,7 +6,7 @@ Popup = @Popup
 class @OrderTable extends @Event
   @defaultOptions = {
     maxDelaySyncMs: 300,
-    maxWaitAccpetingMS: 3000
+    maxWaitAccpetingMS: 1500
   }
 
   constructor: (@element, @order, @options = {}) ->
@@ -77,10 +77,8 @@ class @OrderTable extends @Event
     @$().off('click', '.order-item-price .btn-plus')
     @$().off('click', '.order-total-edit .btn-minus')
     @$().off('click', '.order-total-edit .btn-plus')
-    @$().off('click', '.remove-item-icon', @removeItem.bind(@))
+    @$().off('click', '.remove-item-icon' )
 
-    captureOrderChangeBound = @captureOrderChange.bind(@)
-    releaseOrderChangeBound = @releaseOrderChange.bind(@)
     @$().off('mousedown', '.btn-agrees')
     @$().off('mouseup', '.btn-agrees')
     @$().off('touchstart', '.btn-agrees')
@@ -328,20 +326,6 @@ class @OrderTable extends @Event
       $.post("/orders/#{@orderId}/accept")
         .success () =>
           @showPopup()
-          # @popup = Popup.show """
-          #   <h3>正在同意订单修改</h3>
-          #   <h1>&nbsp;</h1>
-          # """
-          # @count = 0;
-          # maxCount =  @options.maxWaitAccpetingMS / 1000
-          # @acceptTickId = setInterval () =>
-          #   @popup.setHtml """
-          #     <h3>正在同意订单修改</h3>
-          #     <h1 class="text-center">#{maxCount - @count}</h1>
-          #   """
-
-          #   @count = if @count >= maxCount then @count else @count + 1
-          # , 1000
 
           @ensureTickId = setTimeout () =>
             @inAccepting = false
@@ -364,6 +348,7 @@ class @OrderTable extends @Event
 
   rejectOrderChanges: () ->
     $.post "/orders/#{@orderId}/reject", { inline: true }, (json) =>
+      @unbindAllEvents()
       $('.order-table').html(json.html) if json.html?
       @hideConsultButtons()
 
@@ -374,14 +359,15 @@ class @OrderTable extends @Event
     """, options
     count = 0;
     maxCount =  @options.maxWaitAccpetingMS / 1000
+    startTime = (new Date()).getTime()
     @acceptTickId = setInterval () =>
       @popup.setHtml """
         <h3>正在同意订单修改</h3>
-        <h1 class="text-center">#{maxCount - count}</h1>
+        <h1 class="text-center">#{Math.round(maxCount - count)}</h1>
       """
-
-      count = if count >= maxCount then count else count + 1
-    , 1000
+      time = (new Date()).getTime()
+      count = if count >= maxCount then count else (time - startTime) / 1000
+    , 500
     @popup
 
   closePopup: () ->

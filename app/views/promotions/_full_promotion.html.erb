@@ -43,7 +43,7 @@
 
   <div class="shop-brief clearfix">
     <div class="shop-logo">
-       <%= image_tag shop.image.try(:src) %>
+       <%= image_tag shop.logo_url %>
     </div>
 
     <div class="shop-desc">
@@ -74,7 +74,7 @@
 
   <div class="navbar-bottom navbar navbar-default navbar-fixed-bottom">
     <div class="link-table">
-      <%= link_to shop_path(promotion.shop_id), class: "contact-button into-shop" do %>
+      <%= link_to shop_site_path(shop_name: promotion.shop_name), class: "contact-button into-shop" do %>
         <span class="button-icon glyphicon glyphicon-home" aria-hidden="true"></span>
         <div class="button-text">商家</div>
       <% end %>

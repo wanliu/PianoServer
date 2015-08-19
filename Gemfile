@@ -52,6 +52,7 @@ gem "mini_magick", '~> 4.2.7'
 gem 'poseidon'
 gem 'google-analytics-rails'
 gem 'kaminari'
+gem 'awesome_nested_set'
 
 gem "rails_config"
 

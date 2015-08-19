@@ -2,21 +2,35 @@
 
 class @OrderItem
   constructor: (@element, @parent, @itemId = $(@element).data('itemId')) ->
+    @hammer = new Hammer.Manager(@$()[0])
+    @hammer.add(new Hammer.Swipe({
+      direction: Hammer.DIRECTION_HORIZONTAL,
+      velocity: 0.1
+    }))
+
+    @bindAllEvents()
+
+  bindAllEvents: () ->
     @$().click(@onClick.bind(@))
     @$().bind('item:price:change', @onPriceChange.bind(@))
     @$().bind('item:amount:change', @onAmountChange.bind(@))
     @$().bind('item:add', @onAddChange.bind(@))
     @$().bind('item:remove', @onRemoveChange.bind(@))
     @$().bind('item:replace', @onReplaceChange.bind(@))
+    @hammer.on('swipeleft', @onSwipeLeft.bind(@))
+    @hammer.on('swiperight', @onSwipeRight.bind(@))
+    @hammer.on('dragleft dragright', @onDrag.bind(@))
 
-    hammer = new Hammer.Manager(@$()[0])
-    hammer.add(new Hammer.Swipe({
-      direction: Hammer.DIRECTION_HORIZONTAL,
-      velocity: 0.1
-    }))
-    hammer.on('swipeleft', @onSwipeLeft.bind(@))
-    hammer.on('swiperight', @onSwipeRight.bind(@))
-    hammer.on('dragleft dragright', @onDrag.bind(@))
+  unbindAllEvents: () ->
+    @$().off('click')
+    @$().unbind('item:price:change')
+    @$().unbind('item:amount:change')
+    @$().unbind('item:add')
+    @$().unbind('item:remove')
+    @$().unbind('item:replace')
+    @hammer.off('swipeleft')
+    @hammer.off('swiperight')
+    @hammer.off('dragleft dragright')
 
   $: () ->
     $(@element)
