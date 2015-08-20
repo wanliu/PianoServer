@@ -11,8 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
-ActiveRecord::Schema.define(version: 20150812125426) do
+ActiveRecord::Schema.define(version: 20150814022632) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -178,6 +177,15 @@ ActiveRecord::Schema.define(version: 20150812125426) do
     t.jsonb    "data"
     t.integer  "delivery_location_id"
     t.integer  "send_location_id"
+  end
+
+  create_table "shop_categories", force: :cascade do |t|
+    t.integer  "shop_id",        null: false
+    t.string   "name",           null: false
+    t.string   "ancestry"
+    t.integer  "ancestry_depth"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
   end
 
   create_table "shops", force: :cascade do |t|
