@@ -1,7 +1,7 @@
 class Order < ActiveRecord::Base
   include ThumbImages
   store_accessor :image, :avatar_url
-  store_accessor :data, :updates, :accept_state
+  store_accessor :data, :updates, :accept_state, :delivery_address
 
   MIN_AMOUNT = 6
 
@@ -141,6 +141,7 @@ class Order < ActiveRecord::Base
   def origin_hash
     attrs = attributes
     attrs["items"] = items.map {|item| item.attributes }
+    attrs["delivery_address"] = delivery_address
     to_hash(attrs)
   end
 
@@ -163,6 +164,7 @@ class Order < ActiveRecord::Base
       "supplier_id" => h["supplier_id"],
       "send_location" => h["send_location"],
       "delivery_location" => h["delivery_location"],
+      "delivery_address" => h["delivery_address"],
       "business_type" => h["business_type"],
       "title" => h["title"],
       "contacts" => h["contacts"],
@@ -256,6 +258,14 @@ class Order < ActiveRecord::Base
     #   data[:updates] = nil
     #   save
     # end
+  end
+
+  def delivery_address_title
+    if delivery_location_id == nil or delivery_location_id < 0
+      (delivery_address || {})["location"] || ''
+    else
+      delivery_location.full_address
+    end
   end
 
   private

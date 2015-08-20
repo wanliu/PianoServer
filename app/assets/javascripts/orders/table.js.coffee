@@ -48,7 +48,6 @@ class @OrderTable extends @Event
     @$().bind('item:add', @onAddChange.bind(@))
     @$().bind('item:remove', @onRemoveChange.bind(@))
     @$().bind('item:replace', @onReplaceChange.bind(@))
-    @$().bind('order:total:change', @insertRejectMessage.bind(@))
 
     @on 'init', () =>
       $.ajax({
@@ -61,6 +60,7 @@ class @OrderTable extends @Event
         @checkDiff(diffs)
 
     @on 'order', @onOrderCommand.bind(@)
+    @on 'order-address', @onAddressChange.bind(@)
 
   unbindAllEvents: () ->
     @itemList.off('click')
@@ -287,6 +287,7 @@ class @OrderTable extends @Event
 
   onReplaceChange: (e, data) ->
     {key, src, dest} = data
+
     if key == 'total'
       $total = @$().find('.total')
       $value = $total.find('.text')
@@ -462,7 +463,7 @@ class @OrderTable extends @Event
       [itemObj, key] = @parsePath(path)
       switch op
         when '+'
-          @send('table:add', {key: key, src: src, dest: dest})
+          @send('item:add', {key: key, src: src, dest: dest})
         when '-'
           itemObj.send('item:remove', {key: key, src: src, dest: dest})
         when '~'
@@ -541,7 +542,16 @@ class @OrderTable extends @Event
 
       @pushRemoveItemOp(index)
 
-  insertRejectMessage: () ->
+  onAddressChange: (e, data) ->
+    $wrap = @$().find('.chat-order-address')
+    $wrap.parent()
+         .stop(true, true)
+         .addClass('order-item-modify')
+         .effect('pulsate', times: 3, duration: 1500, () ->
+            $(this).removeClass('order-item-modify')
+          )
+
+    $wrap.find('#address-text').text(data.dest)
 
 
 

@@ -42,6 +42,7 @@ class OrdersController < ApplicationController
     begin
       # 应用修改记录， 返回一个新的 json
       new_json    = @order.apply_patch(patch_params)
+
       # 用差分算法比较两个同的 hash, 返回 diff 数组
       @diffs = diff_hash @order.update_hash, new_json
       unless @diffs.blank?
@@ -59,13 +60,26 @@ class OrdersController < ApplicationController
   end
 
   def set_address
-    @order = Order.find(params[:order_id])
-    if params[:default_location_id].to_i > 0
-      @order.delivery_location_id = params[:default_location_id]
-      @order.save
+    old_address = @order.delivery_address_title
+
+    delivery_address = params[:delivery_address]
+
+    if delivery_address[:location_id].to_i > 0
+      @order.delivery_location_id = delivery_address[:location_id]
     else
-      @order.create_delivery_location(params.require(:address).permit(:id,:contact,:zipcode,:contact_phone,:province_id,:city_id,:region_id))
+      @order[:data] ||= {}
+      @order[:data]["delivery_address"] = delivery_address
     end
+
+    @order.save
+
+    new_address = @order.delivery_address_title
+
+    msg = modify_order('delivery_address', old_address, new_address)
+
+    MessageSystemService.push_message current_anonymous_or_user.id, other_side, msg, to: [other_side], type: 'order'
+    MessageSystemService.push_command current_anonymous_or_user.id, other_side, {command: 'order-address', dest: new_address}.to_json
+
     render json: @order.delivery_location
     # head :ok
   end
@@ -196,12 +210,15 @@ class OrdersController < ApplicationController
       msgAry.unshift(msg)
     end
 
-    if msg.length > 1
+    return if msgAry.length == 0
+
+    if msgAry.length > 1
       msg = msgAry.join('；')
+    else
+      msg = msgAry.join('')
     end
 
     MessageSystemService.push_message user_id, other_side, msg, to: [other_side], type: 'order'
-
     MessageSystemService.push_command user_id, other_side, {command: 'order', diff: diffs}.to_json
   end
 
