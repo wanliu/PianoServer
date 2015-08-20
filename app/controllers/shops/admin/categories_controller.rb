@@ -45,17 +45,11 @@ class Shops::Admin::CategoriesController < Shops::Admin::BaseController
   end
 
   def upload_image
-    upload = ImageUploader.new(@category, :avatar_url)
-
-    # pp params[:file]
-    # pp upload.store!(params[:file])
-    # pp upload.url
-    pp @category.avatar.store!(params[:file])
-    pp @category.attributes
-    pp @category.avatar_url
+    @category.image = params[:file]
     @category.save
-    # pp @category
-    render json: { success: true }
+    @category.reload
+    pp @category
+    render json: { success: true, url: @category.image.url }
   end
 
   private

@@ -2,7 +2,7 @@
   <div class="box">
     <div class="thumbnail" data-link="<%= child_shop_admin_category_path(@shop.name, @root, category) %>" >
     <%#= link_to child_shop_admin_category_path(@shop.name, @root, category) , class: "thumbnail" do %>
-      <%= image_tag category.logo_url || Settings.assets.gray_image %>
+      <%= image_tag category.image.url || Settings.assets.gray_image %>
       <h2><%= category.name %></h2>
       <input type="text" name="name" class="title-input" placeholder="分类名称" />
       <div class="actions">

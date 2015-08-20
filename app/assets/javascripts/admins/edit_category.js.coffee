@@ -21,6 +21,7 @@ class @EditCategory extends @Event
       element: @$().find('.uploader-btn')[0],
       action: @url + "/upload_image",
       customHeaders: { "X-CSRF-Token": token },
+      multiple: false,
       template: """
         <div class="qq-uploader">
           <div class="qq-upload-drop-area"><span>{dragText}</span></div>
@@ -29,7 +30,8 @@ class @EditCategory extends @Event
           </div>
           <ul class="qq-upload-list"></ul>
         </div>
-      """
+      """,
+      onComplete: @onUploader.bind(@)
     })
 
   onClickTitle: (e) ->
@@ -44,6 +46,9 @@ class @EditCategory extends @Event
   onClick: (e) ->
     Turbolinks.visit(@url) if $(e.target).is('.thumbnail>img')
 
+  onUploader: (id, filename, responseJSON) ->
+    @setImage(responseJSON.url)
+    $(@$uploader._listElement).empty()
 
   enterTitle: (e) ->
     if e.which == 13
@@ -72,3 +77,7 @@ class @EditCategory extends @Event
   setTitle: (title) ->
     @$input.val(title)
     @$title.text(title)
+
+  setImage: (url) ->
+    @$img.val(url)
+    @$().find('.thumbnail>img').attr('src', url)
