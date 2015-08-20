@@ -80,8 +80,8 @@ class OrdersController < ApplicationController
     MessageSystemService.push_message current_anonymous_or_user.id, other_side, msg, to: [other_side], type: 'order'
     MessageSystemService.push_command current_anonymous_or_user.id, other_side, {command: 'order-address', dest: new_address}.to_json
 
-    render json: @order.delivery_location
-    # head :ok
+    # render json: @order.delivery_location
+    head :ok
   end
 
   def diff
@@ -175,6 +175,8 @@ class OrdersController < ApplicationController
     diffItems = {}
     msgAry = []
     msg = nil
+
+    return if diffs.empty?
 
     diffs.each do |op, path, src, dest|
       msg = case op

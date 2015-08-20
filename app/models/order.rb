@@ -141,7 +141,6 @@ class Order < ActiveRecord::Base
   def origin_hash
     attrs = attributes
     attrs["items"] = items.map {|item| item.attributes }
-    attrs["delivery_address"] = delivery_address
     to_hash(attrs)
   end
 
@@ -164,7 +163,6 @@ class Order < ActiveRecord::Base
       "supplier_id" => h["supplier_id"],
       "send_location" => h["send_location"],
       "delivery_location" => h["delivery_location"],
-      "delivery_address" => h["delivery_address"],
       "business_type" => h["business_type"],
       "title" => h["title"],
       "contacts" => h["contacts"],

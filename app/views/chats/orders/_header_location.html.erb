@@ -50,7 +50,7 @@
 
     $('#address-text').text(address_title);
 
-    if (buyer_id !== user_id) {
+    if (buyer_id !== user_id || user_id > 0) {
       return;
     }
 
