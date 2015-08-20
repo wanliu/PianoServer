@@ -47,9 +47,7 @@ class Shops::Admin::CategoriesController < Shops::Admin::BaseController
   def upload_image
     @category.image = params[:file]
     @category.save
-    @category.reload
-    pp @category
-    render json: { success: true, url: @category.image.url }
+    render json: { success: true, url: @category.image.url(:cover) }
   end
 
   private

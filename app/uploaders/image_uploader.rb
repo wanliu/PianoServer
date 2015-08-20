@@ -1,8 +1,8 @@
 # encoding: utf-8
 
-IMAGE_UPLOADER_ALLOW_IMAGE_VERSION_NAMES = %w(avatar preivew)
+IMAGE_UPLOADER_ALLOW_IMAGE_VERSION_NAMES = %w(avatar cover preivew)
 class ImageUploader < CarrierWave::Uploader::Base
-
+  include ActionView::Helpers::AssetUrlHelper
   # Include RMagick or MiniMagick support:
   # include CarrierWave::RMagick
   # include CarrierWave::MiniMagick
@@ -23,7 +23,8 @@ class ImageUploader < CarrierWave::Uploader::Base
     # For Rails 3.1+ asset pipeline compatibility:
     # ActionController::Base.helpers.asset_path("fallback/" + [version_name, "default.png"].compact.join('_'))
 
-    Settings.assets.gray_image
+    asset_path('gray_blank.gif')
+    # Settings.assets.gray_image
   end
 
 
@@ -35,8 +36,9 @@ class ImageUploader < CarrierWave::Uploader::Base
       # To protected version name using, when it not defined, this will be give an error message in development environment
       raise "ImageUploader version_name:#{version_name} not allow."
     end
-    [@url,version_name].join("!") # thumb split with "!"
+    @url.end_with?(asset_path('gray_blank.gif')) ? @url : [@url,version_name].join("!") # thumb split with "!"
   end
+
 
   # Process files as they are uploaded:
   # process :scale => [200, 300]
@@ -65,5 +67,11 @@ class ImageUploader < CarrierWave::Uploader::Base
       Rails.logger.debug("(BaseUploader.filename) #{@name}")
       @name
     end
+  end
+
+  private
+
+  def asset_path(*args)
+    ActionController::Base.helpers.asset_path *args
   end
 end

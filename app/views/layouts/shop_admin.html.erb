@@ -68,7 +68,6 @@
       <div class="row"> <! normal-layout !>
         <%= render "left_sidebar" %>
 
-
         <div class="content container-fluid">
           <%= bootstrap_flash %>
           <%= yield %>
@@ -78,6 +77,23 @@
             <p><%= raw Settings.app.footer %> <%= PianoServer::VERSION unless Rails.env.production? %></p>
           </footer>
         </div>
+        <script type="text/javascript">
+          $(window).resize(adjustLayout);
+          window.adjId = setInterval(adjustLayout, 3000);
+
+          adjustLayout();
+
+          function adjustLayout() {
+            var contentWidth = $(window).width();
+            if (contentWidth < 768) {
+              $('.left-sidebar').animate({left: -300});
+              $('.content').animate({marginLeft: 0});
+            } else {
+              $('.left-sidebar').animate({left: 0});
+              $('.content').animate({marginLeft: 240});
+            }
+          }
+        </script>
       </div><!--/row-->
 
 
