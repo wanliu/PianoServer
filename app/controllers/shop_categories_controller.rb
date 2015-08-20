@@ -11,7 +11,7 @@ class ShopCategoriesController < ApplicationController
 
     if @shop_category.has_children
       per = params[:per].presence || 9
-      @shop_categories = Category.where(parent_id: @shop_category).page(page).per(per)
+      @shop_categories = Category.where(parent_id: @shop_category).order(id: :asc).page(page).per(per)
       @items = []
     else
       per = params[:per].presence || 8
