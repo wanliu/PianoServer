@@ -99,29 +99,31 @@
     </div> <!-- /container -->
 
     <script type="text/javascript">
-      $(function() {
-        var inChats = {};
+      var inChats = {};
 
-        // userSocket.emit('unreadCount', {}, function(err, unreadCounts) {
-        //   if (err) {
-        //     return;
-        //   }
+      if (!window._notificationInited) {
+        window._notificationInited = true;
 
-        //   for(var channelId in unreadCounts) {
-        //     var unreadCount = unreadCounts[channelId],
-        //         count = unreadCount.count,
-        //         senderId = unreadCount.user_id,
-        //         username = unreadCount.realname;
+        userSocket.emit('unreadCount', {}, function(err, unreadCounts) {
+          if (err) {
+            return;
+          }
 
-        //     window.noticeCenter.addNotice(senderId, username, count);
-        //   }
-        // });
+          for(var channelId in unreadCounts) {
+            var unreadCount = unreadCounts[channelId],
+                count = unreadCount.count,
+                senderId = unreadCount.user_id,
+                username = unreadCount.realname;
 
-        $(document).on('inchats:enter', function(e, channelId) {
+            window.noticeCenter.addNotice(senderId, username, count);
+          }
+        });
+
+        $(document).unbind('inchats:enter').bind('inchats:enter', function(e, channelId) {
           inChats[channelId] = true;
         });
 
-        $(document).on('inchats:leave', function(e, channelId) {
+        $(document).unbind('inchats:leave').bind('inchats:leave', function(e, channelId) {
           delete inChats[channelId];
         });
 
@@ -133,12 +135,11 @@
               ownChannelId = window.userSocket.getUserChannelId(),
               chatChannelId = 'p' + senderId;
 
-          if (type !== 'command' && !inChats[channelId] && (chatChannelId !== ownChannelId)) {
+          if ((chatChannelId !== ownChannelId) && type !== 'command' && !inChats[channelId]) {
             window.noticeCenter.addNotice(senderId, senderLogin, 1);
           }
-
         });
-      });
+      }
     </script>
     <script type="text/javascript">
       <% unless Rails.env.production? %>

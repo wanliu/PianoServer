@@ -5,18 +5,25 @@ class Product
   include Elasticsearch::Persistence::Model
   # include ActiveModel::SerializerSupport
 
-  gateway.client = Elasticsearch::Client.new url: 'http://192.168.0.20:9200/', log: true
+  gateway.client = Elasticsearch::Client.new url: Settings.elasticsearch.url, log: true
 
-  index_name "pm_products_production"
+  index_name Settings.elasticsearch.index_name
 
   attribute :id, Fixnum
   attribute :name, String, mapping: { analyzer: 'ik' }
   attribute :price, BigDecimal
   attribute :avatar, String
   attribute :status, Fixnum
+  attribute :brand_id, Fixnum
+  attribute :brand_name, String
+  attribute :category_id, Fixnum
+  attribute :creator_id, Fixnum
+  attribute :custom_special, Boolean
+  attribute :image_urls, Array
+  attribute :additional_fields, Hash
 
   def image
-    @avatar = self.avatar
+    @avatar = Flf.avatar
     { 
       avatar_url: @avatar + '!avatar',
       preview_url: @avatar

@@ -41,7 +41,6 @@ class Admins::AccountsController < Admins::BaseController
           shop_sync_options(@remote_shop).each do |key, value|
             @import_shop.update_attribute key, value
           end
-          # @import_shop.update(shop_sync_options(@remote_shop))
         end
       end
     else
