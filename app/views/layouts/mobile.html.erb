@@ -99,14 +99,31 @@
     </div> <!-- /container -->
 
     <script type="text/javascript">
-      $(function() {
-        var inChats = {};
+      var inChats = {};
 
-        $(document).on('inchats:enter', function(e, channelId) {
+      if (!window._notificationInited) {
+        window._notificationInited = true;
+
+        userSocket.emit('unreadCount', {}, function(err, unreadCounts) {
+          if (err) {
+            return;
+          }
+
+          for(var channelId in unreadCounts) {
+            var unreadCount = unreadCounts[channelId],
+                count = unreadCount.count,
+                senderId = unreadCount.user_id,
+                username = unreadCount.realname;
+
+            window.noticeCenter.addNotice(senderId, username, count);
+          }
+        });
+
+        $(document).unbind('inchats:enter').bind('inchats:enter', function(e, channelId) {
           inChats[channelId] = true;
         });
 
-        $(document).on('inchats:leave', function(e, channelId) {
+        $(document).unbind('inchats:leave').bind('inchats:leave', function(e, channelId) {
           delete inChats[channelId];
         });
 
@@ -118,20 +135,11 @@
               ownChannelId = window.userSocket.getUserChannelId(),
               chatChannelId = 'p' + senderId;
 
-          if (type !== 'command' && !inChats[channelId] && (chatChannelId !== ownChannelId)) {
-            userSocket.emit('get', {
-              channelId: chatChannelId,
-              key: 'chat_id'
-            }, function(err, chatId) {
-              if (!err && chatId) {
-                window.noticeCenter.addNotice(senderId, senderLogin, chatId);
-              }
-            });
-            // todo process
+          if ((chatChannelId !== ownChannelId) && type !== 'command' && !inChats[channelId]) {
+            window.noticeCenter.addNotice(senderId, senderLogin, 1);
           }
-
         });
-      });
+      }
     </script>
     <script type="text/javascript">
       <% unless Rails.env.production? %>

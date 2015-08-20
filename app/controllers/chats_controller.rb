@@ -3,7 +3,7 @@ class ChatsController < ApplicationController
 
   set_parent_param :promotion_id, class_name: 'Promotion'
   before_action :chat_variables, only: [:owner, :target, :channel]
-  before_action :get_order, only: [:owner, :target, :channel]
+  before_action :get_order, only: [:owner, :target, :channel, :shop_items]
 
   def index
     @chats = Chat.in(current_anonymous_or_user.id)
@@ -25,6 +25,7 @@ class ChatsController < ApplicationController
 
     @chat.order_id = @order.id if @order
     @chat.save
+
     redirect_to @chat
   end
 
@@ -70,6 +71,8 @@ class ChatsController < ApplicationController
 		@order = Order.find(@chat.order_id) if @chat.order_id
     #@target = @chat.chatable || @chat.target
 		@target = my_chat? ? @chat.target : @chat.owner
+
+    MessageSystemService.send_read_message current_anonymous_or_user.id, other_side
 	end
 
 	def chat_variables
@@ -104,5 +107,13 @@ class ChatsController < ApplicationController
 	def my_chat?
 		@chat.owner_id == current_anonymous_or_user.id
 	end
+
+  def other_side
+    if @order.buyer_id == current_anonymous_or_user.id
+      @order.seller_id || @order.supplier.owner_id
+    else
+      @order.buyer_id
+    end
+  end
 
 end

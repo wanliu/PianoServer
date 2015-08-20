@@ -1,0 +1,13 @@
+<div class="container items-container">
+  <div class="row">
+    <% if @items.each do |item| %>
+      <div class="col-xs-6 col-sm-3">
+
+      </div>
+    <% end.empty? %>
+      <div class="no-items-desc">
+        <div class="desc-wrap">此店铺暂未添加任何商品！</div>
+      </div>
+    <% end %>
+  </div>
+</div>

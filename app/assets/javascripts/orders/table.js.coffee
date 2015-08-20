@@ -10,6 +10,7 @@ class @OrderTable extends @Event
   }
 
   constructor: (@element, @order, @options = {}) ->
+    @itemList = @$().find('.item-list')
     super(@element)
     @$items = @$().find('.item-list > .list-group-item')
     @items = for item in @$items
@@ -17,9 +18,7 @@ class @OrderTable extends @Event
 
     @orderId = @order.id
     @options = $.extend({}, OrderTable.defaultOptions, @options)
-    @itemList = @$().find('.item-list')
     @patch = []
-    @bindAllEvents()
 
   bindAllEvents: () ->
     @itemList.on('click', @onClicked.bind(@))
@@ -35,7 +34,7 @@ class @OrderTable extends @Event
     @$().on('click', '.order-item-price .btn-plus', @priceIncreased.bind(@))
     @$().on('click', '.order-total-edit .btn-minus', @totalDecreased.bind(@))
     @$().on('click', '.order-total-edit .btn-plus', @totalIncreased.bind(@))
-    @$().on('click', '.remove-item-icon', @removeItem.bind(@))
+    @$().on('click', '.btn-remove', @removeItem.bind(@))
 
     captureOrderChangeBound = @captureOrderChange.bind(@)
     releaseOrderChangeBound = @releaseOrderChange.bind(@)
@@ -46,10 +45,10 @@ class @OrderTable extends @Event
     @$().on('click', '.btn-disagrees', @rejectOrderChanges.bind(@))
     @$().on('click', '.order-table-total', @changeOrderTotal.bind(@))
 
-    @$().bind('add', @onAddChange.bind(@))
-    @$().bind('remove', @onRemoveChange.bind(@))
-    @$().bind('replace', @onReplaceChange.bind(@))
-    # @$().bind('order:total:change', )
+    @$().bind('item:add', @onAddChange.bind(@))
+    @$().bind('item:remove', @onRemoveChange.bind(@))
+    @$().bind('item:replace', @onReplaceChange.bind(@))
+    @$().bind('order:total:change', @insertRejectMessage.bind(@))
 
     @on 'init', () =>
       $.ajax({
@@ -86,9 +85,9 @@ class @OrderTable extends @Event
     @$().off('click', '.btn-disagrees')
     @$().off('click', '.order-table-total')
 
-    @$().unbind('add')
-    @$().unbind('remove')
-    @$().unbind('replace')
+    @$().unbind('item:add')
+    @$().unbind('item:remove')
+    @$().unbind('item:replace')
     # @$().bind('order:total:change', )
     @$().off('init')
     @$().off('order')
@@ -109,6 +108,8 @@ class @OrderTable extends @Event
 
     unless $target.is('li')
       $target = $target.parents('li:first')
+
+    $target.removeClass('swipeleft')
 
     $target.toggleClass('open')
 
@@ -174,7 +175,7 @@ class @OrderTable extends @Event
     $group = $target.parents('.input-group:first')
     $input = $group.find('input[name=amount]')
     amount = $.trim($input.val())
-    reg = /^[1-9]\d*$/
+    reg = /^[1-9]\d*(.\d+)*$/
 
     if (!reg.test(amount) || +amount <= 1)
       return
@@ -188,7 +189,7 @@ class @OrderTable extends @Event
     $group = $target.parents('.input-group:first')
     $input = $group.find('input[name=amount]')
     amount = $.trim($input.val())
-    reg = /^[1-9]\d*$/
+    reg = /^[1-9]\d*(.\d+)*$/
 
     unless (reg.test(amount))
       return
@@ -378,7 +379,7 @@ class @OrderTable extends @Event
     target.is('.edit-fieldset') or target.parents('.edit-fieldset').length > 0
 
   isRemoveBtn: (target) ->
-    target.is('.remove-btn')
+    target.is('.operate-block')
 
   isItemImage: (target) ->
     target.is('img')
@@ -461,7 +462,7 @@ class @OrderTable extends @Event
       [itemObj, key] = @parsePath(path)
       switch op
         when '+'
-          @send('item:add', {key: key, src: src, dest: dest})
+          @send('table:add', {key: key, src: src, dest: dest})
         when '-'
           itemObj.send('item:remove', {key: key, src: src, dest: dest})
         when '~'
@@ -492,7 +493,6 @@ class @OrderTable extends @Event
         when 'accept'
           @closePopup()
           @resetTable()
-
         else
           @closePopup()
           @resetTable()
@@ -540,5 +540,8 @@ class @OrderTable extends @Event
       index = @indexOf($li)
 
       @pushRemoveItemOp(index)
+
+  insertRejectMessage: () ->
+
 
 

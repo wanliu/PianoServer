@@ -1,7 +1,8 @@
 class OrdersController < ApplicationController
   PROMPTS = {
-    ALL: '$action了 $key 从 $src 至 $dest',
-    ITEMS: '$action了 第 $index 项的 $key 从 $src 至 $dest',
+    ALL: '$key从 $src 变更为 $dest ',
+    ADD_ITEMS: '添加 $name ，价格： $price ，数量： $amount ',
+    REMOVE_ITEMS: '移除 $name ，价格： $price ，数量： $amount '
   }
 
   PROMPT_MATCHS = {
@@ -13,7 +14,7 @@ class OrdersController < ApplicationController
 
   before_action :set_order_params,
     only: [:show, :status, :update, :diff, :accept, :ensure,
-            :cancel, :reject, :items, :add_item]
+            :cancel, :reject, :items, :add_item, :set_address]
 
   def show
     # if params[:inline]
@@ -55,6 +56,18 @@ class OrdersController < ApplicationController
       send_diff_message @diffs
       render json: { diff: @diffs }
     end
+  end
+
+  def set_address
+    @order = Order.find(params[:order_id])
+    if params[:default_location_id].to_i > 0
+      @order.delivery_location_id = params[:default_location_id]
+      @order.save
+    else
+      @order.create_delivery_location(params.require(:address).permit(:id,:contact,:zipcode,:contact_phone,:province_id,:city_id,:region_id))
+    end
+    render json: @order.delivery_location
+    # head :ok
   end
 
   def diff
@@ -101,14 +114,18 @@ class OrdersController < ApplicationController
   def reject
     @order.update(:accept_state => "reject")
     @order.update(updates: nil)
+    msg = '拒绝了提交的修改'
+
     MessageSystemService.push_command current_anonymous_or_user.id, other_side, {command: 'order', accept: 'reject'}.to_json
+
+    MessageSystemService.push_message current_anonymous_or_user.id, other_side, msg, to: [other_side], type: 'order'
 
     render :show, formats: [:json]
   end
 
   def items
     # @order.supplier.
-    []
+    @items = []
   end
 
   def add_item
@@ -141,35 +158,108 @@ class OrdersController < ApplicationController
   def send_diff_message(diffs)
     user_id = current_anonymous_or_user.id
     index = nil
+    diffItems = {}
+    msgAry = []
+    msg = nil
 
     diffs.each do |op, path, src, dest|
-      if path =~ PROMPT_MATCHS[:ITEMS]
-        m = path.match(PROMPT_MATCHS[:ITEMS])
-        index, key = m[1].to_i + 1, m[2]
-        prompt = PROMPTS[:ITEMS]
-      else
+      msg = case op
+          when '+' then add_order_item_message(src)
+          when '-' then remove_order_item_message(src)
+          when '~' then update_order_message(diffItems, path, src, dest)
+          end
+
+      unless msg.nil?
+        msgAry.push(msg)
+      end
+    end
+
+    unless diffItems.blank?
+      diffItems.each do |key, item|
+        name = item[:name]
+        price = item["price"]
+        amount = item["amount"]
         prompt = PROMPTS[:ALL]
-        index = nil
-        key = path
+        msgs = [name, '的']
+
+        unless price.blank?
+          msgs.push(generate_prompt(prompt, 'price', price))
+        end
+
+        unless amount.blank?
+          msgs.push(generate_prompt(prompt, 'amount', amount))
+        end
+
+        msg = msgs.join('')
       end
 
-      action = case op
-               when '+' then '增加'
-               when '-' then '删除'
-               when '~' then '修改'
-               end
-
-      msg = prompt_template(prompt, {
-        action: action,
-        author: current_anonymous_or_user.name,
-        key: key,
-        src: src,
-        index: index,
-        dest: dest
-      })
-      MessageSystemService.push_message user_id, other_side, msg, to: [other_side], type: 'order', key: path
+      msgAry.unshift(msg)
     end
+
+    if msg.length > 1
+      msg = msgAry.join('；')
+    end
+
+    MessageSystemService.push_message user_id, other_side, msg, to: [other_side], type: 'order'
+
     MessageSystemService.push_command user_id, other_side, {command: 'order', diff: diffs}.to_json
+  end
+
+  def update_order_message(diffItems, path, src, dest)
+    if path =~ PROMPT_MATCHS[:ITEMS]
+      modify_order_items(diffItems, path, src, dest)
+    else
+      modify_order(path, src, dest)
+    end
+  end
+
+  def modify_order_items(diffItems, path, src, dest)
+    m = path.match(PROMPT_MATCHS[:ITEMS])
+    index, key = m[1].to_i, m[2]
+
+    diffItem = diffItems[index] ||= {}
+    diffItem[:name] = @order.items[index].title
+
+    item = diffItem[key] ||= {}
+
+    item[:src] = src if item[:src].blank?
+    item[:dest] = dest
+
+    nil
+    # name, key = @order.items[index].title, OrderItem.human_attribute_name(m[2])
+    # prompt = PROMPTS[:ITEMS]
+  end
+
+  def modify_order(path, src, dest)
+    prompt_template(PROMPTS[:ALL], {
+      key: Order.human_attribute_name(path),
+      src: src,
+      dest: dest
+    })
+  end
+
+  def add_order_item_message(src)
+    prompt_template(PROMPTS[:ADD_ITEMS], {
+      name: src["title"],
+      price: src["price"],
+      amount: src["amount"]
+    })
+  end
+
+  def remove_order_item_message(src)
+    prompt_template(PROMPTS[:REMOVE_ITEMS], {
+      name: src["title"],
+      price: src["price"],
+      amount: src["amount"]
+    })
+  end
+
+  def generate_prompt(prompt, key, context)
+    prompt_template(prompt, {
+      key: OrderItem.human_attribute_name(key),
+      src: context[:src],
+      dest: context[:dest]
+    })
   end
 
   def prompt_template(template, context)

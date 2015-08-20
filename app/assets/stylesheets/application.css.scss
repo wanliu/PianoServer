@@ -19,6 +19,7 @@
  *= require _common/popup
  *= require_tree ./application
  *= require_tree ./chats
+ *= require_tree ./locations
  *= require_self
  */
 html{
@@ -48,14 +49,16 @@ body {
   left: 0;
   right: 0;
   z-index: 9999;
+  opacity: 0.6;
 
   .chat-notice{
-    background: #333333;
+    background: #666666;
     height: 35px;
     line-height: 35px;
     text-align: center;
     color: #FFFFFF;
     cursor: pointer;
+    margin-bottom: 1px;
 
     span{
       text-decoration: underline;

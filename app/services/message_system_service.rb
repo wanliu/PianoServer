@@ -41,6 +41,16 @@ module MessageSystemService
     RestClient.post url, msg, token: options.pusher_token
   end
 
+  def send_read_message(author_id, target_id)
+    channel_id = 'p' + target_id.to_s
+    msg = {
+      userId: author_id,
+      channelId: channel_id
+    }
+
+    send('read_channel', msg )
+  end
+
   private
 
   def options

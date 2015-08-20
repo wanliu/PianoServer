@@ -52,7 +52,6 @@ class @MiniTable
       @_showOrderItems(false)
       @$().removeClass('show-toggle-button')
     else
-      @_hideChatScroll()
       @$().addClass('show-toggle-button')
 
       if @isVisible

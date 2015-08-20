@@ -22,30 +22,11 @@
       </div>
     </div>
 
-    <% if promotion.status === 'Published' %>
-    <div class="period-desc not-started">
+    <div class="period-desc">
       <div class="desc-wrap">
-        <p>活动开始时间</p>
-        <%= promotion.start_time.to_datetime.in_time_zone('Beijing').strftime('%Y/%m/%d %H:%M')%>
+
       </div>
     </div>
-    <% elsif promotion.status === 'Active' %>
-    <div class="period-desc started">
-      <div class="desc-wrap">
-        <% if promotion.type == 'promotions/time_limited_sale'%>
-          <p>距活动结束</p>
-        <% else %>
-          <p>库存剩余<%= promotion.product_inventory %>件</p>
-        <% end %>
-      </div>
-    </div>
-    <% else %>
-    <div class="period-desc finished">
-      <div class="desc-wrap">
-        活动结束
-      </div>
-    </div>
-    <% end %>
   </div>
 
   <div class="title-contact">
@@ -120,17 +101,36 @@
       <% if shop.owner.id === current_anonymous_or_user.id %>
  	      <div class="chat contact-button">您的店铺</div>
       <% else %>
-        <%= link_to '洽谈', promotion_chats_path(promotion, shop_id: @shop.id), class: "chat contact-button", method: 'POST' %>
-      <% end %>
+        <!-- <a class="chat contact-button" href="javascript:void(0);">洽谈</a> -->
+        <%= link_to '洽谈', promotion_chats_path(promotion, shop_id: @shop.id), class: "chat contact-button",
+          method: 'POST' %>
+        <% end %>
     </div>
   </div>
 </div>
 
 <script type="text/javascript">
-  $(function() {
+  //$(function() {
+    var shopId = '<%= shop.id %>',
+        channelId = '<%= shop.owner.id %>',
+        type = '<%= promotion.type %>',
+        isLimit = type === 'promotions/time_limited_sale',
+        inventory = '<%= promotion.product_inventory %>',
+        status = '<%= promotion.status %>',
+        startTime = '<%= promotion.start_time.to_datetime.in_time_zone("Beijing") %>',
+        startDate = new Date(startTime),
+        promotionId = $('.promotion-detail-container').data('promotionId'),
+        endDate;
+
+    <% if promotion.type == 'promotions/time_limited_sale' %>
+      var endTime = '<%= promotion.end_time.to_datetime.in_time_zone("Beijing") %>';
+      endDate = new Date(endTime);
+    <% end %>
+
+    new CountDown($('.desc-wrap'), isLimit, inventory, status, startDate, endDate);
+
     $('.fav-button').click(function() {
       var $this = $(this),
-          promotionId = $('.promotion-detail-container').data('promotionId'),
           isFavorited = $this.hasClass('favorited');
 
       $.ajax({
@@ -146,5 +146,16 @@
              .text(isFavorited ? '收藏' : '已收藏');
       });
     });
-  });
+
+    // $('a.contact-button').click(function() {
+    //   userSocket.emit('readChannel', {
+    //     'channelId': 'p' + channelId,
+    //   }, function() {
+    //     var form = document.createElement('form');
+    //     form.action = '/promotions/' + promotionId + '/chats?shop_id=' + shopId;
+    //     form.method = 'POST';
+    //     form.submit();
+    //   })
+    // });
+  //});
 </script>

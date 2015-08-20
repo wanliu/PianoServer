@@ -10,18 +10,14 @@
   background: #F7F7F7;
 
   .order-table{
-    padding-bottom: 55px;
     position: relative;
     height: 100%;
     overflow: auto;
-
     .chat-items{
-      overflow: hidden;
+      position: relative;
+      padding-bottom: 65px;
     }
-  }
 
-  p{
-    margin: 0;
   }
 
   .order-buttons{
@@ -65,11 +61,6 @@
     .buttons-consult{
       display: none;
     }
-  }
-
-  .item-preview-url{
-    width: 100px;
-    height: 100px;
   }
 
   .payment-menu{
@@ -132,14 +123,6 @@
       font-size: 15px;
       vertical-align: middle;
       text-align: right;
-
-      .remove-btn{
-        cursor: pointer;
-
-        &:hover{
-          color: #FF2B2B;
-        }
-      }
     }
   }
 
@@ -161,6 +144,7 @@
 
     &.item-list{
       margin: 20px 0;
+      overflow: hidden;
 
       .list-group-item{
         -webkit-transition: left 0.45s ease-in-out 0;
@@ -180,6 +164,10 @@
         &.order-item-remove .edit-fieldset{
           display: none;
         }
+      }
+
+      &.swipeleft{
+        left: -90px;
       }
 
       .btn-add{
@@ -222,6 +210,7 @@
 
       &.order-item-remove{
         border-color: #FF2B2B;
+        background: rgba(255, 43, 43, 0.02);
 
         p{
           text-decoration: line-through;
@@ -242,6 +231,37 @@
     bottom: -5px;
     color: #FF2B2B;
     cursor: pointer;
+  }
+
+  .item-sub-total{
+    margin-top: 15px;
+    line-height: 32px;
+
+    p{
+      margin: 0;
+    }
+  }
+
+  .remove-btn{
+    padding-left: 40px;
+    margin-top: 15px;
+
+    .btn-remove{
+      padding: 6px 0;
+      background: #FF2B2B;
+      width: 100%;
+      color: #FFFFFF;
+      border: none;
+
+      .glyphicon-trash{
+        margin-right: 2px;
+        vertical-align: text-top;
+      }
+
+      &, &:focus{
+        outline: none;
+      }
+    }
   }
 
   .edit-items{
@@ -316,6 +336,7 @@
 
 .add-item-text{
   line-height: 28px;
+  color: #333333;
 }
 
 .change-up {

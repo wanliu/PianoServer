@@ -223,6 +223,7 @@ ActiveRecord::Schema.define(version: 20150819094158) do
     t.jsonb    "image",                  default: {}, null: false
     t.string   "nickname"
     t.string   "provider"
+    t.integer  "latest_location_id"
   end
 
   add_index "users", ["authentication_token"], name: "index_users_on_authentication_token", unique: true, using: :btree

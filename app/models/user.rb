@@ -11,7 +11,11 @@ class User < ActiveRecord::Base
          :authentication_keys => [:login]
 
   # has_many :memberings, :dependent => :destroy
+  belongs_to :latest_location, class_name: 'Location'
+
   has_many :chats, foreign_key: 'owner_id'
+
+  has_many :locations
 
   image_token -> { self.email || self.username || self.mobile }
   validates :username, presence: true, uniqueness: true

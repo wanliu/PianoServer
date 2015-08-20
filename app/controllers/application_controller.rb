@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_meta_user_data
 
-  helper_method :current_anonymous_or_user
+  helper_method :current_anonymous_or_user, :anonymous?
   rescue_from ActionController::RoutingError, :with => :render_404
   rescue_from ActiveResource::ResourceNotFound, :with => :render_404
 
@@ -33,6 +33,10 @@ class ApplicationController < ActionController::Base
       session[:anonymous] = @anonymous.id
     end
     @anonymous
+  end
+
+  def anonymous?
+    current_anonymous_or_user.id < 0
   end
 
   def configure_permitted_parameters
