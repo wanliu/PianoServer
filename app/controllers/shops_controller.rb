@@ -6,7 +6,7 @@ class ShopsController < ApplicationController
     page = params[:page].presence || 1
     per = params[:per].presence || 9
 
-    @categories = @shop.categories.page(page).per(per)
+    @categories = @shop.categories.roots.page(page).per(per)
     render :show
   end
 
