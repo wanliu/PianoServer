@@ -90,14 +90,17 @@
 
       $parent.addClass('selected').siblings().removeClass('selected');
 
-      var location_id = $(this).data('locationId') ,
+      var address_title = $(this).text(),
+          location_id = $(this).data('locationId') ,
           order_id = $(this).data('orderId'),
           location = $(this).data("location"),
           data = {};
 
-        data['delivery_address'] =  {
-          "location_id": location_id
-        };
+      $('#address-text').text(address_title);
+
+      data['delivery_address'] =  {
+        "location_id": location_id
+      };
 
       if (location_id < 0) {
         var address = LocalAddress.get(location_id);
@@ -115,6 +118,6 @@
           $('#address-text').html(location);
         }
       });
-    })
+    });
   })();
 </script>
