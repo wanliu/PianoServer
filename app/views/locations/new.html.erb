@@ -35,32 +35,37 @@
 <% end %>
 
 <% if anonymous? %>
-<script type="text/javascript">
-  $('form').on('submit', function(e) {
-    e.preventDefault();
-    var contact = $(this).serializeArray()[4].value,
-        zipcode = $(this).serializeArray()[9].value,
-        contact_phone = $(this).serializeArray()[10].value,
-        province_id = $(this).serializeArray()[5].value,
-        city_id = $(this).serializeArray()[6].value,
-        region_id = $(this).serializeArray()[7].value,
-        road = $(this).serializeArray()[8].value,
-        province_name = jQuery("#location_province_id  option:selected").text(),
-        city_name = jQuery("#location_city_id  option:selected").text(),
-        region_name = jQuery("#location_region_id  option:selected").text(),
-        address_object = {
-          'contact':contact,
-          'province_id': province_id,
-          'city_id': city_id,
-          'region_id': region_id,
-          'province_name': province_name,
-          'city_name': city_name,
-          'region_name':region_name,
-          'road':road,
-          'zipcode':zipcode,
-          'contact_phone':contact_phone
-        };
+  <script type="text/javascript">
+    $('form').on('submit', function(e) {
+      e.preventDefault();
+
+      var contact = $(this).serializeArray()[4].value,
+          zipcode = $(this).serializeArray()[9].value,
+          contact_phone = $(this).serializeArray()[10].value,
+          province_id = $(this).serializeArray()[5].value,
+          city_id = $(this).serializeArray()[6].value,
+          region_id = $(this).serializeArray()[7].value,
+          road = $(this).serializeArray()[8].value,
+          province_name = jQuery("#location_province_id  option:selected").text(),
+          city_name = jQuery("#location_city_id  option:selected").text(),
+          region_name = jQuery("#location_region_id  option:selected").text(),
+          address_object = {
+            'contact':contact,
+            'province_id': province_id,
+            'city_id': city_id,
+            'region_id': region_id,
+            'province_name': province_name,
+            'city_name': city_name,
+            'region_name':region_name,
+            'road':road,
+            'zipcode':zipcode,
+            'contact_phone':contact_phone
+          },
+          chatId = '<%= @location.chat_id %>';
+
       LocalAddress.set(~new Date().getTime(),address_object);
+
+      Turbolinks.visit('/chats/' + chatId);
     });
-</script>
+  </script>
 <% end %>
