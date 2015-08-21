@@ -29,4 +29,6 @@ assets:
 dev:
   feature:
     camera: false
+    shop:
+      website: false
 
