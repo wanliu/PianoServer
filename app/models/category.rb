@@ -3,8 +3,20 @@ class Category < ActiveRecord::Base
 
   has_and_belongs_to_many :shops
 
-  store_accessor :image, :avatar_url
+  has_many :items, foreign_key: :shop_category_id
 
-  alias_method :cover_url, :avatar_url
-  alias_method :logo_url, :avatar_url
+  # store_accessor :image, :avatar_url
+
+  mount_uploader :image, ImageUploader # , mount_on: :avatar_url
+
+  # alias_method :cover_url, :avatar_url
+  # alias_method :logo_url, :avatar_url
+
+  def has_children
+    Category.exists?(parent_id: id)
+  end
+
+  def chain_name
+    self_and_ancestors.map(&:name)
+  end
 end

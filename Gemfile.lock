@@ -59,6 +59,14 @@ GEM
     builder (3.2.2)
     byebug (4.0.3)
       columnize (= 0.9.0)
+    carrierwave (0.10.0)
+      activemodel (>= 3.2.0)
+      activesupport (>= 3.2.0)
+      json (>= 1.7)
+      mime-types (>= 1.16)
+    carrierwave-upyun (0.1.8)
+      carrierwave (>= 0.5.7)
+      rest-client (>= 1.6.7)
     celluloid (0.16.0)
       timers (~> 4.0.0)
     china_city (0.0.4)
@@ -210,6 +218,8 @@ GEM
       slop (~> 3.4)
     rack (1.6.4)
     rack-cors (0.4.0)
+    rack-raw-upload (1.1.1)
+      multi_json
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (4.2.0)
@@ -354,6 +364,8 @@ DEPENDENCIES
   awesome_nested_set
   bootstrap-sass (~> 3.3.5)
   byebug
+  carrierwave
+  carrierwave-upyun
   china_city
   coffee-rails (~> 4.1.0)
   devise (= 3.4.0)
@@ -380,6 +392,7 @@ DEPENDENCIES
   pg
   poseidon
   rack-cors
+  rack-raw-upload (~> 1.1.1)
   rails (= 4.2.0)
   rails-api
   rails_config

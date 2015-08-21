@@ -1,4 +1,7 @@
 class ItemsController < ApplicationController
+  before_filter :set_shop
+  before_filter :set_item, only: [ :show ]
+
   def index
     page = params[:page].presence || 1
     per = params[:per].presence || 8
@@ -13,7 +16,14 @@ class ItemsController < ApplicationController
   end
 
   def show
-    @item = Item.find(params[:id])
-    @shop = @item.shop
   end
+
+  private
+    def set_shop
+      @shop = Shop.find_by(name: params[:shop_id])
+    end
+
+    def set_item
+      @item = Shop.items.find(params[:id])
+    end
 end

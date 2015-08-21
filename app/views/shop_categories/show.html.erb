@@ -20,7 +20,7 @@
     <%= sanitize @shop_category.chain_name.join("<span class='glyphicon glyphicon-menu-right' aria-hidden='true'></span>") %>
   </div>
   <% if @shop_category.has_children %>
-    <%= render partial: 'shop_categories', locals: { shop_categories: @shop_categories } %>
+    <%= render partial: 'shop_categories', locals: { shop: @shop, categories: @shop_categories } %>
   <% else %>
     <%= render partial: 'items', locals: { items: @items } %>
   <% end %>
@@ -70,8 +70,8 @@
     }[key];
 
     var request_url = {
-      shop_categories: "/shop_categories.json?page=" + (page + 1) + "&per=" + per + "&parent_id=<%= @shop_category.id %>",
-      items: "/items.json?page=" + (page + 1) + "&per=" + per + "&shop_category_id=<%= @shop_category.id %>"
+      shop_categories: "/<%= @shop.name %>/categories.json?page=" + (page + 1) + "&per=" + per + "&parent_id=<%= @shop_category.id %>",
+      items: "/<%= @shop.name %>/items.json?page=" + (page + 1) + "&per=" + per + "&shop_category_id=<%= @shop_category.id %>"
     }[key];
 
     $(document).scroll(function (e) {

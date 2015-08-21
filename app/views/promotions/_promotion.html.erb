@@ -4,7 +4,7 @@
 	    <% if promotion.type == 'promotions/discount' %>
         <div class="type-flag discount">
         	<%= image_tag 'discount.png' %>
-            <div class="type-text"><%= promotion.discount.gsub('小于', '') %></div>
+            <div class="type-text"><%= promotion.discount.try(:gsub, '小于', '') %></div>
         </div>
 	    <% elsif promotion.type == 'promotions/time_limited_sale' %>
         <div class="type-flag limit-time">
@@ -41,7 +41,7 @@
 	    </p>-->
 	  <% end %>
   	<div class="provider-wrap">
-    	<%= link_to shop_site_path(shop_name: promotion.shop_name) do %>
+    	<%= link_to Settings.dev.feature.shop.website ? shop_site_path(shop_name: promotion.shop_name) : 'javascript:void(0)' do %>
 	      <div class="provider">
 	        <div class="provider-name">
 	          <%= promotion.shop_name %>
@@ -51,7 +51,7 @@
 	          <%= image_tag(promotion.publisher_avatar, class: "publish-avatar") %>
 	        </div>
 	      </div>
-	     <% end %>
+	    <% end %>
     </div>
   </div>
 </div>

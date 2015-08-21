@@ -33,6 +33,8 @@ module PianoServer
       end
     end
 
+    config.middleware.use 'Rack::RawUpload'
+
     config.i18n.load_path += Dir[Rails.root.join('config','locales', '**', '*.{rb,yml}')]
     config.i18n.default_locale = 'zh-CN'
     config.i18n.enforce_available_locales = true

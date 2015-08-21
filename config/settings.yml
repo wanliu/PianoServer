@@ -26,3 +26,16 @@ elasticsearch:
   index_name: pm_products_production
 assets:
   gray_image: "data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+dev:
+  feature:
+    camera: true
+    shop:
+      website: true
+    purchase: true
+    cart: true
+    favorites: true
+    qrcode: true
+    order:
+      chat: true
+    user:
+      sign_in: true

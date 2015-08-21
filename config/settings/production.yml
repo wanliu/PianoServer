@@ -1,0 +1,13 @@
+dev:
+  feature:
+    camera: false
+    shop:
+      website: false
+    purchase: false
+    cart: false
+    favrited: false
+    qrcode: false
+    order:
+      chat: false
+    user:
+      sign_in: false

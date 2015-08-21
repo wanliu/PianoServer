@@ -53,10 +53,6 @@ Rails.application.routes.draw do
 
   resources :shops, only: [ :show ]
 
-  resources :shop_categories
-
-  resources :items
-
   resources :chats
   resources :orders do
     member do
@@ -88,6 +84,9 @@ Rails.application.routes.draw do
       get "/about", to: "shops#about"
     end
 
+    resources :categories, controller: 'shop_categories'
+    resources :items
+
     namespace :admin, module: 'shops/admin' do
       get "/", to: "admin#dashboard", as: :index
       get "/profile", to: "admin#profile"
@@ -96,6 +95,9 @@ Rails.application.routes.draw do
         member do
           get "/:child_id", to: "categories#show_by_child", as: :child
           post "/:parent_id", to: "categories#create_by_child"
+          put "/:child_id", to: "categories#update_by_child"
+          post "/:child_id/upload_image", to: "categories#upload_image"
+          delete "/:child_id", to: "categories#destroy_by_child"
         end
       end
 

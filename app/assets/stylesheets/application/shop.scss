@@ -46,11 +46,12 @@
 
 .cate-items-list {
   color: #6c6c6c;
+  margin-bottom: 30px;
 
   .title {
     padding: 10px 20px;
     height: 40px;
-    border-bottom: 1px solid #e1e1e1;
+    border-bottom: 1px solid #ddd;
     margin-bottom: 20px;
 
     span {
@@ -62,22 +63,39 @@
   
   .cate {
     margin-bottom: 20px;
-    height: 120px;
-    overflow: hidden;
+    max-height: 220px;
+    // overflow: hidden;
 
     a {
-      border: 1px solid #e1e1e1;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      position: relative;
       display: inline-block;
-      line-height: 92px;
-      overflow: hidden;
       width: 100%;
       font-size: 12px;
-      height: 92px;
+      margin-bottom: 10px;
+
+      div {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        margin-top: -9px;
+        font-size: 18px;
+        width: 100%;
+        text-align: center;
+        cursor: text;
+      }
+
+      img {
+        width: 210px;
+        max-width: 100%;
+      }
     }
 
     span.text {
       display: block;
       line-height: 15px;
+      height: 15px;
       font-size: 12px;
     }
   }
@@ -88,7 +106,8 @@
     overflow: hidden;
 
     a {
-      border: 1px solid #e1e1e1;
+      border: 1px solid #ddd;
+      border-radius: 4px;
       display: block;
       overflow: hidden;
       height: 200px;

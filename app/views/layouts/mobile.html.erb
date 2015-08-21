@@ -57,8 +57,14 @@
         <div class="navbar-collapse collapse navbar-responsive-collapse">
           <ul class="nav navbar-nav navbar-right">
             <li><%= link_to "关于我们", about_path  %></li>
+            <% if Settings.dev.feature.qrcode %>
             <li><%= link_to "二维码", "#share-url-qrcode" , "data-toggle"=>"modal" %></li>
+            <% end %>
+            <% if Settings.dev.feature.favorites %>
             <li><%= link_to "我的收藏", "/favorites" %></li>
+            <% end %>
+
+            <% if Settings.dev.feature.user.sign_in %>
             <% if current_anonymous_or_user.id < 0 %>
             <li><%= link_to "登入(#{current_anonymous_or_user.id if Rails.env.development?})", new_user_session_path %></li>
             <% else %>
@@ -71,6 +77,7 @@
                 <li><%= link_to '登出', destroy_user_session_path, method: :delete %>
               </ul>
             </li>
+            <% end %>
             <% end %>
           </ul>
         </div>
