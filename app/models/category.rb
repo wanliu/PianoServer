@@ -5,10 +5,12 @@ class Category < ActiveRecord::Base
 
   has_many :items, foreign_key: :shop_category_id
 
-  store_accessor :image, :avatar_url
+  # store_accessor :image, :avatar_url
 
-  alias_method :cover_url, :avatar_url
-  alias_method :logo_url, :avatar_url
+  mount_uploader :image, ImageUploader # , mount_on: :avatar_url
+
+  # alias_method :cover_url, :avatar_url
+  # alias_method :logo_url, :avatar_url
 
   def has_children
     Category.exists?(parent_id: id)

@@ -95,6 +95,9 @@ Rails.application.routes.draw do
         member do
           get "/:child_id", to: "categories#show_by_child", as: :child
           post "/:parent_id", to: "categories#create_by_child"
+          put "/:child_id", to: "categories#update_by_child"
+          post "/:child_id/upload_image", to: "categories#upload_image"
+          delete "/:child_id", to: "categories#destroy_by_child"
         end
       end
 

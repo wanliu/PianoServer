@@ -1,28 +1,32 @@
 class @LeftSideBar
-	constructor: (@element) ->
-		$(window).resize(@onResize.bind(@))
-		@$().click ()=>
-			@toggleSlide() if $(window).width() < 768
+  constructor: (@element, @container = window) ->
+    @bindResizeEvent(@container)
+    @$().click ()=>
+      @toggleSlide() if $(@container).width() < 768
 
-	$: () ->
-		$(@element)
+  $: () ->
+    $(@element)
 
-	onResize: () ->
-		windowWidth = $(window).width()
-		if windowWidth > 768
-			@show()
-		else
-			@hide()
+  bindResizeEvent: (container) ->
+    $(window).resize (e) =>
+      @onResize(e)
 
-	toggleSlide: () ->
-		left = parseInt(@$().css('left'))
-		if left == 0
-			@hide()
-		else
-			@show()
+  onResize: () ->
+    windowWidth = $(@container).width()
+    if windowWidth > 768
+      @show()
+    else
+      @hide()
 
-	hide: () ->
-		@$().animate({left: -240})
+  toggleSlide: () ->
+    left = parseInt(@$().css('left'))
+    if left == 0
+      @hide()
+    else
+      @show()
 
-	show: () ->
-		@$().animate({left: 0})
+  hide: () ->
+    @$().animate({left: -240})
+
+  show: () ->
+    @$().animate({left: 0})

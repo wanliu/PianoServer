@@ -5,17 +5,60 @@
     border-radius: 4px;
     margin-bottom: 20px;
 
+    .deleted {
+      display: none;
+      position: absolute;
+      left: 10px;
+      bottom: 10px;
+    }
+
     .actions {
       display: none;
       position: absolute;
       bottom: 10px;
       right: 10px;
+
+      .uploader-btn {
+        display: inline-block;
+        font-weight: normal;
+        text-align: center;
+        vertical-align: middle;
+        border-radius: 4px;
+        // padding: 6px 12px;
+        background-color: white;
+        touch-action: manipulation;
+        color: black;
+      }
+
+      .qq-upload-button {
+        display: block;
+        width: auto;
+        padding: 6px 12px;
+        text-align: center;
+        background-color: transparent;
+        border: 0px;
+        color: inherit;
+      }
     }
   }
 
   .box:hover {
+    .deleted {
+      display: block;
+    }
+
     .actions {
       display: block;
+
+      .uploader {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        opacity: 0;
+        z-index: 10;
+        padding-top: 100px;
+      }
+
     }
   }
 
@@ -42,6 +85,7 @@
   }
 
   .thumbnail .title-input {
+    display: none;
     position: absolute;
     top: 50%;
     // left: 20px;
