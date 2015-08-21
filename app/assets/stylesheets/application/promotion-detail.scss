@@ -2,11 +2,16 @@
   margin-bottom: 2em;
   background: #FFFFFF;
 
-  .promotion-poster{
-    width: 200px;
-    height: auto;
-    display: block;
+  .promotion-poster-image{
+    width: 50%;
     margin: 0 auto;
+    overflow: hidden;
+
+    .promotion-poster{
+      max-width: 100%;
+      height: auto;
+      width: 100%\9;
+    }
   }
 
   .price-period{
