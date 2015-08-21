@@ -1,74 +1,123 @@
 <li class="list-group-item">
   <div class="chat-order-address clearfix">
-    <div class="col-xs-4 col-sm-4">收货地址</div>
-    <div class="col-xs-8 col-sm-8">
+    <div class="col-xs-4 col-sm-2">收货地址</div>
+    <div class="col-xs-8 col-sm-10">
       <div class="text-right">
         <div class="dropdown">
           <span class="toggle-button" data-toggle="dropdown" role="button">
+            <span class="button-text" id="address-text"></span>
             <% if @order.buyer_id == current_anonymous_or_user.id %>
-            <span class="button-text" id="button-text"><%= @order.delivery_location || current_anonymous_or_user.latest_location || '选择收货地址' %></span>
-            <span class="caret"></span>
-            <% else %>
-            <span class="button-text">暂无收货地址</span>
+              <span class="caret"></span>
             <% end %>
           </span>
-          <ul class="dropdown-menu address-menu locations">
-            <%# if @order.buyer_id < 0 %>
-            <!-- <span class="anonymousAddress" id="anonymousAddress"></span> -->
-            <%# else %>
-            <% current_anonymous_or_user.locations.first(5).each do |location| %>
-            <li>
-              <%= link_to location, 'javascript:void(0)', :"data-default-location-id" => location.id,:"data-order-id" => @order.id , :"data-location" => location ,:class => "set-default-address" %>
-            </li>
-            <% end %>
-            <%# end %>
-            <li role="separator" class="divider"></li>
-            <li>
-              <%= link_to '新增收货地址', new_location_path(chat_id: @chat, order_id:@order) %>
-              <% if @order.buyer_id > 0 %>
-                <%= link_to '管理收货地址', location_path(user_id: current_anonymous_or_user.id) %>
+          <% if @order.buyer_id == current_anonymous_or_user.id %>
+            <ul class="dropdown-menu address-menu locations">
+              <% if current_anonymous_or_user.locations.first(5).length > 0 %>
+                <% current_anonymous_or_user.locations.first(5).each do |location| %>
+                  <li>
+                    <%= link_to location, 'javascript:void(0)', :"data-default-location-id" => location.id,:"data-order-id" => @order.id , :"data-location" => location ,:class => "set-default-address" %>
+                  </li>
+                <% end %>
+                <li role="separator" class="divider"></li>
               <% end %>
-            </li>
-          </ul>
+
+              <li>
+                <%= link_to '新增收货地址', new_location_path(chat_id: @chat, order_id:@order) %>
+              </li>
+
+              <% if @order.buyer_id > 0 %>
+                <li>
+                  <%= link_to '管理收货地址', location_path(user_id: current_anonymous_or_user.id) %>
+                </li>
+              <% end %>
+            </ul>
+          <% end %>
         </div>
       </div>
-    </li>
+    </div>
   </div>
 </li>
-    
-<script type="text/javascript">
-  $(function(){
-    var addresses =LocalAddress.getAll() || [];
-    
-    for(i=0;i<addresses.length;i++){
-      var address = addresses[i];
-      var full_address = address.contact + ',' + address.province_name + address.city_name + address.region_name + address.road + ',' + address.contact_phone;
-      var orderId = <%= @order.id %>;
-      var html = '<li><a data-default-location-id="' + address.id + '" data-order-id="' + orderId + '" data-location="' + full_address + '" class="set-default-address" href="javascript:void(0)">' + full_address + '</a></li>';
 
-      $(".locations .divider").before(html);
+<script type="text/javascript">
+  (function(){
+    var buyer_id = '<%= @order.buyer_id %>',
+        user_id = '<%= current_anonymous_or_user.id %>',
+        address_title = '<%= @order.delivery_address_title %>';
+
+    if (address_title === '') {
+      address_title = '暂无收货地址';
     }
 
+    $('#address-text').text(address_title);
+
+    if (buyer_id !== user_id || user_id > 0) {
+      return;
+    }
+
+    var addresses = LocalAddress.getAll() || [],
+        $locations = $(".locations"),
+        html = '';
+
+    for (var i=0; i<addresses.length; i++){
+      var address = addresses[i],
+          full_address = [address.contact, [address.province_name, address.city_name, address.region_name, address.road].join(''), address.contact_phone].join('，'),
+          orderId = <%= @order.id %>;
+          html += '<li><a data-location-id="' + address.id + '" data-order-id="' + orderId + '" data-location="' + full_address + '" class="set-default-address" href="javascript:void(0)">' + full_address + '</a></li>';
+    }
+
+    if (addresses.length > 0) {
+      html += '<li role="separator" class="divider"></li>';
+      $locations.prepend(html);
+    }
+
+    <% if @order["data"] && @order["data"]["delivery_address"] && @order["data"]["delivery_address"]["location_id"] %>
+      var locationId = '<%= @order["data"]["delivery_address"]["location_id"] %>',
+          $link = $locations.find('a[data-location-id=' + locationId +']');
+
+      if ($link.length > 0) {
+        var text = $link.text();
+
+        $link.parent().addClass('selected');
+      }
+    <% end %>
+
     $('.set-default-address').click(function (e) {
-      var default_location_id = $(this).data('defaultLocationId') ,
+      var $parent = $(this).parent();
+
+      if ($parent.hasClass('selected')) {
+        return;
+      }
+
+      $parent.addClass('selected').siblings().removeClass('selected');
+
+      var address_title = $(this).text(),
+          location_id = $(this).data('locationId') ,
           order_id = $(this).data('orderId'),
           location = $(this).data("location"),
-          data =  { "default_location_id": default_location_id , "order_id": order_id, address: address };
+          data = {};
 
-        if (default_location_id < 0) {
-          var address = LocalAddress.get(default_location_id)
-          data['address'] = address;
-        }
-          
-        $.ajax({
+      $('#address-text').text(address_title);
+
+      data['delivery_address'] =  {
+        "location_id": location_id
+      };
+
+      if (location_id < 0) {
+        var address = LocalAddress.get(location_id);
+
+        data['delivery_address']['location'] = location;
+        data['delivery_address']['address'] = address;
+      }
+
+      $.ajax({
         url: '/orders/' + order_id + '/set_address/',
         type: 'PUT',
         dataType: 'json',
         data: data,
-        success: function(data) {
-          $('#button-text').html(location);
+        success: function() {
+          $('#address-text').html(location);
         }
       });
-    })
-  });
+    });
+  })();
 </script>

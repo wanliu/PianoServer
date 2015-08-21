@@ -1,7 +1,7 @@
 class Order < ActiveRecord::Base
   include ThumbImages
   store_accessor :image, :avatar_url
-  store_accessor :data, :updates, :accept_state
+  store_accessor :data, :updates, :accept_state, :delivery_address
 
   MIN_AMOUNT = 6
 
@@ -256,6 +256,14 @@ class Order < ActiveRecord::Base
     #   data[:updates] = nil
     #   save
     # end
+  end
+
+  def delivery_address_title
+    if delivery_location_id == nil or delivery_location_id < 0
+      (delivery_address || {})["location"] || ''
+    else
+      delivery_location.full_address
+    end
   end
 
   private

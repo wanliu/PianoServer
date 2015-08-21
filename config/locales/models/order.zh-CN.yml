@@ -5,3 +5,4 @@ zh-CN:
     attributes:
       order:
         total: "总价"
+        delivery_address: "收货地址"

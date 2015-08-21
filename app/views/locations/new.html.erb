@@ -1,11 +1,11 @@
 <%= form_for @location do |f| %>
   <%= f.hidden_field :chat_id %>
   <%= f.hidden_field :order_id %>
-  <div class="form-group">
+  <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-6">
     <%= f.label :contact, "姓名"%>
     <%= f.text_field :contact, class: "form-control", maxlength: 30 %>
   </div>
-  <div class="form-group">
+  <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-6">
     <%= f.label :id, "城市"%>
       <div class="city-group">
         <%= select(:location, :province_id, options_for_select(ChinaCity.list), {prompt: '--省份--'}, {class: "city-select"}) %>
@@ -18,49 +18,56 @@
     return $('.city-group').china_city();
   });
   </script>
-  <div class="form-group">
+  <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-6">
     <%= f.label :road, "地址"%>
       <%= f.text_field :road, class: "form-control", maxlength: 140 %>
   </div>
-  <div class="form-group">
+  <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-6">
     <%= f.label :zipcode, "邮编"%>
       <%= f.text_field :zipcode, class: "form-control" %>
   </div>
-  <div class="form-group">
+  <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-6">
     <%= f.label :contact_phone, "手机"%>
       <%= f.text_field :contact_phone, class: "form-control" %>
   </div>
   <input type="hidden" name="location[user_id]" value="<%= current_anonymous_or_user.id %>" />
-  <%= f.submit "新建收件人信息", class: "btn btn-danger" %>
+  <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-6">
+    <%= f.submit "新建收件人信息", class: "btn btn-danger " %>
+  </div>
 <% end %>
 
 <% if anonymous? %>
-<script type="text/javascript">
-  $('form').on('submit', function(e) {
-    e.preventDefault();
-    var contact = $(this).serializeArray()[4].value,
-        zipcode = $(this).serializeArray()[9].value,
-        contact_phone = $(this).serializeArray()[10].value,
-        province_id = $(this).serializeArray()[5].value,
-        city_id = $(this).serializeArray()[6].value,
-        region_id = $(this).serializeArray()[7].value,
-        road = $(this).serializeArray()[8].value,
-        province_name = jQuery("#location_province_id  option:selected").text(),
-        city_name = jQuery("#location_city_id  option:selected").text(),
-        region_name = jQuery("#location_region_id  option:selected").text(),
-        address_object = {
-          'contact':contact,
-          'province_id': province_id,
-          'city_id': city_id,
-          'region_id': region_id,
-          'province_name': province_name,
-          'city_name': city_name,
-          'region_name':region_name,
-          'road':road,
-          'zipcode':zipcode,
-          'contact_phone':contact_phone
-        };
+  <script type="text/javascript">
+    $('form').on('submit', function(e) {
+      e.preventDefault();
+
+      var contact = $(this).serializeArray()[4].value,
+          zipcode = $(this).serializeArray()[9].value,
+          contact_phone = $(this).serializeArray()[10].value,
+          province_id = $(this).serializeArray()[5].value,
+          city_id = $(this).serializeArray()[6].value,
+          region_id = $(this).serializeArray()[7].value,
+          road = $(this).serializeArray()[8].value,
+          province_name = jQuery("#location_province_id  option:selected").text(),
+          city_name = jQuery("#location_city_id  option:selected").text(),
+          region_name = jQuery("#location_region_id  option:selected").text(),
+          address_object = {
+            'contact':contact,
+            'province_id': province_id,
+            'city_id': city_id,
+            'region_id': region_id,
+            'province_name': province_name,
+            'city_name': city_name,
+            'region_name':region_name,
+            'road':road,
+            'zipcode':zipcode,
+            'contact_phone':contact_phone
+          },
+          chatId = '<%= @location.chat_id %>';
+
       LocalAddress.set(~new Date().getTime(),address_object);
+
+      Turbolinks.visit('/chats/' + chatId);
     });
-</script>
+  </script>
 <% end %>

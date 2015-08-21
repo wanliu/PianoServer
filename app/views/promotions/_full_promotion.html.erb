@@ -3,7 +3,9 @@
 <%= content_for :module, :detail %>
 
 <div class="promotion-detail-container" data-promotion-id="<%= promotion.id %>" >
-  <%= image_tag(promotion.image_url, class: "promotion-poster") %>
+  <div class="promotion-poster-image">
+    <%= image_tag(promotion.image_url, class: "promotion-poster") %>
+  </div>
 
   <div class="price-period clearfix">
     <div class="price-desc">

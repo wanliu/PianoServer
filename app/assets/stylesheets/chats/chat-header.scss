@@ -38,21 +38,13 @@
   .order-toggle-button{
     position: absolute;
     right: 10px;
-    top: 0;
-    bottom: 0;
+    top: 50%;
+    margin-top: -11px;
+    line-height: 1;
     width: 30px;
     text-align: center;
     font-size: 22px;
     display: none;
-
-    .icon-wrap{
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      display: table;
-      width: 100%;
-      margin: auto;
-    }
 
     .toggle-icon{
       -webkit-transition: all 0.45s ease-in-out 0s;
