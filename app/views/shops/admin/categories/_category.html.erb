@@ -3,7 +3,7 @@
     <div class="thumbnail" data-link="<%= child_shop_admin_category_path(@shop.name, @root, category) %>" >
     <%#= link_to child_shop_admin_category_path(@shop.name, @root, category) , class: "thumbnail" do %>
       <%= image_tag category.image.url(:cover) || Settings.assets.gray_image %>
-      <h2><%= category.name %></h2>
+      <h2><%= category.title %></h2>
       <input type="text" name="name" class="title-input" placeholder="分类名称" />
       <div class="actions">
         <div type="button" class="uploader-btn">
@@ -16,7 +16,7 @@
       </div>
 
       <div class="deleted">
-        <%= button_to child_shop_admin_category_path(@shop.name, @root, category), class: 'btn btn-danger', method: :delete, remote: true do %>
+        <%= link_to child_shop_admin_category_path(@shop.name, @root, category), class: 'btn btn-danger', method: :delete, remote: true, data: { confirm: '删除此分类吗？' } do %>
           <%= icon :remove %>
         <% end %>
       </div>
@@ -27,5 +27,5 @@
   <%= form_tag shop_admin_categories_path(@shop.name) do %>
     <input type="hidden" name="category_img" />
   <% end %>
-  <p class="text-center"><%= category.name %></p>
+  <p class="text-center"><%= category.title %></p>
 </div>

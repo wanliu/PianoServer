@@ -36,6 +36,8 @@ gem 'activeresource'
 gem 'scoped_search'
 gem 'json-patch'
 gem 'hashdiff'
+gem 'chinese_pinyin'
+gem 'data-confirm-modal', github: 'ifad/data-confirm-modal'
 
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'

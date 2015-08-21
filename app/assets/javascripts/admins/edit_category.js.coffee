@@ -58,13 +58,13 @@ class @EditCategory extends @Event
         data: {
           parent_id: @categoryId,
           category: {
-            name: @$input.val(),
+            title: @$input.val(),
             image_url: @$img.val()
           }
         }
       }).success (data) =>
         @leaveEdit()
-        @setTitle(data.name)
+        @setTitle(data.title)
 
 
   leaveEdit: () ->

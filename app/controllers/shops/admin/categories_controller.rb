@@ -54,7 +54,7 @@ class Shops::Admin::CategoriesController < Shops::Admin::BaseController
   private
 
   def category_params
-    params.require(:category).permit(:name)
+    params.require(:category).permit(:title)
   end
 
   def is_descendant_of_category

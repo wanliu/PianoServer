@@ -1,15 +1,15 @@
-<h1><%= @category.name %></h1>
+<h1><%= @category.title %></h1>
 <% if @category.ancestors.count > 0 %>
 <ol class="breadcrumb">
   <% @category.self_and_ancestors.each_with_index do |node, i| %>
     <% if @category.ancestors.count - i == 0 %>
       <li class="active">
-        <%= node.name %>
+        <%= node.title %>
       </li>
     <% else %>
       <li>
         <% url = @root == node ? shop_admin_category_path(@shop.name, @root) : child_shop_admin_category_path(@shop.name, @root, @category) %>
-         <%= link_to node.name, url %>
+         <%= link_to node.title, url %>
       </li>
     <% end %>
   <% end %>
