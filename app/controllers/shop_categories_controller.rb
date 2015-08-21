@@ -25,7 +25,8 @@ class ShopCategoriesController < ApplicationController
       @shop = Shop.find_by(name: params[:shop_id])
     end
 
-    def set_shop_category    
-      @shop_category = @shop.categories.find(params[:id])
+    def set_shop_category
+      @shop_category = Category.find(params[:id])
+      @root = @shop.categories.find(@shop_category.root.id)
     end
 end
