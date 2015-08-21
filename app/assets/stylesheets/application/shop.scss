@@ -60,69 +60,73 @@
       font-size: 12px;
     }
   }
-  
-  .cate {
-    margin-bottom: 20px;
-    max-height: 220px;
-    // overflow: hidden;
 
-    a {
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      position: relative;
-      display: inline-block;
-      width: 100%;
-      font-size: 12px;
-      margin-bottom: 10px;
+  .content {
+    padding: 0;
 
-      div {
-        position: absolute;
-        top: 50%;
-        left: 0;
-        margin-top: -9px;
-        font-size: 18px;
+    .cate {
+      margin-bottom: 20px;
+      max-height: 220px;
+      // overflow: hidden;
+
+      a {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        position: relative;
+        display: inline-block;
         width: 100%;
-        text-align: center;
-        cursor: text;
+        font-size: 12px;
+        margin-bottom: 10px;
+
+        div {
+          position: absolute;
+          top: 50%;
+          left: 0;
+          margin-top: -9px;
+          font-size: 18px;
+          width: 100%;
+          text-align: center;
+          cursor: text;
+        }
+
+        img {
+          width: 210px;
+          max-width: 100%;
+        }
       }
 
-      img {
-        width: 210px;
-        max-width: 100%;
+      span.text {
+        display: block;
+        line-height: 15px;
+        height: 15px;
+        font-size: 12px;
       }
     }
 
-    span.text {
-      display: block;
-      line-height: 15px;
-      height: 15px;
-      font-size: 12px;
-    }
-  }
-
-  .item {
-    margin-bottom: 20px;
-    height: 240px;
-    overflow: hidden;
-
-    a {
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      display: block;
+    .item {
+      margin-bottom: 20px;
+      height: 240px;
       overflow: hidden;
-      height: 200px;
-      margin: 5px 20px;
 
-      img.item-avatar {
+      a {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        display: block;
+        overflow: hidden;
         height: 200px;
-        max-width: 100%;
-      }
-    }
+        margin: 5px 20px;
 
-    span.text {
-      display: block;
-      line-height: 15px;
-      font-size: 12px;
+        img.item-avatar {
+          height: 200px;
+          max-width: 100%;
+        }
+      }
+
+      span.text {
+        display: block;
+        line-height: 15px;
+        font-size: 12px;
+      }
     }
   }
 }
