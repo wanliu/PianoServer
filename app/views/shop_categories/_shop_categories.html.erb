@@ -1,19 +1,17 @@
-<div class="container content">
-  <div class="row shop-categories">
-    <% categories.each do |cate| %>
-      <div class="col-xs-4 col-sm-3 cate">
-        <%= link_to shop_category_path(shop.name, cate), class: 'text-center' do %>
-          <% if cate.image.present? %>
-            <%= image_tag cate.image.url %>
-          <% else %>
-            <%= image_tag image_url('trans_blank.gif') %>
-            <div>
-              <span><%= cate.name %></span>
-            </div>
-          <% end %>
+<div class="row shop-categories">
+  <% categories.each do |cate| %>
+    <div class="col-xs-4 col-sm-3 cate">
+      <%= link_to shop_category_path(shop.name, cate), class: 'text-center' do %>
+        <% if cate.image.present? %>
+          <%= image_tag cate.image.url %>
+        <% else %>
+          <%= image_tag image_url('trans_blank.gif') %>
+          <div>
+            <span><%= cate.name %></span>
+          </div>
         <% end %>
-        <span class='text text-center'><%= cate.name %></span>
-      </div>
-    <% end %>
-  </div>
+      <% end %>
+      <span class='text text-center'><%= cate.name %></span>
+    </div>
+  <% end %>
 </div>
