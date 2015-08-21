@@ -41,7 +41,7 @@
 	    </p>-->
 	  <% end %>
   	<div class="provider-wrap">
-    	<%= link_to Settings.dev.feature.shop.website ? shop_site_path(shop_name: promotion.shop_name) : root_path do %>
+    	<%= link_to Settings.dev.feature.shop.website ? shop_site_path(shop_name: promotion.shop_name) : 'javascript:void(0)' do %>
 	      <div class="provider">
 	        <div class="provider-name">
 	          <%= promotion.shop_name %>
