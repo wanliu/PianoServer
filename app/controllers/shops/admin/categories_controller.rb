@@ -14,6 +14,7 @@ class Shops::Admin::CategoriesController < Shops::Admin::BaseController
     @parent = Category.find(params[:parent_id])
     raise ActionController::RoutingError.new('Not Found') unless @parent.is_or_is_descendant_of?(@root)
     @category = @parent.children.create(category_params)
+
     render :show, formats: [ :json ]
   end
 

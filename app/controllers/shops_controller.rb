@@ -6,8 +6,7 @@ class ShopsController < ApplicationController
     page = params[:page].presence || 1
     per = params[:per].presence || 9
 
-    # @shop_categories = ShopCategory.where(shop_id: @shop.id, page: page, per: per)
-    @shop_categories = []
+    @categories = @shop.categories.page(page).per(per)
     render :show
   end
 
@@ -17,7 +16,6 @@ class ShopsController < ApplicationController
     page = params[:page].presence || 1
     per = params[:per].presence || 9
 
-    # @shop_categories = ShopCategory.where(shop_id: @shop.id, page: page, per: per)
-    @shop_categories = []
+    @categories = @shop.categories.page(page).per(per)
   end
 end
