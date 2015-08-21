@@ -3,8 +3,8 @@
     <% categories.each do |cate| %>
       <div class="col-xs-4 col-sm-3 cate">
         <%= link_to shop_category_path(shop.name, cate), class: 'text-center' do %>
-          <% if cate.logo_url.present? %>
-            <%= image_tag cate.logo_url %>
+          <% if cate.image.present? %>
+            <%= image_tag cate.image.url %>
           <% else %>
             <%= image_tag image_url('trans_blank.gif') %>
             <div>
