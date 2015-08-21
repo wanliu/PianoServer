@@ -179,6 +179,15 @@ ActiveRecord::Schema.define(version: 20150819094158) do
     t.integer  "send_location_id"
   end
 
+  create_table "shop_categories", force: :cascade do |t|
+    t.integer  "shop_id",        null: false
+    t.string   "name",           null: false
+    t.string   "ancestry"
+    t.integer  "ancestry_depth"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
   create_table "shops", force: :cascade do |t|
     t.integer  "owner_id"
     t.string   "name"
