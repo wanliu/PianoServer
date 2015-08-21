@@ -5,7 +5,6 @@ class Shops::Admin::CategoriesController < Shops::Admin::BaseController
   def create
     @root = @shop.categories.find(params[:parent_id])
     @category = @root.children.create(category_params)
-    @shop.categories << @category
 
     render :show, formats: [ :json ]
   end
@@ -15,7 +14,6 @@ class Shops::Admin::CategoriesController < Shops::Admin::BaseController
     @parent = Category.find(params[:parent_id])
     raise ActionController::RoutingError.new('Not Found') unless @parent.is_or_is_descendant_of?(@root)
     @category = @parent.children.create(category_params)
-    @shop.categories << @category
 
     render :show, formats: [ :json ]
   end
