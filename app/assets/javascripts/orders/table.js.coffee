@@ -10,6 +10,7 @@ class @OrderTable extends @Event
   }
 
   constructor: (@element, @order, @options = {}) ->
+    @itemList = @$().find('.item-list')
     super(@element)
     @$items = @$().find('.item-list > .list-group-item')
     @items = for item in @$items
@@ -17,9 +18,7 @@ class @OrderTable extends @Event
 
     @orderId = @order.id
     @options = $.extend({}, OrderTable.defaultOptions, @options)
-    @itemList = @$().find('.item-list')
     @patch = []
-    @bindAllEvents()
 
   bindAllEvents: () ->
     @itemList.on('click', @onClicked.bind(@))

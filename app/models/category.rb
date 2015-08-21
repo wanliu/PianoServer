@@ -3,8 +3,11 @@ class Category < ActiveRecord::Base
 
   has_and_belongs_to_many :shops
 
-  store_accessor :image, :avatar_url
+  # store_accessor :image, :avatar_url
 
-  alias_method :cover_url, :avatar_url
-  alias_method :logo_url, :avatar_url
+  mount_uploader :image, ImageUploader # , mount_on: :avatar_url
+
+
+  # alias_method :cover_url, :avatar_url
+  # alias_method :logo_url, :avatar_url
 end

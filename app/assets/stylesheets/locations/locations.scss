@@ -1,0 +1,29 @@
+ .locations{
+    >li >a{
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+.show-locations{
+
+  .my-locations{
+    padding: 10px;
+    border: 2px dashed red;
+    height: 100px;
+    margin-left: 10px;
+    margin-top: 10px;
+
+    &:hover{
+      background-color: #ddd;
+    }
+    .address-choiced{
+      position: absolute;
+      right: 5px;
+      color: red;
+      top: 75px;
+    }
+  }
+}

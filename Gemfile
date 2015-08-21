@@ -43,6 +43,7 @@ gem 'elasticsearch-persistence'
 # gem 'active_model_serializers', github: 'rails-api/active_model_serializers', tag: 'v0.10.0.rc2'
 
 gem 'rack-cors', :require => 'rack/cors'
+gem 'rack-raw-upload', '~> 1.1.1'
 
 gem 'devise', '3.4.0'
 gem 'mobylette'
@@ -67,6 +68,8 @@ gem 'sidekiq'
 gem 'china_city'
 gem 'table_cloth'
 
+gem 'carrierwave'
+gem 'carrierwave-upyun'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 

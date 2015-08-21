@@ -30,13 +30,18 @@ class Admins::AccountsController < Admins::BaseController
     url = "/api/v1/users/#{params[:wanliu_user_id]}/pry.json"
     @remote_user = WanliuUser.find(:one, from: url)
     if User.can_import?(params[:wanliu_user_id])
-
-      @import_user = User.find_or_initialize_by(id: @remote_user.id)
-      @import_user.update(user_sync_options(@remote_user))
-      unless @remote_user.shop_id.blank?
-        @remote_shop = WanliuShop.find(@remote_user.shop_id)
-        @import_shop = Shop.find_or_initialize_by(id: @remote_shop.id)
-        @import_shop.update(shop_sync_options(@remote_shop))
+      User.transaction do
+        @import_user = User.find_or_initialize_by(id: @remote_user.id)
+        user_sync_options(@remote_user).each do |key, value|
+          @import_user.update_attribute key, value
+        end
+        unless @remote_user.shop_id.blank?
+          @remote_shop = WanliuShop.find(@remote_user.shop_id)
+          @import_shop = Shop.find_or_initialize_by(id: @remote_shop.id)
+          shop_sync_options(@remote_shop).each do |key, value|
+            @import_shop.update_attribute key, value
+          end
+        end
       end
     else
       raise AccountImportError.new("can't import this user")
@@ -116,7 +121,7 @@ class Admins::AccountsController < Admins::BaseController
       license_no: shop.license_no,
       website: shop.website,
       image: {
-        avatar_url: shop.image.src
+        avatar_url: shop.image.try(:src)
       },
       provider: 'import'
     }

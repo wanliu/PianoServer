@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150812125426) do
+ActiveRecord::Schema.define(version: 20150819094158) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,10 +45,10 @@ ActiveRecord::Schema.define(version: 20150812125426) do
     t.integer  "depth",          default: 0, null: false
     t.integer  "children_count", default: 0, null: false
     t.integer  "position"
-    t.jsonb    "image"
     t.jsonb    "data"
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
+    t.string   "image"
   end
 
   add_index "categories", ["iid"], name: "index_categories_on_iid", using: :btree
@@ -223,6 +223,7 @@ ActiveRecord::Schema.define(version: 20150812125426) do
     t.jsonb    "image",                  default: {}, null: false
     t.string   "nickname"
     t.string   "provider"
+    t.integer  "latest_location_id"
   end
 
   add_index "users", ["authentication_token"], name: "index_users_on_authentication_token", unique: true, using: :btree

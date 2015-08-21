@@ -61,7 +61,9 @@
 
     <% unless @order.nil? %>
     var order = <%=raw @order.origin_hash.to_json %>;
-    var miniTable = new MiniTable($('.chat-order-header'), $('.order-table-wrap'), order);
+      <% if Settings.dev.feature.order.chat %>
+      var miniTable = new MiniTable($('.chat-order-header'), $('.order-table-wrap'), order);
+      <% end %>
     <% end %>
 
     if (!targetId) {
@@ -76,7 +78,9 @@
 
     chat.enter();
 
+    <% if Settings.dev.feature.order.chat %>
     chat.setTable(miniTable);
+    <% end %>
 
     chat.on('init', function(e, socket) {
       var chatId = '<%= @chat.id %>';
