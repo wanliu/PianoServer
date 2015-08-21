@@ -5,7 +5,7 @@ dev:
       website: false
     purchase: false
     cart: false
-    favrited: false
+    favorites: false
     qrcode: false
     order:
       chat: false
