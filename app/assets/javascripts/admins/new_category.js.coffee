@@ -31,6 +31,7 @@ class @NewCategory extends @Event
         }
       }).success (data) =>
         category = @$().before($(data.html)).prev()
+        @$input.val('')
         new EditCategory(category)
 
   leaveEdit: () ->

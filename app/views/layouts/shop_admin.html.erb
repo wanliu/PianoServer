@@ -43,17 +43,18 @@
   <body class="<%= yield :module %>">
     <div class="navbar navbar-default navbar-fixed-top">
       <div class="container">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
         <ul class="nav navbar-nav navbar-left">
           <%= yield :back %>
         </ul>
         <%= link_to root_path, class: "navbar-brand" do %>
           <%= content_for?(:title) ? yield(:title) : @shop.name %>
         <% end %>
+
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
         <div class="navbar-collapse collapse navbar-responsive-collapse">
           <ul class="nav navbar-nav">
             <li><%= link_to "关于我们", about_path  %></li>
@@ -78,8 +79,8 @@
           </footer>
         </div>
         <script type="text/javascript">
-          $(window).resize(adjustLayout);
-          window.adjId = setInterval(adjustLayout, 3000);
+          $(window).resize(tryAdjustLayout);
+          MAX_RETRY_ADJUSTMENTS = 3;
 
           adjustLayout();
 
@@ -92,6 +93,36 @@
               $('.left-sidebar').animate({left: 0});
               $('.content').animate({marginLeft: 240});
             }
+          }
+
+          function checkLayout() {
+            var contentWidth = $(window).width();
+            var left =  parseInt($('.left-sidebar').css("left"));
+            var marginLeft = parseInt($('.content').css('marginLeft'));
+
+            if (contentWidth < 768) {
+              return left === -300 && marginLeft === 0;
+            } else {
+              return left === 0 && marginLeft === 240;
+            }
+          }
+
+          function tryAdjustLayout() {
+            var count = 0;
+
+            var adjustId = setInterval(function() {
+              count++;
+              if (count < MAX_RETRY_ADJUSTMENTS) {
+                if (!checkLayout()) {
+                  adjustLayout();
+                } else {
+                  clearInterval(adjustId);
+                }
+              } else {
+                clearInterval(adjustId);
+              }
+            }, 500);
+
           }
         </script>
       </div><!--/row-->
