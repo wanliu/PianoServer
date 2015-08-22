@@ -77,9 +77,9 @@ Rails.application.routes.draw do
   #
   get '/about' => 'home#about'
 
-  match ':shop_name', :to => 'shops#show_by_name', via: [ :get ], as: :shop_site
+  match ':shop_name', :to => 'shops#show_by_name', constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ }, via: [ :get ], as: :shop_site
 
-  resources :shops, path: '/', only: [] do # constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ }
+  resources :shops, path: '/', only: [], constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do
     member do
       get "/about", to: "shops#about"
     end
@@ -91,7 +91,7 @@ Rails.application.routes.draw do
       get "/", to: "admin#dashboard", as: :index
       get "/profile", to: "admin#profile"
 
-      resources :categories do
+      resources :categories, constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do
         member do
           get "/:child_id", to: "categories#show_by_child", as: :child
           post "/:parent_id", to: "categories#create_by_child"

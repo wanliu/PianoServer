@@ -39,3 +39,5 @@ dev:
       chat: true
     user:
       sign_in: true
+sites:
+  root: '.sites'
