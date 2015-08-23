@@ -4,16 +4,7 @@
 
 <% content_for :module, :shop %>
 
-<div class="brand-board">
-  <div class='shop-info'>
-    <%= image_tag @shop.logo_url, class: 'shop-logo' %>
-    <div class='name-address'>
-      <span class='name'><%= @shop.name %></span>
-      <span class='address'><%= @shop.address %></span>
-    </div>
-    <div style='clear:both'></div>
-  </div>
-</div>
+<%= shop_render "header.html" %>
 
 <div class="cate-items-list">
   <div class='title'>

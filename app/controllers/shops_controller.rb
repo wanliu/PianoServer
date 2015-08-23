@@ -1,4 +1,5 @@
 class ShopsController < ApplicationController
+  before_action :prepare_shop_views_path
 
   def show_by_name
     @shop = Shop.find_by name: params[:shop_name]
@@ -23,5 +24,11 @@ class ShopsController < ApplicationController
     per = params[:per].presence || 9
 
     @categories = @shop.categories.page(page).per(per)
+  end
+
+  private
+
+  def prepare_shop_views_path
+    prepend_view_path Settings.sites.root
   end
 end

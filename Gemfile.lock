@@ -190,6 +190,11 @@ GEM
       actionpack (>= 3.1)
       less (~> 2.6.0)
     libv8 (3.16.14.7)
+    liquid (3.0.6)
+    liquid-rails (0.1.2)
+      kaminari (~> 0.16.1)
+      liquid (>= 3.0.0)
+      rails (>= 3.2)
     listen (3.0.2)
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
@@ -395,6 +400,7 @@ DEPENDENCIES
   jwt
   kaminari
   less-rails
+  liquid-rails
   meta-tags
   mini_magick (~> 4.2.7)
   mobylette
