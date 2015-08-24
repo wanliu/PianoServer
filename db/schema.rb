@@ -233,8 +233,9 @@ ActiveRecord::Schema.define(version: 20150824072846) do
     t.datetime "start_at"
     t.datetime "end_at"
     t.string   "condition"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.text     "templates",   default: [],              array: true
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
   end
 
   create_table "subjects_templates", id: false, force: :cascade do |t|
