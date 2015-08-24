@@ -192,6 +192,15 @@ ActiveRecord::Schema.define(version: 20150824072846) do
   add_index "punches", ["average_time"], name: "index_punches_on_average_time", using: :btree
   add_index "punches", ["punchable_type", "punchable_id"], name: "punchable_index", using: :btree
 
+  create_table "shop_categories", force: :cascade do |t|
+    t.integer  "shop_id",        null: false
+    t.string   "name",           null: false
+    t.string   "ancestry"
+    t.integer  "ancestry_depth"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
   create_table "shops", force: :cascade do |t|
     t.integer  "owner_id"
     t.string   "name"
