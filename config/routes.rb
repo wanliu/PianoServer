@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :subjects, except: [:index, :new, :edit]
   devise_for :admins, controllers: {
     sessions: 'admins/sessions',
     registrations: 'admins/registrations'
@@ -29,6 +30,7 @@ Rails.application.routes.draw do
       end
     end
     resources :promotions
+    resources :subjects
     resources :messages
     resources :contacts
   end

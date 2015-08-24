@@ -1,0 +1,17 @@
+<h1 class="page-header">专题   <div class="btn-group pull-right" role="toolbar" aria-label="...">
+  <%= link_to new_admins_subject_path, class: "btn btn-default" do %>
+    <%= icon :plus%>
+  <% end %>
+<!--     <button type="button" class="btn btn-default">Middle</button>
+    <button type="button" class="btn btn-default">Right</button> -->
+  </div>
+</h1>
+
+<div class="btn-toolbar" role="toolbar" aria-label="...">
+
+  </div>
+
+
+<div class="subject-list">
+  <%= render partial: "subject_item", collection: @subjects %>
+</div>

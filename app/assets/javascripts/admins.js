@@ -1,11 +1,16 @@
 //= require jquery
 //= require jquery_ujs
 //= require data-confirm-modal
+//= require moment
+//= require moment/zh-cn
+//= require bootstrap-datetimepicker
 //= require bootstrap-sprockets
 //= require turbolinks
 //= require nprogress
 //= require nprogress-turbolinks
 //= require china_city/jquery.china_city
+//= require ace-rails-ap
+//= require ace/mode-liquid
 //= require _common/fileuploader
 //= require_tree ./admins
 //= require_self
