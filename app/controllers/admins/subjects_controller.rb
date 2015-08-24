@@ -7,6 +7,9 @@ class Admins::SubjectsController < Admins::BaseController
 
   def new
     @subject = Subject.new
+    defaults_templates.each do |template|
+      @subject.templates.build template
+    end
   end
 
   def create
@@ -20,6 +23,10 @@ class Admins::SubjectsController < Admins::BaseController
   end
 
 
+  def preview
+
+  end
+
   private
 
   def set_subject
@@ -28,5 +35,24 @@ class Admins::SubjectsController < Admins::BaseController
 
   def subject_params
     params.require(:subject).permit(:title, :description, :start_at, :end_at)
+  end
+
+  def defaults_templates
+    [
+      {
+        name: :_homepage_header,
+        filename: 'views/_homepage_header.html.liquid',
+        content: default_template_content('views/_homepage_header.html.liquid')
+      },
+      {
+        name: :index,
+        filename: 'views/index.html.liquid',
+        content: default_template_content('views/index.html.liquid')
+      },
+    ]
+  end
+
+  def default_template_content(filename)
+    File.read Rails.root.join('lib/generators/subject/templates', filename)
   end
 end

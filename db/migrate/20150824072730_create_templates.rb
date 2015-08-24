@@ -4,6 +4,7 @@ class CreateTemplates < ActiveRecord::Migration
       t.string :name
       t.string :filename
       t.belongs_to :last_editor, class_name: "User"
+      t.belongs_to :subject
 
       t.timestamps null: false
     end

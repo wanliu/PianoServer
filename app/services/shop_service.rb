@@ -1,8 +1,10 @@
+require 'rails/generators'
+
 module ShopService
   extend self
 
   def build(name)
-    Rails::Generator.invoke 'shop:build', [ name ]
+    Rails::Generators.invoke 'shop:build', [ name ]
   end
 
   def valid?(shop)

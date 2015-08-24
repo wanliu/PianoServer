@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150824072846) do
+ActiveRecord::Schema.define(version: 20150824072730) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -192,15 +192,6 @@ ActiveRecord::Schema.define(version: 20150824072846) do
   add_index "punches", ["average_time"], name: "index_punches_on_average_time", using: :btree
   add_index "punches", ["punchable_type", "punchable_id"], name: "punchable_index", using: :btree
 
-  create_table "shop_categories", force: :cascade do |t|
-    t.integer  "shop_id",        null: false
-    t.string   "name",           null: false
-    t.string   "ancestry"
-    t.integer  "ancestry_depth"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
-  end
-
   create_table "shops", force: :cascade do |t|
     t.integer  "owner_id"
     t.string   "name"
@@ -237,15 +228,11 @@ ActiveRecord::Schema.define(version: 20150824072846) do
     t.datetime "updated_at",  null: false
   end
 
-  create_table "subjects_templates", id: false, force: :cascade do |t|
-    t.integer "subject_id",  null: false
-    t.integer "template_id", null: false
-  end
-
   create_table "templates", force: :cascade do |t|
     t.string   "name"
     t.string   "filename"
     t.integer  "last_editor_id"
+    t.integer  "subject_id"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
   end

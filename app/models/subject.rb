@@ -1,7 +1,7 @@
 class Subject < ActiveRecord::Base
   acts_as_punchable
 
-  has_and_belongs_to_many :templates
+  has_many :templates
 
   validates :title, presence: true
   validates :name, uniqueness: true
@@ -10,6 +10,8 @@ class Subject < ActiveRecord::Base
 
 
   before_save :default_values
+
+  after_create :create_subject_files
 
   protected
 
@@ -23,5 +25,9 @@ class Subject < ActiveRecord::Base
 
   def same_name?(name)
     self.class.where(name: name).last.present?
+  end
+
+  def create_subject_files
+    SubjectService.build(name)
   end
 end

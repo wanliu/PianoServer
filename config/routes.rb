@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
-  resources :subjects, except: [:index, :new, :edit]
+  resources :subjects, except: [:index, :new, :edit] do
+    member do
+      get "preview", to: 'subjects#preview', as: :preview
+    end
+  end
   devise_for :admins, controllers: {
     sessions: 'admins/sessions',
     registrations: 'admins/registrations'
