@@ -1,4 +1,6 @@
 class Subject < ActiveRecord::Base
+  include Liquid::Rails::Droppable
+
   acts_as_punchable
 
   has_many :templates
@@ -10,8 +12,11 @@ class Subject < ActiveRecord::Base
 
 
   before_save :default_values
-
   after_create :create_subject_files
+
+  scope :availables, -> do
+    where("start_at <= ? and end_at >= ?", Time.now, Time.now)
+  end
 
   protected
 

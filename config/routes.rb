@@ -34,7 +34,9 @@ Rails.application.routes.draw do
       end
     end
     resources :promotions
-    resources :subjects
+    resources :subjects do
+      resources :templates
+    end
     resources :messages
     resources :contacts
   end

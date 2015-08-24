@@ -22,11 +22,6 @@ class Admins::SubjectsController < Admins::BaseController
     redirect_to admins_subjects_path # (@subject)
   end
 
-
-  def preview
-
-  end
-
   private
 
   def set_subject

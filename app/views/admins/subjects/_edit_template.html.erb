@@ -1,20 +1,31 @@
 <div class="panel panel-default">
+  <% url = admins_subject_template_path(subject, edit_template) %>
+  <%= form_for edit_template, url: url, remote: true do |f| %>
   <div class="panel-heading">
     <h3 class="panel-title"><%= edit_template.name %></h3>
   </div>
 
   <div class="panel-body">
     <div id="<%= edit_template.name %>" class="source-editor"><%= edit_template.content -%></div>
+    <%= f.hidden_field :content, class: "template_content" %>
   </div>
   <div class="panel-footer">
     <%#= f.submit :save, class: 'btn btn-primary' %>
-    <%= link_to :save, '#', class: 'btn btn-primary' %>
+    <%= f.submit :save, class: 'btn btn-primary' %>
     <%= link_to :Preview, '#',  class: 'btn btn-default' %>
   </div>
+  <% end %>
 </div>
 
 <script type="text/javascript">
   var LiquidMode = ace.require("ace/mode/liquid").Mode;
   var editor =ace.edit("<%= edit_template.name %>");
   editor.getSession().setMode(new LiquidMode());
+
+  $("#<%= dom_id(edit_template, :edit) %>").submit(function(e) {
+    // e.preventDefault();
+    // var url = $(this).attr('action');
+    $(this).find('.template_content').val(editor.getValue())
+    // $.post(url, $(this).serialize());
+  });
 </script>
