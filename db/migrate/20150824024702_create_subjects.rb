@@ -7,7 +7,6 @@ class CreateSubjects < ActiveRecord::Migration
       t.datetime :start_at
       t.datetime :end_at
       t.string :condition
-      t.text :templates, array: true, default: []
 
       t.timestamps null: false
     end

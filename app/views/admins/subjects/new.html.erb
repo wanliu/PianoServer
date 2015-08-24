@@ -1,67 +1,37 @@
 <h1 class="page-header">新建专题</h1>
 
-<%= form_for @subject do |f| %>
+<%= render "form" %>
 
+<%= render partial: "edit_template", collection: @subject.templates %>
 <div class="panel panel-default">
-  <div class="panel-body">
-    <div class="form-group">
-      <%= f.label :title %>
-      <%= f.text_field :title, class: 'form-control', focus: true %>
-    </div>
-
-    <div class="form-group">
-      <%= f.label :description %>
-      <%= f.text_area :description, class: 'form-control', focus: true %>
-    </div>
-
-    <div class="form-group col-xs-12 col-md-6 col-lg-6">
-      <%= f.label :start_at %>
-
-      <div class='input-group date'>
-        <%= f.text_field :start_at, class: 'form-control' %>
-        <span class="input-group-addon">
-            <span class="glyphicon glyphicon-calendar"></span>
-        </span>
-      </div>
-    </div>
-
-    <div class="form-group col-xs-12 col-md-6 col-lg-6">
-      <%= f.label :end_at %>
-
-      <div class='input-group date'>
-        <%= f.text_field :end_at, class: 'form-control', row: 40 %>
-        <span class="input-group-addon">
-            <span class="glyphicon glyphicon-calendar"></span>
-        </span>
-      </div>
-    </div>
-
+  <div class="panel-heading">
+    <h3 class="panel-title">首页头部</h3>
   </div>
-  <div class="template-list">
-    <li class="list-group-item">首页头部
-      <div class="editable">
-        <div id="homepage_header" class="source-editor">
-        </div>
-      </div>
-    </li>
-    <li class="list-group-item">专题主页</li>
-    <li class="list-group-item">Morbi leo risus</li>
-    <li class="list-group-item">Porta ac consectetur ac</li>
-    <li class="list-group-item">Vestibulum at eros</li>
+
+  <div class="panel-body">
+    <div id="homepage_header" class="source-editor">
+    </div>
   </div>
   <div class="panel-footer">
-    <%= f.submit :save, class: 'btn btn-primary' %>
+    <%#= f.submit :save, class: 'btn btn-primary' %>
+    <%= link_to :save, '#', class: 'btn btn-primary' %>
+    <%= link_to :Preview, '#',  class: 'btn btn-default' %>
   </div>
 </div>
 
-<script type="text/javascript">
-  $('.input-group.date').datetimepicker();
-  // $('.source-editor')
-  var LiquidMode = ace.require("ace/mode/liquid").Mode;
-  var editor =ace.edit("homepage_header");
-  editor.getSession().setMode(new LiquidMode());
 
-  // editor.setSession.
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">专题主页</h3>
+  </div>
 
-</script>
-<% end %>
+  <div class="panel-body">
+    <div id="homepage_header" class="source-editor">
+    </div>
+  </div>
+  <div class="panel-footer">
+    <%#= f.submit :save, class: 'btn btn-primary' %>
+  </div>
+</div>
+
+
