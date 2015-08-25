@@ -6,7 +6,6 @@
 
   .chat-linkman-wrap{
     position: relative;
-    z-index: 20;
     overflow: hidden;
     width: 100%;
     border-width: 1px 0;
@@ -15,6 +14,8 @@
     background-color: #FFFFFF;
     margin-bottom: -1px;
     height: 60px;
+    display: block;
+    color: #333333;
 
     .remove-linkman{
       position: absolute;
@@ -22,7 +23,7 @@
       right: 5px;
       color: #FF662B;
       display: none;
-      z-index: 19;
+      z-index: 1;
     }
 
     .linkman-name{
@@ -32,7 +33,6 @@
       left: 0;
       width: 60px;
       padding: 10px;
-      z-index: 18;
       word-break: break-all;
       line-height: 1;
       cursor: pointer;
@@ -59,7 +59,7 @@
     padding: 5px 5px 5px 60px;
     display: block;
     min-width: 200px;
-    color: #333333;
+    height: 60px;
 
     img {
       position: absolute;

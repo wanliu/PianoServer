@@ -159,7 +159,10 @@
         }
       });
 
-      $('.chat-linkman-container .remove-linkman').on('click', function() {
+      $('.chat-linkman-container .remove-linkman').on('click', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
         $(this).parent().slideUp('fast', function() {
           $(this).remove();
         });
