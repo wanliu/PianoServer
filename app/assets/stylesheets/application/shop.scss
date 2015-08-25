@@ -64,7 +64,6 @@
   .cate {
     margin-bottom: 20px;
     max-height: 220px;
-    // overflow: hidden;
 
     a {
       border: 1px solid #ddd;
@@ -74,6 +73,7 @@
       width: 100%;
       font-size: 12px;
       margin-bottom: 10px;
+      overflow: hidden;
 
       div {
         position: absolute;
