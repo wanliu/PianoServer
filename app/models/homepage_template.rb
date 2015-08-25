@@ -1,0 +1,2 @@
+class HomepageTemplate < Template
+end
