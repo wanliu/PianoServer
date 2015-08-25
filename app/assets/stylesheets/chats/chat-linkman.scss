@@ -4,6 +4,13 @@
   border-right: 1px solid #CCCCCC;
   z-index: 20;
 
+  .no-linkmen{
+    display: none;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+  }
+
   .chat-linkman-wrap{
     position: relative;
     overflow: hidden;
@@ -98,6 +105,10 @@
 
     .chat-linkman-wrap:hover .linkman-name{
       display: none;
+    }
+
+    .no-linkmen{
+      display: block;
     }
   }
 }

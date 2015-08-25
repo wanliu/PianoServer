@@ -1,5 +1,5 @@
 <div class="chat-linkman-container">
-  <% @chats.each do |chat_item| %>
+  <% if @chats.each do |chat_item| %>
     <% unless chat_item.id == @chat.id %>
       <% other_side = chat_item.other_side(current_anonymous_or_user) %>
 
@@ -20,5 +20,7 @@
         <% end %>
       <% end %>
     <% end %>
+  <% end.empty? %>
+    <div class="no-linkmen">最近没有聊天记录</div>
   <% end %>
 </div>
