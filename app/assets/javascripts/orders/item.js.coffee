@@ -50,8 +50,14 @@ class @OrderItem
     @$().addClass('order-item-remove').effect('pulsate', times: 3, duration: 1500)
 
   onReplaceChange: (e, data) ->
+    return if typeof data == 'undefined'
+
     {key, src, dest} = data
     $item = @$().find(".#{key}");
+
+    if key == 'deleted' && dest == true
+      return @onRemoveChange()
+
     $value = @$().find(".#{key}>.text")
     prefix = switch key
              when 'price', 'sub_total'
