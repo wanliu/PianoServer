@@ -3,7 +3,7 @@ class @OrderItem
     @hammer = new Hammer.Manager(@$()[0])
     @hammer.add(new Hammer.Swipe({
       direction: Hammer.DIRECTION_HORIZONTAL,
-      velocity: 0.1
+      velocity: 0.2
     }))
 
     @bindAllEvents()
@@ -96,13 +96,15 @@ class @OrderItem
   send: (event, args...) ->
     @$().trigger(event, args...)
 
-  onSwipeLeft: (e) ->
-    e.preventDefault()
+  onSwipeLeft: () ->
     @$().addClass('swipeleft')
 
-  onSwipeRight: (e) ->
-    e.preventDefault()
+    return false;
+
+  onSwipeRight: () ->
     @$().removeClass('swipeleft')
+
+    return false
 
   onDrag: () ->
     return false

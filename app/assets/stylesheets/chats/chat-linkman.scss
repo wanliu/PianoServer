@@ -6,6 +6,7 @@
 
   .chat-linkman-wrap{
     position: relative;
+    z-index: 20;
     overflow: hidden;
     width: 100%;
     border-width: 1px 0;
@@ -92,7 +93,7 @@
     z-index: 99999;
     width: 80%;
     left: -80%;
-    top: 0;
+    top: 50px;
     background: #FFFFFF;
 
     .chat-linkman-wrap:hover .linkman-name{
