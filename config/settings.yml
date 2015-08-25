@@ -35,6 +35,7 @@ dev:
     cart: true
     favorites: true
     qrcode: true
+    linkmen: true
     order:
       chat: true
     user:

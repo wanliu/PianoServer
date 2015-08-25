@@ -28,6 +28,7 @@
 //= require lib/underscore-template
 //= require _common/qrcode
 //= require _common/local-address
+//= require _common/hammer
 //= require_tree ./application
 //= require_tree ./chats
 //= require_tree ./orders

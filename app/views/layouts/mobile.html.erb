@@ -63,6 +63,9 @@
             <% if Settings.dev.feature.favorites %>
             <li><%= link_to "我的收藏", "/favorites" %></li>
             <% end %>
+            <% if Settings.dev.feature.linkmen %>
+            <li><%= link_to "最近联系人", "/chats" %></li>
+            <% end %>
 
             <% if Settings.dev.feature.user.sign_in %>
             <% if current_anonymous_or_user.id < 0 %>
@@ -103,6 +106,7 @@
         </div>
       </footer>
       <%= render "qrcode" %>
+      <div class="linkmen-overlayer"></div>
     </div> <!-- /container -->
 
     <script type="text/javascript">

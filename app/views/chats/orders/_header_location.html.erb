@@ -42,7 +42,8 @@
   (function(){
     var buyer_id = '<%= @order.buyer_id %>',
         user_id = '<%= current_anonymous_or_user.id %>',
-        address_title = '<%= @order.delivery_address_title %>';
+        address_title = '<%= @order.delivery_address_title %>',
+        $locations = $(".locations");
 
     if (address_title === '') {
       address_title = '暂无收货地址';
@@ -53,8 +54,7 @@
     //匿名用户获取地址选项
     if (buyer_id === user_id && user_id < 0) {
       var addresses = LocalAddress.getAll() || [],
-        $locations = $(".locations"),
-        html = '';
+          html = '';
 
       for (var i=0; i<addresses.length; i++){
         var address = addresses[i],

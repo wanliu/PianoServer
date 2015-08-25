@@ -71,6 +71,7 @@ class ChatsController < ApplicationController
 		@order = Order.find(@chat.order_id) if @chat.order_id
     #@target = @chat.chatable || @chat.target
 		@target = my_chat? ? @chat.target : @chat.owner
+    @chats = Chat.in(current_anonymous_or_user.id)
 
     MessageSystemService.send_read_message current_anonymous_or_user.id, other_side
 	end

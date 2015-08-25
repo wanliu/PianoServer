@@ -1,0 +1,101 @@
+.chat-linkman-container{
+  bottom: 0;
+  overflow: hidden;
+  border-right: 1px solid #CCCCCC;
+  z-index: 20;
+
+  .chat-linkman-wrap{
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    border-width: 1px 0;
+    border-style: solid;
+    border-color: #EEEEEE;
+    background-color: #FFFFFF;
+    margin-bottom: -1px;
+    height: 60px;
+
+    .remove-linkman{
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      color: #FF662B;
+      display: none;
+      z-index: 19;
+    }
+
+    .linkman-name{
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 60px;
+      padding: 10px;
+      z-index: 18;
+      word-break: break-all;
+      line-height: 1;
+    }
+
+    &:hover{
+      .remove-linkman{
+        display: block;
+        cursor: pointer;
+
+        &:hover{
+          color: #FF2B2B;
+        }
+      }
+
+      .linkman-name{
+        display: block;
+      }
+    }
+  }
+
+  .chat-linkman{
+    position: relative;
+    padding: 5px 5px 5px 60px;
+    display: block;
+    min-width: 200px;
+    color: #333333;
+
+    img {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      left: 5px;
+      top: 5px;
+    }
+
+    h4, p{
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin: 0;
+    }
+  }
+}
+
+@media (min-width: 868px) {
+  .chat-linkman-container{
+    position: absolute;
+    width: 60px;
+    left: -60px;
+    top: -70px;
+  }
+}
+
+@media (max-width: 867px) {
+  .chat-linkman-container{
+    position: fixed;
+    z-index: 99999;
+    width: 80%;
+    left: -80%;
+    top: 0;
+    background: #FFFFFF;
+
+    .chat-linkman-wrap:hover .linkman-name{
+      display: none;
+    }
+  }
+}
