@@ -1,5 +1,3 @@
-#= require _common/hammer
-
 class @OrderItem
   constructor: (@element, @parent, @itemId = $(@element).data('itemId')) ->
     @hammer = new Hammer.Manager(@$()[0])

@@ -20,7 +20,7 @@
         </div>
         <div class="buttons-consult">
           <div class="col-sm-6 col-xs-6 btn-wrap left">
-            <button class="btn btn-agrees">按住3S同意</button>
+            <button class="btn btn-agrees">按住3秒同意</button>
           </div>
           <div class="col-sm-6 col-xs-6 btn-wrap right">
             <button class="btn btn-disagrees">拒绝</button>
@@ -37,6 +37,8 @@
 
       <%= render "chat_input" %>
     </div>
+
+    <%= render "chat_linkmen" %>
   </div>
 </div>
 
@@ -95,5 +97,39 @@
     $(document).on('page:before-unload', function() {
       chat.leave();
     });
+
+
+    <% if Settings.dev.feature.linkmen %>
+      var hammer = new Hammer.Manager($('body')[0]);
+
+      hammer.add(new Hammer.Swipe({
+        direction: Hammer.DIRECTION_HORIZONTAL,
+        velocity: 0.4
+      }));
+
+      hammer.on('swipeleft', function() {
+        var width = $(window).width();
+
+        if (width <= 867) {
+          $('.chat-linkman-container').animate({
+            'left': '-80%'
+          }, 250, function() {
+            $('.linkmen-overlayer').hide();
+          });
+        }
+      });
+
+      hammer.on('swiperight', function() {
+        var width = $(window).width();
+
+        if (width <= 867) {
+          $('.chat-linkman-container').animate({
+            'left': '0'
+          }, 250, function() {
+            $('.linkmen-overlayer').show();
+          });
+        }
+      });
+    <% end %>
   });
 </script>

@@ -1,0 +1,22 @@
+<div class="chat-linkman-container">
+  <% @chats.each do |chat| %>
+    <% other_side = chat.other_side(current_anonymous_or_user) %>
+
+    <% unless other_side.nil? %>
+      <div class="chat-linkman-wrap">
+        <%= link_to chat_path(chat), class: "chat-linkman" do %>
+          <%= avatar_image_tag other_side.avatar_url, class: 'chat-item-avatar' %>
+          <h4>
+            <%= other_side.name %>
+            <div class="format-time"></div>
+          </h4>
+          <p><%= chat.try :last_message %></p>
+        <% end %>
+        <div class="linkman-name"><%= other_side.name %></div>
+        <div class="remove-linkman" title="隐藏">
+          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+          </div>
+        </div>
+    <% end %>
+  <% end %>
+</div>
