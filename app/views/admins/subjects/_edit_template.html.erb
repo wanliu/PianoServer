@@ -8,13 +8,23 @@
   <div class="panel-body">
     <div id="<%= edit_template.name %>" class="source-editor"><%= edit_template.content -%></div>
     <div class="variables">
-      <ul class="list-group">
-        <li class="list-group-item">Cras justo odio</li>
-        <li class="list-group-item">Dapibus ac facilisis in</li>
-        <li class="list-group-item">Morbi leo risus</li>
-        <li class="list-group-item">Porta ac consectetur ac</li>
-        <li class="list-group-item">Vestibulum at eros</li>
-      </ul>
+
+      <div class="btn-group-vertical btn-group-justified" role="group" aria-label="variables">
+        <div class="btn-group" role="group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            新增对象
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <% edit_template.customize_variables.each do |config| %>
+              <li><a href="#"><%= config[:title] %></a></li>
+            <% end %>
+          </ul>
+        </div>
+        <% edit_template.variables.each do |variable| %>
+          <button type="button" class="btn btn-default"><%= variables.name %></button>
+        <% end %>
+      </div>
     </div>
     <%= f.hidden_field :content, class: "template_content" %>
   </div>

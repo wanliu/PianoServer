@@ -1,4 +1,7 @@
 class Template < ActiveRecord::Base
+  mattr_accessor :available_variables
+  mattr_accessor :constants_variables
+  mattr_accessor :customize_variables
 
   attr_accessor :content
 
@@ -31,3 +34,15 @@ class Template < ActiveRecord::Base
 
   alias_method_chain :update_attributes, :content
 end
+
+Template.customize_variables = [
+  {
+    name: 'promotion_variable',
+    title: '活动',
+    class: PromotionVariable
+  }, {
+    name: 'promotion_set_variable',
+    title: '活动集',
+    class: PromotionSetVariable
+  }
+]
