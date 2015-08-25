@@ -11,6 +11,7 @@
 //= require china_city/jquery.china_city
 //= require ace-rails-ap
 //= require ace/mode-liquid
+//= require ace/ext-language_tools
 //= require _common/fileuploader
 //= require_tree ./admins
 //= require_self

@@ -1,4 +1,4 @@
-<div class="panel panel-default">
+<div class="panel panel-default edit-template">
   <% url = admins_subject_template_path(subject, edit_template) %>
   <%= form_for edit_template, url: url, remote: true do |f| %>
   <div class="panel-heading">
@@ -7,6 +7,15 @@
 
   <div class="panel-body">
     <div id="<%= edit_template.name %>" class="source-editor"><%= edit_template.content -%></div>
+    <div class="variables">
+      <ul class="list-group">
+        <li class="list-group-item">Cras justo odio</li>
+        <li class="list-group-item">Dapibus ac facilisis in</li>
+        <li class="list-group-item">Morbi leo risus</li>
+        <li class="list-group-item">Porta ac consectetur ac</li>
+        <li class="list-group-item">Vestibulum at eros</li>
+      </ul>
+    </div>
     <%= f.hidden_field :content, class: "template_content" %>
   </div>
   <div class="panel-footer">
@@ -21,6 +30,9 @@
   var LiquidMode = ace.require("ace/mode/liquid").Mode;
   var editor =ace.edit("<%= edit_template.name %>");
   editor.getSession().setMode(new LiquidMode());
+  editor.setOptions({
+    enableBasicAutocompletion: true
+  });
 
   $("#<%= dom_id(edit_template, :edit) %>").submit(function(e) {
     // e.preventDefault();

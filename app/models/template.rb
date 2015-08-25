@@ -3,7 +3,7 @@ class Template < ActiveRecord::Base
   attr_accessor :content
 
   belongs_to :subject
-
+  has_many :variables
 
   def content
     @content ||= File.read template_path
