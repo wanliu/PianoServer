@@ -100,7 +100,8 @@
 
 
     <% if Settings.dev.feature.linkmen %>
-      var hammer = new Hammer.Manager($('body')[0]);
+      var hammer = new Hammer.Manager($('body')[0]),
+          chatListShown = $(window).width() > 867;
 
       hammer.add(new Hammer.Swipe({
         direction: Hammer.DIRECTION_HORIZONTAL,
@@ -111,6 +112,8 @@
         var width = $(window).width();
 
         if (width <= 867) {
+          chatListShown = false;
+
           $('.chat-linkman-container').animate({
             'left': '-80%'
           }, 250, function() {
@@ -123,12 +126,31 @@
         var width = $(window).width();
 
         if (width <= 867) {
+          chatListShown = true;
+
           $('.chat-linkman-container').animate({
             'left': '0'
           }, 250, function() {
             $('.linkmen-overlayer').show();
           });
         }
+      });
+
+      $(window).resize(function() {
+        var width = $(window).width();
+
+        if (width > 867) {
+          $('.chat-linkman-container').css('left', '-60px');
+          $('.linkmen-overlayer').hide();
+        } else {
+          $('.chat-linkman-container').css('left', chatListShown ? '0' : '-80%');
+        }
+      });
+
+      $('.chat-linkman-container .remove-linkman').on('click', function() {
+        $(this).parent().slideUp('fast', function() {
+          $(this).remove();
+        });
       });
     <% end %>
   });
