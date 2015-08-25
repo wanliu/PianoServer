@@ -38,6 +38,7 @@ gem 'json-patch'
 gem 'hashdiff'
 gem 'chinese_pinyin'
 gem 'data-confirm-modal', github: 'ifad/data-confirm-modal'
+gem 'liquid-rails'
 
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'

@@ -1,13 +1,12 @@
 module ShopService
   extend self
 
-  def create(name, template, attributes = {})
-    # Shop.create()
+  def build(name)
+    Rails::Generator.invoke 'shop:build', [ name ]
   end
 
-  def migrate(name)
-    @shop = Shop.find_by name: name
-    builtin_category(@shop)
+  def valid?(shop)
+    shop.categories.find_by(name: 'product_category').present?
   end
 
   private
