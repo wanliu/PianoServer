@@ -12,6 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require data-confirm-modal
 //= require jquery-ui/core
 //= require jquery-ui/widget
 //= require jquery-ui/mouse
@@ -35,3 +36,10 @@
 //= require_tree ./promotions
 //= require_tree ./utils
 //= require_self
+
+
+dataConfirmModal.setDefaults({
+  title: '确认执行此操作？',
+  commit: '删除',
+  cancel: '取消'
+});

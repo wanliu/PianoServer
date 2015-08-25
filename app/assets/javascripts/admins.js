@@ -1,5 +1,6 @@
 //= require jquery
 //= require jquery_ujs
+//= require data-confirm-modal
 //= require bootstrap-sprockets
 //= require turbolinks
 //= require nprogress
@@ -8,3 +9,11 @@
 //= require _common/fileuploader
 //= require_tree ./admins
 //= require_self
+
+
+
+dataConfirmModal.setDefaults({
+  title: '确认执行此操作？',
+  commit: '删除',
+  cancel: '取消'
+});

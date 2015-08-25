@@ -8,7 +8,7 @@
       <% if @shop.categories.count > 0 %>
         <ul class="nav">
         <% @shop.categories.each do |category| %>
-          <li><%= link_to category.name, shop_admin_category_path(@shop.name, category) %>
+          <li><%= link_to category.title, shop_admin_category_path(@shop.name, category.name) %>
           </li>
         <% end %>
         </ul>
