@@ -2,5 +2,6 @@
 
 <%= render "form" %>
 
-<%= render partial: "edit_template", collection: @subject.templates %>
-
+<% if @subject.persisted? %>
+<%= render partial: "edit_template", collection: @subject.templates, locals: { subject: @subject } %>
+<% end %>
