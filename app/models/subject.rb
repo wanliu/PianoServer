@@ -3,7 +3,7 @@ class Subject < ActiveRecord::Base
 
   acts_as_punchable
 
-  has_many :templates
+  has_and_belongs_to_many :templates
 
   validates :title, presence: true
   validates :name, uniqueness: true
