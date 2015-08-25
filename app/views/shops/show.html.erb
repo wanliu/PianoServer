@@ -19,9 +19,7 @@
   <div class='title'>
     <span>本店主营系列</span>
   </div>
-  <div class="container-fluid">
-    <%= render partial: 'shop_categories/shop_categories', locals: { shop: @shop, categories: @categories } %>
-  </div>
+  <%= render partial: 'shop_categories/shop_categories', locals: { shop: @shop, categories: @categories } %>
 </div>
 
 <script type="text/template" id='template-shop-categories'>
