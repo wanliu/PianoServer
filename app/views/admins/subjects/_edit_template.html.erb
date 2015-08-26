@@ -1,12 +1,12 @@
 <div class="panel panel-default edit-template">
   <% url = admins_subject_template_path(subject, edit_template) %>
-  <%= form_for edit_template, url: url, remote: true do |f| %>
+  <%= form_for edit_template, url: url, remote: true, html: { class: "form-" + edit_template.name } do |f| %>
   <div class="panel-heading">
     <h3 class="panel-title"><%= edit_template.name %></h3>
   </div>
 
   <div class="panel-body">
-    <div id="<%= edit_template.name %>" class="source-editor"><%= edit_template.content -%></div>
+    <div id="editor-<%= edit_template.name %>" class="source-editor"><%= edit_template.content -%></div>
     <div class="variables">
 
       <div class="btn-group-vertical btn-group-justified" role="group" aria-label="variables">
@@ -44,16 +44,18 @@
 
 <script type="text/javascript">
   var LiquidMode = ace.require("ace/mode/liquid").Mode;
-  var editor =ace.edit("<%= edit_template.name %>");
+  var editorName = "editor-<%= edit_template.name %>";
+  var editor = ace.edit(editorName);
   editor.getSession().setMode(new LiquidMode());
   editor.setOptions({
     enableBasicAutocompletion: true
   });
 
-  $("#<%= dom_id(edit_template, :edit) %>").submit(function(e) {
-    // e.preventDefault();
-    // var url = $(this).attr('action');
-    $(this).find('.template_content').val(editor.getValue())
-    // $.post(url, $(this).serialize());
+  var formName = ".form-<%= edit_template.name %>";
+  $(formName).data('editor', editor);
+
+  $(formName).submit(function(e) {
+    var editor = $(e.currentTarget).data('editor');
+    $(e.currentTarget).find('.template_content').val(editor.getValue())
   });
 </script>
