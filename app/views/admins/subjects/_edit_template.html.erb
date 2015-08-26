@@ -17,7 +17,13 @@
           </button>
           <ul class="dropdown-menu">
             <% edit_template.customize_variables.each do |config| %>
-              <li><a href="#"><%= config[:title] %></a></li>
+              <li><%= link_to config[:title], '#',
+                        data: {
+                          toggle: 'modal',
+                          target: modal_target(config),
+                          link: new_variable_path(subject, edit_template)
+                        }, class: config[:name] %>
+              </li>
             <% end %>
           </ul>
         </div>
