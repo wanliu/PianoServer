@@ -1,6 +1,17 @@
-<li class="list-group-item subject-item">
-  <%= link_to edit_admins_subject_path(subject_item) do %>
-    <%= icon :ok %>
-    <h3><%= subject_item.title %></h3>
-  <% end %>
+<li class="list-group-item subject-item" data-subject-id="<%= subject_item.id %>">
+  <div class="subject-info">
+    <%= link_to edit_admins_subject_path(subject_item) do %>
+      <%= icon :ok %>
+      <h3><%= subject_item.title %></h3>
+    <% end %>
+  </div>
+
+  <div class="subject-toggle">
+    <label class="toggle-box">
+      <%= check_box_tag :status, 'status', subject_item.open?, class: 'toggle-checkbox'%>
+      <div class="track">
+        <div class="handle"></div>
+      </div>
+    </label>
+  </div>
 </li>

@@ -19,7 +19,11 @@ class Admins::SubjectsController < Admins::BaseController
 
   def update
     @subject.update_attributes(subject_params)
-    redirect_to admins_subjects_path # (@subject)
+    if request.xhr?
+      render json: @subject
+    else
+      redirect_to admins_subjects_path # (@subject)
+    end
   end
 
   private
@@ -29,7 +33,7 @@ class Admins::SubjectsController < Admins::BaseController
   end
 
   def subject_params
-    params.require(:subject).permit(:title, :description, :start_at, :end_at)
+    params.require(:subject).permit(:title, :description, :start_at, :end_at, :status)
   end
 
   def defaults_templates
