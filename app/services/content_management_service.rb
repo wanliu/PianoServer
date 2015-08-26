@@ -12,7 +12,11 @@ module ContentManagementService
 
       @@content_templates = []
 
-      before_action :prepare_load_variables
+      before_action :check_subject_variables
+    end
+
+    def check_subject_variables
+      prepare_load_variables unless @subject.nil?
     end
 
     # 预载入所有模板中的 Variable

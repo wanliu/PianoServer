@@ -1,1 +1,19 @@
-<h1>new Variables</h1>
+<div class="form-group">
+  <input type="text" class="form-control" placeholder="对象名">
+</div>
+<div class="list-group">
+  <li class="list-group-item">
+    <h4>
+      <span class="id">&nbsp;</span>
+      暂未选择一个活动名
+    </h4>
+  </li>
+</div>
+<div class="form-group">
+  <input type="text" class="form-control" placeholder="Search">
+</div>
+
+<%#= simple_table_for @promotions, with: PromotionTable %>
+<div class="list-group">
+  <%= render partial: "promotion_item", collection: @promotions %>
+</div>

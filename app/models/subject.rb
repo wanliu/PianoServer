@@ -1,6 +1,8 @@
 class Subject < ActiveRecord::Base
   include Liquid::Rails::Droppable
 
+  enum status: [ :open, :close ]
+
   acts_as_punchable
 
   has_many :templates
@@ -17,6 +19,8 @@ class Subject < ActiveRecord::Base
   scope :availables, -> do
     where("start_at <= ? and end_at >= ?", Time.now, Time.now)
   end
+
+  default_scope { where(status: 0) }
 
   protected
 

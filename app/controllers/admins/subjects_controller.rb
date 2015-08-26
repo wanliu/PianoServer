@@ -2,7 +2,7 @@ class Admins::SubjectsController < Admins::BaseController
 
   before_action :set_subject, only: [:edit, :show, :update, :destroy]
   def index
-    @subjects = Subject.page
+    @subjects = Subject.unscoped.page
   end
 
   def new
@@ -25,7 +25,7 @@ class Admins::SubjectsController < Admins::BaseController
   private
 
   def set_subject
-    @subject = Subject.find(params[:id])
+    @subject = Subject.unscoped.find(params[:id])
   end
 
   def subject_params
