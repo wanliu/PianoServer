@@ -13,11 +13,11 @@
     position: relative;
     height: 100%;
     overflow: auto;
+
     .chat-items{
       position: relative;
       padding-bottom: 65px;
     }
-
   }
 
   .order-buttons{
@@ -101,7 +101,6 @@
           line-height: 22px;
         }
       }
-
     }
 
     .order-item-right{
@@ -157,7 +156,7 @@
       }
 
       .btn-add{
-        padding: 4px 5px 6px;
+        padding: 3px 5px;
       }
 
       .operate-block{
