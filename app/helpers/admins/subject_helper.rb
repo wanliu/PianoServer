@@ -17,6 +17,7 @@ module Admins::SubjectHelper
   end
 
   def modal_target(config)
-    '#' + config[:class].name.underscore
+    # '#' + config[:class].name.underscore
+    '#variable_editor_modal'
   end
 end

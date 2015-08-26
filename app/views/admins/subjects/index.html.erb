@@ -16,26 +16,29 @@
 </ul>
 
 <script type="text/javascript">
-  $(function() {
-    $('.subject-list input.toggle-checkbox').on('change', function() {
-      var $this = $(this),
-          $subjectItem = $this.parents('.subject-item:first')
-          subject_id = $subjectItem.data('subject-id'),
-          is_open = $this.prop('checked');
 
-      $.ajax({
-        url: '/admins/subjects/' + subject_id,
-        data: {
-          subject: {
-            status: is_open ? 'open' : 'close'
-          }
-        },
-        type: 'PUT',
-        dataType: 'json',
-        success: function() {
+  $('.subject-list input.toggle-checkbox').on('change', function() {
+    var $this = $(this),
+        $subjectItem = $this.parents('.subject-item:first')
+        subject_id = $subjectItem.data('subject-id'),
+        is_open = $this.prop('checked');
 
+    $.ajax({
+      url: '/admins/subjects/' + subject_id,
+      data: {
+        subject: {
+          status: is_open ? 'open' : 'close'
         }
-      });
+      },
+      type: 'PUT',
+      dataType: 'json',
+      success: function() {
+
+      }
     });
   });
+
+  // $('.subject-list').forEach(function(i, ele) {
+  //   var editor = new EditTemplate($(ele).find('.edit-template'));
+  // })
 </script>
