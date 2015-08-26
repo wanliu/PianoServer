@@ -36,7 +36,12 @@ Rails.application.routes.draw do
     resources :promotions
     resources :subjects do
       resources :templates do
-        resources :variables
+        resources :variables, except: [:new ] do
+          collection do
+            get :new_promotion_variable
+          end
+        end
+
       end
     end
     resources :messages

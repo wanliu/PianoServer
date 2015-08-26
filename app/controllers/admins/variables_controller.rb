@@ -7,6 +7,14 @@ class Admins::VariablesController < Admins::BaseController
     render :new, layout: false
   end
 
+  def new_promotion_variable
+    @variable = PromotionVariable.new
+
+    @promotions = Promotion.find(:all, from: :active, params: query_params)
+
+    render :new_promotion_variable, layout: false
+  end
+
   def create
 
   end

@@ -21,7 +21,7 @@
                         data: {
                           toggle: 'modal',
                           target: modal_target(config),
-                          link: new_variable_path(subject, edit_template)
+                          link: new_variable_path(subject, edit_template, config[:class])
                         }, class: config[:name] %>
               </li>
             <% end %>
