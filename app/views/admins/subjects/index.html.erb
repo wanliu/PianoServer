@@ -9,9 +9,33 @@
 
 <div class="btn-toolbar" role="toolbar" aria-label="...">
 
-  </div>
-
+</div>
 
 <ul class="list-group subject-list">
   <%= render partial: "subject_item", collection: @subjects %>
 </ul>
+
+<script type="text/javascript">
+  $(function() {
+    $('.subject-list input.toggle-checkbox').on('change', function() {
+      var $this = $(this),
+          $subjectItem = $this.parents('.subject-item:first')
+          subject_id = $subjectItem.data('subject-id'),
+          is_open = $this.prop('checked');
+
+      $.ajax({
+        url: '/admins/subjects/' + subject_id,
+        data: {
+          subject: {
+            status: is_open ? 'open' : 'close'
+          }
+        },
+        type: 'PUT',
+        dataType: 'json',
+        success: function() {
+
+        }
+      });
+    });
+  });
+</script>
