@@ -1,5 +1,5 @@
 class Template < ActiveRecord::Base
-  RESERVED_NAMES = ["homepage_header", "index_template"]
+  RESERVED_NAMES = ["homepage_header", "index"]
 
   mattr_accessor :available_variables
   mattr_accessor :constants_variables
@@ -9,6 +9,7 @@ class Template < ActiveRecord::Base
 
   belongs_to :subject
   has_many :variables
+  has_many :attachments, as: :attachable
 
   validates :filename, uniqueness: { scope: :subject_id }, presence: true
   validates :name, uniqueness: { scope: :subject_id }, presence: true

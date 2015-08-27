@@ -52,6 +52,49 @@
     }
   }
 
+  .panel-footer {
+    display: table;
+    width: 100%;
+
+    .panel-actions {
+      display: table-cell;
+      width: 200px;
+      .upload {
+
+      }
+    }
+
+    .panel-attachments {
+      display: table-cell;
+      padding: 10px;
+      .file-list {
+        list-style: none;
+        padding-left: 0px;
+      }
+
+      .file-list {
+
+        &>li {
+          white-space: nowrap;
+
+        }
+        .icon {
+          width: 16px;
+          height: 16px;
+        }
+
+        .title {
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .delete {
+        }
+      }
+    }
+  }
+
+
 
 }
 

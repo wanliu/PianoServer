@@ -36,6 +36,9 @@ Rails.application.routes.draw do
     resources :promotions
     resources :subjects do
       resources :templates do
+        member do
+          post :upload
+        end
         resources :variables, except: [:new ] do
           collection do
             get :new_promotion_variable
@@ -46,6 +49,7 @@ Rails.application.routes.draw do
     end
     resources :messages
     resources :contacts
+    resources :attachments
   end
 
   namespace :api do
