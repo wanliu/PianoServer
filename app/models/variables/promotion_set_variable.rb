@@ -6,5 +6,6 @@ class PromotionSetVariable < ArrayVariable
     unless promotion_string.blank
       promotion_ids = promotion_string.split(',')
       Promotions.find(promotion_ids)
+    end
   end
 end
