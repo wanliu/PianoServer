@@ -7,7 +7,7 @@ class @PromotionVariableModal extends @ModalBase
     'click .save': 'onSave'
 
   constructor: (@element, @url) ->
-    super
+    super(@element)
 
     @$selected = @$().find('.selected');
 

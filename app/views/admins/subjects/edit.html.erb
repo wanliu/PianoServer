@@ -38,6 +38,10 @@
         modal = new PromotionVariable($("#variable_editor"), url);
 
         break;
+      case 'promotion_set_variable':
+        modal = new PromotionSetVariable($("#promotion_set_variable_modal"), url);
+
+        break;
       default: ;
     }
     // $(this).find('.modal-body').load(url);

@@ -43,6 +43,8 @@ class EditVariableModal
       switch klass
         when 'promotion_variable'
           modal = new PromotionVariableModal(@$modal, url);
+        when 'promotion_set_variable'
+          modal = new PromotionSetVariableModal(@$modal, url)
         else
 
   @getModal: () ->

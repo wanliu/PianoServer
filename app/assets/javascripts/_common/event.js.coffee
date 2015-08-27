@@ -13,13 +13,13 @@ class @Event extends @Element
     for event, value of @events
       [event, name] = event.split(' ')
       target = if name? then @$().find(name) else @$()
-      target.bind(event, name, @[value].bind(@))
+      target.on(event, name, @[value].bind(@))
 
   unbindAllEvents: () ->
     for event, value of @events
       [event, name] = event.split(' ')
       target = if name? then @$().find(name) else @$()
-      target.unbind(event)
+      target.off(event)
 
   send: (event, data) ->
     @$().trigger(event, data)
