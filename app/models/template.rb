@@ -10,8 +10,8 @@ class Template < ActiveRecord::Base
   belongs_to :subject
   has_many :variables
 
-  validates :filename, uniqueness: { scope: :subject_id }
-  validates :name, uniqueness: { scope: :subject_id }, allow_nil: true
+  validates :filename, uniqueness: { scope: :subject_id }, presence: true
+  validates :name, uniqueness: { scope: :subject_id }, presence: true
 
   def content
     @content ||= File.read template_path

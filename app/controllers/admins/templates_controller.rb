@@ -23,6 +23,17 @@ class Admins::TemplatesController < Admins::BaseController
     filename = "#{Settings.sites.system.root}/subjects/#{@subject.name}/#{@template.filename}"
     File.write filename, template_params[:content]
 
+    # generate a name base on filename, and do not repeat in the same subject
+    if @template.name.blank?
+      name = File.basename(filename)
+
+      while Template.exists?(subject_id: @subject, name: name)
+        name.succ!
+      end
+
+      @template.name = name
+    end
+
     respond_to do |format|
       if @template.save
         format.html { render :show, layout: false }

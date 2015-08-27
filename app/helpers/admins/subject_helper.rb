@@ -21,14 +21,6 @@ module Admins::SubjectHelper
     '#variable_editor_modal'
   end
 
-  def file_name_extract(template)
-    if template.name.present? && Template::ReservedNames.include?(template.name)
-      template.name
-    else
-      template.filename[6..-13]
-    end
-  end
-
   def title_extract(template)
     if template.name.present? && Template::ReservedNames.include?(template.name)
       template.name
