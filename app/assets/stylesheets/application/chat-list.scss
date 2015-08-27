@@ -1,5 +1,17 @@
-.chat {
+body.chat {
   footer {
     display: none;
   }
+}
+
+.linkmen-overlayer{
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 11;
+  background: #333333;
+  opacity: 0.8;
+  display: none;
 }

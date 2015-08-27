@@ -42,7 +42,8 @@
   (function(){
     var buyer_id = '<%= @order.buyer_id %>',
         user_id = '<%= current_anonymous_or_user.id %>',
-        address_title = '<%= @order.delivery_address_title %>';
+        address_title = '<%= @order.delivery_address_title %>',
+        $locations = $(".locations");
 
     if (address_title === '') {
       address_title = '暂无收货地址';
@@ -50,26 +51,25 @@
 
     $('#address-text').text(address_title);
 
-    if (buyer_id !== user_id || user_id > 0) {
-      return;
+    //匿名用户获取地址选项
+    if (buyer_id === user_id && user_id < 0) {
+      var addresses = LocalAddress.getAll() || [],
+          html = '';
+
+      for (var i=0; i<addresses.length; i++){
+        var address = addresses[i],
+            full_address = [address.contact, [address.province_name, address.city_name, address.region_name, address.road].join(''), address.contact_phone].join('，'),
+            orderId = <%= @order.id %>;
+            html += '<li><a data-location-id="' + address.id + '" data-order-id="' + orderId + '" data-location="' + full_address + '" class="set-default-address" href="javascript:void(0)">' + full_address + '</a></li>';
+      }
+
+      if (addresses.length > 0) {
+        html += '<li role="separator" class="divider"></li>';
+        $locations.prepend(html);
+      }
     }
 
-    var addresses = LocalAddress.getAll() || [],
-        $locations = $(".locations"),
-        html = '';
-
-    for (var i=0; i<addresses.length; i++){
-      var address = addresses[i],
-          full_address = [address.contact, [address.province_name, address.city_name, address.region_name, address.road].join(''), address.contact_phone].join('，'),
-          orderId = <%= @order.id %>;
-          html += '<li><a data-location-id="' + address.id + '" data-order-id="' + orderId + '" data-location="' + full_address + '" class="set-default-address" href="javascript:void(0)">' + full_address + '</a></li>';
-    }
-
-    if (addresses.length > 0) {
-      html += '<li role="separator" class="divider"></li>';
-      $locations.prepend(html);
-    }
-
+    //设置默认地址
     <% if @order["data"] && @order["data"]["delivery_address"] && @order["data"]["delivery_address"]["location_id"] %>
       var locationId = '<%= @order["data"]["delivery_address"]["location_id"] %>',
           $link = $locations.find('a[data-location-id=' + locationId +']');
@@ -90,14 +90,17 @@
 
       $parent.addClass('selected').siblings().removeClass('selected');
 
-      var location_id = $(this).data('locationId') ,
+      var address_title = $(this).text(),
+          location_id = $(this).data('locationId') ,
           order_id = $(this).data('orderId'),
           location = $(this).data("location"),
           data = {};
 
-        data['delivery_address'] =  {
-          "location_id": location_id
-        };
+      $('#address-text').text(address_title);
+
+      data['delivery_address'] =  {
+        "location_id": location_id
+      };
 
       if (location_id < 0) {
         var address = LocalAddress.get(location_id);
@@ -115,6 +118,6 @@
           $('#address-text').html(location);
         }
       });
-    })
+    });
   })();
 </script>
