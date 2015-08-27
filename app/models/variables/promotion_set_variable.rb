@@ -1,0 +1,2 @@
+class PromotionSetVariable < ArrayVariable
+end

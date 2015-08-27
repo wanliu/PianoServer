@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  resources :subjects, except: [:index, :new, :edit] do
+    member do
+      get "preview", to: 'subjects#preview', as: :preview
+    end
+  end
   devise_for :admins, controllers: {
     sessions: 'admins/sessions',
     registrations: 'admins/registrations'
@@ -29,6 +34,16 @@ Rails.application.routes.draw do
       end
     end
     resources :promotions
+    resources :subjects do
+      resources :templates do
+        resources :variables, except: [:new ] do
+          collection do
+            get :new_promotion_variable
+          end
+        end
+
+      end
+    end
     resources :messages
     resources :contacts
   end

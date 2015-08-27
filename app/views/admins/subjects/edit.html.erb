@@ -1,0 +1,45 @@
+<h1 class="page-header">编辑专题</h1>
+
+<%= render "form" %>
+
+<%= render partial: "edit_template", collection: @subject.templates, locals: {subject: @subject} %>
+
+<div id="variable_editor_modal" class="modal fade">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Modal title</h4>
+      </div>
+      <div class="modal-body">
+        <p>One fine body&hellip;</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary save">Save changes</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<script type="text/javascript">
+  $('#variable_editor').on('show.bs.modal', function (e) {
+    var url = $(e.relatedTarget).data('link');
+    var klass = $(e.relatedTarget).data('class');
+    var modal;
+
+    switch(klass) {
+      case 'promotion_variable':
+        modal = new PromotionVariable($("#variable_editor"), url);
+
+        break;
+      default: ;
+    }
+    // $(this).find('.modal-body').load(url);
+  });
+
+  // $('#promotion_variable save').click(function(e) {
+  //   $("#promotion_variable form")
+  // });
+</script>

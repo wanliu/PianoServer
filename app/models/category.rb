@@ -27,7 +27,7 @@ class Category < ActiveRecord::Base
     self_and_ancestors.map(&:name)
   end
 
-  private
+  protected
 
   def default_values
     if self.name.blank?
