@@ -19,4 +19,20 @@ module Admins::SubjectHelper
   def modal_target(config)
     '#' + config[:class].name.underscore
   end
+
+  def file_name_extract(template)
+    if template.name.present? && Template::ReservedNames.include?(template.name)
+      template.name
+    else
+      template.filename[6..-13]
+    end
+  end
+
+  def title_helper(template)
+    if template.name.present? && Template::ReservedNames.include?(template.name)
+      template.name
+    else
+      sanitize "<input autofocus='autofocus' class='form-control template-filename' placeholder='请输入文件名称' type='text' name='template[filename]' id='template_filename' value='#{template.filename}'>"
+    end
+  end
 end

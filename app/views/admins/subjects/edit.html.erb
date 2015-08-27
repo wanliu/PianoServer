@@ -3,6 +3,7 @@
 <%= render "form" %>
 
 <%= render partial: "edit_template", collection: @subject.templates, locals: {subject: @subject} %>
+<%= render partial: "admins/templates/form", locals: {template: @new_template, subject: @subject} %>
 
 <div id="promotion_variable" class="modal fade">
   <div class="modal-dialog modal-lg">
@@ -22,10 +23,18 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<div>
+  <button class='btn btn-default new-template'>New Template</button>
+</div>
+
 
 <script type="text/javascript">
   $('#promotion_variable').on('show.bs.modal', function (e) {
     var url = $(e.relatedTarget).data('link');
     $(this).find('.modal-body').load(url);
+  })
+
+  $('button.new-template').click(function (event) {
+    $('#new-template').show();
   })
 </script>

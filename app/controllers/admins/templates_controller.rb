@@ -8,9 +8,31 @@ class Admins::TemplatesController < Admins::BaseController
 
   end
 
+  def show
+  end
+
   def update
     @template = @parent.templates.find(params[:id])
     @template.update_attributes(template_params)
+  end
+
+  def create
+    @subject = Subject.find(params[:subject_id])
+    @template = @subject.templates.build(template_params)
+
+    filename = "#{Settings.sites.system.root}/subjects/#{@subject.name}/#{@template.filename}"
+    File.write filename, template_params[:content]
+
+    respond_to do |format|
+      if @template.save
+        format.html { render :show, layout: false }
+        format.js { render :show, layout: false, status: :created }
+        format.json  { render json: {}, status: :created }
+      else
+        format.html { render :new }
+        format.json { render json: @tamplate.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
 

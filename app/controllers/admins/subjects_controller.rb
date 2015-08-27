@@ -12,6 +12,10 @@ class Admins::SubjectsController < Admins::BaseController
     end
   end
 
+  def edit
+    @new_template = Template.new(filename: "views/undefined.html.liquid", content: '')
+  end
+
   def create
     @subject = Subject.create subject_params
     redirect_to admins_subject_path(@subject)
