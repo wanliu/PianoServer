@@ -20,4 +20,12 @@ module Admins::SubjectHelper
     # '#' + config[:class].name.underscore
     '#variable_editor_modal'
   end
+
+  def title_extract(template)
+    if template.name.present? && Template::RESERVED_NAMES.include?(template.name)
+      template.name
+    else
+      sanitize "<input autofocus='autofocus' class='form-control template-filename' placeholder='请输入文件名称' type='text' name='template[filename]' id='template_filename' value='#{template.filename}'>"
+    end
+  end
 end

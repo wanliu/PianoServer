@@ -2,7 +2,8 @@
 
 <%= render "form" %>
 
-<%= render partial: "edit_template", collection: @subject.templates, locals: {subject: @subject} %>
+<%= render partial: "edit_template", collection: @subject.templates.order(id: :asc), locals: {subject: @subject} %>
+<%= render partial: "admins/templates/form", locals: {template: @new_template, subject: @subject} %>
 
 <div id="variable_editor_modal" class="modal fade">
   <div class="modal-dialog modal-lg">
@@ -21,6 +22,10 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+<div>
+  <button class='btn btn-default new-template'>新建模板</button>
+</div>
 
 
 <script type="text/javascript">
@@ -42,4 +47,8 @@
   // $('#promotion_variable save').click(function(e) {
   //   $("#promotion_variable form")
   // });
+
+  $('button.new-template').click(function (event) {
+    $('#new-template').show();
+  })
 </script>
