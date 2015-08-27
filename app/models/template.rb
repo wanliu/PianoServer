@@ -7,6 +7,7 @@ class Template < ActiveRecord::Base
 
   belongs_to :subject
   has_many :variables
+  has_many :attachments, as: :attachable
 
   def content
     @content ||= File.read template_path

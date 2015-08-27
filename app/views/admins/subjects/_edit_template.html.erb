@@ -35,9 +35,16 @@
     <%= f.hidden_field :content, class: "template_content" %>
   </div>
   <div class="panel-footer">
-    <%#= f.submit :save, class: 'btn btn-primary' %>
-    <%= f.submit :save, class: 'btn btn-primary' %>
-    <%= link_to :Preview, '#',  class: 'btn btn-default' %>
+    <div class="panel-actions">
+      <%= f.submit :save, class: 'btn btn-primary' %>
+      <%= link_to :Preview, '#',  class: 'btn btn-default' %>
+      <%= link_to :upload, '#', class: 'btn-upload btn-default' %>
+    </div>
+    <div class="panel-attachments">
+      <ul class="row-fluid file-list">
+        <%= render partial: "attachment", collection: edit_template.attachments %>
+      </ul>
+    </div>
   </div>
   <% end %>
 </div>
@@ -46,6 +53,7 @@
   var EditTemplate = window.EditTemplate;
   var templateName = "template-<%= edit_template.name %>";
   var editorName= "editor-<%= edit_template.name %>";
+  var url = "<%= url %>";
 
-  var editor = new EditTemplate($('#' + templateName), editorName);
+  var editor = new EditTemplate($('#' + templateName), editorName, { url: url });
 </script>
