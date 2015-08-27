@@ -3,7 +3,7 @@
 <%= render "form" %>
 
 <%= render partial: "edit_preview_template", collection: @subject.templates.order(id: :asc), as: :template, locals: {subject: @subject} %>
-<%= render partial: "admins/templates/form", locals: {template: @new_template, subject: @subject} %>
+<%= render partial: "admins/templates/new_template", locals: {template: @new_template, subject: @subject} %>
 
 <div id="variable_editor_modal" class="modal fade">
   <div class="modal-dialog modal-lg">
