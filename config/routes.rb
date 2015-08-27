@@ -42,6 +42,9 @@ Rails.application.routes.draw do
           end
         end
         collection do
+          get :preview, to: 'templates#preview_new'
+        end
+        member do
           get :preview
         end
       end

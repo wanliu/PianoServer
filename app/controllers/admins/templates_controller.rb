@@ -7,14 +7,6 @@ class Admins::TemplatesController < Admins::BaseController
 
   set_parent_param :subject_id
 
-  def preview
-    source = params[:source]
-    @file = Tempfile.new(['template', '.html.liquid'], "#{Rails.root}/tmp/")
-    @file.write source
-    @file.rewind
-    render file: @file.path, layout: false
-  end
-
   def show
   end
 
@@ -51,6 +43,29 @@ class Admins::TemplatesController < Admins::BaseController
         format.json { render json: @tamplate.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  def preview
+    @subject = Subject.find(params[:subject_id])
+    @template = @subject.templates.find(params[:id])
+
+    source = params[:source]
+    @file = Tempfile.new(['template', '.html.liquid'], "#{Rails.root}/tmp/")
+    @file.write source
+    @file.rewind
+
+    render file: @file.path, layout: false
+  end
+
+  def preview_new
+    @subject = Subject.find(params[:subject_id])
+
+    source = params[:source]
+    @file = Tempfile.new(['template', '.html.liquid'], "#{Rails.root}/tmp/")
+    @file.write source
+    @file.rewind
+
+    render file: @file.path, layout: false
   end
 
 

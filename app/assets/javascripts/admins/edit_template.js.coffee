@@ -35,6 +35,9 @@ class @EditTemplate extends @Event
     source = @editor.getValue()
     parseUrl = @element.attr("data-preview-url")
 
+    fileTitle = @element.find(".edit-template h3.panel-title input").val()
+    @element.find(".preview-template h3.panel-title").html(fileTitle)
+
     $.get(parseUrl, {source: source})
       .success (data, status, xhr)=>
-        @element.find('.preview-template').html(data)
+        @element.find('.preview-template .preview').html(data)

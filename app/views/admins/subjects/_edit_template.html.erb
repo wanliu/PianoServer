@@ -1,4 +1,4 @@
-<div id="template-<%= edit_template.id %>" class="edit-preview-template" data-preview-url="<%= preview_admins_subject_templates_path(subject) %>">
+<div id="template-<%= edit_template.id %>" class="edit-preview-template" data-preview-url="<%= preview_admins_subject_template_path(subject, edit_template) %>">
   <ul class="nav nav-tabs">
     <li role="presentation" class="active">
       <a href="#edit-template-<%= edit_template.id %>" role="tab" data-toggle="tab">编辑</a>
@@ -53,6 +53,11 @@
       <% end %>
     </div>
     <div id="preview-template-<%= edit_template.id %>" class="tab-pane panel panel-default preview-template fade">
+      <div class="panel-heading">
+        <h3 class="panel-title"></h3>
+      </div>
+      <div class="preview">
+      </div>
     </div>
   </div>
 </div>
