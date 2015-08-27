@@ -1,0 +1,24 @@
+.new_location {
+  margin-top: 20px;
+
+  .city-group {
+    .padding0 {
+      padding-left: 0;
+
+      &:last-child{
+        padding-right: 0;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .new_location .city-group .padding0{
+    margin-bottom: 10px;
+    padding: 0;
+
+    &:last-child{
+      margin-bottom: 0;
+    }
+  }
+}

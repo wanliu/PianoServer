@@ -96,6 +96,7 @@
 
     $(document).on('page:before-unload', function() {
       chat.leave();
+      $(window).off('resize.linkmen');
     });
 
 
@@ -148,7 +149,7 @@
         }
       });
 
-      $(window).resize(function() {
+      $(window).on('resize.linkmen', function() {
         var width = $(window).width();
 
         if (width > 867) {
