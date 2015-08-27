@@ -1,5 +1,12 @@
-<li class="col-xs-12 col-sm-6 col-lg-4">
-  <%= image_tag attachment.filename.url(:avatar) %>
+<li class="col-xs-12 col-sm-6 col-lg-4 attachment-<%= attachment.id %>">
+  <%= image_tag attachment.filename.url(:avatar), class: 'icon' %>
   <span class="title"><%= attachment.name %></span>
-  <span class="delete">[x]</span>
+  <%= link_to '[x]',
+              admins_attachment_path(attachment),
+              method: :delete,
+              class: 'delete',
+              remote: true,
+              data: {
+                confirm: '确认删除附件？'
+              } %>
 </li>

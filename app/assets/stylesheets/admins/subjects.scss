@@ -65,20 +65,23 @@
         padding-left: 0px;
       }
 
-      .file-list>li {
-        display: table;
-        &>img {
-          display: table-cell;
+      .file-list {
+
+        &>li {
+          white-space: nowrap;
+
+        }
+        .icon {
           width: 16px;
           height: 16px;
         }
 
-        &>.title {
-          display: table-cell;
+        .title {
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
-        &>.delete {
-          display: table-cell;
+        .delete {
         }
       }
     }
