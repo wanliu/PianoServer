@@ -3,9 +3,6 @@ class PromotionSetVariable < ArrayVariable
   attr_accessor :promotion_string
 
   def call
-    unless promotion_string.blank
-      promotion_ids = promotion_string.split(',')
-      Promotions.find(promotion_ids)
-    end
+    (promotion_string || '').split(',').map {|id| Promotions.find(id) }
   end
 end
