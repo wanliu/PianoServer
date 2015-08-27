@@ -2,7 +2,8 @@
  *= require bootstrap-launcher
  *= require nprogress
  *= require nprogress-bootstrap
- *= require_tree ./_common
+ *= require _common/checkbox
+ *= require _common/upload
  *= require_tree ./admins
  *= require_self
 */
