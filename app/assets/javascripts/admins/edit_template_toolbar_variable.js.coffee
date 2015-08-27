@@ -42,7 +42,7 @@ class EditVariableModal
     @$modal.find('.modal-body').load newUrl, () =>
       switch klass
         when 'promotion_variable'
-          modal = new PromotionVariableModal(@$modal, url);
+          modal = new PromotionVariableModal(@$modal, url)
         when 'promotion_set_variable'
           modal = new PromotionSetVariableModal(@$modal, url)
         else

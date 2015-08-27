@@ -8,7 +8,7 @@ class @PromotionSetVariableModal extends @ModalBase
     'click .remove-promotion': 'removeSelectedItem'
 
   constructor: (@element, @url) ->
-    super
+    super(@element)
 
     @$seleteds = @$().find('.selected-promotions')
     @$list = @$().find('.promotion-set-variable .list-group')
