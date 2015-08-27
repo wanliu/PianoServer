@@ -1,11 +1,10 @@
 #= require _common/event
 #= ./modal_base
-
 class @PromotionSetVariableModal extends @ModalBase
 
   events:
-    'click .promotion': 'toggleSelectedItem',
-    'click .remove-promotion': 'removeSelectedItem'
+    'click .promotion': 'toggleSelectedItem'
+    'click .save': 'onSave'
 
   constructor: (@element, @url) ->
     super(@element)
@@ -20,34 +19,17 @@ class @PromotionSetVariableModal extends @ModalBase
     title = $target.find('.title').text()
 
     if ($target.hasClass('active'))
-      $target.removeClass('active')
-
-      @$seleteds.find('li#' + id).remove();
+      @$seleteds.find('li#' + id).slideUp 250, () ->
+        $(this).remove()
+        $target.removeClass('active')
 
       @removePromotionId(id);
     else
       $target.addClass('active')
 
-      html = ['<li class="selected-promotion" id="', id,
-        '" ><div class="promotion-name">', title, '</div><div class="remove-promotion">',
-        '<span class="glyphicon glyphicon-remove"></span></div>', '</li>']
-
-      $(html.join('')).appendTo(@$seleteds)
+      new SelectedPromotion(@$seleteds, id, title)
 
       @addPromotionId(id)
-
-  removeSelectedItem: (e) ->
-    $target = $(e.target)
-    $selected = $target.parents('.selected-promotion:first')
-    pid = $selected.attr('id')
-
-    @$selected.slideUp 'fast', () =>
-      @$selected.remove()
-
-      @removePromotionId(pid)
-
-      @$list.find('.promotion[data-id=' + pid +']').removeClass('active')
-
 
   addPromotionId: (id) ->
     ids = @$ids.val()
@@ -64,4 +46,8 @@ class @PromotionSetVariableModal extends @ModalBase
     if (index > -1)
       ids.splice(index, 1)
       @$ids.val(ids.join(','))
+
+  onSave: (e) ->
+    $.post @url, @$().find('.modal-body>form').serialize(), (e) =>
+      console.log(e)
 
