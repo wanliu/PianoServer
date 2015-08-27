@@ -1,53 +1,69 @@
-<div class="panel panel-default edit-template" id="template-<%= edit_template.id %>">
-  <% url = admins_subject_template_path(subject, edit_template) %>
-  <%= form_for edit_template, url: url, remote: true, html: { class: "template-form-#{edit_template.id}" } do |f| %>
-  <div class="panel-heading">
-    <h3 class="panel-title"><%= title_extract edit_template %></h3>
-  </div>
+<div id="template-<%= edit_template.id %>" class="edit-preview-template" data-preview-url="<%= preview_admins_subject_templates_path(subject) %>">
+  <ul class="nav nav-tabs">
+    <li role="presentation" class="active">
+      <a href="#edit-template-<%= edit_template.id %>" role="tab" data-toggle="tab">编辑</a>
+    </li>
+    <li role="presentation">
+      <a href="#preview-template-<%= edit_template.id %>" class="preview-template-tab" role="tab" data-toggle="tab">预览</a>
+    </li>
+  </ul>
 
-  <div class="panel-body">
-    <div id="template-editor-<%= edit_template.id %>" class="source-editor"><%= edit_template.content -%></div>
-    <div class="variables">
-      <div class="btn-group add-variable" role="group">
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          新增对象
-          <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu toolbars">
-          <% edit_template.customize_variables.each do |config| %>
-            <li><%= link_to config[:title], '#',
-                      data: {
-                        toggle: 'modal',
-                        target: modal_target(config),
-                        class: config[:name],
-                        link: variables_path(subject, edit_template)
-                      } %>
-            </li>
-          <% end %>
-        </ul>
+  <div class="tab-content">
+    <div id="edit-template-<%= edit_template.id %>" class="tab-pane fade in panel panel-default edit-template active">
+      <% url = admins_subject_template_path(subject, edit_template) %>
+      <%= form_for edit_template, url: url, remote: true, html: { class: "template-form-#{edit_template.id}" } do |f| %>
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= title_extract edit_template %></h3>
       </div>
-      <div class="btn-group-vertical" role="group" aria-label="variables">
-        <% edit_template.variables.each do |var| %>
-          <button type="button" class="btn btn-default"><%= var.name %></button>
-        <% end %>
+
+      <div class="panel-body">
+        <div id="template-editor-<%= edit_template.id %>" class="source-editor"><%= edit_template.content -%></div>
+        <div class="variables">
+          <div class="btn-group add-variable" role="group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              新增对象
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu toolbars">
+              <% edit_template.customize_variables.each do |config| %>
+                <li><%= link_to config[:title], '#',
+                          data: {
+                            toggle: 'modal',
+                            target: modal_target(config),
+                            class: config[:name],
+                            link: variables_path(subject, edit_template)
+                          } %>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+          <div class="btn-group-vertical" role="group" aria-label="variables">
+            <% edit_template.variables.each do |var| %>
+              <button type="button" class="btn btn-default"><%= var.name %></button>
+            <% end %>
+          </div>
+        </div>
+        <%= f.hidden_field :content, class: "template_content" %>
       </div>
+      <div class="panel-footer">
+        <%#= f.submit :save, class: 'btn btn-primary' %>
+        <%= f.submit :save, class: 'btn btn-primary' %>
+        <%= link_to :Preview, 'javascript: void(0)',  class: 'btn btn-default preview' %>
+      </div>
+      <% end %>
     </div>
-    <%= f.hidden_field :content, class: "template_content" %>
+    <div id="preview-template-<%= edit_template.id %>" class="tab-pane panel panel-default preview-template fade">
+    </div>
   </div>
-  <div class="panel-footer">
-    <%#= f.submit :save, class: 'btn btn-primary' %>
-    <%= f.submit :save, class: 'btn btn-primary' %>
-    <%= link_to :Preview, '#',  class: 'btn btn-default' %>
-  </div>
-  <% end %>
 </div>
 
-<script type="text/javascript">
-  (function() {
-    var EditTemplate = window.EditTemplate;
-    var templateName = "template-<%= edit_template.id %>";
-    var editorName= "template-editor-<%= edit_template.id %>";
 
-    var editor = new EditTemplate($('#' + templateName), editorName);
-  })();
-</script>
+  <script type="text/javascript">
+    (function() {
+      var EditTemplate = window.EditTemplate;
+      var templateName = "template-<%= edit_template.id %>";
+      var editorName= "template-editor-<%= edit_template.id %>";
+
+      var editor = new EditTemplate($('#' + templateName), editorName);
+    })();
+  </script>

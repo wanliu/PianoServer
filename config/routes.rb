@@ -41,7 +41,9 @@ Rails.application.routes.draw do
             get :new_promotion_variable
           end
         end
-
+        collection do
+          get :preview
+        end
       end
     end
     resources :messages

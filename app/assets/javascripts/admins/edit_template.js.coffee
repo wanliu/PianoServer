@@ -8,7 +8,9 @@ class @EditTemplate extends @Event
 
   LiquidMode = ace.require("ace/mode/liquid").Mode
   events:
-    'submit >form': 'onSave'
+    'submit >form': 'onSave',
+    'show.bs.tab .preview-template-tab': 'preview',
+    'click .preview': 'clickPreview'
 
   constructor: (@element, @name) ->
     super(@element)
@@ -25,3 +27,14 @@ class @EditTemplate extends @Event
 
   onSave: (e) ->
     @$content.val(@editor.getValue())
+
+  clickPreview: (e) ->
+    @element.find('.preview-template-tab').tab('show')
+
+  preview: (e) ->
+    source = @editor.getValue()
+    parseUrl = @element.attr("data-preview-url")
+
+    $.get(parseUrl, {source: source})
+      .success (data, status, xhr)=>
+        @element.find('.preview-template').html(data)
