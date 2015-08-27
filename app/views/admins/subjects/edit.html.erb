@@ -21,25 +21,3 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-
-
-<script type="text/javascript">
-  $('#variable_editor').on('show.bs.modal', function (e) {
-    var url = $(e.relatedTarget).data('link');
-    var klass = $(e.relatedTarget).data('class');
-    var modal;
-
-    switch(klass) {
-      case 'promotion_variable':
-        modal = new PromotionVariable($("#variable_editor"), url);
-
-        break;
-      default: ;
-    }
-    // $(this).find('.modal-body').load(url);
-  });
-
-  // $('#promotion_variable save').click(function(e) {
-  //   $("#promotion_variable form")
-  // });
-</script>
