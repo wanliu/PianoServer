@@ -1,12 +1,12 @@
-<div class="panel panel-default edit-template" id="template-<%= edit_template.name %>">
+<div class="panel panel-default edit-template" id="template-<%= edit_template.id %>">
   <% url = admins_subject_template_path(subject, edit_template) %>
-  <%= form_for edit_template, url: url, remote: true, html: { class: "form-" + edit_template.name } do |f| %>
+  <%= form_for edit_template, url: url, remote: true, html: { class: "template-form-#{edit_template.id}" } do |f| %>
   <div class="panel-heading">
-    <h3 class="panel-title"><%= edit_template.name %></h3>
+    <h3 class="panel-title"><%= title_extract edit_template %></h3>
   </div>
 
   <div class="panel-body">
-    <div id="editor-<%= edit_template.name %>" class="source-editor"><%= edit_template.content -%></div>
+    <div id="template-editor-<%= edit_template.id %>" class="source-editor"><%= edit_template.content -%></div>
     <div class="variables">
       <div class="btn-group add-variable" role="group">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -42,7 +42,7 @@
     </div>
     <div class="panel-attachments">
       <ul class="row-fluid file-list">
-        <%= render partial: "attachment", collection: edit_template.attachments %>
+        <%= render partial: "admins/subjects/attachment", collection: edit_template.attachments %>
       </ul>
     </div>
   </div>
@@ -50,10 +50,12 @@
 </div>
 
 <script type="text/javascript">
-  var EditTemplate = window.EditTemplate;
-  var templateName = "template-<%= edit_template.name %>";
-  var editorName= "editor-<%= edit_template.name %>";
-  var url = "<%= url %>";
+  (function() {
+    var EditTemplate = window.EditTemplate;
+    var templateName = "template-<%= edit_template.id %>";
+    var editorName= "template-editor-<%= edit_template.id %>";
+    var url = "<%= url %>";
 
-  var editor = new EditTemplate($('#' + templateName), editorName, { url: url });
+    var editor = new EditTemplate($('#' + templateName), editorName, { url: url });
+  })();
 </script>

@@ -1,4 +1,11 @@
 .edit-template {
+
+  .panel-heading {
+    input {
+      max-width: 450px;
+    }
+  }
+
   .panel-body {
     display: table;
     width: 100%;
@@ -89,4 +96,9 @@
 
 
 
+}
+
+
+#new-template {
+  display: none;
 }
