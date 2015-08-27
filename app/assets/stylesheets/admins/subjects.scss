@@ -21,6 +21,29 @@
       padding-left: 5px;
       padding-right: 5px;
       vertical-align: top;
+
+      .btn-group-vertical {
+        width: 100%;
+        button  {
+          width: 100%;
+        }
+      }
     }
   }
+
+  .add-variable {
+    width: 100%;
+    margin-bottom: 10px;
+    button {
+      width: 100%;
+      text-align: left;
+    }
+
+    span {
+      float: right;
+      margin: 10px 0;
+    }
+  }
+
+
 }

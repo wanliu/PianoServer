@@ -18,7 +18,7 @@ class OrdersController < ApplicationController
 
   def show
     # if params[:inline]
-    #   render json: { order: @order, html: :partial => "order"
+    #   render json: { order: @order, html: :partial => "order" }
     # else
     #   render json: { order: @order.origin_hash }
     # end
@@ -172,8 +172,8 @@ class OrdersController < ApplicationController
   def send_diff_message(diffs)
     user_id = current_anonymous_or_user.id
     index = nil
-    diffItems = {}
-    msgAry = []
+    diff_items = {}
+    msg_ary = []
     msg = nil
 
     return if diffs.empty?
@@ -181,17 +181,16 @@ class OrdersController < ApplicationController
     diffs.each do |op, path, src, dest|
       msg = case op
           when '+' then add_order_item_message(src)
-          when '-' then remove_order_item_message(src)
-          when '~' then update_order_message(diffItems, path, src, dest)
+          when '~' then update_order_message(diff_items, path, src, dest)
           end
 
       unless msg.nil?
-        msgAry.push(msg)
+        msg_ary.push(msg)
       end
     end
 
-    unless diffItems.blank?
-      diffItems.each do |key, item|
+    unless diff_items.empty?
+      diff_items.each do |key, item|
         name = item[:name]
         price = item["price"]
         amount = item["amount"]
@@ -209,37 +208,42 @@ class OrdersController < ApplicationController
         msg = msgs.join('')
       end
 
-      msgAry.unshift(msg)
+      msg_ary.unshift(msg)
     end
 
-    return if msgAry.length == 0
+    return if msg_ary.length == 0
 
-    if msgAry.length > 1
-      msg = msgAry.join('；')
+    if msg_ary.length > 1
+      msg = msg_ary.join('；')
     else
-      msg = msgAry.join('')
+      msg = msg_ary.join('')
     end
 
     MessageSystemService.push_message user_id, other_side, msg, to: [other_side], type: 'order'
     MessageSystemService.push_command user_id, other_side, {command: 'order', diff: diffs}.to_json
   end
 
-  def update_order_message(diffItems, path, src, dest)
+  def update_order_message(diff_items, path, src, dest)
     if path =~ PROMPT_MATCHS[:ITEMS]
-      modify_order_items(diffItems, path, src, dest)
+      modify_order_items(diff_items, path, src, dest)
     else
       modify_order(path, src, dest)
     end
   end
 
-  def modify_order_items(diffItems, path, src, dest)
+  def modify_order_items(diff_items, path, src, dest)
     m = path.match(PROMPT_MATCHS[:ITEMS])
     index, key = m[1].to_i, m[2]
+    order_item = @order.items[index]
 
-    diffItem = diffItems[index] ||= {}
-    diffItem[:name] = @order.items[index].title
+    if key == "deleted" && src == false && dest == true
+      return remove_order_item_message(order_item)
+    end
 
-    item = diffItem[key] ||= {}
+    diff_item = diff_items[index] ||= {}
+    diff_item[:name] = order_item.title
+
+    item = diff_item[key] ||= {}
 
     item[:src] = src if item[:src].blank?
     item[:dest] = dest

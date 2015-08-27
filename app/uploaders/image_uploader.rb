@@ -36,9 +36,12 @@ class ImageUploader < CarrierWave::Uploader::Base
       # To protected version name using, when it not defined, this will be give an error message in development environment
       raise "ImageUploader version_name:#{version_name} not allow."
     end
-    @url.end_with?(asset_path('gray_blank.gif')) ? @url : [@url,version_name].join("!") # thumb split with "!"
+    blank_image? ? @url : [@url,version_name].join("!") # thumb split with "!"
   end
 
+  def blank_image?
+    @url.nil? or @url.end_with?(asset_path('gray_blank.gif'))
+  end
 
   # Process files as they are uploaded:
   # process :scale => [200, 300]
