@@ -156,6 +156,10 @@
           $('.linkmen-overlayer').hide();
         } else {
           $('.chat-linkman-container').css('left', chatListShown ? '0' : '-80%');
+
+          if (chatListShown) {
+            $('.linkmen-overlayer').show();
+          }
         }
       });
 
