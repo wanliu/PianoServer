@@ -16,7 +16,15 @@ class Admins::VariablesController < Admins::BaseController
   end
 
   def create
-
+    case variable_params[:type]
+    when "promotion_variable", "promotion_set_variable"
+      params_name = "#{variable_params[:type]}_params".to_sym
+      create_params = send(params_name)
+      create_params.merge! template_id: params[:template_id], type: variable_params[:type].classify
+      klass = variable_params[:type].classify.safe_constantize
+      @variable = klass.create(create_params) if klass
+    else
+    end
   end
 
   private
@@ -32,5 +40,17 @@ class Admins::VariablesController < Admins::BaseController
       category_id: params[:category_id],
       inline: params[:inline]
     }
+  end
+
+  def variable_params
+    params[:variable]
+  end
+
+  def promotion_variable_params
+    params.require(:variable).permit(:id, :type, :name, :promotion_id, :template_id)
+  end
+
+  def promotion_set_variable_params
+    params.require(:variable).permit(:id, :type, :name, :promotion_string, :template_id)
   end
 end

@@ -63,7 +63,7 @@ module ContentManagementService
     def load_all_variables(variables)
       variables.each do |variable|
         name = '@' + variable.name
-        instance_variable_set name.to_sym, variable.exec if variable.respond_to?(:exec)
+        instance_variable_set name.to_sym, variable.call if variable.respond_to?(:call)
       end
     end
 

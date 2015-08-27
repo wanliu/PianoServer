@@ -33,26 +33,10 @@
 
 <script type="text/javascript">
 (function() {
-  var LiquidMode = ace.require("ace/mode/liquid").Mode;
-  var editor = ace.edit("new-template-content");
-  editor.getSession().setMode(new LiquidMode());
-  editor.setOptions({
-    enableBasicAutocompletion: true
-  });
+  var EditTemplate = window.EditTemplate;
+  var templateName = "new-template";
+  var editorName= "new-template-content";
 
-  $("#new_template").submit(function(e) {
-    $(this).find('.template_content').val(editor.getValue())
-  });
-
-  $("#new_template").on("ajax:success", function (e, data, status, xhr) {
-    $('#new-template').before(data);
-
-    editor.setValue('');
-    editor.resize(true)
-    $('#new-template').hide();
-
-    $('#new-template input.template-filename').val('views/undefined.html.liquid');
-    $('#new-template input.template_content').val('');
-  }).on("ajax:error", function(e, xhr, status, error) { });
+  var editor = new NewTemplate($('#' + templateName), editorName);
 })();
 </script>

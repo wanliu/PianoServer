@@ -17,7 +17,8 @@ module Admins::SubjectHelper
   end
 
   def modal_target(config)
-    '#' + config[:class].name.underscore
+    # '#' + config[:class].name.underscore
+    '#variable_editor_modal'
   end
 
   def file_name_extract(template)
@@ -28,7 +29,7 @@ module Admins::SubjectHelper
     end
   end
 
-  def title_helper(template)
+  def title_extract(template)
     if template.name.present? && Template::ReservedNames.include?(template.name)
       template.name
     else

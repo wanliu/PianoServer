@@ -1,34 +1,34 @@
-<div class="panel panel-default edit-template">
+<div class="panel panel-default edit-template" id="template-<%= file_name_extract edit_template %>">
   <% url = admins_subject_template_path(subject, edit_template) %>
   <%= form_for edit_template, url: url, remote: true, html: { class: "form-#{file_name_extract edit_template}" } do |f| %>
   <div class="panel-heading">
-    <h3 class="panel-title"><%= title_helper edit_template %></h3>
+    <h3 class="panel-title"><%= title_extract edit_template %></h3>
   </div>
 
   <div class="panel-body">
     <div id="editor-<%= file_name_extract edit_template %>" class="source-editor"><%= edit_template.content -%></div>
     <div class="variables">
-
-      <div class="btn-group-vertical btn-group-justified" role="group" aria-label="variables">
-        <div class="btn-group" role="group">
-          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            新增对象
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu">
-            <% edit_template.customize_variables.each do |config| %>
-              <li><%= link_to config[:title], '#',
-                        data: {
-                          toggle: 'modal',
-                          target: modal_target(config),
-                          link: new_variable_path(subject, edit_template, config[:class])
-                        }, class: config[:name] %>
-              </li>
-            <% end %>
-          </ul>
-        </div>
-        <% edit_template.variables.each do |variable| %>
-          <button type="button" class="btn btn-default"><%= variables.name %></button>
+      <div class="btn-group add-variable" role="group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          新增对象
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu toolbars">
+          <% edit_template.customize_variables.each do |config| %>
+            <li><%= link_to config[:title], '#',
+                      data: {
+                        toggle: 'modal',
+                        target: modal_target(config),
+                        class: config[:name],
+                        link: variables_path(subject, edit_template)
+                      } %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+      <div class="btn-group-vertical" role="group" aria-label="variables">
+        <% edit_template.variables.each do |var| %>
+          <button type="button" class="btn btn-default"><%= var.name %></button>
         <% end %>
       </div>
     </div>
@@ -43,21 +43,9 @@
 </div>
 
 <script type="text/javascript">
-  var LiquidMode = ace.require("ace/mode/liquid").Mode;
+  var EditTemplate = window.EditTemplate;
+  var templateName = "template-<%= file_name_extract edit_template %>";
+  var editorName= "editor-<%= file_name_extract edit_template %>";
 
-  var editorName = "editor-<%= file_name_extract edit_template %>";
-  var editor = ace.edit(editorName);
-
-  editor.getSession().setMode(new LiquidMode());
-  editor.setOptions({
-    enableBasicAutocompletion: true
-  });
-
-  var formName = ".form-<%= file_name_extract edit_template %>";
-  $(formName).data('editor', editor);
-
-  $(formName).submit(function(e) {
-    var editor = $(e.currentTarget).data('editor');
-    $(e.currentTarget).find('.template_content').val(editor.getValue())
-  });
+  var editor = new EditTemplate($('#' + templateName), editorName);
 </script>
