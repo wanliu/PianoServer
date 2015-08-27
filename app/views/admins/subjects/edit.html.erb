@@ -2,7 +2,7 @@
 
 <%= render "form" %>
 
-<%= render partial: "edit_template", collection: @subject.templates, locals: {subject: @subject} %>
+<%= render partial: "edit_template", collection: @subject.templates.order(id: :asc), locals: {subject: @subject} %>
 <%= render partial: "admins/templates/form", locals: {template: @new_template, subject: @subject} %>
 
 <div id="variable_editor_modal" class="modal fade">
