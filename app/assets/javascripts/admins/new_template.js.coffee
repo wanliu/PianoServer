@@ -3,6 +3,8 @@
 class @NewTemplate extends @EditTemplate
   events:
     'submit >form': 'onSave',
+    'show.bs.tab .preview-template-tab': 'preview',
+    'click .preview': 'clickPreview',
     'ajax:success >form': 'success',
     'ajax:error >form': 'error'
 

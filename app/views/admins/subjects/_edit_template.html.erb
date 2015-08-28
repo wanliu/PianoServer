@@ -1,16 +1,15 @@
-<div class="panel panel-default edit-template" id="template-<%= edit_template.id %>">
-  <% url = admins_subject_template_path(subject, edit_template) %>
-  <%= form_for edit_template, url: url, remote: true, html: { class: "template-form-#{edit_template.id}" } do |f| %>
+<div id="edit-template-<%= template.id %>" class="tab-pane fade in panel panel-default edit-template active">
+  <%= form_for template, url: url, remote: true, html: { class: "template-form-#{template.id}" } do |f| %>
   <div class="panel-heading">
     <h3 class="panel-title">
-      <%= title_extract edit_template %>
+      <%= title_extract template %>
       <span class="glyphicon glyphicon-chevron-up toggle-icon" aria-hidden="true"></span>
     </h3>
   </div>
 
   <div class="panel-body">
     <div class="panel-body-content">
-      <div id="template-editor-<%= edit_template.id %>" class="source-editor"><%= edit_template.content -%></div>
+      <div id="template-editor-<%= template.id %>" class="source-editor"><%= template.content -%></div>
       <div class="variables">
         <div class="btn-group add-variable" role="group">
           <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -18,20 +17,20 @@
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu toolbars">
-            <% edit_template.customize_variables.each do |config| %>
+            <% template.customize_variables.each do |config| %>
               <li><%= link_to config[:title], '#',
                         data: {
                           toggle: 'modal',
                           target: modal_target(config),
                           class: config[:name],
-                          link: variables_path(subject, edit_template)
+                          link: variables_path(subject, template)
                         } %>
               </li>
             <% end %>
           </ul>
         </div>
         <div class="btn-group-vertical" role="group" aria-label="variables">
-          <% edit_template.variables.each do |var| %>
+          <% template.variables.each do |var| %>
             <button type="button" class="btn btn-default"><%= var.name %></button>
           <% end %>
         </div>
@@ -42,7 +41,7 @@
   <div class="panel-footer">
     <div class="panel-actions">
       <%= f.submit :save, class: 'btn btn-primary' %>
-      <%= link_to :Preview, '#',  class: 'btn btn-default' %>
+      <%= link_to :Preview, 'javascript: void(0)',  class: 'btn btn-default preview' %>
       <%= link_to :upload, '#', class: 'btn-upload btn-default' %>
     </div>
     <div class="panel-attachments">
@@ -52,7 +51,7 @@
         </div>
       </div>
       <ul class="row-fluid file-list">
-        <%= render partial: "admins/subjects/attachment", collection: edit_template.attachments %>
+        <%= render partial: "admins/subjects/attachment", collection: template.attachments %>
         <li class="drop-zone col-12 text-center hide" >拖动到这里上传</li>
       </ul>
       <script type="text/javascript">
@@ -62,14 +61,3 @@
   </div>
   <% end %>
 </div>
-
-<script type="text/javascript">
-  (function() {
-    var EditTemplate = window.EditTemplate;
-    var templateName = "template-<%= edit_template.id %>";
-    var editorName= "template-editor-<%= edit_template.id %>";
-    var url = "<%= url %>";
-
-    var editor = new EditTemplate($('#' + templateName), editorName, { url: url });
-  })();
-</script>

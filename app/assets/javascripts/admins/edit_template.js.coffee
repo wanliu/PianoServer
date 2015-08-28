@@ -8,7 +8,9 @@ class @EditTemplate extends @Event
 
   LiquidMode = ace.require("ace/mode/liquid").Mode
   events:
-    'submit >form': 'onSave'
+    'submit >form': 'onSave',
+    'show.bs.tab .preview-template-tab': 'preview',
+    'click .preview': 'clickPreview',
     'click .panel-heading': 'togglePanelBody'
 
   constructor: (@element, @name, @options ={}) ->
@@ -47,6 +49,25 @@ class @EditTemplate extends @Event
 
   onSave: (e) ->
     @$content.val(@editor.getValue())
+
+  clickPreview: (e) ->
+    @element.find('.preview-template-tab').tab('show')
+
+  preview: (e) ->
+    source = @editor.getValue()
+    parseUrl = @element.attr("data-preview-url")
+
+    @element.find(".preview-template h3.panel-title").html(@fileTitle())
+
+    $.get(parseUrl, {source: source})
+      .success (data, status, xhr)=>
+        @element.find('.preview-template .preview').html(data)
+
+  fileTitle: () ->
+    if @element.find(".edit-template h3.panel-title input").length > 0
+      @element.find(".edit-template h3.panel-title input").val()
+    else
+      @element.find(".edit-template h3.panel-title").text()
 
   onUploader: (id, filename, json) ->
     $(json.html).appendTo(@$().find('.file-list'))
