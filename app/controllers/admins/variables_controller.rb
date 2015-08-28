@@ -15,6 +15,14 @@ class Admins::VariablesController < Admins::BaseController
     render :new_promotion_variable, layout: false
   end
 
+  def new_promotion_set_variable
+    @variable = PromotionSetVariable.new
+
+    @promotions = Promotion.find(:all, from: :active, params: query_params)
+
+    render :new_promotion_set_variable, layout: false
+  end
+
   def create
     case variable_params[:type]
     when "promotion_variable", "promotion_set_variable"
@@ -30,7 +38,7 @@ class Admins::VariablesController < Admins::BaseController
   private
 
   def set_parents
-    @subject = Subject.find(params[:subject_id])
+    @subject = Subject.unscoped.find(params[:subject_id])
     @template = Template.find(params[:template_id])
   end
 
