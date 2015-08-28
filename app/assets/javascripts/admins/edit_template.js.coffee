@@ -9,6 +9,7 @@ class @EditTemplate extends @Event
   LiquidMode = ace.require("ace/mode/liquid").Mode
   events:
     'submit >form': 'onSave'
+    'click .panel-heading': 'togglePanelBody'
 
   constructor: (@element, @name, @options ={}) ->
     super(@element)
@@ -46,3 +47,14 @@ class @EditTemplate extends @Event
   onUploader: (id, filename, responseJSON) ->
     # @setImage(responseJSON.url)
     # $(@$uploader._listElement).empty()
+
+  togglePanelBody: (e) ->
+    $target = $(e.target)
+
+    if $target.is('input')
+      return false;
+
+    unless $target.is('.panel-heading')
+      $target = $target.parents('.panel-heading:first')
+
+    $target.toggleClass('down').siblings().slideToggle()

@@ -1,16 +1,39 @@
 .edit-template {
-
   .panel-heading {
     input {
       max-width: 450px;
     }
+
+    .panel-title {
+      position: relative;
+
+      .toggle-icon {
+        position: absolute;
+        top: 50%;
+        margin-top: -8px;
+        right: 0;
+        -webkit-transition: all 0.45s ease-in-out 0s;
+        transition: all 0.45s ease-in-out 0s;
+      }
+    }
+
+    &.down {
+      .toggle-icon {
+        -webkit-transform: rotate(-180deg);
+        transform: rotate(-180deg);
+      }
+    }
   }
 
-  .panel-body {
+  .panel-body{
+    padding: 0px;
+  }
+
+  .panel-body-content {
     display: table;
     width: 100%;
 
-    padding: 0px;
+
     &:before, &:after {
       content: none;
     }
@@ -101,4 +124,14 @@
 
 #new-template {
   display: none;
+}
+
+.template-page-header {
+  position: relative;
+
+  .subject-toggle{
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
 }

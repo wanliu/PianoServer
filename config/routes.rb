@@ -42,6 +42,7 @@ Rails.application.routes.draw do
         resources :variables, except: [:new ] do
           collection do
             get :new_promotion_variable
+            get :new_promotion_set_variable
           end
         end
 

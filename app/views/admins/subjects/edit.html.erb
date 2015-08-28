@@ -1,4 +1,14 @@
-<h1 class="page-header">编辑专题</h1>
+<h1 class="page-header template-page-header">
+  编辑专题
+  <div class="subject-toggle">
+    <label class="toggle-box">
+      <%= check_box_tag :status, 'status', @subject.open?, class: 'toggle-checkbox'%>
+      <div class="track">
+        <div class="handle"></div>
+      </div>
+    </label>
+  </div>
+</h1>
 
 <%= render "form" %>
 
@@ -23,7 +33,6 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-
 <div>
   <button class='btn btn-default new-template'>新建模板</button>
 </div>
@@ -31,5 +40,25 @@
 <script type="text/javascript">
   $('button.new-template').click(function (event) {
     $('#new-template').show();
-  })
+  });
+
+  var subject_id = '<%= @subject.id %>';
+
+  $('.template-page-header .toggle-checkbox').change(function() {
+    var is_open = $(this).prop('checked');
+
+    $.ajax({
+      url: '/admins/subjects/' + subject_id,
+      data: {
+        subject: {
+          status: is_open ? 'open' : 'close'
+        }
+      },
+      type: 'PUT',
+      dataType: 'json',
+      success: function() {
+
+      }
+    });
+  });
 </script>
