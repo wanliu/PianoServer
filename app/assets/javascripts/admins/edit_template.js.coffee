@@ -10,9 +10,10 @@ class @EditTemplate extends @Event
   events:
     'submit >form': 'onSave',
     'show.bs.tab .preview-template-tab': 'preview',
-    'click .preview': 'clickPreview'
+    'click .preview': 'clickPreview',
+    'click .panel-heading': 'togglePanelBody'
 
-  constructor: (@element, @name) ->
+  constructor: (@element, @name, @options ={}) ->
     super(@element)
     editor = @$().find('.source-editor')
     @editor = ace.edit(@name)
@@ -21,9 +22,30 @@ class @EditTemplate extends @Event
       enableBasicAutocompletion: true
     });
 
-    @$content = @$().find('.template_content');
+    @url = @options['url']
+
+
+    @$content = @$().find('.template_content')
+    @$progress = @$().find('.progress')
 
     @variableToolbar = new EditTemplateToolbarVariable(@$().find('.variables'))
+    @bindUploadButton()
+
+  bindUploadButton: () ->
+    token = $('meta[name="csrf-token"]').attr('content')
+
+    @$upload = @$().find('.btn-upload')
+    @$uploader = new qq.FileUploader({
+      element: @$upload[0],
+      action: @url + "/upload",
+      uploadButtonText: '上传',
+      dragText: '拖动到这里上传',
+      customHeaders: { "X-CSRF-Token": token },
+      multiple: false,
+      onComplete: @onUploader.bind(@),
+      onProgress: @onProgress.bind(@)
+
+    })
 
   onSave: (e) ->
     @$content.val(@editor.getValue())
@@ -46,3 +68,27 @@ class @EditTemplate extends @Event
       @element.find(".edit-template h3.panel-title input").val()
     else
       @element.find(".edit-template h3.panel-title").text()
+
+  onUploader: (id, filename, json) ->
+    $(json.html).appendTo(@$().find('.file-list'))
+    @$progress.hide();
+    # @setImage(responseJSON.url)
+    # $(@$uploader._listElement).empty()
+
+  onProgress: (id, fileName, loaded, total) ->
+    percent = Math.round(loaded / total * 100, 0) + '%'
+    if loaded > 0
+      @$progress.show()
+
+    @$progress.find('.progress-bar').width(percent).text(percent)
+
+  togglePanelBody: (e) ->
+    $target = $(e.target)
+
+    if $target.is('input')
+      return false;
+
+    unless $target.is('.panel-heading')
+      $target = $target.parents('.panel-heading:first')
+
+    $target.toggleClass('down').siblings().slideToggle()

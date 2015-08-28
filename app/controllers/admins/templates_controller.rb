@@ -4,14 +4,12 @@ class Admins::TemplatesController < Admins::BaseController
   include ConcernParentResource
 
   after_filter :rm_temp_file, only: [ :preview ]
-
-  set_parent_param :subject_id
+  before_action :set_template, only: [ :update, :upload]
 
   def show
   end
 
   def update
-    @template = @parent.templates.find(params[:id])
     @template.update_attributes(template_params)
   end
 
@@ -74,6 +72,14 @@ class Admins::TemplatesController < Admins::BaseController
   end
 
 
+  def upload
+    # filename = params[:file].original_filename
+    @attachment = @template.attachments.create(name: params[:file].original_filename, filename: params[:file])
+
+    render :upload, formats: [:json]
+  end
+
+
   private
 
   def template_params
@@ -82,5 +88,9 @@ class Admins::TemplatesController < Admins::BaseController
 
   def rm_temp_file
     @file.close!
+  end
+
+  def set_template
+    @template = @parent.templates.find(params[:id])
   end
 end

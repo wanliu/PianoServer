@@ -12,6 +12,7 @@
 //= require ace-rails-ap
 //= require ace/mode-liquid
 //= require ace/ext-language_tools
+//= require best_in_place
 //= require _common/fileuploader
 //= require_tree ./admins
 //= require_self

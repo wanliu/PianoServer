@@ -7,22 +7,24 @@
   </div>
 
   <div class="panel-body">
-    <div id="new-template-content" class="source-editor">
-    </div>
+    <div class="panel-body-content">
+      <div id="new-template-content" class="source-editor">
+      </div>
 
-    <div class="variables">
-      <div class="btn-group-vertical btn-group-justified" role="group" aria-label="variables">
-        <div class="btn-group" role="group">
-          <!-- <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            新增对象
-            <span class="caret"></span>
-          </button> -->
-          <ul class="dropdown-menu">
-          </ul>
+      <div class="variables">
+        <div class="btn-group-vertical btn-group-justified" role="group" aria-label="variables">
+          <div class="btn-group" role="group">
+            <!-- <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              新增对象
+              <span class="caret"></span>
+            </button> -->
+            <ul class="dropdown-menu">
+            </ul>
+          </div>
         </div>
       </div>
+      <%= f.hidden_field :content, class: "template_content" %>
     </div>
-    <%= f.hidden_field :content, class: "template_content" %>
   </div>
   <div class="panel-footer">
     <%= f.submit :save, class: 'btn btn-primary' %>

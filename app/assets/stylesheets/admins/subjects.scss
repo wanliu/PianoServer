@@ -1,5 +1,4 @@
 .edit-preview-template {
-
   .tab-content {
     .edit-template {
       border-top: none;
@@ -8,13 +7,37 @@
         input {
           max-width: 450px;
         }
+
+        .panel-title {
+          position: relative;
+
+          .toggle-icon {
+            position: absolute;
+            top: 50%;
+            margin-top: -8px;
+            right: 0;
+            -webkit-transition: all 0.45s ease-in-out 0s;
+            transition: all 0.45s ease-in-out 0s;
+          }
+        }
+
+        &.down {
+          .toggle-icon {
+            -webkit-transform: rotate(-180deg);
+            transform: rotate(-180deg);
+          }
+        }
       }
 
-      .panel-body {
+      .panel-body{
+        padding: 0px;
+      }
+
+      .panel-body-content {
         display: table;
         width: 100%;
 
-        padding: 0px;
+
         &:before, &:after {
           content: none;
         }
@@ -62,8 +85,79 @@
       border-top: none;
     }
   }
+
+  .panel-footer {
+    display: table;
+    position: relative;
+    width: 100%;
+
+    .panel-actions {
+      display: table-cell;
+      width: 200px;
+      vertical-align: top;
+
+      .btn-upload {
+        .qq-upload-drop-area {
+          position: absolute;
+          left: 200px;
+          right: 0px;
+          top: 0px;
+          bottom: 0px;
+        }
+      }
+    }
+
+    .panel-attachments {
+      display: table-cell;
+
+      padding: 10px;
+      .file-list {
+        list-style: none;
+        padding-left: 0px;
+      }
+
+      .progress {
+        display: none;
+        height: 5px;
+      }
+
+      .file-list {
+
+        &>li {
+          white-space: nowrap;
+
+        }
+        .icon {
+          width: 16px;
+          height: 16px;
+        }
+
+        .title {
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        input {
+          display: inline-block;
+        }
+
+        .delete {
+        }
+      }
+    }
+  }
 }
 
 #new-template {
   display: none;
+}
+
+.template-page-header {
+  position: relative;
+
+  .subject-toggle{
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
 }
