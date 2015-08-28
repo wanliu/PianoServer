@@ -1,6 +1,10 @@
 class Admins::VariablesController < Admins::BaseController
   before_action :set_parents
 
+  def show
+
+  end
+
   def new
     @promotions = Promotion.find(:all, from: :active, params: query_params)
 
@@ -21,6 +25,12 @@ class Admins::VariablesController < Admins::BaseController
     @promotions = Promotion.find(:all, from: :active, params: query_params)
 
     render :new_promotion_set_variable, layout: false
+  end
+
+  def search_promotion
+    @promotions = Promotion.where("title like ?", "%#{params[:q]}%")
+
+
   end
 
   def create

@@ -4,10 +4,11 @@ class @PromotionVariableModal extends @ModalBase
 
   events:
     'click .promotion': 'onSelectedItem'
-    'click .save': 'onSave'
+    'click .save': 'onSave',
+    'change #variable_name': 'onVariableNameChange'
 
   constructor: (@element, @url) ->
-    super(@element)
+    super(@element, @url)
 
     @$selected = @$().find('.selected');
 
@@ -23,3 +24,8 @@ class @PromotionVariableModal extends @ModalBase
   onSave: (e) ->
     $.post @url, @$().find('.modal-body>form').serialize(), (e) =>
       console.log(e)
+
+  onVariableNameChange: (e) ->
+    name = $.trim($(e.target).val())
+
+
