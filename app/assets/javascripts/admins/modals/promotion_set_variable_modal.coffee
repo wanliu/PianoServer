@@ -7,7 +7,7 @@ class @PromotionSetVariableModal extends @ModalBase
     'click .save': 'onSave'
 
   constructor: (@element, @url) ->
-    super(@element)
+    super(@element, @url)
 
     @$seleteds = @$().find('.selected-promotions')
     @$list = @$().find('.promotion-set-variable .list-group')
@@ -48,6 +48,8 @@ class @PromotionSetVariableModal extends @ModalBase
       @$ids.val(ids.join(','))
 
   onSave: (e) ->
-    $.post @url, @$().find('.modal-body>form').serialize(), (e) =>
-      console.log(e)
+    $.post @url, @$().find('.modal-body>div>form').serialize(), (e) =>
+      @$().modal('hide')
+      @$().find('.modal-body').html('')
+    , 'json'
 
