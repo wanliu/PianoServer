@@ -46,7 +46,7 @@ class Admins::TemplatesController < Admins::BaseController
     # filename = params[:file].original_filename
     @attachment = @template.attachments.create(name: params[:file].original_filename, filename: params[:file])
 
-    render json: { success: true, url: @attachment.filename.url(:avatar) }
+    render :upload, formats: [:json]
   end
 
 

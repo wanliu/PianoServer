@@ -1,9 +1,10 @@
 class Admins::AttachmentsController < Admins::BaseController
-  before_action :set_attachment, only: [ :destroy ]
+  before_action :set_attachment, only: [ :destroy, :update ]
   respond_to :js
 
   def update
     @attachment.update_attributes(attachment_params)
+    render json: @attachment
   end
 
   def destroy

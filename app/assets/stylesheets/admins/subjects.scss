@@ -54,22 +54,37 @@
 
   .panel-footer {
     display: table;
+    position: relative;
     width: 100%;
 
     .panel-actions {
       display: table-cell;
       width: 200px;
-      .upload {
+      vertical-align: top;
 
+      .btn-upload {
+        .qq-upload-drop-area {
+          position: absolute;
+          left: 200px;
+          right: 0px;
+          top: 0px;
+          bottom: 0px;
+        }
       }
     }
 
     .panel-attachments {
       display: table-cell;
+
       padding: 10px;
       .file-list {
         list-style: none;
         padding-left: 0px;
+      }
+
+      .progress {
+        display: none;
+        height: 5px;
       }
 
       .file-list {
@@ -86,6 +101,10 @@
         .title {
           overflow: hidden;
           text-overflow: ellipsis;
+        }
+
+        input {
+          display: inline-block;
         }
 
         .delete {

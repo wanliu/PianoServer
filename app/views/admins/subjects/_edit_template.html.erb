@@ -41,9 +41,18 @@
       <%= link_to :upload, '#', class: 'btn-upload btn-default' %>
     </div>
     <div class="panel-attachments">
+      <div class="progress">
+        <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+          0%
+        </div>
+      </div>
       <ul class="row-fluid file-list">
         <%= render partial: "admins/subjects/attachment", collection: edit_template.attachments %>
+        <li class="drop-zone col-12 text-center hide" >拖动到这里上传</li>
       </ul>
+      <script type="text/javascript">
+        $(".file-list .best_in_place").best_in_place();
+      </script>
     </div>
   </div>
   <% end %>
