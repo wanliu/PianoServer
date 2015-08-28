@@ -6,6 +6,8 @@ class PromotionCollection < ActiveResource::Collection
 end
 
 class Promotion < ActiveResource::Base
+  include Liquid::Rails::Droppable
+
   UPYUN_SITES = %r(neil-img.b0.upaiyun.com)
 
   self.site = Settings.wanliu.backend

@@ -8,6 +8,7 @@ GIT
 GEM
   remote: http://ruby.taobao.org/
   specs:
+    ace-rails-ap (4.0.0)
     actionmailer (4.2.0)
       actionpack (= 4.2.0)
       actionview (= 4.2.0)
@@ -58,11 +59,16 @@ GEM
       ice_nine (~> 0.11.0)
       thread_safe (~> 0.3, >= 0.3.1)
     bcrypt (3.1.10)
+    best_in_place (3.0.3)
+      actionpack (>= 3.2)
+      railties (>= 3.2)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
     bootstrap-sass (3.3.5.1)
       autoprefixer-rails (>= 5.0.0.1)
       sass (>= 3.3.0)
+    bootstrap3-datetimepicker-rails (4.15.35)
+      momentjs-rails (>= 2.8.1)
     builder (3.2.2)
     byebug (4.0.3)
       columnize (= 0.9.0)
@@ -166,6 +172,7 @@ GEM
     hashdiff (0.2.2)
     hashie (3.4.2)
     hitimes (1.2.2)
+    httpclient (2.6.0.1)
     i18n (0.7.0)
     ice_nine (0.11.1)
     jbuilder (2.2.12)
@@ -212,6 +219,8 @@ GEM
     minitest (5.7.0)
     mobylette (3.5)
       actionpack (>= 3.0)
+    momentjs-rails (2.10.3)
+      railties (>= 3.1)
     multi_json (1.11.1)
     multipart-post (2.0.0)
     nenv (0.2.0)
@@ -229,6 +238,9 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
+    punching_bag (0.4.0)
+      railties (>= 3.2, < 5)
+      voight_kampff (~> 0.2)
     rack (1.6.4)
     rack-cors (0.4.0)
     rack-raw-upload (1.1.1)
@@ -361,6 +373,9 @@ GEM
       coercible (~> 1.0)
       descendants_tracker (~> 0.0, >= 0.0.3)
       equalizer (~> 0.0, >= 0.0.9)
+    voight_kampff (0.2.2)
+      httpclient (~> 2.2)
+      nokogiri (~> 1.6)
     warden (1.2.3)
       rack (>= 1.0)
     web-console (2.1.2)
@@ -373,9 +388,12 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  ace-rails-ap
   activeresource
   awesome_nested_set
+  best_in_place (~> 3.0.1)
   bootstrap-sass (~> 3.3.5)
+  bootstrap3-datetimepicker-rails (~> 4.15.35)
   byebug
   carrierwave
   carrierwave-upyun
@@ -404,9 +422,11 @@ DEPENDENCIES
   meta-tags
   mini_magick (~> 4.2.7)
   mobylette
+  momentjs-rails (>= 2.9.0)
   nprogress-rails
   pg
   poseidon
+  punching_bag
   rack-cors
   rack-raw-upload (~> 1.1.1)
   rails (= 4.2.0)

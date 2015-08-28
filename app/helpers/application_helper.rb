@@ -81,6 +81,17 @@ module ApplicationHelper
     html_class.select {|k,v| v }.map { |k,v| k }.join(' ')
   end
 
+
+  def subject_render(subject, template, *args)
+    return if subject.nil?
+    tpl = subject.templates.find_by(name: template)
+
+    path = File.join("subjects", subject.name, tpl.filename.sub(/^views\/_/, 'views/'))
+    pp path
+
+    render partial: path
+  end
+
   private
 
   def user_profile_path(user)

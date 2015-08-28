@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150822084818) do
+ActiveRecord::Schema.define(version: 20150827023702) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,6 +34,15 @@ ActiveRecord::Schema.define(version: 20150822084818) do
 
   add_index "admins", ["email"], name: "index_admins_on_email", unique: true, using: :btree
   add_index "admins", ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true, using: :btree
+
+  create_table "attachments", force: :cascade do |t|
+    t.string   "name"
+    t.string   "filename"
+    t.integer  "attachable_id"
+    t.string   "attachable_type"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
 
   create_table "categories", force: :cascade do |t|
     t.string   "name"
@@ -180,6 +189,18 @@ ActiveRecord::Schema.define(version: 20150822084818) do
     t.integer  "send_location_id"
   end
 
+  create_table "punches", force: :cascade do |t|
+    t.integer  "punchable_id",                          null: false
+    t.string   "punchable_type", limit: 20,             null: false
+    t.datetime "starts_at",                             null: false
+    t.datetime "ends_at",                               null: false
+    t.datetime "average_time",                          null: false
+    t.integer  "hits",                      default: 1, null: false
+  end
+
+  add_index "punches", ["average_time"], name: "index_punches_on_average_time", using: :btree
+  add_index "punches", ["punchable_type", "punchable_id"], name: "punchable_index", using: :btree
+
   create_table "shops", force: :cascade do |t|
     t.integer  "owner_id"
     t.string   "name"
@@ -203,6 +224,28 @@ ActiveRecord::Schema.define(version: 20150822084818) do
     t.integer  "state"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
+  end
+
+  create_table "subjects", force: :cascade do |t|
+    t.string   "name"
+    t.string   "title"
+    t.text     "description"
+    t.datetime "start_at"
+    t.datetime "end_at"
+    t.string   "condition"
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.integer  "status",      default: 0
+  end
+
+  create_table "templates", force: :cascade do |t|
+    t.string   "name"
+    t.string   "filename"
+    t.integer  "last_editor_id"
+    t.integer  "subject_id"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.string   "type"
   end
 
   create_table "users", force: :cascade do |t|
@@ -232,5 +275,15 @@ ActiveRecord::Schema.define(version: 20150822084818) do
   add_index "users", ["mobile"], name: "index_users_on_mobile", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["username"], name: "index_users_on_username", unique: true, using: :btree
+
+  create_table "variables", force: :cascade do |t|
+    t.integer  "template_id"
+    t.string   "name"
+    t.string   "data_type"
+    t.jsonb    "data"
+    t.string   "type"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
 
 end
