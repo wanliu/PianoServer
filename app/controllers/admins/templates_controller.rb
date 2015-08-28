@@ -49,6 +49,11 @@ class Admins::TemplatesController < Admins::BaseController
     @subject = Subject.find(params[:subject_id])
     @template = @subject.templates.find(params[:id])
 
+    @template.variables.each do |variable|
+      name = '@' + variable.name
+      self.instance_variable_set name.to_sym, variable.call if variable.respond_to?(:call)
+    end
+
     source = params[:source]
     @file = Tempfile.new(['template', '.html.liquid'], "#{Rails.root}/tmp/")
     @file.write source
