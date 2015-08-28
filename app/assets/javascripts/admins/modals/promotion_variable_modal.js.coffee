@@ -27,5 +27,12 @@ class @PromotionVariableModal extends @ModalBase
 
   onVariableNameChange: (e) ->
     name = $.trim($(e.target).val())
+    url = [@url, '/search_promotion'].join('')
+
+    if (name.length > 0)
+      $.get url, { inline: true, q: name }, (json) =>
+        @unbindAllEvents()
+        @$().find('.modal-body').html(json.html) if json.html?
+        @bindAllEvents()
 
 

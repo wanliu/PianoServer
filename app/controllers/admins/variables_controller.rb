@@ -28,9 +28,9 @@ class Admins::VariablesController < Admins::BaseController
   end
 
   def search_promotion
-    @promotions = Promotion.where("title like ?", "%#{params[:q]}%")
+    @promotions = Promotion.find(:all, from: :active, params: query_params)
 
-
+    render :show, formats: [:json]
   end
 
   def create
@@ -56,7 +56,8 @@ class Admins::VariablesController < Admins::BaseController
     @query_params = {
       page: params[:page] || 1,
       category_id: params[:category_id],
-      inline: params[:inline]
+      inline: params[:inline],
+      q: params[:q]
     }
   end
 

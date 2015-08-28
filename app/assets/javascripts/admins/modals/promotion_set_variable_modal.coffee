@@ -5,6 +5,7 @@ class @PromotionSetVariableModal extends @ModalBase
   events:
     'click .promotion': 'toggleSelectedItem'
     'click .save': 'onSave'
+    'change #variable_name': 'onVariableNameChange'
 
   constructor: (@element, @url) ->
     super(@element, @url)
@@ -52,4 +53,14 @@ class @PromotionSetVariableModal extends @ModalBase
       @$().modal('hide')
       @$().find('.modal-body').html('')
     , 'json'
+
+  onVariableNameChange: (e) ->
+    name = $.trim($(e.target).val())
+    url = [@url, '/search_promotion'].join('')
+
+    if (name.length > 0)
+      $.get url, { inline: true, q: name }, (json) =>
+        @unbindAllEvents()
+        @$().find('.modal-body').html(json.html) if json.html?
+        @bindAllEvents()
 
