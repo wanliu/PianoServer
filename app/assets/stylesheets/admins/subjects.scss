@@ -1,98 +1,124 @@
-.edit-template {
-  .panel-heading {
-    input {
-      max-width: 450px;
-    }
+.edit-preview-template {
+  .tab-content {
+    .edit-template {
+      border-top: none;
 
-    .panel-title {
-      position: relative;
+      .panel-heading {
+        input {
+          max-width: 450px;
+        }
 
-      .toggle-icon {
-        position: absolute;
-        top: 50%;
-        margin-top: -8px;
-        right: 0;
-        -webkit-transition: all 0.45s ease-in-out 0s;
-        transition: all 0.45s ease-in-out 0s;
+        .panel-title {
+          position: relative;
+
+          .toggle-icon {
+            position: absolute;
+            top: 50%;
+            margin-top: -8px;
+            right: 0;
+            -webkit-transition: all 0.45s ease-in-out 0s;
+            transition: all 0.45s ease-in-out 0s;
+          }
+        }
+
+        &.down {
+          .toggle-icon {
+            -webkit-transform: rotate(-180deg);
+            transform: rotate(-180deg);
+          }
+        }
       }
-    }
 
-    &.down {
-      .toggle-icon {
-        -webkit-transform: rotate(-180deg);
-        transform: rotate(-180deg);
+      .panel-body{
+        padding: 0px;
       }
-    }
-  }
 
-  .panel-body{
-    padding: 0px;
-  }
-
-  .panel-body-content {
-    display: table;
-    width: 100%;
-
-
-    &:before, &:after {
-      content: none;
-    }
-
-    .source-editor {
-      display: table-cell;
-      height: 400px;
-      border-right: 1px solid #ccc;
-      // margin-right: 200px;
-    }
-
-    .variables {
-      display: table-cell;
-      width: 200px;
-      padding-left: 5px;
-      padding-right: 5px;
-      vertical-align: top;
-
-      .btn-group-vertical {
+      .panel-body-content {
+        display: table;
         width: 100%;
-        button  {
+
+
+        &:before, &:after {
+          content: none;
+        }
+
+        .source-editor {
+          display: table-cell;
+          height: 400px;
+          border-right: 1px solid #ccc;
+          // margin-right: 200px;
+        }
+
+        .variables {
+          display: table-cell;
+          width: 200px;
+          padding-left: 5px;
+          padding-right: 5px;
+          vertical-align: top;
+
+          .btn-group-vertical {
+            width: 100%;
+            button  {
+              width: 100%;
+            }
+          }
+        }
+      }
+
+      .add-variable {
+        width: 100%;
+        margin-bottom: 10px;
+        button {
           width: 100%;
+          text-align: left;
+        }
+
+        span {
+          float: right;
+          margin: 10px 0;
         }
       }
     }
-  }
 
-  .add-variable {
-    width: 100%;
-    margin-bottom: 10px;
-    button {
-      width: 100%;
-      text-align: left;
-    }
-
-    span {
-      float: right;
-      margin: 10px 0;
+    .preview-template {
+      min-height: 511px;
+      border-top: none;
     }
   }
 
   .panel-footer {
     display: table;
+    position: relative;
     width: 100%;
 
     .panel-actions {
       display: table-cell;
       width: 200px;
-      .upload {
+      vertical-align: top;
 
+      .btn-upload {
+        .qq-upload-drop-area {
+          position: absolute;
+          left: 200px;
+          right: 0px;
+          top: 0px;
+          bottom: 0px;
+        }
       }
     }
 
     .panel-attachments {
       display: table-cell;
+
       padding: 10px;
       .file-list {
         list-style: none;
         padding-left: 0px;
+      }
+
+      .progress {
+        display: none;
+        height: 5px;
       }
 
       .file-list {
@@ -111,16 +137,16 @@
           text-overflow: ellipsis;
         }
 
+        input {
+          display: inline-block;
+        }
+
         .delete {
         }
       }
     }
   }
-
-
-
 }
-
 
 #new-template {
   display: none;

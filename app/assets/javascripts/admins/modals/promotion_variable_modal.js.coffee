@@ -22,8 +22,13 @@ class @PromotionVariableModal extends @ModalBase
     @$().find('#variable_promotion_id').val(id)
 
   onSave: (e) ->
-    $.post @url, @$().find('.modal-body>form').serialize(), (e) =>
-      console.log(e)
+    $.ajax
+      type: "POST",
+      url: @url,
+      data: @$().find('.modal-body>form').serialize(),
+      dataType: 'json',
+      success: (data) =>
+        @$().modal('hide')
 
   onVariableNameChange: (e) ->
     name = $.trim($(e.target).val())
@@ -34,5 +39,3 @@ class @PromotionVariableModal extends @ModalBase
         @unbindAllEvents()
         @$().find('.modal-body').html(json.html) if json.html?
         @bindAllEvents()
-
-

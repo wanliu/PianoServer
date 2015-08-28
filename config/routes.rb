@@ -46,7 +46,12 @@ Rails.application.routes.draw do
             get :search_promotion
           end
         end
-
+        collection do
+          get :preview, to: 'templates#preview_new'
+        end
+        member do
+          get :preview
+        end
       end
     end
     resources :messages

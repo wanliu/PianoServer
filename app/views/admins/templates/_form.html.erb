@@ -1,4 +1,4 @@
-<div class="panel panel-default edit-template" id="new-template">
+<div id="edit-new-template" class="tab-pane fade in panel panel-default edit-template active">
   <%= form_for(template, url: admins_subject_templates_path(subject), remote: true, html: {"data-type" => 'html'}) do |f| %>
   <div class="panel-heading">
     <h3 class="panel-title">
@@ -7,36 +7,28 @@
   </div>
 
   <div class="panel-body">
-    <div id="new-template-content" class="source-editor">
-    </div>
+    <div class="panel-body-content">
+      <div id="new-template-content" class="source-editor">
+      </div>
 
-    <div class="variables">
-      <div class="btn-group-vertical btn-group-justified" role="group" aria-label="variables">
-        <div class="btn-group" role="group">
-          <!-- <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            新增对象
-            <span class="caret"></span>
-          </button> -->
-          <ul class="dropdown-menu">
-          </ul>
+      <div class="variables">
+        <div class="btn-group-vertical btn-group-justified" role="group" aria-label="variables">
+          <div class="btn-group" role="group">
+            <!-- <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              新增对象
+              <span class="caret"></span>
+            </button> -->
+            <ul class="dropdown-menu">
+            </ul>
+          </div>
         </div>
       </div>
+      <%= f.hidden_field :content, class: "template_content" %>
     </div>
-    <%= f.hidden_field :content, class: "template_content" %>
   </div>
   <div class="panel-footer">
     <%= f.submit :save, class: 'btn btn-primary' %>
-    <%= link_to :Preview, '#',  class: 'btn btn-default' %>
+    <%= link_to :Preview, 'javascript: void(0)',  class: 'btn btn-default preview' %>
   </div>
   <% end %>
 </div>
-
-<script type="text/javascript">
-(function() {
-  var EditTemplate = window.EditTemplate;
-  var templateName = "new-template";
-  var editorName= "new-template-content";
-
-  var editor = new NewTemplate($('#' + templateName), editorName);
-})();
-</script>
