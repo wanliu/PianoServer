@@ -88,7 +88,6 @@ class @EditTemplate extends @Event
     if $target.is('input')
       return false;
 
-    unless $target.is('.panel-heading')
-      $target = $target.parents('.panel-heading:first')
+    $panel = $target.parents(".edit-template:first")
 
-    $target.toggleClass('down').siblings().slideToggle()
+    $panel.toggleClass('down').find('.panel-body, .panel-footer').slideToggle()
