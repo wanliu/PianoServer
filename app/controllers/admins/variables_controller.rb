@@ -38,7 +38,7 @@ class Admins::VariablesController < Admins::BaseController
   private
 
   def set_parents
-    @subject = Subject.unscoped.find(params[:subject_id])
+    @subject = Subject.find(params[:subject_id])
     @template = Template.find(params[:template_id])
   end
 

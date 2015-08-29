@@ -17,10 +17,10 @@ class Subject < ActiveRecord::Base
   after_create :create_subject_files
 
   scope :availables, -> do
-    where("start_at <= ? and end_at >= ?", Time.now, Time.now)
+    where("start_at <= ? and end_at >= ? and status = ?", Time.now, Time.now, 0)
   end
 
-  default_scope { where(status: 0) }
+  # default_scope { where(status: 0) }
 
   protected
 
