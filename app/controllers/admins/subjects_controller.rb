@@ -18,7 +18,7 @@ class Admins::SubjectsController < Admins::BaseController
 
   def create
     @subject = Subject.create subject_params
-    redirect_to admins_subject_path(@subject)
+    redirect_to edit_admins_subject_path(@subject)
   end
 
   def update

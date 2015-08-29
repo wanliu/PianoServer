@@ -87,7 +87,6 @@ module ApplicationHelper
     tpl = subject.templates.find_by(name: template)
 
     path = File.join("subjects", subject.name, tpl.filename.sub(/^views\/_/, 'views/'))
-    pp path
 
     render partial: path
   end
