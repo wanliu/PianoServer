@@ -3,6 +3,7 @@ require 'tempfile'
 class Admins::TemplatesController < Admins::BaseController
   include ConcernParentResource
 
+  set_parent_param :subject_id
   after_filter :rm_temp_file, only: [ :preview ]
   before_action :set_template, only: [ :update, :upload]
 
