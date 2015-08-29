@@ -8,7 +8,7 @@ class @EditTemplate extends @Event
 
   LiquidMode = ace.require("ace/mode/liquid").Mode
   events:
-    'submit >form': 'onSave',
+    'submit #edit_template': 'onSave',
     'show.bs.tab .preview-template-tab': 'preview',
     'click .preview': 'clickPreview',
     'click .panel-heading': 'togglePanelBody'
