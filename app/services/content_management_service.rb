@@ -16,7 +16,10 @@ module ContentManagementService
     end
 
     def check_subject_variables
-      prepare_load_variables unless @subject.nil?
+      unless @subject.nil?
+        prepare_load_variables
+        prepare_load_attachments
+      end
     end
 
     # 预载入所有模板中的 Variable
@@ -34,6 +37,22 @@ module ContentManagementService
       variables = merge_variables(load_variables)
 
       load_all_variables variables
+    end
+
+    def prepare_load_attachments
+      @images = ImagesDrop.new(all_attachments)
+      @attachments = all_attachments
+    end
+
+    # # liquid 变量赋值入口
+    # def liquid_assigns
+    #   {
+    #     images: all_attachments
+    #   }
+    # end
+
+    def all_attachments
+      get_subject.templates.includes(:attachments).inject([]) {|s, t| s.concat(t.attachments) }
     end
 
     module ClassMethods

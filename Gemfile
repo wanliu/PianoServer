@@ -106,5 +106,6 @@ group :development, :test do
   gem 'thin'
   gem "teaspoon-jasmine"
   gem 'spring-commands-teaspoon'
+  gem "table_print"
 end
 
