@@ -1,0 +1,12 @@
+zh-CN:
+  activerecord:
+    models:
+      location: "收货地址"
+    attributes:
+      location:
+        contact: "联系人"
+        road: "地址"
+        contact_phone: "手机/座机号"
+        province_id: "省份"
+        city_id: "城市"
+        region_id: "地区"
