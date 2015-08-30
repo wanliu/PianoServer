@@ -1,5 +1,5 @@
 class Template < ActiveRecord::Base
-  RESERVED_NAMES = ["homepage_header", "index"]
+  RESERVED_NAMES = ["homepage_header", "index", "promotion"]
 
   mattr_accessor :available_variables
   mattr_accessor :constants_variables
