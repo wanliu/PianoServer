@@ -25,6 +25,8 @@ Rails.application.routes.draw do
     resources :chats
   end
 
+  match "admins", to: "admins/dashboards#index", via: :get
+
   namespace :admins do
     resources :dashboards
     resources :accounts, except: [:new, :edit] do
