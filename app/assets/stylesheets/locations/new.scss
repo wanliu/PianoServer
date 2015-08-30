@@ -1,0 +1,44 @@
+.new_location {
+  margin-top: 20px;
+
+  label {
+    font-weight: normal;
+
+    .required {
+      color: #FF2B2B;
+    }
+  }
+
+  .city-group {
+    .padding0 {
+      padding-left: 0;
+
+      &:last-child{
+        padding-right: 0;
+      }
+    }
+  }
+}
+
+.error-messages {
+  padding: 0 15px;
+  margin: 15px 0;
+  list-style: none;
+  color: #FF2B2B;
+
+  .error-message {
+    float: left;
+    margin-right: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .new_location .city-group .padding0{
+    margin-bottom: 10px;
+    padding: 0;
+
+    &:last-child{
+      margin-bottom: 0;
+    }
+  }
+}

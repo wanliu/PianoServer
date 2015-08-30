@@ -2,7 +2,10 @@ require 'tempfile'
 
 class Admins::TemplatesController < Admins::BaseController
   include ConcernParentResource
+  include ContentManagementService::Methods
 
+
+  set_parent_param :subject_id
   after_filter :rm_temp_file, only: [ :preview ]
   before_action :set_template, only: [ :update, :upload]
 
@@ -51,6 +54,8 @@ class Admins::TemplatesController < Admins::BaseController
       name = '@' + variable.name
       self.instance_variable_set name.to_sym, variable.call if variable.respond_to?(:call)
     end
+
+    load_attachments
 
     source = params[:source]
     @file = Tempfile.new(['template', '.html.liquid'], "#{Rails.root}/tmp/")

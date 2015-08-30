@@ -14,16 +14,18 @@ class LocationsController < ApplicationController
     # location = current_anonymous_or_user.locations.build(location_params)
     @location = Location.new(location_params)
 
-
     if @location.save
       # render json: @location, status: :created
       @order = Order.find(@location.order_id)
       @order.delivery_location_id = @location.id
       @order.save
-      
+
       redirect_to @location.chat_id ? chat_path(@location.chat_id) : location_path(@location)
     else
-      render json: @location.errors, status: :unprocessable_entity
+      respond_to do |format|
+        format.json { render json: @location.errors, status: :unprocessable_entity }
+        format.html { render :new }
+      end
     end
   end
 

@@ -5,9 +5,10 @@ class @PromotionSetVariableModal extends @ModalBase
   events:
     'click .promotion': 'toggleSelectedItem'
     'click .save': 'onSave'
+    'change input[name=q]': 'onVariableNameChange'
 
   constructor: (@element, @url) ->
-    super(@element)
+    super(@element, @url)
 
     @$seleteds = @$().find('.selected-promotions')
     @$list = @$().find('.promotion-set-variable .list-group')
@@ -48,6 +49,24 @@ class @PromotionSetVariableModal extends @ModalBase
       @$ids.val(ids.join(','))
 
   onSave: (e) ->
-    $.post @url, @$().find('.modal-body>form').serialize(), (e) =>
-      console.log(e)
+    $.post @url, @$().find('.modal-body>div>form').serialize(), (e) =>
+      @$().modal('hide')
+      @$().find('.modal-body').html('')
+    , 'json'
+
+  onVariableNameChange: (e) ->
+    name = $.trim($(e.target).val())
+    url = [@url, '/search_promotion'].join('')
+
+    if (name.length > 0)
+      $.get url, { inline: true, q: name }, (json) =>
+        @unbindAllEvents()
+        promotions = json.promotions
+        htmlAry = []
+
+        for promotion in promotions
+          htmlAry.push(promotion.html) if promotion.html?
+
+        @$().find('.promotion-list .list-group').html(htmlAry.join(''))
+        @bindAllEvents()
 

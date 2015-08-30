@@ -1,0 +1,21 @@
+.edit-subject-base{
+  .start-at {
+    padding-left: 0;
+  }
+
+  .end-at {
+    padding-right: 0;
+  }
+}
+
+@media (max-width: 970px) {
+  .edit-subject-base {
+    .start-at {
+      padding-right: 0;
+    }
+
+    .end-at {
+      padding-left: 0;
+    }
+  }
+}

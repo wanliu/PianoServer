@@ -2,7 +2,7 @@ class Admins::SubjectsController < Admins::BaseController
 
   before_action :set_subject, only: [:edit, :show, :update, :destroy]
   def index
-    @subjects = Subject.unscoped.page
+    @subjects = Subject.page
   end
 
   def new
@@ -18,7 +18,7 @@ class Admins::SubjectsController < Admins::BaseController
 
   def create
     @subject = Subject.create subject_params
-    redirect_to admins_subject_path(@subject)
+    redirect_to edit_admins_subject_path(@subject)
   end
 
   def update
@@ -33,7 +33,7 @@ class Admins::SubjectsController < Admins::BaseController
   private
 
   def set_subject
-    @subject = Subject.unscoped.find(params[:id])
+    @subject = Subject.find(params[:id])
   end
 
   def subject_params

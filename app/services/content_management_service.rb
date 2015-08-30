@@ -3,6 +3,8 @@ module ContentManagementService
     extend ActiveSupport::Concern
 
     included do |klass|
+      include ContentManagementService::Methods
+
       cattr_accessor :content_templates
       attr_accessor :cached_all_templates
 
@@ -16,7 +18,10 @@ module ContentManagementService
     end
 
     def check_subject_variables
-      prepare_load_variables unless @subject.nil?
+      unless @subject.nil?
+        prepare_load_variables
+        load_attachments
+      end
     end
 
     # 预载入所有模板中的 Variable
@@ -36,6 +41,18 @@ module ContentManagementService
       load_all_variables variables
     end
 
+    def valid_section?(section)
+      name = action_name.to_sym
+
+      if section[:only]
+        section[:only].include? name
+      elsif section[:except]
+        !section[:except].include? name
+      else
+        true
+      end
+    end
+
     module ClassMethods
 
       # 注册渲染模板
@@ -46,6 +63,18 @@ module ContentManagementService
         section[:name] = template_name
         self.content_templates << section
       end
+    end
+
+  end
+
+  module Methods
+    def load_attachments
+      @images = ImagesDrop.new(all_attachments)
+      @attachments = all_attachments
+    end
+
+    def all_attachments
+      get_subject.templates.includes(:attachments).inject([]) {|s, t| s.concat(t.attachments) }
     end
 
     protected
@@ -76,16 +105,6 @@ module ContentManagementService
       variables.uniq { |var| var.name }
     end
 
-    def valid_section?(section)
-      name = action_name.to_sym
 
-      if section[:only]
-        section[:only].include? name
-      elsif section[:except]
-        !section[:except].include? name
-      else
-        true
-      end
-    end
   end
 end
