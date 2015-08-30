@@ -28,7 +28,7 @@ class Admins::VariablesController < Admins::BaseController
   end
 
   def search_promotion
-    @promotions = Promotion.find(:all, from: :active, params: query_params)
+    @promotions = Promotion.find(:all, params: query_params)
 
     render :show, formats: [:json]
   end
