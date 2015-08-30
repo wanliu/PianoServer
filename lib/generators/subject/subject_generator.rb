@@ -35,7 +35,7 @@ class SubjectGenerator < Rails::Generators::NamedBase
     end
 
     def bind_templates
-      subject.templates.create(name: 'index_template', filename: index_template, type: 'PageTemplate')
+      subject.templates.create(name: 'index', filename: index_template, type: 'PageTemplate')
       subject.templates.create(name: 'homepage_header', filename: homepage_header, type: 'HomepageTemplate')
     end
 end
