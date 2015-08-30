@@ -1,4 +1,4 @@
-if query_params[:inline]
+if params[:inline]
   json.(promotion, :id, :title)
   json.html render partial: "promotion_item", object: promotion, formats: [ :html ]
 else
