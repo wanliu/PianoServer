@@ -1,4 +1,5 @@
 require 'rails/generators'
+require 'fileutils'
 
 module SubjectService
   extend self
@@ -9,6 +10,10 @@ module SubjectService
 
   def update_template(subject, template, content)
     file = template_path(subject, template)
+
+    directory = File.dirname(file)
+    FileUtils.mkdir_p directory unless File.directory?(directory) 
+
     File.write file, content
     logger.info "\033[32mWriting\033[0m to #{file}..."
     logger.debug content

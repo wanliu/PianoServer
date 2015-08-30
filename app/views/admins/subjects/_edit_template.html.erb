@@ -1,4 +1,5 @@
 <div id="edit-template-<%= template.id %>" class="tab-pane fade in panel panel-default edit-template active">
+  <% url = admins_subject_template_path(subject, template) %>
   <%= form_for template, url: url, as: :template, remote: true, html: { class: "template-form-#{template.id}" } do |f| %>
   <div class="panel-heading">
     <h3 class="panel-title">
