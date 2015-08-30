@@ -62,7 +62,7 @@ class Admins::TemplatesController < Admins::BaseController
     @file.write source
     @file.rewind
 
-    render file: @file.path, layout: false
+    render file: @file.path, layout: 'preview'
   end
 
   def preview_new
@@ -73,7 +73,7 @@ class Admins::TemplatesController < Admins::BaseController
     @file.write source
     @file.rewind
 
-    render file: @file.path, layout: false
+    render file: @file.path, layout: 'preview'
   end
 
 
