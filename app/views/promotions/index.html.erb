@@ -3,7 +3,8 @@
 <%= subject_render @subject, :homepage_header %>
 
 <div class="promotions-list">
-	<%= render partial: "promotion", collection: @promotions %>
+  <%= subject_render @subject, :promotion, partial: "promotion", collection: @promotions %>
+	<%#= render partial: "promotion", collection: @promotions %>
 </div>
 
 <script type="text/javascript">

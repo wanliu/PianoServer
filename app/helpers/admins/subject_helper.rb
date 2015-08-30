@@ -28,4 +28,5 @@ module Admins::SubjectHelper
       sanitize "<input autofocus='autofocus' class='form-control template-filename' placeholder='请输入文件名称' type='text' name='template[filename]' id='template_filename' value='#{template.filename}'>"
     end
   end
+
 end
