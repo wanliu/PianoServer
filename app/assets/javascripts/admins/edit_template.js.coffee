@@ -60,7 +60,7 @@ class @EditTemplate extends @Event
     @element.find(".preview-template h3.panel-title").html(@fileTitle())
     $.get(parseUrl, {source: source})
       .success (data, status, xhr) =>
-         @element.find('iframe').contents().find('#preview-zone').html(data);
+         @element.find('iframe').contents().find('body').html(data);
 
   fileTitle: () ->
     if @element.find(".edit-template h3.panel-title input").length > 0
