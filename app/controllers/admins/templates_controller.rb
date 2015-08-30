@@ -4,7 +4,6 @@ class Admins::TemplatesController < Admins::BaseController
   include ConcernParentResource
   include ContentManagementService::Methods
 
-
   set_parent_param :subject_id
   after_filter :rm_temp_file, only: [ :preview ]
   before_action :set_template, only: [ :update, :upload]
@@ -14,6 +13,10 @@ class Admins::TemplatesController < Admins::BaseController
 
   def update
     @template.update_attributes(template_params)
+  end
+
+  def preview_layout
+    render layout: 'preview'
   end
 
   def create
@@ -62,7 +65,7 @@ class Admins::TemplatesController < Admins::BaseController
     @file.write source
     @file.rewind
 
-    render file: @file.path, layout: 'preview'
+    render file: @file.path, layout: false
   end
 
   def preview_new
@@ -73,7 +76,7 @@ class Admins::TemplatesController < Admins::BaseController
     @file.write source
     @file.rewind
 
-    render file: @file.path, layout: 'preview'
+    render file: @file.path, layout: false
   end
 
 

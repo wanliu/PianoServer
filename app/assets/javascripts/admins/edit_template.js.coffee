@@ -58,7 +58,9 @@ class @EditTemplate extends @Event
     parseUrl = @element.attr("data-preview-url")
 
     @element.find(".preview-template h3.panel-title").html(@fileTitle())
-    @element.find(".preview-template iframe").attr('src', parseUrl + '?source=' + source)
+    $.get(parseUrl, {source: source})
+      .success (data, status, xhr) =>
+         @element.find('iframe').contents().find('body').html(data);
 
   fileTitle: () ->
     if @element.find(".edit-template h3.panel-title input").length > 0
