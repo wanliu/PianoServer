@@ -4,7 +4,8 @@ class @PromotionVariableModal extends @ModalBase
 
   events:
     'click .promotion': 'onSelectedItem'
-    'click .save': 'onSave'
+    'click .save': 'onSave',
+    'change #variable_name': 'onVariableNameChange'
 
   constructor: (@element, @url) ->
     super(@element, @url)
@@ -28,3 +29,13 @@ class @PromotionVariableModal extends @ModalBase
       dataType: 'json',
       success: (data) =>
         @$().modal('hide')
+
+  onVariableNameChange: (e) ->
+    name = $.trim($(e.target).val())
+    url = [@url, '/search_promotion'].join('')
+
+    if (name.length > 0)
+      $.get url, { inline: true, q: name }, (json) =>
+        @unbindAllEvents()
+        @$().find('.modal-body').html(json.html) if json.html?
+        @bindAllEvents()

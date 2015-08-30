@@ -24,4 +24,15 @@ class @SelectedPromotion extends @Event
     $promotion = $(selector)
 
     if $promotion.length > 0
-      $promotion.trigger("click")
+      $selected.slideUp 250, () ->
+        $(this).remove()
+        $promotion.removeClass('active') if $promotion.length > 0
+
+    removePromotionId: (id) ->
+      $ids = $('#variable_promotion_string')
+      ids = @$ids.val().split(',')
+      index = ids.indexOf(id)
+
+      if (index > -1)
+        ids.splice(index, 1)
+        $ids.val(ids.join(','))
