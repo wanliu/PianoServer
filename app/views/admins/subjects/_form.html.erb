@@ -1,4 +1,4 @@
-<div class="panel panel-default">
+<div class="panel panel-default edit-subject-base">
   <% url = @subject.persisted? ? admins_subject_path(@subject) : admins_subjects_path %>
   <%= form_for @subject, url: url do |f| %>
 
@@ -14,7 +14,7 @@
       <%= f.text_area :description, class: 'form-control', focus: true %>
     </div>
 
-    <div class="form-group col-xs-12 col-md-6 col-lg-6">
+    <div class="form-group col-xs-12 col-md-6 col-lg-6 start-at">
       <%= f.label :start_at %>
 
       <div class='input-group date'>
@@ -25,7 +25,7 @@
       </div>
     </div>
 
-    <div class="form-group col-xs-12 col-md-6 col-lg-6">
+    <div class="form-group col-xs-12 col-md-6 col-lg-6 end-at">
       <%= f.label :end_at %>
 
       <div class='input-group date'>
