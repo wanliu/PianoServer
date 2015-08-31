@@ -1,36 +1,34 @@
 module Piano
   module LiquidTags
-    Syntax = /(#{::Liquid::QuotedFragment})(.*)/
     AttributesSyntax = /\s*(#{::Liquid::TagAttributes})/
-    Inspect = /(["'])(.*)\k<1>/
 
     class NavbarTag < ::Liquid::Tag
 
       def initialize(tag_name, markup, tokens)
-        if markup =~ Syntax
-          @variable = $1
-          @styles = parse_attributes($2) || {}
+        pp markup =~ AttributesSyntax
+
+        if markup =~ AttributesSyntax
+          @styles = parse_attributes(markup) || {}
         else
-          raise SyntaxError.new("Syntax Error in tag 'navbar_tags' - Valid syntax:navbar variable [attrib:name, ...]")
+          raise SyntaxError.new("Syntax Error in tag 'navbar_tag' - Valid syntax: navbar [attrib:name, ...]")
         end
         super
       end
 
       def render(context)
-        variable = context[@variable]
-
-        raise ::Liquid::ArgumentError.new("Cannot variable '#{@variable}'. Not found.") if variable.nil?
-
-        @styles["background-color"] || = "transparent"
+        @styles["background-color"] ||= "transparent"
         @styles["color"] ||= "#333333"
         @styles["text_shadow"] ||= "none"
 
         <<-HTML
         <style type="text/css">
-          .navbar {
+          .navbar-fixed-top {
             background-color: #{@styles["background-color"]};
+            text-shadow: #{@styles["text_shadow"]};
+          }
+
+          .navbar-fixed-top .navbar-nav > li > a {
             color: #{@styles["color"]};
-            text-shadow: #{@styles["text_shadow"]}
           }
         </style>
 

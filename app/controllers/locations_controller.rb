@@ -2,7 +2,7 @@ class LocationsController < ApplicationController
 
 
   def new
-    @location = Location.new(chat_id: params[:chat_id] ,order_id: params[:order_id])
+    @location = Location.new(user_id: current_anonymous_or_user.id)
   end
 
   def show
