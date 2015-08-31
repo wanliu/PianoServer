@@ -4,7 +4,7 @@ module Piano
     AttributesSyntax = /\s*(#{::Liquid::TagAttributes})/
     Inspect = /(["'])(.*)\k<1>/
 
-    class NavbarTags < ::Liquid::Tag
+    class NavbarTag < ::Liquid::Tag
 
       def initialize(tag_name, markup, tokens)
         if markup =~ Syntax
@@ -67,4 +67,4 @@ module Piano
   end
 end
 
-Liquid::Template.register_tag('navbar', Piano::LiquidTags::NavbarTags)
+Liquid::Template.register_tag('navbar', Piano::LiquidTags::NavbarTag)

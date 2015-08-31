@@ -9,8 +9,7 @@
   </ul>
 
   <div class="tab-content">
-    <% url = admins_subject_template_path(subject, template) %>
-    <%= render partial: "admins/subjects/edit_template", locals: {subject: subject, template: template, url: url} %>
+    <%= render partial: "admins/subjects/edit_template", locals: {subject: subject, template: template} %>
 
     <div id="preview-template-<%= template.id %>" class="tab-pane panel panel-default preview-template fade">
       <div class="panel-heading">
@@ -28,8 +27,8 @@
     var EditTemplate = window.EditTemplate;
     var templateName = "template-<%= template.id %>";
     var editorName= "template-editor-<%= template.id %>";
-    var url = "<%= url %>";
+    var url = "<%= admins_subject_template_path(subject, template) %>";
 
-    var editor = new EditTemplate($('#' + templateName), editorName, { url: url });
+    var editor = new EditTemplate($('#' + templateName), editorName);
   })();
 </script>

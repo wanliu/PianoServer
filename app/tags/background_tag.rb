@@ -1,10 +1,9 @@
 module Piano
   module LiquidTags
-    Syntax = /(#{::Liquid::QuotedFragment})(.*)/
-    AttributesSyntax = /\s*(#{::Liquid::TagAttributes})/
-    Inspect = /(["'])(.*)\k<1>/
-
-    class BackgroundTags < ::Liquid::Tag
+    class BackgroundTag < ::Liquid::Tag
+      Syntax = /(#{::Liquid::QuotedFragment})(.*)/
+      AttributesSyntax = /\s*(#{::Liquid::TagAttributes})/
+      Inspect = /(["'])(.*)\k<1>/
 
       def initialize(tag_name, markup, tokens)
         if markup =~ Syntax
@@ -17,6 +16,7 @@ module Piano
       end
 
       def render(context)
+
         variable = context[@variable]
         raise ::Liquid::ArgumentError.new("Cannot variable '#{@variable}'. Not found.") if variable.nil?
         styles = @styles.slice("repeat", "position", "origin", "size")
@@ -45,4 +45,4 @@ module Piano
   end
 end
 
-Liquid::Template.register_tag('background_image', Piano::LiquidTags::BackgroundTags)
+Liquid::Template.register_tag('background_image', Piano::LiquidTags::BackgroundTag)

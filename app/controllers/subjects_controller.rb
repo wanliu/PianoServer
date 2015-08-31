@@ -7,6 +7,7 @@ class SubjectsController < ApplicationController
 
   def show
     @subject.punch(request)
+    @promotions = Promotion.find(:all, from: :active).to_a
     respond_to do |format|
       format.json { render json: @subject }
       format.html { subject_render @subject, :index }

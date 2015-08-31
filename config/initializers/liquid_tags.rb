@@ -1,1 +1,3 @@
-Dir[ Rails.root.join('app/tags/*.rb') ].map { |f| require(f) }
+Dir[ Rails.root.join('app/tags/*.rb') ].map do |f|
+  require f
+end
