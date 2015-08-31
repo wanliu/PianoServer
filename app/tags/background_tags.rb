@@ -1,5 +1,5 @@
-module Liquid
-  module Rails
+module Piano
+  module LiquidTags
     Syntax = /(#{::Liquid::QuotedFragment})(.*)/
     AttributesSyntax = /\s*(#{::Liquid::TagAttributes})/
     Inspect = /(["'])(.*)\k<1>/
@@ -45,4 +45,4 @@ module Liquid
   end
 end
 
-Liquid::Template.register_tag('background_image', Liquid::Rails::BackgroundTags)
+Liquid::Template.register_tag('background_image', Piano::LiquidTags::BackgroundTags)
