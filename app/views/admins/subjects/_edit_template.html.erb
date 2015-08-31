@@ -81,7 +81,7 @@
     })
 
     $('#edit-template-<%= template.id %> .panel-heading').on('affixed.bs.affix', function () {
-      var width = $('#edit-template-74').outerWidth();
+      var width = $('#edit-template-<%= template.id %>').outerWidth();
       $('#edit-template-<%= template.id %> .panel-heading').css('width', width - 1);
     });
   })();
