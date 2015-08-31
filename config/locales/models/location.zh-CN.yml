@@ -10,3 +10,4 @@ zh-CN:
         province_id: "省份"
         city_id: "城市"
         region_id: "地区"
+        amount: "地址数量"
