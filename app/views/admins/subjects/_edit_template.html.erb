@@ -61,3 +61,28 @@
   </div>
   <% end %>
 </div>
+
+<script type="text/javascript">
+  (function () {
+    $('#edit-template-<%= template.id %> .panel-heading').affix({
+      offset: {
+        top: function () {
+          var height = $('#edit-template-<%= template.id %> .panel-heading').outerHeight();
+          var offset_top = $('#edit-template-<%= template.id %>').offset()['top'] - 50;
+          var offset_height = offset_top + $('#edit-template-<%= template.id %>').height() - height;
+
+          if ($(document).scrollTop() > offset_top && $(document).scrollTop() < offset_height) {
+            return offset_top;
+          } else {
+            return $(document).outerHeight();
+          }
+        }
+      }
+    })
+
+    $('#edit-template-<%= template.id %> .panel-heading').on('affixed.bs.affix', function () {
+      var width = $('#edit-template-74').outerWidth();
+      $('#edit-template-<%= template.id %> .panel-heading').css('width', width - 1);
+    });
+  })();
+</script>
