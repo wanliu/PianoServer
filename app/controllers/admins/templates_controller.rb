@@ -12,7 +12,15 @@ class Admins::TemplatesController < Admins::BaseController
   end
 
   def update
+    old_filename = @template.filename
+    @subject = Subject.find(params[:subject_id])
+
     @template.update_attributes(template_params)
+
+    if @template.valid? && old_filename != @template.filename
+      old_path = "#{Settings.sites.system.root}/subjects/#{@subject.name}/#{old_filename}"
+      File.delete(old_path) if File.exist?(old_path)
+    end
   end
 
   def preview_layout
