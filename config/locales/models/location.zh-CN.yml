@@ -4,7 +4,7 @@ zh-CN:
       location: "收货地址"
     attributes:
       location:
-        contact: "联系人"
+        contact: "姓名"
         road: "地址"
         contact_phone: "手机/座机号"
         province_id: "省份"

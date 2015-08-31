@@ -67,12 +67,18 @@
 		}
 
 		$(document).on('page:change', function(e) {
-			var url = parseURL(e.target.URL);
+			var url = parseURL(e.target.URL).pathname;
+
+      if (url === '/' || url === '/promotions') {
+        $(document).off('scroll.page');
+      } else {
+        $(document).on('scroll.page', scrollPage);
+      }
 
       if (/promotions\/\d+\/chat/.test(url)) {
-				$(document).on('scroll:bottom', loadingPromotions).off('scroll.page');
+				$(document).on('scroll:bottom', loadingPromotions)
 			} else {
-				$(document).off('scroll:bottom').on('scroll.page', scrollPage);
+				$(document).off('scroll:bottom');
 				clearLoading();
 			}
 		});

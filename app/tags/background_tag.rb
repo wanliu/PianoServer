@@ -5,7 +5,6 @@ module Piano
       AttributesSyntax = /\s*(#{::Liquid::TagAttributes})/
       Inspect = /(["'])(.*)\k<1>/
 
-
       def initialize(tag_name, markup, tokens)
         if markup =~ Syntax
           @variable = $1
