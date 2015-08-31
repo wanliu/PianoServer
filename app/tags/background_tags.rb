@@ -18,7 +18,6 @@ module Liquid
 
       def render(context)
 
-        pp context.registers[:file_system]
         variable = context[@variable]
         raise ::Liquid::ArgumentError.new("Cannot variable '#{@variable}'. Not found.") if variable.nil?
         styles = @styles.slice("repeat", "position", "origin", "size")
