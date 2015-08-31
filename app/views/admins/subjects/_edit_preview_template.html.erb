@@ -29,6 +29,6 @@
     var editorName= "template-editor-<%= template.id %>";
     var url = "<%= admins_subject_template_path(subject, template) %>";
 
-    var editor = new EditTemplate($('#' + templateName), editorName);
+    var editor = new EditTemplate($('#' + templateName), editorName, {url: url});
   })();
 </script>
