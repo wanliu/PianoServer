@@ -1,10 +1,10 @@
-module Liquid
-  module Rails
-    Syntax = /(#{::Liquid::QuotedFragment})(.*)/
-    AttributesSyntax = /\s*(#{::Liquid::TagAttributes})/
-    Inspect = /(["'])(.*)\k<1>/
+module Piano
+  module LiquidTags
+    class BackgroundTag < ::Liquid::Tag
+      Syntax = /(#{::Liquid::QuotedFragment})(.*)/
+      AttributesSyntax = /\s*(#{::Liquid::TagAttributes})/
+      Inspect = /(["'])(.*)\k<1>/
 
-    class BackgroundTags < ::Liquid::Tag
 
       def initialize(tag_name, markup, tokens)
         if markup =~ Syntax
@@ -46,4 +46,4 @@ module Liquid
   end
 end
 
-Liquid::Template.register_tag('background_image', Liquid::Rails::BackgroundTags)
+Liquid::Template.register_tag('background_image', Piano::LiquidTags::BackgroundTag)
