@@ -7,7 +7,7 @@ class @PromotionVariableModal extends @ModalBase
     'click .save': 'onSave',
     'change input[name=q]': 'onVariableNameChange'
 
-  constructor: (@element, @url) ->
+  constructor: (@element, @url, @$variableList) ->
     super(@element, @url)
 
     @$selected = @$().find('.selected');
@@ -29,6 +29,12 @@ class @PromotionVariableModal extends @ModalBase
       dataType: 'json',
       success: (data) =>
         @$().modal('hide')
+
+        {id, name} = data
+        templateVariables = @$variableList.data('plugin')
+
+        if (templateVariables)
+          templateVariables.addVariable(id, name)
 
   onVariableNameChange: (e) ->
     name = $.trim($(e.target).val())

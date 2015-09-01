@@ -7,7 +7,7 @@ class @PromotionSetVariableModal extends @ModalBase
     'click .save': 'onSave'
     'change input[name=q]': 'onVariableNameChange'
 
-  constructor: (@element, @url) ->
+  constructor: (@element, @url, $variableList) ->
     super(@element, @url)
 
     @$seleteds = @$().find('.selected-promotions')
@@ -49,10 +49,18 @@ class @PromotionSetVariableModal extends @ModalBase
       @$ids.val(ids.join(','))
 
   onSave: (e) ->
-    $.post @url, @$().find('.modal-body>div>form').serialize(), (e) =>
-      @$().modal('hide')
-      @$().find('.modal-body').html('')
-    , 'json'
+    $.ajax
+      type: "POST",
+      url: @url,
+      data: @$().find('.modal-body>div>form').serialize(),
+      dataType: 'json',
+      success: (data) =>
+        @$().modal('hide')
+        @$().find('.modal-body').html('')
+
+        {id, name} = data
+        templateVariables = @$variableList.data('plugin')
+        templateVariables.addVariable(id, name)
 
   onVariableNameChange: (e) ->
     name = $.trim($(e.target).val())
