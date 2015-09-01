@@ -8,8 +8,8 @@ class Template < ActiveRecord::Base
   attr_accessor :content
 
   belongs_to :subject
-  has_many :variables
-  has_many :attachments, as: :attachable
+  has_many :variables, dependent: :destroy
+  has_many :attachments, dependent: :destroy, as: :attachable
 
   validates :filename, uniqueness: { scope: :subject_id }, presence: true
   validates :name, uniqueness: { scope: :subject_id }, presence: true
