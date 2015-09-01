@@ -5,8 +5,6 @@ module Piano
     class NavbarTag < ::Liquid::Tag
 
       def initialize(tag_name, markup, tokens)
-        pp markup =~ AttributesSyntax
-
         if markup =~ AttributesSyntax
           @styles = parse_attributes(markup) || {}
         else
