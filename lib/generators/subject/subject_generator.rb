@@ -30,11 +30,11 @@ class SubjectGenerator < Rails::Generators::NamedBase
     end
 
     def subject_root
-      Settings.sites.system.root
+      SubjectService.subject_root
     end
-    
+
     def subject_path
-      "#{subject_root}/subjects/#{file_name}"
+      "#{subject_root}/#{file_name}"
     end
 
     def bind_templates
