@@ -18,7 +18,7 @@ class Admins::TemplatesController < Admins::BaseController
     @template.update_attributes(template_params)
 
     if @template.valid? && old_filename != @template.filename
-      old_path = "#{Settings.sites.system.root}/subjects/#{@subject.name}/#{old_filename}"
+      old_path = "#{SubjectService.subject_path(@subject)}/#{old_filename}"
       File.delete(old_path) if File.exist?(old_path)
     end
   end
@@ -31,7 +31,7 @@ class Admins::TemplatesController < Admins::BaseController
     @subject = Subject.find(params[:subject_id])
     @template = @subject.templates.build(template_params)
 
-    filename = "#{Settings.sites.system.root}/subjects/#{@subject.name}/#{@template.filename}"
+    filename = "#{SubjectService.subject_path(@subject)}/#{@template.filename}"
     File.write filename, template_params[:content]
 
     # generate a name base on filename, and do not repeat in the same subject
