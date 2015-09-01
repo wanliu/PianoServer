@@ -9,8 +9,16 @@
       border-top-left-radius: 0;
 
       .panel-heading {
+        background-color: whitesmoke;
         border-top: 1px solid #DDDDDD;
         border-top-left-radius: 0;
+        border-bottom: 1px solid #DDDDDD;
+
+        &.affix {
+          top: 50px;
+          z-index: 200;
+          border-right: 1px solid #DDDDDD;
+        }
 
         input {
           max-width: 450px;
