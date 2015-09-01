@@ -34,17 +34,19 @@ class EditVariableModal
     @$modal.on('show.bs.modal', @onModalShow.bind(@))
 
   onModalShow: (e) ->
-    url = $(e.relatedTarget).data('link')
+    $relatedTarget = $(e.relatedTarget)
+    url = $relatedTarget.data('link')
+    $variableList = $relatedTarget.parents('.add-variable:first').next()
 
-    klass = $(e.relatedTarget).data('class')
+    klass = $relatedTarget.data('class')
     newUrl = "#{url}/new_#{klass}"
 
     @$modal.find('.modal-body').load newUrl, () =>
       switch klass
         when 'promotion_variable'
-          modal = new PromotionVariableModal(@$modal, url)
+          modal = new PromotionVariableModal(@$modal, url, $variableList)
         when 'promotion_set_variable'
-          modal = new PromotionSetVariableModal(@$modal, url)
+          modal = new PromotionSetVariableModal(@$modal, url, $variableList)
         else
 
   @getModal: () ->

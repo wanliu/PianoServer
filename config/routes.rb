@@ -38,20 +38,20 @@ Rails.application.routes.draw do
       resources :templates do
         member do
           post :upload
+          post :preview
         end
+
+        collection do
+          post :preview, to: 'templates#preview_new'
+          get :preview_layout
+        end
+
         resources :variables, except: [:new ] do
           collection do
             get :new_promotion_variable
             get :new_promotion_set_variable
             get :search_promotion
           end
-        end
-        collection do
-          get :preview, to: 'templates#preview_new'
-          get :preview_layout
-        end
-        member do
-          get :preview
         end
       end
     end

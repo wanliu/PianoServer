@@ -58,7 +58,8 @@ class @EditTemplate extends @Event
     parseUrl = @element.attr("data-preview-url")
 
     @element.find(".preview-template h3.panel-title").html(@fileTitle())
-    $.get(parseUrl, {source: source})
+
+    $.post(parseUrl, {source: source})
       .success (data, status, xhr) =>
          @element.find('iframe').contents().find('body').html(data);
 

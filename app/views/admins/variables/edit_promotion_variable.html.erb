@@ -6,19 +6,18 @@
     <li class="list-group-item">
       <h4>
       <span class="id">&nbsp;</span>
-      <span class="title">暂未选择一个活动名</span>
+      <span class="title"><%= variable.name %></span>
       </h4>
     </li>
     <%= f.hidden_field :promotion_id %>
   </div>
   <div class="promotion-list">
     <div class="form-group">
-      <input type="text" class="form-control" placeholder="Search" name="q" autocomplete='off'>
+      <input type="text" class="form-control" placeholder="Search" name="q">
     </div>
     <%= f.hidden_field :type, value: @variable.class.name.underscore %>
-    <div class="list-group promotions">
+    <div class="list-group">
       <%= render partial: "promotion_item", collection: @promotions %>
     </div>
   </div>
 <% end %>
-
