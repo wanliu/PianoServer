@@ -29,6 +29,8 @@ class @PromotionVariableModal extends @ModalBase
       dataType: 'json',
       success: (data) =>
         @$().modal('hide')
+        @unbindAllEvents()
+        @$().find('.modal-body').html('')
 
         {id, name} = data
         templateVariables = @$variableList.data('plugin')

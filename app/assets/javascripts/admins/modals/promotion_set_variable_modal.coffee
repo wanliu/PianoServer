@@ -56,6 +56,7 @@ class @PromotionSetVariableModal extends @ModalBase
       dataType: 'json',
       success: (data) =>
         @$().modal('hide')
+        @unbindAllEvents()
         @$().find('.modal-body').html('')
 
         {id, name} = data
