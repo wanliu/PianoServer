@@ -27,7 +27,7 @@ class Template < ActiveRecord::Base
   protected
 
   def subject_root
-    File.join(Settings.sites.system.root, "subjects")
+    SubjectService.subject_root
   end
 
   def subject_path
