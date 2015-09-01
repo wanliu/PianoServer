@@ -176,3 +176,31 @@
     top: 0;
   }
 }
+
+
+#variable_editor_modal {
+  .promotions {
+    .promotion {
+      img {
+        width: 50px;
+        height: 50px;
+        float: left;
+      }
+
+      .promotion-infor {
+        float: left;
+        padding-left: 10px;
+
+        .title {
+          height: 30px;
+          font-size: 20px;
+        }
+
+        .shop-infor {
+          height: 20px;
+          font-size: 14px;
+        }
+      }
+    }
+  }
+}
