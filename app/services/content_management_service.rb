@@ -7,7 +7,7 @@ module ContentManagementService
 
       cattr_accessor :content_templates
       attr_accessor :cached_all_templates
-      attr_accessor :variables
+      attr_accessor :all_variables
 
       define_method :cached_all_templates do
         @cached_all_templates ||= {}
@@ -93,14 +93,18 @@ module ContentManagementService
     end
 
     def load_all_variables(_variables)
+      @all_variables ||= {}
+
       _variables.each do |variable|
         value = variable.call if variable.respond_to?(:call)
         if VALID_VAR_NAME =~ variable.name
           name = '@' + variable.name
           instance_variable_set name.to_sym, value
         end
-        set_variable variable.name, value
+        @all_variables[variable.name] = value
       end
+
+      @variables = VariablesDrop.new(@all_variables)
     end
 
     def get_subject
@@ -110,11 +114,6 @@ module ContentManagementService
 
     def merge_variables(_variables)
       _variables.uniq { |var| var.name }
-    end
-
-    def set_variable(name, value)
-      @variables ||= {}
-      @variables[name] = value
     end
   end
 end
