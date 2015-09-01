@@ -12,8 +12,8 @@
           </span>
           <% if @order.buyer_id == current_anonymous_or_user.id %>
             <ul class="dropdown-menu address-menu locations">
-              <% if current_anonymous_or_user.locations.first(5).length > 0 %>
-                <% current_anonymous_or_user.locations.first(5).each do |location| %>
+              <% if current_anonymous_or_user.locations.last(5).length > 0 %>
+                <% current_anonymous_or_user.locations.last(5).reverse.each do |location| %>
                   <li>
                     <%= link_to location, 'javascript:void(0)', :"data-default-location-id" => location.id,:"data-order-id" => @order.id , :"data-location" => location ,:class => "set-default-address" %>
                   </li>

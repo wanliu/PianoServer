@@ -14,6 +14,8 @@ class Location < ActiveRecord::Base
   validates :city_id, presence: true, on: :create
   validates :region_id, presence: true, on: :create
 
+  validate :too_many_record
+
   def to_s
     %(#{contact}, #{province_name}#{city_name}#{region_name}#{road}, #{contact_phone})
   end
@@ -32,5 +34,13 @@ class Location < ActiveRecord::Base
 
   def full_address
     to_s
+  end
+
+  def too_many_record
+    locations = user.locations
+
+    if locations.length >= 5
+      errors.add(:amount, '已达到上限')
+    end
   end
 end
