@@ -41,7 +41,20 @@ class Admins::VariablesController < Admins::BaseController
       create_params.merge! template_id: params[:template_id], type: variable_params[:type].classify
       klass = variable_params[:type].classify.safe_constantize
       @variable = klass.create(create_params) if klass
+
+      render json: @variable
     else
+
+    end
+  end
+
+  def destroy
+    @variable = @template.variables.find(params[:id])
+
+    if @variable.destroy
+      head :no_content
+    else
+      render json: @variable.errors, status: :unprocessable_entity
     end
   end
 

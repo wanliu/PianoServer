@@ -30,9 +30,15 @@
             <% end %>
           </ul>
         </div>
-        <div class="btn-group-vertical" role="group" aria-label="variables">
+        <div class="btn-group-vertical variable-items" role="group" aria-label="variables">
           <% template.variables.each do |var| %>
-            <button type="button" class="btn btn-default"><%= var.name %></button>
+            <div class="variable-item" variable-id="<%= var.id %>" >
+              <%= var.name %>
+              <div class="variable-tools">
+                <span class="glyphicon glyphicon-pencil edit-icon" aria-hidden="true"></span>
+                <span class="glyphicon glyphicon-remove remove-icon" aria-hidden="true"></span>
+              </div>
+            </div>
           <% end %>
         </div>
       </div>
@@ -84,5 +90,11 @@
       var width = $('#edit-template-<%= template.id %>').outerWidth();
       $('#edit-template-<%= template.id %> .panel-heading').css('width', width - 1);
     });
+
+    var subject_id = "<%= subject.id %>",
+        template_id = "<%= template.id %>",
+        selector = "#edit-template-<%= template.id %> .variable-items";
+
+    new TemplateVariables($(selector), subject_id, template_id);
   })();
 </script>
