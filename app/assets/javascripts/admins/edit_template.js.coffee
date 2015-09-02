@@ -84,8 +84,9 @@ class @EditTemplate extends @Event
 
   togglePanelBody: (e) ->
     $target = $(e.target)
+    $panel = if $target.is('.panel-heading') then $target else $target.parents('.panel-heading')
 
-    if $target.is('input')
+    if $target.is('input') || $panel.is('.affix')
       return false;
 
     $panel = $target.parents(".edit-template:first")
