@@ -25,10 +25,6 @@ class Admins::TemplatesController < Admins::BaseController
     end
   end
 
-  def preview_layout
-    render layout: 'preview'
-  end
-
   def create
     @subject = Subject.find(params[:subject_id])
     @template = @subject.templates.build(template_params)
@@ -70,7 +66,7 @@ class Admins::TemplatesController < Admins::BaseController
     @file.write source
     @file.rewind
 
-    render file: @file.path, layout: false
+    render file: @file.path, layout: 'preview'
   end
 
   def preview_new
@@ -79,7 +75,7 @@ class Admins::TemplatesController < Admins::BaseController
     @file.write source
     @file.rewind
 
-    render file: @file.path, layout: false
+    render file: @file.path, layout: 'preview'
   end
 
 
