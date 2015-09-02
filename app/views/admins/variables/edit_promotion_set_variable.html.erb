@@ -1,0 +1,35 @@
+<div class="promotion-set-variable" >
+  <%= form_for @variable, as: :variable, url: variables_path(@subject, @template) do |f| %>
+    <%= f.hidden_field :promotion_string %>
+
+    <div class="form-group">
+      <%= f.text_field :name, class: "form-control", placeholder: "活动集名" %>
+    </div>
+    <div class="promotion-set">
+      <div class="promotion-list">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search" name="q">
+        </div>
+        <%= f.hidden_field :type, value: @variable.class.name.underscore %>
+        <div class="list-group">
+
+        </div>
+      </div>
+      <div class="promotion-selected">
+        <label class="control-label">
+          已选择的活动：
+        </label>
+        <ul class="selected-promotions">
+          <% @variablePromotions.each do |promotion| %>
+            <li class="selected-promotion" id="<%= promotion.id %>">
+              <div class="promotion-name"><%= promotion.title %></div>
+              <div class="remove-promotion">
+                <span class="glyphicon glyphicon-remove"></span>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+</div>

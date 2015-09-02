@@ -1,4 +1,4 @@
-class PromotionVariable < ObjectVariable
+class PromotionVariable < Variable
 
   store_accessor :data, :promotion_id
 
