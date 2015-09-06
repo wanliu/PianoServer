@@ -23,6 +23,7 @@ class @PromotionVariableEditModal extends @ModalBase
         @variableCRUD('update', data)
 
   showPromotions: () ->
+    @$().find('.list-group.selected').addClass('pressed')
     @$().find('.promotion-list').removeClass('hidden')
 
   onSelectedItem: (e) ->
@@ -36,8 +37,10 @@ class @PromotionVariableEditModal extends @ModalBase
 
   onVariableNameChange: (e) ->
     name = $.trim($(e.target).val())
-    url = @url.replace('/edit', '')
-    url = [url, '/search_promotion'].join('')
+    str = "variables"
+    index = @url.indexOf(str)
+
+    url = [@url.slice(0, index + str.length), '/search_promotion'].join('')
 
     if (name.length > 0)
       $.get url, { inline: true, q: name }, (json) =>

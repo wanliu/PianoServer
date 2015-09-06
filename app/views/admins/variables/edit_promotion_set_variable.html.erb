@@ -21,12 +21,13 @@
         </label>
         <ul class="selected-promotions">
           <% @variablePromotions.each do |promotion| %>
-            <li class="selected-promotion" id="<%= promotion.id %>">
-              <div class="promotion-name"><%= promotion.title %></div>
-              <div class="remove-promotion">
-                <span class="glyphicon glyphicon-remove"></span>
-              </div>
-            </li>
+            <script type="text/javascript">
+              var container = $('.selected-promotions'),
+                  promotionId = "<%= promotion.id %>",
+                  title = "<%= promotion.title %>";
+
+              new SelectedPromotion(container, promotionId, title, true);
+            </script>
           <% end %>
         </ul>
       </div>

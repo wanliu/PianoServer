@@ -42,10 +42,10 @@ class EditVariableModal
     klass = $relatedTarget.data('class')
     op = $relatedTarget.data('op')
 
-    if op == 'new'
-      loadUrl = "#{url}/new_#{klass}"
-      isEdit = false
-    else
+    loadUrl = "#{url}/new_#{klass}"
+    isEdit = false
+
+    if op == 'edit'
       loadUrl = "#{url}/edit"
       isEdit = true
 

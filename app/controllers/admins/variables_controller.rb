@@ -52,6 +52,8 @@ class Admins::VariablesController < Admins::BaseController
     @variable = Variable.find(params[:id])
 
     type = @variable[:type].underscore
+    @promotions = nil
+    @variablePromotions = nil
 
     case type
     when "promotion_variable"
@@ -62,9 +64,8 @@ class Admins::VariablesController < Admins::BaseController
     when "promotion_set_variable"
       promotion_string = @variable.promotion_string
       @promotions = Promotion.find(:all, from: :active, params: query_params)
-      @variablePromotions = (promotion_string || '').split(',').map {|id| Promotions.find(id) }
+      @variablePromotions = (promotion_string || '').split(',').map {|id| Promotion.find(id) }
 
-      pp @variable
       render :edit_promotion_set_variable, layout: false
     else
 
