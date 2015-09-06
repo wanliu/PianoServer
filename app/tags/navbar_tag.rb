@@ -5,8 +5,6 @@ module Piano
     class NavbarTag < ::Liquid::Tag
 
       def initialize(tag_name, markup, tokens)
-        pp markup =~ AttributesSyntax
-
         if markup =~ AttributesSyntax
           @styles = parse_attributes(markup) || {}
         else
@@ -43,9 +41,11 @@ module Piano
             if (scrollTop < 100) {
               var _opacity = $nav.css('opacity');
               opacity = +_opacity * 100 - (scrollTop - prevScrollTop) * 10 / 100;
+              $nav.css('background-color', 'transparent');
               $this.data('scroll_top', scrollTop);
             } else {
               opacity = scrollTop === 0 ? 100 : 90;
+              $nav.css('background-color', 'white');
               $this.data('scroll_top', opacity);
             }
 

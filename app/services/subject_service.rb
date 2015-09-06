@@ -12,7 +12,7 @@ module SubjectService
     file = template_path(subject, template)
 
     directory = File.dirname(file)
-    FileUtils.mkdir_p directory unless File.directory?(directory) 
+    FileUtils.mkdir_p directory unless File.directory?(directory)
 
     File.write file, content
     logger.info "\033[32mWriting\033[0m to #{file}..."
@@ -20,7 +20,7 @@ module SubjectService
   end
 
   def subject_root
-    File.join(Settings.sites.system.root, "subjects")
+    File.join(Rails.root, Settings.sites.system.root, "subjects")
   end
 
   def subject_path(subject)

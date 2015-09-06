@@ -18,7 +18,7 @@ class @EditTemplateToolbarVariable extends @Event
     # // $(this).find('.modal-body').load(url);
 
 
-class EditVariableModal
+class @EditVariableModal
 
   @defaultOptions = {
     modal: '#variable_editor_modal',
@@ -69,8 +69,6 @@ class EditVariableModal
       @modal = null
 
   @getModal: () ->
-    @editVariableModal ||= new EditVariableModal()
+    @editVariableModal = new EditVariableModal()
 
 
-$ ->
-  EditVariableModal.getModal()

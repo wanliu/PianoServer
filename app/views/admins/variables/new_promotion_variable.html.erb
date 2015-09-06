@@ -13,10 +13,10 @@
   </div>
   <div class="promotion-list">
     <div class="form-group">
-      <input type="text" class="form-control" placeholder="Search" name="q">
+      <input type="text" class="form-control" placeholder="Search" name="q" autocomplete='off'>
     </div>
     <%= f.hidden_field :type, value: @variable.class.name.underscore %>
-    <div class="list-group">
+    <div class="list-group promotions">
       <%= render partial: "promotion_item", collection: @promotions %>
     </div>
   </div>

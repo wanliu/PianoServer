@@ -69,7 +69,7 @@
 
             <% if Settings.dev.feature.user.sign_in %>
             <% if current_anonymous_or_user.id < 0 %>
-            <li><%= link_to "登入(#{current_anonymous_or_user.id if Rails.env.development?})", new_user_session_path %></li>
+            <li><%= link_to "登入 #{current_anonymous_or_user.id if Rails.env.development?}", new_user_session_path %></li>
             <% else %>
             <li class="dropdown">
               <%= user_avatar(current_anonymous_or_user, 'data-toggle' => 'dropdown', 'role' => "button" ) %>
@@ -102,7 +102,7 @@
       <footer>
         <div class="container">
           <span class="page-loading pull-right"></span>
-          <p><%= raw Settings.app.footer %> ver <%= PianoServer::VERSION unless Rails.env.production? %></p>
+          <p><%= raw Settings.app.footer %> <%= 'ver ' + PianoServer::VERSION unless Rails.env.production? %></p>
         </div>
       </footer>
       <%= render "qrcode" %>

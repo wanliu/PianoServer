@@ -3,10 +3,12 @@ require 'tempfile'
 class Admins::TemplatesController < Admins::BaseController
   include ConcernParentResource
   include ContentManagementService::Methods
+  include SubjectsHelper
 
   set_parent_param :subject_id
-  after_filter :rm_temp_file, only: [ :preview ]
   before_action :set_template, only: [ :update, :upload]
+  before_filter :set_subject_and_view_path, only: [:preview, :preview_new]
+  after_filter :rm_temp_file, only: [ :preview ]
 
   def show
   end
@@ -18,7 +20,7 @@ class Admins::TemplatesController < Admins::BaseController
     @template.update_attributes(template_params)
 
     if @template.valid? && old_filename != @template.filename
-      old_path = "#{Settings.sites.system.root}/subjects/#{@subject.name}/#{old_filename}"
+      old_path = "#{SubjectService.subject_path(@subject)}/#{old_filename}"
       File.delete(old_path) if File.exist?(old_path)
     end
   end
@@ -31,7 +33,7 @@ class Admins::TemplatesController < Admins::BaseController
     @subject = Subject.find(params[:subject_id])
     @template = @subject.templates.build(template_params)
 
-    filename = "#{Settings.sites.system.root}/subjects/#{@subject.name}/#{@template.filename}"
+    filename = "#{SubjectService.subject_path(@subject)}/#{@template.filename}"
     File.write filename, template_params[:content]
 
     # generate a name base on filename, and do not repeat in the same subject
@@ -58,14 +60,9 @@ class Admins::TemplatesController < Admins::BaseController
   end
 
   def preview
-    @subject = Subject.find(params[:subject_id])
     @template = @subject.templates.find(params[:id])
 
-    @template.variables.each do |variable|
-      name = '@' + variable.name
-      self.instance_variable_set name.to_sym, variable.call if variable.respond_to?(:call)
-    end
-
+    load_all_variables @template.variables
     load_attachments
 
     source = params[:source]
@@ -77,8 +74,6 @@ class Admins::TemplatesController < Admins::BaseController
   end
 
   def preview_new
-    @subject = Subject.find(params[:subject_id])
-
     source = params[:source]
     @file = Tempfile.new(['template', '.html.liquid'], "#{Rails.root}/tmp/")
     @file.write source
@@ -108,5 +103,10 @@ class Admins::TemplatesController < Admins::BaseController
 
   def set_template
     @template = @parent.templates.find(params[:id])
+  end
+
+  def set_subject_and_view_path
+    @subject = Subject.find(params[:subject_id])
+    set_file_system(@subject)
   end
 end
