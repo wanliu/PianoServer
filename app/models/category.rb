@@ -12,6 +12,9 @@ class Category < ActiveRecord::Base
   mount_uploader :image, ImageUploader # , mount_on: :avatar_url
 
   before_save :default_values
+
+  validate :depth_less_or_eq_to_3
+
   # alias_method :cover_url, :avatar_url
   # alias_method :logo_url, :avatar_url
 
@@ -39,5 +42,11 @@ class Category < ActiveRecord::Base
 
   def same_name?(name)
     nested_set_scope.where(name: name).last.present?
+  end
+
+  def depth_less_or_eq_to_3
+    if parent.depth >= 2
+      errors.add(:depth, "层级过多，最多只能有三级")
+    end
   end
 end
