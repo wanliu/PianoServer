@@ -62,20 +62,20 @@ class Admins::TemplatesController < Admins::BaseController
     load_attachments
 
     source = params[:source]
-    @file = Tempfile.new(['template', '.html.liquid'], "#{Rails.root}/tmp/")
+    @file = Tempfile.new(["template", ".html.liquid"], "#{Rails.root}/tmp/")
     @file.write source
     @file.rewind
 
-    render file: @file.path, layout: 'preview'
+    render file: @file.path, layout: "preview"
   end
 
   def preview_new
     source = params[:source]
-    @file = Tempfile.new(['template', '.html.liquid'], "#{Rails.root}/tmp/")
+    @file = Tempfile.new(["template", ".html.liquid"], "#{Rails.root}/tmp/")
     @file.write source
     @file.rewind
 
-    render file: @file.path, layout: 'preview'
+    render file: @file.path, layout: "preview"
   end
 
 
