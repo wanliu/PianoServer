@@ -8,7 +8,7 @@
       </li>
     <% else %>
       <li>
-        <% url = @root == node ? shop_admin_category_path(@shop.name, @root.name) : child_shop_admin_category_path(@shop.name, @root.name, @category) %>
+        <% url = @root == node ? shop_admin_category_path(@shop.name, @root.name) : child_shop_admin_category_path(@shop.name, @root.name, node) %>
          <%= link_to node.title, url %>
       </li>
     <% end %>
@@ -17,26 +17,26 @@
 <% end %>
 <div class="category-list row">
   <%= render partial: "category", collection: @category.children %>
-  <div class="col-xs-4 col-sm-4 col-md-4 col-lg-3 new-category">
-    <div class="box">
-      <a href="#" class="thumbnail">
-        <img src="<%= Settings.assets.gray_image %>" alt="new category">
-        <h2>+</h2>
-        <input type="text" name="name" class="title-input" placeholder="分类名称" />
-        <p class="second-title">新增一个分类</p>
-      </a>
+  <% if @category.depth < 3 %>
+    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-3 new-category">
+      <div class="box">
+          <a href="#" class="thumbnail">
+            <img src="<%= Settings.assets.gray_image %>" alt="new category">
+              <h2>+</h2>
+              <input type="text" name="name" class="title-input" placeholder="分类名称" />
+              <p class="second-title">新增一个分类</p>
+          </a>
+      </div>
+      <%= form_tag shop_admin_categories_path(@shop.name) do %>
+        <input type="hidden" name="category_img" />
+      <% end %>
+      <p class="text-center">新增一个分类</p>
     </div>
-    <%= form_tag shop_admin_categories_path(@shop.name) do %>
-      <input type="hidden" name="category_img" />
-    <% end %>
-    <p class="text-center">新增一个分类</p>
-  </div>
+  <% end %>
 </div>
 
 <script type="text/javascript">
   // $(ready);
-
-  var newCategory;
 
   // function ready () {
     var NewCategory = window.NewCategory;
@@ -45,7 +45,7 @@
     var category = <%=raw @category.to_json %>;
     var createCategoryUrl = '<%= child_shop_admin_category_path(@shop.name, @root.name, @category) %>';
 
-    newCategory = new NewCategory($('.category-list .new-category')[0], category, createCategoryUrl);
+    var newCategory = new NewCategory($('.category-list .new-category')[0], category, createCategoryUrl);
 
     $('.category-list .category').each(function(i, e) {
       new EditCategory($(e))
