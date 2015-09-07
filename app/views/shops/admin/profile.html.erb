@@ -10,7 +10,7 @@
       <div class="form-group">
         <%= f.label :logo_url %>
         <div class="image-uploader">
-          <%= image_tag @shop.logo.try(:url) %>
+          <%= image_tag @shop.logo.url(:cover) %>
           <div class="image-uploader-button">
           </div>
         </div>
@@ -44,26 +44,32 @@
   </div>
 </div>
 
+<div class="file-uploader-template hidden">
+  <div class='qq-uploader'>
+    <div class='qq-upload-drop-area' style='display: none;'>
+      <span>拖动文件到这里上传</span>
+    </div>
+    <div class='qq-upload-button' style='position: relative; overflow: hidden; direction: ltr;'>选择文件上传
+      <input type='file' name='file' style='position: absolute; right: 0px; top: 0px; font-family: Arial; font-size: 118px; margin: 0px; padding: 0px; cursor: pointer; opacity: 0;'>
+    </div>
+    <ul class='qq-upload-list' style='display: none;'></ul>
+  </div>
+</div>
+
 <script type="text/javascript">
   (function () {
     var shopId = "<%= @shop.id %>";
     var token = $("#edit_shop_" + shopId + " input[name=authenticity_token]").val();
 
+    var $element = $("#edit_shop_" + shopId + " div.image-uploader-button")[0];
+    var actionUrl = "<%= shop_admin_shop_logo_path(@shop) %>"
+
     new qq.FileUploader({
-      element: $("#edit_shop_" + shopId + " div.image-uploader-button")[0],
-      action:  "<%= shop_admin_shop_logo_path(@shop) %>",
+      element: $element,
+      action:  actionUrl,
       customHeaders: { "X-CSRF-Token": token },
       multiple: false,
-      template: "\
-        <div class='qq-uploader'>\
-          <div class='qq-upload-drop-area' style='display: none;''>\
-            <span>Drop files here to upload</span>\
-          </div>\
-          <div class='qq-upload-button' style='position: relative; overflow: hidden; direction: ltr;'>选择文件上传\
-            <input type='file' name='file' style='position: absolute; right: 0px; top: 0px; font-family: Arial; font-size: 118px; margin: 0px; padding: 0px; cursor: pointer; opacity: 0;'>\
-          </div>\
-          <ul class='qq-upload-list' style='display: none;'></ul>\
-        </div>",
+      template: $(".file-uploader-template").html(),
       onComplete: function (id, filename, responseJSON) {
         var url = responseJSON.url
         $("#edit_shop_" + shopId + " .image-uploader img").attr('src', url);
