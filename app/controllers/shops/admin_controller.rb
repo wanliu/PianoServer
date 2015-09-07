@@ -7,7 +7,7 @@ class Shops::AdminController < Shops::Admin::BaseController
     if @shop.save
       render json: {success: true, url: @shop.logo.url(:cover)}, status: :ok
     else
-      render json: {errors: @shop.errors}, status: :unproccessable_entity
+      render json: {errors: @shop.errors}, status: :unprocessable_entity
     end
   end
 end
