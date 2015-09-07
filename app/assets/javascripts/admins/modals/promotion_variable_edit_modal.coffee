@@ -1,16 +1,30 @@
 #= ./modal_base
 
-class @PromotionVariableModal extends @ModalBase
+class @PromotionVariableEditModal extends @ModalBase
 
   events:
-    'click .promotion': 'onSelectedItem'
     'click .save': 'onSave'
+    'click .selected': 'showPromotions'
+    'click .promotion': 'onSelectedItem'
     'change input[name=q]': 'onVariableNameChange'
 
   constructor: (@element, @url, @$variableList) ->
     super(@element, @url, @$variableList)
-
     @$selected = @$().find('.selected')
+
+  onSave: () ->
+    $.ajax
+      type: 'PUT',
+      url: @url.replace('/edit', ''),
+      data: @$().find('.modal-body>form').serialize(),
+      dataType: 'json',
+      success: (data) =>
+        @$().modal('hide')
+        @variableCRUD('update', data)
+
+  showPromotions: () ->
+    @$().find('.list-group.selected').addClass('pressed')
+    @$().find('.promotion-list').removeClass('hidden')
 
   onSelectedItem: (e) ->
     id = $(e.currentTarget).find('.id').text()
@@ -21,22 +35,12 @@ class @PromotionVariableModal extends @ModalBase
     @$selected.find('.title').text(title)
     @$().find('#variable_promotion_id').val(id)
 
-  onSave: (e) ->
-    promotion_id = @$().find('#variable_promotion_id').val()
-    name = @$selected
-
-    $.ajax
-      type: "POST",
-      url: @url,
-      data: @$().find('.modal-body>form').serialize(),
-      dataType: 'json',
-      success: (data) =>
-        @$().modal('hide')
-        @variableCRUD('add', data)
-
   onVariableNameChange: (e) ->
     name = $.trim($(e.target).val())
-    url = [@url, '/search_promotion'].join('')
+    str = "variables"
+    index = @url.indexOf(str)
+
+    url = [@url.slice(0, index + str.length), '/search_promotion'].join('')
 
     if (name.length > 0)
       $.get url, { inline: true, q: name }, (json) =>
@@ -49,3 +53,5 @@ class @PromotionVariableModal extends @ModalBase
 
         @$().find('.promotion-list .list-group').html(htmlAry.join(''))
         @bindAllEvents()
+
+

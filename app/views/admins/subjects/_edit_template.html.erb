@@ -23,8 +23,9 @@
                         data: {
                           toggle: 'modal',
                           target: modal_target(config),
+                          link: variables_path(subject, template),
                           class: config[:name],
-                          link: variables_path(subject, template)
+                          op: 'new'
                         } %>
               </li>
             <% end %>
@@ -33,9 +34,11 @@
         <div class="btn-group-vertical variable-items" role="group" aria-label="variables">
           <% template.variables.each do |var| %>
             <div class="variable-item" variable-id="<%= var.id %>" >
-              <%= var.name %>
+              <span class="variable_name"><%= var.name %></span>
               <div class="variable-tools">
-                <span class="glyphicon glyphicon-pencil edit-icon" aria-hidden="true"></span>
+                <%= link_to '#', data: {toggle: 'modal', target: modal_target(var), link: admins_subject_template_variable_path(subject, template, var), class: var[:type].underscore, op: 'edit'} do %>
+                  <span class="glyphicon glyphicon-pencil edit-icon" aria-hidden="true"></span>
+                <% end %>
                 <span class="glyphicon glyphicon-remove remove-icon" aria-hidden="true"></span>
               </div>
             </div>

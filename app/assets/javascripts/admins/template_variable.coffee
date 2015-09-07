@@ -2,7 +2,7 @@
 class @TemplateVariable extends @Event
 
   events:
-    'click .edit-icon': 'editVariable'
+    # 'click .edit-icon': 'editVariable'
     'click .remove-icon': 'removeVariable'
     'click': 'insertVariable'
 
@@ -40,6 +40,9 @@ class @TemplateVariable extends @Event
     })
 
   insertVariable: (e) ->
+
+  update: (name) ->
+    @$().find('.variable_name').text(name)
 
   destroy: () ->
     @unbindAllEvent()

@@ -32,22 +32,41 @@ class @EditVariableModal
 
   bindModalEvents: () ->
     @$modal.on('show.bs.modal', @onModalShow.bind(@))
+    @$modal.on('hide.bs.modal', @onModalHide.bind(@))
 
   onModalShow: (e) ->
     $relatedTarget = $(e.relatedTarget)
     url = $relatedTarget.data('link')
-    $variableList = $relatedTarget.parents('.add-variable:first').next()
+    $variableList = $relatedTarget.parents('.variables:first').find('.variable-items')
 
     klass = $relatedTarget.data('class')
-    newUrl = "#{url}/new_#{klass}"
+    op = $relatedTarget.data('op')
 
-    @$modal.find('.modal-body').load newUrl, () =>
+    loadUrl = "#{url}/new_#{klass}"
+    isEdit = false
+
+    if op == 'edit'
+      loadUrl = "#{url}/edit"
+      isEdit = true
+
+    @$modal.find('.modal-body').load loadUrl, () =>
       switch klass
         when 'promotion_variable'
-          modal = new PromotionVariableModal(@$modal, url, $variableList)
+          if isEdit
+            @modal = new PromotionVariableEditModal(@$modal, url, $variableList)
+          else
+            @modal = new PromotionVariableModal(@$modal, url, $variableList)
         when 'promotion_set_variable'
-          modal = new PromotionSetVariableModal(@$modal, url, $variableList)
-        else
+          if isEdit
+            @modal = new PromotionSetVariableEditModal(@$modal, url, $variableList)
+          else
+            @modal = new PromotionSetVariableModal(@$modal, url, $variableList)
+
+
+  onModalHide: () ->
+    if @modal && @modal.destroy
+      @modal.destroy()
+      @modal = null
 
   @getModal: () ->
     @editVariableModal = new EditVariableModal()

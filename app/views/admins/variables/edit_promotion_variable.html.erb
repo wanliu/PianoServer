@@ -6,12 +6,12 @@
     <li class="list-group-item">
       <h4>
       <span class="id">&nbsp;</span>
-      <span class="title"><%= variable.name %></span>
+      <span class="title"><%= @promotion.title %></span>
       </h4>
     </li>
     <%= f.hidden_field :promotion_id %>
   </div>
-  <div class="promotion-list">
+  <div class="promotion-list hidden">
     <div class="form-group">
       <input type="text" class="form-control" placeholder="Search" name="q">
     </div>
