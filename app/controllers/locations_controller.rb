@@ -2,7 +2,7 @@ class LocationsController < ApplicationController
 
 
   def new
-    @location = Location.new(chat_id: params[:chat_id] ,order_id: params[:order_id])
+    @location = Location.new(user_id: current_anonymous_or_user.id)
   end
 
   def show
@@ -16,9 +16,9 @@ class LocationsController < ApplicationController
 
     if @location.save
       # render json: @location, status: :created
-      @order = Order.find(@location.order_id)
-      @order.delivery_location_id = @location.id
-      @order.save
+      #@order = Order.find(@location.order_id)
+      # @order.delivery_location_id = @location.id
+      #@order.save
 
       redirect_to @location.chat_id ? chat_path(@location.chat_id) : location_path(@location)
     else

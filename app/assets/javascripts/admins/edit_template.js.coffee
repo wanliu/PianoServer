@@ -59,9 +59,9 @@ class @EditTemplate extends @Event
 
     @element.find(".preview-template h3.panel-title").html(@fileTitle())
 
-    $.get(parseUrl, {source: source})
-      .success (data, status, xhr)=>
-        @element.find('.preview-template .preview').html(data)
+    $.post(parseUrl, {source: source})
+      .success (data, status, xhr) =>
+         @element.find('iframe').contents().find('html').html(data);
 
   fileTitle: () ->
     if @element.find(".edit-template h3.panel-title input").length > 0
@@ -84,8 +84,9 @@ class @EditTemplate extends @Event
 
   togglePanelBody: (e) ->
     $target = $(e.target)
+    $panel = if $target.is('.panel-heading') then $target else $target.parents('.panel-heading')
 
-    if $target.is('input')
+    if $target.is('input') || $panel.is('.affix')
       return false;
 
     $panel = $target.parents(".edit-template:first")

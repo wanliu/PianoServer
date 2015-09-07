@@ -73,6 +73,6 @@ class ApplicationController < ActionController::Base
   end
 
   def prepare_system_view_path
-    prepend_view_path Settings.sites.system.root
+    prepend_view_path File.join(Rails.root, Settings.sites.system.root)
   end
 end

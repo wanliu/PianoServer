@@ -9,8 +9,16 @@
       border-top-left-radius: 0;
 
       .panel-heading {
+        background-color: whitesmoke;
         border-top: 1px solid #DDDDDD;
         border-top-left-radius: 0;
+        border-bottom: 1px solid #DDDDDD;
+
+        &.affix {
+          top: 50px;
+          z-index: 200;
+          border-right: 1px solid #DDDDDD;
+        }
 
         input {
           max-width: 450px;
@@ -55,12 +63,60 @@
           width: 200px;
           padding-left: 5px;
           padding-right: 5px;
+          padding-top: 5px;
           vertical-align: top;
 
           .btn-group-vertical {
             width: 100%;
-            button  {
-              width: 100%;
+
+            .variable-item {
+              padding: 6px 35px 6px 10px;
+              text-align: left;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              border: 1px solid #CCCCCC;
+              margin-bottom: -1px;
+              cursor: pointer;
+              position: relative;
+
+              &:first-child {
+                border-top-left-radius: 5px;
+                border-top-right-radius: 5px;
+              }
+
+              &:last-child {
+                border-bottom-left-radius: 5px;
+                border-bottom-right-radius: 5px;
+              }
+
+              .variable-tools {
+                position: absolute;
+                right: 10px;
+                top: 6px;
+                display: none;
+
+                .edit-icon, .remove-icon{
+                  cursor: pointer;
+                  color: #CCCCCC;
+                }
+
+                .edit-icon:hover {
+                  color: #333333;
+                }
+
+                .remove-icon:hover {
+                  color: #FF2B2B;
+                }
+              }
+
+              &:hover {
+                background: #EEEEEE;
+
+                .variable-tools {
+                  display: block;
+                }
+              }
             }
           }
         }
@@ -166,5 +222,37 @@
     position: absolute;
     right: 0;
     top: 0;
+  }
+}
+
+
+#variable_editor_modal {
+  .promotions {
+    .promotion {
+      img {
+        width: 50px;
+        height: 50px;
+        float: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .promotion-infor {
+        padding-left: 60px;
+
+        .title {
+          height: 30px;
+          font-size: 20px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .shop-infor {
+          height: 20px;
+          font-size: 14px;
+        }
+      }
+    }
   }
 }

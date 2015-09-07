@@ -1,6 +1,12 @@
-<a href="javascript:void(0);" class="list-group-item promotion" data-id="<%= promotion_item.id %>" >
-  <h4>
-    <span class="id"><%= promotion_item.id %></span>
-    <span class="title"><%= promotion_item.title %></span>
-  </h4>
+<a href="javascript:void(0);" class="list-group-item promotion clearfix" data-id="<%= promotion_item.id %>" >
+  <%= image_tag promotion_item.image_mobile_url, class: 'promotion-image' %>
+  <div class="promotion-infor">
+    <div class="title">
+      <span class="id"><%= promotion_item.id %></span>
+      <span class="title"><%= promotion_item.title %></span>
+    </div>
+    <div class="shop-infor">
+      商店: <%= promotion_item.shop_name %>
+    </div>
+  </div>
 </a>

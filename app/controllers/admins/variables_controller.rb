@@ -41,7 +41,59 @@ class Admins::VariablesController < Admins::BaseController
       create_params.merge! template_id: params[:template_id], type: variable_params[:type].classify
       klass = variable_params[:type].classify.safe_constantize
       @variable = klass.create(create_params) if klass
+
+      render json: @variable
     else
+
+    end
+  end
+
+  def edit
+    @variable = Variable.find(params[:id])
+
+    type = @variable[:type].underscore
+    @promotions = nil
+    @variablePromotions = nil
+
+    case type
+    when "promotion_variable"
+      @promotion = Promotion.find(@variable.promotion_id) unless @variable.promotion_id.nil?
+      @promotions = Promotion.find(:all, from: :active, params: query_params)
+
+      render :edit_promotion_variable, layout: false
+    when "promotion_set_variable"
+      promotion_string = @variable.promotion_string
+      @promotions = Promotion.find(:all, from: :active, params: query_params)
+      @variablePromotions = (promotion_string || '').split(',').map {|id| Promotion.find(id) }
+
+      render :edit_promotion_set_variable, layout: false
+    else
+
+    end
+  end
+
+  def update
+    case variable_params[:type]
+    when "promotion_variable", "promotion_set_variable"
+      @variable = Variable.find(params[:id])
+      params_name = "#{variable_params[:type]}_params".to_sym
+      update_params = send(params_name)
+      update_params.delete(:type)
+      @variable.update_attributes(update_params)
+
+      render json: @variable
+    else
+
+    end
+  end
+
+  def destroy
+    @variable = @template.variables.find(params[:id])
+
+    if @variable.destroy
+      head :no_content
+    else
+      render json: @variable.errors, status: :unprocessable_entity
     end
   end
 

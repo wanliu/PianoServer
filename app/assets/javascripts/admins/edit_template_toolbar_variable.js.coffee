@@ -18,7 +18,7 @@ class @EditTemplateToolbarVariable extends @Event
     # // $(this).find('.modal-body').load(url);
 
 
-class EditVariableModal
+class @EditVariableModal
 
   @defaultOptions = {
     modal: '#variable_editor_modal',
@@ -32,24 +32,43 @@ class EditVariableModal
 
   bindModalEvents: () ->
     @$modal.on('show.bs.modal', @onModalShow.bind(@))
+    @$modal.on('hide.bs.modal', @onModalHide.bind(@))
 
   onModalShow: (e) ->
-    url = $(e.relatedTarget).data('link')
+    $relatedTarget = $(e.relatedTarget)
+    url = $relatedTarget.data('link')
+    $variableList = $relatedTarget.parents('.variables:first').find('.variable-items')
 
-    klass = $(e.relatedTarget).data('class')
-    newUrl = "#{url}/new_#{klass}"
+    klass = $relatedTarget.data('class')
+    op = $relatedTarget.data('op')
 
-    @$modal.find('.modal-body').load newUrl, () =>
+    loadUrl = "#{url}/new_#{klass}"
+    isEdit = false
+
+    if op == 'edit'
+      loadUrl = "#{url}/edit"
+      isEdit = true
+
+    @$modal.find('.modal-body').load loadUrl, () =>
       switch klass
         when 'promotion_variable'
-          modal = new PromotionVariableModal(@$modal, url)
+          if isEdit
+            @modal = new PromotionVariableEditModal(@$modal, url, $variableList)
+          else
+            @modal = new PromotionVariableModal(@$modal, url, $variableList)
         when 'promotion_set_variable'
-          modal = new PromotionSetVariableModal(@$modal, url)
-        else
+          if isEdit
+            @modal = new PromotionSetVariableEditModal(@$modal, url, $variableList)
+          else
+            @modal = new PromotionSetVariableModal(@$modal, url, $variableList)
+
+
+  onModalHide: () ->
+    if @modal && @modal.destroy
+      @modal.destroy()
+      @modal = null
 
   @getModal: () ->
-    @editVariableModal ||= new EditVariableModal()
+    @editVariableModal = new EditVariableModal()
 
 
-$ ->
-  EditVariableModal.getModal()

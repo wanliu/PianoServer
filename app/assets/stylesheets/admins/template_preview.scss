@@ -1,0 +1,11 @@
+.preview-template {
+  position: relative;
+
+  .preview {
+    position: absolute;
+    top: 38px;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+  }
+}
