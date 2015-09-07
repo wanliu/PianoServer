@@ -1,6 +1,6 @@
 #= ./modal_base
 
-class @PromotionSetVariableModal extends @ModalBase
+class @PromotionSetVariableEditModal extends @ModalBase
 
   events:
     'click .promotion': 'toggleSelectedItem'
@@ -49,18 +49,24 @@ class @PromotionSetVariableModal extends @ModalBase
       @$ids.val(ids.join(','))
 
   onSave: (e) ->
+    url = @url.replace('/edit', '')
+
     $.ajax
-      type: "POST",
-      url: @url,
+      type: "PUT",
+      url: url,
       data: @$().find('.modal-body>div>form').serialize(),
       dataType: 'json',
       success: (data) =>
         @$().modal('hide')
-        @variableCRUD('add', data)
+        @variableCRUD('update', data)
 
   onVariableNameChange: (e) ->
     name = $.trim($(e.target).val())
-    url = [@url, '/search_promotion'].join('')
+
+    str = "variables"
+    index = @url.indexOf(str)
+
+    url = [@url.slice(0, index + str.length), '/search_promotion'].join('')
 
     if (name.length > 0)
       $.get url, { inline: true, q: name }, (json) =>
