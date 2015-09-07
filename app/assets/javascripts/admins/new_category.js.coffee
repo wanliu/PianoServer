@@ -26,7 +26,7 @@ class @NewCategory extends @Event
       $.post(@url, {
         parent_id: @category.id,
         category: {
-          name: @$input.val(),
+          title: @$input.val(),
           image_url: @$img.val()
         }
       }).success (data) =>

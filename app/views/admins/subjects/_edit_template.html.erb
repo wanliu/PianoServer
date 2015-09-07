@@ -1,0 +1,103 @@
+<div id="edit-template-<%= template.id %>" class="tab-pane fade in panel panel-default edit-template active">
+  <% url = admins_subject_template_path(subject, template) %>
+  <%= form_for template, url: url, as: :template, remote: true, html: { class: "template-form-#{template.id}" } do |f| %>
+  <div class="panel-heading">
+    <h3 class="panel-title">
+      <%= title_extract template %>
+      <span class="glyphicon glyphicon-chevron-up toggle-icon" aria-hidden="true"></span>
+    </h3>
+  </div>
+
+  <div class="panel-body">
+    <div class="panel-body-content">
+      <div id="template-editor-<%= template.id %>" class="source-editor"><%= template.content -%></div>
+      <div class="variables">
+        <div class="btn-group add-variable" role="group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            新增对象
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu toolbars">
+            <% template.customize_variables.each do |config| %>
+              <li><%= link_to config[:title], '#',
+                        data: {
+                          toggle: 'modal',
+                          target: modal_target(config),
+                          link: variables_path(subject, template),
+                          class: config[:name],
+                          op: 'new'
+                        } %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+        <div class="btn-group-vertical variable-items" role="group" aria-label="variables">
+          <% template.variables.each do |var| %>
+            <div class="variable-item" variable-id="<%= var.id %>" >
+              <span class="variable_name"><%= var.name %></span>
+              <div class="variable-tools">
+                <%= link_to '#', data: {toggle: 'modal', target: modal_target(var), link: admins_subject_template_variable_path(subject, template, var), class: var[:type].underscore, op: 'edit'} do %>
+                  <span class="glyphicon glyphicon-pencil edit-icon" aria-hidden="true"></span>
+                <% end %>
+                <span class="glyphicon glyphicon-remove remove-icon" aria-hidden="true"></span>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <%= f.hidden_field :content, class: "template_content" %>
+  </div>
+  <div class="panel-footer">
+    <div class="panel-actions">
+      <%= f.submit :save, class: 'btn btn-primary' %>
+      <%= link_to :upload, '#', class: 'btn-upload btn-default' %>
+    </div>
+    <div class="panel-attachments">
+      <div class="progress">
+        <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+          0%
+        </div>
+      </div>
+      <ul class="row-fluid file-list">
+        <%= render partial: "admins/subjects/attachment", collection: template.attachments %>
+        <li class="drop-zone col-12 text-center hide" >拖动到这里上传</li>
+      </ul>
+      <script type="text/javascript">
+        $(".file-list .best_in_place").best_in_place();
+      </script>
+    </div>
+  </div>
+  <% end %>
+</div>
+
+<script type="text/javascript">
+  (function () {
+    $('#edit-template-<%= template.id %> .panel-heading').affix({
+      offset: {
+        top: function () {
+          var height = $('#edit-template-<%= template.id %> .panel-heading').outerHeight();
+          var offset_top = $('#edit-template-<%= template.id %>').offset()['top'] - 50;
+          var offset_height = offset_top + $('#edit-template-<%= template.id %>').height() - height;
+
+          if ($(document).scrollTop() > offset_top && $(document).scrollTop() < offset_height) {
+            return offset_top;
+          } else {
+            return $(document).outerHeight();
+          }
+        }
+      }
+    })
+
+    $('#edit-template-<%= template.id %> .panel-heading').on('affixed.bs.affix', function () {
+      var width = $('#edit-template-<%= template.id %>').outerWidth();
+      $('#edit-template-<%= template.id %> .panel-heading').css('width', width - 1);
+    });
+
+    var subject_id = "<%= subject.id %>",
+        template_id = "<%= template.id %>",
+        selector = "#edit-template-<%= template.id %> .variable-items";
+
+    new TemplateVariables($(selector), subject_id, template_id);
+  })();
+</script>

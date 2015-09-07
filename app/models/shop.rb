@@ -1,4 +1,8 @@
 class Shop < ActiveRecord::Base
+  include Liquid::Rails::Droppable
+
+  acts_as_punchable
+
   belongs_to :location
   belongs_to :owner, class_name: 'User'
 

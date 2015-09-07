@@ -1,0 +1,33 @@
+<div id="edit-new-template" class="tab-pane fade in panel panel-default edit-template active">
+  <%= form_for(template, url: admins_subject_templates_path(subject), remote: true, html: {"data-type" => 'html'}) do |f| %>
+  <div class="panel-heading">
+    <h3 class="panel-title">
+      <%= f.text_field :filename, class: "form-control template-filename", autofocus: true, placeholder: '请输入文件名称' %>
+    </h3>
+  </div>
+
+  <div class="panel-body">
+    <div class="panel-body-content">
+      <div id="new-template-content" class="source-editor">
+      </div>
+
+      <div class="variables">
+        <div class="btn-group-vertical btn-group-justified" role="group" aria-label="variables">
+          <div class="btn-group" role="group">
+            <!-- <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              新增对象
+              <span class="caret"></span>
+            </button> -->
+            <ul class="dropdown-menu">
+            </ul>
+          </div>
+        </div>
+      </div>
+      <%= f.hidden_field :content, class: "template_content" %>
+    </div>
+  </div>
+  <div class="panel-footer">
+    <%= f.submit :save, class: 'btn btn-primary' %>
+  </div>
+  <% end %>
+</div>

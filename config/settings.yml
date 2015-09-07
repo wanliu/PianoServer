@@ -35,7 +35,15 @@ dev:
     cart: true
     favorites: true
     qrcode: true
+    linkmen: true
     order:
       chat: true
     user:
       sign_in: true
+sites:
+  shops:
+    root: '.sites/shops'
+  user:
+    root: '.sites/users'
+  system:
+    root: '.sites/system'

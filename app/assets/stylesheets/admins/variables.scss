@@ -1,0 +1,13 @@
+@import "bootstrap/mixins/_gradients";
+
+.list-group.selected {
+  .list-group-item {
+    @include gradient-vertical(white, #ccc);
+  }
+
+  &.pressed {
+    .list-group-item {
+      @include gradient-vertical(#CCC, white);
+    }
+  }
+}

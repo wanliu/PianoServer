@@ -1,0 +1,2 @@
+class SearchVariable < Variable
+end

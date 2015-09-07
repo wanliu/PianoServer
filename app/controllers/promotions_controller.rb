@@ -1,6 +1,10 @@
 class PromotionsController < ApplicationController
   include DefaultAssetHost
+  include ContentManagementService::ContentController
+
   before_action :set_promotion, only: [:show, :update, :destroy, :chat, :shop]
+
+  register_render_template :homepage_header, only: [ :index ]
 
   respond_to :json, :html
   # GET /promotions
@@ -12,7 +16,7 @@ class PromotionsController < ApplicationController
   # GET /promotions/1
   # GET /promotions/1.json
   def show
-    @promotion
+    @promotion.punch request
     @shop = Shop.find(@promotion.shop_id)
   end
 

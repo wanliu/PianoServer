@@ -1,0 +1,18 @@
+<li class="col-xs-12 col-sm-6 col-lg-4 attachment-<%= attachment.id %>">
+  <%= image_tag attachment.filename.url(:avatar), class: 'icon' %>
+  <span class="title">
+    <%= best_in_place attachment,
+                      :name,
+                      as: :input,
+                      inner_class: 'form-control',
+                      skip_blur: true,
+                      url: admins_attachment_path(attachment) %></span>
+  <%= link_to '[x]',
+              admins_attachment_path(attachment),
+              method: :delete,
+              class: 'delete',
+              remote: true,
+              data: {
+                confirm: '确认删除附件？'
+              } %>
+</li>

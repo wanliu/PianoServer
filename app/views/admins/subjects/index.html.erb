@@ -1,0 +1,44 @@
+<h1 class="page-header">专题   <div class="btn-group pull-right" role="toolbar" aria-label="...">
+  <%= link_to new_admins_subject_path, class: "btn btn-default" do %>
+    <%= icon :plus%>
+  <% end %>
+<!--     <button type="button" class="btn btn-default">Middle</button>
+    <button type="button" class="btn btn-default">Right</button> -->
+  </div>
+</h1>
+
+<div class="btn-toolbar" role="toolbar" aria-label="...">
+
+</div>
+
+<ul class="list-group subject-list">
+  <%= render partial: "subject_item", collection: @subjects %>
+</ul>
+
+<script type="text/javascript">
+
+  $('.subject-list input.toggle-checkbox').on('change', function() {
+    var $this = $(this),
+        $subjectItem = $this.parents('.subject-item:first')
+        subject_id = $subjectItem.data('subject-id'),
+        is_open = $this.prop('checked');
+
+    $.ajax({
+      url: '/admins/subjects/' + subject_id,
+      data: {
+        subject: {
+          status: is_open ? 'open' : 'close'
+        }
+      },
+      type: 'PUT',
+      dataType: 'json',
+      success: function() {
+
+      }
+    });
+  });
+
+  // $('.subject-list').forEach(function(i, ele) {
+  //   var editor = new EditTemplate($(ele).find('.edit-template'));
+  // })
+</script>

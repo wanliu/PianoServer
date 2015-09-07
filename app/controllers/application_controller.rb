@@ -14,6 +14,8 @@ class ApplicationController < ActionController::Base
   # before_action :authenticate_user!
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_meta_user_data
+  before_action :current_subject
+  before_action :prepare_system_view_path
 
   helper_method :current_anonymous_or_user, :anonymous?
   rescue_from ActionController::RoutingError, :with => :render_404
@@ -64,5 +66,13 @@ class ApplicationController < ActionController::Base
     end
 
     render :file => "#{Rails.root}/public/404.html", :status => 404, :layout => false
+  end
+
+  def current_subject
+    @subject ||= Subject.availables.first
+  end
+
+  def prepare_system_view_path
+    prepend_view_path File.join(Rails.root, Settings.sites.system.root)
   end
 end

@@ -1,37 +1,70 @@
+<ul class="error-messages clearfix">
+  <% if @location.errors.any? %>
+    <% @location.errors.full_messages.each do |msg| %>
+      <li class="error-message"><%= msg %></li>
+    <% end %>
+  <% end %>
+</ul>
+
 <%= form_for @location do |f| %>
-  <%= f.hidden_field :chat_id %>
-  <%= f.hidden_field :order_id %>
-  <div class="form-group">
-    <%= f.label :contact, "姓名"%>
+  <%= f.hidden_field :user_id %>
+
+  <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+    <%= label :location, :contact do %>
+      姓名<span class="required">*</span>
+    <% end %>
+
     <%= f.text_field :contact, class: "form-control", maxlength: 30 %>
   </div>
-  <div class="form-group">
-    <%= f.label :id, "城市"%>
-      <div class="city-group">
-        <%= select(:location, :province_id, options_for_select(ChinaCity.list), {prompt: '--省份--'}, {class: "city-select"}) %>
-        <%= select(:location, :city_id, [], {prompt: "--城市--"}, { class: "city-select" } ) %>
-        <%= select(:location, :region_id, [], {prompt: "--地区--"}, { class: "city-select" } ) %>
+
+  <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+    <%= label :location, :id do %>
+      城市<span class="required">*</span>
+    <% end %>
+
+    <div class="city-group">
+      <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding0">
+        <%= select(:location, :province_id, options_for_select(ChinaCity.list), {prompt: '--省份--'}, {class: "city-select form-control"}) %>
       </div>
+      <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding0">
+        <%= select(:location, :city_id, [], {prompt: "--城市--"}, { class: "city-select form-control" } ) %>
+      </div>
+      <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding0">
+        <%= select(:location, :region_id, [], {prompt: "--地区--"}, { class: "city-select form-control" } ) %>
+      </div>
+    </div>
   </div>
+
   <script type="text/javascript">
-  $(document).on('page:load', function() {
-    return $('.city-group').china_city();
-  });
+    $(document).on('page:load', function() {
+      return $('.city-group').china_city();
+    });
   </script>
-  <div class="form-group">
-    <%= f.label :road, "地址"%>
-      <%= f.text_field :road, class: "form-control", maxlength: 140 %>
+
+  <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+    <%= label :location, :road do %>
+      地址<span class="required">*</span>
+    <% end %>
+
+    <%= f.text_field :road, class: "form-control", maxlength: 140 %>
   </div>
-  <div class="form-group">
+
+  <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
     <%= f.label :zipcode, "邮编"%>
       <%= f.text_field :zipcode, class: "form-control" %>
   </div>
-  <div class="form-group">
-    <%= f.label :contact_phone, "手机"%>
-      <%= f.text_field :contact_phone, class: "form-control" %>
+
+  <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+    <%= label :location, :contact_phone do %>
+      手机/座机号<span class="required">*</span>
+    <% end %>
+
+    <%= f.text_field :contact_phone, class: "form-control" %>
   </div>
-  <input type="hidden" name="location[user_id]" value="<%= current_anonymous_or_user.id %>" />
-  <%= f.submit "新建收件人信息", class: "btn btn-danger" %>
+
+  <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <%= f.submit "新建收件人信息", class: "btn btn-danger " %>
+  </div>
 <% end %>
 
 <% if anonymous? %>
@@ -39,31 +72,74 @@
     $('form').on('submit', function(e) {
       e.preventDefault();
 
-      var contact = $(this).serializeArray()[4].value,
-          zipcode = $(this).serializeArray()[9].value,
-          contact_phone = $(this).serializeArray()[10].value,
-          province_id = $(this).serializeArray()[5].value,
-          city_id = $(this).serializeArray()[6].value,
-          region_id = $(this).serializeArray()[7].value,
-          road = $(this).serializeArray()[8].value,
-          province_name = jQuery("#location_province_id  option:selected").text(),
-          city_name = jQuery("#location_city_id  option:selected").text(),
-          region_name = jQuery("#location_region_id  option:selected").text(),
-          address_object = {
-            'contact':contact,
-            'province_id': province_id,
-            'city_id': city_id,
-            'region_id': region_id,
-            'province_name': province_name,
-            'city_name': city_name,
-            'region_name':region_name,
-            'road':road,
-            'zipcode':zipcode,
-            'contact_phone':contact_phone
-          },
-          chatId = '<%= @location.chat_id %>';
+      var array = $(this).serializeArray(),
+          contact = array[3].value,
+          province_id = array[4].value,
+          city_id = array[5].value,
+          region_id = array[6].value,
+          road = array[7].value,
+          zipcode = array[8].value,
+          contact_phone = array[9].value,
 
-      LocalAddress.set(~new Date().getTime(),address_object);
+          province_name = $("#location_province_id  option:selected").text(),
+          city_name = $("#location_city_id  option:selected").text(),
+          region_name = $("#location_region_id  option:selected").text(),
+
+          chatId = '<%= @location.chat_id %>',
+          VALID_PHONE_REGEX = /^((\d{3,4}-\d{7,8}(-\d+)?)|((\+?86)?1\d{10}))$/g,
+          VALID_CONTACT_REGEX = /^([\u4e00-\u9fa5]|[a-zA-Z0-9_]|[\uFF10-\uFF19])+$/
+          $errors = $('ul.error-messages'),
+          errors = [],
+          address_object;
+
+      if (contact.length === 0) {
+        errors.push('<li class="error-message">姓名不能为空字符</li>');
+      } else {
+        if (!VALID_CONTACT_REGEX.test(contact)) {
+          errors.push('<li class="error-message">姓名是无效的</li>')
+        }
+      }
+
+      if (province_name === "--省份--") {
+        errors.push('<li class="error-message">省份不能为空字符</li>');
+      }
+
+      if (city_name === "--城市--") {
+        errors.push('<li class="error-message">城市不能为空字符</li>');
+      }
+
+      if (region_name === "--地区--") {
+        errors.push('<li class="error-message">地区不能为空字符</li>');
+      }
+
+      if (road.length === 0) {
+        errors.push('<li class="error-message">地址不能为空字符</li>');
+      }
+
+      if (!VALID_PHONE_REGEX.test(contact_phone)) {
+        errors.push('<li class="error-message">手机/座机号是无效的</li>');
+      }
+
+      $errors.html(errors.join(''));
+
+      if (errors.length > 0) {
+        return;
+      }
+
+      address_object = {
+        'contact':contact,
+        'province_id': province_id,
+        'city_id': city_id,
+        'region_id': region_id,
+        'province_name': province_name,
+        'city_name': city_name,
+        'region_name':region_name,
+        'road':road,
+        'zipcode':zipcode,
+        'contact_phone':contact_phone
+      };
+
+      LocalAddress.set(~new Date().getTime(), address_object);
 
       Turbolinks.visit('/chats/' + chatId);
     });

@@ -1,0 +1,34 @@
+<div id="template-<%= template.id %>" class="edit-preview-template" data-preview-url="<%= preview_admins_subject_template_path(subject, template) %>">
+  <ul class="nav nav-tabs">
+    <li role="presentation" class="active">
+      <a href="#edit-template-<%= template.id %>" role="tab" data-toggle="tab">编辑</a>
+    </li>
+    <li role="presentation">
+      <a href="#preview-template-<%= template.id %>" class="preview-template-tab" role="tab" data-toggle="tab">预览</a>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+    <%= render partial: "admins/subjects/edit_template", locals: {subject: subject, template: template} %>
+
+    <div id="preview-template-<%= template.id %>" class="tab-pane panel panel-default preview-template fade">
+      <div class="panel-heading">
+        <h3 class="panel-title"></h3>
+      </div>
+      <div class="preview">
+        <iframe src="" width="100%" height="100%" frameborder="0" marginwidth="0" marginheight="0"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  (function() {
+    var EditTemplate = window.EditTemplate;
+    var templateName = "template-<%= template.id %>";
+    var editorName= "template-editor-<%= template.id %>";
+    var url = "<%= admins_subject_template_path(subject, template) %>";
+
+    var editor = new EditTemplate($('#' + templateName), editorName, {url: url});
+  })();
+</script>

@@ -1,0 +1,3 @@
+class ConstantVariable < Variable
+
+end

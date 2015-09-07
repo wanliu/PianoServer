@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  resources :subjects, except: [:index, :new, :edit] do
+    member do
+      get "preview", to: 'subjects#preview', as: :preview
+    end
+  end
   devise_for :admins, controllers: {
     sessions: 'admins/sessions',
     registrations: 'admins/registrations'
@@ -20,6 +25,8 @@ Rails.application.routes.draw do
     resources :chats
   end
 
+  match "admins", to: "admins/dashboards#index", via: :get
+
   namespace :admins do
     resources :dashboards
     resources :accounts, except: [:new, :edit] do
@@ -29,8 +36,29 @@ Rails.application.routes.draw do
       end
     end
     resources :promotions
+    resources :subjects do
+      resources :templates do
+        member do
+          post :upload
+          post :preview
+        end
+
+        collection do
+          post :preview, to: 'templates#preview_new'
+        end
+
+        resources :variables, except: [:new ] do
+          collection do
+            get :new_promotion_variable
+            get :new_promotion_set_variable
+            get :search_promotion
+          end
+        end
+      end
+    end
     resources :messages
     resources :contacts
+    resources :attachments
   end
 
   namespace :api do
@@ -77,9 +105,9 @@ Rails.application.routes.draw do
   #
   get '/about' => 'home#about'
 
-  match ':shop_name', :to => 'shops#show_by_name', via: [ :get ], as: :shop_site
+  match ':shop_name', :to => 'shops#show_by_name', constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ }, via: [ :get ], as: :shop_site
 
-  resources :shops, path: '/', only: [] do # constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ }
+  resources :shops, path: '/', only: [], constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do
     member do
       get "/about", to: "shops#about"
     end
@@ -91,7 +119,7 @@ Rails.application.routes.draw do
       get "/", to: "admin#dashboard", as: :index
       get "/profile", to: "admin#profile"
 
-      resources :categories do
+      resources :categories, constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do
         member do
           get "/:child_id", to: "categories#show_by_child", as: :child
           post "/:parent_id", to: "categories#create_by_child"

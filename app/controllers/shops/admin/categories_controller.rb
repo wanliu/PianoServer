@@ -10,7 +10,7 @@ class Shops::Admin::CategoriesController < Shops::Admin::BaseController
   end
 
   def create_by_child
-    @root = @shop.categories.find(params[:id])
+    @root = @shop.categories.find_by(name: params[:id])
     @parent = Category.find(params[:parent_id])
     raise ActionController::RoutingError.new('Not Found') unless @parent.is_or_is_descendant_of?(@root)
     @category = @parent.children.create(category_params)
@@ -19,7 +19,7 @@ class Shops::Admin::CategoriesController < Shops::Admin::BaseController
   end
 
   def show
-    @category = @shop.categories.where(id: params[:id]).first
+    @category = @shop.categories.where(name: params[:id]).first
     @root = @category
   end
 
@@ -54,11 +54,11 @@ class Shops::Admin::CategoriesController < Shops::Admin::BaseController
   private
 
   def category_params
-    params.require(:category).permit(:name)
+    params.require(:category).permit(:title)
   end
 
   def is_descendant_of_category
-    @root = @shop.categories.find(params[:id])
+    @root = @shop.categories.find_by(name: params[:id])
     @category = Category.find(params[:child_id])
     raise ActionController::RoutingError.new('Not Found') unless @category.is_or_is_descendant_of?(@root)
   end
