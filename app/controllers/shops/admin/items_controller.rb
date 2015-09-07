@@ -9,6 +9,10 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     @categories = shop_category_root.children
   end
 
+  def new
+    @item = Item.new(shop_id: @shop.id)
+  end
+
 
   protected
 
