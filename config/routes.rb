@@ -117,6 +117,7 @@ Rails.application.routes.draw do
     namespace :admin, module: 'shops/admin' do
       get "/", to: "admin#dashboard", as: :index
       get "/profile", to: "admin#profile"
+      post "/shop_logo", to: "admin#update_shop_logo"
 
       resources :categories, constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do
         member do
