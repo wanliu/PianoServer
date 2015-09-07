@@ -62,7 +62,7 @@
     var token = $("#edit_shop_" + shopId + " input[name=authenticity_token]").val();
 
     var $element = $("#edit_shop_" + shopId + " div.image-uploader-button")[0];
-    var actionUrl = "<%= shop_admin_shop_logo_path(@shop) %>"
+    var actionUrl = "<%= shop_admin_shop_logo_path(@shop) %>";
 
     new qq.FileUploader({
       element: $element,
@@ -71,7 +71,7 @@
       multiple: false,
       template: $(".file-uploader-template").html(),
       onComplete: function (id, filename, responseJSON) {
-        var url = responseJSON.url
+        var url = responseJSON.url;
         $("#edit_shop_" + shopId + " .image-uploader img").attr('src', url);
       }
     });    
