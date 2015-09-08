@@ -59,6 +59,7 @@ Rails.application.routes.draw do
     resources :messages
     resources :contacts
     resources :attachments
+    resources :industries
   end
 
   namespace :api do

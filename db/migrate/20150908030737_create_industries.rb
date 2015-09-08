@@ -5,6 +5,7 @@ class CreateIndustries < ActiveRecord::Migration
       t.string :title
       t.text :description
       t.string :image
+      t.integer :status, default: 0
 
       t.timestamps null: false
     end
