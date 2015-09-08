@@ -8,7 +8,7 @@
     <%= form_for @shop do |f| %>
 
       <div class="form-group">
-        <%= f.label :logo_url %>
+        <%= f.label :logo_url, "商店Logo" %>
         <div class="image-uploader">
           <%= image_tag @shop.logo.url(:cover) %>
           <div class="image-uploader-button">
