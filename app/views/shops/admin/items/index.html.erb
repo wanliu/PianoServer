@@ -1,0 +1,77 @@
+<div class="shop-items-container">
+  <div class="panel panel-default category-panel">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+      分类
+      <ol class="breadcrumb">
+
+      </ol>
+      </h3>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-4 level1">
+          <div class="list-group">
+
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 level2">
+          <div class="list-group">
+
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 level3">
+          <div class="list-group">
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default items-panel">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        店铺商品
+        <div class="items-search">
+          <div class="input-group">
+            <input type="text" class="form-control input-sm" name="search-items">
+            <span class="input-group-addon btn btn-search">
+              <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+            </span>
+          </div>
+        </div>
+      </h3>
+      <button class="btn btn-success btn-add">
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+          新增
+        </button>
+    </div>
+    <div class="panel-body">
+      <table class="table">
+        <thead>
+          <th>商品项名</th>
+          <th>所属分类</th>
+          <th>出售价</th>
+          <th>库存</th>
+          <th>是否在售</th>
+        </thead>
+        <tbody>
+
+        </tbody>
+      </table>
+    </div>
+    <div class="panel-footer"></div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  var shop_name = "<%= @shop.name %>",
+      categoryContainer = $('.category-panel'),
+      itemsContainer = $('.items-panel');
+
+  new Categories(shop_name, categoryContainer, itemsContainer)
+</script>
+
+
+

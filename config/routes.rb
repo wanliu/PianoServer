@@ -129,7 +129,11 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :items
+      resources :items do
+        collection do
+          get "load_categories", to: "items#load_categories"
+        end
+      end
     end
   end
 

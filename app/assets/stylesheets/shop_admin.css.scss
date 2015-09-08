@@ -32,6 +32,7 @@ body[module="signup"] {
 
 .relative {
   position: relative;
+  padding-top: 20px;
 }
 
 .content {
@@ -39,13 +40,14 @@ body[module="signup"] {
   left: 240px;
   -webkit-transition: left 0.45s ease-in-out 0s;
   transition: left 0.45s ease-in-out 0s;
+  right: 0;
 }
 
 .shop.left-sidebar {
   position: absolute;
   -webkit-transition: left 0.45s ease-in-out 0s;
   transition: left 0.45s ease-in-out 0s;
-  top: 51px;
+  top: 21px;
 }
 
 .left-sidebar {

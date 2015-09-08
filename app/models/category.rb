@@ -12,6 +12,8 @@ class Category < ActiveRecord::Base
   mount_uploader :image, ImageUploader # , mount_on: :avatar_url
 
   before_save :default_values
+
+  attr_accessor :is_leaf
   # alias_method :cover_url, :avatar_url
   # alias_method :logo_url, :avatar_url
 
@@ -25,6 +27,10 @@ class Category < ActiveRecord::Base
 
   def chain_name
     self_and_ancestors.map(&:name)
+  end
+
+  def is_leaf
+    rgt - lft == 1
   end
 
   protected
