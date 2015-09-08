@@ -57,7 +57,7 @@ class @EditShopCategory extends @Event
         type: 'PUT',
         data: {
           parent_id: @shopCategoryId,
-          shopCategory: {
+          shop_category: {
             title: @$input.val(),
             image_url: @$img.val()
           }
