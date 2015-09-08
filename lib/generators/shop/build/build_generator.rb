@@ -28,7 +28,6 @@ class Shop::BuildGenerator < Rails::Generators::NamedBase
     if shop_category.persisted?
       say_status :exist, "Category #{attributes}", :blue
     else
-      shop.categories << shop_category
       say_status :create, "Category #{attributes}"
     end
   end
