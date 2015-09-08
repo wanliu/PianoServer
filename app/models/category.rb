@@ -45,7 +45,7 @@ class Category < ActiveRecord::Base
   end
 
   def depth_less_or_eq_to_3
-    if parent.depth >= 2
+    if parent.depth >= 3
       errors.add(:depth, "层级过多，最多只能有三级")
     end
   end
