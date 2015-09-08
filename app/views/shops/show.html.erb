@@ -10,13 +10,13 @@
   <div class='title'>
     <span>本店主营系列</span>
   </div>
-  <%= render partial: 'shop_categories/shop_categories', locals: { shop: @shop, categories: @categories } %>
+  <%= render partial: 'shop_categories/shop_categories', locals: { shop: @shop, shop_categories: @shop_categories } %>
 </div>
 
 <script type="text/template" id='template-shop-categories'>
   {{ _.each(collection, function (cate, index) { }}
     <div class="col-xs-4 col-sm-3 cate">
-      <a href="/categories/{{= cate.id }}" class='text-center'>
+      <a href="/shop_categories/{{= cate.id }}" class='text-center'>
         {{= cate.name }}
       </a>
       <span class='text text-center'>{{= cate.name }}</span>
@@ -29,7 +29,7 @@
     var per = 9;
     var page = 1;
     var id = <%= @shop.id %>;
-    var all_fetched = <%= @categories.length %> < per;
+    var all_fetched = <%= @shop_categories.length %> < per;
     var fetch_locked = false;
 
     var template = _.template($('#template-shop-categories').html());
@@ -43,7 +43,7 @@
         fetch_locked = true;
 
 
-        $.getJSON("/<%= @shop.name %>/categories.json?page=" + (page + 1) + "&per=" + per + "&shop_id=<%= @shop.id %>")
+        $.getJSON("/<%= @shop.name %>/shop_categories.json?page=" + (page + 1) + "&per=" + per + "&shop_id=<%= @shop.id %>")
           .success(function (data, status) {
             page += 1;
 

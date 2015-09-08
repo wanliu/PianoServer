@@ -1,8 +1,8 @@
 #= require _common/event
 #= require admins/edit_category
-EditCategory = @EditCategory
+EditShopCategory = @EditShopCategory
 
-class @NewCategory extends @Event
+class @NewShopCategory extends @Event
   events:
     'click': 'onClick',
     'click a>h2': 'onClickTitle',
@@ -25,14 +25,14 @@ class @NewCategory extends @Event
     if e.which == 13
       $.post(@url, {
         parent_id: @category.id,
-        category: {
+        shop_category: {
           title: @$input.val(),
           image_url: @$img.val()
         }
       }).success (data) =>
         category = @$().before($(data.html)).prev()
         @$input.val('')
-        new EditCategory(category)
+        new EditShopCategory(category)
 
   leaveEdit: () ->
     @$input.hide()

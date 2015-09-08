@@ -113,20 +113,20 @@ Rails.application.routes.draw do
       get "/about", to: "shops#about"
     end
 
-    resources :categories, controller: 'shop_categories'
+    resources :shop_categories
     resources :items
 
     namespace :admin, module: 'shops/admin' do
       get "/", to: "admin#dashboard", as: :index
       get "/profile", to: "admin#profile"
 
-      resources :categories, constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do
+      resources :shop_categories, constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do
         member do
-          get "/:child_id", to: "categories#show_by_child", as: :child
-          post "/:parent_id", to: "categories#create_by_child"
-          put "/:child_id", to: "categories#update_by_child"
-          post "/:child_id/upload_image", to: "categories#upload_image"
-          delete "/:child_id", to: "categories#destroy_by_child"
+          get "/:child_id", to: "shop_categories#show_by_child", as: :child
+          post "/:parent_id", to: "shop_categories#create_by_child"
+          put "/:child_id", to: "shop_categories#update_by_child"
+          post "/:child_id/upload_image", to: "shop_categories#upload_image"
+          delete "/:child_id", to: "shop_categories#destroy_by_child"
         end
       end
 

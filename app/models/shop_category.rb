@@ -1,6 +1,6 @@
 require 'chinese_pinyin'
 
-class Category < ActiveRecord::Base
+class ShopCategory < ActiveRecord::Base
   acts_as_nested_set
 
   has_and_belongs_to_many :shops
@@ -20,7 +20,7 @@ class Category < ActiveRecord::Base
   end
 
   def has_children
-    Category.exists?(parent_id: id)
+    ShopCategory.exists?(parent_id: id)
   end
 
   def chain_name
