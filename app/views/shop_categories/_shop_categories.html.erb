@@ -1,7 +1,7 @@
 <div class="row shop-categories">
-  <% categories.each do |cate| %>
+  <% shop_categories.each do |cate| %>
     <div class="col-xs-4 col-sm-3 cate">
-      <%= link_to shop_category_path(shop.name, cate), class: 'text-center' do %>
+      <%= link_to shop_shop_category_path(shop.name, cate), class: 'text-center' do %>
         <% if !cate.image.blank_image? %>
           <%= image_tag cate.image.url(:cover) %>
         <% else %>

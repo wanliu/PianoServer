@@ -4,13 +4,11 @@
     <li><%= link_to '仪表盘', shop_admin_index_path(@shop.name) %></li>
     <li><%= link_to '档案', shop_admin_profile_path(@shop.name) %></li>
     <li>
-      <%= link_to '分类', shop_admin_categories_path(@shop.name) %>
-      <% if @shop.categories.count > 0 %>
+      <%= link_to '分类', shop_admin_shop_categories_path(@shop.name) %>
+      <% if @shop.shop_category.present? %>
         <ul class="nav">
-        <% @shop.categories.each do |category| %>
-          <li><%= link_to category.title, shop_admin_category_path(@shop.name, category.name) %>
+          <li><%= link_to @shop.shop_category.title, shop_admin_shop_category_path(@shop.name, @shop.shop_category.name) %>
           </li>
-        <% end %>
         </ul>
       <% end %>
     </li>
