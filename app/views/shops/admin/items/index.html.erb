@@ -1,14 +1,29 @@
-<div class="panel panel-default">
-  <div class="panel-heading">分类</div>
+<div class="panel panel-default panel-category">
+  <div class="panel-heading">
+    <div class="btn-toolbar" role="toolbar" aria-label="...">
+      <div class="btn-group">
+        <h5>分类</h5>
+      </div>
+      <div class="btn-group">
+        <ol class="breadcrumb">
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Library</a></li>
+          <li class="active">Data</li>
+          <li><input type="text" placeholder="Search for..."></li>
+        </ol>
+      </div>
+      <div class="btn-group pull-right">
+        <button class="btn btn-default"><%= icon :remove %></button>
+      </div>
+    </div>
+  </div>
   <div class="panel-body">
     <div class="row">
       <div class="col-sm-4">
         <ul class="list-group">
-          <li class="list-group-item">Cras justo odio</li>
-          <li class="list-group-item">Dapibus ac facilisis in</li>
-          <li class="list-group-item">Morbi leo risus</li>
-          <li class="list-group-item">Porta ac consectetur ac</li>
-          <li class="list-group-item">Vestibulum at eros</li>
+          <% @categories.each do |cate| %>
+            <li class="list-group-item"><%= cate.title %></li>
+          <% end %>
         </ul>
       </div>
       <div class="col-sm-4">
@@ -47,7 +62,9 @@
         </div><!-- /input-group -->
       </div>
       <div class="btn-group pull-right">
-        <button class="btn btn-success "><%= icon :plus %> 新增</button>
+        <%= link_to new_shop_admin_item_path(@shop.name), class: 'btn btn-success' do %>
+          <%= icon :plus %> 新增
+        <% end %>
       </div>
     </div>
   </div>

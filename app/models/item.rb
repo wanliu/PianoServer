@@ -13,6 +13,18 @@ class Item < ActiveRecord::Base
   delegate :category_id, to: :product, prefix: true
   delegate :additional_fields, to: :product, allow_nil: true
 
+  scope :with_category, -> (category_id) do
+    category_id.nil? ? all : where("shop_category_id = ?", category_id)
+  end
+
+  scope :with_query, -> (q) do
+    q.nil? ? all : where("title like ?", "%#{q}%")
+  end
+
+  scope :with_shop, -> (shop_id) do
+    shop_id.nil? ? all : where("shop_id = ?", shop_id)
+  end
+
   def product
     Product.find(product_id)
   end

@@ -14,6 +14,7 @@
 //= require ace/ext-language_tools
 //= require best_in_place
 //= require _common/fileuploader
+//= require _common/hammer
 //= require_tree ./admins
 //= require_self
 
