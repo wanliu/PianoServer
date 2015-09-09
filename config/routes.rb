@@ -25,6 +25,8 @@ Rails.application.routes.draw do
     resources :chats
   end
 
+  match "admins", to: "admins/dashboards#index", via: :get
+
   namespace :admins do
     resources :dashboards
     resources :accounts, except: [:new, :edit] do
@@ -43,7 +45,6 @@ Rails.application.routes.draw do
 
         collection do
           post :preview, to: 'templates#preview_new'
-          get :preview_layout
         end
 
         resources :variables, except: [:new ] do

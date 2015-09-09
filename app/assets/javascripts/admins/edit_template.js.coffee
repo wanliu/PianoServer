@@ -61,7 +61,7 @@ class @EditTemplate extends @Event
 
     $.post(parseUrl, {source: source})
       .success (data, status, xhr) =>
-         @element.find('iframe').contents().find('body').html(data);
+         @element.find('iframe').contents().find('html').html(data);
 
   fileTitle: () ->
     if @element.find(".edit-template h3.panel-title input").length > 0

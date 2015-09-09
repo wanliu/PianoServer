@@ -1,5 +1,4 @@
 class Shops::Admin::CategoriesController < Shops::Admin::BaseController
-  before_action :get_shop
   before_action :is_descendant_of_category, only: [:show_by_child, :update_by_child, :upload_image, :destroy_by_child]
 
   def create
@@ -30,10 +29,6 @@ class Shops::Admin::CategoriesController < Shops::Admin::BaseController
   def update_by_child
     @category.update category_params
     render :show, formats: [ :json ]
-  end
-
-  def get_shop
-    @shop = Shop.find_by name: params[:shop_id]
   end
 
   def destroy
