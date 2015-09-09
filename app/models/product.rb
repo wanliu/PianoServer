@@ -1,12 +1,7 @@
 require 'elasticsearch/persistence/model'
 require 'bigdecimal'
 
-class Product
-  include Elasticsearch::Persistence::Model
-  # include ActiveModel::SerializerSupport
-
-  gateway.client = Elasticsearch::Client.new url: Settings.elasticsearch.url, log: true
-
+class Product < ESModel
   index_name Settings.elasticsearch.index_name
 
   attribute :id, Fixnum
@@ -24,7 +19,7 @@ class Product
 
   def image
     @avatar = Flf.avatar
-    { 
+    {
       avatar_url: @avatar + '!avatar',
       preview_url: @avatar
     }

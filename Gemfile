@@ -63,6 +63,7 @@ gem 'poseidon'
 gem 'google-analytics-rails'
 gem 'kaminari'
 gem 'awesome_nested_set'
+gem 'ancestry' # 暂时的支持，旧的 neil
 
 gem "rails_config"
 

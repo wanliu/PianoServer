@@ -1,0 +1,22 @@
+.panel-category {
+  .breadcrumb {
+    margin: 0px;
+  }
+
+  .list-group {
+    min-height: 250px;
+    background-color: #999;
+    border-radius: 4px;
+    overflow-y: auto;
+  }
+
+  .list-group-item {
+    padding: 5px 15px;
+  }
+}
+
+.panel-items {
+  .pagination {
+    margin: 0px;
+  }
+}

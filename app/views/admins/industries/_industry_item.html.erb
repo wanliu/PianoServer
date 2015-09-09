@@ -1,0 +1,17 @@
+<li class="list-group-item industry-item" data-industry-id="<%= industry_item.id %>">
+  <div class="industry-info">
+    <%= link_to edit_admins_industry_path(industry_item) do %>
+      <%= icon :ok %>
+      <h3><%= industry_item.title %></h3>
+    <% end %>
+  </div>
+
+  <div class="industry-toggle">
+    <label class="toggle-box">
+      <%= check_box_tag :status, 'status', industry_item.open?, class: 'toggle-checkbox'%>
+      <div class="track">
+        <div class="handle"></div>
+      </div>
+    </label>
+  </div>
+</li>
