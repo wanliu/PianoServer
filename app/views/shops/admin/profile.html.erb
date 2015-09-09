@@ -62,7 +62,7 @@
     var token = $("#edit_shop_" + shopId + " input[name=authenticity_token]").val();
 
     var $element = $("#edit_shop_" + shopId + " div.image-uploader-button")[0];
-    var actionUrl = "<%= shop_admin_shop_logo_path(@shop) %>";
+    var actionUrl = "<%= shop_admin_upload_shop_logo_path(@shop) %>";
 
     new qq.FileUploader({
       element: $element,

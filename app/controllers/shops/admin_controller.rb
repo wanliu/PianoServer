@@ -1,6 +1,6 @@
 class Shops::AdminController < Shops::Admin::BaseController
 
-  def update_shop_logo
+  def upload_shop_logo
     @shop = Shop.find(params[:shop_id])
     @shop.logo = params[:file]
 
