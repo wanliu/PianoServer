@@ -1,8 +1,15 @@
 class Shops::AdminController < Shops::Admin::BaseController
 
-  # def
-  # def profile
-  # end
+  def upload_shop_logo
+    @shop = Shop.find(params[:shop_id])
+    @shop.logo = params[:file]
+
+    if @shop.save
+      render json: {success: true, url: @shop.logo.url(:cover)}, status: :ok
+    else
+      render json: {errors: @shop.errors}, status: :unprocessable_entity
+    end
+
   def update_shop_profile
     @shop.update(shop_profile_params)
 

@@ -11,7 +11,8 @@ class Shop < ActiveRecord::Base
 
   store_accessor :image, :avatar_url
 
+  mount_uploader :logo, ImageUploader
 
   alias_method :address, :location
-  alias_method :logo_url, :avatar_url
+  # alias_method :logo_url, :avatar_url
 end
