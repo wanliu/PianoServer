@@ -21,6 +21,6 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
   end
 
   def shop_category_root
-    @category_root ||= @shop.categories.find_by(name: "product_category")
+    @category_root ||= @shop.shop_category
   end
 end
