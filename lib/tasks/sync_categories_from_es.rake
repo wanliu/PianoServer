@@ -15,16 +15,12 @@ namespace :db do
         id = attributes.id
         record = Category.find_by(id: id)
 
-        params = ActionController::Parameters.new({
-          category: attributes.except(:created_at, :updated_at, :deleted_at)
-        })
-
-        permited = params.require(:category).permit(:name, :ancestry, :ancestry_depth, :id)
-
         if record.present?
-          record.update permited.except(:id) if args.overwrite_model == "overwrite"
+          update_attributes = attributes.except(:id, :created_at, :updated_at, :deleted_at).to_hash
+          record.update update_attributes if args.overwrite_model == "overwrite"
         else
-          Category.create permited
+          update_attributes = attributes.except(:created_at, :updated_at, :deleted_at).to_hash
+          Category.create update_attributes
         end
       end
 
