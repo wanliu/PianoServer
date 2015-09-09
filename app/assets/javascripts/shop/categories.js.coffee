@@ -47,9 +47,9 @@ class @Categories
         $addBtn = @itemsContainer.find('.btn-add')
 
         if isLeaf
-          $addBtn.show()
+          $addBtn.removeAttr('disabled')
         else
-          $addBtn.hide()
+          $addBtn.attr('disabled', 'disabled')
 
         callback.call(this, data) if $.isFunction(callback)
 
@@ -127,6 +127,9 @@ class @Categories
 
   handleClickEvent: (e) ->
     $target = $(e.currentTarget)
+
+    return if $target.hasClass('active')
+
     categoryId = $target.attr('category-id')
     depth = $target.attr('depth')
     isLeaf = $target.attr('is-leaf') == 'on'
@@ -170,6 +173,19 @@ class @Categories
         """
           <li><a href="javascript:void(0)" category-id="#{categoryId}">#{categoryName}</a></li>
         """
+
+    template = """
+      <li><div class="items-search">
+        <div class="input-group">
+          <input type="text" class="form-control input-sm" name="search-items">
+          <span class="input-group-addon btn btn-search">
+            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+          </span>
+        </div>
+      </div></li>
+    """
+
+    pathNames.push(template) if pathNames.length > 0
 
     $path = @categoryContainer.find('.breadcrumb')
     $path.html(pathNames.join(''))

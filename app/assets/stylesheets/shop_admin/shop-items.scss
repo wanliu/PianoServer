@@ -9,6 +9,19 @@
       padding: 0;
       margin: 0 0 0 10px;
     }
+
+    .category-col .list-group{
+      height: 250px;
+      background: #EEEEEE;
+      overflow: auto;
+      border-radius: 5px;
+    }
+
+    .items-search {
+      display: inline-block;
+      width: 150px;
+      vertical-align: middle;
+    }
   }
 
   .items-panel {
@@ -19,16 +32,8 @@
       .btn-add {
         position: absolute;
         right: 10px;
-        top: 12px;
+        top: 7px;
         color: #FFFFFF;
-        display: none;
-      }
-
-      .items-search {
-        display: inline-block;
-        width: 250px;
-        vertical-align: middle;
-        margin-left: 10px;
       }
     }
 
@@ -49,7 +54,7 @@
     }
 
     .panel-footer{
-      height: 47px;
+      height: 40px;
     }
   }
 }
