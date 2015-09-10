@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150908102437) do
+ActiveRecord::Schema.define(version: 20150910070542) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -195,6 +195,18 @@ ActiveRecord::Schema.define(version: 20150908102437) do
     t.integer  "send_location_id"
   end
 
+  create_table "properties", force: :cascade do |t|
+    t.string   "name"
+    t.string   "title"
+    t.string   "summary"
+    t.jsonb    "data"
+    t.integer  "unit_id"
+    t.string   "unit_type"
+    t.string   "prop_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "punches", force: :cascade do |t|
     t.integer  "punchable_id",                          null: false
     t.string   "punchable_type", limit: 20,             null: false
@@ -276,6 +288,14 @@ ActiveRecord::Schema.define(version: 20150908102437) do
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
     t.string   "type"
+  end
+
+  create_table "units", force: :cascade do |t|
+    t.string   "name"
+    t.string   "title"
+    t.string   "summary"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|
