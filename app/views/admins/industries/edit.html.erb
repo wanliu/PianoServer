@@ -32,6 +32,30 @@
         </div>
       </div>
       <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <form>
+              <div class="form-group">
+                <label for="exampleInputEmail1">名称</label>
+                <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputPassword1">标题</label>
+                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+              </div>
+            </form>
+            <h4>上级属性</h4>
+              <%= select_tag "up_property", options_from_collection_for_select(Category.all, "id", "title") %>
+            <h4>属性列表</h4>
+            <ul class="list-group">
+              <li class="list-group-item">Cras justo odio</li>
+              <li class="list-group-item">Dapibus ac facilisis in</li>
+              <li class="list-group-item">Morbi leo risus</li>
+              <li class="list-group-item">Porta ac consectetur ac</li>
+              <li class="list-group-item">Vestibulum at eros</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </div>
