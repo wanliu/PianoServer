@@ -3,24 +3,27 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     page = params[:page].presence || 1
     per = params[:per].presence || 25
 
-    if params[:category_id].present?
-      @categories = Category.where(parent_id: params[:category_id])
-      @items = Item.where(shop_category_id: params[:category_id]).page(page).per(per)
-    else
-      @root = @shop.categories.first
-      @categories = Category.where(parent_id: @root.id)
-      @items = Item.where(shop_id: @shop.id).page(page).per(per)
-    end
-
-    render json: {categories: @categories.as_json(methods: [:is_leaf]), items: @items }
-
-  def index
     @items = Item.with_shop(@shop.id)
                  .with_category(query_params[:category_id])
                  .with_query(query_params[:q])
                  .page(query_params[:page])
 
-    @categories = shop_category_root.children
+    @categories = if params[:category_id].present?
+      ShopCategory.where(parent_id: params[:category_id])
+    else
+      shop_category_root.children
+    end
+
+    render json: {categories: @categories.as_json(methods: [:is_leaf]), items: @items }
+  end
+
+  def index
+    # @items = Item.with_shop(@shop.id)
+    #              .with_category(query_params[:category_id])
+    #              .with_query(query_params[:q])
+    #              .page(query_params[:page])
+
+    # @categories = shop_category_root.children
   end
 
   def new

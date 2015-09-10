@@ -3,6 +3,7 @@ class @Categories
     @loadLevel1Categories(null)
 
     @bindSearchEvent()
+    @bindNewEvent()
 
   loadLevel1Categories: (category_id) ->
     @loadDataAndCallback(category_id, false, (data) =>
@@ -127,8 +128,7 @@ class @Categories
 
   handleClickEvent: (e) ->
     $target = $(e.currentTarget)
-
-    return if $target.hasClass('active')
+    # return if $target.hasClass('active')
 
     categoryId = $target.attr('category-id')
     depth = $target.attr('depth')
@@ -145,7 +145,12 @@ class @Categories
         @loadLevel4Categories(categoryId, isLeaf)
 
   bindSearchEvent: () ->
-    @itemsContainer.find('.btn-search').bind('click', @handleSearchEvent.bind(@))
+    @categoryContainer.find('.btn-search').bind('click', @handleSearchEvent.bind(@))
+
+  bindNewEvent: () ->
+    @itemsContainer.find('.btn-add').click () =>
+      url = ['/', @shop_name, '/admin/items/new'].join('')
+      Turbolinks.visit(url)
 
   handleSearchEvent: (e) ->
     $target = $(e.currentTarget)

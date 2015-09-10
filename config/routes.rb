@@ -80,6 +80,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :categories
+
   resources :shops, only: [ :show ]
 
   resources :chats

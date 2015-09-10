@@ -27,6 +27,10 @@ class ShopCategory < ActiveRecord::Base
     self_and_ancestors.map(&:name)
   end
 
+  def is_leaf
+    rgt - lft == 1
+  end
+
   protected
 
   def default_values

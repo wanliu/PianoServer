@@ -5,4 +5,7 @@ class Category < ActiveRecord::Base
 
   acts_as_tree :cache_depth => true
 
+  def is_leaf
+    !has_children?
+  end
 end

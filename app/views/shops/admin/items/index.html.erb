@@ -2,10 +2,10 @@
   <div class="panel panel-default category-panel">
     <div class="panel-heading">
       <h3 class="panel-title">
-      分类
-      <ol class="breadcrumb">
+        分类
+        <ol class="breadcrumb">
 
-      </ol>
+        </ol>
       </h3>
     </div>
     <div class="panel-body">
@@ -34,9 +34,10 @@
       <h3 class="panel-title">
         店铺商品
       </h3>
-      <%= link_to new_shop_admin_item_path(@shop.name), class: 'btn btn-success btn-add' do %>
-        <%= icon :plus %> 新增
-      <% end %>
+      <button class="btn btn-success btn-add" disabled="disabled">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        新增
+      </button>
     </div>
     <div class="panel-body">
       <table class="table">

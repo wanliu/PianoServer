@@ -13,8 +13,12 @@
     .category-col .list-group{
       height: 250px;
       background: #EEEEEE;
-      overflow: auto;
+      overflow-y: auto;
       border-radius: 5px;
+
+      .list-group-item {
+        padding: 5px 15px;
+      }
     }
 
     .items-search {
