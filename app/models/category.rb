@@ -18,4 +18,8 @@ class Category < ActiveRecord::Base
   def open
     true
   end
+
+  def is_leaf
+    !has_children?
+  end
 end
