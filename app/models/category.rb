@@ -5,4 +5,12 @@ class Category < ActiveRecord::Base
 
   acts_as_tree :cache_depth => true
 
+  def title
+    super || name
+  end
+
+  # 伪代码 展开分类显示
+  def open
+    true
+  end
 end

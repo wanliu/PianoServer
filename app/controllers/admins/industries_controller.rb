@@ -14,7 +14,7 @@ class Admins::IndustriesController < Admins::BaseController
   end
 
   def edit
-
+    @categories = category_root.try(:children) || []
   end
 
   private
@@ -25,5 +25,9 @@ class Admins::IndustriesController < Admins::BaseController
 
   def get_industry
     @industry = Industry.find(params[:id])
+  end
+
+  def category_root
+    Category.roots[0]
   end
 end

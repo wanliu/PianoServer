@@ -1,0 +1,36 @@
+.category-tree {
+  .list-group-item {
+    span {
+      display: inline-block;
+      width: 15px;
+      color: #ddd;
+    }
+  }
+
+  $step: 20px;
+  $base: 15px;
+
+  .child-1 {
+    padding-left: $base + $step;
+  }
+
+  .child-2 {
+    padding-left: $base + $step * 2;
+  }
+
+  .child-3 {
+    padding-left: $base + $step * 3;
+  }
+
+  .child-4 {
+    padding-left: $base + $step * 4;
+  }
+
+  .child-5 {
+    padding-left: $base + $step * 5;
+  }
+
+  .child-6 {
+    padding-left: $base + $step * 6;
+  }
+}

@@ -23,6 +23,21 @@
 <div class="panel panel-default">
   <div class="panel-heading">分类</div>
   <div class="panel-body">
-    Panel content
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="list-group category-tree">
+          <%= render partial: 'category_item', collection: @categories %>
+          <a class="list-group-item child-1" href='#'><span></span>Child-1</a>
+          </li>
+        </div>
+      </div>
+      <div class="col-sm-6">
+      </div>
+    </div>
   </div>
 </div>
+<script type="text/javascript">
+  var CategoryTree = window.CategoryTree;
+  var industryUrl = "<%= admins_industry_path(@industry) %>";
+  var cateTree = new CategoryTree($('.category-tree'), industryUrl);
+</script>

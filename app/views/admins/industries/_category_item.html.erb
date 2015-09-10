@@ -1,0 +1,10 @@
+<a class="list-group-item<%= category_item.try(:open) ? ' open': '' %>" href='#' data-category-id="<%= category_item.id %>">
+  <%= toggle_arrow category_item %> <%= category_item.title %>
+</a>
+<% if category_item.try(:open) %>
+  <% category_item.children.each do |child| %>
+    <a class="list-group-item child-<%= child_depth child %> parent-<%= category_item.id %>" href='#' data-category-id="<%= child.id %>">
+      <%= toggle_arrow child %> <%= child.title %>
+    </a>
+  <% end %>
+<% end %>
