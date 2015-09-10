@@ -60,7 +60,17 @@ Rails.application.routes.draw do
     resources :contacts
     resources :attachments
     resources :industries do
-      resources :categories
+      resources :categories do
+        resources :properties
+
+        member do
+          post :add_property
+          patch :update_property
+          delete :remove_property
+          get :show_inhibit
+          get :hide_inhibit
+        end
+      end
     end
 
     resources :products

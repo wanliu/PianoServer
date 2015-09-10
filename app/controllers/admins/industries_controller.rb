@@ -19,6 +19,10 @@ class Admins::IndustriesController < Admins::BaseController
     @properties = Property.all
   end
 
+  def destroy
+
+  end
+
   private
 
   def industry_params

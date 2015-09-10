@@ -59,9 +59,14 @@ ActiveRecord::Schema.define(version: 20150910083843) do
   add_index "categories", ["ancestry"], name: "index_categories_on_ancestry", using: :btree
 
   create_table "categories_properties", id: false, force: :cascade do |t|
-    t.integer "category_id", null: false
-    t.integer "property_id", null: false
+    t.integer "category_id",             null: false
+    t.integer "property_id",             null: false
+    t.integer "state",       default: 0
   end
+
+  add_index "categories_properties", ["category_id", "property_id"], name: "index_categories_properties_on_category_id_and_property_id", using: :btree
+  add_index "categories_properties", ["property_id", "category_id"], name: "index_categories_properties_on_property_id_and_category_id", using: :btree
+  add_index "categories_properties", ["state"], name: "index_categories_properties_on_state", using: :btree
 
   create_table "categories_shops", id: false, force: :cascade do |t|
     t.integer "category_id", null: false

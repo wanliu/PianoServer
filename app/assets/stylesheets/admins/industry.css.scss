@@ -45,13 +45,13 @@
       min-width: 250px;
 
       &>li>a:hover, &>li:hover {
-        button {
+        .label {
           visibility: visible;
         }
       }
 
       &>li {
-        button {
+        .label {
           visibility: hidden;
         }
       }
@@ -68,4 +68,20 @@
       }
     }
   }
+
+  .property-list {
+    .list-group-item {
+      .btn-group {
+        display: none;
+      }
+
+      &:hover .btn-group {
+        display: inline-block;
+      }
+    }
+  }
+}
+
+.empty-category h1 {
+  color: #ccc;
 }
