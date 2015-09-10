@@ -34,3 +34,38 @@
     padding-left: $base + $step * 6;
   }
 }
+
+.category-edit {
+
+  .add-property {
+    .dropdown-menu {
+      left: auto;
+      right: 0px;
+      padding-top: 0px;
+      min-width: 250px;
+
+      &>li>a:hover, &>li:hover {
+        button {
+          visibility: visible;
+        }
+      }
+
+      &>li {
+        button {
+          visibility: hidden;
+        }
+      }
+
+      .no-selected {
+        background-color: #ccc;
+        padding: 5px;
+
+        input {
+          border-bottom-left-radius: 0px;
+          border-bottom-right-radius: 0px;
+        }
+
+      }
+    }
+  }
+}

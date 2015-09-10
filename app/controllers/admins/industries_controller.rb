@@ -15,6 +15,8 @@ class Admins::IndustriesController < Admins::BaseController
 
   def edit
     @categories = category_root.try(:children) || []
+    # demo code, remove after impl
+    @properties = Property.all
   end
 
   private

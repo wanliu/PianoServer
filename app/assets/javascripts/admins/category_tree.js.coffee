@@ -70,9 +70,11 @@ class @CategoryNode extends @Event
   loadChildren: (e, categoryId) ->
     childUrl = @url + '/categories/' + categoryId
     $.get childUrl, (data) =>
-      categories = data.categories
+      categories = data.children
       categories.map (c) =>
         $child = $(e).after(c.html)
+
+      $('.category-right').html(data.edit_html)
 
       @addChildren()
 

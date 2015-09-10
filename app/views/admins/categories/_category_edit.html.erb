@@ -1,0 +1,40 @@
+<div class="panel panel-default category-edit category-<%= category.id %>">
+  <div class="panel-body">
+    <form>
+      <div class="form-group">
+        <label for="exampleInputPassword1">标题</label>
+        <input type="text" class="form-control" id="exampleInputPassword1" placeholder="标题">
+      </div>
+    </form>
+    <h4>上级属性</h4>
+      <!-- TODO: -->
+      <%= select_tag "up_property", options_from_collection_for_select(Category.all, "id", "title") %>
+    <h4>属性列表
+      <div class="btn-group pull-right add-property" role="toolbar" aria-label="...">
+        <div class="dropdown">
+          <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <%= icon :plus%>
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+            <li class='no-selected' >
+              <input type="text" name="q_cate" class="form-control" />
+            </li>
+            <% Property.all.each do |property| %>
+              <li>
+                <a href="#"><%= property.title %>
+                  <button class="btn btn-xs btn-primary pull-right">创建</button>
+                </a>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </h4>
+    <ul class="list-group">
+      <% category.properties.each do |property| %>
+        <li class="list-group-item"><%= property.title %></li>
+      <% end %>
+    </ul>
+  </div>
+</div>

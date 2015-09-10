@@ -24,35 +24,47 @@
   <div class="panel-heading">分类</div>
   <div class="panel-body">
     <div class="row">
-      <div class="col-sm-6">
+      <div class="col-sm-6 category-left">
         <div class="list-group category-tree">
           <%= render partial: 'category_item', collection: @categories %>
           <a class="list-group-item child-1" href='#'><span></span>Child-1</a>
           </li>
         </div>
       </div>
-      <div class="col-sm-6">
-        <div class="panel panel-default">
+      <div class="col-sm-6 category-right">
+        <div class="panel panel-default category-edit">
           <div class="panel-body">
             <form>
               <div class="form-group">
-                <label for="exampleInputEmail1">名称</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
-              </div>
-              <div class="form-group">
                 <label for="exampleInputPassword1">标题</label>
-                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                <input type="text" class="form-control" id="exampleInputPassword1" placeholder="标题">
               </div>
             </form>
             <h4>上级属性</h4>
+              <!-- TODO: -->
               <%= select_tag "up_property", options_from_collection_for_select(Category.all, "id", "title") %>
-            <h4>属性列表</h4>
+            <h4>属性列表
+              <div class="btn-group pull-right add-property" role="toolbar" aria-label="...">
+                <div class="dropdown">
+                  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <%= icon :plus%>
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li class='no-selected' >
+                      <input type="text" name="q_cate" class="form-control" />
+                    </li>
+                    <% @properties.each do |property| %>
+                      <li><a href="#"><%= property.title %></a> <span class="actions"></span></li>
+                    <% end %>
+                  </ul>
+                </div>
+              </div>
+            </h4>
             <ul class="list-group">
-              <li class="list-group-item">Cras justo odio</li>
-              <li class="list-group-item">Dapibus ac facilisis in</li>
-              <li class="list-group-item">Morbi leo risus</li>
-              <li class="list-group-item">Porta ac consectetur ac</li>
-              <li class="list-group-item">Vestibulum at eros</li>
+              <% @properties.each do |property| %>
+                <li class="list-group-item"><%= property.title %></li>
+              <% end %>
             </ul>
           </div>
         </div>
