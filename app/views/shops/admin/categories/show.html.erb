@@ -1,0 +1,62 @@
+<h1><%= @category.title %></h1>
+<% if @category.ancestors.count > 0 %>
+<ol class="breadcrumb">
+  <% @category.self_and_ancestors.each_with_index do |node, i| %>
+    <% if @category.ancestors.count - i == 0 %>
+      <li class="active">
+        <%= node.title %>
+      </li>
+    <% else %>
+      <li>
+        <% url = @root == node ? shop_admin_category_path(@shop.name, @root.name) : child_shop_admin_category_path(@shop.name, @root.name, node) %>
+         <%= link_to node.title, url %>
+      </li>
+    <% end %>
+  <% end %>
+</ol>
+<% end %>
+<div class="category-list row">
+  <%= render partial: "category", collection: @category.children %>
+  <% if @category.depth < 4 %>
+    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-3 new-category">
+      <div class="box">
+          <a href="#" class="thumbnail">
+            <img src="<%= Settings.assets.gray_image %>" alt="new category">
+              <h2>+</h2>
+              <input type="text" name="name" class="title-input" placeholder="分类名称" />
+              <p class="second-title">新增一个分类</p>
+          </a>
+      </div>
+      <%= form_tag shop_admin_categories_path(@shop.name) do %>
+        <input type="hidden" name="category_img" />
+      <% end %>
+      <p class="text-center">新增一个分类</p>
+    </div>
+  <% end %>
+</div>
+
+<script type="text/javascript">
+  // $(ready);
+
+  // function ready () {
+    var NewCategory = window.NewCategory;
+    var EditCategory = window.EditCategory;
+
+    var category = <%=raw @category.to_json %>;
+    var createCategoryUrl = '<%= child_shop_admin_category_path(@shop.name, @root.name, @category) %>';
+
+    var newCategory = new NewCategory($('.category-list .new-category')[0], category, createCategoryUrl);
+
+    $('.category-list .category').each(function(i, e) {
+      new EditCategory($(e))
+    });
+  // };
+
+
+  // $(document).on('page:before-unload', function() {
+  //   if (newCategory) {
+  //     newCategory.unbindAllEvents();
+  //     delete newCategory;
+  //   }
+  // });
+</script>
