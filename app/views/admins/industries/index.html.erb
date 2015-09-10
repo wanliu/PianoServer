@@ -13,4 +13,13 @@
 
 <ul class="list-group industry-list">
   <%= render partial: "industry_item", collection: @industries %>
+  <button class='btn btn-default sync-neil-categories'>同步ES分类</button>
 </ul>
+
+<script type="text/javascript">
+  (function () {
+    $('button.sync-neil-categories').click(function (e) {
+      $.post('<%= sync_es_categories_admins_industries_path %>')
+    });
+  })();
+</script>

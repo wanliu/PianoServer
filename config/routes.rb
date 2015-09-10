@@ -59,7 +59,11 @@ Rails.application.routes.draw do
     resources :messages
     resources :contacts
     resources :attachments
-    resources :industries
+    resources :industries do
+      collection do
+        post :sync_es_categories
+      end
+    end
   end
 
   namespace :api do
