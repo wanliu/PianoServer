@@ -9,6 +9,7 @@ class Shops::AdminController < Shops::Admin::BaseController
     else
       render json: {errors: @shop.errors}, status: :unprocessable_entity
     end
+  end
 
   def update_shop_profile
     @shop.update(shop_profile_params)
