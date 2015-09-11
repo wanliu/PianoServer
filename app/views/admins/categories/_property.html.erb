@@ -1,0 +1,21 @@
+<li class="list-group-item property-<%= property.id %> <%= property.inhibit? ? "disabled" : "" %>">
+  <%= best_in_place property, :title, :as => :input, url: admin_property_path(industry, category, property), inner_class: 'form-control' %>
+
+  <div class="flags pull-right">
+    <% if property.upperd? %>
+      <%= icon :flash %>
+    <% end %>
+
+    <% if property.inhibit? %>
+      <%= icon :'eye-close' %>
+    <% end %>
+  </div>
+
+  <div class="btn-group btn-group-sm pull-right">
+    <%= link_to remove_property_category_path(industry, category, property_id: property), method: :delete, remote: true, class: 'btn btn-link ' do %>
+      <%= icon :remove %>
+    <% end %>
+  </div>
+
+  <%#= text_field_tag :title, property.title, placeholder: '新属性名', class: 'form-control', focus: true %>
+</li>

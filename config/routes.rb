@@ -59,7 +59,21 @@ Rails.application.routes.draw do
     resources :messages
     resources :contacts
     resources :attachments
-    resources :industries
+    resources :industries do
+      resources :categories do
+        resources :properties
+
+        member do
+          post :add_property
+          patch :update_property
+          delete :remove_property
+          get :show_inhibit
+          get :hide_inhibit
+        end
+      end
+    end
+
+    resources :products
   end
 
   namespace :api do

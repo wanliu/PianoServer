@@ -1,0 +1,48 @@
+<div class="panel panel-default category-edit category-<%= category.id %>">
+  <div class="panel-body">
+    <form>
+      <div class="form-group">
+        <label for="exampleInputPassword1">标题</label>
+        <input type="text" class="form-control" id="exampleInputPassword1" placeholder="标题">
+      </div>
+    </form>
+    <h4>上级属性</h4>
+      <!-- TODO: -->
+      <%= select_tag "up_property", options_from_collection_for_select(Category.all, "id", "title"), class: "form-control" %>
+    <h4>属性列表
+      <% if category.inhibit_count > 0 %>
+        <small>
+          <%= link_to show_inhibit_admins_industry_category_path(industry, category), class: 'toggle_inhibit', remote: true do %>
+            显示(压制 <%= category.inhibit_count %>...)
+          <% end %>
+        </small>
+      <% end %>
+      <div class="btn-group pull-right add-property" role="toolbar" aria-label="...">
+        <div class="dropdown">
+          <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <%= icon :plus%>
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+            <li class='no-selected' >
+              <input type="text" name="q_cate" class="form-control" />
+            </li>
+            <% if @remind_properties.each do |property| %>
+              <li>
+                <%= link_to add_property_cateogry_path(industry, category, property_id: property), method: :post, remote: true do %>
+                  <%= property.title %>
+                  <span class="label label-primary pull-right">创建</span>
+                <% end %>
+              </li>
+            <% end.empty? %>
+              <li><h6 class="text-center">(已无可用属性)</h6></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </h4>
+    <ul class="list-group property-list">
+      <%= render partial: "property", collection: @properties, locals: { category: category, industry: industry } %>
+    </ul>
+  </div>
+</div>
