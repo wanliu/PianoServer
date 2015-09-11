@@ -5,6 +5,7 @@ class @CategoryListWrap
     @categoryLists = for level in [1..4]
       @generateCategoryList(level)
 
+    @length = 4
     @$leftBtn = @$container.prev()
     @$rightBtn = @$container.next()
 
@@ -15,11 +16,14 @@ class @CategoryListWrap
       @categoryChanged(data, 0)
     )
 
+    @initColNumAndCurrentMax()
+    $(window).bind('resize', @resizeHandler.bind(@))
+
   generateCategoryList: (level) ->
     levelClass = ['level', level].join('')
 
     template = """
-      <div class="col-sm-3">
+      <div class="category-list-item">
         <ul class="list-group #{levelClass}">
         </ul>
       </div>
@@ -43,27 +47,34 @@ class @CategoryListWrap
 
   categoryChanged: (data, level) ->
     @resetListsContent(data, level)
-    @changeBreadcrumb()
+    #@changeBreadcrumb()
 
   resetListsContent: (data, level) ->
-    length = @categoryLists.length
+    # 如果是最后一级分类点击则不作任何操作
+    return if level == @length
 
+    @levelCount = level + 1
+
+    # 重新生成分类数据
     for categoryList in @categoryLists
       _level = categoryList.level
 
-      if _level > level
-        if _level == level + 1
-          categoryList.resetContent(data)
-        else
-          categoryList.emptyContent(data)
+      continue if _level <= level
 
-    return @resetPosition() if level < length - 1
+      if _level == @levelCount
+        categoryList.resetContent(data)
+      else
+        categoryList.emptyContent(data)
 
-    return if level == length
+    @currentLevel = @levelCount - 1
 
-    if data.length > 0
-      @scrollRight()
+    if @levelCount > @col
+      if data.length > 0
+        @scrollRight()
+      else if @levelCount = @col + 1
+        @resetPosition()
     else
+      @currentLevel = @levelCount
       @resetPosition()
 
   changeBreadcrumb: () ->
@@ -85,17 +96,43 @@ class @CategoryListWrap
     @$breadcrumb.html(pathNames.join(''))
 
     @$breadcrumb.find('a').bind('click', (e) =>
-      cateId = $(e.currentTarget).attr('category-id')
-      selector = ['.list-group-item[category-id=', cateId, ']'].join('')
-
-      @$container.find(selector).trigger('click')
+      $target = $(e.currentTarget)
+      cateId = $target.attr('category-id')
+      $parent = $target.parent()
+      level = $parent.index() + 1
     )
 
   bindPrevBtnClickEvent: () ->
-    @$leftBtn.bind('click', @scrollLeft.bind(@))
+    @$leftBtn.bind('click', @scrolleLeft.bind(@))
 
   bindNextBtnClickEvent: () ->
     @$rightBtn.bind('click', @scrollRight.bind(@))
+
+  scrolleLeft: () ->
+    @$container.animate({
+      'margin-left': '+=290'
+    }, 250, () =>
+      @currentLevel -= 1
+      @$rightBtn.addClass('btn-visible')
+
+      if @currentLevel <= @col
+        @$leftBtn.removeClass('btn-visible')
+
+      @currentLevelChanged()
+    )
+
+  scrollRight: () ->
+    @$container.animate({
+      'margin-left': '-=290'
+    }, 250, () =>
+      @currentLevel += 1
+      @$leftBtn.addClass('btn-visible')
+
+      if @currentLevel > @col
+        @$rightBtn.removeClass('btn-visible')
+
+      @currentLevelChanged()
+    )
 
   resetPosition: () ->
     @$container.animate({
@@ -105,19 +142,56 @@ class @CategoryListWrap
       @$leftBtn.removeClass('btn-visible')
     )
 
-  scrollLeft: () ->
+  resizeHandler: () ->
+    width = $(window).width()
+
+    if width >= 1200
+      @col = 3
+    else if width >= 992
+      @col = 2
+    else
+      @col = 1
+
+    @currentLevel = 1 if not @currentLevel
+    return if not @lastCol?
+
+    diffCol = @col - @lastCol
+    @lastCol = @col
+
+    return if diffCol == 0
+
     @$container.animate({
-      'margin-left': '0'
+      'margin-left': '+=' + diffCol * 290
     }, 250, () =>
-      @$leftBtn.removeClass('btn-visible')
-      @$rightBtn.addClass('btn-visible')
+
     )
 
-  scrollRight: () ->
-    @$container.animate({
-      'margin-left': '-33.33%'
-    }, 250, () =>
-      @$rightBtn.removeClass('btn-visible')
-      @$leftBtn.addClass('btn-visible')
-    )
+  initColNumAndCurrentMax: () ->
+    @resizeHandler()
+    @levelCount = 1
+    @currentLevel = 1
+
+  currentLevelChanged: () ->
+    if @levelCount > @col
+      if @currentLevel == @levelCount
+        @$rightBtn.removeClass('btn-visible')
+    else
+      if @currentLevel < @col
+        @$leftBtn.removeClass('btn-visible')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

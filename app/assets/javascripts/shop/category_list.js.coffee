@@ -13,13 +13,21 @@ class @CategoryList
     @bindClickEvent()
 
   generateCategoryItem: (category) ->
-    { id, name} = category
+    { id, name, is_leaf } = category
 
-    template = """
-      <li class="list-group-item" category-id="#{id}">
-        #{name}
-      </li>
-    """
+    if is_leaf
+      template = """
+        <li class="list-group-item" category-id="#{id}">
+          #{name}
+        </li>
+      """
+    else
+      template = """
+        <li class="list-group-item has-children" category-id="#{id}">
+          #{name}
+          <span class="children"></span>
+        </li>
+      """
 
     $(template)
 
@@ -28,8 +36,6 @@ class @CategoryList
 
   clickHandler: (e) ->
     $target = $(e.currentTarget)
-
-    # return if $target.hasClass('active')
 
     $target.addClass('active').siblings().removeClass('active')
     category_id = $target.attr('category-id')
