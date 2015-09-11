@@ -23,6 +23,12 @@ class Admins::IndustriesController < Admins::BaseController
 
   end
 
+  def sync_es_categories
+    EsCategoriesSyncJob.perform_later 'overwrite'
+
+    render json: {}, status: :ok
+  end
+
   private
 
   def industry_params

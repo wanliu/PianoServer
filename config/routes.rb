@@ -60,6 +60,10 @@ Rails.application.routes.draw do
     resources :contacts
     resources :attachments
     resources :industries do
+      collection do
+        post :sync_es_categories
+      end
+
       resources :categories do
         resources :properties
 
