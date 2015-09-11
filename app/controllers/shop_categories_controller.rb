@@ -1,20 +1,17 @@
 class ShopCategoriesController < ApplicationController
-  def index
-    page = params[:page].presence || 1
-    per = params[:per].presence || 9
+  before_filter :set_shop
+  before_filter :set_shop_category, only: [ :show ]
 
-    @shop_categories = ShopCategory.where(shop_id: params[:shop_id]).page(page).per(per)
+  def index
+    @shop_categories = @shop.categories.page(page).per(per)
   end
 
   def show
     page = params[:page].presence || 1
 
-    @shop_category = ShopCategory.find(params[:id])
-    @shop = @shop_category.shop
-
     if @shop_category.has_children
       per = params[:per].presence || 9
-      @shop_categories = ShopCategory.where(parent_id: @shop_category).page(page).per(per)
+      @shop_categories = Category.where(parent_id: @shop_category).order(id: :asc).page(page).per(per)
       @items = []
     else
       per = params[:per].presence || 8
@@ -22,4 +19,14 @@ class ShopCategoriesController < ApplicationController
       @shop_categories = []
     end
   end
+
+  private
+    def set_shop
+      @shop = Shop.find_by(name: params[:shop_id])
+    end
+
+    def set_shop_category
+      @shop_category = Category.find(params[:id])
+      @root = @shop.categories.find(@shop_category.root.id)
+    end
 end

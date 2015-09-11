@@ -1,0 +1,70 @@
+<h1 class="page-header template-page-header">
+  编辑专题
+  <div class="subject-toggle">
+    <label class="toggle-box">
+      <%= check_box_tag :status, 'status', @subject.open?, class: 'toggle-checkbox'%>
+      <div class="track">
+        <div class="handle"></div>
+      </div>
+    </label>
+  </div>
+</h1>
+
+<%= render "form" %>
+
+<div class="edit_template_wrap">
+  <%= render partial: "edit_preview_template", collection: @subject.templates.order(id: :asc), as: :template, locals: {subject: @subject} %>
+</div>
+
+<%= render partial: "admins/templates/new_template", locals: {template: @new_template, subject: @subject} %>
+
+<div id="variable_editor_modal" class="modal fade">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Modal title</h4>
+      </div>
+      <div class="modal-body">
+        <p>One fine body&hellip;</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary save">Save changes</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div>
+  <button class='btn btn-default new-template'>新建模板</button>
+</div>
+
+<script type="text/javascript">
+  var EditVariableModal = window.EditVariableModal;
+  var variableModal = EditVariableModal.getModal();
+
+  $('button.new-template').click(function (event) {
+    $('#new-template').show();
+  });
+
+  var subject_id = '<%= @subject.id %>';
+
+  $('.template-page-header .toggle-checkbox').change(function() {
+    var is_open = $(this).prop('checked');
+
+    $.ajax({
+      url: '/admins/subjects/' + subject_id,
+      data: {
+        subject: {
+          status: is_open ? 'open' : 'close'
+        }
+      },
+      type: 'PUT',
+      dataType: 'json',
+      success: function() {
+
+      }
+    });
+  });
+</script>

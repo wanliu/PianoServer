@@ -1,17 +1,8 @@
 <li class="list-group-item clearfix">
-  <% if @order.buyer_id == current_anonymous_or_user.id %>
-    <div class="col-xs-4 col-sm-4">
-      商店
-    </div>
-    <div class="col-xs-8 col-sm-8 text-right">
-      <%= @order.supplier.name %>
-    </div>
-  <% else %>
-    <div class="col-xs-4 col-sm-4">
-      用户
-    </div>
-    <div class="col-xs-8 col-sm-8 text-right">
-      <%= @order.buyer.name %>
-    </div>
-  <% end %>
+  <div class="col-xs-4 col-sm-4">
+    <%= @order.buyer.name %>
+  </div>
+  <div class="col-xs-8 col-sm-8 text-right">
+    <%= @order.buyer.mobile || '暂无联系方式' %>
+  </div>
 </li>

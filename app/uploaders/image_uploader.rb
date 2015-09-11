@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-IMAGE_UPLOADER_ALLOW_IMAGE_VERSION_NAMES = %w(avatar cover preivew)
+IMAGE_UPLOADER_ALLOW_IMAGE_VERSION_NAMES = %w(default avatar cover preivew)
 class ImageUploader < CarrierWave::Uploader::Base
   include ActionView::Helpers::AssetUrlHelper
   # Include RMagick or MiniMagick support:
@@ -27,18 +27,22 @@ class ImageUploader < CarrierWave::Uploader::Base
     # Settings.assets.gray_image
   end
 
+  def url_with_version(version_name = "default")
+    @url ||= url_without_version
 
-  def url(version_name = "")
-    @url ||= super({})
     version_name = version_name.to_s
     return @url if version_name.blank?
     if not version_name.in?(IMAGE_UPLOADER_ALLOW_IMAGE_VERSION_NAMES)
       # To protected version name using, when it not defined, this will be give an error message in development environment
       raise "ImageUploader version_name:#{version_name} not allow."
     end
-    @url.end_with?(asset_path('gray_blank.gif')) ? @url : [@url,version_name].join("!") # thumb split with "!"
+    version_urls = version_name == "default" ? [@url] : [@url,version_name]
+    blank_image? ? @url : version_urls.join("!")
   end
 
+  def blank_image?()
+    url_without_version && url_without_version.end_with?(asset_path('gray_blank.gif'))
+  end
 
   # Process files as they are uploaded:
   # process :scale => [200, 300]
@@ -74,4 +78,6 @@ class ImageUploader < CarrierWave::Uploader::Base
   def asset_path(*args)
     ActionController::Base.helpers.asset_path *args
   end
+
+  alias_method_chain :url, :version
 end

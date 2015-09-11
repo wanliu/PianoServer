@@ -1,0 +1,28 @@
+.btn-upload {
+  display: inline-block;
+  font-weight: normal;
+  text-align: center;
+  vertical-align: middle;
+  border-radius: 4px;
+  // padding: 6px 12px;
+  background-color: white;
+  touch-action: manipulation;
+  color: black;
+  border-width: 1px;
+  border-style: solid;
+
+  .qq-upload-button {
+    display: block;
+    width: auto;
+    padding: 6px 12px;
+    text-align: center;
+    background-color: transparent;
+    border: 0px;
+    color: inherit;
+  }
+
+  .qq-upload-list {
+    display: none;
+  }
+}
+

@@ -1,18 +1,22 @@
 class PromotionsController < ApplicationController
   include DefaultAssetHost
+  include ContentManagementService::ContentController
+
   before_action :set_promotion, only: [:show, :update, :destroy, :chat, :shop]
+
+  register_render_template :homepage_header, only: [ :index ]
 
   respond_to :json, :html
   # GET /promotions
   # GET /promotions.json
   def index
-    @promotions = Promotion.find(:all, from: :active, params: query_params)
+    @promotions = Promotion.find(:all, from: :active, params: query_params).to_a
   end
 
   # GET /promotions/1
   # GET /promotions/1.json
   def show
-    @promotion
+    @promotion.punch request
     @shop = Shop.find(@promotion.shop_id)
   end
 

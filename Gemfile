@@ -32,10 +32,19 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem "less-rails" #Sprockets (what Rails 3.1 uses for its asset pipeline) supports LESS
 gem 'bootstrap-sass', '~> 3.3.5'
 gem 'nprogress-rails'
+gem 'momentjs-rails', '>= 2.9.0'
+gem 'bootstrap3-datetimepicker-rails', '~> 4.15.35'
+gem 'ace-rails-ap'
+gem 'best_in_place', '~> 3.0.1'
+
 gem 'activeresource'
 gem 'scoped_search'
 gem 'json-patch'
 gem 'hashdiff'
+gem 'chinese_pinyin'
+gem 'data-confirm-modal', github: 'ifad/data-confirm-modal'
+gem 'liquid-rails'
+gem "punching_bag"
 
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'
@@ -97,5 +106,6 @@ group :development, :test do
   gem 'thin'
   gem "teaspoon-jasmine"
   gem 'spring-commands-teaspoon'
+  gem "table_print"
 end
 

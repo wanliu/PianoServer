@@ -13,11 +13,11 @@
     position: relative;
     height: 100%;
     overflow: auto;
+
     .chat-items{
       position: relative;
       padding-bottom: 65px;
     }
-
   }
 
   .order-buttons{
@@ -63,19 +63,6 @@
     }
   }
 
-  .payment-menu{
-    right: 0;
-    min-width: 100px;
-    left: auto;
-  }
-
-  .address-menu{
-    right: 0;
-    left: auto;
-    max-width: 100%;
-    min-width: 100px;
-  }
-
   .order-item-brief{
     display: table;
     width: 100%;
@@ -114,7 +101,6 @@
           line-height: 22px;
         }
       }
-
     }
 
     .order-item-right{
@@ -128,8 +114,7 @@
 
   .list-group{
     font-size: 16px;
-    margin-bottom: 0;
-    margin-top: -1px;
+    margin-bottom: -1px;
 
     .dropdown-menu > li.selected {
       > a, >a:hover{
@@ -171,7 +156,7 @@
       }
 
       .btn-add{
-        padding: 3px 6px;
+        padding: 3px 5px;
       }
 
       .operate-block{
@@ -284,22 +269,15 @@
       input[type="text"]{
         width: 100%;
         text-align: center;
+        border-width: 1px 0;
       }
 
       .btn-minus, .btn-plus{
-        border-style: solid;
-        border-color: #CCCCCC;
         color: #707070;
         background: #EEEEEE;
         outline: none;
-      }
-
-      .btn-minus{
-        border-width: 1px 0 1px 1px;
-      }
-
-      .btn-plus{
-        border-width: 1px;
+        height: 34px;
+        border: 1px solid #CCCCCC;
       }
     }
 

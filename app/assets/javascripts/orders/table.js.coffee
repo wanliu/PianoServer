@@ -48,7 +48,6 @@ class @OrderTable extends @Event
     @$().bind('item:add', @onAddChange.bind(@))
     @$().bind('item:remove', @onRemoveChange.bind(@))
     @$().bind('item:replace', @onReplaceChange.bind(@))
-    @$().bind('order:total:change', @insertRejectMessage.bind(@))
 
     @on 'init', () =>
       $.ajax({
@@ -61,6 +60,7 @@ class @OrderTable extends @Event
         @checkDiff(diffs)
 
     @on 'order', @onOrderCommand.bind(@)
+    @on 'order-address', @onAddressChange.bind(@)
 
   unbindAllEvents: () ->
     @itemList.off('click')
@@ -76,7 +76,7 @@ class @OrderTable extends @Event
     @$().off('click', '.order-item-price .btn-plus')
     @$().off('click', '.order-total-edit .btn-minus')
     @$().off('click', '.order-total-edit .btn-plus')
-    @$().off('click', '.remove-item-icon' )
+    @$().off('click', '.btn-remove' )
 
     @$().off('mousedown', '.btn-agrees')
     @$().off('mouseup', '.btn-agrees')
@@ -91,6 +91,7 @@ class @OrderTable extends @Event
     # @$().bind('order:total:change', )
     @$().off('init')
     @$().off('order')
+    @$().off('order-address')
 
   onClicked: (event) ->
     $target = $(event.target)
@@ -287,6 +288,7 @@ class @OrderTable extends @Event
 
   onReplaceChange: (e, data) ->
     {key, src, dest} = data
+
     if key == 'total'
       $total = @$().find('.total')
       $value = $total.find('.text')
@@ -450,8 +452,8 @@ class @OrderTable extends @Event
     @pushOp(op, path, value)
 
   pushRemoveItemOp: (itemId) ->
-    path = "/items/#{itemId}"
-    @pushOp('remove', path, null)
+    path = "/items/#{itemId}/deleted"
+    @pushOp('replace', path, true)
 
   indexOf: (item) ->
     $(".item-list .list-group-item").index(item)
@@ -462,7 +464,7 @@ class @OrderTable extends @Event
       [itemObj, key] = @parsePath(path)
       switch op
         when '+'
-          @send('table:add', {key: key, src: src, dest: dest})
+          @send('item:add', {key: key, src: src, dest: dest})
         when '-'
           itemObj.send('item:remove', {key: key, src: src, dest: dest})
         when '~'
@@ -531,8 +533,8 @@ class @OrderTable extends @Event
     $.get "/orders/#{@orderId}", {inline: true}, (json) =>
       $('.order-table').html(json.html) if json.html?
 
-  removeItem: () ->
-    confrimation = confirm(' 您确定删除者这个商品项吗?')
+  removeItem: (event) ->
+    confrimation = confirm('您确定删除者这个商品项吗?')
 
     if confrimation == true
       $li = $(event.target).parents('.list-group-item:first')
@@ -541,7 +543,16 @@ class @OrderTable extends @Event
 
       @pushRemoveItemOp(index)
 
-  insertRejectMessage: () ->
+  onAddressChange: (e, data) ->
+    $wrap = @$().find('.chat-order-address')
+    $wrap.parent()
+         .stop(true, true)
+         .addClass('order-item-modify')
+         .effect('pulsate', times: 3, duration: 1500, () ->
+            $(this).removeClass('order-item-modify')
+          )
+
+    $wrap.find('#address-text').text(data.dest)
 
 
 

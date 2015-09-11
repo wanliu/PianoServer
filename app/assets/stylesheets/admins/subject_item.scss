@@ -1,0 +1,15 @@
+.subject-item{
+  display: table;
+  width: 100%;
+
+  .subject-info{
+    display: table-cell;
+  }
+
+  .subject-toggle{
+    display: table-cell;
+    width: 55px;
+    line-height: 100%;
+    vertical-align: middle;
+  }
+}

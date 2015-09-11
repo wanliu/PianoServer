@@ -18,7 +18,7 @@ class OrdersController < ApplicationController
 
   def show
     # if params[:inline]
-    #   render json: { order: @order, html: :partial => "order"
+    #   render json: { order: @order, html: :partial => "order" }
     # else
     #   render json: { order: @order.origin_hash }
     # end
@@ -42,6 +42,7 @@ class OrdersController < ApplicationController
     begin
       # 应用修改记录， 返回一个新的 json
       new_json    = @order.apply_patch(patch_params)
+
       # 用差分算法比较两个同的 hash, 返回 diff 数组
       @diffs = diff_hash @order.update_hash, new_json
       unless @diffs.blank?
@@ -59,15 +60,28 @@ class OrdersController < ApplicationController
   end
 
   def set_address
-    @order = Order.find(params[:order_id])
-    if params[:default_location_id].to_i > 0
-      @order.delivery_location_id = params[:default_location_id]
-      @order.save
+    old_address = @order.delivery_address_title
+
+    delivery_address = params[:delivery_address]
+
+    if delivery_address[:location_id].to_i > 0
+      @order.delivery_location_id = delivery_address[:location_id]
     else
-      @order.create_delivery_location(params.require(:address).permit(:id,:contact,:zipcode,:contact_phone,:province_id,:city_id,:region_id))
+      @order[:data] ||= {}
+      @order[:data]["delivery_address"] = delivery_address
     end
-    render json: @order.delivery_location
-    # head :ok
+
+    @order.save
+
+    new_address = @order.delivery_address_title
+
+    msg = modify_order('delivery_address', old_address, new_address)
+
+    MessageSystemService.push_message current_anonymous_or_user.id, other_side, msg, to: [other_side], type: 'order'
+    MessageSystemService.push_command current_anonymous_or_user.id, other_side, {command: 'order-address', dest: new_address}.to_json
+
+    # render json: @order.delivery_location
+    head :ok
   end
 
   def diff
@@ -158,24 +172,25 @@ class OrdersController < ApplicationController
   def send_diff_message(diffs)
     user_id = current_anonymous_or_user.id
     index = nil
-    diffItems = {}
-    msgAry = []
+    diff_items = {}
+    msg_ary = []
     msg = nil
+
+    return if diffs.empty?
 
     diffs.each do |op, path, src, dest|
       msg = case op
           when '+' then add_order_item_message(src)
-          when '-' then remove_order_item_message(src)
-          when '~' then update_order_message(diffItems, path, src, dest)
+          when '~' then update_order_message(diff_items, path, src, dest)
           end
 
       unless msg.nil?
-        msgAry.push(msg)
+        msg_ary.push(msg)
       end
     end
 
-    unless diffItems.blank?
-      diffItems.each do |key, item|
+    unless diff_items.empty?
+      diff_items.each do |key, item|
         name = item[:name]
         price = item["price"]
         amount = item["amount"]
@@ -193,34 +208,42 @@ class OrdersController < ApplicationController
         msg = msgs.join('')
       end
 
-      msgAry.unshift(msg)
+      msg_ary.unshift(msg)
     end
 
-    if msg.length > 1
-      msg = msgAry.join('；')
+    return if msg_ary.length == 0
+
+    if msg_ary.length > 1
+      msg = msg_ary.join('；')
+    else
+      msg = msg_ary.join('')
     end
 
     MessageSystemService.push_message user_id, other_side, msg, to: [other_side], type: 'order'
-
     MessageSystemService.push_command user_id, other_side, {command: 'order', diff: diffs}.to_json
   end
 
-  def update_order_message(diffItems, path, src, dest)
+  def update_order_message(diff_items, path, src, dest)
     if path =~ PROMPT_MATCHS[:ITEMS]
-      modify_order_items(diffItems, path, src, dest)
+      modify_order_items(diff_items, path, src, dest)
     else
       modify_order(path, src, dest)
     end
   end
 
-  def modify_order_items(diffItems, path, src, dest)
+  def modify_order_items(diff_items, path, src, dest)
     m = path.match(PROMPT_MATCHS[:ITEMS])
     index, key = m[1].to_i, m[2]
+    order_item = @order.items[index]
 
-    diffItem = diffItems[index] ||= {}
-    diffItem[:name] = @order.items[index].title
+    if key == "deleted" && src == false && dest == true
+      return remove_order_item_message(order_item)
+    end
 
-    item = diffItem[key] ||= {}
+    diff_item = diff_items[index] ||= {}
+    diff_item[:name] = order_item.title
+
+    item = diff_item[key] ||= {}
 
     item[:src] = src if item[:src].blank?
     item[:dest] = dest

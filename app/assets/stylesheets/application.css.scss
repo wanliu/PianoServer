@@ -17,6 +17,8 @@
  *= require _common/bubble
  *= require _common/animate
  *= require _common/popup
+ *= require _common/checkbox
+ *= require _common/upload
  *= require_tree ./application
  *= require_tree ./chats
  *= require_tree ./locations
@@ -90,7 +92,39 @@ body {
       padding-top: 15px;
       padding-bottom: 15px;
   }
+
+  .navbar-responsive-collapse.collapse.in {
+    .navbar-right {
+      position: absolute;
+      right: 20px;
+      width: 150px;
+      top: 50px;
+      background-color: white;
+      height: auto;
+      max-height: 400px;
+    }
+  }
+
+  .navbar-responsive-collapse.collapsing {
+    position: absolute;
+    top: 49px;
+    right: 35px;
+    width: 150px;
+    max-height: 400px;
+    height: auto;
+    background-color: white;
+    padding: 0px;
+    overflow: hidden;
+    // -webkit-transition-property: height, visibility;
+    // transition-property: height, visibility;
+    // -webkit-transition-duration: 0.35s;
+    // transition-duration: 0.35s;
+    // -webkit-transition-timing-function: ease;
+    // transition-timing-function: ease;
+  }
 }
+
+
 
 .navbar-collapse .navbar-nav{
   max-height: 50px;

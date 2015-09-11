@@ -122,8 +122,11 @@ class @Chat
 
   onCommand: (message) ->
     command = JSON.parse(message.content)
+
     if command.command == 'order' and @table?
-        @table.send('order', command)
+      @table.send('order', command)
+    else if command.command == 'order-address' and @table?
+      @table.send('order-address', command)
 
   onHistoryMessage: () ->
     @getHistoryMessage @earlyTime, @_loadMoreProcess

@@ -3,7 +3,9 @@
 <%= content_for :module, :detail %>
 
 <div class="promotion-detail-container" data-promotion-id="<%= promotion.id %>" >
-  <%= image_tag(promotion.image_url, class: "promotion-poster") %>
+  <div class="promotion-poster-image">
+    <%= image_tag(promotion.image_url, class: "promotion-poster") %>
+  </div>
 
   <div class="price-period clearfix">
     <div class="price-desc">
@@ -64,10 +66,7 @@
     </div>
     <div class="row">
       <div class="col-xs-7 col-md-7">
-        <p>数&nbsp;&nbsp;量：</p>
-      </div>
-      <div class="col-xs-5 col-md-5">
-        <p class="text-right">库存：<%= promotion.product_inventory %>件</p>
+        <p>库&nbsp;&nbsp;存：<%= promotion.product_inventory %>件</p>
       </div>
     </div>
   </div>

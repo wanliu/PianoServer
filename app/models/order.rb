@@ -1,7 +1,7 @@
 class Order < ActiveRecord::Base
   include ThumbImages
   store_accessor :image, :avatar_url
-  store_accessor :data, :updates, :accept_state
+  store_accessor :data, :updates, :accept_state, :delivery_address
 
   MIN_AMOUNT = 6
 
@@ -169,12 +169,15 @@ class Order < ActiveRecord::Base
       "bid" => h["bid"],
       "sid" => h["sid"],
     }
+
     hash["items"] = (h["items"] || []).map do |item|
       price = n(item["price"])
       amount = n(item["amount"])
+      deleted = item["deleted"].blank? ? false : item["deleted"]
       sub_total = n(item["sub_total"].nil? ? price * amount : item["sub_total"])
       sub_total = price * amount
-      total += sub_total
+      total += deleted ? 0 : sub_total
+
       {
         "id" => item["id"],
         "title" => item["title"],
@@ -184,7 +187,8 @@ class Order < ActiveRecord::Base
         "amount" => amount,
         "sub_total" => sub_total,
         "unit" => item["unit"],
-        "unit_title" => item["unit_title"]
+        "unit_title" => item["unit_title"],
+        "deleted" => deleted
       }
     end
     hash["total"] = n(h["total"].nil? ? total : h["total"])
@@ -256,6 +260,14 @@ class Order < ActiveRecord::Base
     #   data[:updates] = nil
     #   save
     # end
+  end
+
+  def delivery_address_title
+    if delivery_location_id == nil or delivery_location_id < 0
+      (delivery_address || {})["location"] || ''
+    else
+      delivery_location.full_address
+    end
   end
 
   private

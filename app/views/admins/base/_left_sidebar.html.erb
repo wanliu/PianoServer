@@ -1,35 +1,42 @@
 <div class="left-sidebar">
-	<ul class="nav nav-sidebar">
-	  <li><%= link_to '仪表盘', admins_dashboards_path %></li>
-	  <li><%= link_to '帐号', admins_accounts_path %></li>
-	  <li><%= link_to '活动', admins_promotions_path %></li>
- 	  <li><%= link_to '消息', admins_messages_path %></li>
-	</ul>
+  <ul class="nav nav-sidebar">
+    <li><%= link_to '仪表盘', admins_dashboards_path %></li>
+    <li><%= link_to '帐号', admins_accounts_path %></li>
+    <li><%= link_to '专题', admins_subjects_path %></li>
+    <li><%= link_to '活动', admins_promotions_path %></li>
+    <li><%= link_to '消息', admins_messages_path %></li>
+  </ul>
 </div>
 
 <script type="text/javascript">
-	var highlightSelected = function() {
-		var current_url = location.pathname;
+  if (typeof String.prototype.startsWith != 'function') {
+    String.prototype.startsWith = function (str){
+      return this.slice(0, str.length) == str;
+    };
+  }
 
-		$('.nav-sidebar>li').each(function(i, elem) {
-			var $href = $(elem).find('a');
-			if ($href.attr('href') === current_url) {
-				$(elem).addClass('active')
-			} else {
-				$(elem).removeClass('active')
-			}
-		});
-	};
+  var highlightSelected = function() {
+    var current_url = location.pathname;
 
-	$(function() {
-		var LeftSideBar = window.LeftSideBar;
-		var leftSidebar = new LeftSideBar($('.left-sidebar'));
+    $('.nav-sidebar>li').each(function(i, elem) {
+      var $href = $(elem).find('a');
+      if (current_url.startsWith($href.attr('href'))) {
+        $(elem).addClass('active')
+      } else {
+        $(elem).removeClass('active')
+      }
+    });
+  };
+
+  $(function() {
+    var LeftSideBar = window.LeftSideBar;
+    var leftSidebar = new LeftSideBar($('.left-sidebar'));
 
 
-		highlightSelected();
-	});
+    highlightSelected();
+  });
 
-	$(document).on('page:change', highlightSelected)
+  $(document).on('page:change', highlightSelected)
 
 
 </script>
