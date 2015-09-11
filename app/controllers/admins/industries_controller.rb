@@ -14,6 +14,12 @@ class Admins::IndustriesController < Admins::BaseController
   end
 
   def edit
+    @categories = category_root.try(:children) || []
+    # demo code, remove after impl
+    @properties = Property.all
+  end
+
+  def destroy
 
   end
 
@@ -31,5 +37,9 @@ class Admins::IndustriesController < Admins::BaseController
 
   def get_industry
     @industry = Industry.find(params[:id])
+  end
+
+  def category_root
+    Category.roots[0]
   end
 end

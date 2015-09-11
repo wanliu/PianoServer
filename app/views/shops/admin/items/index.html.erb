@@ -1,93 +1,66 @@
-<div class="panel panel-default panel-category">
-  <div class="panel-heading">
-    <div class="btn-toolbar" role="toolbar" aria-label="...">
-      <div class="btn-group">
-        <h5>分类</h5>
-      </div>
-      <div class="btn-group">
+<div class="shop-items-container">
+  <div class="panel panel-default category-panel">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        分类
         <ol class="breadcrumb">
-          <li><a href="#">Home</a></li>
-          <li><a href="#">Library</a></li>
-          <li class="active">Data</li>
-          <li><input type="text" placeholder="Search for..."></li>
+
         </ol>
-      </div>
-      <div class="btn-group pull-right">
-        <button class="btn btn-default"><%= icon :remove %></button>
+      </h3>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-4 category-col level1">
+          <div class="list-group">
+
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 category-col level2">
+          <div class="list-group">
+
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 category-col level3">
+          <div class="list-group">
+
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  <div class="panel-body">
-    <div class="row">
-      <div class="col-sm-4">
-        <ul class="list-group">
-          <% @categories.each do |cate| %>
-            <li class="list-group-item"><%= cate.title %></li>
-          <% end %>
-        </ul>
-      </div>
-      <div class="col-sm-4">
-        <ul class="list-group">
-          <li class="list-group-item">Cras justo odio</li>
-          <li class="list-group-item">Dapibus ac facilisis in</li>
-          <li class="list-group-item">Morbi leo risus</li>
-          <li class="list-group-item">Porta ac consectetur ac</li>
-          <li class="list-group-item">Vestibulum at eros</li>
-        </ul>
-      </div>
-      <div class="col-sm-4">
-        <ul class="list-group">
-          <li class="list-group-item">Cras justo odio</li>
-          <li class="list-group-item">Dapibus ac facilisis in</li>
-          <li class="list-group-item">Morbi leo risus</li>
-          <li class="list-group-item">Porta ac consectetur ac</li>
-          <li class="list-group-item">Vestibulum at eros</li>
-        </ul>
-      </div>
 
+  <div class="panel panel-default items-panel">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        店铺商品
+      </h3>
+      <button class="btn btn-success btn-add" disabled="disabled">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        新增
+      </button>
     </div>
+    <div class="panel-body">
+      <table class="table">
+        <thead>
+          <th>商品项名</th>
+          <th>所属分类</th>
+          <th>出售价</th>
+          <th>库存</th>
+          <th>是否在售</th>
+        </thead>
+        <tbody>
+
+        </tbody>
+      </table>
+    </div>
+    <div class="panel-footer"></div>
   </div>
 </div>
 
-<div class="panel panel-default panel-items">
-  <div class="panel-heading">
-    <div class="btn-toolbar" role="toolbar" aria-label="...">
-      <div class="btn-group"><h5>产品</h5></div>
-      <div class="btn-group col-sm-4">
-        <div class="input-group">
-          <span class="input-group-btn">
-            <button class="btn btn-default" type="button">Go!</button>
-          </span>
-          <input type="text" class="form-control" placeholder="Search for...">
-        </div><!-- /input-group -->
-      </div>
-      <div class="btn-group pull-right">
-        <%= link_to new_shop_admin_item_path(@shop.name), class: 'btn btn-success' do %>
-          <%= icon :plus %> 新增
-        <% end %>
-      </div>
-    </div>
-  </div>
-  <%= simple_table_for @items, with: ItemTable%>
-  <div class="panel-footer">
-    <nav>
-      <ul class="pagination">
-        <li>
-          <a href="#" aria-label="Previous">
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-        </li>
-        <li><a href="#">1</a></li>
-        <li><a href="#">2</a></li>
-        <li><a href="#">3</a></li>
-        <li><a href="#">4</a></li>
-        <li><a href="#">5</a></li>
-        <li>
-          <a href="#" aria-label="Next">
-            <span aria-hidden="true">&raquo;</span>
-          </a>
-        </li>
-      </ul>
-    </nav>
-  </div>
-</div>
+<script type="text/javascript">
+  var shop_name = "<%= @shop.name %>",
+      categoryContainer = $('.category-panel'),
+      itemsContainer = $('.items-panel');
+
+  new Categories(shop_name, categoryContainer, itemsContainer)
+</script>

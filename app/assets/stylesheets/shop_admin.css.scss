@@ -13,35 +13,51 @@ body {
   background: #fff;
 }
 
-
 body[module="signup"] {
   background: #ddd;
 }
 
-.content {
-  padding-top: 20px;
-  margin-left: 240px;
-}
+.shop-admin-container {
+  position: absolute;
+  top: 50px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #FFFFFF;
 
+  footer {
+    display: none;
+  }
+}
 
 .relative {
   position: relative;
+  padding-top: 20px;
 }
 
+.content {
+  position: absolute;
+  left: 240px;
+  -webkit-transition: left 0.45s ease-in-out 0s;
+  transition: left 0.45s ease-in-out 0s;
+  right: 0;
+}
 
 .shop.left-sidebar {
   position: absolute;
+  -webkit-transition: left 0.45s ease-in-out 0s;
+  transition: left 0.45s ease-in-out 0s;
+  top: 21px;
 }
-
 
 .left-sidebar {
   width: 240px;
-  // position: fixed;
   left: 0;
   bottom: 0;
   top: 51px;
-  // background-color: #ddd;
-  z-index: 1050;
+  z-index: 999;
+  min-height: 300px;
+  background: #FFFFFF;
 
   .nav .nav>li>a {
     padding-left: 30px;
@@ -59,27 +75,24 @@ body[module="signup"] {
   }
 }
 
+.shop-admin-overlayer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: #333333;
+  opacity: 0.8;
+  display: none;
+}
 
+@media (max-width: 768px) {
+  .shop.left-sidebar {
+    position: fixed;
+    left: -300px;
+  }
 
-// .nav-sidebar {
-//   // margin-right: -21px;
-//   margin-bottom: 20px;
-//   // margin-left: -20px;
-
-// }
-
-// .nav-sidebar > .active > a, .nav-sidebar > .active > a:hover, .nav-sidebar > .active > a:focus {
-//   color: #fff;
-//   background-color: #428bca;
-// }
-
-// .normal-layout {
-//   padding-left: 240px;
-// }
-
-
-// @media (max-width: 768px) {
-//   .normal-layout {
-//     padding-left: 0px;
-//   }
-// }
+  .content {
+    left: 0;
+  }
+}
