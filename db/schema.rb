@@ -11,6 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+
 ActiveRecord::Schema.define(version: 20150907080045) do
 
   # These are extensions that must be enabled in order to support this database
@@ -46,25 +47,16 @@ ActiveRecord::Schema.define(version: 20150907080045) do
 
   create_table "categories", force: :cascade do |t|
     t.string   "name"
-    t.string   "category_type"
-    t.integer  "iid"
-    t.integer  "parent_id"
-    t.integer  "lft",                        null: false
-    t.integer  "rgt",                        null: false
-    t.integer  "depth",          default: 0, null: false
-    t.integer  "children_count", default: 0, null: false
-    t.integer  "position"
+    t.string   "title"
+    t.string   "image"
+    t.string   "ancestry"
+    t.integer  "ancestry_depth", default: 0
     t.jsonb    "data"
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
-    t.string   "image"
-    t.string   "title"
   end
 
-  add_index "categories", ["iid"], name: "index_categories_on_iid", using: :btree
-  add_index "categories", ["lft"], name: "index_categories_on_lft", using: :btree
-  add_index "categories", ["parent_id"], name: "index_categories_on_parent_id", using: :btree
-  add_index "categories", ["rgt"], name: "index_categories_on_rgt", using: :btree
+  add_index "categories", ["ancestry"], name: "index_categories_on_ancestry", using: :btree
 
   create_table "categories_shops", id: false, force: :cascade do |t|
     t.integer "category_id", null: false
@@ -90,6 +82,16 @@ ActiveRecord::Schema.define(version: 20150907080045) do
     t.text     "message"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "industries", force: :cascade do |t|
+    t.string   "name"
+    t.string   "title"
+    t.text     "description"
+    t.string   "image"
+    t.integer  "status",      default: 0
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
   end
 
   create_table "items", force: :cascade do |t|
@@ -206,6 +208,30 @@ ActiveRecord::Schema.define(version: 20150907080045) do
   add_index "punches", ["average_time"], name: "index_punches_on_average_time", using: :btree
   add_index "punches", ["punchable_type", "punchable_id"], name: "punchable_index", using: :btree
 
+  create_table "shop_categories", force: :cascade do |t|
+    t.string   "name"
+    t.string   "category_type"
+    t.integer  "iid"
+    t.integer  "parent_id"
+    t.integer  "lft",                        null: false
+    t.integer  "rgt",                        null: false
+    t.integer  "depth",          default: 0, null: false
+    t.integer  "children_count", default: 0, null: false
+    t.integer  "position"
+    t.jsonb    "data"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.string   "image"
+    t.string   "title"
+    t.integer  "shop_id"
+  end
+
+  add_index "shop_categories", ["iid"], name: "index_shop_categories_on_iid", using: :btree
+  add_index "shop_categories", ["lft"], name: "index_shop_categories_on_lft", using: :btree
+  add_index "shop_categories", ["parent_id"], name: "index_shop_categories_on_parent_id", using: :btree
+  add_index "shop_categories", ["rgt"], name: "index_shop_categories_on_rgt", using: :btree
+  add_index "shop_categories", ["shop_id"], name: "index_shop_categories_on_shop_id", using: :btree
+
   create_table "shops", force: :cascade do |t|
     t.integer  "owner_id"
     t.string   "name"
@@ -292,4 +318,5 @@ ActiveRecord::Schema.define(version: 20150907080045) do
     t.datetime "updated_at",  null: false
   end
 
+  add_foreign_key "shop_categories", "shops"
 end

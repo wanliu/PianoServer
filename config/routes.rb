@@ -59,6 +59,7 @@ Rails.application.routes.draw do
     resources :messages
     resources :contacts
     resources :attachments
+    resources :industries
   end
 
   namespace :api do
@@ -78,6 +79,8 @@ Rails.application.routes.draw do
       get 'shop/:shop_id', to: "promotions#shop", as: :shop
     end
   end
+
+  resources :categories
 
   resources :shops, only: [ :show ]
 
@@ -112,7 +115,7 @@ Rails.application.routes.draw do
       get "/about", to: "shops#about"
     end
 
-    resources :categories, controller: 'shop_categories'
+    resources :shop_categories
     resources :items
 
     namespace :admin, module: 'shops/admin' do
@@ -121,17 +124,21 @@ Rails.application.routes.draw do
       post "/upload_shop_logo", to: "admin#upload_shop_logo"
       patch "/shop_profile", to: "admin#update_shop_profile"
 
-      resources :categories, constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do
+      resources :shop_categories, constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do
         member do
-          get "/:child_id", to: "categories#show_by_child", as: :child
-          post "/:parent_id", to: "categories#create_by_child"
-          put "/:child_id", to: "categories#update_by_child"
-          post "/:child_id/upload_image", to: "categories#upload_image"
-          delete "/:child_id", to: "categories#destroy_by_child"
+          get "/:child_id", to: "shop_categories#show_by_child", as: :child
+          post "/:parent_id", to: "shop_categories#create_by_child"
+          put "/:child_id", to: "shop_categories#update_by_child"
+          post "/:child_id/upload_image", to: "shop_categories#upload_image"
+          delete "/:child_id", to: "shop_categories#destroy_by_child"
         end
       end
 
-      resources :items
+      resources :items do
+        collection do
+          get "load_categories", to: "items#load_categories"
+        end
+      end
     end
   end
 

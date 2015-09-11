@@ -1,0 +1,16 @@
+<h1 class="page-header">行业   <div class="btn-group pull-right" role="toolbar" aria-label="...">
+  <%= link_to new_admins_industry_path, class: "btn btn-default" do %>
+    <%= icon :plus%>
+  <% end %>
+<!--     <button type="button" class="btn btn-default">Middle</button>
+    <button type="button" class="btn btn-default">Right</button> -->
+  </div>
+</h1>
+
+<div class="btn-toolbar" role="toolbar" aria-label="...">
+
+</div>
+
+<ul class="list-group industry-list">
+  <%= render partial: "industry_item", collection: @industries %>
+</ul>

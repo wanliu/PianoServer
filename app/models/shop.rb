@@ -6,7 +6,8 @@ class Shop < ActiveRecord::Base
   belongs_to :location
   belongs_to :owner, class_name: 'User'
 
-  has_and_belongs_to_many :categories
+  # has_and_belongs_to_many :categories
+  has_one :shop_category
   has_many :items
 
   store_accessor :image, :avatar_url

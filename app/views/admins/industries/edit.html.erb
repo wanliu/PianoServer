@@ -1,0 +1,28 @@
+<h1 class="page-header template-page-header">
+  编辑行业
+  <small><%= @industry.title %></small>
+  <div class="industry-toggle">
+    <label class="toggle-box">
+      <%= check_box_tag :status, 'status', @industry.open?, class: 'toggle-checkbox'%>
+      <div class="track">
+        <div class="handle"></div>
+      </div>
+    </label>
+  </div>
+</h1>
+
+<%= render "form" %>
+
+<div class="panel panel-default">
+  <div class="panel-heading">品牌汇集</div>
+  <div class="panel-body">
+    Panel content
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">分类</div>
+  <div class="panel-body">
+    Panel content
+  </div>
+</div>

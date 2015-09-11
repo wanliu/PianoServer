@@ -16,6 +16,7 @@
 //= require _common/fileuploader
 //= require _common/hammer
 //= require_tree ./admins
+//= require_tree ./shop
 //= require_self
 
 

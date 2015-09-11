@@ -1,17 +1,75 @@
 .panel-category {
   .breadcrumb {
     margin: 0px;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .panel-body {
+    padding: 15px 0;
+  }
+
+  .category-wrap {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    height: 250px;
+
+    .category-list {
+      width: 133.33%;
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+    }
+
+    .btn-left, .btn-right {
+      position: absolute;
+      width: 40px;
+      height: 72px;
+      top: 50%;
+      margin-top: -36px;
+      cursor: pointer;
+      display: none;
+      visibility: hidden;
+      z-index: 2;
+
+      &.btn-visible {
+        display: block;
+        visibility: visible;
+      }
+    }
+
+    .btn-left {
+      left: 0;
+      background-image: image-url('arr-left.png');
+
+      &:hover {
+        background-image: image-url('arr-left-red.png');
+      }
+    }
+
+    .btn-right {
+      right: 0;
+      background-image: image-url('arr-right.png');
+
+      &:hover{
+        background-image: image-url('arr-right-red.png');
+      }
+    }
   }
 
   .list-group {
-    min-height: 250px;
-    background-color: #999;
+    height: 250px;
+    background-color: #EEE;
     border-radius: 4px;
     overflow-y: auto;
+    margin-bottom: 0;
   }
 
   .list-group-item {
     padding: 5px 15px;
+    cursor: pointer;
   }
 }
 
