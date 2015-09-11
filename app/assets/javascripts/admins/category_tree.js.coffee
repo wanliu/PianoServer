@@ -21,7 +21,7 @@ class @CategoryTree extends @Event
       @fetchChildren($item)
 
     $item.toggleClass('open')
-    $(".list-group[data-parent-id=#{categoryId}]").toggle()
+    $(".list-group[data-parent-id=#{categoryId}]").slideToggle()
 
   onClickItem: (e) ->
     $item = if $(e.target).is('.category-item') then $(e.target) else $(e.target).parent('.category-item')
