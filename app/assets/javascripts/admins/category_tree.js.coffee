@@ -1,40 +1,5 @@
 #= require _common/event
 
-# class @CategoryTree extends @Event
-
-#   constructor: (@$element, @url) ->
-#     super(@$element)
-#     @$element.on('click', '.category-item>.glyphicon-chevron-right', @onClickItem.bind(@))
-
-#   onClickItem: (e) ->
-#     e.preventDefault()
-
-#     $item = $(e.target).parent('.category-item')
-#     categoryId = $item.attr('data-category-id')
-
-#     @fetchChildren($item)
-
-#     $item.toggleClass('open')
-#     $(".list-group[data-parent-id=#{categoryId}]").toggle()
-
-#   fetchChildren: ($item) ->
-#     categoryId = $item.attr('data-category-id')
-#     childUrl = @url + '/categories/' + categoryId
-
-#     $.get childUrl, (data) =>
-#       isChildrenFetched = $item.attr('data-children-fetched')
-#       isLeaf = $item.attr('data-is-leaf')
-
-#       unless isLeaf == 'true' || isChildrenFetched == 'true'
-#         $item.attr('data-children-fetched', 'true')
-#         categories = data.children
-#         categories.forEach (category) =>
-#           $(".list-group[data-parent-id=#{categoryId}]").append(category.html)
-
-#       $('.category-right').html(data.edit_html)
-
-
-
 class @CategoryTree extends @Event
 
   constructor: (@$element, @url) ->
