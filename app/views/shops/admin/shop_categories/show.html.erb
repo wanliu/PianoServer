@@ -47,8 +47,8 @@
 
     newCategory = new NewShopCategory($('.shop-category-list .new-shop-category')[0], shop_category, createCategoryUrl);
 
-    $('.shop-category-list .shop_category').each(function(i, e) {
-      new EditCategory($(e))
+    $('.shop-category-list .shop-category').each(function(i, e) {
+      new EditShopCategory($(e))
     });
   // };
 

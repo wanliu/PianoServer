@@ -10,14 +10,23 @@
   <%= render partial: "property_item", collection: @properties %>
 </div>
 
-<div>
-  <button class='btn btn-default sync-es-brands'>同步ES品牌</button>
+<div class="btn-toolbar" role="toolbar" aria-label="...">
+  <div class="btn-group" role="group" aria-label="...">
+    <button class='btn btn-default sync-es-categories'>同步ES分类</button>
+  </div>
+  <div class="btn-group" role="group" aria-label="...">
+    <button class='btn btn-default sync-es-brands'>同步ES品牌</button>
+  </div>
 </div>
 
 <script type="text/javascript">
   (function () {
     $('button.sync-es-brands').click(function (e) {
       $.post('<%= sync_es_brands_admins_industries_path %>')
+    });
+
+    $('button.sync-es-categories').click(function (e) {
+      $.post('<%= sync_es_categories_admins_industries_path %>')
     });
   })();
 </script>
