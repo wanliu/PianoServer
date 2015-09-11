@@ -27,7 +27,18 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
   end
 
   def new
+    redirect_to new_step1_shopitems_path(@shop.name)
+  end
+
+  def new_step1
     @item = Item.new(shop_id: @shop.id)
+  end
+
+  def commit_step1
+    redirect_to new_step2_shopitems_path(@shop.name)
+  end
+
+  def new_step2
   end
 
 
