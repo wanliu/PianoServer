@@ -10,13 +10,13 @@ class PromotionsController < ApplicationController
   # GET /promotions
   # GET /promotions.json
   def index
-    @promotions = Promotion.find(:all, from: :active, params: query_params)
+    @promotions = Promotion.find(:all, from: :active, params: query_params).to_a
   end
 
   # GET /promotions/1
   # GET /promotions/1.json
   def show
-    @promotion
+    @promotion.punch request
     @shop = Shop.find(@promotion.shop_id)
   end
 
