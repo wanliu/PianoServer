@@ -10,3 +10,14 @@
   <%= render partial: "property_item", collection: @properties %>
 </div>
 
+<div>
+  <button class='btn btn-default sync-es-brands'>同步ES品牌</button>
+</div>
+
+<script type="text/javascript">
+  (function () {
+    $('button.sync-es-brands').click(function (e) {
+      $.post('<%= sync_es_brands_admins_industries_path %>')
+    });
+  })();
+</script>
