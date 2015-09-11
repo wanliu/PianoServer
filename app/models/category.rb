@@ -6,6 +6,7 @@ class Category < ActiveRecord::Base
   acts_as_tree :cache_depth => true
 
   belongs_to :upper, class_name: "Category", foreign_key: 'upper_properties_id'
+  belongs_to :brand
 
   has_and_belongs_to_many :properties
 

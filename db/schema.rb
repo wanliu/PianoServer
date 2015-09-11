@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150911064701) do
+ActiveRecord::Schema.define(version: 20150911074226) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -64,6 +64,7 @@ ActiveRecord::Schema.define(version: 20150911064701) do
     t.datetime "created_at",                      null: false
     t.datetime "updated_at",                      null: false
     t.integer  "upper_properties_id"
+    t.integer  "brand_id"
   end
 
   add_index "categories", ["ancestry"], name: "index_categories_on_ancestry", using: :btree
@@ -130,6 +131,7 @@ ActiveRecord::Schema.define(version: 20150911064701) do
     t.decimal  "income_price",     precision: 10, scale: 2
     t.jsonb    "images",                                    default: []
     t.integer  "brand_id"
+    t.jsonb    "properties",                                default: {}
   end
 
   create_table "locations", force: :cascade do |t|

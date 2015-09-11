@@ -1,6 +1,8 @@
 class Item < ActiveRecord::Base
   belongs_to :shop_category
   belongs_to :category
+  belongs_to :brand
+  belongs_to :shop
 
   mount_uploaders :images, ImageUploader
 
@@ -8,6 +10,7 @@ class Item < ActiveRecord::Base
   validates :shop, presence: true
   validates :price, presence: true
   validates :product_id, presence: true
+  validates :brand, :category, presence: true
 
   # delegate :name, to: :product
   # delegate :price, to: :product, prefix: true
@@ -34,5 +37,24 @@ class Item < ActiveRecord::Base
 
   def product=(p)
     self.product_id = p.id
+  end
+
+  def method_missing(method, *args)
+    name = method.to_s
+    super unless name.start_with?('property_')
+    property_name = name[9, -1]
+    if property_name.end_with?('=')
+      write_property(property_name[0, -2], *args)
+    else
+      read_property(property_name, *args)
+    end
+  end
+
+  def write_property(name, value)
+
+  end
+
+  def read_property(name)
+
   end
 end

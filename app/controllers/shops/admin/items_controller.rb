@@ -46,7 +46,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     raise_404 if params[:category_id].to_i == 0
     @category = Category.find(params[:category_id])
     @breadcrumb = @category.ancestors
-    @item = Item.new(category_id: @category.id)
+    @item = Item.new(category_id: @category.id, shop_id: @shop.id)
     @properties = @category.with_upper_properties
   end
 
