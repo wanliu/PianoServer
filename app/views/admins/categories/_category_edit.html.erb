@@ -3,7 +3,7 @@
     <form>
       <div class="form-group">
         <label for="exampleInputPassword1">标题</label>
-        <input type="text" class="form-control" id="exampleInputPassword1" placeholder="标题">
+        <%= text_field_tag "title", category.title, placeholder: "标题", class: "form-control" %>
       </div>
     </form>
     <h4>上级属性</h4>

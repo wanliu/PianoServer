@@ -69,6 +69,7 @@ Rails.application.routes.draw do
           delete :remove_property
           get :show_inhibit
           get :hide_inhibit
+          get :children
         end
       end
     end
