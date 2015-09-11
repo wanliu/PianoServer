@@ -31,7 +31,7 @@ class EsBrandsSync
       from += size
     end
 
-    ActiveRecord::Base.connection.reset_pk_sequence!('categories')
+    ActiveRecord::Base.connection.reset_pk_sequence!('brands')
   end
 
   def self.extract_chinese_name!(attributes)
