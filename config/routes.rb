@@ -61,6 +61,7 @@ Rails.application.routes.draw do
     resources :attachments
     resources :industries do
       collection do
+        post :sync_es_brands
         post :sync_es_categories
       end
 
@@ -154,8 +155,13 @@ Rails.application.routes.draw do
       end
 
       resources :items do
+
         collection do
           get "load_categories", to: "items#load_categories"
+          get "/new/step1",  to: "items#new_step1"
+          post "/new/step1", to: "items#commit_step1"
+          get "/new/step2", to: "items#new_step2"
+          post "/new/step2", to: "items#create"
         end
       end
     end

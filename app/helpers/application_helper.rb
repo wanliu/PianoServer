@@ -92,4 +92,8 @@ module ApplicationHelper
     end
   end
 
+  def s(*args)
+    raw(*args)
+  end
+
 end

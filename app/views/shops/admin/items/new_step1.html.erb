@@ -1,0 +1,23 @@
+<div class="panel panel-default panel-category">
+  <div class="panel-heading">
+    产品分类
+    <ol class="breadcrumb">
+
+    </ol>
+  </div>
+  <div class="panel-body">
+    <div class="category-wrap">
+      <div class="btn-left"></div>
+      <div class="category-list"></div>
+      <div class="btn-right"></div>
+    </div>
+  </div>
+</div>
+
+<div class="well">
+  <%= button_to '下一步', new_step1_shopitems_path(@shop.name), class: 'btn btn-info btn-lg', params: { category_id: 0 } %>
+</div>
+
+<script type="text/javascript">
+  new CategoryListWrap($('.panel-category .category-list'), $('.panel-category .breadcrumb'))
+</script>

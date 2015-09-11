@@ -1,0 +1,44 @@
+<div class="panel panel-default panel-item-edit">
+  <div class="panel-heading">
+    <h3>创建自己的产品
+      <small> ->
+      <ol class="breadcrumb">
+        <% @breadcrumb.each do |bread| %>
+          <li><a href="javascript:void(0)"><%=humanize bread.title %></a></li>
+        <% end %>
+        <li class="active"><%= @category.title %></li>
+      </ol> </small></h3>
+  </div>
+  <div class="panel-body">
+    <%= form_for @item, url: shop_admin_items_path(@shop.name), html: { class: "form-horizontal" } do |f| %>
+      <div class="form-group">
+        <%= f.label :images, class: "col-sm-2 control-label" %>
+        <div class="col-sm-10">
+          <% @item.images.each do |image| %>
+            <%= image %>
+          <% end %>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+        <div class="col-sm-10">
+          <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <div class="checkbox">
+            <label>
+              <input type="checkbox"> Remember me
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button type="submit" class="btn btn-default">Sign in</button>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
