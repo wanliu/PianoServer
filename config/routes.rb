@@ -94,6 +94,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :categories
+
   resources :shops, only: [ :show ]
 
   resources :chats
@@ -133,6 +135,8 @@ Rails.application.routes.draw do
     namespace :admin, module: 'shops/admin' do
       get "/", to: "admin#dashboard", as: :index
       get "/profile", to: "admin#profile"
+      post "/upload_shop_logo", to: "admin#upload_shop_logo"
+      patch "/shop_profile", to: "admin#update_shop_profile"
 
       resources :shop_categories, constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do
         member do
@@ -144,7 +148,11 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :items
+      resources :items do
+        collection do
+          get "load_categories", to: "items#load_categories"
+        end
+      end
     end
   end
 

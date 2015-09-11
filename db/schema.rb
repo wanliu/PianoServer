@@ -269,6 +269,7 @@ ActiveRecord::Schema.define(version: 20150910083843) do
     t.string   "provider"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.string   "logo"
   end
 
   create_table "statuses", force: :cascade do |t|
