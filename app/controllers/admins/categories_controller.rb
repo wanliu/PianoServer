@@ -1,19 +1,24 @@
 class Admins::CategoriesController < Admins::BaseController
   before_action :get_industry
-  before_action :get_category, only: [:show, :properties, :update_property, :remove_property, :show_inhibit, :hide_inhibit]
+  before_action :get_category, only: [:properties, :update_property, :remove_property, :show_inhibit, :hide_inhibit, :children, :edit]
   before_action :get_property, only: [:add_property, :update_property, :remove_property]
 
   respond_to :js, only: [:new_property]
 
   def show
-    # @industry.category.find()
-    @categories = @category.children
-    @properties = @category.with_upper_properties
-    @remind_properties = (Property.all - @category.with_upper_properties)
   end
 
   def properties
     @properties = @category.properties
+  end
+
+  def children
+    @categories = @category.children
+  end
+
+  def edit
+    @properties = @category.with_upper_properties
+    @remind_properties = (Property.all - @category.with_upper_properties)
   end
 
   def category_edit
