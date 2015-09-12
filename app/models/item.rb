@@ -6,11 +6,9 @@ class Item < ActiveRecord::Base
 
   mount_uploaders :images, ImageUploader
 
-  validates :shop_category, presence: true
-  validates :shop, presence: true
-  validates :price, presence: true
-  validates :product_id, presence: true
-  validates :brand, :category, presence: true
+  validates :shop_category_id, :category_id, :shop_id, :brand_id, presence: true
+  validates :title, presence: true
+  validates :public_price, :income_price, :price, numericality: true
 
   # delegate :name, to: :product
   # delegate :price, to: :product, prefix: true
@@ -42,9 +40,9 @@ class Item < ActiveRecord::Base
   def method_missing(method, *args)
     name = method.to_s
     super unless name.start_with?('property_')
-    property_name = name[9, -1]
+    property_name = name[9..-1]
     if property_name.end_with?('=')
-      write_property(property_name[0, -2], *args)
+      write_property(property_name[0..-2], *args)
     else
       read_property(property_name, *args)
     end
@@ -55,6 +53,23 @@ class Item < ActiveRecord::Base
   end
 
   def read_property(name)
+    # property_config[name]
+  end
 
+  def valid_properties?
+
+  end
+
+  private
+
+  def property_config(config)
+    case config[:type]
+    when "string"
+      StringProperty.new config
+    when "number"
+      NumberProperty.new config
+    when "boolean"
+      BooleanProperty.new config
+    end
   end
 end

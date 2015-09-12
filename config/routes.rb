@@ -138,6 +138,7 @@ Rails.application.routes.draw do
       post "/upload_shop_logo", to: "admin#upload_shop_logo"
       patch "/shop_profile", to: "admin#update_shop_profile"
 
+      resources :dashboard
       resources :shop_categories, constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do
         member do
           get "/:child_id", to: "shop_categories#show_by_child", as: :child
@@ -154,8 +155,8 @@ Rails.application.routes.draw do
           get "load_categories", to: "items#load_categories"
           get "/new/step1",  to: "items#new_step1"
           post "/new/step1", to: "items#commit_step1"
-          get "/new/step2", to: "items#new_step2"
-          post "/new/step2", to: "items#create"
+          get "/new/step2/category/:category_id", to: "items#new_step2", as: :with_category
+          post "/new/step2/category/:category_id", to: "items#create"
         end
       end
     end

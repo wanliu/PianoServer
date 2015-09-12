@@ -1,6 +1,10 @@
 require 'active_resource'
 class ApplicationController < ActionController::Base
   include DebugMode
+  include ContentFor
+
+  class_attribute :page_title
+
   # include TokenAuthenticatable
   layout "mobile"
   # Prevent CSRF attacks by raising an exception.
@@ -16,6 +20,8 @@ class ApplicationController < ActionController::Base
   before_action :set_meta_user_data
   before_action :current_subject
   before_action :prepare_system_view_path
+  before_action :set_locale
+  before_action :set_title
 
   helper_method :current_anonymous_or_user, :anonymous?
   rescue_from ActionController::RoutingError, :with => :render_404
@@ -59,6 +65,19 @@ class ApplicationController < ActionController::Base
     set_meta_tags debug: Settings.debug
   end
 
+  def set_locale
+    I18n.locale = params[:locale] || I18n.default_locale
+  end
+
+  def set_title
+    pp self.class, controller_name, action_name
+    content_for :title, self.page_title.join('_')
+  end
+
+  def module
+    nil
+  end
+
   private
   def render_404(exception = nil)
     if exception
@@ -76,3 +95,5 @@ class ApplicationController < ActionController::Base
     prepend_view_path File.join(Rails.root, Settings.sites.system.root)
   end
 end
+
+ApplicationController.page_title = [ Settings.app.page_title ]
