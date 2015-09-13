@@ -1,4 +1,7 @@
 class Item < ActiveRecord::Base
+  include DynamicProperty
+
+
   belongs_to :shop_category
   belongs_to :category
   belongs_to :brand
@@ -6,9 +9,16 @@ class Item < ActiveRecord::Base
 
   mount_uploaders :images, ImageUploader
 
+  # dynamic_property prefix: 'property'
+
   validates :shop_category_id, :category_id, :shop_id, :brand_id, presence: true
   validates :title, presence: true
   validates :public_price, :income_price, :price, numericality: true
+  validates :properties, properties: {
+    method_prefix: 'property',
+    definitions: :definition_properties
+  }
+    # definitions: -> (item) { Hash[item.definition_properties.map {|name, cfg| ["property_#{name}", cfg] }] }}
 
   # delegate :name, to: :product
   # delegate :price, to: :product, prefix: true
@@ -16,6 +26,8 @@ class Item < ActiveRecord::Base
   # delegate :brand_name, to: :product, allow_nil: true
   # delegate :category_id, to: :product, prefix: true
   # delegate :additional_fields, to: :product, allow_nil: true
+
+  delegate :definition_properties, to: :category, allow_nil: true
 
   scope :with_category, -> (category_id) do
     category_id.nil? ? all : where("shop_category_id = ?", category_id)
@@ -35,41 +47,5 @@ class Item < ActiveRecord::Base
 
   def product=(p)
     self.product_id = p.id
-  end
-
-  def method_missing(method, *args)
-    name = method.to_s
-    super unless name.start_with?('property_')
-    property_name = name[9..-1]
-    if property_name.end_with?('=')
-      write_property(property_name[0..-2], *args)
-    else
-      read_property(property_name, *args)
-    end
-  end
-
-  def write_property(name, value)
-
-  end
-
-  def read_property(name)
-    # property_config[name]
-  end
-
-  def valid_properties?
-
-  end
-
-  private
-
-  def property_config(config)
-    case config[:type]
-    when "string"
-      StringProperty.new config
-    when "number"
-      NumberProperty.new config
-    when "boolean"
-      BooleanProperty.new config
-    end
   end
 end

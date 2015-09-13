@@ -13,8 +13,7 @@ class Shops::Admin::BaseController < ApplicationController
   end
 
   def shop_page_title
-    self.page_title += [ t("shops.page_title", shop_name: @shop.title) ]
-    pp self.page_title
+    self.page_title += [ t("titles.shops", shop_name: @shop.title) ]
   end
 end
 

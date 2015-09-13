@@ -224,13 +224,21 @@ zh-CN:
     images: 图像
     image: 图像
   controllers:
-    shops:
-    items:
-      create:
-        flash:
-          notice: "恭喜您，商品创建成功。"
+    shops: 商店
+    items: 商品
+  actions:
+    new: 新增
+    index: ''
+    edit: 编辑
+    show: 显示
+  notices:
+    controllers:
+      items:
+        create:: "恭喜您，商品创建成功。"
   modules:
     shop: 商店
     admin: 工作平台
-  shops:
-    page_title: '%{shop_name}店'
+  titles:
+    shops: '%{shop_name}店'
+
+

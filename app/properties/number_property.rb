@@ -1,5 +1,5 @@
 class NumberProperty < Property::Base
-  def initialize(config)
+  def initialize(*args)
     super
 
   end

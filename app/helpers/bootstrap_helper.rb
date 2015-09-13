@@ -35,6 +35,20 @@ module BootstrapHelper
     nil
   end
 
+  def group_with_property_errors(object, property, helper)
+    property_name = "property_#{property.name}"
+    valid = object.errors[property_name].present?
+
+    s "<div class=\"form-group#{" has-error has-feedback" if valid}\">"
+      s "#{helper.label property_name, property.title, class: "col-sm-2 control-label"}"
+      s "<div class=\"col-sm-10\">"
+        s "#{yield}"
+        s "#{error_block if valid}"
+      s "</div>"
+    s "</div>"
+    nil
+  end
+
   private
 
   def error_block

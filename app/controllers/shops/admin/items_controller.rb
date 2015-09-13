@@ -46,11 +46,13 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
   end
 
   def new_step2
+    @title = "创建自己的商品"
     @item = Item.new(category_id: @category.id, shop_id: @shop.id)
     @properties = @category.with_upper_properties
   end
 
   def create
+    @title = "创建自己的商品"
     @properties = @category.with_upper_properties
     prop_params = properties_params(@properties)
     @item = Item.new item_basic_params.merge(shop_id: @shop.id) do |item|
@@ -73,8 +75,8 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
       item.save
     end
     @item = Item.new(category_id: @category.id, shop_id: @shop.id) if @item.valid?
-
-    flash[:notice] = t("controllers.items.create.flash.notice")
+    # pp @item.errors.full_messages
+    flash[:notice] = t("notices.controllers.items.create")
     render :new_step2
   end
 
