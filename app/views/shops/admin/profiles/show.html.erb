@@ -3,7 +3,7 @@
     <h3 class="panel-title">商店档案</h3>
   </div>
   <div class="panel-body">
-    <%= form_for @shop, url: shop_admin_shop_profile_path(@shop.name) do |f| %>
+    <%= form_for @shop, url: shop_admin_profile_path(@shop.name) do |f| %>
       <div class="form-group">
         <%= f.label :logo_url, "商店Logo" %>
         <div class="image-uploader">
@@ -63,7 +63,7 @@
     var token = $("#edit_shop_" + shopId + " input[name=authenticity_token]").val();
 
     var $element = $("#edit_shop_" + shopId + " div.image-uploader-button")[0];
-    var actionUrl = "<%= shop_admin_upload_shop_logo_path(@shop) %>";
+    var actionUrl = "<%= update_shop_profile_shop_admin_profile_path(@shop) %>";
 
     new qq.FileUploader({
       element: $element,
@@ -75,6 +75,6 @@
         var url = responseJSON.url;
         $("#edit_shop_" + shopId + " .image-uploader img").attr('src', url);
       }
-    });    
+    });
   })();
 </script>

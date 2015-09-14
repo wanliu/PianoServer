@@ -1,7 +1,7 @@
 <div class="shop left-sidebar">
 
   <ul class="nav nav-pills nav-stacked">
-    <li><%= link_to '仪表盘', shop_admin_dashboard_index_path(@shop.name) %></li>
+    <li><%= link_to '仪表盘', shop_admin_index_path(@shop.name) %></li>
     <li><%= link_to '档案', shop_admin_profile_path(@shop.name) %></li>
     <li>
       <%= link_to '分类', shop_admin_shop_categories_path(@shop.name) %>

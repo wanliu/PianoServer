@@ -1,4 +1,5 @@
 class Shops::AdminController < Shops::Admin::BaseController
+<<<<<<< HEAD
 
   def upload_shop_logo
     @shop = Shop.find(params[:shop_id])
@@ -26,4 +27,6 @@ class Shops::AdminController < Shops::Admin::BaseController
   def shop_profile_params
     params.require(:shop).permit(:title, :phone, :website, :description)
   end
+=======
+>>>>>>> e08ffac4ca4df9a0d57e22476afa7c336aa29ddd
 end
