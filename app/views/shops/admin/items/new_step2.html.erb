@@ -77,6 +77,10 @@
         <%# end %>
       <% end %>
 
+      <!-- 详情 -->
+      <% group_with_errors @item, :description, f do %>
+        <%= f.bootsy_area :description %>
+      <% end %>
       <!-- 隐藏字段 -->
       <%= f.hidden_field :category_id %>
 

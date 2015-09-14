@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  mount Bootsy::Engine => '/bootsy', as: 'bootsy'
   resources :subjects, except: [:index, :new, :edit] do
     member do
       get "preview", to: 'subjects#preview', as: :preview

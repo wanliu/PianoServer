@@ -36,6 +36,7 @@ gem 'momentjs-rails', '>= 2.9.0'
 gem 'bootstrap3-datetimepicker-rails', '~> 4.15.35'
 gem 'ace-rails-ap'
 gem 'best_in_place', '~> 3.0.1'
+gem 'bootsy'
 
 gem 'activeresource'
 gem 'scoped_search'
