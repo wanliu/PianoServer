@@ -11,7 +11,7 @@
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
-      <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.1/html5shiv.js" type="text/javascript"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.1/html5shiv.js" type="text/javascript"></script>
     <![endif]-->
 
     <%= stylesheet_link_tag "application", :media => "all", 'data-turbolinks-track' => true %>
@@ -60,29 +60,32 @@
           <ul class="nav navbar-nav navbar-right">
             <li><%= link_to "关于我们", about_path  %></li>
             <% if Settings.dev.feature.qrcode %>
-            <li><%= link_to "二维码", "#share-url-qrcode" , "data-toggle"=>"modal" %></li>
+              <li><%= link_to "二维码", "#share-url-qrcode" , "data-toggle"=>"modal" %></li>
             <% end %>
             <% if Settings.dev.feature.favorites %>
-            <li><%= link_to "我的收藏", "/favorites" %></li>
+              <li><%= link_to "我的收藏", "/favorites" %></li>
             <% end %>
             <% if Settings.dev.feature.linkmen %>
-            <li><%= link_to "最近联系人", "/chats" %></li>
+              <li><%= link_to "最近联系人", "/chats" %></li>
             <% end %>
 
+            <li><%= link_to "微信第三方登陆", authorize_weixin_path %></li>
+
+
             <% if Settings.dev.feature.user.sign_in %>
-            <% if current_anonymous_or_user.id < 0 %>
-            <li><%= link_to "登入 #{current_anonymous_or_user.id if Rails.env.development?}", new_user_session_path %></li>
-            <% else %>
-            <li class="dropdown">
-              <%= user_avatar(current_anonymous_or_user, 'data-toggle' => 'dropdown', 'role' => "button" ) %>
- <!--            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a> -->
-              <ul class="dropdown-menu">
-                <li><%= link_to '我的主页', user_profile_path(current_user) %></li>
-                <li role="separator" class="divider"></li>
-                <li><%= link_to '登出', destroy_user_session_path, method: :delete %>
-              </ul>
-            </li>
-            <% end %>
+              <% if current_anonymous_or_user.id < 0 %>
+                <li><%= link_to "登入 #{current_anonymous_or_user.id if Rails.env.development?}", new_user_session_path %></li>
+              <% else %>
+                <li class="dropdown">
+                  <%= user_avatar(current_anonymous_or_user, 'data-toggle' => 'dropdown', 'role' => "button" ) %>
+                  <!--            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a> -->
+                  <ul class="dropdown-menu">
+                    <li><%= link_to '我的主页', user_profile_path(current_user) %></li>
+                    <li role="separator" class="divider"></li>
+                    <li><%= link_to '登出', destroy_user_session_path, method: :delete %>
+                  </ul>
+                    </li>
+              <% end %>
             <% end %>
           </ul>
         </div>
@@ -112,52 +115,52 @@
     </div> <!-- /container -->
 
     <script type="text/javascript">
-      var inChats = {};
+     var inChats = {};
 
-      if (!window._notificationInited) {
-        window._notificationInited = true;
+     if (!window._notificationInited) {
+       window._notificationInited = true;
 
-        userSocket.emit('unreadCount', {}, function(err, unreadCounts) {
-          if (err) {
-            return;
-          }
+       userSocket.emit('unreadCount', {}, function(err, unreadCounts) {
+         if (err) {
+           return;
+         }
 
-          for(var channelId in unreadCounts) {
-            var unreadCount = unreadCounts[channelId],
-                count = unreadCount.count,
-                senderId = unreadCount.user_id,
-                username = unreadCount.realname;
+         for(var channelId in unreadCounts) {
+           var unreadCount = unreadCounts[channelId],
+               count = unreadCount.count,
+               senderId = unreadCount.user_id,
+               username = unreadCount.realname;
 
-            window.noticeCenter.addNotice(senderId, username, count);
-          }
-        });
+           window.noticeCenter.addNotice(senderId, username, count);
+         }
+       });
 
-        $(document).unbind('inchats:enter').bind('inchats:enter', function(e, channelId) {
-          inChats[channelId] = true;
-        });
+       $(document).unbind('inchats:enter').bind('inchats:enter', function(e, channelId) {
+         inChats[channelId] = true;
+       });
 
-        $(document).unbind('inchats:leave').bind('inchats:leave', function(e, channelId) {
-          delete inChats[channelId];
-        });
+       $(document).unbind('inchats:leave').bind('inchats:leave', function(e, channelId) {
+         delete inChats[channelId];
+       });
 
-        userSocket.onPersonMessage(function(message) {
-          var channelId = message.channelId,
-              senderId = message.senderId,
-              type = message.type,
-              senderLogin = message.senderLogin,
-              ownChannelId = window.userSocket.getUserChannelId(),
-              chatChannelId = 'p' + senderId;
+       userSocket.onPersonMessage(function(message) {
+         var channelId = message.channelId,
+             senderId = message.senderId,
+             type = message.type,
+             senderLogin = message.senderLogin,
+             ownChannelId = window.userSocket.getUserChannelId(),
+             chatChannelId = 'p' + senderId;
 
-          if ((chatChannelId !== ownChannelId) && type !== 'command' && !inChats[channelId]) {
-            window.noticeCenter.addNotice(senderId, senderLogin, 1);
-          }
-        });
-      }
+         if ((chatChannelId !== ownChannelId) && type !== 'command' && !inChats[channelId]) {
+           window.noticeCenter.addNotice(senderId, senderLogin, 1);
+         }
+       });
+     }
     </script>
     <script type="text/javascript">
-      <% unless Rails.env.production? %>
-        console.log('development version: <%= PianoServer::VERSION %>')
-      <% end %>
+     <% unless Rails.env.production? %>
+     console.log('development version: <%= PianoServer::VERSION %>')
+     <% end %>
     </script>
   </body>
 </html>
