@@ -12,15 +12,19 @@
 
 <script type="text/javascript">
   var highlightSelected = function() {
-    var current_url = location.pathname;
-
+    var currentUrl = location.pathname;
+    var maxLength = 0;
+    var activeElem = null;
     $('.nav-sidebar>li').each(function(i, elem) {
       var $href = $(elem).find('a');
-      if (current_url.startsWith($href.attr('href'))) {
-        $(elem).addClass('active')
-      } else {
-        $(elem).removeClass('active')
+      if (currentUrl.startsWith($href.attr('href'))) {
+        if (maxLength < $href.attr('href').length) {
+          maxLength = $href.attr('href').length;
+          activeElem = elem
+        }
       }
+
+      $(elem).removeClass('active')
     });
   };
 
