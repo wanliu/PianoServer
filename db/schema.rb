@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150914072259) do
+ActiveRecord::Schema.define(version: 20150914073356) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -146,6 +146,7 @@ ActiveRecord::Schema.define(version: 20150914072259) do
     t.jsonb    "images",                                    default: []
     t.integer  "brand_id"
     t.jsonb    "properties",                                default: {}
+    t.text     "description"
   end
 
   create_table "locations", force: :cascade do |t|

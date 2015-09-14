@@ -14,10 +14,14 @@ class Item < ActiveRecord::Base
   validates :shop_category_id, :category_id, :shop_id, :brand_id, presence: true
   validates :title, presence: true
   validates :public_price, :income_price, :price, numericality: true
-  validates :properties, properties: {
-    method_prefix: 'property',
-    definitions: :definition_properties
-  }
+  validates :description, length: { minimum: 4 }
+
+  if Settings.dev.feature.dynamic_property
+    validates :properties, properties: {
+      method_prefix: 'property',
+      definitions: :definition_properties
+    }
+  end
     # definitions: -> (item) { Hash[item.definition_properties.map {|name, cfg| ["property_#{name}", cfg] }] }}
 
   # delegate :name, to: :product

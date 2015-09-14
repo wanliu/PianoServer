@@ -223,6 +223,7 @@ zh-CN:
     shop_category_id: 商品分类
     images: 图像
     image: 图像
+    description: 描述
   controllers:
     shops: 商店
     items: 商品

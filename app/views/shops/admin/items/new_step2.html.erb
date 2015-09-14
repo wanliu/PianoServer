@@ -63,6 +63,8 @@
 
       <hr />
 
+      <% if Settings.dev.feature.dynamic_property %>
+
       <!-- 枚举全部属性 -->
       <% @properties.each do |property| %>
       <div class="form-group">
@@ -77,9 +79,11 @@
         <%# end %>
       <% end %>
 
+      <% end %>
+
       <!-- 详情 -->
       <% group_with_errors @item, :description, f do %>
-        <%= f.bootsy_area :description %>
+        <%= f.bootsy_area :description, class: "form-control", rows: 12 %>
       <% end %>
       <!-- 隐藏字段 -->
       <%= f.hidden_field :category_id %>
