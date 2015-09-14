@@ -60,6 +60,11 @@ Rails.application.routes.draw do
     resources :contacts
     resources :attachments
     resources :industries do
+      collection do
+        post :sync_es_brands
+        post :sync_es_categories
+      end
+
       resources :categories do
         resources :properties
 
@@ -69,6 +74,7 @@ Rails.application.routes.draw do
           delete :remove_property
           get :show_inhibit
           get :hide_inhibit
+          get :children
         end
       end
     end

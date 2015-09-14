@@ -19,8 +19,20 @@ class Admins::IndustriesController < Admins::BaseController
     @properties = Property.all
   end
 
+  def sync_es_brands
+    EsBrandsSyncJob.perform_later 'overwrite'
+
+    render json: {}, status: :ok
+  end
+
   def destroy
 
+  end
+
+  def sync_es_categories
+    EsCategoriesSyncJob.perform_later 'overwrite'
+
+    render json: {}, status: :ok
   end
 
   private
