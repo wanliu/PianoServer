@@ -139,7 +139,7 @@ Rails.application.routes.draw do
     resources :items
 
     namespace :admin, module: 'shops/admin' do
-      get "/", to: "admin#dashboard", as: :index
+      get "/", to: "dashboard#index", as: :index
       get "/profile", to: "admin#profile"
       post "/upload_shop_logo", to: "admin#upload_shop_logo"
       patch "/shop_profile", to: "admin#update_shop_profile"
