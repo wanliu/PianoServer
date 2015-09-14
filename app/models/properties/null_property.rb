@@ -1,4 +1,4 @@
-class NullProperty < Property::Base
+class NullProperty < PropertyBase
   def initialize(name, record = nil, options = {})
     super
 

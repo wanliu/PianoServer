@@ -1,4 +1,4 @@
-class BooleanProperty < Property::Base
+class NumberProperty < PropertyBase
   def initialize(*args)
     super
 

@@ -1,6 +1,6 @@
-class NumberProperty < Property::Base
+class StringProperty < PropertyBase
   def initialize(*args)
     super
-
   end
+
 end
