@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150914073356) do
+ActiveRecord::Schema.define(version: 20150914083913) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -359,9 +359,11 @@ ActiveRecord::Schema.define(version: 20150914073356) do
     t.string   "nickname"
     t.string   "provider"
     t.integer  "latest_location_id"
+    t.jsonb    "data",                   default: {}
   end
 
   add_index "users", ["authentication_token"], name: "index_users_on_authentication_token", unique: true, using: :btree
+  add_index "users", ["data"], name: "index_users_on_data", using: :gin
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["mobile"], name: "index_users_on_mobile", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
