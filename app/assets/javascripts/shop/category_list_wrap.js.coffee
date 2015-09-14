@@ -1,7 +1,7 @@
 #= require ./category_list
 
 class @CategoryListWrap
-  constructor: (@$container, @$breadcrumb) ->
+  constructor: (@$container, @$form) ->
     @categoryLists = for level in [1..4]
       @generateCategoryList(level)
 
@@ -31,7 +31,7 @@ class @CategoryListWrap
     $list = $(template).appendTo(@$container)
     $element = $list.find('.list-group')
 
-    new CategoryList(@, $element, [], level)
+    new CategoryList(@, $element, [], level, @$form)
 
   loadCategoryData: (category_id, callback) ->
     data = {}
@@ -46,13 +46,14 @@ class @CategoryListWrap
     })
 
   categoryChanged: (data, level) ->
+    # 如果是最后一级分类点击则不作任何操作
+    return @lastLevelPicked if level == @length
+
     @resetListsContent(data, level)
+    @changeCategory(data)
     #@changeBreadcrumb()
 
   resetListsContent: (data, level) ->
-    # 如果是最后一级分类点击则不作任何操作
-    return if level == @length
-
     @levelCount = level + 1
 
     # 重新生成分类数据
@@ -66,15 +67,17 @@ class @CategoryListWrap
       else
         categoryList.emptyContent(data)
 
-    @currentLevel = @levelCount - 1
-
+  changeCategory: (data) =>
     if @levelCount > @col
+      @currentLevel = @levelCount - 1
+
       if data.length > 0
         @scrollRight()
       else if @levelCount = @col + 1
+        @currentLevel = @col
         @resetPosition()
     else
-      @currentLevel = @levelCount
+      @currentLevel = @col
       @resetPosition()
 
   changeBreadcrumb: () ->
@@ -100,6 +103,10 @@ class @CategoryListWrap
       cateId = $target.attr('category-id')
       $parent = $target.parent()
       level = $parent.index() + 1
+
+      loadCategoryData(cateId, (data) =>
+        changeCategory(data)
+      )
     )
 
   bindPrevBtnClickEvent: () ->
@@ -113,11 +120,6 @@ class @CategoryListWrap
       'margin-left': '+=290'
     }, 250, () =>
       @currentLevel -= 1
-      @$rightBtn.addClass('btn-visible')
-
-      if @currentLevel <= @col
-        @$leftBtn.removeClass('btn-visible')
-
       @currentLevelChanged()
     )
 
@@ -126,11 +128,6 @@ class @CategoryListWrap
       'margin-left': '-=290'
     }, 250, () =>
       @currentLevel += 1
-      @$leftBtn.addClass('btn-visible')
-
-      if @currentLevel > @col
-        @$rightBtn.removeClass('btn-visible')
-
       @currentLevelChanged()
     )
 
@@ -152,18 +149,22 @@ class @CategoryListWrap
     else
       @col = 1
 
-    @currentLevel = 1 if not @currentLevel
-    return if not @lastCol?
+    if @lastCol?
+      diffCol = @col - @lastCol
+    else
+      diffCol = 0
 
-    diffCol = @col - @lastCol
     @lastCol = @col
 
-    return if diffCol == 0
+    return if @levelCount <= @col or diffCol == 0
+
+    marginLeft = parseInt(@$container.css('margin-left'))
+    min = Math.min(0, marginLeft + diffCol * 290)
 
     @$container.animate({
-      'margin-left': '+=' + diffCol * 290
+      'margin-left': min
     }, 250, () =>
-
+      @currentLevelChanged()
     )
 
   initColNumAndCurrentMax: () ->
@@ -173,11 +174,24 @@ class @CategoryListWrap
 
   currentLevelChanged: () ->
     if @levelCount > @col
-      if @currentLevel == @levelCount
-        @$rightBtn.removeClass('btn-visible')
-    else
-      if @currentLevel < @col
+      if @currentLevel < @levelCount
+        @$rightBtn.addClass('btn-visible')
+
+      if @currentLevel > @col
+        @$leftBtn.addClass('btn-visible')
+
+        if @currentLevel == @levelCount
+          @$rightBtn.removeClass('btn-visible')
+      else
         @$leftBtn.removeClass('btn-visible')
+    else
+      @$leftBtn.removeClass('btn-visible')
+      @$rightBtn.removeClass('btn-visible')
+
+  lastLevelPicked: () ->
+    @currentLevel = @levelCount = @length
+
+    @currentLevelChanged()
 
 
 

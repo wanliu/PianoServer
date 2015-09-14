@@ -59,7 +59,27 @@ Rails.application.routes.draw do
     resources :messages
     resources :contacts
     resources :attachments
-    resources :industries
+    resources :industries do
+      collection do
+        post :sync_es_brands
+        post :sync_es_categories
+      end
+
+      resources :categories do
+        resources :properties
+
+        member do
+          post :add_property
+          patch :update_property
+          delete :remove_property
+          get :show_inhibit
+          get :hide_inhibit
+          get :children
+        end
+      end
+    end
+
+    resources :products
   end
 
   namespace :api do
@@ -119,11 +139,12 @@ Rails.application.routes.draw do
     resources :items
 
     namespace :admin, module: 'shops/admin' do
-      get "/", to: "admin#dashboard", as: :index
+      get "/", to: "dashboard#index", as: :index
       get "/profile", to: "admin#profile"
       post "/upload_shop_logo", to: "admin#upload_shop_logo"
       patch "/shop_profile", to: "admin#update_shop_profile"
 
+      resources :dashboard
       resources :shop_categories, constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do
         member do
           get "/:child_id", to: "shop_categories#show_by_child", as: :child
@@ -135,8 +156,13 @@ Rails.application.routes.draw do
       end
 
       resources :items do
+
         collection do
           get "load_categories", to: "items#load_categories"
+          get "/new/step1",  to: "items#new_step1"
+          post "/new/step1", to: "items#commit_step1"
+          get "/new/step2/category/:category_id", to: "items#new_step2", as: :with_category
+          post "/new/step2/category/:category_id", to: "items#create"
         end
       end
     end

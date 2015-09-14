@@ -3,9 +3,12 @@
  *= require nprogress
  *= require nprogress-bootstrap
  *= require _common/fileuploader
+ *= require _common/checkbox
  *= require_tree ./shop_admin
  *= require_self
 */
+
+@import 'bootstrap-datetimepicker';
 
 body {
   padding-top: 50px;

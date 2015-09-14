@@ -1,8 +1,7 @@
 class @CategoryList
 
-  constructor: (@container, @element, @categories, @level) ->
+  constructor: (@container, @element, @categories, @level, @$form) ->
     @generateCategoryItems(@categories)
-    @element.data('category-list', @)
 
   generateCategoryItems: (categories) ->
     @element.html('')
@@ -39,7 +38,14 @@ class @CategoryList
 
     $target.addClass('active').siblings().removeClass('active')
     category_id = $target.attr('category-id')
-    selector = ['.list-group.level', @level+1].join('')
+    $submit = @$form.find('input[type=submit]')
+    $input = @$form.find('input[name=category_id]')
+
+    if $target.hasClass('has-children')
+      $submit.attr('disabled', 'disabled')
+    else
+      $submit.removeAttr('disabled')
+      $input.val(category_id)
 
     @container.loadCategoryData(category_id, (data) =>
       @container.categoryChanged(data, @level)

@@ -3,7 +3,7 @@ require 'chinese_pinyin'
 class ShopCategory < ActiveRecord::Base
   acts_as_nested_set
 
-  has_and_belongs_to_many :shops
+  belongs_to :shop
 
   has_many :items, foreign_key: :shop_category_id
 

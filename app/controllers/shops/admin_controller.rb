@@ -11,6 +11,10 @@ class Shops::AdminController < Shops::Admin::BaseController
     end
   end
 
+  def index
+    redirect_to shop_admin_dashboard_index_path(@shop.name)
+  end
+
   def update_shop_profile
     @shop.update(shop_profile_params)
 
