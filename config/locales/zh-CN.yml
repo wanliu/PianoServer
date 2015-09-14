@@ -201,3 +201,44 @@ zh-CN:
       long: ! '%Y年%b%d日 %H:%M'
       short: ! '%b%d日 %H:%M'
     pm: 下午
+  activerecord:
+    models:
+      item: 商品
+    attributes:
+      user:
+        login: "Handle"
+
+      # will translate User attribute "login" as "Handle"
+  attributes:
+    created_at: 创建时间
+    updated_at: 更新时间
+    title: 标题
+    name: 名称
+    price: 价格
+    brand: 品牌
+    brand_id: 品牌
+    public_price: 零售价
+    income_price: 进货价
+    shop_category: 商品分类
+    shop_category_id: 商品分类
+    images: 图像
+    image: 图像
+  controllers:
+    shops: 商店
+    items: 商品
+  actions:
+    new: 新增
+    index: ''
+    edit: 编辑
+    show: 显示
+  notices:
+    controllers:
+      items:
+        create:: "恭喜您，商品创建成功。"
+  modules:
+    shop: 商店
+    admin: 工作平台
+  titles:
+    shops: '%{shop_name}店'
+
+

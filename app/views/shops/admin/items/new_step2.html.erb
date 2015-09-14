@@ -4,13 +4,24 @@
       <small> ->
       <ol class="breadcrumb">
         <% @breadcrumb.each do |bread| %>
-          <li><a href="javascript:void(0)"><%=humanize bread.title %></a></li>
+          <li><a href="javascript:void(0)"><%= bread.title.humanize %></a></li>
         <% end %>
         <li class="active"><%= @category.title %></li>
       </ol> </small></h3>
   </div>
   <div class="panel-body">
-    <%= form_for @item, url: shop_admin_items_path(@shop.name), html: { class: "form-horizontal" } do |f| %>
+    <%= form_for @item, url: new_step2_shopitems_path(@shop.name, category_id: @category), html: { class: "form-horizontal" } do |f| %>
+
+      <!-- 错误显示 -->
+      <% if @item.errors.any? %>
+      <div class="list-group col-sm-offset-2 col-sm-10">
+        <% @item.errors.full_messages.each do |msg| %>
+          <a href="#" class="list-group-item list-group-item-danger"><%= msg %></a>
+        <% end %>
+      </div>
+      <% end %>
+
+      <!-- 图片 -->
       <div class="form-group">
         <%= f.label :images, class: "col-sm-2 control-label" %>
         <div class="col-sm-10">
@@ -19,24 +30,59 @@
           <% end %>
         </div>
       </div>
+
+      <!-- 标题 -->
+      <% group_with_errors @item, :title, f do %>
+        <%= f.text_field :title, class: 'form-control' %>
+      <% end %>
+
+      <!-- 品牌 -->
+      <% group_with_errors @item, :brand_id, f do %>
+        <%= f.select :brand_id, options_from_collection_for_select(Brand.all, 'id', 'title'), {}, class: 'form-control' %>
+      <% end %>
+
+      <!-- 参考价 -->
+      <% group_with_errors @item, :price, f do %>
+          <%= f.number_field :price, class: 'form-control' %>
+      <% end %>
+
+      <!-- 零售价 -->
+      <% group_with_errors @item, :public_price, f do %>
+          <%= f.number_field :public_price, class: 'form-control' %>
+      <% end %>
+
+      <!-- 进货价 -->
+      <% group_with_errors @item, :income_price, f do %>
+          <%= f.number_field :income_price, class: 'form-control' %>
+      <% end %>
+
+      <!-- 商店分类 -->
+      <% group_with_errors @item, :shop_category_id, f do %>
+        <%= f.select :shop_category_id, options_from_collection_for_select(@shop.shop_category.descendants, 'id', 'title'), {}, class: 'form-control' %>
+      <% end %>
+
+      <hr />
+
+      <!-- 枚举全部属性 -->
+      <% @properties.each do |property| %>
       <div class="form-group">
-        <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+        <% property_name = "property_#{property.name}" %>
+        <%= label_tag property_name, property.title, class: "col-sm-2 control-label" %>
         <div class="col-sm-10">
-          <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+          <%= property_edit "item", property %>
         </div>
       </div>
+        <%# group_with_property_errors @item, property, f do %>
+          <%#= property_edit "item", property %>
+        <%# end %>
+      <% end %>
+
+      <!-- 隐藏字段 -->
+      <%= f.hidden_field :category_id %>
+
       <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
-          <div class="checkbox">
-            <label>
-              <input type="checkbox"> Remember me
-            </label>
-          </div>
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-          <button type="submit" class="btn btn-default">Sign in</button>
+          <%= f.submit class: "btn btn-primary btn-lg" %>
         </div>
       </div>
     <% end %>

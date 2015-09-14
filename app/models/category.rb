@@ -1,4 +1,6 @@
 class Category < ActiveRecord::Base
+  HashEx = ActiveSupport::HashWithIndifferentAccess
+
   include Elasticsearch::Model
   include Elasticsearch::Model::Callbacks
   include ESModel
@@ -6,6 +8,7 @@ class Category < ActiveRecord::Base
   acts_as_tree :cache_depth => true
 
   belongs_to :upper, class_name: "Category", foreign_key: 'upper_properties_id'
+  belongs_to :brand
 
   has_and_belongs_to_many :properties
 
@@ -41,7 +44,23 @@ class Category < ActiveRecord::Base
           WHERE #{cond_string}
     SQL
 
-    Property.find_by_sql [query, ancestry_depth, sort_ancestor_ids]
+    Property.find_by_sql [query.squish, ancestry_depth, sort_ancestor_ids]
+  end
+
+  def definition_properties
+    @defintion_properties ||= HashEx[with_upper_properties.map do |property|
+      [property.name, {
+        name: property.name,
+        title: property.title,
+        type: property.prop_type,
+        unit_type: property.unit_type,
+        unit_id: property.unit_id,
+        default: property.data.try(:[], "default"),
+        validates: property.data.try(:[], "validates"),
+        value: property.data.try(:[], "value"),
+        map: property.data.try(:[], "map")
+      }]
+    end]
   end
 
   def inhibit_count

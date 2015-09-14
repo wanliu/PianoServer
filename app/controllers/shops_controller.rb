@@ -11,7 +11,7 @@ class ShopsController < ApplicationController
       ShopService.build(params[:shop_name])
     end
 
-    @root = @shop.shop_category
+    @root = @shop.shop_category(true)
     @shop_categories = @root.children.page(page).per(per)
 
     render :show

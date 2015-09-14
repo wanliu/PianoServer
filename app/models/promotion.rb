@@ -1,7 +1,13 @@
 require 'active_resource'
 class PromotionCollection < ActiveResource::Collection
+  include Liquid::Rails::Droppable
+
   def initialize(parsed = {})
     @elements = parsed['promotions']
+  end
+
+  def drop_class
+    "PromotionDrop".safe_constantize
   end
 end
 

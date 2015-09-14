@@ -1,7 +1,7 @@
 <div class="shop left-sidebar">
 
   <ul class="nav nav-pills nav-stacked">
-    <li><%= link_to '仪表盘', shop_admin_index_path(@shop.name) %></li>
+    <li><%= link_to '仪表盘', shop_admin_dashboard_index_path(@shop.name) %></li>
     <li><%= link_to '档案', shop_admin_profile_path(@shop.name) %></li>
     <li>
       <%= link_to '分类', shop_admin_shop_categories_path(@shop.name) %>
@@ -23,7 +23,7 @@
 
     $('.left-sidebar .nav>li').each(function(i, elem) {
       var $href = $(elem).find('a');
-      if ($href.attr('href') === current_url) {
+      if (current_url.startsWith($href.attr('href'))) {
         $(elem).addClass('active')
       } else {
         $(elem).removeClass('active')
@@ -31,15 +31,7 @@
     });
   };
 
-  // $(function() {
-    // var LeftSideBar = window.LeftSideBar;
-    // var leftSidebar = new LeftSideBar($('.left-sidebar'), $('.content'));
-
-
-    highlightSelected();
-  // });
+  highlightSelected();
 
   $(document).on('page:change', highlightSelected)
-
-
 </script>
