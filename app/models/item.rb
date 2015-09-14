@@ -1,5 +1,6 @@
 class Item < ActiveRecord::Base
   include DynamicProperty
+  html_fragment :description, :scrub => :prune  # scrubs `body` using the :prune scrubber
 
 
   belongs_to :shop_category

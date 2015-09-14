@@ -219,6 +219,8 @@ GEM
       rb-inotify (>= 0.9)
     loofah (2.0.2)
       nokogiri (>= 1.5.9)
+    loofah-activerecord (1.2.0)
+      loofah (>= 1.0.0)
     lumberjack (1.0.9)
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
@@ -435,6 +437,7 @@ DEPENDENCIES
   kaminari
   less-rails
   liquid-rails
+  loofah-activerecord
   meta-tags
   mini_magick (~> 4.2.7)
   mobylette

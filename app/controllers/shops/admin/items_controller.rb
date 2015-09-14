@@ -76,7 +76,6 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
       item.save
     end
 
-    pp item_basic_params
     @item = Item.new(category_id: @category.id, shop_id: @shop.id) if @item.valid?
     # pp @item.errors.full_messages
     flash[:notice] = t("notices.controllers.items.create")
@@ -97,13 +96,8 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     raise ActionController::RoutingError.new('Not Found')
   end
 
-  def html_safe_params
-    params[:description] = sanitize params[:description], tags: %w(script), attributes: %w(href)
-    params
-  end
-
   def item_basic_params
-    _params = html_safe_params.require(:item).permit(:name, :title, :brand_id, :images, :price, :public_price,
+    _params = params.require(:item).permit(:name, :title, :brand_id, :images, :price, :public_price,
       :income_price, :shop_category_id, :category_id, :description)
     _params[:description] = sanitize _params[:description], tags: %w(script), attributes: %w(href)
     _params
