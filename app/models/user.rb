@@ -1,5 +1,4 @@
 class User < ActiveRecord::Base
-  include DefaultImage
   include AnonymousUser
 
   # Include default devise modules. Others available are:
@@ -17,7 +16,6 @@ class User < ActiveRecord::Base
 
   has_many :locations
 
-  image_token -> { self.email || self.username || self.mobile }
   validates :username, presence: true, uniqueness: true
 
   after_commit :sync_to_pusher
@@ -32,7 +30,7 @@ class User < ActiveRecord::Base
     return found.nil? ? true : found.provider == 'import'
   }
 
-  store_accessor :image, :avatar_url
+  mount_uploader :image, ImageUploader # , mount_on: :avatar_url
 
   JWT_TOKEN = Rails.application.secrets.live_key_base
 
@@ -79,13 +77,17 @@ class User < ActiveRecord::Base
     pusher_token = Settings.pusher.pusher_token.clone
     pusher_url << 'users'
 
-    options = {id: "#{id}", token: pusher_token, login: username, realname: username, avatar_url: (image && image[:avatar_url]) }
+    options = {id: "#{id}", token: pusher_token, login: username, realname: username, avatar_url: avatar_url ) }
 
     begin
       RestClient.post pusher_url, options
     rescue Errno::ECONNREFUSED => e
       # TODO what to do when sync fails?
     end
+  end
+
+  def avatar_url
+    image.url(:avatar)
   end
 
   alias_method :name, :nickname
