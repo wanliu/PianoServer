@@ -61,6 +61,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def avatar_url
+    image.url(:avatar)
+  end
+
   private
 
   def generate_authentication_token
@@ -84,10 +88,6 @@ class User < ActiveRecord::Base
     rescue Errno::ECONNREFUSED => e
       # TODO what to do when sync fails?
     end
-  end
-
-  def avatar_url
-    image.url(:avatar)
   end
 
   alias_method :name, :nickname

@@ -36,6 +36,7 @@ gem 'momentjs-rails', '>= 2.9.0'
 gem 'bootstrap3-datetimepicker-rails', '~> 4.15.35'
 gem 'ace-rails-ap'
 gem 'best_in_place', '~> 3.0.1'
+gem 'bootsy'
 
 gem 'activeresource'
 gem 'scoped_search'
@@ -45,6 +46,7 @@ gem 'chinese_pinyin'
 gem 'data-confirm-modal', github: 'ifad/data-confirm-modal'
 gem 'liquid-rails'
 gem "punching_bag"
+gem "loofah-activerecord"
 
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'

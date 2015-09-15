@@ -5,7 +5,7 @@ class Shops::Admin::ProfilesController < Shops::Admin::BaseController
   def update
     @shop.update(shop_profile_params)
 
-    redirect_to edit_shop_admin_profile_path(@shop.name)
+    redirect_to shop_admin_profile_path(@shop.name)
   end
 
   def upload_shop_logo

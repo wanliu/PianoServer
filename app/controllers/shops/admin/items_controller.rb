@@ -1,5 +1,9 @@
 class Shops::Admin::ItemsController < Shops::Admin::BaseController
   include Shops::Admin::ItemHelper
+  include ActionView::Helpers::SanitizeHelper
+
+  before_action :set_category, only: [:new_step2, :create]
+  before_action :set_breadcrumb, only: [:new_step2, :create]
 
   def load_categories
     page = params[:page].presence || 1
@@ -43,13 +47,40 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
   end
 
   def new_step2
-    raise_404 if params[:category_id].to_i == 0
-    @category = Category.find(params[:category_id])
-    @breadcrumb = @category.ancestors
-    @item = Item.new(category_id: @category.id)
+    @title = "创建自己的商品"
+    @item = Item.new(category_id: @category.id, shop_id: @shop.id)
     @properties = @category.with_upper_properties
   end
 
+  def create
+    @title = "创建自己的商品"
+    @properties = @category.with_upper_properties
+    prop_params = properties_params(@properties)
+    @item = Item.new item_basic_params.merge(shop_id: @shop.id) do |item|
+      item.properties ||= {}
+
+      @properties.each do |prop|
+        config = item.properties[prop.name] = {
+          title: prop.title,
+          type: prop.prop_type,
+          unit_id: prop.unit_id,
+          unit_type: prop.unit_type
+        }
+
+        if prop.prop_type == "map"
+          config["map"] = prop.data["map"]
+        end
+        config["value"] = prop_params["property_#{prop.name}"]
+      end
+
+      item.save
+    end
+
+    @item = Item.new(category_id: @category.id, shop_id: @shop.id) if @item.valid?
+    # pp @item.errors.full_messages
+    flash[:notice] = t("notices.controllers.items.create")
+    render :new_step2
+  end
 
   protected
 
@@ -63,5 +94,25 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
 
   def raise_404
     raise ActionController::RoutingError.new('Not Found')
+  end
+
+  def item_basic_params
+    _params = params.require(:item).permit(:name, :title, :brand_id, :images, :price, :public_price,
+      :income_price, :shop_category_id, :category_id, :description)
+    _params[:description] = sanitize _params[:description], tags: %w(script), attributes: %w(href)
+    _params
+  end
+
+
+  def properties_params(properties)
+    params.require(:item).slice(*properties.map{ |prop| "property_#{prop.name}" })
+  end
+
+  def set_category
+    @category = Category.find(params[:category_id])
+  end
+
+  def set_breadcrumb
+    @breadcrumb = @category.ancestors
   end
 end
