@@ -4,10 +4,26 @@
 
 </div>
 
-<h1 class="page-header">属性配置</h1>
+<h1 class="page-header">
+  属性配置
+  <%= link_to new_admins_property_path, class: "btn btn-default pull-right" do %>
+    <span class='glyphicon glyphicon-plus'>添加新属性</span>
+  <% end %>
+</h1>
 
 <div class="property-list">
-  <%= render partial: "property_item", collection: @properties %>
+  <table class="table">
+    <thead>
+      <th>属性ID</th>
+      <th>名称</th>
+      <th>标题</th>
+      <th>取值类型</th>
+      <th>操作</th>
+    </thead>
+    <tbody>
+      <%= render partial: "property_item", collection: @properties %>
+    </tbody>
+  </table>
 </div>
 
 <div class="btn-toolbar" role="toolbar" aria-label="...">

@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  mount Bootsy::Engine => '/bootsy', as: 'bootsy'
   resources :subjects, except: [:index, :new, :edit] do
     member do
       get "preview", to: 'subjects#preview', as: :preview
@@ -80,6 +81,7 @@ Rails.application.routes.draw do
     end
 
     resources :products
+    resources :properties
   end
 
   namespace :api do
@@ -139,12 +141,12 @@ Rails.application.routes.draw do
     resources :items
 
     namespace :admin, module: 'shops/admin' do
-      get "/", to: "admin#dashboard", as: :index
-
+      get "/", to: "dashboard#index", as: :index
       resource :profile do
         post :update_shop_profile
       end
 
+      resources :dashboard
       resources :shop_categories, constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do
         member do
           get "/:child_id", to: "shop_categories#show_by_child", as: :child
@@ -161,8 +163,8 @@ Rails.application.routes.draw do
           get "load_categories", to: "items#load_categories"
           get "/new/step1",  to: "items#new_step1"
           post "/new/step1", to: "items#commit_step1"
-          get "/new/step2", to: "items#new_step2"
-          post "/new/step2", to: "items#create"
+          get "/new/step2/category/:category_id", to: "items#new_step2", as: :with_category
+          post "/new/step2/category/:category_id", to: "items#create"
         end
       end
     end

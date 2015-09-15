@@ -12,6 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require bootsy
 //= require data-confirm-modal
 //= require jquery-ui/core
 //= require jquery-ui/widget
@@ -30,6 +31,7 @@
 //= require _common/qrcode
 //= require _common/local-address
 //= require _common/hammer
+//= require _common/util
 //= require_tree ./application
 //= require_tree ./chats
 //= require_tree ./orders

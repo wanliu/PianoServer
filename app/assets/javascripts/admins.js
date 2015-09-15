@@ -15,6 +15,9 @@
 //= require best_in_place
 //= require _common/fileuploader
 //= require _common/hammer
+//= require _common/util
+//= require bootsy
+//= require_tree ./locales
 //= require_tree ./admins
 //= require_tree ./shop
 //= require_self

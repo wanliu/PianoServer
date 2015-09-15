@@ -1,5 +1,6 @@
 module ApplicationHelper
   include SubjectsHelper
+  include BootstrapHelper
 
   def avatar_url(user)
     user.image || identicon_url(user)
@@ -10,24 +11,6 @@ module ApplicationHelper
     md5.update(user.email || user.username || user.mobile)
     md5.hexdigest
     "//www.gravatar.com/avatar/#{md5.hexdigest}?s=#{s}&default=identicon".html_safe
-  end
-
-  def bootstrap_flash
-    flash_class = {
-      'notice' => 'success',
-      'alert' => 'warning',
-      'error' => 'danger'
-    }
-
-    flash.map do |k, title|
-      <<-HTML
-        <div class="alert alert-#{flash_class[k]}" role="alert">#{title}</div>
-      HTML
-    end.join('').html_safe
-  end
-
-  def icon(name)
-    raw "<span class=\"button-icon glyphicon glyphicon-#{name}\"></span>"
   end
 
   def nav_back_button
@@ -60,10 +43,6 @@ module ApplicationHelper
     link_to user_profile_path(user), *args do
       avatar_image_tag(user.avatar_url) + user.nickname + caret
     end
-  end
-
-  def caret
-    raw "<span class=\"caret\"></span>"
   end
 
   def cx(class_or_options, *args)
