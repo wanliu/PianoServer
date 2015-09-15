@@ -12,9 +12,13 @@ class Shops::Admin::ShopCategoriesController < Shops::Admin::BaseController
     @root = @shop.shop_category
     @parent = ShopCategory.find(params[:parent_id])
     raise ActionController::RoutingError.new('Not Found') unless @parent.is_or_is_descendant_of?(@root)
-    @shop_category = @parent.children.create(shop_category_params)
+    @shop_category = @parent.children.build(shop_category_params)
 
-    render :show, formats: [ :json ]
+    if @shop_category.save
+      render :show, formats: [ :json ]
+    else
+      render json: { errors: @shop_category.errors.full_messages }, status: :unprocessable_entity
+    end
   end
 
   def show

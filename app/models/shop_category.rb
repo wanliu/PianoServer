@@ -15,6 +15,8 @@ class ShopCategory < ActiveRecord::Base
   # alias_method :cover_url, :avatar_url
   # alias_method :logo_url, :avatar_url
 
+  validate :depth_less_or_eq_to_3
+
   def title
     super || name
   end
@@ -43,5 +45,11 @@ class ShopCategory < ActiveRecord::Base
 
   def same_name?(name)
     nested_set_scope.where(name: name).last.present?
+  end
+
+  def depth_less_or_eq_to_3
+    if parent.depth >= 3
+      errors.add(:depth, "层级过多，最多只能有三级")
+    end
   end
 end
