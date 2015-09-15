@@ -1,0 +1,25 @@
+.new-item-poster {
+  .thumbnail {
+    position: relative;
+
+    img {
+      width: 500px;
+    }
+
+    .plus-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin: -36px 0 0 -12px;
+      font-size: 50px;
+    }
+
+    .uploader {
+      position: absolute;
+      top: 0;
+      left: 0;
+      font-size: 120px;
+      opacity: 0;
+    }
+  }
+}
