@@ -81,7 +81,7 @@ class User < ActiveRecord::Base
     pusher_token = Settings.pusher.pusher_token.clone
     pusher_url << 'users'
 
-    options = {id: "#{id}", token: pusher_token, login: username, realname: username, avatar_url: avatar_url ) }
+    options = {id: "#{id}", token: pusher_token, login: username, realname: username, avatar_url: avatar_url }
 
     begin
       RestClient.post pusher_url, options
