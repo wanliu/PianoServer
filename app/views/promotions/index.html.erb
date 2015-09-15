@@ -11,6 +11,8 @@
 	var page = 1;
 	var delayedTime = 200;
 	var pulling = false;
+  var per = 25;
+  var allLoaded = <%= @promotions.length %> < per;
 
 	$(function() {
 		var parseURL = window.parseURL;
@@ -24,15 +26,16 @@
 		}
 
 		function loadingPromotions() {
-
-			if (!pulling) {
+			if (!pulling && !allLoaded) {
 				pulling = true;
 
-				var url = [ 'promotions.json', $.param({ page: page++, inline: true }) ].join('?');
+				var url = [ 'promotions.json', $.param({ page: ++page, inline: true }) ].join('?');
 				displayLoading();
 
 				$.get(url).then(function(data, status, e) {
 					clearLoading();
+
+          allLoaded = data['promotions'].length < per;
 					var promotions = data['promotions'].map(function(promotion) {
 						return promotion.html;
 					});
@@ -76,10 +79,10 @@
       }
 
       if (/promotions\/\d+\/chat/.test(url)) {
+        $(document).off('scroll:bottom');
+        clearLoading();
+      } else {
 				$(document).on('scroll:bottom', loadingPromotions)
-			} else {
-				$(document).off('scroll:bottom');
-				clearLoading();
 			}
 		});
 	});
