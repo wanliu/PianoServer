@@ -1,7 +1,7 @@
 describe AuthorizeController, type: :request do
   describe 'actions' do
     describe '#weixin_redirect_url' do
-      it 'should create a new user' do
+      it 'should create a new user if not exist' do
         client = WeixinClient.instance.client
         code = 'grand_code123'
 
@@ -29,8 +29,15 @@ describe AuthorizeController, type: :request do
         expect(client).to receive(:get_oauth_userinfo).with('app_id', access_token).and_return(info)
 
         expect(User.exists?).to be false
-        get '/authorize/weixin_redirect_url?', code: code
-        expect(User.exists?).to be true
+        get '/authorize/weixin_redirect_url?', {code: code}, {HTTP_REFERER: root_path}
+        expect(User.first.weixin_openid).to eq 'o0tInv8I0VvpdNyx12tMTy9asT-0'
+        expect(User.first.username).to eq '羁绊'
+        expect(User.first.sex).to eq '男'
+        expect(User.first.language).to eq 'zh_CN'
+        expect(User.first.city).to eq '太原'
+        expect(User.first.province).to eq '山西'
+        expect(User.first.country).to eq '中国'
+        expect(User.first.weixin_privilege).to eq []
       end
     end
   end

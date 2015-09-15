@@ -40,7 +40,6 @@ class AuthorizeController < ApplicationController
       end
       sign_in(:user, user)
     end
-  # redirect_to :back
-    render nothing: true
+    redirect_to :back
   end
 end
