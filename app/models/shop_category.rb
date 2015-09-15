@@ -26,7 +26,7 @@ class ShopCategory < ActiveRecord::Base
   end
 
   def chain_name
-    self_and_ancestors.map(&:name)
+    self_and_ancestors.map(&:title)
   end
 
   def is_leaf
