@@ -50,10 +50,12 @@
         </button>
         <ul class="nav navbar-nav navbar-left">
           <%= yield :back %>
+          <li>
+            <%= link_to root_path, class: "navbar-brand" do %>
+              <%= content_for?(:title) ? yield(:title) : Settings.app.title %>
+            <% end %>
+          </li>
         </ul>
-        <%= link_to root_path, class: "navbar-brand" do %>
-          <%= content_for?(:title) ? yield(:title) : Settings.app.title %>
-        <% end %>
         <div class="navbar-collapse collapse navbar-responsive-collapse">
           <ul class="nav navbar-nav navbar-right">
             <li><%= link_to "关于我们", about_path  %></li>
