@@ -1,9 +1,6 @@
 <div class="panel panel-default panel-category">
   <div class="panel-heading">
     产品分类
-    <ol class="breadcrumb">
-
-    </ol>
   </div>
   <div class="panel-body">
     <div class="category-wrap">
@@ -15,9 +12,9 @@
 </div>
 
 <div class="well">
-  <%= button_to '下一步', new_step1_shopitems_path(@shop.name), class: 'btn btn-info btn-lg', params: { category_id: 0 } %>
+  <%= button_to '下一步', new_step1_shopitems_path(@shop.name), class: 'btn btn-info btn-lg', params: { category_id: 0 }, disabled: true %>
 </div>
 
 <script type="text/javascript">
-  new CategoryListWrap($('.panel-category .category-list'), $('.panel-category .breadcrumb'))
+  new CategoryListWrap($('.panel-category .category-list'), $('form.button_to'))
 </script>
