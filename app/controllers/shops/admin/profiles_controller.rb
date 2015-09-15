@@ -9,7 +9,6 @@ class Shops::Admin::ProfilesController < Shops::Admin::BaseController
   end
 
   def upload_shop_logo
-    @shop = Shop.find(params[:shop_id])
     @shop.logo = params[:file]
 
     if @shop.save
