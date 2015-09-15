@@ -6,7 +6,7 @@
 
 <div class="brand-board">
   <div class='shop-info'>
-    <%= image_tag @shop.logo_url, class: 'shop-logo' %>
+    <%= image_tag @shop.logo.url(:cover), class: 'shop-logo' %>
     <div class='name-address'>
       <span class='name'><%= @shop.name %></span>
       <span class='address'><%= @shop.address %></span>
