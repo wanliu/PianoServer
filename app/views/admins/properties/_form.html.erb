@@ -1,4 +1,4 @@
-<%= form_for property, url: url do |f| %>
+<%= form_for [:admins, property] do |f| %>
   <div class="form-group">
     <%= f.label :name, "名称" %>
     <%= f.text_field :name, class: 'form-control', placeholder: '必须为有效的Ruby变量名' %>
