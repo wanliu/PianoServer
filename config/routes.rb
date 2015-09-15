@@ -81,6 +81,7 @@ Rails.application.routes.draw do
     end
 
     resources :products
+    resources :properties
   end
 
   namespace :api do
@@ -141,7 +142,6 @@ Rails.application.routes.draw do
 
     namespace :admin, module: 'shops/admin' do
       get "/", to: "dashboard#index", as: :index
-
       resource :profile do
         post :update_shop_profile
       end
