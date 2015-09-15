@@ -45,6 +45,13 @@ body {
   background: #FFFFFF;
 }
 
+.navbar-brand {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 150px;
+}
+
 .chat-notices{
   position: fixed;
   top: 0;

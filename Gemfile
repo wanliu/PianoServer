@@ -47,6 +47,7 @@ gem 'data-confirm-modal', github: 'ifad/data-confirm-modal'
 gem 'liquid-rails'
 gem "punching_bag"
 gem "loofah-activerecord"
+gem 'public_activity'
 
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'
