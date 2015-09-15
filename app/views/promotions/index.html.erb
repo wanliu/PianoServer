@@ -11,7 +11,7 @@
 	var page = 1;
 	var delayedTime = 200;
 	var pulling = false;
-  var per = 25;
+  var per = 24;
   var allLoaded = <%= @promotions.length %> < per;
 
 	$(function() {
@@ -29,7 +29,7 @@
 			if (!pulling && !allLoaded) {
 				pulling = true;
 
-				var url = [ 'promotions.json', $.param({ page: ++page, inline: true }) ].join('?');
+				var url = [ 'promotions.json', $.param({ page: ++page, inline: true, per: per }) ].join('?');
 				displayLoading();
 
 				$.get(url).then(function(data, status, e) {

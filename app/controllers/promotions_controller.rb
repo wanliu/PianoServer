@@ -78,7 +78,7 @@ class PromotionsController < ApplicationController
     def query_params
       @query_params = {
         page: params[:page] || 1,
-        per: params[:page] || 25,
+        per: params[:page] || 24,
         category_id: params[:category_id],
         inline: params[:inline]
       }
