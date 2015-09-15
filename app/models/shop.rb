@@ -1,5 +1,6 @@
 class Shop < ActiveRecord::Base
   include Liquid::Rails::Droppable
+  html_fragment :description, :scrub => :prune  # scrubs `body` using the :prune scrubber
 
   acts_as_punchable
 
