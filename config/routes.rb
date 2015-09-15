@@ -80,6 +80,7 @@ Rails.application.routes.draw do
     end
 
     resources :products
+    resources :properties
   end
 
   namespace :api do
@@ -139,10 +140,11 @@ Rails.application.routes.draw do
     resources :items
 
     namespace :admin, module: 'shops/admin' do
-      get "/", to: "dashboard#index", as: :index
-      get "/profile", to: "admin#profile"
-      post "/upload_shop_logo", to: "admin#upload_shop_logo"
-      patch "/shop_profile", to: "admin#update_shop_profile"
+      get "/", to: "admin#dashboard", as: :index
+
+      resource :profile do
+        post :update_shop_profile
+      end
 
       resources :dashboard
       resources :shop_categories, constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do
