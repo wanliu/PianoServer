@@ -92,6 +92,5 @@ class User < ActiveRecord::Base
     # TODO what to do when sync fails?
     end
   end
-
   alias_method :name, :nickname
 end
