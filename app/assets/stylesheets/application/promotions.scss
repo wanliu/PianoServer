@@ -36,6 +36,7 @@ $border-color: #CCCCCC;
   }
 
   .type-flag {
+    position: absolute;
     top: 10px;
     right: 10px;
     z-index: 9;
@@ -48,11 +49,6 @@ $border-color: #CCCCCC;
     }
 
     .type-text{
-      position: absolute;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
       line-height: 30px;
       color: #FFFFFF;
     }
