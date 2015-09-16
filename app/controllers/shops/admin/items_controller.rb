@@ -73,13 +73,21 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
         config["value"] = prop_params["property_#{prop.name}"]
       end
 
+      item.send(:write_attribute, :images, params[:item][:filenames].split(','))
       item.save
     end
 
     @item = Item.new(category_id: @category.id, shop_id: @shop.id) if @item.valid?
-    # pp @item.errors.full_messages
+
     flash[:notice] = t("notices.controllers.items.create")
     render :new_step2
+  end
+
+  def upload_image
+    uploader = ItemImageUploader.new(Item.new, :images)
+    uploader.store! params[:file]
+
+    render json: { success: true, url: uploader.url(:cover)  , filename: uploader.filename }
   end
 
   protected

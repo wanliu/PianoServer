@@ -31,8 +31,11 @@ class User < ActiveRecord::Base
     return found.nil? ? true : found.provider == 'import'
   }
 
-  store_accessor :image, :avatar_url
-  # mount_uploader :image, ImageUploader # , mount_on: :avatar_url
+
+  mount_uploader :image, ImageUploader
+  enum sex: {'男' => 1, '女' => 0 }
+  store_accessor :data,
+                 :weixin_openid, :weixin_privilege, :language, :city, :province, :country
 
   JWT_TOKEN = Rails.application.secrets.live_key_base
 
@@ -49,13 +52,13 @@ class User < ActiveRecord::Base
   end
 
   def self.find_for_database_authentication(warden_conditions)
-	  conditions = warden_conditions.dup
-	  if login = conditions.delete(:login)
-	    where(conditions.to_h).where(["lower(username) = :value OR lower(email) = :value OR lower(mobile) = :value", { :value => login.downcase }]).first
-	  else
-	    where(conditions.to_h).first
-	  end
-	end
+    conditions = warden_conditions.dup
+    if login = conditions.delete(:login)
+      where(conditions.to_h).where(["lower(username) = :value OR lower(email) = :value OR lower(mobile) = :value", { :value => login.downcase }]).first
+    else
+      where(conditions.to_h).first
+    end
+  end
 
   def ensure_authentication_token
     if authentication_token.blank?
@@ -88,7 +91,7 @@ class User < ActiveRecord::Base
     begin
       RestClient.post pusher_url, options
     rescue Errno::ECONNREFUSED => e
-      # TODO what to do when sync fails?
+    # TODO what to do when sync fails?
     end
   end
 

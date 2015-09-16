@@ -9,7 +9,6 @@ class Shop < ActiveRecord::Base
   belongs_to :location
   belongs_to :owner, class_name: 'User'
 
-  # has_and_belongs_to_many :categories
   has_one :shop_category
   has_many :items
   has_many :members, class_name: "User", foreign_key: 'shop_id'
@@ -22,5 +21,9 @@ class Shop < ActiveRecord::Base
 
   def avatar_url
     logo.url(:avatar)
+  end
+
+  def logo_url_cover
+    logo.url(:cover)
   end
 end
