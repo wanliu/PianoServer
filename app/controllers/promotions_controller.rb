@@ -2,7 +2,7 @@ class PromotionsController < ApplicationController
   include DefaultAssetHost
   include ContentManagementService::ContentController
 
-  before_action :set_promotion, only: [:show, :update, :destroy, :chat, :shop]
+  before_action :set_promotion, only: [:show, :update, :destroy, :chat, :shop, :follow]
 
   register_render_template :homepage_header, only: [ :index ]
 
@@ -57,8 +57,14 @@ class PromotionsController < ApplicationController
     head :no_content
   end
 
-  def favorited
+  def follow
+    if current_user.persent?
+      current_user.follow! @promotion
 
+      render json: {}, status: :created
+    else
+      render json: { errors: ["匿名用户无法关注活动"] }, status: :unprocessable_entity
+    end
   end
 
   def saled_product_count
