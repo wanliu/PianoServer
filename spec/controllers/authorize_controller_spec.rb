@@ -39,7 +39,7 @@ describe AuthorizeController, type: :request do
         expect(User.first.city).to eq '太原'
         expect(User.first.province).to eq '山西'
         expect(User.first.country).to eq '中国'
-        expect(User.first.image_url).to eq 'http://wx.qlogo.cn/mmopen/Ccnk8Z7hLeMQsChtJJugQ6ronzJsp31TeickDmOBAl2ibRnsgxP3KZpx9LSAGDefATebLVU1Op6wWNyFVXr9H9LBhic1Egws9zE/0!avatar'
+        expect(User.first.image_url).to eq 'http://wx.qlogo.cn/mmopen/Ccnk8Z7hLeMQsChtJJugQ6ronzJsp31TeickDmOBAl2ibRnsgxP3KZpx9LSAGDefATebLVU1Op6wWNyFVXr9H9LBhic1Egws9zE/0'
         expect(User.first.weixin_privilege).to eq []
       end
 
