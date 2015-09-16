@@ -5,6 +5,12 @@ Rails.application.routes.draw do
       get "preview", to: 'subjects#preview', as: :preview
     end
   end
+
+  namespace :authorize do
+    get :weixin
+    get :weixin_redirect_url
+  end
+
   devise_for :admins, controllers: {
     sessions: 'admins/sessions',
     registrations: 'admins/registrations'
