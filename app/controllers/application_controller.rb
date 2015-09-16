@@ -107,6 +107,9 @@ class ApplicationController < ActionController::Base
   end
 
   alias_method_chain :render, :page_title
+  def wx_client
+    WeixinClient.instance.client
+  end
 end
 
 ApplicationController.page_title = [ Settings.app.page_title ]

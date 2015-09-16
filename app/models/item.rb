@@ -8,7 +8,7 @@ class Item < ActiveRecord::Base
   belongs_to :brand
   belongs_to :shop
 
-  mount_uploaders :images, ImageUploader
+  mount_uploaders :images, ItemImageUploader
 
   # dynamic_property prefix: 'property'
 
@@ -52,5 +52,9 @@ class Item < ActiveRecord::Base
 
   def product=(p)
     self.product_id = p.id
+  end
+
+  def filenames
+    []
   end
 end

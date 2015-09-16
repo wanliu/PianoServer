@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150914073356) do
+ActiveRecord::Schema.define(version: 20150916081043) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -290,7 +290,6 @@ ActiveRecord::Schema.define(version: 20150914073356) do
     t.string   "license_no"
     t.string   "website"
     t.string   "status"
-    t.integer  "location_id"
     t.string   "phone"
     t.integer  "industry_id"
     t.jsonb    "image"
@@ -299,6 +298,7 @@ ActiveRecord::Schema.define(version: 20150914073356) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.string   "logo"
+    t.string   "address"
   end
 
   create_table "statuses", force: :cascade do |t|
@@ -355,13 +355,16 @@ ActiveRecord::Schema.define(version: 20150914073356) do
     t.string   "mobile"
     t.string   "username"
     t.string   "authentication_token"
-    t.jsonb    "image",                  default: {}, null: false
+    t.string   "image",                  default: "", null: false
     t.string   "nickname"
     t.string   "provider"
     t.integer  "latest_location_id"
+    t.jsonb    "data",                   default: {}
+    t.integer  "sex",                    default: 1
   end
 
   add_index "users", ["authentication_token"], name: "index_users_on_authentication_token", unique: true, using: :btree
+  add_index "users", ["data"], name: "index_users_on_data", using: :gin
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["mobile"], name: "index_users_on_mobile", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree

@@ -1,11 +1,15 @@
 require 'chinese_pinyin'
 
 class ShopCategory < ActiveRecord::Base
+  LIMITED_DEPTH = 3
+
   acts_as_nested_set
 
   belongs_to :shop
 
   has_many :items, foreign_key: :shop_category_id
+
+  validates :name, presence: true
 
   # store_accessor :image, :avatar_url
 
@@ -15,7 +19,7 @@ class ShopCategory < ActiveRecord::Base
   # alias_method :cover_url, :avatar_url
   # alias_method :logo_url, :avatar_url
 
-  validate :depth_less_or_eq_to_3
+  validate :out_of_depth
 
   def title
     super || name
@@ -33,6 +37,10 @@ class ShopCategory < ActiveRecord::Base
     rgt - lft == 1
   end
 
+  def depth_limited_reached
+    depth >= LIMITED_DEPTH
+  end
+
   protected
 
   def default_values
@@ -47,8 +55,8 @@ class ShopCategory < ActiveRecord::Base
     nested_set_scope.where(name: name).last.present?
   end
 
-  def depth_less_or_eq_to_3
-    if parent.depth >= 3
+  def out_of_depth
+    if parent.depth >= LIMITED_DEPTH
       errors.add(:depth, "层级过多，最多只能有三级")
     end
   end
