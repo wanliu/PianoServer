@@ -21,6 +21,6 @@ class Shops::Admin::ProfilesController < Shops::Admin::BaseController
   protected
 
     def shop_profile_params
-      params.require(:shop).permit(:title, :phone, :website, :description)
+      params.require(:shop).permit(:title, :phone, :website, :description, :address)
     end
 end
