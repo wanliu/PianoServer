@@ -1,6 +1,6 @@
 class AuthorizeController < ApplicationController
   def weixin
-    redirect_url = "#{Settings.app.host}/weixin_redirect_url"
+    redirect_url = "#{Settings.app.host}/authorize/weixin_redirect_url"
     redirect_to client.authorize_url(redirect_url, 'snsapi_userinfo') if client.is_valid?
   end
 
@@ -26,6 +26,6 @@ class AuthorizeController < ApplicationController
       # sign_in(:user, user) 在登陆前，竟然强制保存了 user.
       sign_in(:user, user)
     end
-    redirect_to edit_user_password_url
+    redirect_to :back
   end
 end

@@ -30,7 +30,7 @@ describe AuthorizeController, type: :request do
 
         expect(User.exists?).to be false
 
-        get '/authorize/weixin_redirect_url?', {code: code}
+        get '/authorize/weixin_redirect_url?', {code: code}, {'HTTP_REFERER' => root_url}
 
         expect(User.first.weixin_openid).to eq 'o0tInv8I0VvpdNyx12tMTy9asT-0'
         expect(User.first.nickname).to eq '羁绊'
@@ -81,7 +81,7 @@ describe AuthorizeController, type: :request do
         expect(User.count).to eq 1
         expect(User.first.username).to eq 'username'
 
-        get '/authorize/weixin_redirect_url?', {code: code}
+        get '/authorize/weixin_redirect_url?', {code: code}, {'HTTP_REFERER' => root_url }
         expect(User.count).to eq 1
         expect(User.first.weixin_openid).to eq 'o0tInv8I0VvpdNyx12tMTy9asT-1'
         expect(User.first.nickname).to eq 'nickname'
