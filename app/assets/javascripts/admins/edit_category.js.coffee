@@ -44,7 +44,11 @@ class @EditShopCategory extends @Event
       .focus()
 
   onClick: (e) ->
-    Turbolinks.visit(@url) if $(e.target).is('.thumbnail>img')
+    if $(e.target).is('.thumbnail>img') && @thumbnailClickable(e)
+      Turbolinks.visit(@url)
+
+  thumbnailClickable: (e) ->
+    $(e.target).parent('.thumbnail').attr('data-limited-depth') is 'false'
 
   onUploader: (id, filename, responseJSON) ->
     @setImage(responseJSON.url)
