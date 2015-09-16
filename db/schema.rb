@@ -355,13 +355,16 @@ ActiveRecord::Schema.define(version: 20150916081043) do
     t.string   "mobile"
     t.string   "username"
     t.string   "authentication_token"
-    t.jsonb    "image",                  default: {}, null: false
+    t.string   "image",                  default: "", null: false
     t.string   "nickname"
     t.string   "provider"
     t.integer  "latest_location_id"
+    t.jsonb    "data",                   default: {}
+    t.integer  "sex",                    default: 1
   end
 
   add_index "users", ["authentication_token"], name: "index_users_on_authentication_token", unique: true, using: :btree
+  add_index "users", ["data"], name: "index_users_on_data", using: :gin
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["mobile"], name: "index_users_on_mobile", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
