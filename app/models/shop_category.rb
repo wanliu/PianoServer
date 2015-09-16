@@ -9,6 +9,8 @@ class ShopCategory < ActiveRecord::Base
 
   has_many :items, foreign_key: :shop_category_id
 
+  validates :name, presence: true
+
   # store_accessor :image, :avatar_url
 
   mount_uploader :image, ImageUploader # , mount_on: :avatar_url
