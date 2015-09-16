@@ -1,15 +1,15 @@
 class AuthorizeController < ApplicationController
   def weixin
     redirect_url = "#{Settings.app.host}/authorize/weixin_redirect_url"
-    redirect_to client.authorize_url(redirect_url, 'snsapi_userinfo') if client.is_valid?
+    redirect_to wx_client.authorize_url(redirect_url, 'snsapi_userinfo') if wx_client.is_valid?
   end
 
   def weixin_redirect_url
     code = params[:code]
 
-    if client.is_valid?
-      access_token = client.get_oauth_access_token(code).result['access_token']
-      profile = client.get_oauth_userinfo(client.app_id, access_token).result
+    if wx_client.is_valid?
+      access_token = wx_client.get_oauth_access_token(code).result['access_token']
+      profile = wx_client.get_oauth_userinfo(wx_client.app_id, access_token).result
 
       user = User.where('data @> ?', {weixin_openid: profile['openid']}.to_json)
              .first_or_initialize(

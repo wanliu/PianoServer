@@ -107,7 +107,7 @@ class ApplicationController < ActionController::Base
   end
 
   alias_method_chain :render, :page_title
-  def client
+  def wx_client
     WeixinClient.instance.client
   end
 end
