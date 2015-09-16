@@ -2,6 +2,7 @@ require 'active_resource'
 class ApplicationController < ActionController::Base
   include DebugMode
   include ContentFor
+  include Errors::RescueError
 
   class_attribute :page_title
 

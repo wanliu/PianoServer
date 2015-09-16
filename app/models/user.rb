@@ -11,6 +11,7 @@ class User < ActiveRecord::Base
 
   # has_many :memberings, :dependent => :destroy
   belongs_to :latest_location, class_name: 'Location'
+  belongs_to :shop
 
   has_many :chats, foreign_key: 'owner_id'
 
@@ -30,7 +31,8 @@ class User < ActiveRecord::Base
     return found.nil? ? true : found.provider == 'import'
   }
 
-  mount_uploader :image, ImageUploader # , mount_on: :avatar_url
+  store_accessor :image, :avatar_url
+  # mount_uploader :image, ImageUploader # , mount_on: :avatar_url
 
   JWT_TOKEN = Rails.application.secrets.live_key_base
 
@@ -61,9 +63,9 @@ class User < ActiveRecord::Base
     end
   end
 
-  def avatar_url
-    image.url(:avatar)
-  end
+  # def avatar_url
+  #   image.url(:avatar)
+  # end
 
   private
 

@@ -17,5 +17,11 @@ class Shops::Admin::BaseController < ApplicationController
   def shop_page_title
     self.page_title += [ t("titles.shops", shop_name: @shop.title) ]
   end
+
+
+  def authenticate_shop_user!
+    user_id = current_user.try(:id)
+    raise Errors::Forbidden unless current_user.try(:shop) == @shop or current_user.try(:id) == @shop.owner_id
+  end
 end
 

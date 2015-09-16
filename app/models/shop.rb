@@ -12,6 +12,7 @@ class Shop < ActiveRecord::Base
   # has_and_belongs_to_many :categories
   has_one :shop_category
   has_many :items
+  has_many :members, class_name: "User", foreign_key: 'shop_id'
 
   store_accessor :settings, :greetings
 
