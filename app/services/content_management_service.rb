@@ -5,7 +5,7 @@ module ContentManagementService
     included do |klass|
       include ContentManagementService::Methods
 
-      cattr_accessor :content_templates
+      klass.class_attribute :content_templates
       attr_accessor :cached_all_templates
       attr_accessor :all_variables
 
@@ -13,8 +13,7 @@ module ContentManagementService
         @cached_all_templates ||= {}
       end
 
-      @@content_templates = []
-
+      klass.content_templates = []
       before_action :check_subject_variables
     end
 
@@ -94,7 +93,6 @@ module ContentManagementService
 
     def load_all_variables(_variables)
       @all_variables ||= {}
-
       _variables.each do |variable|
         value = variable.call if variable.respond_to?(:call)
         if VALID_VAR_NAME =~ variable.name
