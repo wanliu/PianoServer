@@ -40,8 +40,10 @@ class @EditShopCategory extends @Event
 
     @$title = $(e.target).hide()
     @$input
+      .val(@$title.text())
       .show()
       .focus()
+      .select()
 
   onClick: (e) ->
     Turbolinks.visit(@url) if $(e.target).is('.thumbnail>img')
