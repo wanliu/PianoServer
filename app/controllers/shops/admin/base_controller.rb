@@ -3,6 +3,8 @@ class Shops::Admin::BaseController < ApplicationController
 
   before_action :set_shop
   before_action :shop_page_title
+  before_action :authenticate_shop_user!
+
 
   def set_shop
     @shop = Shop.find_by name: params[:shop_id]

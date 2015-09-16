@@ -167,6 +167,9 @@ Rails.application.routes.draw do
           post "/new/step2/category/:category_id", to: "items#create"
         end
       end
+
+      resources :settings
+
     end
   end
 
