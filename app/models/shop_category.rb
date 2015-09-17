@@ -56,7 +56,7 @@ class ShopCategory < ActiveRecord::Base
   end
 
   def out_of_depth
-    if parent.depth >= LIMITED_DEPTH
+    if parent.present? && parent.depth >= LIMITED_DEPTH
       errors.add(:depth, "层级过多，最多只能有三级")
     end
   end
