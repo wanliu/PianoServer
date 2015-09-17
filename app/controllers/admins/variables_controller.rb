@@ -82,7 +82,7 @@ class Admins::VariablesController < Admins::BaseController
       params_name = "#{variable_params[:type]}_params".to_sym
       update_params = send(params_name)
       update_params.delete(:type)
-      @variable.update_attributes(update_params)
+      @variable.update_attributes!(update_params)
 
       render json: @variable
     else

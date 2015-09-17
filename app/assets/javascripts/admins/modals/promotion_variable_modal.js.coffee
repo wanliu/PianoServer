@@ -33,6 +33,11 @@ class @PromotionVariableModal extends @ModalBase
       success: (data) =>
         @$().modal('hide')
         @variableCRUD('add', data)
+      error: (jqXHR, textStatus, errorThrown) =>
+        json = eval("(" + jqXHR.responseText + ")");
+        fields = json.errors.fields
+
+        @hanldeErrors(fields)
 
   onVariableNameChange: (e) ->
     name = $.trim($(e.target).val())
@@ -49,3 +54,17 @@ class @PromotionVariableModal extends @ModalBase
 
         @$().find('.promotion-list .list-group').html(htmlAry.join(''))
         @bindAllEvents()
+
+  hanldeErrors: (fields) ->
+    $fieldName = @$().find('.field-name')
+    $promotions = @$().find('.field-promotion')
+
+    if fields['name']?
+      $fieldName.addClass('has-error').find('.help-block').text(fields['name'])
+    else
+      $fieldName.removeClass('has-error').find('.help-block').text('')
+
+    if fields['promotion_id']?
+      $promotions.addClass('has-error').find('.help-block').text(fields['promotion_id'])
+    else
+      $promotions.removeClass('has-error').find('.help-block').text('')
