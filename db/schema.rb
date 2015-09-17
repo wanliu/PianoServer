@@ -292,12 +292,12 @@ ActiveRecord::Schema.define(version: 20150916081043) do
     t.string   "status"
     t.string   "phone"
     t.integer  "industry_id"
-    t.jsonb    "image"
     t.text     "description"
     t.string   "provider"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
     t.string   "logo"
+    t.jsonb    "settings",    default: {}
     t.string   "address"
   end
 
@@ -359,6 +359,7 @@ ActiveRecord::Schema.define(version: 20150916081043) do
     t.string   "nickname"
     t.string   "provider"
     t.integer  "latest_location_id"
+    t.integer  "shop_id"
     t.jsonb    "data",                   default: {}
     t.integer  "sex",                    default: 1
   end

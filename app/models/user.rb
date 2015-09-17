@@ -11,6 +11,7 @@ class User < ActiveRecord::Base
 
   # has_many :memberings, :dependent => :destroy
   belongs_to :latest_location, class_name: 'Location'
+  belongs_to :shop
 
   has_many :chats, foreign_key: 'owner_id'
 
@@ -29,6 +30,7 @@ class User < ActiveRecord::Base
     found = where(id: id).first
     return found.nil? ? true : found.provider == 'import'
   }
+
 
   mount_uploader :image, ImageUploader
   enum sex: {'男' => 1, '女' => 0 }
@@ -64,9 +66,9 @@ class User < ActiveRecord::Base
     end
   end
 
-  def avatar_url
-    image.url(:avatar)
-  end
+  # def avatar_url
+  #   image.url(:avatar)
+  # end
 
   private
 
@@ -92,5 +94,6 @@ class User < ActiveRecord::Base
     # TODO what to do when sync fails?
     end
   end
+
   alias_method :name, :nickname
 end

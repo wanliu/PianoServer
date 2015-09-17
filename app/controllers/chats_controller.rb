@@ -63,7 +63,6 @@ class ChatsController < ApplicationController
         order.bid = Order.last_bid(current_anonymous_or_user.id) + 1
       end
     @order.items.add_shop_product(@item)
-    @order
   end
 
 	def show
@@ -72,6 +71,11 @@ class ChatsController < ApplicationController
     #@target = @chat.chatable || @chat.target
 		@target = my_chat? ? @chat.target : @chat.owner
     @chats = Chat.in(current_anonymous_or_user.id)
+
+    if @order.buyer_id == current_anonymous_or_user.id and
+      DateTime.now - 15.seconds < @chat.created_at
+      @greetings = @order.supplier.greetings
+    end
 
     MessageSystemService.send_read_message current_anonymous_or_user.id, other_side
 	end

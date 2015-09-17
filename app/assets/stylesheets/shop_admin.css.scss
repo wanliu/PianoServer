@@ -5,6 +5,7 @@
  *= require _common/fileuploader
  *= require _common/checkbox
  *= require_tree ./shop_admin
+ *= require ./chats/chat-item
  *= require_self
 */
 
@@ -77,6 +78,11 @@ body[module="signup"] {
     color: #fff;
     background-color: #337ab7;
   }
+
+  .nav > li.divider {
+    border-top: 1px solid #ccc;
+  }
+
 }
 
 .shop-admin-overlayer {

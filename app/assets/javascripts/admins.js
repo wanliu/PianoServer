@@ -16,6 +16,7 @@
 //= require _common/fileuploader
 //= require _common/hammer
 //= require _common/util
+//= require _common/save_on_change
 //= require bootsy
 //= require_tree ./locales
 //= require_tree ./admins
