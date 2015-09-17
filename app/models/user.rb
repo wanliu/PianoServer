@@ -66,9 +66,9 @@ class User < ActiveRecord::Base
     end
   end
 
-  # def avatar_url
-  #   image.url(:avatar)
-  # end
+  def avatar_url
+    image.url(:avatar)
+  end
 
   private
 
