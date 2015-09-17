@@ -173,6 +173,9 @@ Rails.application.routes.draw do
           post "/upload_image", to: "items#upload_image"
         end
       end
+
+      resources :settings
+
     end
   end
 
