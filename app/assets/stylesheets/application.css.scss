@@ -37,7 +37,7 @@ html{
 
 body {
   background-image: image-url('bj.jpg');
-  padding-top: 50px;
+  padding-top: 80px;
   margin-bottom: 60px;
 }
 
@@ -144,4 +144,8 @@ body {
     width: 30px;
     height: 30px;
   }
+}
+
+.ie-warning {
+  display: none;
 }
