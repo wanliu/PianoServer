@@ -1,6 +1,8 @@
 class Admins::VariablesController < Admins::BaseController
   before_action :set_parents
 
+  rescue_from ActiveRecord::RecordInvalid, with: :raise_validates_errors
+
   def show
 
   end
@@ -40,7 +42,8 @@ class Admins::VariablesController < Admins::BaseController
       create_params = send(params_name)
       create_params.merge! template_id: params[:template_id], type: variable_params[:type].classify
       klass = variable_params[:type].classify.safe_constantize
-      @variable = klass.create(create_params) if klass
+
+      @variable = klass.create!(create_params) if klass
 
       render json: @variable
     else
@@ -123,5 +126,19 @@ class Admins::VariablesController < Admins::BaseController
 
   def promotion_set_variable_params
     params.require(:variable).permit(:id, :type, :name, :promotion_string, :template_id)
+  end
+
+  def raise_validates_errors(e)
+    variable = e.record
+    if variable && !variable.valid?
+      errors_hash = Hash[
+        variable.errors.map {|name, errors| [name, variable.errors[name].join(',') ] }
+      ]
+
+      render json: { errors: {
+        text: variable.errors.full_messages.join(','),
+        fields: errors_hash
+      }}, status: 422
+    end
   end
 end

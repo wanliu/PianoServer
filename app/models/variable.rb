@@ -1,7 +1,7 @@
 class Variable < ActiveRecord::Base
-  belongs_to :template
+  include Variables::Validates
 
-  validates :name, presence: true
+  belongs_to :template
 
   def call
     data
