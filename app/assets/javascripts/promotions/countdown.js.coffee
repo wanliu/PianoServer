@@ -43,7 +43,7 @@ class @CountDown
         .addClass(toAddClass)
 
   _diff: (date1, date2) ->
-    date2.getTime() - date1.getTime()
+    date2 - date1
 
   duration: (date1, date2) ->
     duration = @_diff(date1, date2)
@@ -115,6 +115,7 @@ class @CountDown
     @_applyClass('started')
 
   _formatFullyTime: (date) ->
+    date = new Date(date)
     years = date.getFullYear()
     months = @_formatValue(date.getMonth())
     days = @_formatValue(date.getDate())

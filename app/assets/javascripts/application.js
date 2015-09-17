@@ -27,6 +27,7 @@
 //= require lib/user-socket
 //= require lib/underscore
 //= require lib/underscore-template
+//= require lib/date_iso8601_polyfill
 //= require _common/qrcode
 //= require _common/local-address
 //= require _common/hammer
