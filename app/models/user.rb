@@ -72,7 +72,7 @@ class User < ActiveRecord::Base
   end
 
   def follows?(target)
-    if is_anonymous?
+    if anonymous?
       false
     else
       followables.exists?(followable_type: target.class, followable_id: target.id)
@@ -80,12 +80,18 @@ class User < ActiveRecord::Base
   end
 
   def follows!(target)
-    unless is_anonymous?
+    unless anonymous?
       followables.create!(followable_type: target.class, followable_id: target.id)
     end
   end
 
-  def is_anonymous?
+  def unfollows!(target)
+    unless anonymous?
+      followables.find_by(followable_type: target.class, followable_id: target.id).destroy!
+    end
+  end
+
+  def anonymous?
     id < 0
   end
 

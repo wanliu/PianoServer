@@ -57,13 +57,19 @@ class PromotionsController < ApplicationController
     head :no_content
   end
 
-  def follow
+  def toggle_follow
+    action = "关注"
     if current_user.persent?
-      current_user.follow! @promotion
+      if follows? target
+        unfollows! target
+      else
+        follows! target
+        action = "取消关注"
+      end
 
-      render json: {}, status: :created
+      render json: {sucess: "#{action}成功！"}, status: :ok
     else
-      render json: { errors: ["匿名用户无法关注活动"] }, status: :unprocessable_entity
+      render json: { errors: ["匿名用户无法进行此类操作，请登录后再试"] }, status: :unprocessable_entity
     end
   end
 
