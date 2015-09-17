@@ -125,14 +125,14 @@
         isLimit = type === 'promotions/time_limited_sale',
         inventory = '<%= promotion.product_inventory %>',
         status = '<%= promotion.status %>',
-        startTime = '<%= promotion.start_time.to_datetime.in_time_zone("Beijing") %>',
-        startDate = new Date(startTime),
+        startTime = '<%= promotion.start_time %>',
+        startDate = Date.parse(startTime),
         promotionId = $('.promotion-detail-container').data('promotionId'),
         endDate;
 
     <% if promotion.type == 'promotions/time_limited_sale' %>
-      var endTime = '<%= promotion.end_time.to_datetime.in_time_zone("Beijing") %>';
-      endDate = new Date(endTime);
+      var endTime = '<%= promotion.end_time %>';
+      endDate = Date.parse(endTime);
     <% end %>
 
     new CountDown($('.desc-wrap'), isLimit, inventory, status, startDate, endDate);
