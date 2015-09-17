@@ -17,8 +17,6 @@ class Shop < ActiveRecord::Base
 
   mount_uploader :logo, ImageUploader
 
-  alias_method :address, :location
-
   def avatar_url
     logo.url(:avatar)
   end

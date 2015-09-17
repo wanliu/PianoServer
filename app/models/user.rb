@@ -13,8 +13,8 @@ class User < ActiveRecord::Base
   belongs_to :latest_location, class_name: 'Location'
   belongs_to :shop
 
+  has_one :owner_shop, class_name: 'Shop', foreign_key: 'owner_id'
   has_many :chats, foreign_key: 'owner_id'
-
   has_many :locations
 
   validates :username, presence: true, uniqueness: true
@@ -30,7 +30,6 @@ class User < ActiveRecord::Base
     found = where(id: id).first
     return found.nil? ? true : found.provider == 'import'
   }
-
 
   mount_uploader :image, ImageUploader
   enum sex: {'男' => 1, '女' => 0 }
@@ -68,6 +67,10 @@ class User < ActiveRecord::Base
 
   def avatar_url
     image.url(:avatar)
+  end
+
+  def join_shop
+    shop || owner_shop
   end
 
   private

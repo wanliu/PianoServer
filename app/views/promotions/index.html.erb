@@ -8,13 +8,13 @@
 </div>
 
 <script type="text/javascript">
-	var page = 1;
-	var delayedTime = 200;
-	var pulling = false;
-  var per = 24;
-  var allLoaded = <%= @promotions.length %> < per;
+  $(function() {
+    var page = 1;
+    var delayedTime = 200;
+    var pulling = false;
+    var per = 24;
+    var allLoaded = <%= @promotions.length %> < per;
 
-	$(function() {
 		var parseURL = window.parseURL;
 
 		function displayLoading()  {
