@@ -67,7 +67,7 @@ module ApplicationHelper
     if user.id < 0
       '#'
     else
-      profile_path(user)
+      profile_path(user.name)
     end
   end
 

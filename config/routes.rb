@@ -136,6 +136,8 @@ Rails.application.routes.draw do
   #
   get '/about' => 'home#about'
 
+  match '@:profile', :to => 'profile#username', as: :profile, via: [ :get ]
+
   match ':shop_name', :to => 'shops#show_by_name', constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ }, via: [ :get ], as: :shop_site
 
   resources :shops, path: '/', only: [], constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do
@@ -173,11 +175,10 @@ Rails.application.routes.draw do
           post "/upload_image", to: "items#upload_image"
         end
       end
+
+      resources :settings
     end
   end
-
-  match '@:profile', :to => 'profile#username', as: :profile, via: [ :get ]
-
 
   root to: "promotions#index"
 end

@@ -14,6 +14,8 @@
     </li>
     <li><%= link_to '产品', shop_admin_items_path(@shop.name) %></li>
     <li><%= link_to '关于', about_shop_path(@shop.name) %></li>
+    <li role="separator" class="divider"></li>
+    <li><%= link_to '设置', shop_admin_settings_path(@shop.name) %></li>
   </ul>
 </div>
 

@@ -292,13 +292,13 @@ ActiveRecord::Schema.define(version: 20150916081043) do
     t.string   "status"
     t.string   "phone"
     t.integer  "industry_id"
-    t.jsonb    "image"
     t.text     "description"
     t.string   "provider"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
     t.string   "logo"
     t.string   "address"
+    t.jsonb    "settings",    default: {}
   end
 
   create_table "statuses", force: :cascade do |t|
@@ -361,6 +361,7 @@ ActiveRecord::Schema.define(version: 20150916081043) do
     t.integer  "latest_location_id"
     t.jsonb    "data",                   default: {}
     t.integer  "sex",                    default: 1
+    t.integer  "shop_id"
   end
 
   add_index "users", ["authentication_token"], name: "index_users_on_authentication_token", unique: true, using: :btree

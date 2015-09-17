@@ -11,9 +11,10 @@ class User < ActiveRecord::Base
 
   # has_many :memberings, :dependent => :destroy
   belongs_to :latest_location, class_name: 'Location'
+  belongs_to :shop
 
+  has_one :owner_shop, class_name: 'Shop', foreign_key: 'owner_id'
   has_many :chats, foreign_key: 'owner_id'
-
   has_many :locations
 
   validates :username, presence: true, uniqueness: true
@@ -68,6 +69,10 @@ class User < ActiveRecord::Base
     image.url(:avatar)
   end
 
+  def join_shop
+    shop || owner_shop
+  end
+
   private
 
   def generate_authentication_token
@@ -92,5 +97,6 @@ class User < ActiveRecord::Base
     # TODO what to do when sync fails?
     end
   end
+
   alias_method :name, :nickname
 end
