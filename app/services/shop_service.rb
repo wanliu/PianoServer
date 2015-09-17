@@ -4,7 +4,7 @@ module ShopService
   extend self
 
   def build(name)
-    Rails::Generators.invoke 'shop:build', [ name ]
+    Rails::Generators.invoke 'shop:build', [ name, "--skip" ]
   end
 
   def valid?(shop)
