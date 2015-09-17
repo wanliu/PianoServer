@@ -22,23 +22,24 @@
  *= require_tree ./application
  *= require_tree ./chats
  *= require_tree ./locations
+ *= require_tree ./contacts
  *= require_self
  */
 html{
   position: relative;
   min-height: 100%;
-
-  /**footer{
-    position: absolute;
-    bottom: 0;
-    word-break: break-all;
-  }*/
 }
 
 body {
   background-image: image-url('bj.jpg');
   padding-top: 50px;
-  margin-bottom: 60px;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  text-align: center;
+  word-break: break-all;
 }
 
 .detail .navbar-fixed-top{
