@@ -1,15 +1,18 @@
 <%= form_for @variable, as: :variable, url: variables_path(@subject, @template) do |f| %>
-  <div class="form-group">
+  <%= f.hidden_field :promotion_id %>
+
+  <div class="form-group field-name">
     <%= f.text_field :name, class: "form-control", placeholder: "对象名" %>
+    <div class="help-block error-name"></div>
   </div>
-  <div class="list-group selected">
-    <li class="list-group-item">
+  <div class="list-group selected field-promotion">
+    <div class="list-group-item">
       <h4>
       <span class="id">&nbsp;</span>
       <span class="title">暂未选择一个活动名</span>
       </h4>
-    </li>
-    <%= f.hidden_field :promotion_id %>
+    </div>
+    <div class="help-block"></div>
   </div>
   <div class="promotion-list">
     <div class="form-group">
