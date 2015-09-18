@@ -12,14 +12,14 @@ class EsBrandsSync
         record = Brand.find_by(id: id)
 
         if record.present?
-          update_attributes = attributes.except(:id, :created_at, :updated_at, :deleted_at, :custom_special).to_hash
+          update_attributes = attributes.slice(*Brand.attribute_names).except(:id, :created_at, :updated_at).to_hash
 
           if overwrite_model == "overwrite"
             extract_chinese_name! update_attributes
             record.update update_attributes
           end
         else
-          update_attributes = attributes.except(:created_at, :updated_at, :deleted_at, :custom_special).to_hash
+          update_attributes = attributes.slice(*Brand.attribute_names).except(:created_at, :updated_at).to_hash
 
           extract_chinese_name! update_attributes
           Brand.create update_attributes

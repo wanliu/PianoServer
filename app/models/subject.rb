@@ -13,7 +13,7 @@ class Subject < ActiveRecord::Base
   validates :end_at, presence: true
 
 
-  before_save :default_values
+  before_validation :default_values
   after_create :create_subject_files
 
   scope :availables, -> do
