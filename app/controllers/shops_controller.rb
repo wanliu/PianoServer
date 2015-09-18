@@ -21,7 +21,7 @@ class ShopsController < ApplicationController
     @shop = Shop.find params[:id]
 
     page = params[:page].presence || 1
-    per = params[:per].presence || 9
+    per = params[:per].presence || 12
 
     @shop_categories = @shop.shop_category.children.page(page).per(per)
   end
