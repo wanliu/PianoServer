@@ -1,5 +1,4 @@
 <%= form_for(@contact) do |f| %>
-
   <% if @contact and  @contact.errors.any? -%>
     <div id="error_explanation">
       <h2>存在以下错误: </h2>
@@ -12,20 +11,31 @@
     </div>
   <% end -%>
 
-  <fieldset>
-    <legend>申请开店</legend>
+  <div class="form-group">
+    <%= label :contact, :name do %>
+      姓名<span class="required">*</span>
+    <% end %>
 
-    <label for="name">您的姓名:</label><br />
-    <%= f.text_field :name %><br />
-    <label for="mobile">您的移动电话:</label><br />
-    <%= f.text_field :mobile %><br />
-    <label for="message">输入开店申请信息:</label><br />
-    <%= f.text_area :message %>
+    <%= f.text_field :name, class: "form-control" %>
+  </div>
 
-    <div class="actions">
-      <%= f.submit "立即提交申请" %>
-    </div>
+  <div class="form-group">
+    <%= label :contact, :mobile do %>
+      手机/座机号<span class="required">*</span>
+    <% end %>
 
-  </fieldset>
+    <%= f.text_field :mobile, class: "form-control" %>
+  </div>
 
+  <div class="form-group">
+    <%= label :contact, :message do %>
+      开店申请信息<span class="required">*</span>
+    <% end %>
+
+    <%= f.text_area :message, rows: 3, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= f.submit "立即提交申请", class: "btn btn-default" %>
+  </div>
 <% end %>

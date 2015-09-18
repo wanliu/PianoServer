@@ -6,4 +6,14 @@ module ShopsHelper
 
     render partial: path
   end
+
+  def title_chain_render(shop, shop_category)
+    html = shop_category.self_and_ancestors.map do |cate|
+      <<-HTML
+        <a href="#{shop_shop_category_path(shop.name, cate)}">#{cate.title}</a>
+      HTML
+    end.join("<span class='glyphicon glyphicon-menu-right' aria-hidden='true'></span>")
+
+    sanitize html
+  end
 end

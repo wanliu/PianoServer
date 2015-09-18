@@ -55,8 +55,7 @@
     <div class='qq-upload-drop-area' style='display: none;'>
       <span>拖动文件到这里上传</span>
     </div>
-    <div class='qq-upload-button' style='position: relative; overflow: hidden; direction: ltr;'>选择文件上传
-      <input type='file' name='file' style='position: absolute; right: 0px; top: 0px; font-family: Arial; font-size: 118px; margin: 0px; padding: 0px; cursor: pointer; opacity: 0;'>
+    <div class='qq-upload-button'>选择文件上传
     </div>
     <ul class='qq-upload-list' style='display: none;'></ul>
   </div>
@@ -65,15 +64,15 @@
 <script type="text/javascript">
   (function () {
     var shopId = "<%= @shop.id %>";
-    var token = $("#edit_shop_" + shopId + " input[name=authenticity_token]").val();
 
     var $element = $("#edit_shop_" + shopId + " div.image-uploader-button")[0];
     var actionUrl = "<%= upload_shop_logo_shop_admin_profile_path(@shop.name) %>";
+    var token = $('meta[name=csrf-token]').attr('content');
 
     new qq.FileUploader({
       element: $element,
-      action:  actionUrl,
-      customHeaders: { "X-CSRF-Token": token },
+      customHeaders: { "X-CSRF-TOKEN": token },
+      action:  actionUrl + "?authenticity_token=" + encodeURIComponent(token),
       multiple: false,
       template: $(".file-uploader-template").html(),
       onComplete: function (id, filename, responseJSON) {

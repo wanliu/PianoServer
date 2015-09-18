@@ -15,7 +15,7 @@ class ShopCategory < ActiveRecord::Base
 
   mount_uploader :image, ImageUploader # , mount_on: :avatar_url
 
-  before_save :default_values
+  before_validation :default_values
   # alias_method :cover_url, :avatar_url
   # alias_method :logo_url, :avatar_url
 
@@ -27,10 +27,6 @@ class ShopCategory < ActiveRecord::Base
 
   def has_children
     ShopCategory.exists?(parent_id: id)
-  end
-
-  def chain_name
-    self_and_ancestors.map(&:title)
   end
 
   def is_leaf
@@ -56,7 +52,7 @@ class ShopCategory < ActiveRecord::Base
   end
 
   def out_of_depth
-    if parent.depth >= LIMITED_DEPTH
+    if parent.present? && parent.depth >= LIMITED_DEPTH
       errors.add(:depth, "层级过多，最多只能有三级")
     end
   end

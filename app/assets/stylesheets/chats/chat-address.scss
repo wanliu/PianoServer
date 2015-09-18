@@ -1,8 +1,27 @@
-.address-menu{
-  right: 0;
-  left: auto;
-  max-width: 100%;
-  min-width: 100px;
-  max-height: 250px;
-  overflow-y: auto;
+.chat-order-address {
+  .toggle-button {
+    position: relative;
+    padding-right: 10px;
+
+    .button-text {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .caret {
+      position: absolute;
+      top: 8px;
+      right: 0;
+    }
+  }
+
+  .address-menu {
+    right: 0;
+    left: auto;
+    max-width: 100%;
+    min-width: 100px;
+    max-height: 250px;
+    overflow-y: auto;
+  }
 }
