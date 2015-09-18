@@ -3,29 +3,29 @@
 <% end %>
 
 <% content_for :module, :shop %>
-
-<div class="brand-board">
-  <div class='shop-info'>
-    <%= image_tag @shop.logo.url(:cover), class: 'shop-logo' %>
-    <div class='name-address'>
-      <span class='name'><%= @shop.name %></span>
-      <span class='address'><%= @shop.address %></span>
+<div class="col-md-12">
+  <div class="brand-board">
+    <div class='shop-info'>
+      <%= image_tag @shop.logo.url(:cover), class: 'shop-logo' %>
+      <div class='name-address'>
+        <span class='name'><%= @shop.name %></span>
+        <span class='address'><%= @shop.address %></span>
+      </div>
+      <div style='clear:both'></div>
     </div>
-    <div style='clear:both'></div>
+  </div>
+
+  <div class="cate-items-list">
+    <div class='title'>
+      <%= sanitize @shop_category.chain_name.join("<span class='glyphicon glyphicon-menu-right' aria-hidden='true'></span>") %>
+    </div>
+    <% if @shop_category.has_children %>
+      <%= render partial: 'shop_categories', locals: { shop: @shop, shop_categories: @shop_categories } %>
+    <% else %>
+      <%= render partial: 'items', locals: { items: @items } %>
+    <% end %>
   </div>
 </div>
-
-<div class="cate-items-list">
-  <div class='title'>
-    <%= sanitize @shop_category.chain_name.join("<span class='glyphicon glyphicon-menu-right' aria-hidden='true'></span>") %>
-  </div>
-  <% if @shop_category.has_children %>
-    <%= render partial: 'shop_categories', locals: { shop: @shop, shop_categories: @shop_categories } %>
-  <% else %>
-    <%= render partial: 'items', locals: { items: @items } %>
-  <% end %>
-</div>
-
 <script type="text/template" id='template-shop-categories'>
   {{ _.each(collection, function (cate, index) { }}
     <div class="col-xs-6 col-sm-4 cate">
