@@ -6,7 +6,7 @@
 
 <div class="brand-board">
   <div class='shop-info'>
-    <%= image_tag @shop.logo_url, class: 'shop-logo' %>
+    <%= image_tag @shop.logo.url(:cover), class: 'shop-logo' %>
     <div class='name-address'>
       <span class='name'><%= @shop.name %></span>
       <span class='address'><%= @shop.address %></span>
@@ -17,10 +17,10 @@
 
 <div class="cate-items-list">
   <div class='title'>
-    <%= sanitize @shop_category.chain_name.join("<span class='glyphicon glyphicon-menu-right' aria-hidden='true'></span>") %>
+    <%= title_chain_render(@shop, @shop_category) %>
   </div>
   <% if @shop_category.has_children %>
-    <%= render partial: 'shop_categories', locals: { shop: @shop, categories: @shop_categories } %>
+    <%= render partial: 'shop_categories', locals: { shop: @shop, shop_categories: @shop_categories } %>
   <% else %>
     <%= render partial: 'items', locals: { items: @items } %>
   <% end %>
@@ -70,7 +70,7 @@
     }[key];
 
     var request_url = {
-      shop_categories: "/<%= @shop.name %>/categories.json?page=" + (page + 1) + "&per=" + per + "&parent_id=<%= @shop_category.id %>",
+      shop_categories: "/<%= @shop.name %>/shop_categories.json?page=" + (page + 1) + "&per=" + per + "&parent_id=<%= @shop_category.id %>",
       items: "/<%= @shop.name %>/items.json?page=" + (page + 1) + "&per=" + per + "&shop_category_id=<%= @shop_category.id %>"
     }[key];
 

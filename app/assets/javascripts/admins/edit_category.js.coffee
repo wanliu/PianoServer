@@ -1,6 +1,6 @@
 #= require _common/event
 #= require _common/fileuploader
-class @EditCategory extends @Event
+class @EditShopCategory extends @Event
   events:
     'click': 'onClick'
     'click .thumbnail>h2': 'onClickTitle'
@@ -11,9 +11,9 @@ class @EditCategory extends @Event
 
   constructor: (@element, @url) ->
     super
-    @$img = @$().find('form input[name="category_img"]')
+    @$img = @$().find('form input[name="shop_category_img"]')
     @$input = @$().find('.title-input')
-    @categoryId = @$().data('categoryId')
+    @shopCategoryId = @$().data('shopCategoryId')
     @url = @$().find('.thumbnail').data('link')
     token = $('meta[name="csrf-token"]').attr('content')
 
@@ -40,11 +40,17 @@ class @EditCategory extends @Event
 
     @$title = $(e.target).hide()
     @$input
+      .val(@$title.text())
       .show()
       .focus()
+      .select()
 
   onClick: (e) ->
-    Turbolinks.visit(@url) if $(e.target).is('.thumbnail>img')
+    if $(e.target).is('.thumbnail>img') && @thumbnailClickable(e)
+      Turbolinks.visit(@url)
+
+  thumbnailClickable: (e) ->
+    $(e.target).parent('.thumbnail').attr('data-limited-depth') is 'false'
 
   onUploader: (id, filename, responseJSON) ->
     @setImage(responseJSON.url)
@@ -56,8 +62,8 @@ class @EditCategory extends @Event
         url: @url,
         type: 'PUT',
         data: {
-          parent_id: @categoryId,
-          category: {
+          parent_id: @shopCategoryId,
+          shop_category: {
             title: @$input.val(),
             image_url: @$img.val()
           }

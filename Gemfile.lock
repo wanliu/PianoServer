@@ -1,4 +1,15 @@
 GIT
+  remote: git://github.com/carrierwaveuploader/carrierwave.git
+  revision: 504d113920db984c3d262f5fdbf567cbfe409b8b
+  branch: mount-multiple
+  specs:
+    carrierwave (0.10.0)
+      activemodel (>= 3.2.0)
+      activesupport (>= 3.2.0)
+      json (>= 1.7)
+      mime-types (>= 1.16)
+
+GIT
   remote: git://github.com/ifad/data-confirm-modal.git
   revision: 931cab3b269c6dab301245be2b2d738b243ba169
   specs:
@@ -48,6 +59,8 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
+    ancestry (2.1.0)
+      activerecord (>= 3.0.0)
     arel (6.0.0)
     autoprefixer-rails (5.2.1)
       execjs
@@ -69,14 +82,13 @@ GEM
       sass (>= 3.3.0)
     bootstrap3-datetimepicker-rails (4.15.35)
       momentjs-rails (>= 2.8.1)
+    bootsy (2.1.0)
+      carrierwave (~> 0.10)
+      mini_magick (~> 4.0)
+      remotipart (~> 1.2)
     builder (3.2.2)
     byebug (4.0.3)
       columnize (= 0.9.0)
-    carrierwave (0.10.0)
-      activemodel (>= 3.2.0)
-      activesupport (>= 3.2.0)
-      json (>= 1.7)
-      mime-types (>= 1.16)
     carrierwave-upyun (0.1.8)
       carrierwave (>= 0.5.7)
       rest-client (>= 1.6.7)
@@ -207,6 +219,8 @@ GEM
       rb-inotify (>= 0.9)
     loofah (2.0.2)
       nokogiri (>= 1.5.9)
+    loofah-activerecord (1.2.0)
+      loofah (>= 1.0.0)
     lumberjack (1.0.9)
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
@@ -238,6 +252,11 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
+    public_activity (1.4.2)
+      actionpack (>= 3.0.0)
+      activerecord (>= 3.0)
+      i18n (>= 0.5.0)
+      railties (>= 3.0.0)
     punching_bag (0.4.0)
       railties (>= 3.2, < 5)
       voight_kampff (~> 0.2)
@@ -287,6 +306,7 @@ GEM
     redis-namespace (1.5.2)
       redis (~> 3.0, >= 3.0.4)
     ref (1.0.5)
+    remotipart (1.2.1)
     responders (2.1.0)
       railties (>= 4.2.0, < 5)
     rest-client (1.7.2)
@@ -384,6 +404,13 @@ GEM
       binding_of_caller (>= 0.7.2)
       railties (>= 4.0)
       sprockets-rails (>= 2.0, < 4.0)
+    weixin_authorize (1.6.3)
+      carrierwave (>= 0.10.0)
+      mini_magick (>= 3.7.0)
+      redis (>= 3.1.0)
+      rest-client (>= 1.6.7)
+      yajl-ruby (>= 1.2.0)
+    yajl-ruby (1.2.1)
 
 PLATFORMS
   ruby
@@ -391,12 +418,14 @@ PLATFORMS
 DEPENDENCIES
   ace-rails-ap
   activeresource
+  ancestry
   awesome_nested_set
   best_in_place (~> 3.0.1)
   bootstrap-sass (~> 3.3.5)
   bootstrap3-datetimepicker-rails (~> 4.15.35)
+  bootsy
   byebug
-  carrierwave
+  carrierwave!
   carrierwave-upyun
   china_city
   chinese_pinyin
@@ -420,6 +449,7 @@ DEPENDENCIES
   kaminari
   less-rails
   liquid-rails
+  loofah-activerecord
   meta-tags
   mini_magick (~> 4.2.7)
   mobylette
@@ -427,6 +457,7 @@ DEPENDENCIES
   nprogress-rails
   pg
   poseidon
+  public_activity
   punching_bag
   rack-cors
   rack-raw-upload (~> 1.1.1)
@@ -449,3 +480,4 @@ DEPENDENCIES
   turbolinks
   uglifier (>= 1.3.0)
   web-console (~> 2.0)
+  weixin_authorize

@@ -1,6 +1,11 @@
 require 'active_resource'
 class ApplicationController < ActionController::Base
   include DebugMode
+  include ContentFor
+  include Errors::RescueError
+
+  class_attribute :page_title
+
   # include TokenAuthenticatable
   layout "mobile"
   # Prevent CSRF attacks by raising an exception.
@@ -16,6 +21,7 @@ class ApplicationController < ActionController::Base
   before_action :set_meta_user_data
   before_action :current_subject
   before_action :prepare_system_view_path
+  before_action :set_locale
 
   helper_method :current_anonymous_or_user, :anonymous?
   rescue_from ActionController::RoutingError, :with => :render_404
@@ -59,6 +65,31 @@ class ApplicationController < ActionController::Base
     set_meta_tags debug: Settings.debug
   end
 
+  def set_locale
+    I18n.locale = params[:locale] || I18n.default_locale
+  end
+
+  def module
+    nil
+  end
+
+  def render_with_page_title(*args)
+    prefix = "titles."
+    self.page_title +=
+      if @title.nil?
+        [ t( "titles.controllers.#{controller_name}",
+             default: [ :"controllers.#{controller_name}", controller_name ]),
+          t( "titles.actions.#{controller_name}.#{action_name}",
+             default: [ :"actions.#{action_name}", action_name ]) ]
+      else
+        [ @title ]
+      end
+
+    content_for :title, self.page_title.reverse.join(' ').humanize
+
+    render_without_page_title(*args)
+  end
+
   private
   def render_404(exception = nil)
     if exception
@@ -75,4 +106,11 @@ class ApplicationController < ActionController::Base
   def prepare_system_view_path
     prepend_view_path File.join(Rails.root, Settings.sites.system.root)
   end
+
+  alias_method_chain :render, :page_title
+  def wx_client
+    WeixinClient.instance.client
+  end
 end
+
+ApplicationController.page_title = [ Settings.app.page_title ]

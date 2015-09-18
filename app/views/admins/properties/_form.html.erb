@@ -1,0 +1,19 @@
+<%= form_for [:admins, property] do |f| %>
+  <div class="form-group">
+    <%= f.label :name, "名称" %>
+    <%= f.text_field :name, class: 'form-control', placeholder: '必须为有效的Ruby变量名' %>
+  </div>
+  <div class="form-group">
+    <%= f.label :title, "标题" %>
+    <%= f.text_field :title, class: 'form-control', placeholder: '用于显示的标题' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :prop_type, "取值类型" %>
+    <%= f.select :prop_type, property.prop_types, {}, {class: 'form-control'} %>
+  </div>
+
+  <div class="form-group">
+    <%= f.submit "提交" %>
+  </div>
+<% end %>

@@ -1,0 +1,4 @@
+$(".toggle_inhibit")
+  .attr("href", "<%= hide_inhibit_admins_industry_category_path(@industry, @category) %>")
+  .text("隐藏 (压制 <%= @category.inhibit_count %> ...)")
+$(".property-list").html("<%=j render partial: "property", collection: @properties, locals: { category: @category, industry: @industry } %>")

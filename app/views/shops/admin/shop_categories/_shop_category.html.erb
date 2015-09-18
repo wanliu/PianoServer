@@ -1,0 +1,31 @@
+<div class="col-xs-4 col-sm-4 col-md-4 col-lg-3 shop-category" data-category-id="<%= shop_category.id %>">
+  <div class="box">
+    <div class="thumbnail" data-link="<%= child_shop_admin_shop_category_path(@shop.name, @root.name, shop_category) %>" data-limited-depth="<%= shop_category.depth_limited_reached %>">
+    <%#= link_to child_shop_admin_shop_category_path(@shop.name, @root, shop_category) , class: "thumbnail" do %>
+      <%= image_tag shop_category.image.url(:cover) || Settings.assets.gray_image %>
+      <h2><%= shop_category.title %></h2>
+      <input type="text" name="name" class="title-input" placeholder="分类名称" />
+      <div class="actions">
+        <div type="button" class="uploader-btn">
+          <%= icon :picture %>
+          <input type="file" name="upload" class="uploader" required />
+        </div>
+        <% if Settings.dev.feature.camera %>
+        <button type="button" class="btn btn-default"><%= icon :camera %></button>
+        <% end %>
+      </div>
+
+      <div class="deleted">
+        <%= link_to child_shop_admin_shop_category_path(@shop.name, @root, shop_category), class: 'btn btn-danger', method: :delete, remote: true, data: { confirm: '删除此分类吗？' } do %>
+          <%= icon :remove %>
+        <% end %>
+      </div>
+    <%# end %>
+    </div>
+  </div>
+
+  <%= form_tag shop_admin_shop_categories_path(@shop.name) do %>
+    <input type="hidden" name="category_img" />
+  <% end %>
+  <p class="text-center"><%= shop_category.title %></p>
+</div>

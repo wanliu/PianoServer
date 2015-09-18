@@ -1,4 +1,6 @@
 app:
+  website: http://m.wanliu.biz
+  page_title: 万流网
   title: 万流电商社区
   footer: "&copy; Wanliu.biz 2015  湘ICP备：13005289号-1"
 admin:
@@ -22,8 +24,8 @@ pusher:
   pusher_url: http://www.wanliu.biz:8000/api/v1/
   pusher_token: '3lfj8845fafda[f]fj394u983tioj5jtoi5j9hp;f4f9dfghr;nnbncxaf[fe;094t45g;jgih='
 elasticsearch:
-  url: http://192.168.0.20:9200
-  index_name: pm_products_production
+  url: http://192.168.0.131:9200
+  index_name: products_production
 assets:
   gray_image: "data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
 dev:

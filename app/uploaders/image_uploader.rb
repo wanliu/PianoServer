@@ -2,6 +2,7 @@
 
 IMAGE_UPLOADER_ALLOW_IMAGE_VERSION_NAMES = %w(default avatar cover preivew)
 class ImageUploader < CarrierWave::Uploader::Base
+  HTTP_PREFIX = /\Ahttp[s]?:\/\//
   include ActionView::Helpers::AssetUrlHelper
   # Include RMagick or MiniMagick support:
   # include CarrierWave::RMagick
@@ -22,7 +23,6 @@ class ImageUploader < CarrierWave::Uploader::Base
   def default_url
     # For Rails 3.1+ asset pipeline compatibility:
     # ActionController::Base.helpers.asset_path("fallback/" + [version_name, "default.png"].compact.join('_'))
-
     asset_path('gray_blank.gif')
     # Settings.assets.gray_image
   end
@@ -44,6 +44,15 @@ class ImageUploader < CarrierWave::Uploader::Base
     url_without_version && url_without_version.end_with?(asset_path('gray_blank.gif'))
   end
 
+  def url_with_absolute_path(*args)
+    image = model.read_attribute(mounted_as)
+
+    if absolute_url?(image)
+      image
+    else
+      url_without_absolute_path(*args)
+    end
+  end
   # Process files as they are uploaded:
   # process :scale => [200, 300]
   #
@@ -79,5 +88,10 @@ class ImageUploader < CarrierWave::Uploader::Base
     ActionController::Base.helpers.asset_path *args
   end
 
+  def absolute_url?(url)
+    HTTP_PREFIX =~ url
+  end
+
   alias_method_chain :url, :version
+  alias_method_chain :url, :absolute_path
 end

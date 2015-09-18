@@ -49,6 +49,7 @@
         Chat          = window.Chat,
         userSocket    = window.userSocket,
         buyerId       = '<%= @order.buyer_id %>',
+        greetings     = '<%= @greetings %>',
         chatChannelId,
         targetId;
 
@@ -75,7 +76,8 @@
     }
 
     var chat = new Chat($('.chat-order-header'), chatChannelId, {
-      sendBtn: $('.btn-send')
+      sendBtn: $('.btn-send'),
+      greetings: greetings
     });
 
     chat.enter();

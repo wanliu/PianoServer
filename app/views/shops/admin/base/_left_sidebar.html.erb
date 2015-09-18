@@ -1,47 +1,46 @@
 <div class="shop left-sidebar">
 
   <ul class="nav nav-pills nav-stacked">
-    <li><%= link_to '仪表盘', shop_admin_index_path(@shop.name) %></li>
+    <li><%= link_to '商店', shop_admin_index_path(@shop.name) %></li>
     <li><%= link_to '档案', shop_admin_profile_path(@shop.name) %></li>
     <li>
-      <%= link_to '分类', shop_admin_categories_path(@shop.name) %>
-      <% if @shop.categories.count > 0 %>
+      <%= link_to '分类', shop_admin_shop_categories_path(@shop.name) %>
+      <% if @shop.shop_category.present? %>
         <ul class="nav">
-        <% @shop.categories.each do |category| %>
-          <li><%= link_to category.title, shop_admin_category_path(@shop.name, category.name) %>
+          <li><%= link_to @shop.shop_category.title, shop_admin_shop_category_path(@shop.name, @shop.shop_category.name) %>
           </li>
-        <% end %>
         </ul>
       <% end %>
     </li>
     <li><%= link_to '产品', shop_admin_items_path(@shop.name) %></li>
     <li><%= link_to '关于', about_shop_path(@shop.name) %></li>
+    <li role="separator" class="divider"></li>
+    <li><%= link_to '设置', shop_admin_settings_path(@shop.name) %></li>
   </ul>
 </div>
 
 <script type="text/javascript">
   var highlightSelected = function() {
-    var current_url = location.pathname;
+    var currentUrl = location.pathname;
 
+    var maxLength = 0;
+    var activeElem = null;
     $('.left-sidebar .nav>li').each(function(i, elem) {
       var $href = $(elem).find('a');
-      if ($href.attr('href') === current_url) {
-        $(elem).addClass('active')
-      } else {
-        $(elem).removeClass('active')
+      if (currentUrl.startsWith($href.attr('href'))) {
+        if (maxLength < $href.attr('href').length) {
+          maxLength = $href.attr('href').length;
+          activeElem = elem
+        }
       }
+
+      $(elem).removeClass('active')
     });
+
+    $(activeElem).addClass('active')
   };
 
-  // $(function() {
-    // var LeftSideBar = window.LeftSideBar;
-    // var leftSidebar = new LeftSideBar($('.left-sidebar'), $('.content'));
-
-
-    highlightSelected();
-  // });
+  highlightSelected();
 
   $(document).on('page:change', highlightSelected)
-
-
 </script>

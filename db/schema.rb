@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150827023702) do
+ActiveRecord::Schema.define(version: 20150916081043) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,27 +44,54 @@ ActiveRecord::Schema.define(version: 20150827023702) do
     t.datetime "updated_at",      null: false
   end
 
-  create_table "categories", force: :cascade do |t|
-    t.string   "name"
-    t.string   "category_type"
-    t.integer  "iid"
-    t.integer  "parent_id"
-    t.integer  "lft",                        null: false
-    t.integer  "rgt",                        null: false
-    t.integer  "depth",          default: 0, null: false
-    t.integer  "children_count", default: 0, null: false
-    t.integer  "position"
-    t.jsonb    "data"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
-    t.string   "image"
-    t.string   "title"
+  create_table "bootsy_image_galleries", force: :cascade do |t|
+    t.integer  "bootsy_resource_id"
+    t.string   "bootsy_resource_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
-  add_index "categories", ["iid"], name: "index_categories_on_iid", using: :btree
-  add_index "categories", ["lft"], name: "index_categories_on_lft", using: :btree
-  add_index "categories", ["parent_id"], name: "index_categories_on_parent_id", using: :btree
-  add_index "categories", ["rgt"], name: "index_categories_on_rgt", using: :btree
+  create_table "bootsy_images", force: :cascade do |t|
+    t.string   "image_file"
+    t.integer  "image_gallery_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "brands", force: :cascade do |t|
+    t.string   "name"
+    t.string   "image"
+    t.string   "chinese_name"
+    t.text     "description"
+    t.jsonb    "data"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  create_table "categories", force: :cascade do |t|
+    t.string   "name"
+    t.string   "title"
+    t.string   "image"
+    t.string   "ancestry"
+    t.integer  "ancestry_depth",      default: 0
+    t.jsonb    "data"
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+    t.integer  "upper_properties_id"
+    t.integer  "brand_id"
+  end
+
+  add_index "categories", ["ancestry"], name: "index_categories_on_ancestry", using: :btree
+
+  create_table "categories_properties", id: false, force: :cascade do |t|
+    t.integer "category_id",             null: false
+    t.integer "property_id",             null: false
+    t.integer "state",       default: 0
+  end
+
+  add_index "categories_properties", ["category_id", "property_id"], name: "index_categories_properties_on_category_id_and_property_id", using: :btree
+  add_index "categories_properties", ["property_id", "category_id"], name: "index_categories_properties_on_property_id_and_category_id", using: :btree
+  add_index "categories_properties", ["state"], name: "index_categories_properties_on_state", using: :btree
 
   create_table "categories_shops", id: false, force: :cascade do |t|
     t.integer "category_id", null: false
@@ -92,6 +119,16 @@ ActiveRecord::Schema.define(version: 20150827023702) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "industries", force: :cascade do |t|
+    t.string   "name"
+    t.string   "title"
+    t.text     "description"
+    t.string   "image"
+    t.integer  "status",      default: 0
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
+
   create_table "items", force: :cascade do |t|
     t.integer  "shop_category_id"
     t.integer  "shop_id"
@@ -101,6 +138,15 @@ ActiveRecord::Schema.define(version: 20150827023702) do
     t.boolean  "on_sale",                                   default: true
     t.datetime "created_at",                                               null: false
     t.datetime "updated_at",                                               null: false
+    t.integer  "sid"
+    t.string   "title"
+    t.integer  "category_id"
+    t.decimal  "public_price",     precision: 10, scale: 2
+    t.decimal  "income_price",     precision: 10, scale: 2
+    t.jsonb    "images",                                    default: []
+    t.integer  "brand_id"
+    t.jsonb    "properties",                                default: {}
+    t.text     "description"
   end
 
   create_table "locations", force: :cascade do |t|
@@ -189,6 +235,18 @@ ActiveRecord::Schema.define(version: 20150827023702) do
     t.integer  "send_location_id"
   end
 
+  create_table "properties", force: :cascade do |t|
+    t.string   "name"
+    t.string   "title"
+    t.string   "summary"
+    t.jsonb    "data"
+    t.integer  "unit_id"
+    t.string   "unit_type"
+    t.string   "prop_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "punches", force: :cascade do |t|
     t.integer  "punchable_id",                          null: false
     t.string   "punchable_type", limit: 20,             null: false
@@ -201,6 +259,30 @@ ActiveRecord::Schema.define(version: 20150827023702) do
   add_index "punches", ["average_time"], name: "index_punches_on_average_time", using: :btree
   add_index "punches", ["punchable_type", "punchable_id"], name: "punchable_index", using: :btree
 
+  create_table "shop_categories", force: :cascade do |t|
+    t.string   "name"
+    t.string   "category_type"
+    t.integer  "iid"
+    t.integer  "parent_id"
+    t.integer  "lft",                        null: false
+    t.integer  "rgt",                        null: false
+    t.integer  "depth",          default: 0, null: false
+    t.integer  "children_count", default: 0, null: false
+    t.integer  "position"
+    t.jsonb    "data"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.string   "image"
+    t.string   "title"
+    t.integer  "shop_id"
+  end
+
+  add_index "shop_categories", ["iid"], name: "index_shop_categories_on_iid", using: :btree
+  add_index "shop_categories", ["lft"], name: "index_shop_categories_on_lft", using: :btree
+  add_index "shop_categories", ["parent_id"], name: "index_shop_categories_on_parent_id", using: :btree
+  add_index "shop_categories", ["rgt"], name: "index_shop_categories_on_rgt", using: :btree
+  add_index "shop_categories", ["shop_id"], name: "index_shop_categories_on_shop_id", using: :btree
+
   create_table "shops", force: :cascade do |t|
     t.integer  "owner_id"
     t.string   "name"
@@ -208,14 +290,15 @@ ActiveRecord::Schema.define(version: 20150827023702) do
     t.string   "license_no"
     t.string   "website"
     t.string   "status"
-    t.integer  "location_id"
     t.string   "phone"
     t.integer  "industry_id"
-    t.jsonb    "image"
     t.text     "description"
     t.string   "provider"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+    t.string   "logo"
+    t.string   "address"
+    t.jsonb    "settings",    default: {}
   end
 
   create_table "statuses", force: :cascade do |t|
@@ -248,6 +331,14 @@ ActiveRecord::Schema.define(version: 20150827023702) do
     t.string   "type"
   end
 
+  create_table "units", force: :cascade do |t|
+    t.string   "name"
+    t.string   "title"
+    t.string   "summary"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
@@ -264,13 +355,17 @@ ActiveRecord::Schema.define(version: 20150827023702) do
     t.string   "mobile"
     t.string   "username"
     t.string   "authentication_token"
-    t.jsonb    "image",                  default: {}, null: false
+    t.string   "image",                  default: "", null: false
     t.string   "nickname"
     t.string   "provider"
     t.integer  "latest_location_id"
+    t.jsonb    "data",                   default: {}
+    t.integer  "sex",                    default: 1
+    t.integer  "shop_id"
   end
 
   add_index "users", ["authentication_token"], name: "index_users_on_authentication_token", unique: true, using: :btree
+  add_index "users", ["data"], name: "index_users_on_data", using: :gin
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["mobile"], name: "index_users_on_mobile", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
@@ -286,4 +381,5 @@ ActiveRecord::Schema.define(version: 20150827023702) do
     t.datetime "updated_at",  null: false
   end
 
+  add_foreign_key "shop_categories", "shops"
 end

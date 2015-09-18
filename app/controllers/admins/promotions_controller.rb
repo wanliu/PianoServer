@@ -1,5 +1,6 @@
 class Admins::PromotionsController < Admins::BaseController
 	def index
+    @title = "最新活动"
     @promotions = Promotion.find(:all, from: :active, params: query_params)
 	end
 

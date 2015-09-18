@@ -36,6 +36,7 @@ gem 'momentjs-rails', '>= 2.9.0'
 gem 'bootstrap3-datetimepicker-rails', '~> 4.15.35'
 gem 'ace-rails-ap'
 gem 'best_in_place', '~> 3.0.1'
+gem 'bootsy'
 
 gem 'activeresource'
 gem 'scoped_search'
@@ -45,6 +46,8 @@ gem 'chinese_pinyin'
 gem 'data-confirm-modal', github: 'ifad/data-confirm-modal'
 gem 'liquid-rails'
 gem "punching_bag"
+gem "loofah-activerecord"
+gem 'public_activity'
 
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'
@@ -63,6 +66,7 @@ gem 'poseidon'
 gem 'google-analytics-rails'
 gem 'kaminari'
 gem 'awesome_nested_set'
+gem 'ancestry' # 暂时的支持，旧的 neil
 
 gem "rails_config"
 
@@ -77,7 +81,7 @@ gem 'sidekiq'
 gem 'china_city'
 gem 'table_cloth'
 
-gem 'carrierwave'
+gem 'carrierwave', github: 'carrierwaveuploader/carrierwave', branch: 'mount-multiple'
 gem 'carrierwave-upyun'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -87,6 +91,8 @@ gem 'carrierwave-upyun'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
+
+gem 'weixin_authorize'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -108,4 +114,3 @@ group :development, :test do
   gem 'spring-commands-teaspoon'
   gem "table_print"
 end
-
