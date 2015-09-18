@@ -15,7 +15,7 @@ class ShopCategory < ActiveRecord::Base
 
   mount_uploader :image, ImageUploader # , mount_on: :avatar_url
 
-  before_save :default_values
+  before_validation :default_values
   # alias_method :cover_url, :avatar_url
   # alias_method :logo_url, :avatar_url
 
