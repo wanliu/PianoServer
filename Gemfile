@@ -47,7 +47,7 @@ gem 'data-confirm-modal', github: 'ifad/data-confirm-modal'
 gem 'liquid-rails'
 gem "punching_bag"
 gem "loofah-activerecord"
-gem 'public_activity'
+gem 'public_activity', github: 'pokonski/public_activity'
 
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'
@@ -68,7 +68,7 @@ gem 'kaminari'
 gem 'awesome_nested_set'
 gem 'ancestry' # 暂时的支持，旧的 neil
 
-gem "rails_config"
+gem "rails_config", '~> 0.4.2'
 
 gem 'jwt'
 

@@ -232,6 +232,8 @@ zh-CN:
     index: ''
     edit: 编辑
     show: 显示
+    create: 创建
+    destroy: 删除
   notices:
     controllers:
       items:
@@ -241,5 +243,9 @@ zh-CN:
     admin: 工作平台
   titles:
     shops: '%{shop_name}店'
-
+  activity:
+    models:
+      contact:
+        actions:
+          create: 提交了
 
