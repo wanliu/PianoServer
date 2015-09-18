@@ -266,7 +266,7 @@ class Order < ActiveRecord::Base
     if delivery_location_id == nil or delivery_location_id < 0
       (delivery_address || {})["location"] || ''
     else
-      delivery_location.full_address
+      delivery_location.try(:full_address)
     end
   end
 
