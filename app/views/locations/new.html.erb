@@ -8,6 +8,8 @@
 
 <%= form_for @location do |f| %>
   <%= f.hidden_field :user_id %>
+  <%= f.hidden_field :chat_id %>
+  <%= f.hidden_field :order_id %>
 
   <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
     <%= label :location, :contact do %>
@@ -73,13 +75,13 @@
       e.preventDefault();
 
       var array = $(this).serializeArray(),
-          contact = array[3].value,
-          province_id = array[4].value,
-          city_id = array[5].value,
-          region_id = array[6].value,
-          road = array[7].value,
-          zipcode = array[8].value,
-          contact_phone = array[9].value,
+          contact = array[5].value,
+          province_id = array[6].value,
+          city_id = array[7].value,
+          region_id = array[8].value,
+          road = array[9].value,
+          zipcode = array[10].value,
+          contact_phone = array[11].value,
 
           province_name = $("#location_province_id  option:selected").text(),
           city_name = $("#location_city_id  option:selected").text(),
@@ -87,7 +89,7 @@
 
           chatId = '<%= @location.chat_id %>',
           VALID_PHONE_REGEX = /^((\d{3,4}-\d{7,8}(-\d+)?)|((\+?86)?1\d{10}))$/g,
-          VALID_CONTACT_REGEX = /^([\u4e00-\u9fa5]|[a-zA-Z0-9_]|[\uFF10-\uFF19])+$/
+          VALID_CONTACT_REGEX = /^([\u4e00-\u9fa5]|[a-zA-Z0-9_]|[\uFF10-\uFF19])+$/,
           $errors = $('ul.error-messages'),
           errors = [],
           address_object;
