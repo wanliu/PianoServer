@@ -4,12 +4,12 @@
     <div class="col-xs-8 col-sm-10">
       <div class="text-right">
         <div class="dropdown">
-          <span class="toggle-button" data-toggle="dropdown" role="button">
-            <span class="button-text" id="address-text"></span>
+          <div class="toggle-button" data-toggle="dropdown" role="button">
+            <div class="button-text" id="address-text"></div>
             <% if @order.buyer_id == current_anonymous_or_user.id %>
               <span class="caret"></span>
             <% end %>
-          </span>
+          </div>
           <% if @order.buyer_id == current_anonymous_or_user.id %>
             <ul class="dropdown-menu address-menu locations">
               <% if current_anonymous_or_user.locations.last(5).length > 0 %>

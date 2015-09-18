@@ -112,11 +112,19 @@ class @Categories
     { id, title, depth, is_leaf } = category
     desc = if is_leaf then 'on' else 'off'
 
-    template = """
-      <a href="javascript:void(0);" class="list-group-item" category-id="#{id}" depth="#{depth}" is-leaf="#{desc}">
-        #{title}
-      </a>
-    """
+    if is_leaf
+      template = """
+        <a href="javascript:void(0);" class="list-group-item" category-id="#{id}" depth="#{depth}" is-leaf="on">
+          #{title}
+        </a>
+      """
+    else
+      template = """
+        <a href="javascript:void(0);" class="list-group-item has_children" category-id="#{id}" depth="#{depth}" is-leaf="off">
+          #{title}
+          <span class="children"></span>
+        </a>
+      """
 
     $(template)
 

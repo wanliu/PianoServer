@@ -1,3 +1,5 @@
+<%= content_for :module, :location %>
+
 <ul class="error-messages clearfix">
   <% if @location.errors.any? %>
     <% @location.errors.full_messages.each do |msg| %>

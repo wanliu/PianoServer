@@ -20,7 +20,8 @@ class Admins::IndustriesController < Admins::BaseController
   end
 
   def sync_es_brands
-    EsBrandsSyncJob.perform_later 'overwrite'
+    # EsBrandsSyncJob.perform_later 'overwrite'
+    EsBrandsSync.sync 'overwrite'
 
     render json: {}, status: :ok
   end
@@ -30,7 +31,8 @@ class Admins::IndustriesController < Admins::BaseController
   end
 
   def sync_es_categories
-    EsCategoriesSyncJob.perform_later 'overwrite'
+    # EsCategoriesSyncJob.perform_later 'overwrite'
+    EsCategoriesSync.sync 'overwrite'
 
     render json: {}, status: :ok
   end
