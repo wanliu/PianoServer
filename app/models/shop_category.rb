@@ -29,10 +29,6 @@ class ShopCategory < ActiveRecord::Base
     ShopCategory.exists?(parent_id: id)
   end
 
-  def chain_name
-    self_and_ancestors.map(&:title)
-  end
-
   def is_leaf
     rgt - lft == 1
   end

@@ -17,7 +17,7 @@
 
 <div class="cate-items-list">
   <div class='title'>
-    <%= sanitize @shop_category.chain_name.join("<span class='glyphicon glyphicon-menu-right' aria-hidden='true'></span>") %>
+    <%= title_chain_render(@shop, @shop_category) %>
   </div>
   <% if @shop_category.has_children %>
     <%= render partial: 'shop_categories', locals: { shop: @shop, shop_categories: @shop_categories } %>
