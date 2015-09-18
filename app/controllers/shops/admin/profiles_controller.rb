@@ -9,12 +9,12 @@ class Shops::Admin::ProfilesController < Shops::Admin::BaseController
   end
 
   def upload_shop_logo
-    @shop.logo = params[:file]
+    @shop.logo = params[:file] || params[:qqfile]
 
     if @shop.save
-      render json: {success: true, url: @shop.logo.url(:cover)}, status: :ok
+      render json: {success: true, url: @shop.logo.url(:cover)}, status: :ok, content_type: "text/html"
     else
-      render json: {errors: @shop.errors}, status: :unprocessable_entity
+      render json: {errors: @shop.errors}, status: :unprocessable_entity, content_type: "text/html"
     end
   end
 
