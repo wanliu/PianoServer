@@ -3,7 +3,9 @@
 <%= subject_render @subject, :homepage_header %>
 
 <div class="promotions-list">
-  <%= subject_render @subject, :promotion, partial: "promotion", collection: @promotions %>
+  <div class="col-sm-12 col-md-12 col-lg-12">
+    <%= subject_render @subject, :promotion, partial: "promotion", collection: @promotions %>
+  </div>
 	<%#= render partial: "promotion", collection: @promotions %>
 </div>
 
