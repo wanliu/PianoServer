@@ -20,6 +20,19 @@
 
       .list-group-item {
         padding: 5px 15px;
+
+        .children {
+          position: absolute;
+          right: 8px;
+          top: 10px;
+          background-image: image-url('next.png');
+          width: 5px;
+          height: 7px;
+        }
+
+        &.active .children {
+          background-image: image-url('next-red.png');
+        }
       }
     }
 
