@@ -2,8 +2,9 @@
   <%= form_for @variable, as: :variable, url: variables_path(@subject, @template) do |f| %>
     <%= f.hidden_field :promotion_string %>
 
-    <div class="form-group">
+    <div class="form-group field-name">
       <%= f.text_field :name, class: "form-control", placeholder: "活动集名" %>
+      <div class="help-block"></div>
     </div>
     <div class="promotion-set">
       <div class="promotion-list promotions">
@@ -15,7 +16,7 @@
 
         </div>
       </div>
-      <div class="promotion-selected">
+      <div class="promotion-selected field-promotions">
         <label class="control-label">
           已选择的活动：
         </label>
@@ -30,6 +31,7 @@
             </script>
           <% end %>
         </ul>
+        <div class="help-block"></div>
       </div>
     </div>
   <% end %>
