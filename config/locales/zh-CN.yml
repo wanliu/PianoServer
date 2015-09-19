@@ -227,6 +227,9 @@ zh-CN:
   controllers:
     shops: 商店
     items: 商品
+    promotions: 活动
+    shop_categories: 分类
+    categories: 分类
   actions:
     new: 新增
     index: ''
@@ -243,6 +246,8 @@ zh-CN:
     admin: 工作平台
   titles:
     shops: '%{shop_name}店'
+    shop_category: '分类 %{category}'
+    promotions: 活动
   activity:
     models:
       contact:

@@ -22,6 +22,13 @@ body[module="signup"] {
   background: #ddd;
 }
 
+.navbar-brand > img {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+  float: left;
+}
+
 .shop-admin-container {
   position: absolute;
   top: 50px;

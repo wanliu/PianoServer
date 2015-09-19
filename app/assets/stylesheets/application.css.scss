@@ -50,7 +50,15 @@ footer {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  max-width: 70%;
+  padding-right: 0px!important;
+}
+
+.navbar-brand > img {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+
+  float: left;
 }
 
 .chat-notices{
