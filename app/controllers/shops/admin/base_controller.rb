@@ -14,8 +14,10 @@ class Shops::Admin::BaseController < ApplicationController
   end
 
   def shop_page_info
-    self.page_title += [ t("titles.shops", shop_name: @shop.title) ]
-    self.page_navbar = @shop.title
+    self.page_title += [ "设置", t("titles.shops", shop_name: @shop.title) ]
+    self.page_navbar = "设置 -#{@shop.title}"
+    self.page_navbar_link = shop_admin_index_path(@shop.name)
+
   end
 
   def authenticate_shop_user!

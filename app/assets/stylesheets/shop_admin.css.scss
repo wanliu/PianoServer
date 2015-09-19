@@ -22,6 +22,16 @@ body[module="signup"] {
   background: #ddd;
 }
 
+.navbar-left > li {
+  float: left;
+}
+
+
+.navbar-left > li > a {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
 .navbar-brand > img {
   width: 20px;
   height: 20px;

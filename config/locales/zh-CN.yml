@@ -230,6 +230,8 @@ zh-CN:
     promotions: 活动
     shop_categories: 分类
     categories: 分类
+    profiles: 档案
+    dashboard: 面板
   actions:
     new: 新增
     index: ''
