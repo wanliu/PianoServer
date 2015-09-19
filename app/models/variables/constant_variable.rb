@@ -1,3 +1,2 @@
 class ConstantVariable < Variable
-
 end
