@@ -31,6 +31,11 @@ module Piano
       @title = ''
     end
 
+    def set_page_navbar(title, link = '/')
+      self.page_navbar = title
+      self.page_navbar_link = link
+    end
+
     private
 
     def page_pair_name(pair, name)

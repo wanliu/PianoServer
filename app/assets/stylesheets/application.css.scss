@@ -50,14 +50,12 @@ footer {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  padding-right: 0px!important;
 }
 
 .navbar-brand > img {
   width: 20px;
   height: 20px;
   margin-right: 5px;
-
   float: left;
 }
 
@@ -88,6 +86,15 @@ footer {
   }
 }
 
+.nav > li > a.navbar-title {
+  padding-left: 0px;
+}
+
+@media (min-width: 768px) {
+  .navbar-header {
+    float: none;
+  }
+}
 
 @media (max-width: 768px) {
   .navbar-fixed-top {
@@ -105,8 +112,8 @@ footer {
   }
 
   .navbar-nav > li > a {
-      padding-top: 15px;
-      padding-bottom: 15px;
+    padding-top: 15px;
+    padding-bottom: 15px;
   }
 
   .navbar-responsive-collapse.collapse.in {
