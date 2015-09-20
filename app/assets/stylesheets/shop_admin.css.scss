@@ -113,7 +113,20 @@ body[module="signup"] {
   display: none;
 }
 
+@media (min-width: 768px) {
+  .navbar-header {
+    float: none;
+  }
+}
+
+
 @media (max-width: 768px) {
+  .navbar-fixed-top {
+    .navbar-left {
+      float: left !important;
+    }
+  }
+
   .shop.left-sidebar {
     position: fixed;
     left: -300px;
