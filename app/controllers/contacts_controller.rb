@@ -1,4 +1,5 @@
 class ContactsController < ApplicationController
+  include PublicActivity::StoreController
 
   def new
     @contact = Contact.new

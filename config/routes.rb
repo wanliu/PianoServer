@@ -145,7 +145,7 @@ Rails.application.routes.draw do
       get "/about", to: "shops#about"
     end
 
-    resources :shop_categories
+    resources :shop_categories, path: "categories"
     resources :items
 
     namespace :admin, module: 'shops/admin' do
@@ -155,7 +155,7 @@ Rails.application.routes.draw do
       end
 
       resources :dashboard
-      resources :shop_categories, constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do
+      resources :shop_categories,  path: "categories", constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do
         member do
           get "/:child_id", to: "shop_categories#show_by_child", as: :child
           post "/:parent_id", to: "shop_categories#create_by_child"
