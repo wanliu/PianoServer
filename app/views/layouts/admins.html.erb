@@ -4,10 +4,9 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge, chrome=1">
     <!--<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2, minimum-scale=1, user-scalable=no" >-->
-    <title><%= content_for?(:title) ? yield(:title) : Settings.admin.title %></title>
     <%= csrf_meta_tags %>
 
-    <%= display_meta_tags %>
+    <%= display_meta_tags site: Settings.app.name, separator: '-', reverse: true %>
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
@@ -51,11 +50,14 @@
         <ul class="nav navbar-nav navbar-left">
           <%= yield :back %>
         </ul>
-        <%= link_to root_path, class: "navbar-brand" do %>
-          <%= content_for?(:title) ? yield(:title) : Settings.app.title %>
+        <%= link_to root_path, class: "navbar-brand", title: Settings.app.title do %>
+          <%= image_tag 'logo.png' %>
+        <% end %>
+        <%= link_to content_for(:navbar_link), class: "navbar-brand" do %>
+          <%= content_for?(:navbar) ? yield(:navbar) : Settings.app.title %>
         <% end %>
         <div class="navbar-collapse collapse navbar-responsive-collapse">
-          <ul class="nav navbar-nav">
+          <ul class="nav navbar-nav navbar-right">
             <li><%= link_to "关于我们", about_path  %></li>
             <li><%= link_to "二维码", "#share-url-qrcode" , "data-toggle"=>"modal" %></li>
           </ul>

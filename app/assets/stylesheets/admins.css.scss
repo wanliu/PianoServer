@@ -35,3 +35,10 @@ body[module="signup"] {
 .shop.left-sidebar {
   position: absolute;
 }
+
+.navbar-brand > img {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+  float: left;
+}
