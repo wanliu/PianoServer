@@ -44,8 +44,6 @@ $border-color: #CCCCCC;
     z-index: 9;
     text-align: center;
     font-size: 1.5em;
-    width: 45px;
-    height: 30px;
 
     img {
       width: 100%;
@@ -53,11 +51,6 @@ $border-color: #CCCCCC;
     }
 
     .type-text{
-      position: absolute;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
       line-height: 30px;
       color: #FFFFFF;
     }
