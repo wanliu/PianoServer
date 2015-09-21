@@ -248,18 +248,6 @@ class Order < ActiveRecord::Base
 
       save
     end
-    # Order.transaction do
-    #   _items = attrs.delete "items" || []
-
-    #   update_attributes(attrs)
-    #   items.destroy_all
-
-    #   _items.each do |item|
-    #     items.build item
-    #   end
-    #   data[:updates] = nil
-    #   save
-    # end
   end
 
   def delivery_address_title

@@ -1,5 +1,4 @@
-class ShopCategoriesController < ApplicationController
-  before_filter :set_shop
+class ShopCategoriesController < ShopsController
   before_filter :set_shop_category, only: [ :show ]
 
   def index
@@ -7,6 +6,8 @@ class ShopCategoriesController < ApplicationController
   end
 
   def show
+    add_page_title t("titles.shop_category", category: @shop_category.title)
+
     if @shop_category.has_children
       @shop_categories = ShopCategory.where(parent_id: @shop_category).order(id: :asc).page(params[:page]).per(params[:per])
       @items = []
