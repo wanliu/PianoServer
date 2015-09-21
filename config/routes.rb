@@ -165,11 +165,15 @@ Rails.application.routes.draw do
 
       resources :items do
         collection do
-          get "load_categories", to: "items#load_categories"
+          # get "load_categories", to: "items#load_categories"
           get "/new/step1",  to: "items#new_step1"
           post "/new/step1", to: "items#commit_step1"
           get "/new/step2/category/:category_id", to: "items#new_step2", as: :with_category
           post "/new/step2/category/:category_id", to: "items#create"
+          post "/upload_image", to: "items#upload_image"
+        end
+
+        member do
           post "/upload_image", to: "items#upload_image"
         end
       end

@@ -2,12 +2,15 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
   include Shops::Admin::ItemHelper
   include ActionView::Helpers::SanitizeHelper
 
+  respond_to :json, :html
+
   before_action :set_category, only: [:new_step2, :create]
   before_action :set_breadcrumb, only: [:new_step2, :create]
+  before_action :set_item, only: [ :edit, :update, :destroy ]
 
-  def load_categories
-    page = params[:page].presence || 1
-    per = params[:per].presence || 25
+  def index
+    # page = params[:page].presence || 1
+    # per = params[:per].presence || 25
 
     @items = Item.with_shop(@shop.id)
                  .with_category(query_params[:category_id])
@@ -20,17 +23,23 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
       shop_category_root.children
     end
 
-    render json: {categories: @categories.as_json(methods: [:is_leaf]), items: @items }
+
+    # respond_to do |format|
+    #   format.json { render :index }
+    #   format.html { render :index }
+    # end
+    # render :index, formats: [ :json ]
+    # render json: {categories: @categories.as_json(methods: [:is_leaf]), items: @items }
   end
 
-  def index
-    # @items = Item.with_shop(@shop.id)
-    #              .with_category(query_params[:category_id])
-    #              .with_query(query_params[:q])
-    #              .page(query_params[:page])
+  # def index
+  #   @items = Item.with_shop(@shop.id)
+  #                .with_category(query_params[:category_id])
+  #                .with_query(query_params[:q])
+  #                .page(query_params[:page])
 
-    # @categories = shop_category_root.children
-  end
+  #   # @categories = shop_category_root.children
+  # end
 
   def new
     redirect_to new_step1_shopitems_path(@shop.name)
@@ -90,10 +99,31 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     render json: { success: true, url: uploader.url(:cover)  , filename: uploader.filename }
   end
 
+  def edit
+    @category = @item.category
+    @breadcrumb = @category.ancestors
+    @properties = @category.with_upper_properties
+  end
+
+  def update
+    @category = @item.category
+    @breadcrumb = @category.ancestors
+    @properties = @category.with_upper_properties
+
+    @item.send(:write_attribute, :images, params[:item][:filenames].split(','))
+
+
+    if @item.update_attributes(item_basic_params)
+      redirect_to shop_admin_items_path(@shop.name)
+    else
+      render :edit
+    end
+  end
+
   protected
 
   def query_params
-    params.permit(:shop_id, :category_id, :q, :page)
+    params.permit(:shop_id, :category_id, :q, :page, :per)
   end
 
   def shop_category_root
@@ -106,7 +136,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
 
   def item_basic_params
     _params = params.require(:item).permit(:name, :title, :brand_id, :images, :price, :public_price,
-      :income_price, :shop_category_id, :category_id, :description)
+      :income_price, :shop_category_id, :category_id, :description,)
     _params[:description] = sanitize _params[:description], tags: %w(script), attributes: %w(href)
     _params
   end
@@ -122,5 +152,9 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
 
   def set_breadcrumb
     @breadcrumb = @category.ancestors
+  end
+
+  def set_item
+    @item = Item.find(params[:id])
   end
 end

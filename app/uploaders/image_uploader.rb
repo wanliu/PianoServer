@@ -45,7 +45,7 @@ class ImageUploader < CarrierWave::Uploader::Base
   end
 
   def url_with_absolute_path(*args)
-    image = model.read_attribute(mounted_as)
+    image = self.send(:original_filename)
 
     if absolute_url?(image)
       image
