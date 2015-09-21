@@ -18,6 +18,7 @@
 //= require _common/util
 //= require _common/save_on_change
 //= require bootsy
+//= require lib/tablesaw
 //= require_tree ./locales
 //= require_tree ./admins
 //= require_tree ./shop

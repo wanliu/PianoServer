@@ -1,11 +1,17 @@
 .shop-items-container{
-  min-width: 898px;
+  // min-width: 898px;
+  .btn-toolbar {
+    margin-bottom: 20px;
+  }
 
   .list-group {
     margin-bottom: 0;
   }
 
   .category-panel {
+    margin-bottom: 20px;
+    display: none;
+
     .breadcrumb {
       display: inline-block;
       padding: 0;
@@ -44,6 +50,7 @@
   }
 
   .items-panel {
+
     .panel-heading {
       position: relative;
       padding: 15px;

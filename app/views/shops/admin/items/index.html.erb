@@ -1,34 +1,28 @@
 <div class="shop-items-container">
-  <div class="btn-toolbar">
-    <div class="btn-group">
-      <div class="btn-group" role="group">
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          分类
-          <span class="caret"></span>
-        </button>
-          <ul class="dropdown-menu">
-            <div class="row category-panel">
-              <div class="col-xs-4 col-sm-4 col-md-4 category-col level1">
-                <div class="list-group">
-
-                </div>
-              </div>
-              <div class="col-xs-4 col-sm-4 col-md-4 category-col level2">
-                <div class="list-group">
-
-                </div>
-              </div>
-              <div class="col-xs-4 col-sm-4 col-md-4 category-col level3">
-                <div class="list-group">
-
-                </div>
-              </div>
-            </div>
-          </ul>
-      </div>
-    </div>
+  <div class="btn-toolbar category-toolbar">
+    <button type="button" class="btn btn-default dropdown-toggle btn-category" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      分类
+      <span class="caret"></span>
+    </button>
   </div>
 
+  <div class="row category-panel">
+      <div class="col-xs-4 col-sm-4 col-md-4 category-col level1">
+        <div class="list-group">
+
+        </div>
+      </div>
+      <div class="col-xs-4 col-sm-4 col-md-4 category-col level2">
+        <div class="list-group">
+
+        </div>
+      </div>
+      <div class="col-xs-4 col-sm-4 col-md-4 category-col level3">
+        <div class="list-group">
+
+        </div>
+      </div>
+  </div>
 <!--
   <div class="panel panel-default category-panel">
     <div class="panel-heading">
@@ -43,7 +37,6 @@
 
     </div>
   </div> -->
-
   <div class="panel panel-default items-panel">
     <div class="panel-heading">
       <h3 class="panel-title">
@@ -54,21 +47,21 @@
         新增
       </button>
     </div>
-    <div class="panel-body">
-      <table class="table">
-        <thead>
-          <th>商品项名</th>
-          <th>所属分类</th>
-          <th>出售价</th>
-          <th>库存</th>
-          <th>是否在售</th>
-        </thead>
-        <tbody>
+    <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack" data-tablesaw-mode-switch>
+      <thead>
+        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">商品项名</th>
+        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">所属分类</th>
+        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">出售价</th>
+        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">库存</th>
+        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">是否在售</th>
+      </thead>
+      <tbody>
 
-        </tbody>
-      </table>
+      </tbody>
+    </table>
+    <div class="panel-footer">
+
     </div>
-    <div class="panel-footer"></div>
   </div>
 </div>
 
@@ -78,4 +71,5 @@
       itemsContainer = $('.items-panel');
 
   new Categories(shop_name, categoryContainer, itemsContainer)
+  new CategoryToolbar($('.category-toolbar'))
 </script>
