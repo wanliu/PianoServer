@@ -110,8 +110,6 @@ Rails.application.routes.draw do
 
   resources :categories
 
-  resources :shops, only: [ :show ]
-
   resources :chats
   resources :orders do
     member do
