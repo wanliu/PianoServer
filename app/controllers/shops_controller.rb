@@ -4,15 +4,12 @@ class ShopsController < ApplicationController
   def show_by_name
     @shop = Shop.find_by name: params[:shop_name]
 
-    page = params[:page].presence || 1
-    per = params[:per].presence || 9
-
     unless ShopService.valid?(@shop)
       ShopService.build(params[:shop_name])
     end
 
     @root = @shop.shop_category(true)
-    @shop_categories = @root.children.page(page).per(per)
+    @shop_categories = @root.children.page(params[:page]).per(params[:per])
 
     render :show
   end
