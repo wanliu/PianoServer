@@ -1,66 +1,122 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
 <head>
-  <title>We're sorry, but something went wrong (500)</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <style>
-  body {
-    background-color: #EFEFEF;
-    color: #2E2F30;
-    text-align: center;
-    font-family: arial, sans-serif;
-    margin: 0;
-  }
+<meta charset="utf-8">
+<title>500 - 这个页面出现了严重的错误 - 万流网 </title>
+<style>
 
-  div.dialog {
-    width: 95%;
-    max-width: 33em;
-    margin: 4em auto 0;
-  }
+@import url(http://fonts.useso.com/css?family=Bree+Serif|Source+Sans+Pro:300,400);
 
-  div.dialog > div {
-    border: 1px solid #CCC;
-    border-right-color: #999;
-    border-left-color: #999;
-    border-bottom-color: #BBB;
-    border-top: #B00100 solid 4px;
-    border-top-left-radius: 9px;
-    border-top-right-radius: 9px;
-    background-color: white;
-    padding: 7px 12% 0;
-    box-shadow: 0 3px 8px rgba(50, 50, 50, 0.17);
-  }
+*{
+  maring: 0;
+  padding: 0;
+}
+body{
+  font-family: 'Source Sans Pro', sans-serif;
+  background: #FF6666;
+  color: #FFCC99;
+}
+a:link{
+  color: #FFCC99;
+  text-decoration: none;
+}
+a:active{
+  color: #FFCC99;
+  text-decoration: none;
+}
+a:hover{
+  color: #FFCC99;
+  text-decoration: none;
+}
+a:visited{
+  color: #FFCC99;
+  text-decoration: none;
+}
 
-  h1 {
-    font-size: 100%;
-    color: #730E15;
-    line-height: 1.5em;
-  }
+a.underline, .underline{
+  text-decoration: underline;
+}
 
-  div.dialog > p {
-    margin: 0 0 1em;
-    padding: 1em;
-    background-color: #F7F7F7;
-    border: 1px solid #CCC;
-    border-right-color: #999;
-    border-left-color: #999;
-    border-bottom-color: #999;
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
-    border-top-color: #DADADA;
-    color: #666;
-    box-shadow: 0 3px 8px rgba(50, 50, 50, 0.17);
-  }
-  </style>
+.bree-font{
+  font-family: 'Bree Serif', serif;
+}
+
+#content{
+  margin: 0 auto;
+  width: 960px;
+}
+
+.clearfix:after {
+  content: ".";
+  display: block;
+  clear: both;
+  visibility: hidden;
+  line-height: 0;
+  height: 0;
+}
+
+.clearfix {
+  display: block;
+}
+
+#logo {
+  margin: 1em;
+  float: left;
+  display: bloack;
+}
+nav{
+  float: right;
+  display: block;
+}
+nav ul > li{
+  list-style: none;
+  float: left;
+  margin: 0 2em;
+  display: block;
+}
+
+#main-body{
+  text-align: center;
+}
+
+.enormous-font{
+  font-size: 10em;
+  margin-bottom: 0em;
+}
+.big-font{
+  font-size: 2em;
+}
+hr{
+  width: 25%;
+  height: 1px;
+  background: #1f3759;
+  border: 0px;
+}
+
+
+
+</style>
 </head>
-
 <body>
-  <!-- This file lives in public/500.html -->
-  <div class="dialog">
-    <div>
-      <h1>We're sorry, but something went wrong.</h1>
+  <div id="content">
+    <header>
+      <div id="logo">
+        <a href="#">万流网</a>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="/">首页</a></li>
+          <li><a href="/about">关于我们</a></li>
+        </ul>
+      </nav>
+    </header>
+    <div class="clearfix"></div>
+    <div id="main-body">
+      <p class="enormous-font bree-font"> 500 </p>
+      <p class="big-font"> 抱歉发生了严重的错误，我们的工程师正在紧张的抢修中...</p>
+      <hr>
+      <p class="big-font"> 你可以点击这里返回正常的 <a href="/" class="underline">首页</a></p>
     </div>
-    <p>If you are the application owner check the logs for more information.</p>
   </div>
 </body>
 </html>

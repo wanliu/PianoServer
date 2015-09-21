@@ -3,98 +3,13 @@
 <% end %>
 
 <% content_for :module, :shop %>
+<div class="col-md-12">
+  <%= shop_render "header.html" %>
 
-<div class="brand-board">
-  <div class='shop-info'>
-    <%= image_tag @shop.logo_url, class: 'shop-logo' %>
-    <div class='name-address'>
-      <span class='name'><%= @shop.name %></span>
-      <span class='address'><%= @shop.address %></span>
+  <div class="cate-items-list">
+    <div class='title'>
+      <%= title_chain_render(@shop, @shop_category) %>
     </div>
-    <div style='clear:both'></div>
+    <%= render partial: 'shop_categories/shop_categories', locals: { shop: @shop, shop_categories: @shop_categories } %>
   </div>
 </div>
-
-<div class="cate-items-list">
-  <div class='title'>
-    <%= sanitize @shop_category.chain_name.join("<span class='glyphicon glyphicon-menu-right' aria-hidden='true'></span>") %>
-  </div>
-  <% if @shop_category.has_children %>
-    <%= render partial: 'shop_categories', locals: { shop: @shop, categories: @shop_categories } %>
-  <% else %>
-    <%= render partial: 'items', locals: { items: @items } %>
-  <% end %>
-</div>
-
-<script type="text/template" id='template-shop-categories'>
-  {{ _.each(collection, function (cate, index) { }}
-    <div class="col-xs-6 col-sm-4 cate">
-      <a href="/shop_categories/{{= cate.id }}" class='text-center'>
-        {{= cate.name }}
-      </a>
-      <span class='text text-center'>{{= cate.name }}</span>
-    </div>
-  {{ }) }}
-</script>
-
-<script type="text/template" id='template-items'>
-  {{ _.each(collection, function (item, index) { }}
-    <div class="col-xs-6 col-sm-4 item">
-      <a href="/items/{{= item.id }}" class='text-center'>
-        <img src="{{= item.avatar }}" class='item-avatar' />
-      </a>
-      <span class='text text-center'>{{= item.name }}</span>
-    </div>
-  {{ }) }}
-</script>
-
-<script type="text/javascript">
-  $(function () {
-    <% if @shop_category.has_children %>
-      var per = 9;
-      var all_fetched = <%= @shop_categories.length %> < per;
-      var key = "shop_categories";
-    <% else %>
-      var per = 8;
-      var all_fetched = <%= @items.length %> < per;
-      var key = "items";
-    <% end %>
-
-    var page = 1;
-    var id = <%= @shop_category.id %>;
-    var fetch_locked = false;
-
-    var template = {
-      shop_categories: _.template($('#template-shop-categories').html()),
-      items: _.template($('#template-items').html())
-    }[key];
-
-    var request_url = {
-      shop_categories: "/<%= @shop.name %>/categories.json?page=" + (page + 1) + "&per=" + per + "&parent_id=<%= @shop_category.id %>",
-      items: "/<%= @shop.name %>/items.json?page=" + (page + 1) + "&per=" + per + "&shop_category_id=<%= @shop_category.id %>"
-    }[key];
-
-    $(document).scroll(function (e) {
-      if (!/shop_categories\/\d+/.test(e.target.URL) || all_fetched || fetch_locked) {
-        return;
-      }
-
-      if ($(document).height() < $(window).scrollTop() + $(window).height() + 100) {
-        fetch_locked = true;
-
-        $.getJSON(request_url)
-          .success(function (data, status) {
-            page += 1;
-
-            all_fetched = data.length < per;
-
-            var html = template({ collection: data });
-
-            $('.cate-items-list .' + key).append(html);
-
-            fetch_locked = false;
-          });
-      }
-    });
-  });
-</script>

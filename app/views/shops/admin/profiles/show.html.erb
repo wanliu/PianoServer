@@ -1,0 +1,84 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">商店档案</h3>
+  </div>
+  <div class="panel-body">
+    <%= form_for @shop, url: shop_admin_profile_path(@shop.name) do |f| %>
+      <div class="form-group">
+        <%= f.label :logo_url, "商店Logo" %>
+        <div class="image-uploader">
+          <%= image_tag @shop.logo.url(:cover) %>
+          <div class="image-uploader-button">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :name, "商店名称" %>
+        <%= f.text_field :name, class: 'form-control', readonly: "readonly" %>
+      </div>
+      <div class="form-group">
+        <%= f.label :title, " 标题" %>
+        <%= f.text_field :title, class: 'form-control' %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :phone, "联系电话" %>
+        <%= f.text_field :phone, class: 'form-control' %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :address, "地址" %>
+        <%= f.text_field :address, class: 'form-control', placeholder: '商店地址' %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :website, "商店主页" %>
+        <%= f.text_field :website, class: 'form-control' %>
+      </div>
+
+
+      <div class="form-group">
+        <%= f.label :description, "描述" %>
+        <%= f.bootsy_area :description, class: "form-control", rows: 12 %>
+      </div>
+
+      <div class="form-group">
+        <%= f.submit "确认", class: "btn btn-primary btn-lg" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<div class="file-uploader-template hidden">
+  <div class='qq-uploader'>
+    <div class='qq-upload-drop-area' style='display: none;'>
+      <span>拖动文件到这里上传</span>
+    </div>
+    <div class='qq-upload-button'>选择文件上传
+    </div>
+    <ul class='qq-upload-list' style='display: none;'></ul>
+  </div>
+</div>
+
+<script type="text/javascript">
+  (function () {
+    var shopId = "<%= @shop.id %>";
+
+    var $element = $("#edit_shop_" + shopId + " div.image-uploader-button")[0];
+    var actionUrl = "<%= upload_shop_logo_shop_admin_profile_path(@shop.name) %>";
+    var token = $('meta[name=csrf-token]').attr('content');
+
+    new qq.FileUploader({
+      element: $element,
+      customHeaders: { "X-CSRF-TOKEN": token },
+      action:  actionUrl + "?authenticity_token=" + encodeURIComponent(token),
+      multiple: false,
+      template: $(".file-uploader-template").html(),
+      onComplete: function (id, filename, responseJSON) {
+        var url = responseJSON.url;
+        $("#edit_shop_" + shopId + " .image-uploader img").attr('src', url);
+      }
+    });
+  })();
+</script>

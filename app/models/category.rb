@@ -1,43 +1,90 @@
-require 'chinese_pinyin'
-
 class Category < ActiveRecord::Base
-  acts_as_nested_set
+  HashEx = ActiveSupport::HashWithIndifferentAccess
 
-  has_and_belongs_to_many :shops
+  include Elasticsearch::Model
+  include Elasticsearch::Model::Callbacks
+  include ESModel
 
-  has_many :items, foreign_key: :shop_category_id
+  acts_as_tree :cache_depth => true
 
-  # store_accessor :image, :avatar_url
+  belongs_to :upper, class_name: "Category", foreign_key: 'upper_properties_id'
+  belongs_to :brand
 
-  mount_uploader :image, ImageUploader # , mount_on: :avatar_url
+  has_and_belongs_to_many :properties
 
-  before_save :default_values
-  # alias_method :cover_url, :avatar_url
-  # alias_method :logo_url, :avatar_url
+  def with_upper_properties(inhibit = true)
+    cond_string = [ "u.rk = 1", inhibit ? "u.state = 0" : nil ].compact.join(" and ")
+
+    # | id | name                      | title          | summary | unit_type | prop_type | state | upperd | category_id | ancestry_depth | rk |
+    # |----|---------------------------|----------------|---------|-----------|-----------|-------|--------|-------------|----------------|----|
+    # | 4  | factory                   | 生产厂家       |         |           | string    | 0     | f      | 5           | 3              | 1  |
+    # | 4  | factory                   | 生产厂家       |         |           | string    | 0     | t      | 3           | 1              | 2  |
+    # | 5  | production_license_number | 生产许可证编号 |         |           | number    | 0     | t      | 3           | 1              | 1  |
+    # | 6  | shelf_life                | 保质期         |         | 天        | days      | 1     | f      | 5           | 3              | 1  |
+    # | 6  | shelf_life                | 保质期         |         | 天        | days      | 0     | t      | 4           | 2              | 2  |
+
+    query = <<-SQL
+      WITH
+        uppers AS (
+          SELECT  p.*,
+            cp.state,
+            c.id as category_id,
+            c.ancestry_depth as ancestry_depth,
+            c.ancestry_depth < ? as upperd,
+            ROW_NUMBER() OVER(PARTITION BY p.name
+                                         ORDER BY c.ancestry_depth DESC) AS rk
+          FROM "properties" p
+            INNER JOIN "categories_properties" cp
+              ON "cp"."property_id" = "p"."id"
+              INNER JOIN "categories" c
+                ON "c"."id" = "cp"."category_id"
+                WHERE (cp.category_id in (?)) )
+      SELECT u.*
+          FROM uppers u
+          WHERE #{cond_string}
+    SQL
+
+    Property.find_by_sql [query.squish, ancestry_depth, sort_ancestor_ids]
+  end
+
+  def definition_properties
+    @defintion_properties ||= HashEx[with_upper_properties.map do |property|
+      [property.name, {
+        name: property.name,
+        title: property.title,
+        type: property.prop_type,
+        unit_type: property.unit_type,
+        unit_id: property.unit_id,
+        default: property.data.try(:[], "default"),
+        validates: property.data.try(:[], "validates"),
+        value: property.data.try(:[], "value"),
+        map: property.data.try(:[], "map")
+      }]
+    end]
+  end
+
+  def inhibit_count
+    Category.joins(:properties).where("categories_properties.category_id = ? and categories_properties.state = 1", id).count
+  end
+
+  def sort_ancestor_ids
+    upper.blank? ? [id] : [*upper.ancestor_ids, upper.id, id]
+  end
+
+  def upper
+    super || parent
+  end
 
   def title
     super || name
   end
 
-  def has_children
-    Category.exists?(parent_id: id)
+  # 伪代码 展开分类显示
+  def open
+    true
   end
 
-  def chain_name
-    self_and_ancestors.map(&:name)
-  end
-
-  protected
-
-  def default_values
-    if self.name.blank?
-      py_name = Pinyin.t(self.title, splitter: '_')
-      py_name.succ! if same_name?(py_name)
-      self.name = py_name
-    end
-  end
-
-  def same_name?(name)
-    nested_set_scope.where(name: name).last.present?
+  def is_leaf
+    !has_children?
   end
 end

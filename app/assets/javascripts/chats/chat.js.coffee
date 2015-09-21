@@ -30,6 +30,7 @@ class @Chat
     @metadata = window.metadata
     @ownerChannelId = @options.userChannelId || @userSocket.getUserChannelId()
     @table = @options.table
+    @greetings = @options.greetings
 
     $(document).bind 'page:before-unload', =>
       @_clearEventListners()
@@ -44,6 +45,10 @@ class @Chat
     setTimeout () =>
       @$().trigger('chat:init', @userSocket)
     , 10
+
+    setTimeout () =>
+      @_insertGreetingMessage() if @greetings? and @greetings.length > 0
+    , 1500
 
   $: () ->
     $(@element)
@@ -206,6 +211,17 @@ class @Chat
       @autoScroll(direction)
 
     #@autoScroll(direction) if @options.isMessageScroll
+
+  _insertGreetingMessage: () ->
+    if @greetings?
+      @_insertMessage({
+        id: ~(new Date),
+        senderId: 0,
+        content: @greetings,
+        senderAvatar: @options.avatarDefault,
+        senderLogin: '商店',
+        time: new Date()
+      })
 
   _batchInsertMessages: (messages, direction = 'down') ->
     for message in messages

@@ -16,6 +16,7 @@ class PromotionsController < ApplicationController
   # GET /promotions/1
   # GET /promotions/1.json
   def show
+    self.page_title = [ @promotion.title ]
     @promotion.punch request
     @shop = Shop.find(@promotion.shop_id)
   end
@@ -78,6 +79,7 @@ class PromotionsController < ApplicationController
     def query_params
       @query_params = {
         page: params[:page] || 1,
+        per: params[:page] || 24,
         category_id: params[:category_id],
         inline: params[:inline]
       }

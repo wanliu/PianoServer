@@ -1,0 +1,128 @@
+.panel-category {
+  .breadcrumb {
+    margin: 0px;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .panel-body {
+    padding: 15px 0;
+  }
+
+  .category-wrap {
+    overflow: hidden;
+    position: relative;
+    height: 250px;
+    margin: 0 auto;
+
+    .category-list {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 1160px;
+
+      .category-list-item {
+        width: 290px;
+        padding: 0 15px;
+        float: left;
+      }
+    }
+
+    .btn-left, .btn-right {
+      position: absolute;
+      width: 40px;
+      height: 72px;
+      top: 50%;
+      margin-top: -36px;
+      cursor: pointer;
+      display: none;
+      visibility: hidden;
+      z-index: 2;
+
+      &.btn-visible {
+        display: block;
+        visibility: visible;
+      }
+    }
+
+    .btn-left {
+      left: 0;
+      background-image: image-url('arr-left.png');
+
+      &:hover {
+        background-image: image-url('arr-left-red.png');
+      }
+    }
+
+    .btn-right {
+      right: 0;
+      background-image: image-url('arr-right.png');
+
+      &:hover{
+        background-image: image-url('arr-right-red.png');
+      }
+    }
+  }
+
+  .list-group {
+    height: 250px;
+    background-color: #EEE;
+    border-radius: 4px;
+    overflow-y: auto;
+    margin-bottom: 0;
+  }
+
+  .list-group-item {
+    padding: 5px 15px;
+    cursor: pointer;
+
+    .children {
+      position: absolute;
+      right: 8px;
+      top: 10px;
+      background-image: image-url('next.png');
+      width: 5px;
+      height: 7px;
+    }
+
+    &.active .children {
+      background-image: image-url('next-red.png');
+    }
+  }
+}
+
+.panel-items {
+  .pagination {
+    margin: 0px;
+  }
+}
+
+
+@media (max-width: 991px) {
+  .panel-category .category-wrap {
+    width: 290px;
+  }
+}
+
+@media (min-width: 992px) {
+  .panel-category .category-wrap {
+    width: 580px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .panel-category .category-wrap {
+    width: 870px;
+  }
+}
+
+.panel-item-edit {
+  .panel-heading {
+    .breadcrumb {
+      margin-bottom: 0px;
+      padding: 8px 0;
+      display: inline-block;
+    }
+  }
+}
