@@ -16,7 +16,7 @@
 </ol>
 <% end %>
 <div class="shop-category-list row">
-  <%= render partial: "shop_category", collection: @shop_category.children %>
+  <%= render partial: "shop_category", collection: @children %>
   <% unless @shop_category.depth >= 3 %>
     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-3 new-shop-category">
       <div class="box">
@@ -33,6 +33,10 @@
       <p class="text-center">新增一个分类</p>
     </div>
   <% end %>
+
+  <div style='clear: both;'>
+    <%= paginate(@children) %>
+  </div>
 </div>
 
 <script type="text/javascript">
