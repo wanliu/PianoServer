@@ -82,7 +82,15 @@
     width: 100%;
     text-align: center;
     cursor: text;
-    word-break: break-all;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
+  }
+
+  .shop-category .text-center {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .thumbnail .title-wrap {
