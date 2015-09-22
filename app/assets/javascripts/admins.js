@@ -5,7 +5,7 @@
 //= require moment/zh-cn
 //= require bootstrap-datetimepicker
 //= require bootstrap-sprockets
-//= require turbolinks
+//= require jquery.turbolinks
 //= require nprogress
 //= require nprogress-turbolinks
 //= require china_city/jquery.china_city
