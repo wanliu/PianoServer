@@ -5,10 +5,14 @@ class @CategoryItems extends @Event
     "click .edit": "onEditCategory"
 
   constructor: (@element, @items, @options = {}) ->
+    super
     @element.html('')
 
     for item, index in @items
       @generateCategoryItem(item, index)
+
+    table = @$().parents('table').data("table")
+    table.refresh()
 
   bindEditCategory: () ->
     @$().find('.edit').bind('click', @onEditCategory.bind(@))
@@ -18,7 +22,7 @@ class @CategoryItems extends @Event
 
     template = """
       <tr data-item-index="#{index}" data-item-id="#{id}" >
-        <td><img src="#{image_url}" alt="product image" class='item-image' />#{ title }</td>
+        <td class="title"><img src="#{image_url}" alt="product image" class='item-image' />#{ title }</td>
         <td>#{ shop_category_title }</td>
         <td>#{ public_price }</td>
         <td>#{ price }</td>
@@ -38,6 +42,7 @@ class @CategoryItems extends @Event
     """
 
     $item = $(template).appendTo(@element)
+
 
     $item.find('.toggle-checkbox').attr('checked', 'checked') if on_sale
 

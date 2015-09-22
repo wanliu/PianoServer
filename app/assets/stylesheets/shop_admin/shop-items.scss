@@ -76,11 +76,13 @@
         &:last-child {
           border-right: none;
         }
-
-        .item-image {
-          margin-right: 10px;
-        }
       }
+    }
+
+    .item-image {
+      margin-right: 10px;
+      width: 50px;
+      height: 50px;
     }
 
     .panel-footer{

@@ -17,12 +17,12 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
                  .with_query(query_params[:q])
                  .page(query_params[:page])
 
+
     @categories = if params[:category_id].present?
       ShopCategory.where(parent_id: params[:category_id])
     else
       shop_category_root.children
     end
-
 
     # respond_to do |format|
     #   format.json { render :index }

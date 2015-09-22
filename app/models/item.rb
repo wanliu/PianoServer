@@ -2,7 +2,7 @@ class Item < ActiveRecord::Base
   include DynamicProperty
   html_fragment :description, :scrub => :prune  # scrubs `body` using the :prune scrubber
 
-  # paginates_per 5
+  paginates_per 5
 
   belongs_to :shop_category
   belongs_to :category

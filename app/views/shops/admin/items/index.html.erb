@@ -1,9 +1,19 @@
 <div class="shop-items-container">
-  <div class="btn-toolbar category-toolbar">
-    <button type="button" class="btn btn-default dropdown-toggle btn-category" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      分类
-      <span class="caret"></span>
-    </button>
+  <div class="btn-toolbar category-toolbar" role="toolbar" >
+    <div class="btn-group">
+      <button type="button" class="btn btn-default dropdown-toggle btn-category" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        分类
+        <span class="caret"></span>
+      </button>
+    </div>
+    <div class="btn-group col-md-3">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Search" aria-describedby="basic-addon2">
+        <span class="input-group-addon" id="basic-addon2">
+          <span class="glyphicon glyphicon-search"></span>
+        </span>
+      </div>
+    </div>
   </div>
 
   <div class="row category-panel">
@@ -47,17 +57,17 @@
         新增
       </button>
     </div>
-    <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack" data-tablesaw-mode-switch>
+    <table class="tablesaw" data-tablesaw-mode="swipe">
       <thead>
-        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">商品标题</th>
-        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="5">所属分类</th>
-        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">零售价</th>
-        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">批发价</th>
-        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">库存</th>
-        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">是否在售</th>
+        <th scope="col" class="title" data-tablesaw-sortable-col data-tablesaw-priority="persist">商品标题</th>
+        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">所属分类</th>
+        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="5">零售价</th>
+        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">批发价</th>
+        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">库存</th>
+        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">是否在售</th>
       </thead>
       <tbody>
-
+        <%#= render partial: "item_line", collection: @items %>
       </tbody>
     </table>
   </div>
@@ -71,6 +81,15 @@
       itemsContainer = $('.items-panel'),
       url = "<%= shop_admin_items_path(@shop.name) %>" + "/$itemId/";
 
+      // page = <%= @page %>,
+      // per = <%= @per %>,
+      // total_count = <%= @total_count %>,
+
+  // var paginate = new Paginate($('.pagination'), page, per, total_count)
   new Categories(shop_name, categoryContainer, itemsContainer, {item: {url: url}})
   new CategoryToolbar($('.category-toolbar'))
+
+  // $(document).on("page:load", function() {
+  //   $('.tablesaw').table();
+  // });
 </script>

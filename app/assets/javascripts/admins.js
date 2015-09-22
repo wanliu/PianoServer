@@ -17,6 +17,7 @@
 //= require _common/hammer
 //= require _common/util
 //= require _common/save_on_change
+//= require _common/paginate
 //= require bootsy
 //= require lib/tablesaw
 //= require_tree ./locales
