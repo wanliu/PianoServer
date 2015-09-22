@@ -1,9 +1,16 @@
 Rails.application.routes.draw do
+  mount Bootsy::Engine => '/bootsy', as: 'bootsy'
   resources :subjects, except: [:index, :new, :edit] do
     member do
       get "preview", to: 'subjects#preview', as: :preview
     end
   end
+
+  namespace :authorize do
+    get :weixin
+    get :weixin_redirect_url
+  end
+
   devise_for :admins, controllers: {
     sessions: 'admins/sessions',
     registrations: 'admins/registrations'
@@ -59,6 +66,28 @@ Rails.application.routes.draw do
     resources :messages
     resources :contacts
     resources :attachments
+    resources :industries do
+      collection do
+        post :sync_es_brands
+        post :sync_es_categories
+      end
+
+      resources :categories do
+        resources :properties
+
+        member do
+          post :add_property
+          patch :update_property
+          delete :remove_property
+          get :show_inhibit
+          get :hide_inhibit
+          get :children
+        end
+      end
+    end
+
+    resources :products
+    resources :properties
   end
 
   namespace :api do
@@ -78,6 +107,8 @@ Rails.application.routes.draw do
       get 'shop/:shop_id', to: "promotions#shop", as: :shop
     end
   end
+
+  resources :categories
 
   resources :shops, only: [ :show ]
 
@@ -105,6 +136,8 @@ Rails.application.routes.draw do
   #
   get '/about' => 'home#about'
 
+  match '@:profile', :to => 'profile#username', as: :profile, via: [ :get ]
+
   match ':shop_name', :to => 'shops#show_by_name', constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ }, via: [ :get ], as: :shop_site
 
   resources :shops, path: '/', only: [], constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do
@@ -112,29 +145,40 @@ Rails.application.routes.draw do
       get "/about", to: "shops#about"
     end
 
-    resources :categories, controller: 'shop_categories'
+    resources :shop_categories, path: "categories"
     resources :items
 
     namespace :admin, module: 'shops/admin' do
-      get "/", to: "admin#dashboard", as: :index
-      get "/profile", to: "admin#profile"
+      get "/", to: "dashboard#index", as: :index
+      resource :profile do
+        post :upload_shop_logo
+      end
 
-      resources :categories, constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do
+      resources :dashboard
+      resources :shop_categories,  path: "categories", constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do
         member do
-          get "/:child_id", to: "categories#show_by_child", as: :child
-          post "/:parent_id", to: "categories#create_by_child"
-          put "/:child_id", to: "categories#update_by_child"
-          post "/:child_id/upload_image", to: "categories#upload_image"
-          delete "/:child_id", to: "categories#destroy_by_child"
+          get "/:child_id", to: "shop_categories#show_by_child", as: :child
+          post "/:parent_id", to: "shop_categories#create_by_child"
+          put "/:child_id", to: "shop_categories#update_by_child"
+          post "/:child_id/upload_image", to: "shop_categories#upload_image"
+          delete "/:child_id", to: "shop_categories#destroy_by_child"
         end
       end
 
-      resources :items
+      resources :items do
+        collection do
+          get "load_categories", to: "items#load_categories"
+          get "/new/step1",  to: "items#new_step1"
+          post "/new/step1", to: "items#commit_step1"
+          get "/new/step2/category/:category_id", to: "items#new_step2", as: :with_category
+          post "/new/step2/category/:category_id", to: "items#create"
+          post "/upload_image", to: "items#upload_image"
+        end
+      end
+
+      resources :settings
     end
   end
-
-  match '@:profile', :to => 'profile#username', as: :profile, via: [ :get ]
-
 
   root to: "promotions#index"
 end

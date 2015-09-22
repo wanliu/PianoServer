@@ -21,6 +21,11 @@ class @PromotionVariableEditModal extends @ModalBase
       success: (data) =>
         @$().modal('hide')
         @variableCRUD('update', data)
+      error: (jqXHR, textStatus, errorThrown) =>
+        json = eval("(" + jqXHR.responseText + ")");
+        fields = json.errors.fields
+
+        @hanldeErrors(fields)
 
   showPromotions: () ->
     @$().find('.list-group.selected').addClass('pressed')
@@ -53,5 +58,11 @@ class @PromotionVariableEditModal extends @ModalBase
 
         @$().find('.promotion-list .list-group').html(htmlAry.join(''))
         @bindAllEvents()
+
+  hanldeErrors: (fields) ->
+    $fieldName = @$().find('.field-name')
+
+    if fields['name']?
+      $fieldName.addClass('has-error').find('.help-block').text(fields['name'])
 
 

@@ -1,30 +1,30 @@
 <div class="left-sidebar">
   <ul class="nav nav-sidebar">
-    <li><%= link_to '仪表盘', admins_dashboards_path %></li>
+    <li><%= link_to '工作台', admins_dashboards_path %></li>
     <li><%= link_to '帐号', admins_accounts_path %></li>
     <li><%= link_to '专题', admins_subjects_path %></li>
+    <li><%= link_to '行业', admins_industries_path %></li>
+    <li><%= link_to '商品中心', admins_products_path %></li>
     <li><%= link_to '活动', admins_promotions_path %></li>
     <li><%= link_to '消息', admins_messages_path %></li>
   </ul>
 </div>
 
 <script type="text/javascript">
-  if (typeof String.prototype.startsWith != 'function') {
-    String.prototype.startsWith = function (str){
-      return this.slice(0, str.length) == str;
-    };
-  }
-
   var highlightSelected = function() {
-    var current_url = location.pathname;
-
+    var currentUrl = location.pathname;
+    var maxLength = 0;
+    var activeElem = null;
     $('.nav-sidebar>li').each(function(i, elem) {
       var $href = $(elem).find('a');
-      if (current_url.startsWith($href.attr('href'))) {
-        $(elem).addClass('active')
-      } else {
-        $(elem).removeClass('active')
+      if (currentUrl.startsWith($href.attr('href'))) {
+        if (maxLength < $href.attr('href').length) {
+          maxLength = $href.attr('href').length;
+          activeElem = elem
+        }
       }
+
+      $(elem).removeClass('active')
     });
   };
 

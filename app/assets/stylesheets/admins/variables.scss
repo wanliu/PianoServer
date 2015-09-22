@@ -1,13 +1,35 @@
 @import "bootstrap/mixins/_gradients";
 
-.list-group.selected {
-  .list-group-item {
-    @include gradient-vertical(white, #ccc);
+#variable_editor_modal {
+  .list-group.selected {
+    .list-group-item {
+      @include gradient-vertical(white, #ccc);
+    }
+
+    &.pressed {
+      .list-group-item {
+        @include gradient-vertical(#CCC, white);
+      }
+    }
   }
 
-  &.pressed {
-    .list-group-item {
-      @include gradient-vertical(#CCC, white);
+  .form-group {
+    .form-control-feedback {
+      display: none;
+    }
+
+    .help-block {
+      display: none;
+    }
+
+    &.has-error {
+      .form-control-feedback {
+        display: block;
+      }
+
+      .help-block {
+        display: block;
+      }
     }
   }
 }

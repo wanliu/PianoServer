@@ -1,7 +1,7 @@
 module AnonymousUser
   extend ActiveSupport::Concern
 
-  included do 
+  included do
 
     scope :anonymous, -> (id = nil, &block) do
       User.new id: id.nil? ? (-Time.now.to_i + rand(10000)) : id do |u|
@@ -14,5 +14,9 @@ module AnonymousUser
         }
       end
     end
+  end
+
+  def anonymous?
+    id < 0
   end
 end

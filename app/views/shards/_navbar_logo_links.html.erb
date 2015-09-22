@@ -1,0 +1,13 @@
+    <ul class="nav navbar-nav navbar-left">
+      <%= yield :back %>
+      <li>
+        <%= link_to root_path, class: "navbar-brand", title: Settings.app.title do %>
+          <%= image_tag 'logo.png' %>
+        <% end %>
+      </li>
+      <li>
+        <%= link_to content_for(:navbar_link), class: "navbar-brand navbar-title" do %>
+          <%= content_for?(:navbar) ? yield(:navbar) : Settings.app.title %>
+        <% end %>
+      </li>
+    </ul>

@@ -1,0 +1,64 @@
+<h1><%= @shop_category.title %></h1>
+<% if @shop_category.ancestors.count > 0 %>
+<ol class="breadcrumb">
+  <% @shop_category.self_and_ancestors.each_with_index do |node, i| %>
+    <% if @shop_category.ancestors.count - i == 0 %>
+      <li class="active">
+        <%= node.title %>
+      </li>
+    <% else %>
+      <li>
+        <% url = @root == node ? shop_admin_shop_category_path(@shop.name, @root.name) : child_shop_admin_shop_category_path(@shop.name, @root.name, node) %>
+         <%= link_to node.title, url %>
+      </li>
+    <% end %>
+  <% end %>
+</ol>
+<% end %>
+<div class="shop-category-list row">
+  <%= render partial: "shop_category", collection: @shop_category.children %>
+  <% unless @shop_category.depth >= 3 %>
+    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-3 new-shop-category">
+      <div class="box">
+        <a href="#" class="thumbnail">
+          <img src="<%= Settings.assets.gray_image %>" alt="new shop_category">
+          <h2>+</h2>
+          <input type="text" name="name" class="title-input" placeholder="分类名称" maxlength="20"/>
+          <p class="second-title">新增一个分类</p>
+        </a>
+      </div>
+      <%= form_tag shop_admin_shop_categories_path(@shop.name) do %>
+        <input type="hidden" name="shop_category_img" />
+      <% end %>
+      <p class="text-center">新增一个分类</p>
+    </div>
+  <% end %>
+</div>
+
+<script type="text/javascript">
+  // $(ready);
+
+  var newCategory;
+
+  // function ready () {
+    var NewShopCategory = window.NewShopCategory;
+    var EditCategory = window.EditCategory;
+
+    var shop_category = <%=raw @shop_category.to_json %>;
+    var createCategoryUrl = '<%= child_shop_admin_shop_category_path(@shop.name, @root.name, @shop_category) %>';
+
+    newCategory = new NewShopCategory($('.shop-category-list .new-shop-category')[0], shop_category, createCategoryUrl);
+
+    $('.shop-category-list .shop-category').each(function(i, e) {
+      new EditShopCategory($(e))
+    });
+  // };
+
+
+  // $(document).on('page:before-unload', function() {
+  //   if (newCategory) {
+  //     newCategory.unbindAllEvents();
+  //     delete newCategory;
+  //   }
+  // });
+</script>

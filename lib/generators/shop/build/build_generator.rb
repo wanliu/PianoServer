@@ -17,20 +17,17 @@ class Shop::BuildGenerator < Rails::Generators::NamedBase
     copy_file 'views/index.html.erb', "#{shop_path}/views/index.html.erb"
     copy_file "views/_header.html.liquid", "#{shop_path}/views/_header.html.liquid"
 
-    create_category name: 'product_category', title: '商品分类', category_type: 'builtin'
+    create_shop_category name: 'product_category', title: '商品分类', category_type: 'builtin'
   end
 
   protected
 
-  def create_category(attributes = {})
-    category = shop
-      .categories
-      .find_or_initialize_by(attributes)
+  def create_shop_category(attributes = {})
+    shop_category = shop.shop_category || shop.create_shop_category(attributes)
 
-    if category.persisted?
+    if shop_category.persisted?
       say_status :exist, "Category #{attributes}", :blue
     else
-      shop.categories << category
       say_status :create, "Category #{attributes}"
     end
   end

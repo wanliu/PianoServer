@@ -24,7 +24,7 @@ class Product
 
   def image
     @avatar = Flf.avatar
-    { 
+    {
       avatar_url: @avatar + '!avatar',
       preview_url: @avatar
     }

@@ -1,5 +1,4 @@
 class User < ActiveRecord::Base
-  include DefaultImage
   include AnonymousUser
 
   # Include default devise modules. Others available are:
@@ -12,12 +11,12 @@ class User < ActiveRecord::Base
 
   # has_many :memberings, :dependent => :destroy
   belongs_to :latest_location, class_name: 'Location'
+  belongs_to :shop
 
+  has_one :owner_shop, class_name: 'Shop', foreign_key: 'owner_id'
   has_many :chats, foreign_key: 'owner_id'
-
   has_many :locations
 
-  image_token -> { self.email || self.username || self.mobile }
   validates :username, presence: true, uniqueness: true
 
   after_commit :sync_to_pusher
@@ -32,7 +31,10 @@ class User < ActiveRecord::Base
     return found.nil? ? true : found.provider == 'import'
   }
 
-  store_accessor :image, :avatar_url
+  mount_uploader :image, ImageUploader
+  enum sex: {'男' => 1, '女' => 0 }
+  store_accessor :data,
+                 :weixin_openid, :weixin_privilege, :language, :city, :province, :country
 
   JWT_TOKEN = Rails.application.secrets.live_key_base
 
@@ -49,18 +51,26 @@ class User < ActiveRecord::Base
   end
 
   def self.find_for_database_authentication(warden_conditions)
-	  conditions = warden_conditions.dup
-	  if login = conditions.delete(:login)
-	    where(conditions.to_h).where(["lower(username) = :value OR lower(email) = :value OR lower(mobile) = :value", { :value => login.downcase }]).first
-	  else
-	    where(conditions.to_h).first
-	  end
-	end
+    conditions = warden_conditions.dup
+    if login = conditions.delete(:login)
+      where(conditions.to_h).where(["lower(username) = :value OR lower(email) = :value OR lower(mobile) = :value", { :value => login.downcase }]).first
+    else
+      where(conditions.to_h).first
+    end
+  end
 
   def ensure_authentication_token
     if authentication_token.blank?
       self.authentication_token = generate_authentication_token
     end
+  end
+
+  def avatar_url
+    image.url(:avatar)
+  end
+
+  def join_shop
+    shop || owner_shop
   end
 
   private
@@ -79,12 +89,12 @@ class User < ActiveRecord::Base
     pusher_token = Settings.pusher.pusher_token.clone
     pusher_url << 'users'
 
-    options = {id: "#{id}", token: pusher_token, login: username, realname: username, avatar_url: (image && image[:avatar_url]) }
+    options = {id: "#{id}", token: pusher_token, login: username, realname: username, avatar_url: avatar_url }
 
     begin
       RestClient.post pusher_url, options
     rescue Errno::ECONNREFUSED => e
-      # TODO what to do when sync fails?
+    # TODO what to do when sync fails?
     end
   end
 

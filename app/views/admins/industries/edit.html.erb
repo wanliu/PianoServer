@@ -1,0 +1,51 @@
+<h1 class="page-header template-page-header">
+  编辑行业
+  <small><%= @industry.title %></small>
+  <div class="industry-toggle">
+    <label class="toggle-box">
+      <%= check_box_tag :status, 'status', @industry.open?, class: 'toggle-checkbox'%>
+      <div class="track">
+        <div class="handle"></div>
+      </div>
+    </label>
+  </div>
+</h1>
+
+<%= render "form" %>
+
+<div class="panel panel-default">
+  <div class="panel-heading">品牌汇集</div>
+  <div class="panel-body">
+    Panel content
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">分类</div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-sm-6 category-left">
+        <div class="list-group category-tree">
+          <%= render partial: 'category_item', collection: @categories %>
+        </div>
+      </div>
+      <div class="col-sm-6 category-right">
+        <%if @selected %>
+          <%= render partial: "admins/categories/category_edit", locals: { category: @selected } %>
+        <% else %>
+          <div class="well empty-category" >
+          <h1><%= icon :'arrow-left'%>在左边选择分类</h1>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  var CategoryTree = window.CategoryTree;
+  var industryUrl = "<%= admins_industry_path(@industry) %>";
+  var cateTree = new CategoryTree($('.category-tree'), industryUrl);
+  /* Activating Best In Place */
+  $(".best_in_place").best_in_place();
+
+</script>

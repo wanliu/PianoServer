@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= I18n.locale %>">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge, chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2, minimum-scale=1, user-scalable=no" >
-    <title><%= content_for?(:title) ? yield(:title) : Settings.admin.title %></title>
     <%= csrf_meta_tags %>
 
-    <%= display_meta_tags %>
+    <%= display_meta_tags site: Settings.app.name, separator: '-', reverse: true %>
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
@@ -43,20 +42,27 @@
   <body class="<%= yield :module %>">
     <div class="navbar navbar-default navbar-fixed-top">
       <div class="container">
-        <ul class="nav navbar-nav navbar-left">
+        <ul class="nav navbar-left">
           <%= yield :back %>
+          <li>
+            <%= link_to root_path, class: "navbar-brand" do %>
+              <%= image_tag 'logo.png' %>
+              <%= content_for?(:navbar) ? yield(:nabvar) : @shop.title %>
+            <% end %>
+          </li>
+          <li>
+            <%= link_to content_for(:navbar_link), class: "navbar-brand navbar-title" do %>
+              <%= content_for?(:navbar) ? yield(:navbar) : Settings.app.title %>
+            <% end %>
+          </li>
         </ul>
-        <%= link_to root_path, class: "navbar-brand" do %>
-          <%= content_for?(:title) ? yield(:title) : @shop.name %>
-        <% end %>
-
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
         <div class="navbar-collapse collapse navbar-responsive-collapse">
-          <ul class="nav navbar-nav">
+          <ul class="nav navbar-nav navbar-right">
             <li><%= link_to "关于我们", about_path  %></li>
             <li><%= link_to "二维码", "#share-url-qrcode" , "data-toggle"=>"modal" %></li>
           </ul>
@@ -65,70 +71,152 @@
     </div>
 
     <div class="chat-notices"></div>
-    <div class="container relative">
-      <div class="row"> <! normal-layout !>
-        <%= render "left_sidebar" %>
+    <div class="shop-admin-container">
+      <div class="container relative">
+        <div class="row"> <! normal-layout !>
+          <%= render "left_sidebar" %>
 
-        <div class="content container-fluid">
-          <%= bootstrap_flash %>
-          <%= yield %>
-        </div>
-        <div class="container">
-          <footer>
-            <p><%= raw Settings.app.footer %> <%= PianoServer::VERSION unless Rails.env.production? %></p>
-          </footer>
-        </div>
-        <script type="text/javascript">
-          $(window).resize(tryAdjustLayout);
-          MAX_RETRY_ADJUSTMENTS = 3;
-
-          adjustLayout();
-
-          function adjustLayout() {
-            var contentWidth = $(window).width();
-            if (contentWidth < 768) {
-              $('.left-sidebar').animate({left: -300});
-              $('.content').animate({marginLeft: 0});
-            } else {
-              $('.left-sidebar').animate({left: 0});
-              $('.content').animate({marginLeft: 240});
-            }
-          }
-
-          function checkLayout() {
-            var contentWidth = $(window).width();
-            var left =  parseInt($('.left-sidebar').css("left"));
-            var marginLeft = parseInt($('.content').css('marginLeft'));
-
-            if (contentWidth < 768) {
-              return left === -300 && marginLeft === 0;
-            } else {
-              return left === 0 && marginLeft === 240;
-            }
-          }
-
-          function tryAdjustLayout() {
-            var count = 0;
-
-            var adjustId = setInterval(function() {
-              count++;
-              if (count < MAX_RETRY_ADJUSTMENTS) {
-                if (!checkLayout()) {
-                  adjustLayout();
-                } else {
-                  clearInterval(adjustId);
-                }
-              } else {
-                clearInterval(adjustId);
-              }
-            }, 500);
-
-          }
-        </script>
-      </div><!--/row-->
-
-
+          <div class="content container-fluid">
+            <%= bootstrap_flash %>
+            <%= yield %>
+          </div>
+          <div class="container">
+            <footer>
+              <p><%= raw Settings.app.footer %> <%= PianoServer::VERSION unless Rails.env.production? %></p>
+            </footer>
+          </div>
+        </div><!--/row-->
+      </div>
+      <div class="shop-admin-overlayer"></div>
     </div> <!-- /container -->
+
+    <script type="text/javascript">
+      var MAX_RETRY_ADJUSTMENTS = 3,
+          $leftSider = $('.left-sidebar'),
+          $content = $('.content'),
+          $overlayer = $('.shop-admin-overlayer'),
+          leftSiderShown = $(window).width() > 768,
+          hammer;
+
+      //adjustLayout();
+      toggleSwipeListeners();
+
+      $(window).on('resize.ajust-layout', tryAdjustLayout);
+      $(window).on('resize.swipe',toggleSwipeListeners);
+
+      function adjustLayout() {
+        var contentWidth = $(window).width();
+
+        if (contentWidth <= 768) {
+          animateLeft();
+        } else {
+          animateRight();
+        }
+      }
+
+      function animateLeft() {
+        if (!leftSiderShown) {
+          $leftSider.css('left', -300);
+        } else {
+          $leftSider.css('left', 0);
+          $overlayer.show();
+        }
+
+        $content.css('left', 0);
+      }
+
+      function animateRight() {
+        $leftSider.css('left', 0);
+        $content.css('left', 240);
+        $overlayer.hide();
+      }
+
+      function checkLayout() {
+        var contentWidth = $(window).width(),
+            left = parseInt($leftSider.css("left")),
+            contentLeft = parseInt($content.css('left'));
+
+        if (contentWidth <= 768) {
+          return left === -300 && contentLeft === 0;
+        } else {
+          return left === 0 && contentLeft === 240;
+        }
+      }
+
+      function tryAdjustLayout() {
+        var count = 0;
+
+        var adjustId = setInterval(function() {
+          count++;
+
+          if (count < MAX_RETRY_ADJUSTMENTS) {
+            if (!checkLayout()) {
+              adjustLayout();
+            } else {
+              clearInterval(adjustId);
+            }
+          } else {
+            clearInterval(adjustId);
+          }
+        }, 500);
+      }
+
+      function toggleSwipeListeners() {
+        var width = $(window).width();
+
+        if (width < 768) {
+          addSwipeListeners();
+        } else {
+          removeSwipeLinsteners();
+        }
+      }
+
+      function addSwipeListeners() {
+        if (hammer) {
+          return;
+        }
+
+        hammer = new Hammer($('body')[0], {
+          direction: Hammer.DIRECTION_HORIZONTAL,
+          velocity: 0.2
+        });
+
+        hammer.on('swipeleft', function () {
+          if (!leftSiderShown) {
+            return;
+          }
+
+          $leftSider.css('left', -300);
+          leftSiderShown = false;
+          $overlayer.hide();
+        });
+
+        hammer.on('swiperight', function () {
+          if (leftSiderShown) {
+            return;
+          }
+
+          $leftSider.css('left', 0);
+          leftSiderShown = true;
+          $overlayer.show();
+        });
+      }
+
+      function removeSwipeLinsteners() {
+        if (!hammer) {
+          return;
+        }
+
+        hammer.off('swipeleft');
+        hammer.off('swiperight');
+
+        if (hammer.destroy) {
+          hammer.destroy();
+        }
+
+        hammer = null;
+      }
+    </script>
 
     <script type="text/javascript">
       $(function() {

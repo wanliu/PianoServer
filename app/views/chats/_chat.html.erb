@@ -20,10 +20,10 @@
         </div>
         <div class="buttons-consult">
           <div class="col-sm-6 col-xs-6 btn-wrap left">
-            <button class="btn btn-agrees">按住3秒同意</button>
+            <button class="btn btn-lg btn-agrees">按住3秒同意</button>
           </div>
           <div class="col-sm-6 col-xs-6 btn-wrap right">
-            <button class="btn btn-disagrees">拒绝</button>
+            <button class="btn btn-lg btn-disagrees">拒绝</button>
           </div>
         </div>
       </div>
@@ -49,6 +49,7 @@
         Chat          = window.Chat,
         userSocket    = window.userSocket,
         buyerId       = '<%= @order.buyer_id %>',
+        greetings     = '<%= @greetings %>',
         chatChannelId,
         targetId;
 
@@ -75,7 +76,8 @@
     }
 
     var chat = new Chat($('.chat-order-header'), chatChannelId, {
-      sendBtn: $('.btn-send')
+      sendBtn: $('.btn-send'),
+      greetings: greetings
     });
 
     chat.enter();

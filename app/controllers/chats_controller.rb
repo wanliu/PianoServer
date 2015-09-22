@@ -4,6 +4,7 @@ class ChatsController < ApplicationController
   set_parent_param :promotion_id, class_name: 'Promotion'
   before_action :chat_variables, only: [:owner, :target, :channel]
   before_action :get_order, only: [:owner, :target, :channel, :shop_items]
+  # before_action :set_page_info, only: [:show]
 
   def index
     @chats = Chat.in(current_anonymous_or_user.id)
@@ -63,15 +64,23 @@ class ChatsController < ApplicationController
         order.bid = Order.last_bid(current_anonymous_or_user.id) + 1
       end
     @order.items.add_shop_product(@item)
-    @order
   end
 
 	def show
+
 		@chat = Chat.find(params[:id])
 		@order = Order.find(@chat.order_id) if @chat.order_id
     #@target = @chat.chatable || @chat.target
 		@target = my_chat? ? @chat.target : @chat.owner
     @chats = Chat.in(current_anonymous_or_user.id)
+
+    set_page_title "与 #{@target.name} 洽谈"
+    set_page_navbar "#{@target.name}", @target.is_a?(Shop) ? shop_site_path(@target.name) : profile_path(@target.name)
+
+    if @order.buyer_id == current_anonymous_or_user.id and
+      DateTime.now - 15.seconds < @chat.created_at
+      @greetings = @order.supplier.greetings
+    end
 
     MessageSystemService.send_read_message current_anonymous_or_user.id, other_side
 	end
@@ -116,5 +125,4 @@ class ChatsController < ApplicationController
       @order.buyer_id
     end
   end
-
 end

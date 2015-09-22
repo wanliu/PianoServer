@@ -3,16 +3,20 @@
 <%= subject_render @subject, :homepage_header %>
 
 <div class="promotions-list">
-  <%= subject_render @subject, :promotion, partial: "promotion", collection: @promotions %>
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <%= subject_render @subject, :promotion, partial: "promotion", collection: @promotions %>
+  </div>
 	<%#= render partial: "promotion", collection: @promotions %>
 </div>
 
 <script type="text/javascript">
-	var page = 1;
-	var delayedTime = 200;
-	var pulling = false;
+  $(function() {
+    var page = 1;
+    var delayedTime = 200;
+    var pulling = false;
+    var per = 24;
+    var allLoaded = <%= @promotions.length %> < per;
 
-	$(function() {
 		var parseURL = window.parseURL;
 
 		function displayLoading()  {
@@ -24,15 +28,16 @@
 		}
 
 		function loadingPromotions() {
-
-			if (!pulling) {
+			if (!pulling && !allLoaded) {
 				pulling = true;
 
-				var url = [ 'promotions.json', $.param({ page: page++, inline: true }) ].join('?');
+				var url = [ 'promotions.json', $.param({ page: ++page, inline: true, per: per }) ].join('?');
 				displayLoading();
 
 				$.get(url).then(function(data, status, e) {
 					clearLoading();
+
+          allLoaded = data['promotions'].length < per;
 					var promotions = data['promotions'].map(function(promotion) {
 						return promotion.html;
 					});
@@ -76,10 +81,10 @@
       }
 
       if (/promotions\/\d+\/chat/.test(url)) {
+        $(document).off('scroll:bottom');
+        clearLoading();
+      } else {
 				$(document).on('scroll:bottom', loadingPromotions)
-			} else {
-				$(document).off('scroll:bottom');
-				clearLoading();
 			}
 		});
 	});
