@@ -1,5 +1,9 @@
 body.detail {
   margin-bottom: 50px;
+
+  footer {
+    display: none;
+  }
 }
 
 .promotion-detail-container{
@@ -180,6 +184,8 @@ body.detail {
     .link-table{
       display: table;
       width: 100%;
+      min-height: 50px;
+      font-size: 1.5rem;
     }
 
     .contact-button{
