@@ -4,8 +4,6 @@ class @CategoryList
     @generateCategoryItems(@categories)
 
   generateCategoryItems: (categories) ->
-    @element.html('')
-
     for category in categories
       @generateCategoryItem(category).appendTo(@element)
 
@@ -24,7 +22,7 @@ class @CategoryList
       template = """
         <li class="list-group-item has-children" category-id="#{id}">
           #{name}
-          <span class="children"></span>
+          <span class="glyphicon glyphicon-chevron-right children"></span>
         </li>
       """
 
@@ -52,6 +50,8 @@ class @CategoryList
     )
 
   resetContent: (data) ->
+    @element.html('')
+
     @generateCategoryItems(data)
 
   emptyContent: () ->
