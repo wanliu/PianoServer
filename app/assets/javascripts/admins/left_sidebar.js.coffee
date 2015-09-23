@@ -1,7 +1,7 @@
 TRANSITION_ENDS = 'webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend'
 
 class @LeftSideBar
-  constructor: (@element, @container, @options = {}) ->
+  constructor: (@element, @navbar, @container, @options = {}) ->
     @bindResizeEvent()
     @$().click ()=>
       @toggleSlide() if $(window).width() < 768
@@ -9,6 +9,7 @@ class @LeftSideBar
     @width = @options["width"] || $(@element).outerWidth()
 
     @$container = $(@container)
+    @$navbar = $(@navbar)
     @hammer = new Hammer.Manager(document.body)
     @hammer.add(new Hammer.Pan({ threshold: 0, pointers: 0 }));
     # @hammer.add(new Hammer.Swipe({
@@ -50,12 +51,16 @@ class @LeftSideBar
     @$().css({left: 0})
     @$container.css('minWidth', 'auto')
     @$container.css('marginLeft', 0)
+    @$navbar.css('minWidth', 'auto')
+    @$navbar.css('marginLeft', 0)
     @$().width(@width)
 
   close: () ->
     @$().css({left: -300})
     @$container.css('minWidth', 'auto')
     @$container.css('marginLeft', 0)
+    @$navbar.css('minWidth', 'auto')
+    @$navbar.css('marginLeft', 0)
     @$().width(@width)
     @$().css('backgroundColor', 'white')
 
@@ -66,14 +71,18 @@ class @LeftSideBar
     @$().width(300);
     @originWidth = @$container.outerWidth()
     @$container.css('marginLeft', 300)
-    @$().css('backgroundColor', '#222222')
     @$container.css('minWidth', @originWidth)
+    @$navbar.css('marginLeft', 300)
+    @$navbar.css('minWidth', @originWidth)
+
+    @$().css('backgroundColor', '#222222')
 
 
   hide: () ->
     @isShow = false
     @$().css({left: -300})
     @$container.css('marginLeft', 0)
+    @$navbar.css('marginLeft', 0)
     @$().css('backgroundColor', 'white')
 
   onTransEnd: (show) ->
@@ -81,5 +90,6 @@ class @LeftSideBar
       $("body").css('overflow', 'hidden')
     else
       @$().width(@width)
+      @$container.css('minWidth', 'auto')
       @$container.css('minWidth', 'auto')
       $("body").css('overflow', 'auto')
