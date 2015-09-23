@@ -1,12 +1,16 @@
+#= require _common/event
 TRANSITION_ENDS = 'webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend'
 
-class @LeftSideBar
+class @LeftSideBar extends @Event
   constructor: (@element, @navbar, @container, @options = {}) ->
+    super
     @bindResizeEvent()
     @$().click ()=>
       @toggleSlide() if $(window).width() < 768
 
     @width = @options["width"] || $(@element).outerWidth()
+    @toggleBackground = @options["toggleBackground"] || "#122048"
+    @originBackground = @options["originBackground"] || @$().css('backgroundColor')
 
     @$container = $(@container)
     @$navbar = $(@navbar)
@@ -19,9 +23,6 @@ class @LeftSideBar
     @hammer.on("panright", @slideOpen.bind(@))
     @hammer.on("panleft", @slideClose.bind(@))
     @$().on(TRANSITION_ENDS, @onTransEnd.bind(@))
-
-  $: () ->
-    $(@element)
 
   bindResizeEvent: (  ) ->
     $(window).resize (e) =>
@@ -62,7 +63,7 @@ class @LeftSideBar
     @$navbar.css('minWidth', 'auto')
     @$navbar.css('marginLeft', 0)
     @$().width(@width)
-    @$().css('backgroundColor', 'white')
+    @$().css('backgroundColor', @originBackground)
 
 
   show: () ->
@@ -75,7 +76,7 @@ class @LeftSideBar
     @$navbar.css('marginLeft', 300)
     @$navbar.css('minWidth', @originWidth)
 
-    @$().css('backgroundColor', '#222222')
+    @$().css('backgroundColor', @toggleBackground)
 
 
   hide: () ->
@@ -83,7 +84,7 @@ class @LeftSideBar
     @$().css({left: -300})
     @$container.css('marginLeft', 0)
     @$navbar.css('marginLeft', 0)
-    @$().css('backgroundColor', 'white')
+    @$().css('backgroundColor', @originBackground)
 
   onTransEnd: (show) ->
     if @isShow
