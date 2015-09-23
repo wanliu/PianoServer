@@ -1,6 +1,8 @@
 class Property < ActiveRecord::Base
 
-  PROP_TYPES = %w(string number date boolean map)
+  DATA_KEY_MAP = "map"
+
+  PROP_TYPES = ["string", "number", "date", "boolean", DATA_KEY_MAP]
 
   has_and_belongs_to_many :categories
   belongs_to :unit
@@ -17,7 +19,7 @@ class Property < ActiveRecord::Base
 
   def map_pairs
     map_data = data || {}
-    map_data["map"] || {}
+    map_data[DATA_KEY_MAP] || {}
   end
 
   # "map_pairs"=>{"keys"=>{"0"=>"a"}, "values"=>{"0"=>"2"}}}
@@ -39,7 +41,7 @@ class Property < ActiveRecord::Base
     end
 
     self.data ||= {}
-    self.data["map"] = pairs
+    self.data[DATA_KEY_MAP] = pairs
   end
 
   def category_id
