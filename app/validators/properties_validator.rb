@@ -67,7 +67,6 @@ class PropertiesValidator < ActiveModel::EachValidator
   def validates_config_of(record, attribute)
     record_definitions record do |definitions|
       remove_prefix_name = attribute.sub(/\A#{@method_prefix}_/, '')
-      pp remove_prefix_name
       config = definitions[remove_prefix_name]
       if config["validates"]
         config["validates"].each do |validate, options|
