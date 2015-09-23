@@ -57,6 +57,7 @@ class @LeftSideBar
     @$container.css('minWidth', 'auto')
     @$container.css('marginLeft', 0)
     @$().width(@width)
+    @$().css('backgroundColor', 'white')
 
 
   show: () ->
