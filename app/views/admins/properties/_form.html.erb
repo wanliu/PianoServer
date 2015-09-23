@@ -19,8 +19,8 @@
     <% property.map_pairs.each do |key, value| %>
       <div class='map-pair' data-pair-index=<%= index %>>
         <%= label_tag "键值对(key-value):" %>
-        <%= text_field_tag "property[map_pairs][keys][#{index}]", "#{key}" %> <span class="key-value"> => </span>
-        <%= text_field_tag "property[map_pairs][values][#{index}]", "#{value}" %>
+        <%= text_field_tag "property[map_pairs][keys][#{index}]", "#{key}", class: "form-control pair-input" %> <span class="key-value"> => </span>
+        <%= text_field_tag "property[map_pairs][values][#{index}]", "#{value}", class: "form-control pair-input" %>
         <button class='btn btn-default remove-map-pair' roll='button' type='button' data-pair-index=<%= index %>>删除</button>
         <% index += 1 %>
       </div>
@@ -35,8 +35,8 @@
 <script type="text/template" id='map-pair-tempalte'>
   <div class='map-pair' data-pair-index={{= index }}>
     <%= label_tag "键值对(key-value):" %>
-    <%= text_field_tag "property[map_pairs][keys][{{=index}}]", "" %> <span class="key-value"> => </span>
-    <%= text_field_tag "property[map_pairs][values][{{=index}}]", "" %>
+    <%= text_field_tag "property[map_pairs][keys][{{=index}}]", "", class: "form-control pair-input" %> <span class="key-value"> => </span>
+    <%= text_field_tag "property[map_pairs][values][{{=index}}]", "", class: "form-control pair-input" %>
     <button class='btn btn-default remove-map-pair' roll='button' type='button' data-pair-index={{= index }}>删除</button>
   </div>
 </script>
