@@ -1,6 +1,6 @@
 class @CategoryList
 
-  constructor: (@container, @element, @categories, @level, @$form) ->
+  constructor: (@container, @element, @categories, @level) ->
     @generateCategoryItems(@categories)
 
   generateCategoryItems: (categories) ->
@@ -10,18 +10,18 @@ class @CategoryList
     @bindClickEvent()
 
   generateCategoryItem: (category) ->
-    { id, name, is_leaf } = category
+    { id, title, is_leaf } = category
 
     if is_leaf
       template = """
         <li class="list-group-item" category-id="#{id}">
-          #{name}
+          #{title}
         </li>
       """
     else
       template = """
         <li class="list-group-item has-children" category-id="#{id}">
-          #{name}
+          #{title}
           <span class="glyphicon glyphicon-chevron-right children"></span>
         </li>
       """
@@ -36,17 +36,10 @@ class @CategoryList
 
     $target.addClass('active').siblings().removeClass('active')
     category_id = $target.attr('category-id')
-    $submit = @$form.find('input[type=submit]')
-    $input = @$form.find('input[name=category_id]')
-
-    if $target.hasClass('has-children')
-      $submit.attr('disabled', 'disabled')
-    else
-      $submit.removeAttr('disabled')
-      $input.val(category_id)
+    is_leaf = !$target.hasClass('has-children')
 
     @container.loadCategoryData(category_id, (data) =>
-      @container.categoryChanged(data, @level)
+      @container.categoryChanged(data, @level, is_leaf)
     )
 
   resetContent: (data) ->

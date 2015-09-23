@@ -1,4 +1,4 @@
-.shop-items-container{
+.shop-admin-container{
   // min-width: 898px;
   .btn-toolbar {
     margin-bottom: 20px;
@@ -11,33 +11,15 @@
   .category-panel {
     margin-bottom: 20px;
     display: none;
+    border: 1px solid #CCCCCC;
+    border-radius: 5px;
+    padding: 15px 0;
+    position: relative;
 
-    .breadcrumb {
-      display: inline-block;
-      padding: 0;
-      margin: 0 0 0 10px;
-    }
-
-    .category-col .list-group{
-      height: 250px;
-      background: #EEEEEE;
-      overflow-y: auto;
-      border-radius: 5px;
-
-      .list-group-item {
-        padding: 5px 15px;
-
-        .children {
-          position: absolute;
-          right: 8px;
-          top: 8px;
-          color: #515151;
-        }
-
-        &.active .children {
-          color: #FFFFFF;
-        }
-      }
+    .breadcrumb-container {
+      position: absolute;
+      top: -40px;
+      right: 0;
     }
 
     .items-search {
@@ -48,7 +30,6 @@
   }
 
   .items-panel {
-
     .panel-heading {
       position: relative;
       padding: 15px;

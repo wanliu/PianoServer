@@ -1,5 +1,7 @@
 class @CategoryContainer
-  constructor: (@$containment) ->
+  constructor: (@$containment, @length) ->
+    @$containment.width(290 * @length)
+
     @$leftBtn = @$containment.prev()
     @$rightBtn = @$containment.next()
 
@@ -7,10 +9,9 @@ class @CategoryContainer
     @bindNextBtnClickEvent()
 
     @getCols()
-    @maxLevelIndex = @cols
+    @maxLevelIndex = @lastCols = @cols
     @currentLevel = 1
-
-    # $(window).bind('resize', @handleResizeEvent.bind(@))
+    # $(window).bind('resize', @resizeHandler.bind(@))
 
   getCols: () ->
     width = $(window).width()
@@ -22,14 +23,15 @@ class @CategoryContainer
     else
       @cols = 1
 
-  handleResizeEvent: () ->
+  resizeHandler: () ->
     @getCols()
 
-    @lastCols ||= @cols
     diff = @lastCols - @cols
+    @lastCols = @cols
 
     return if diff == 0
 
+    # @maxLevelIndex += diff
     @scrollContainer(diff)
 
   bindPrevBtnClickEvent: () ->

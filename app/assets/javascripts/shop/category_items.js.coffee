@@ -1,11 +1,9 @@
-#= require _common/event
+class @CategoryItems
+  constructor: (@container, @element) ->
+    @container.setCategoryItems(@) if @container?
 
-class @CategoryItems extends @Event
-
-  constructor: (@element, @items) ->
-    @element.html('')
-
-    for item in @items
+  generateCategoryItems: (items) ->
+    for item in items
       @generateCategoryItem(item)
 
   generateCategoryItem: (item) ->
@@ -31,3 +29,7 @@ class @CategoryItems extends @Event
     $item = $(template).appendTo(@element)
 
     $item.find('.toggle-checkbox').attr('checked', 'checked') if on_sale
+
+  resetContent: (data) ->
+    @element.html('')
+    @generateCategoryItems(data)

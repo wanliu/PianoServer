@@ -1,9 +1,11 @@
+#= require _common/event
 #= require ./category_list
 #= require ./category_container
+#= require ./category_breadcrumb
 
-class @CategoryListWrap
-  constructor: (@$container, @$form) ->
-    @length = 5
+class @CategoryListWrap extends @Event
+  constructor: (@element, @url, @length) ->
+    super(@element)
 
     @categoryLists = for level in [1..@length]
       @generateCategoryList(level)
@@ -12,8 +14,7 @@ class @CategoryListWrap
       @categoryChanged(data, 0)
     )
 
-    @$container.width(290 * @length)
-    @box = new CategoryContainer(@$container)
+    @box = new CategoryContainer(@element)
 
   generateCategoryList: (level) ->
     levelClass = ['level', level].join('')
@@ -24,28 +25,39 @@ class @CategoryListWrap
         </ul>
       </div>
     """
-    $list = $(template).appendTo(@$container)
+    $list = $(template).appendTo(@element)
     $element = $list.find('.list-group')
 
-    new CategoryList(@, $element, [], level, @$form)
+    new CategoryList(@, $element, [], level)
 
   loadCategoryData: (category_id, callback) ->
     data = {}
     data['category_id'] = category_id if category_id?
+    @category_id = category_id
 
     $.ajax({
-      url: '/categories',
+      url: @url,
       data: data,
       dataType: 'json',
       success: (datas) =>
+        @send('category:changed', category_id)
         callback.call(@, datas) if $.isFunction(callback)
     })
 
-  categoryChanged: (data, level) ->
-    @resetListsContent(data, level)
+  categoryChanged: (data, level, is_leaf) ->
+    if $.isArray(data)
+      @resetListsContent(data, level)
+    else
+      { categories, items } = data
+      @resetListsContent(categories, level)
+      @items.resetContent(items) if @items?
+
+    @form.changeCategory(@category_id, is_leaf) if @form?
 
   resetListsContent: (data, level) ->
-    return @levelCount = level if level == @length
+    if level == @length
+      @changeBreadcrumb() if @breadcrumb?
+      return @levelCount = level
 
     @levelCount = level + 1
 
@@ -65,36 +77,32 @@ class @CategoryListWrap
     else
       @box.changeCurrentLevel(level)
 
-    # @changeBreadcrumb()
+    @changeBreadcrumb() if @breadcrumb?
 
   changeBreadcrumb: () ->
-    $activeItems = @$container.find('.list-group-item.active')
-    pathNames = for item, index in $activeItems
+    $activeItems = @element.find('.list-group-item.active')
+    paths = for item, index in $activeItems
       $item = $(item)
       categoryName = $item.text()
       categoryId = $item.attr('category-id')
+      is_leaf = !$item.hasClass('has-children')
 
-      if index == $activeItems.length - 1
-        """
-          <li class="active">#{categoryName}</li>
-        """
-      else
-        """
-          <li><a href="javascript:void(0)" category-id="#{categoryId}">#{categoryName}</a></li>
-        """
+      {
+        name: categoryName,
+        id: categoryId,
+        is_leaf: is_leaf
+      }
 
-    @$breadcrumb.html(pathNames.join(''))
+    @breadcrumb.resetContent(paths)
 
-    @$breadcrumb.find('a').bind('click', (e) =>
-      $target = $(e.currentTarget)
-      cateId = $target.attr('category-id')
-      $parent = $target.parent()
-      level = $parent.index() + 1
-      selector = ['.list-group-item[category-id=', cateId, ']'].join('')
-      @$container.find(selector).trigger('click')
-    )
+  setBreadcrumb: (breadcrumb) ->
+    @breadcrumb = breadcrumb
 
+  setCategoryItems: (items) ->
+    @items = items
 
+  setForm: (form) ->
+    @form = form
 
 
 

@@ -6,22 +6,16 @@
     </button>
   </div>
 
-  <div class="row category-panel">
-      <div class="col-xs-4 col-sm-4 col-md-4 category-col level1">
-        <div class="list-group">
-
-        </div>
-      </div>
-      <div class="col-xs-4 col-sm-4 col-md-4 category-col level2">
-        <div class="list-group">
-
-        </div>
-      </div>
-      <div class="col-xs-4 col-sm-4 col-md-4 category-col level3">
-        <div class="list-group">
-
-        </div>
-      </div>
+  <div class="category-panel">
+    <div class="breadcrumb-container">
+      分类路径:
+      <ol class="breadcrumb"></ol>
+    </div>
+    <div class="category-wrap">
+      <div class="btn-left"></div>
+      <div class="category-list"></div>
+      <div class="btn-right"></div>
+    </div>
   </div>
 <!--
   <div class="panel panel-default category-panel">
@@ -42,10 +36,10 @@
       <h3 class="panel-title">
         店铺商品
       </h3>
-      <button class="btn btn-success btn-add" disabled="disabled">
+      <%= link_to new_shop_admin_item_path(@shop.name), class: "btn btn-success btn-add" do%>
         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
         新增
-      </button>
+      <% end %>
     </div>
     <div class="panel-body">
       <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack" data-tablesaw-mode-switch>
@@ -69,9 +63,12 @@
 
 <script type="text/javascript">
   var shop_name = "<%= @shop.name %>",
-      categoryContainer = $('.category-panel'),
-      itemsContainer = $('.items-panel');
+      url = ['/', shop_name, '/admin/items/load_categories'].join(''),
+      categoryContainer = $('.category-wrap .category-list'),
+      itemsContainer = $('.items-panel'),
+      container = new CategoryListWrap(categoryContainer, url, 3);
 
-  new Categories(shop_name, categoryContainer, itemsContainer)
-  new CategoryToolbar($('.category-toolbar'))
+  new CategoryBreadcrumb(container, $('.category-panel .breadcrumb'));
+  new CategoryItems(container, $('.items-panel .tbody'));
+  new CategoryToolbar($('.category-toolbar'));
 </script>
