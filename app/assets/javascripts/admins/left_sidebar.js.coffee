@@ -5,14 +5,17 @@ class @LeftSideBar extends @Event
   constructor: (@element, @navbar, @container, @options = {}) ->
     super
     @bindResizeEvent()
-    @$().click ()=>
-      @toggleSlide() if $(window).width() < 768
 
     @width = @options["width"] || $(@element).outerWidth()
     @toggleBackground = @options["toggleBackground"] || "#122048"
     @originBackground = @options["originBackground"] || @$().css('backgroundColor')
+    @slideWidth = @options["slideWidth"] || 200
+    @slideLeft = @options["slideLeft"] || 240
 
     @$container = $(@container)
+    @$().click ()=>
+      @toggleSlide() if $(window).width() < 768
+
     @$navbar = $(@navbar)
     @hammer = new Hammer.Manager(document.body)
     @hammer.add(new Hammer.Pan({ threshold: 0, pointers: 0 }));
@@ -20,8 +23,9 @@ class @LeftSideBar extends @Event
     #   direction: Hammer.DIRECTION_ALL
     # })).recognizeWith(@hammer.get('pan'));
 
-    @hammer.on("panright", @slideOpen.bind(@))
-    @hammer.on("panleft", @slideClose.bind(@))
+    @hammer.on("panright swiperight", @slideOpen.bind(@))
+    @hammer.on("panleft swipeleft", @slideClose.bind(@))
+
     @$().on(TRANSITION_ENDS, @onTransEnd.bind(@))
 
   bindResizeEvent: (  ) ->
@@ -57,7 +61,7 @@ class @LeftSideBar extends @Event
     @$().width(@width)
 
   close: () ->
-    @$().css({left: -300})
+    @$().css({left: -@slideLeft})
     @$container.css('minWidth', 'auto')
     @$container.css('marginLeft', 0)
     @$navbar.css('minWidth', 'auto')
@@ -69,11 +73,11 @@ class @LeftSideBar extends @Event
   show: () ->
     @isShow = true
     @$().css({left: 0})
-    @$().width(300);
+    @$().width(@slideWidth);
     @originWidth = @$container.outerWidth()
-    @$container.css('marginLeft', 300)
+    @$container.css('marginLeft', @slideWidth)
     @$container.css('minWidth', @originWidth)
-    @$navbar.css('marginLeft', 300)
+    @$navbar.css('marginLeft', @slideWidth)
     @$navbar.css('minWidth', @originWidth)
 
     @$().css('backgroundColor', @toggleBackground)
@@ -81,7 +85,7 @@ class @LeftSideBar extends @Event
 
   hide: () ->
     @isShow = false
-    @$().css({left: -300})
+    @$().css({left: -@slideLeft})
     @$container.css('marginLeft', 0)
     @$navbar.css('marginLeft', 0)
     @$().css('backgroundColor', @originBackground)
