@@ -42,5 +42,13 @@
 
   highlightSelected();
 
+  $(function() {
+    var LeftSideBar = window.LeftSideBar;
+    var leftSidebar = new LeftSideBar($('.left-sidebar'), $('.navbar-fixed-top'), $('.content'));
+
+
+    highlightSelected();
+  });
+
   $(document).on('page:change', highlightSelected)
 </script>

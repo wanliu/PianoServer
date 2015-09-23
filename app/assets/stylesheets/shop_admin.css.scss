@@ -27,6 +27,10 @@ body[module="signup"] {
   float: left;
 }
 
+.navbar-fixed-top {
+  -webkit-transition: all 0.45s ease-in-out 0s;
+  transition: all 0.45s ease-in-out 0s;
+}
 
 .navbar-left > li > a {
   padding-top: 15px;
@@ -61,16 +65,17 @@ body[module="signup"] {
 .content {
   position: absolute;
   left: 240px;
-  -webkit-transition: left 0.45s ease-in-out 0s;
-  transition: left 0.45s ease-in-out 0s;
+  -webkit-transition: all 0.45s ease-in-out 0s;
+  transition: all 0.45s ease-in-out 0s;
   right: 0;
 }
 
 .shop.left-sidebar {
   position: absolute;
-  -webkit-transition: left 0.45s ease-in-out 0s;
-  transition: left 0.45s ease-in-out 0s;
-  top: 21px;
+  -webkit-transition: all 0.45s ease-in-out 0s;
+  transition: all 0.45s ease-in-out 0s;
+  top: 0px;
+  padding-top: 60px;
 }
 
 .left-sidebar {

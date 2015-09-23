@@ -1,16 +1,26 @@
 <div class="shop-items-container">
-  <div class="btn-toolbar category-toolbar">
-    <button type="button" class="btn btn-default dropdown-toggle btn-category" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      分类
-      <span class="caret"></span>
-    </button>
-  </div>
-
-  <div class="category-panel">
+  <div class="btn-toolbar category-toolbar" role="toolbar" >
+    <div class="btn-group">
+      <button type="button" class="btn btn-default dropdown-toggle btn-category" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        分类
+        <span class="caret"></span>
+      </button>
+    </div>
+    <div class="btn-group col-md-3">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Search" aria-describedby="basic-addon2">
+        <span class="input-group-addon" id="basic-addon2">
+          <span class="glyphicon glyphicon-search"></span>
+        </span>
+      </div>
+    </div>
     <div class="breadcrumb-container">
       分类路径:
       <ol class="breadcrumb"></ol>
     </div>
+  </div>
+
+  <div class="category-panel">
     <div class="category-wrap">
       <div class="btn-left"></div>
       <div class="category-list"></div>
@@ -56,19 +66,20 @@
       </table>
     </div>
     <div class="panel-footer">
-
+      <%= paginate @items %>
     </div>
   </div>
 </div>
 
 <script type="text/javascript">
   var shop_name = "<%= @shop.name %>",
-      url = ['/', shop_name, '/admin/items/load_categories'].join(''),
+      url = ['/', shop_name, '/admin/items'].join(''),
       categoryContainer = $('.category-wrap .category-list'),
       itemsContainer = $('.items-panel'),
-      container = new CategoryListWrap(categoryContainer, url, 3);
+      container = new CategoryListWrap(categoryContainer, url, 3),
+      itemUrl = "<%= shop_admin_items_path(@shop.name) %>" + "/$itemId/";
 
-  new CategoryBreadcrumb(container, $('.category-panel .breadcrumb'));
-  new CategoryItems(container, $('.items-panel .tbody'));
+  new CategoryBreadcrumb(container, $('.breadcrumb-container .breadcrumb'));
+  new CategoryItems(container, $('.items-panel tbody'), { url: itemUrl });
   new CategoryToolbar($('.category-toolbar'));
 </script>

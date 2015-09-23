@@ -204,6 +204,9 @@ GEM
       rails-dom-testing (~> 1.0)
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
+    jquery-turbolinks (2.1.0)
+      railties (>= 3.1.0)
+      turbolinks
     jquery-ui-rails (5.0.3)
       railties (>= 3.2.16)
     json (1.8.3)
@@ -371,7 +374,6 @@ GEM
       actionpack (>= 3.1, < 5.0)
       element_factory (~> 0.1.3)
     table_print (1.5.4)
-    tablesaw-rails (0.0.1)
     teaspoon (1.0.2)
       railties (>= 3.2.5, < 5)
     teaspoon-jasmine (2.2.0)
@@ -449,6 +451,7 @@ DEPENDENCIES
   hashdiff
   jbuilder (~> 2.0)
   jquery-rails
+  jquery-turbolinks
   jquery-ui-rails
   json-patch
   jwt
@@ -480,7 +483,6 @@ DEPENDENCIES
   spring-commands-teaspoon
   table_cloth
   table_print
-  tablesaw-rails
   teaspoon-jasmine
   therubyracer
   thin

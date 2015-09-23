@@ -1,0 +1,22 @@
+<tr data-item-id="<%= item_line.id %>" >
+  <td class="title">
+    <%= image_tag item_line.image.url(:avatar), class: "item-image" %><%= item_line.title %>
+  </td>
+  <td><%= item_line.shop_category.title %> </td>
+  <td><%= item_line.public_price %></td>
+  <td><%= item_line.price %></td>
+  <td><%= item_line.inventory %></td>
+  <td>
+    <div class="btn-group">
+      <%= link_to edit_shop_admin_item_path(@shop.name, item_line) do %>
+        <%= icon :edit %>
+      <% end %>
+    </div>
+    <label class="toggle-box">
+      <input type="checkbox" name="on_sale" class="toggle-checkbox">
+      <div class="track">
+        <div class="handle"></div>
+      </div>
+    </label>
+  </td>
+</tr>
