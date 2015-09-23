@@ -5,6 +5,8 @@ class ShopCategory < ActiveRecord::Base
 
   acts_as_nested_set
 
+  paginates_per 12
+
   belongs_to :shop
 
   has_many :items, foreign_key: :shop_category_id
