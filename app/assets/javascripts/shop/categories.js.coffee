@@ -1,5 +1,5 @@
 class @Categories
-  constructor: (@shop_name, @categoryContainer, @itemsContainer) ->
+  constructor: (@shop_name, @categoryContainer, @itemsContainer, @options) ->
     @loadLevel1Categories(null)
 
     @bindSearchEvent()
@@ -31,7 +31,7 @@ class @Categories
 
   loadDataAndCallback: (category_id, isLeaf, callback) ->
     q = $.trim($('input[search-items]').val())
-    url = ['/', @shop_name, '/admin/items/load_categories'].join('')
+    url = ['/', @shop_name, '/admin/items'].join('')
     data = { page: 1, per: 25 }
     data['category_id'] = category_id if category_id
     data['q'] = q if q.length > 0
@@ -129,7 +129,7 @@ class @Categories
     $(template)
 
   replaceItems: (items) ->
-    @categoryItems = new CategoryItems(@itemsContainer.find('tbody'), items)
+    @categoryItems = new CategoryItems(@itemsContainer.find('tbody'), items, @options["item"])
 
   bindClickEvent: ($element) ->
     $element.find('a.list-group-item').bind("click", @handleClickEvent.bind(@))

@@ -1,4 +1,39 @@
 <div class="shop-items-container">
+  <div class="btn-toolbar category-toolbar" role="toolbar" >
+    <div class="btn-group">
+      <button type="button" class="btn btn-default dropdown-toggle btn-category" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        分类
+        <span class="caret"></span>
+      </button>
+    </div>
+    <div class="btn-group col-md-3">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Search" aria-describedby="basic-addon2">
+        <span class="input-group-addon" id="basic-addon2">
+          <span class="glyphicon glyphicon-search"></span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row category-panel">
+      <div class="col-xs-4 col-sm-4 col-md-4 category-col level1">
+        <div class="list-group">
+
+        </div>
+      </div>
+      <div class="col-xs-4 col-sm-4 col-md-4 category-col level2">
+        <div class="list-group">
+
+        </div>
+      </div>
+      <div class="col-xs-4 col-sm-4 col-md-4 category-col level3">
+        <div class="list-group">
+
+        </div>
+      </div>
+  </div>
+<!--
   <div class="panel panel-default category-panel">
     <div class="panel-heading">
       <h3 class="panel-title">
@@ -9,26 +44,9 @@
       </h3>
     </div>
     <div class="panel-body">
-      <div class="row">
-        <div class="col-xs-4 col-sm-4 col-md-4 category-col level1">
-          <div class="list-group">
 
-          </div>
-        </div>
-        <div class="col-xs-4 col-sm-4 col-md-4 category-col level2">
-          <div class="list-group">
-
-          </div>
-        </div>
-        <div class="col-xs-4 col-sm-4 col-md-4 category-col level3">
-          <div class="list-group">
-
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
-
+  </div> -->
   <div class="panel panel-default items-panel">
     <div class="panel-heading">
       <h3 class="panel-title">
@@ -39,28 +57,39 @@
         新增
       </button>
     </div>
-    <div class="panel-body">
-      <table class="table">
-        <thead>
-          <th>商品项名</th>
-          <th>所属分类</th>
-          <th>出售价</th>
-          <th>库存</th>
-          <th>是否在售</th>
-        </thead>
-        <tbody>
-
-        </tbody>
-      </table>
-    </div>
-    <div class="panel-footer"></div>
+    <table class="tablesaw" data-tablesaw-mode="swipe">
+      <thead>
+        <th scope="col" class="title" data-tablesaw-sortable-col data-tablesaw-priority="persist">商品标题</th>
+        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">所属分类</th>
+        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="5">零售价</th>
+        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">批发价</th>
+        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">库存</th>
+        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">是否在售</th>
+      </thead>
+      <tbody>
+        <%#= render partial: "item_line", collection: @items %>
+      </tbody>
+    </table>
   </div>
+  <%= paginate @items %>
+
 </div>
 
 <script type="text/javascript">
   var shop_name = "<%= @shop.name %>",
       categoryContainer = $('.category-panel'),
-      itemsContainer = $('.items-panel');
+      itemsContainer = $('.items-panel'),
+      url = "<%= shop_admin_items_path(@shop.name) %>" + "/$itemId/";
 
-  new Categories(shop_name, categoryContainer, itemsContainer)
+      // page = <%= @page %>,
+      // per = <%= @per %>,
+      // total_count = <%= @total_count %>,
+
+  // var paginate = new Paginate($('.pagination'), page, per, total_count)
+  new Categories(shop_name, categoryContainer, itemsContainer, {item: {url: url}})
+  new CategoryToolbar($('.category-toolbar'))
+
+  // $(document).on("page:load", function() {
+  //   $('.tablesaw').table();
+  // });
 </script>

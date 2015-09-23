@@ -98,6 +98,29 @@
   }
 }
 
+.tablesaw-columntoggle td.title a,
+.tablesaw-swipe td.title a {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 10em;
+  max-width: 40vw;
+}
+
+@media (min-width: 40em) {
+  td.title {
+    max-width: 12em;
+  }
+  .tablesaw-stack td.title {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 10em;
+    max-width: 40vw;
+  }
+}
 
 @media (max-width: 991px) {
   .panel-category .category-wrap {

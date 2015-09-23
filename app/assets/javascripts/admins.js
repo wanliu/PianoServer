@@ -5,7 +5,7 @@
 //= require moment/zh-cn
 //= require bootstrap-datetimepicker
 //= require bootstrap-sprockets
-//= require turbolinks
+//= require jquery.turbolinks
 //= require nprogress
 //= require nprogress-turbolinks
 //= require china_city/jquery.china_city
@@ -19,7 +19,9 @@
 //= require _common/save_on_change
 //= require lib/underscore
 //= require lib/underscore-template
+//= require _common/paginate
 //= require bootsy
+//= require lib/tablesaw
 //= require_tree ./locales
 //= require_tree ./admins
 //= require_tree ./shop

@@ -2,6 +2,7 @@ class Item < ActiveRecord::Base
   include DynamicProperty
   html_fragment :description, :scrub => :prune  # scrubs `body` using the :prune scrubber
 
+  # paginates_per 5
 
   belongs_to :shop_category
   belongs_to :category
@@ -35,7 +36,7 @@ class Item < ActiveRecord::Base
   delegate :definition_properties, to: :category, allow_nil: true
 
   scope :with_category, -> (category_id) do
-    category_id.nil? ? all : where("shop_category_id = ?", category_id)
+    category_id.nil? ? all : includes(:shop_category).where("shop_category_id = ?", category_id)
   end
 
   scope :with_query, -> (q) do
@@ -56,5 +57,9 @@ class Item < ActiveRecord::Base
 
   def filenames
     []
+  end
+
+  def image
+    images[0] || ItemImageUploader.new(self)
   end
 end
