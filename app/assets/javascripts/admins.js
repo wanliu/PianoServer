@@ -17,6 +17,8 @@
 //= require _common/hammer
 //= require _common/util
 //= require _common/save_on_change
+//= require lib/underscore
+//= require lib/underscore-template
 //= require _common/paginate
 //= require bootsy
 //= require lib/tablesaw

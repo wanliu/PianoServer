@@ -1,6 +1,8 @@
 class Property < ActiveRecord::Base
 
-  PROP_TYPES = %w(string number null)
+  DATA_KEY_MAP = "map"
+
+  PROP_TYPES = ["string", "number", "date", "boolean", DATA_KEY_MAP]
 
   has_and_belongs_to_many :categories
   belongs_to :unit
@@ -14,6 +16,33 @@ class Property < ActiveRecord::Base
     message: "'%{value}' 不是一个有效的属性名称，必须是有效的Ruby变量名称" }
 
   validates :name, uniqueness: true
+
+  def map_pairs
+    map_data = data || {}
+    map_data[DATA_KEY_MAP] || {}
+  end
+
+  # "map_pairs"=>{"keys"=>{"0"=>"a"}, "values"=>{"0"=>"2"}}}
+  def map_pairs=(hash)
+    return if hash.blank?
+
+    pairs = {}
+
+    keys = hash["keys"]
+    values = hash["values"]
+
+    keys.keys.each do |k|
+      key = keys[k]
+      value = values[k]
+
+      if key.present? && value.present?
+        pairs[key] = value 
+      end
+    end
+
+    self.data ||= {}
+    self.data[DATA_KEY_MAP] = pairs
+  end
 
   def category_id
     read_attribute(:category_id)

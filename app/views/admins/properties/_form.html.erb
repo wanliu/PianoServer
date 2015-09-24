@@ -13,7 +13,55 @@
     <%= f.select :prop_type, property.prop_types, {}, {class: 'form-control'} %>
   </div>
 
+  <div class="form-group map-pairs-editing <%= property.prop_type == 'map' ? '' : 'hidden' %>">
+    <%= f.label :map_values, "map类型编辑" %> <button class='btn btn-default add-map-pair' roll='button' type='button'>添加键值对</button>
+    <% index = 0 %>
+    <% property.map_pairs.each do |key, value| %>
+      <div class='map-pair' data-pair-index=<%= index %>>
+        <%= label_tag "键值对(key-value):" %>
+        <%= text_field_tag "property[map_pairs][keys][#{index}]", "#{key}", class: "form-control pair-input" %> <span class="key-value"> => </span>
+        <%= text_field_tag "property[map_pairs][values][#{index}]", "#{value}", class: "form-control pair-input" %>
+        <button class='btn btn-default remove-map-pair' roll='button' type='button' data-pair-index=<%= index %>>删除</button>
+        <% index += 1 %>
+      </div>
+    <% end %>
+  </div>
+
   <div class="form-group">
     <%= f.submit "提交" %>
   </div>
 <% end %>
+
+<script type="text/template" id='map-pair-tempalte'>
+  <div class='map-pair' data-pair-index={{= index }}>
+    <%= label_tag "键值对(key-value):" %>
+    <%= text_field_tag "property[map_pairs][keys][{{=index}}]", "", class: "form-control pair-input" %> <span class="key-value"> => </span>
+    <%= text_field_tag "property[map_pairs][values][{{=index}}]", "", class: "form-control pair-input" %>
+    <button class='btn btn-default remove-map-pair' roll='button' type='button' data-pair-index={{= index }}>删除</button>
+  </div>
+</script>
+
+<script type="text/javascript">
+  (function () {
+    var index = <%= property.map_pairs.keys.length %>;
+    var template = _.template($('#map-pair-tempalte').html());
+
+    $('button.add-map-pair').click(function (e) {
+      var html = template({index: index});
+      $(".map-pairs-editing").append(html);
+      index ++;
+    });
+
+    $('.map-pairs-editing').on('click', 'button.remove-map-pair', function (e) {
+      $(e.target).parent('div.map-pair').remove();
+    });
+
+    $('select[name="property[prop_type]"]').change(function (e) {
+      if ($(this).val() == 'map') {
+        $('.map-pairs-editing').removeClass('hidden');
+      } else {
+        $('.map-pairs-editing').addClass('hidden');
+      }
+    });
+  })();
+</script>
