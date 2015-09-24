@@ -2,7 +2,7 @@ class PromotionsController < ApplicationController
   include DefaultAssetHost
   include ContentManagementService::ContentController
 
-  before_action :set_promotion, only: [:show, :update, :destroy, :chat, :shop, :follow]
+  before_action :set_promotion, only: [:show, :update, :destroy, :chat, :shop, :toggle_follow]
 
   register_render_template :homepage_header, only: [ :index ]
 
@@ -59,15 +59,16 @@ class PromotionsController < ApplicationController
 
   def toggle_follow
     action = "关注"
-    if current_user.persent?
-      if follows? target
-        unfollows! target
-      else
-        follows! target
+
+    if current_user.present?
+      if current_user.follows? @promotion
+        current_user.unfollows! @promotion
         action = "取消关注"
+      else
+        current_user.follows! @promotion
       end
 
-      render json: {sucess: "#{action}成功！"}, status: :ok
+      render json: { sucess: "#{action}成功！" }, status: :ok
     else
       render json: { errors: ["匿名用户无法进行此类操作，请登录后再试"] }, status: :unprocessable_entity
     end
