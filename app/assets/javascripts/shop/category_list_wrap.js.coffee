@@ -1,23 +1,20 @@
+#= require _common/event
 #= require ./category_list
+#= require ./category_container
+#= require ./category_breadcrumb
 
-class @CategoryListWrap
-  constructor: (@$container, @$form) ->
-    @categoryLists = for level in [1..4]
+class @CategoryListWrap extends @Event
+  constructor: (@element, @url, @length) ->
+    super(@element)
+
+    @categoryLists = for level in [1..@length]
       @generateCategoryList(level)
-
-    @length = 4
-    @$leftBtn = @$container.prev()
-    @$rightBtn = @$container.next()
-
-    @bindPrevBtnClickEvent()
-    @bindNextBtnClickEvent()
 
     @loadCategoryData(null, (data) =>
       @categoryChanged(data, 0)
     )
 
-    @initColNumAndCurrentMax()
-    $(window).bind('resize', @resizeHandler.bind(@))
+    @box = new CategoryContainer(@element)
 
   generateCategoryList: (level) ->
     levelClass = ['level', level].join('')
@@ -28,32 +25,40 @@ class @CategoryListWrap
         </ul>
       </div>
     """
-    $list = $(template).appendTo(@$container)
+    $list = $(template).appendTo(@element)
     $element = $list.find('.list-group')
 
-    new CategoryList(@, $element, [], level, @$form)
+    new CategoryList(@, $element, [], level)
 
   loadCategoryData: (category_id, callback) ->
     data = {}
     data['category_id'] = category_id if category_id?
+    @category_id = category_id
 
     $.ajax({
-      url: '/categories',
+      url: @url,
       data: data,
       dataType: 'json',
       success: (datas) =>
+        @send('category:changed', category_id)
         callback.call(@, datas) if $.isFunction(callback)
     })
 
-  categoryChanged: (data, level) ->
-    # 如果是最后一级分类点击则不作任何操作
-    return @lastLevelPicked if level == @length
+  categoryChanged: (data, level, is_leaf) ->
+    if $.isArray(data)
+      @resetListsContent(data, level)
+    else
+      { categories, items } = data
+      @resetListsContent(categories, level)
+      @items.resetContent(items) if @items?
 
-    @resetListsContent(data, level)
-    @changeCategory(data)
-    #@changeBreadcrumb()
+    @form.changeCategory(@category_id, is_leaf) if @form?
 
   resetListsContent: (data, level) ->
+    if level == @length
+      @changeBreadcrumb() if @breadcrumb?
+      return @levelCount = level
+
     @levelCount = level + 1
 
     # 重新生成分类数据
@@ -65,135 +70,39 @@ class @CategoryListWrap
       if _level == @levelCount
         categoryList.resetContent(data)
       else
-        categoryList.emptyContent(data)
+        categoryList.emptyContent()
 
-  changeCategory: (data) =>
-    if @levelCount > @col
-      @currentLevel = @levelCount - 1
-
-      if data.length > 0
-        @scrollRight()
-      else if @levelCount = @col + 1
-        @currentLevel = @col
-        @resetPosition()
+    if data.length > 0
+      @box.changeCurrentLevel(@levelCount)
     else
-      @currentLevel = @col
-      @resetPosition()
+      @box.changeCurrentLevel(level)
+
+    @changeBreadcrumb() if @breadcrumb?
 
   changeBreadcrumb: () ->
-    $activeItems = @$container.find('.list-group-item.active')
-    pathNames = for item, index in $activeItems
+    $activeItems = @element.find('.list-group-item.active')
+    paths = for item, index in $activeItems
       $item = $(item)
       categoryName = $item.text()
       categoryId = $item.attr('category-id')
+      is_leaf = !$item.hasClass('has-children')
 
-      if index == $activeItems.length - 1
-        """
-          <li class="active">#{categoryName}</li>
-        """
-      else
-        """
-          <li><a href="javascript:void(0)" category-id="#{categoryId}">#{categoryName}</a></li>
-        """
+      {
+        name: categoryName,
+        id: categoryId,
+        is_leaf: is_leaf
+      }
 
-    @$breadcrumb.html(pathNames.join(''))
+    @breadcrumb.resetContent(paths)
 
-    @$breadcrumb.find('a').bind('click', (e) =>
-      $target = $(e.currentTarget)
-      cateId = $target.attr('category-id')
-      $parent = $target.parent()
-      level = $parent.index() + 1
+  setBreadcrumb: (breadcrumb) ->
+    @breadcrumb = breadcrumb
 
-      loadCategoryData(cateId, (data) =>
-        changeCategory(data)
-      )
-    )
+  setCategoryItems: (items) ->
+    @items = items
 
-  bindPrevBtnClickEvent: () ->
-    @$leftBtn.bind('click', @scrolleLeft.bind(@))
-
-  bindNextBtnClickEvent: () ->
-    @$rightBtn.bind('click', @scrollRight.bind(@))
-
-  scrolleLeft: () ->
-    @$container.animate({
-      'margin-left': '+=290'
-    }, 250, () =>
-      @currentLevel -= 1
-      @currentLevelChanged()
-    )
-
-  scrollRight: () ->
-    @$container.animate({
-      'margin-left': '-=290'
-    }, 250, () =>
-      @currentLevel += 1
-      @currentLevelChanged()
-    )
-
-  resetPosition: () ->
-    @$container.animate({
-      'margin-left': '0'
-    }, 250, () =>
-      @$rightBtn.removeClass('btn-visible')
-      @$leftBtn.removeClass('btn-visible')
-    )
-
-  resizeHandler: () ->
-    width = $(window).width()
-
-    if width >= 1200
-      @col = 3
-    else if width >= 992
-      @col = 2
-    else
-      @col = 1
-
-    if @lastCol?
-      diffCol = @col - @lastCol
-    else
-      diffCol = 0
-
-    @lastCol = @col
-
-    return if @levelCount <= @col or diffCol == 0
-
-    marginLeft = parseInt(@$container.css('margin-left'))
-    min = Math.min(0, marginLeft + diffCol * 290)
-
-    @$container.animate({
-      'margin-left': min
-    }, 250, () =>
-      @currentLevelChanged()
-    )
-
-  initColNumAndCurrentMax: () ->
-    @resizeHandler()
-    @levelCount = 1
-    @currentLevel = 1
-
-  currentLevelChanged: () ->
-    if @levelCount > @col
-      if @currentLevel < @levelCount
-        @$rightBtn.addClass('btn-visible')
-
-      if @currentLevel > @col
-        @$leftBtn.addClass('btn-visible')
-
-        if @currentLevel == @levelCount
-          @$rightBtn.removeClass('btn-visible')
-      else
-        @$leftBtn.removeClass('btn-visible')
-    else
-      @$leftBtn.removeClass('btn-visible')
-      @$rightBtn.removeClass('btn-visible')
-
-  lastLevelPicked: () ->
-    @currentLevel = @levelCount = @length
-
-    @currentLevelChanged()
-
-
+  setForm: (form) ->
+    @form = form
 
 
 

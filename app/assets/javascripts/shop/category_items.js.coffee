@@ -1,18 +1,19 @@
-#= require _common/event
+##= require _common/event
 
 class @CategoryItems extends @Event
-  events:
-    "click .edit": "onEditCategory"
+  constructor: (@container, @element, @options = {}) ->
+    super(@element)
+    @container.setCategoryItems(@) if @container?
+    @refreshTable()
 
-  constructor: (@element, @items, @options = {}) ->
-    super
-    @element.html('')
+  generateCategoryItems: (items) ->
+    for item in items
+      @generateCategoryItem(item)
 
-    for item, index in @items
-      @generateCategoryItem(item, index)
+    @refreshTable()
 
-    table = @$().parents('table').data("table")
-    table.refresh()
+  refreshTable: () ->
+    @$().parents('table').table()
 
   bindEditCategory: () ->
     @$().find('.edit').bind('click', @onEditCategory.bind(@))
@@ -41,11 +42,12 @@ class @CategoryItems extends @Event
       </tr>
     """
 
-    $item = $(template).appendTo(@element)
-
-
+    $item = $(template).appendTo(@$())
     $item.find('.toggle-checkbox').attr('checked', 'checked') if on_sale
 
+  resetContent: (data) ->
+    @$().html('')
+    @generateCategoryItems(data)
     @bindEditCategory()
 
   onEditCategory: (e) ->
@@ -57,6 +59,3 @@ class @CategoryItems extends @Event
     url = @options.url.replace(/\$(\w+)/, (match, m) => item[m]) + "edit"
 
     Turbolinks.visit(url)
-
-
-

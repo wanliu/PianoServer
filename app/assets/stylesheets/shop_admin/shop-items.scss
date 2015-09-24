@@ -1,7 +1,13 @@
-.shop-items-container{
+.shop-admin-container{
   // min-width: 898px;
   .btn-toolbar {
     margin-bottom: 20px;
+  }
+
+  .breadcrumb-container {
+    display: inline-block;
+    margin-left: 15px;
+    line-height: 34px;
   }
 
   .list-group {
@@ -11,36 +17,9 @@
   .category-panel {
     margin-bottom: 20px;
     display: none;
-
-    .breadcrumb {
-      display: inline-block;
-      padding: 0;
-      margin: 0 0 0 10px;
-    }
-
-    .category-col .list-group{
-      height: 250px;
-      background: #EEEEEE;
-      overflow-y: auto;
-      border-radius: 5px;
-
-      .list-group-item {
-        padding: 5px 15px;
-
-        .children {
-          position: absolute;
-          right: 8px;
-          top: 10px;
-          background-image: image-url('next.png');
-          width: 5px;
-          height: 7px;
-        }
-
-        &.active .children {
-          background-image: image-url('next-red.png');
-        }
-      }
-    }
+    border: 1px solid #CCCCCC;
+    border-radius: 5px;
+    padding: 15px 0;
 
     .items-search {
       display: inline-block;
@@ -50,7 +29,6 @@
   }
 
   .items-panel {
-
     .panel-heading {
       position: relative;
       padding: 15px;
@@ -65,7 +43,7 @@
 
     .panel-body {
       padding: 0;
-      min-height: 150px;
+      min-height: 250px;
 
       .table > thead > tr > th {
         border-width: 0 1px 1px 0;
