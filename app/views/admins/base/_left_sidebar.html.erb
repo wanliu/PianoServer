@@ -28,13 +28,14 @@
     });
   };
 
-  $(function() {
+  $(window).load(function({
     var LeftSideBar = window.LeftSideBar;
     var leftSidebar = new LeftSideBar($('.left-sidebar'));
 
 
     highlightSelected();
-  });
+
+  }))
 
   $(document).on('page:change', highlightSelected)
 

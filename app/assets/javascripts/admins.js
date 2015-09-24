@@ -20,7 +20,6 @@
 //= require _common/save_on_change
 //= require _common/paginate
 //= require _common/qrcode
-//= require _common/ajaxError
 //= require bootsy
 //= require lib/tablesaw
 //= require_tree ./locales

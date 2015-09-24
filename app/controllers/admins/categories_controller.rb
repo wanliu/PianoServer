@@ -42,6 +42,7 @@ class Admins::CategoriesController < Admins::BaseController
   end
 
   def add_property
+    def
     CategoryProperty.find_or_initialize_by category_id:  params[:id], property_id:  params[:property_id] do |cp|
       cp.state = 0
       cp.save

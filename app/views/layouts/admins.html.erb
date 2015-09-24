@@ -84,6 +84,7 @@
 
 
     </div> <!-- /container -->
+    <%= render "shards/ajax_error" %>
 
     <script type="text/javascript">
       $(function() {
@@ -114,5 +115,6 @@
         console.log('development version: <%= PianoServer::VERSION %>')
       <% end %>
     </script>
+
   </body>
 </html>

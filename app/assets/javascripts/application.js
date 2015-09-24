@@ -33,7 +33,6 @@
 //= require _common/local-address
 //= require _common/hammer
 //= require _common/util
-//= require _common/ajaxError
 //= require_tree ./application
 //= require_tree ./chats
 //= require_tree ./orders
