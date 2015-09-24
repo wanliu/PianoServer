@@ -1,9 +1,12 @@
-class @CategoryContainer
-  constructor: (@$containment, @length) ->
-    @$containment.width(290 * @length)
+#= require _common/event
 
-    @$leftBtn = @$containment.prev()
-    @$rightBtn = @$containment.next()
+class @CategoryContainer extends @Event
+  constructor: (@element, @length) ->
+    super(@element)
+    @element.width(290 * @length)
+
+    @$leftBtn = @element.prev()
+    @$rightBtn = @element.next()
 
     @bindPrevBtnClickEvent()
     @bindNextBtnClickEvent()
@@ -11,6 +14,8 @@ class @CategoryContainer
     @getCols()
     @maxLevelIndex = @lastCols = @cols
     @currentLevel = 1
+
+    @on('level:change', @levelChanged.bind(@))
     # $(window).bind('resize', @resizeHandler.bind(@))
 
   getCols: () ->
@@ -51,14 +56,14 @@ class @CategoryContainer
   scrollContainer: (diff) ->
     return if diff == 0
 
-    @$containment.stop(true, true).animate({
+    @element.stop(true, true).animate({
       'margin-left': '-=' + diff * 290
     }, 250, () =>
       @changeMaxLevelIndex()
     )
 
   resetPosition: () ->
-    @$containment.animate({
+    @element.animate({
       'margin-left': 0
     }, 250, () =>
       @maxLevelIndex = @cols
@@ -85,7 +90,7 @@ class @CategoryContainer
     else
       @$leftBtn.addClass('btn-visible')
 
-  changeCurrentLevel: (level) ->
+  levelChanged: (e, level) ->
     diff = level - @maxLevelIndex
 
     @currentLevel = level

@@ -1,10 +1,13 @@
-##= require _common/event
+#= require _common/event
+#= require _common/paginate
 
 class @CategoryItems extends @Event
-  constructor: (@container, @element, @options = {}) ->
+  constructor: (@element, @container, @options = {}) ->
     super(@element)
     @container.setCategoryItems(@) if @container?
     @refreshTable()
+
+    @on('items:change', @itemsChanged.bind(@))
 
   generateCategoryItems: (items) ->
     for item in items
@@ -45,7 +48,7 @@ class @CategoryItems extends @Event
     $item = $(template).appendTo(@$())
     $item.find('.toggle-checkbox').attr('checked', 'checked') if on_sale
 
-  resetContent: (data) ->
+  itemsChanged: (e, data) ->
     @$().html('')
     @generateCategoryItems(data)
     @bindEditCategory()

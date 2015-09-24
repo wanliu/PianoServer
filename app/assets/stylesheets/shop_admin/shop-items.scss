@@ -63,8 +63,12 @@
       height: 50px;
     }
 
-    .panel-footer{
-      height: 40px;
+    .panel-footer .pagination {
+      margin: 0;
+
+      > li{
+        display: inline-block;
+      }
     }
   }
 }
