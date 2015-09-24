@@ -17,7 +17,7 @@
 </div>
 
 <script type="text/javascript">
-  var container = new CategoryListWrap($('.category-wrap .category-list'), '/categories', 5);
-  new CategoryBreadcrumb(container, $('.panel-category .breadcrumb'));
-  new CategoryForm(container, $('.well form'));
+  var container = new CategoryListWrap($('.panel-category .category-list'), '/categories', 5);
+  new CategoryBreadcrumb($('.panel-category .breadcrumb'), container);
+  new CategoryForm($('.well form'), container);
 </script>

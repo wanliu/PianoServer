@@ -1,53 +1,48 @@
-class @CategoryList
+#= require _common/event
 
+class @CategoryList extends @Event
   constructor: (@container, @element, @categories, @level) ->
+    super(@element)
     @generateCategoryItems(@categories)
+    @on('categories:change', @categoriesChanged.bind(@))
+    @on('categories:empty', @emptyCategories.bind(@))
 
   generateCategoryItems: (categories) ->
     for category in categories
-      @generateCategoryItem(category).appendTo(@element)
-
-    @bindClickEvent()
+      @generateCategoryItem(category).appendTo(@$())
 
   generateCategoryItem: (category) ->
     { id, title, is_leaf } = category
 
     if is_leaf
-      template = """
-        <li class="list-group-item" category-id="#{id}">
-          #{title}
-        </li>
-      """
+      template = """<li class="list-group-item" category-id="#{id}">
+        #{title}</li>"""
     else
       template = """
         <li class="list-group-item has-children" category-id="#{id}">
-          #{title}
-          <span class="glyphicon glyphicon-chevron-right children"></span>
-        </li>
-      """
+          #{title}<span class="glyphicon glyphicon-chevron-right children"></span>
+        </li>"""
 
     $(template)
 
-  bindClickEvent: () ->
-    @element.find('.list-group-item').bind('click', @clickHandler.bind(@))
+  bindAllEvents: () ->
+    @$().bind 'click', '.list-group-item', @clickHandler.bind(@)
 
   clickHandler: (e) ->
-    $target = $(e.currentTarget)
+    $target = $(e.target)
 
     $target.addClass('active').siblings().removeClass('active')
     category_id = $target.attr('category-id')
     is_leaf = !$target.hasClass('has-children')
 
-    @container.loadCategoryData(category_id, (data) =>
-      @container.categoryChanged(data, @level, is_leaf)
-    )
+    @container.send('category:change', [ category_id, @level, is_leaf ])
 
-  resetContent: (data) ->
-    @element.html('')
+  categoriesChanged: (e, data) ->
+    @$().html('')
 
     @generateCategoryItems(data)
 
-  emptyContent: () ->
-    @element.html('')
+  emptyCategories: (e) ->
+    @$().html('')
 
 

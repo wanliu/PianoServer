@@ -1,10 +1,14 @@
-class @CategoryForm
-  constructor: (@container, @$element) ->
-    @container.setForm(@) if @container?
+#= require _common/event
 
-  changeCategory: (id, is_leaf) ->
-    $button = @$element.find('input[type=submit]')
-    $input = @$element.find('input[name=category_id]')
+class @CategoryForm extends @Event
+  constructor: (@element, @container) ->
+    super(@element)
+    @container.setForm(@) if @container?
+    @on('category:change', @changeCategory.bind(@))
+
+  changeCategory: (e, id, is_leaf) ->
+    $button = @$().find('input[type=submit]')
+    $input = @$().find('input[name=category_id]')
 
     if is_leaf
       $button.removeAttr('disabled')
