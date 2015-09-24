@@ -9,7 +9,7 @@ class @CountDown
   constructor: (@element, @isLimit, @inventory, @status, @startTime, @endTime) ->
     @_changeClass()
 
-    if @status == 'Finished'
+    if @status == 'Finish'
         @_showFinishText()
     else
       if @isLimit
