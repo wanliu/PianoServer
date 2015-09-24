@@ -88,6 +88,8 @@ Rails.application.routes.draw do
 
     resources :products
     resources :properties
+
+    resources :units
   end
 
   namespace :api do
@@ -109,6 +111,7 @@ Rails.application.routes.draw do
   end
 
   resources :categories
+  resources :units, only: [:index, :show]
 
   resources :chats
   resources :orders do

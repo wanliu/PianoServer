@@ -20,9 +20,7 @@ class Admins::PropertiesController < Admins::BaseController
   end
 
   def update
-    @property.update(property_params)
-
-    if @property.valid?
+    if @property.update(property_params)
       redirect_to admins_products_path
     else
       flash[:error] = @property.errors.full_messages.join(', ')
