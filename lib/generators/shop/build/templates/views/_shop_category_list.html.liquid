@@ -1,0 +1,19 @@
+<div class="col-md-12">
+  {% include "header" %}
+  {{ shop.description }}
+  <div class="cate-items-list">
+    <div class='title'>
+      {% title_chain shop shop_category %}
+    </div>
+
+    {% if shop.is_leaf %}
+      <div class="row shop-items">
+        {% include "item" for items %}
+      </div>
+    {% else %}
+      <div class="row shop-categories">
+        {% include "category" for shop_categories %}
+      </div>
+    {% endif %}
+  </div>
+</div>
