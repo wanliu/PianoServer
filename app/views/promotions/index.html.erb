@@ -31,7 +31,7 @@
 			if (!pulling && !allLoaded) {
 				pulling = true;
 
-				var url = [ 'promotions.json', $.param({ page: ++page, inline: true, per: per }) ].join('?');
+				var url = [ '/promotions.json', $.param({ page: ++page, inline: true, per: per }) ].join('?');
 				displayLoading();
 
 				$.get(url).then(function(data, status, e) {
@@ -71,22 +71,22 @@
       $nav.css('opacity', opacity / 100);
 		}
 
-		$(document).on('page:change', function(e) {
-			var url = parseURL(e.target.URL).pathname;
+		// $(document).on('page:change', function(e) {
+		// 	var url = parseURL(e.target.URL).pathname;
 
-      if (url === '/' || url === '/promotions') {
-        $(document).off('scroll.page');
-      } else {
-        $(document).on('scroll.page', scrollPage);
-      }
+  //     if (url === '/' || url === '/promotions') {
+  //       $(document).off('scroll.page');
+  //     } else {
+  //       $(document).on('scroll.page', scrollPage);
+  //     }
 
-      if (/promotions\/\d+\/chat/.test(url)) {
-        $(document).off('scroll:bottom');
-        clearLoading();
-      } else {
-				$(document).on('scroll:bottom', loadingPromotions)
-			}
-		});
+  //     if (/promotions\/\d+\/chat/.test(url)) {
+  //       $(document).off('scroll:bottom');
+  //       clearLoading();
+  //     } else {
+		// 		$(document).on('scroll:bottom', loadingPromotions)
+		// 	}
+		// });
 	});
 
   $(document).on('page:load', function() {

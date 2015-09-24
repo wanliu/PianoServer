@@ -1,3 +1,4 @@
+<!-- 顶部 -->
 <h1 class="page-header template-page-header">
   编辑行业
   <small><%= @industry.title %></small>
@@ -11,6 +12,7 @@
   </div>
 </h1>
 
+<!-- 顶部编辑表单 -->
 <%= render "form" %>
 
 <div class="panel panel-default">
@@ -20,15 +22,18 @@
   </div>
 </div>
 
+<!-- 下部 -->
 <div class="panel panel-default">
   <div class="panel-heading">分类</div>
   <div class="panel-body">
     <div class="row">
+      <!-- 下部分类树 -->
       <div class="col-sm-6 category-left">
         <div class="list-group category-tree">
           <%= render partial: 'category_item', collection: @categories %>
         </div>
       </div>
+      <!-- 下部分类及属性编辑框 -->
       <div class="col-sm-6 category-right">
         <%if @selected %>
           <%= render partial: "admins/categories/category_edit", locals: { category: @selected } %>

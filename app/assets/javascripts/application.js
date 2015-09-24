@@ -11,6 +11,7 @@
 // about supported directives.
 //
 //= require jquery
+//= require jquery.turbolinks
 //= require jquery_ujs
 //= require data-confirm-modal
 //= require jquery-ui/core
@@ -19,8 +20,8 @@
 //= require jquery-ui/position
 //= require jquery-ui/effect.all
 //= require bootstrap-sprockets
-//= require jquery.turbolinks
 //= require nprogress
+//= require turbolinks
 //= require nprogress-turbolinks
 //= require china_city/jquery.china_city
 //= require lib/socketcluster-client

@@ -1,11 +1,12 @@
 //= require jquery
+//= require jquery.turbolinks
 //= require jquery_ujs
 //= require data-confirm-modal
 //= require moment
 //= require moment/zh-cn
 //= require bootstrap-datetimepicker
 //= require bootstrap-sprockets
-//= require jquery.turbolinks
+//= require turbolinks
 //= require nprogress
 //= require nprogress-turbolinks
 //= require china_city/jquery.china_city
@@ -20,6 +21,7 @@
 //= require lib/underscore
 //= require lib/underscore-template
 //= require _common/paginate
+//= require _common/qrcode
 //= require bootsy
 //= require lib/tablesaw
 //= require_tree ./locales
