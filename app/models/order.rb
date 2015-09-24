@@ -258,6 +258,14 @@ class Order < ActiveRecord::Base
     end
   end
 
+  def default_location_id
+    if delivery_location_id == nil or delivery_location_id < 0
+      (delivery_address || {})["location_id"] || ''
+    else
+      delivery_location_id
+    end
+  end
+
   private
 
   def n(num)

@@ -63,6 +63,7 @@ class OrdersController < ApplicationController
     old_address = @order.delivery_address_title
 
     delivery_address = params[:delivery_address]
+    pp delivery_address
 
     if delivery_address[:location_id].to_i > 0
       @order.delivery_location_id = delivery_address[:location_id]
