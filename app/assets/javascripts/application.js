@@ -12,6 +12,8 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require es5-shim/es5-shim-min
+//= require es5-shim/es5-sham-min
 //= require data-confirm-modal
 //= require jquery-ui/core
 //= require jquery-ui/widget
