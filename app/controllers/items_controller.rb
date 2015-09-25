@@ -1,5 +1,5 @@
-class ItemsController < ApplicationController
-  before_filter :set_shop
+class ItemsController < ShopsController
+  # before_filter :set_shop
   before_filter :set_item, only: [ :show ]
 
   def index

@@ -4,12 +4,17 @@
   <div class="cate-items-list">
     <div class='title'>
       {% title_chain shop shop_category %}
+
+      <div class="pull-right">
+        {{ '返回' | shop_link_to: shop, shop_category.parent.link }}
+      </div>
     </div>
 
     {% if shop_category.is_leaf %}
       <div class="row shop-items">
         {% include "item" for items %}
       </div>
+
     {% else %}
       <div class="row shop-categories">
         {% include "category" for shop_categories %}

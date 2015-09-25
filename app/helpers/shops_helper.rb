@@ -8,7 +8,10 @@ module ShopsHelper
   # end
 
   def exists?(template)
-    File.exists? File.join ShopService.template_path(@shop, "#{template}.html.liquid")
+    template = template.to_s
+    dir, base = File.dirname(template), File.basename(template)
+    tmp_file = File.join(ShopService.shop_path(@shop), "views", File.join(dir, "_#{base}.html.liquid"))
+    File.exists? tmp_file
   end
 
   def shop_render(template, *args)
@@ -19,7 +22,7 @@ module ShopsHelper
     elsif @shop.nil?
       return
     else
-      if exists? "_#{template}"
+      if exists? template
         ShopService.set_file_system @shop
         path = File.join(@shop.name, "views", template.to_s).to_s
         render({partial: path }.reverse_merge(options))
