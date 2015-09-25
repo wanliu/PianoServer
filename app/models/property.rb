@@ -22,7 +22,8 @@ class Property < ActiveRecord::Base
     map_data[DATA_KEY_MAP] || {}
   end
 
-  # "map_pairs"=>{"keys"=>{"0"=>"a"}, "values"=>{"0"=>"2"}}}
+  # FROM: "map_pairs"=>{"keys"=>{"0"=>"a"}, "values"=>{"0"=>"2"}}}
+  # TO:   data: { map : {"a": "2"}}
   def map_pairs=(hash)
     return if hash.blank?
 
@@ -36,7 +37,7 @@ class Property < ActiveRecord::Base
       value = values[k]
 
       if key.present? && value.present?
-        pairs[key] = value 
+        pairs[key] = value
       end
     end
 

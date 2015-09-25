@@ -1,6 +1,6 @@
 #= require _common/event
 
-class @CategoryToolbar extends @Event
+class @CategoryToolbar extends @HuEvent
   events:
     "click .btn-category": "onClickCategory"
 

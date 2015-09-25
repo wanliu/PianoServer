@@ -1,6 +1,6 @@
 #= require _common/event
 
-class @CategoryPropertiesEdit extends @Event
+class @CategoryPropertiesEdit extends @HuEvent
 
   constructor: (@element) ->
     super(@element)

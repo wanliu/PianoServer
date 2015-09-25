@@ -1,7 +1,7 @@
 #= require _common/event
 #= require utils/parseUrl
 
-class @Paginate extends @Event
+class @Paginate extends @HuEvent
 
   constructor: (@element, @page = 1, @per, @count, @options = { replaceState: false }) ->
     super(@element)

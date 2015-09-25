@@ -1,7 +1,7 @@
 #= require _common/event
 TRANSITION_ENDS = 'webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend'
 
-class @LeftSideBar extends @Event
+class @LeftSideBar extends @HuEvent
   constructor: (@element, @navbar, @container, @options = {}) ->
     super
     @bindResizeEvent()

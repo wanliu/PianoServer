@@ -1,7 +1,7 @@
 #= require _common/event
 #= require _common/paginate
 
-class @CategoryItems extends @Event
+class @CategoryItems extends @HuEvent
   constructor: (@element, @container, @options = {}) ->
     super(@element)
     @container.setCategoryItems(@) if @container?

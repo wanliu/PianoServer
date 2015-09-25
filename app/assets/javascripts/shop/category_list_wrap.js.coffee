@@ -3,8 +3,9 @@
 #= require ./category_container
 #= require ./category_breadcrumb
 
-class @CategoryListWrap extends @Event
+class @CategoryListWrap extends @HuEvent
   constructor: (@element, @url, @length, @pagination) ->
+
     super(@element)
 
     @categoryLists = for level in [1..@length]

@@ -20,9 +20,7 @@ class Admins::PropertiesController < Admins::BaseController
   end
 
   def update
-    @property.update(property_params)
-
-    if @property.valid?
+    if @property.update(property_params)
       redirect_to admins_products_path
     else
       flash[:error] = @property.errors.full_messages.join(', ')
@@ -42,7 +40,7 @@ class Admins::PropertiesController < Admins::BaseController
     end
 
     def property_params
-      params.require(:property).permit(:name, :title, :prop_type).tap do |whitelisted|
+      params.require(:property).permit(:name, :title, :unit_id, :prop_type).tap do |whitelisted|
         if params[:property][:prop_type] == Property::DATA_KEY_MAP
           whitelisted[:map_pairs] =  params[:property][:map_pairs]
         end 

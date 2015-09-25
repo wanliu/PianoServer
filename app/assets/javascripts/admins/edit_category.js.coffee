@@ -1,6 +1,6 @@
 #= require _common/event
 #= require _common/fileuploader
-class @EditShopCategory extends @Event
+class @EditShopCategory extends @HuEvent
   events:
     'click': 'onClick'
     'click .thumbnail>h2': 'onClickTitle'
