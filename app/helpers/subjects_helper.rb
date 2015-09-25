@@ -15,12 +15,10 @@ module SubjectsHelper
       elsif is_partial?(tpl.filename)
         set_file_system subject
         path = File.join("subjects", subject.name, tpl.filename.sub(/^views\/_/, 'views/'))
-        pp path
         render({ partial: path }.reverse_merge(options))
       else
         set_file_system subject
         path = File.join("subjects", subject.name, tpl.filename)
-        pp path
         render path
       end
     end
