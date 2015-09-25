@@ -45,11 +45,11 @@ class ChatsController < ApplicationController
     @promotion = Promotion.find(params[:promotion_id])
     @order = Order
       .where(supplier_id: @shop.id, buyer_id: current_anonymous_or_user.id)
-      .first_or_create({
-        title: @promotion.title
-      }) do |order|
-        order.bid = Order.last_bid(current_anonymous_or_user.id) + 1
-      end
+      .first_or_initialize {}
+    @order.update_attributes({
+      title: @promotion.title,
+      bid: Order.last_bid(current_anonymous_or_user.id) + 1
+    })
     @order.items.add_promotion(@promotion)
     @order
   end
@@ -58,11 +58,11 @@ class ChatsController < ApplicationController
     @item = Item.find(params[:item_id])
     @order = Order
       .where(supplier_id: @shop.id, buyer_id: current_anonymous_or_user.id)
-      .first_or_create({
-        title: @item.name
-      }) do |order|
-        order.bid = Order.last_bid(current_anonymous_or_user.id) + 1
-      end
+      .first_or_initialize {}
+    @order.update_attributes({
+      title: @item.name,
+      bid: Order.last_bid(current_anonymous_or_user.id) + 1
+    })
     @order.items.add_shop_product(@item)
   end
 
@@ -75,7 +75,7 @@ class ChatsController < ApplicationController
     @chats = Chat.in(current_anonymous_or_user.id)
 
     set_page_title "与 #{@target.name} 洽谈"
-    set_page_navbar "#{@target.name}", @target.is_a?(Shop) ? shop_site_path(@target.name) : profile_path(@target.name)
+    set_page_navbar "#{@target.name}", @target.is_a?(Shop) ? shop_site_path(@target.name) : ''
 
     if @order.buyer_id == current_anonymous_or_user.id and
       DateTime.now - 15.seconds < @chat.created_at
