@@ -2,6 +2,7 @@
   <td><%= property_item.id %></td>
   <td><%= property_item.name %></td>
   <td><%= property_item.title %></td>
+  <td><%= property_item.unit.try(:name_title) || '-' %></td>
   <td><%= property_item.prop_type %></td>
   <td><%= link_to "编辑属性", edit_admins_property_path(property_item) %> | <%= link_to "删除属性", admins_property_path(property_item), method: :delete, data: { confirm: "确定要删除\"#{property_item.name}(#{property_item.title})\"属性么？" } %></td>
 </tr>

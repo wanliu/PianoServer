@@ -1,6 +1,6 @@
 ##= require _common/event
 
-class @CategoryItems extends @Event
+class @CategoryItems extends @HuEvent
   constructor: (@container, @element, @options = {}) ->
     super(@element)
     @container.setCategoryItems(@) if @container?

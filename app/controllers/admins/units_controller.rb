@@ -10,6 +10,7 @@ class Admins::UnitsController < Admins::BaseController
   end
 
   def show
+    render json: @unit
   end
 
   def new

@@ -3,7 +3,7 @@
 #= require ./category_container
 #= require ./category_breadcrumb
 
-class @CategoryListWrap extends @Event
+class @CategoryListWrap extends @HuEvent
   constructor: (@element, @url, @length) ->
     super(@element)
 

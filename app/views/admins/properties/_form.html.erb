@@ -9,6 +9,11 @@
   </div>
 
   <div class="form-group">
+    <%= f.label :unit_id, "单位" %>
+    <%= f.select :unit_id, Unit.all.map {|unit| [unit.name_title, unit.id] }, {prompt: '-单位-'}, {class: 'form-control selectpicker', "data-live-search" => "true"} %>
+  </div>
+
+  <div class="form-group">
     <%= f.label :prop_type, "取值类型" %>
     <%= f.select :prop_type, property.prop_types, {}, {class: 'form-control'} %>
   </div>
@@ -43,6 +48,8 @@
 
 <script type="text/javascript">
   (function () {
+    $('.selectpicker').selectpicker();
+
     var index = <%= property.map_pairs.keys.length %>;
     var template = _.template($('#map-pair-tempalte').html());
 

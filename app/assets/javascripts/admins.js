@@ -20,6 +20,7 @@
 //= require _common/save_on_change
 //= require lib/underscore
 //= require lib/underscore-template
+//= require lib/bootstrap-select
 //= require _common/paginate
 //= require _common/qrcode
 //= require bootsy

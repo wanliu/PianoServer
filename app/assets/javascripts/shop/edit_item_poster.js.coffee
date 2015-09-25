@@ -1,6 +1,6 @@
 #= require _common/event
 
-class @EditItemPoster extends @Event
+class @EditItemPoster extends @HuEvent
   events:
     'click .remove-icon': 'removeItemPoster'
 

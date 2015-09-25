@@ -3,7 +3,7 @@
 
 CategoryPropertiesEdit = @CategoryPropertiesEdit
 
-class @CategoryTree extends @Event
+class @CategoryTree extends @HuEvent
 
   constructor: (@$element, @url) ->
     super(@$element)
