@@ -4,11 +4,12 @@
 class @Paginate extends @HuEvent
 
   constructor: (@element, @page = 1, @per, @count, @options = { replaceState: false }) ->
-    super
+    super(@element)
     @init()
 
   init: () ->
     @page = +@page
+    @per = +@per
     @size = @options["size"] || 5
     @parseURL ||= window.parseURL
     @getQueryVars ||= window.getQueryVars

@@ -55,8 +55,9 @@
       <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack" data-tablesaw-mode-switch>
         <thead>
           <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">商品项名</th>
-          <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">所属分类</th>
-          <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">出售价</th>
+          <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="5">所属分类</th>
+          <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">零售价</th>
+          <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">批发价</th>
           <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">库存</th>
           <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">是否在售</th>
         </thead>
@@ -66,7 +67,7 @@
       </table>
     </div>
     <div class="panel-footer">
-      <%= paginate @items %>
+      <ul class="pagination"></ul>
     </div>
   </div>
 </div>
@@ -74,12 +75,13 @@
 <script type="text/javascript">
   var shop_name = "<%= @shop.name %>",
       url = ['/', shop_name, '/admin/items'].join(''),
-      categoryContainer = $('.category-wrap .category-list'),
+      categoryContainer = $('.category-panel .category-list'),
       itemsContainer = $('.items-panel'),
-      container = new CategoryListWrap(categoryContainer, url, 3),
+      pagination = new Paginate($('.items-panel .pagination'), 1, 25, 0)
+      container = new CategoryListWrap(categoryContainer, url, 3, pagination),
       itemUrl = "<%= shop_admin_items_path(@shop.name) %>" + "/$itemId/";
 
-  new CategoryBreadcrumb(container, $('.breadcrumb-container .breadcrumb'));
-  new CategoryItems(container, $('.items-panel tbody'), { url: itemUrl });
+  new CategoryBreadcrumb($('.breadcrumb-container .breadcrumb'), container);
+  new CategoryItems($('.items-panel tbody'), container, { url: itemUrl });
   new CategoryToolbar($('.category-toolbar'));
 </script>
