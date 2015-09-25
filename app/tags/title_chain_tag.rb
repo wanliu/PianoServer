@@ -9,7 +9,6 @@ module Piano
         if markup =~ Syntax
           @shop = $1
           @shop_category = $2
-          pp $1, $2
         else
           raise SyntaxError.new("Syntax Error in tag 'title_chain' - Valid syntax: navbar shop_variable, shop_category_variable")
         end
@@ -17,7 +16,6 @@ module Piano
       end
 
       def render(context)
-        pp @shop, @shop_category
         shop = context[@shop].send(:object)
         shop_category = context[@shop_category].send(:object)
 

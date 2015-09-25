@@ -6,7 +6,7 @@
       {% title_chain shop shop_category %}
     </div>
 
-    {% if shop.is_leaf %}
+    {% if shop_category.is_leaf %}
       <div class="row shop-items">
         {% include "item" for items %}
       </div>

@@ -24,6 +24,6 @@ class ItemsController < ApplicationController
     end
 
     def set_item
-      @item = Shop.items.find(params[:id])
+      @item = @shop.items.find(params[:id])
     end
 end

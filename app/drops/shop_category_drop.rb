@@ -2,7 +2,7 @@ class ShopCategoryDrop < Liquid::Rails::Drop
   attributes :id, :name, :category_type, :iid, :parent_id, :depth, :children_count, :position, :data, :created_at, :updated_at, :image, :title, :shop_id, :is_leaf
 
   def link
-    "categories/#{object.id}"
+    "/categories/#{object.id}"
   end
 
   def blank_image
@@ -15,5 +15,9 @@ class ShopCategoryDrop < Liquid::Rails::Drop
 
   def avatar_url
     object.image.url(:avatar)
+  end
+
+  def parent
+    object.parent
   end
 end

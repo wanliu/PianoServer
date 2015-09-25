@@ -21,7 +21,6 @@ module ShopsHelper
     else
       if exists? "_#{template}"
         ShopService.set_file_system @shop
-        pp template, options
         path = File.join(@shop.name, "views", template.to_s).to_s
         render({partial: path }.reverse_merge(options))
       else
