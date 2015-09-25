@@ -31,6 +31,7 @@
 //= require lib/underscore
 //= require lib/underscore-template
 //= require lib/date_iso8601_polyfill
+//= require lib/paste-media
 //= require _common/qrcode
 //= require _common/local-address
 //= require _common/hammer

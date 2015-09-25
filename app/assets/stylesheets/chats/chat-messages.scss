@@ -119,7 +119,14 @@
   }
 }
 
-@media (max-width: 1200px) and (min-width: 768px) {
+@media (min-width: 960px) {
+  .chat-order-body.show-order-items .chat-list{
+    width: 50%;
+    border-left: 1px dashed #CCCCCC;
+  }
+}
+
+@media (max-width: 960px) and (min-width: 768px) {
   .chat-order-body.show-order-items{
     .chat-list{
       border-left: none;

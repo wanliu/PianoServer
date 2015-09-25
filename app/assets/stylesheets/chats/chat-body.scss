@@ -25,6 +25,10 @@
 
   .chat-list{
     width: 100%;
+
+    .msg-images img {
+      max-width: 25em;
+    }
   }
 
   &.show-order-items{

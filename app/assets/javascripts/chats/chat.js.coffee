@@ -19,7 +19,7 @@ class @Chat
     @options = $.extend(Chat.defaultOptions, @options)
     console.warn('must set sentBtn param in options') unless @options.sendBtn?
     @sendBtn = @options.sendBtn
-    @textElement = @options.textElement || "input[name='chat-text']"
+    @textElement = @options.textElement || "textarea[name='chat-text']"
     @$messageList = $(@options.messageList || ".message-list")
     @$chatContainer = $(@options.container || ".chat-list")
     @$chatWrap = $(@options.container || ".chat-body")
@@ -42,6 +42,8 @@ class @Chat
 
     @getHistoryMessage(0, @_loadMoreProcess)
 
+    @bindAllEvents()
+
     setTimeout () =>
       @$().trigger('chat:init', @userSocket)
     , 10
@@ -55,6 +57,14 @@ class @Chat
 
   on: (event_name, callback) ->
     @$().on('chat:' + event_name, callback)
+
+  bindAllEvents: () ->
+    $(@textElement).on 'keyup', (e) =>
+      if e.which == 13 and e.ctrlKey
+        $(@sendBtn).trigger('click')
+      else if e.which == 13
+        count = Math.min($(@textElement).val().split("\n").length, 5)
+        $(@textElement).attr("rows", count)
 
   setSendBtn: (btnElement) ->
     @sendBtn = $(btnElement)
@@ -153,16 +163,76 @@ class @Chat
         }, (err) =>
           @clearText() unless err?
         )
+      $(@textElement).attr('rows', 1)
 
   _insertItemMessage: (message, direction = 'down') ->
     {id, senderId, content, senderAvatar, senderLogin, type, time} = message
 
     if type == 'command'
-      @onCommand(message)
+      return @onCommand(message)
 
-    if $("div[data-message-id=#{id}]").length > 0
-      $("div[data-message-id=#{id}] p.content").text(content)
-      return
+    try
+      if $("div[data-message-id=#{id}]").length > 0
+        $("div[data-message-id=#{id}] p.content").text(content)
+        return
+
+      context = @_prepareTemplateContext(message)
+
+      # toAddClass = if @_isOwnMessage(message) then 'you' else 'me'
+
+      # senderAvatar = @options.avatarDefault if senderAvatar == '' or senderAvatar?
+      # senderName = if @options.displayUserName then "<h2>#{senderLogin}</h2>" else ''
+      # prefixSection = if @lastTime? and Math.abs(time - @lastTime) > @options.miniTimeGroupPeriod
+      #                   diffDay = Math.floor((time - @lastTime) / DAYS)
+      #                   time = new Date(time)
+      #                   timeStr = if diffDay > 0
+      #                               "#{time.getFullYear()}-#{time.getMonth()}-#{time.getDate()} #{time.getHours()}:#{time.getMinutes()}"
+      #                             else
+      #                               "#{time.getHours()}:#{time.getMinutes()}"
+      #                   """
+      #                   <div class="time"><p class="text-center">#{timeStr}</p></div>
+      #                   """
+      #                 else
+      #                   ''
+
+      # template = """
+      #   #{prefixSection}
+      #   <div class="chat #{toAddClass}" data-message-id="#{id}">
+      #     <img src="#{senderAvatar}" />
+      #     #{senderName}
+      #     <div class="bubble #{toAddClass}">
+      #       <p class="content">#{content}</p>
+      #     </div>
+      #   </div>
+      # """
+
+      if type == 'normal'
+        if message.attachs
+          attach = message.attachs[Object.keys(message.attachs)[0]]
+          if attach && attach.type && attach.type.indexOf('image') == 0
+            type = 'image'
+        else
+          type = 'text'
+
+      template = switch(type)
+                   when 'text'
+                     @_buildTextMessage(content, context)
+                   when 'image'
+                     @_buildImageMessage(content, message.attachs, context)
+                   else
+                     @_buildTextMessage(content, context)
+
+      if @$messageList?
+        if direction == 'down'
+          $(template).appendTo(@$messageList)
+        else
+          $(template).prependTo(@$messageList)
+      @lastTime = time
+    catch e
+      console.error(e.stack)
+
+  _prepareTemplateContext: (message)  ->
+    {id, senderId, content, senderAvatar, senderLogin, type, time} = message
 
     toAddClass = if @_isOwnMessage(message) then 'you' else 'me'
 
@@ -180,24 +250,40 @@ class @Chat
                       """
                     else
                       ''
+    {prefixSection, senderAvatar, senderName, toAddClass, id, senderId, content, senderLogin, type, time}
 
-    template = """
+  _buildTextMessage: (text = null, context = {}) ->
+    {prefixSection, senderAvatar, senderName, toAddClass, id, senderId, content, senderLogin, type, time} = context
+
+    """
       #{prefixSection}
       <div class="chat #{toAddClass}" data-message-id="#{id}">
         <img src="#{senderAvatar}" />
         #{senderName}
         <div class="bubble #{toAddClass}">
-          <p class="content">#{content}</p>
+          <p class="content">#{text || content}</p>
         </div>
       </div>
     """
 
-    if @$messageList?
-      if direction == 'down'
-        $(template).appendTo(@$messageList)
-      else
-        $(template).prependTo(@$messageList)
-    @lastTime = time
+  _buildImageMessage: (text, images, context) ->
+    {prefixSection, senderAvatar, senderName, toAddClass, id, senderId, content, senderLogin, type, time} = context
+
+    $images = ["""<img src="#{image.value}" alt=#{key} />""" for key, image of images]
+
+    """
+      #{prefixSection}
+      <div class="chat #{toAddClass}" data-message-id="#{id}">
+        <img src="#{senderAvatar}" />
+        #{senderName}
+        <div class="bubble #{toAddClass}">
+          <p class="content">#{text || content}</p>
+          <div class="msg-images">
+            #{$images.join('')}
+          </div>
+        </div>
+      </div>
+    """
 
   _insertMessage: (message, direction = 'down') ->
     @_insertItemMessage(message, direction)
