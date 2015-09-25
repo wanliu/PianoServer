@@ -4,4 +4,8 @@ class ItemDrop < Liquid::Rails::Drop
   def image_url
     object.image.url
   end
+
+  def link
+    "/items/#{object.id}"
+  end
 end

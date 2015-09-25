@@ -1,5 +1,5 @@
 <div class="promotion">
-  <a href="/promotions/{{ item.id }}">
+  {% link_to shop_link_to shop | item.link  %}
     {{ item.image_url | image_tag: class: 'promotion-image' }}
     <p class="promotion-title">
        {{ item.title }}
@@ -11,7 +11,7 @@
         <span class="origin-price"><s>￥{{ item.product_price }}></s></span>
       </div>
     </div>
-  </a>
+  {% endlink_to %}
   <div class="provider-wrap">
     <a href="/{{ promotion.shop_name }}" >
       <div class="provider">
