@@ -8,7 +8,10 @@ body.detail {
 
 .promotion-detail-container{
   margin-bottom: 2em;
-  background: #FFFFFF;
+
+  .promotion-detail-content {
+    background: #FFFFFF;
+  }
 
   .promotion-poster-image{
     width: 50%;

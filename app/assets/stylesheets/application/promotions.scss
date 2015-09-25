@@ -11,12 +11,9 @@ $border-color: #CCCCCC;
   .promotion-wrap {
     padding-left: 0px;
     padding-right: 0px;
+    border-right: 1px solid $border-color;
+    overflow: hidden;
   }
-}
-
-.promotion-wrap:nth-child(odd) {
-  border-right: 1px solid $border-color;
-  overflow: hidden;
 }
 
 .promotion {
@@ -80,6 +77,11 @@ $border-color: #CCCCCC;
       .provider-name{
         vertical-align: middle;
         display: table-cell;
+        max-width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: hidden;
+        padding-right: 10px;
       }
 
       .avatar-wrap{
@@ -129,13 +131,14 @@ $border-color: #CCCCCC;
   }
 }
 
-@media screen and (min-width: 768px) {
-  .promotion-wrap{
-    border-right: 1px solid $border-color;
-    overflow: hidden;
+@media screen and (max-widht: 767px) {
+  .promotion-wrap:nth-child(even) {
+    border-color: transparent;
+  }
+}
 
-    &:nth-child(4n) {
-      border-right: none;
-    }
+@media screen and (min-width: 768px) {
+  .promotion-wrap:nth-child(4n) {
+    border-color: transparent;
   }
 }
