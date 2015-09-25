@@ -1,8 +1,9 @@
 <div class="col-xs-6 col-sm-3 promotion-wrap">
   <div class="promotion">
   	<%= link_to promotion_path(promotion) do %>
-
-	    <%= image_tag promotion.image_mobile_url, class: 'promotion-image' %>
+      <div class="image-wrap">
+	     <%= image_tag promotion.image_mobile_url, class: 'promotion-image' %>
+      </div>
 	    <p class="promotion-title">
 	      <% if promotion.title.length > 30 %>
 	        <%= promotion.title[0, 29] %>...
