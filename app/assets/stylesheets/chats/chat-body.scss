@@ -25,6 +25,10 @@
 
   .chat-list{
     width: 100%;
+
+    .msg-images img {
+      max-width: 15em;
+    }
   }
 
   &.show-order-items{
@@ -40,6 +44,10 @@
 
 .order-total-edit{
   margin-top: 10px;
+}
+
+.popupImage {
+  display: none;
 }
 
 @media (max-width: 768px) {
@@ -73,5 +81,6 @@
     width: 100%;
   }
 }
+
 
 
