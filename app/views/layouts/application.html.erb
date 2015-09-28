@@ -36,7 +36,7 @@
 
     <%= javascript_include_tag "application" %>
 
-    <%= analytics_init if Rails.env.production? %>
+    <%= analytics_init if Rails.env.production? and Settings.GA.track %>
 
     <!--[if lt IE 9]>
       <style type="text/css">
@@ -108,7 +108,7 @@
       <%= render "qrcode" %>
       <div class="linkmen-overlayer"></div>
     </div> <!-- /container -->
-
+    <%= render "pswp" %>
     <script type="text/javascript">
       var inChats = {};
 
