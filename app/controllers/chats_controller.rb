@@ -45,7 +45,7 @@ class ChatsController < ApplicationController
     @promotion = Promotion.find(params[:promotion_id])
     @order = Order
       .where(supplier_id: @shop.id, buyer_id: current_anonymous_or_user.id)
-      .first_or_initialize {}
+      .first_or_initialize({})
     @order.update_attributes({
       title: @promotion.title,
       bid: Order.last_bid(current_anonymous_or_user.id) + 1
@@ -58,7 +58,7 @@ class ChatsController < ApplicationController
     @item = Item.find(params[:item_id])
     @order = Order
       .where(supplier_id: @shop.id, buyer_id: current_anonymous_or_user.id)
-      .first_or_initialize {}
+      .first_or_initialize({})
     @order.update_attributes({
       title: @item.name,
       bid: Order.last_bid(current_anonymous_or_user.id) + 1
