@@ -103,7 +103,7 @@
 
 
     <% if Settings.dev.feature.linkmen %>
-      var hammer = new Hammer.Manager($('body')[0]),
+      /**var hammer = new Hammer.Manager($('body')[0]),
           chatListShown = $(window).width() > 867;
 
       hammer.add(new Hammer.Swipe({
@@ -164,7 +164,7 @@
             $('.linkmen-overlayer').show();
           }
         }
-      });
+      });*/
 
       $('.chat-linkman-container .remove-linkman').on('click', function(event) {
         event.preventDefault();
