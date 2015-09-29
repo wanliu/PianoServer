@@ -1,6 +1,6 @@
 #= require _common/event
 
-class @CategoryBreadcrumb extends @Event
+class @CategoryBreadcrumb extends @HuEvent
   constructor: (@element, @container) ->
     super(@element)
     @container.setBreadcrumb(@) if @container?

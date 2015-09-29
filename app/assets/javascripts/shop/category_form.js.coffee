@@ -1,6 +1,6 @@
 #= require _common/event
 
-class @CategoryForm extends @Event
+class @CategoryForm extends @HuEvent
   constructor: (@element, @container) ->
     super(@element)
     @container.setForm(@) if @container?
