@@ -34,6 +34,7 @@ class ChatsController < ApplicationController
   def create_chat_with_shop
     @shop = Shop.find(params[:shop_id])
     @chat = Chat.where(chatable_type: Shop.name, chatable_id: @shop.id, owner_id: current_anonymous_or_user.id).first_or_create target_id: @shop.owner_id
+    @chat
   end
 
   def create_chat_with_user
@@ -69,20 +70,28 @@ class ChatsController < ApplicationController
 	def show
 
 		@chat = Chat.find(params[:id])
-		@order = Order.find(@chat.order_id) if @chat.order_id
+    if @chat.order_id
+		  @order = Order.find(@chat.order_id)
+      @buyer = @order.buyer
+      @supplier = @order.supplier
+    end
     #@target = @chat.chatable || @chat.target
+    unless current_anonymous_or_user.id == @chat.owner.id or (@chat.target.is_a?(User) and current_anonymous_or_user.id == @chat.target.id)
+      return redirect_to chats_path
+    end
+
 		@target = my_chat? ? @chat.target : @chat.owner
     @chats = Chat.in(current_anonymous_or_user.id)
 
     set_page_title "与 #{@target.name} 洽谈"
     set_page_navbar "#{@target.name}", @target.is_a?(Shop) ? shop_site_path(@target.name) : ''
 
-    if @order.buyer_id == current_anonymous_or_user.id and
-      DateTime.now - 15.seconds < @chat.created_at
-      @greetings = @order.supplier.greetings
+    if @buyer && @buyer.id == current_anonymous_or_user.id and
+      DateTime.now - 15.seconds < @chat.created_at && @supplier
+      @greetings = @supplier.greetings
     end
 
-    MessageSystemService.send_read_message current_anonymous_or_user.id, other_side
+    MessageSystemService.send_read_message current_anonymous_or_user.id, other_side if @order
 	end
 
 	def chat_variables
