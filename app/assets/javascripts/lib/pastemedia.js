@@ -55,13 +55,11 @@
                 };
                 /* Convert the blob from clipboard to base64 */
                 reader.readAsBinaryString(blob);
-                break;
               //foundImage = false; Not sure why this was here
               } else if (items[i].kind === "string") {
                 items[i].getAsString(function(s) {
                   callback('text', s);
                 });
-                break;
               }
             }
           } else {
