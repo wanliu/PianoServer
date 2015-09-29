@@ -31,7 +31,7 @@ class @Chat
 
     @boundOnMessage = @onMessage.bind(@)
     @userSocket.onPersonMessage(@boundOnMessage)
-    @metadata = window.metadata
+    @onwerId = @userSocket.userId
     @ownerChannelId = @options.userChannelId || @userSocket.getUserChannelId()
     @table = @options.table
     @greetings = @options.greetings
@@ -47,6 +47,7 @@ class @Chat
     @getHistoryMessage(0, @_loadMoreProcess)
 
     @bindAllEvents()
+    @enter()
 
     setTimeout () =>
       @$().trigger('chat:init', @userSocket)
@@ -95,13 +96,22 @@ class @Chat
 
   send: (msg) ->
 
+  getChatChannelId: () ->
+    @chatChannelId ||= 'p:' + [@ownerChannelId[1..-1],@channelId[1..-1]].sort().join(':')
+
   enter: () ->
-    chatChannelId = 'p' + (@ownerChannelId + @channelId).replace(/p/g, ':')
-    $(document).trigger('inchats:enter', chatChannelId)
+    $(document).trigger('inchats:enter', @getChatChannelId())
+    @setActive(@)
 
   leave: () ->
-    chatChannelId = 'p' + (@ownerChannelId + @channelId).replace(/p/g, ':')
-    $(document).trigger('inchats:leave', chatChannelId)
+    $(document).trigger('inchats:leave', @getChatChannelId())
+    @setActive(null)
+
+  isActive: () ->
+    window.Chat.currentChat == @
+
+  setActive: (chat) ->
+    window.Chat.currentChat = chat
 
   autoScroll: (direction = 'down') ->
     $inner = @$chatContainer.find('.chat-inner')
@@ -138,17 +148,12 @@ class @Chat
   setTable: (@table) ->
 
   onMessage: (message) ->
-    unless @_isEnter
-      @_isEnter = true
-      @chatChannelId = message.channelId
-      @enter()
-
-    @_emitReadEvent()
-
-    if message.type == 'command'
-      @onCommand(message)
-    else
-      @_insertMessage(message)
+    if message.channelId == @getChatChannelId() && @isActive()
+      if message.type == 'command'
+        @onCommand(message)
+      else
+        @_insertMessage(message)
+        @_emitReadEvent() if @isActive()
 
   onCommand: (message) ->
     command = JSON.parse(message.content)
@@ -168,7 +173,7 @@ class @Chat
 
     if text.length > 0
 
-      if @metadata.debug
+      if window.metadata.debug
         @_insertMessage(text);
       else
         @userSocket.publish(@channelId, {
@@ -413,7 +418,7 @@ class @Chat
     @$chatContainer.find('.bubble-tip').remove()
 
   _isOwnMessage: (message) ->
-    @metadata.chatId == message.senderId.toString();
+    @onwerId == message.senderId.toString();
 
   _insertLoadMore: () ->
     $more = $('<div class="load-more">查看更多消息</div>').prependTo(@$messageList)

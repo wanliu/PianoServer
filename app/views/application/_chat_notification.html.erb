@@ -1,0 +1,39 @@
+<script type="text/javascript">
+  var inChats = {};
+
+   userSocket.emit('unreadCount', {}, function(err, unreadCounts) {
+    if (err) {
+      return;
+    }
+
+    for(var channelId in unreadCounts) {
+      var unreadCount = unreadCounts[channelId],
+          count = unreadCount.count,
+          senderId = unreadCount.user_id,
+          username = unreadCount.realname;
+
+      window.noticeCenter.addNotice(senderId, username, count);
+    }
+  });
+
+  $(document).unbind('inchats:enter').bind('inchats:enter', function(e, channelId) {
+    inChats[channelId] = true;
+  });
+
+  $(document).unbind('inchats:leave').bind('inchats:leave', function(e, channelId) {
+    delete inChats[channelId];
+  });
+
+  userSocket.onPersonMessage(function(message) {
+    var channelId = message.channelId,
+        senderId = message.senderId,
+        type = message.type,
+        senderLogin = message.senderLogin,
+        ownChannelId = window.userSocket.getUserChannelId(),
+        chatChannelId = 'p' + senderId;
+
+    if ((chatChannelId !== ownChannelId) && type !== 'command' && !inChats[channelId]) {
+      window.noticeCenter.addNotice(senderId, senderLogin, 1);
+    }
+  });
+</script>

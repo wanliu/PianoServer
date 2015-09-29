@@ -16,7 +16,8 @@
       // Patch jQuery to add clipboardData property support in the event object
       $.event.props.push('clipboardData');
       // Add the paste event listener
-      $(document).bind("paste", doPaste);
+
+      $(document).unbind("paste").bind("paste", doPaste);
 
       // If Firefox (doesn't support clipboard object), create DIV to catch pasted image
       if (!window.Clipboard) { // Firefox
