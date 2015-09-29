@@ -1,52 +1,108 @@
-.item {
-  color: #6c6c6c;
+.shop-item {
+  background: #FFFFFF;
+  margin-bottom: 50px;
 
-  .row-line {
-    margin-top: 15px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #e1e1e1;
-  }
+  .shop-item-image {
+    width: 50%;
+    margin: 15px auto;
+    overflow: hidden;
+    text-align: center;
 
-  .avatar {
     img {
-      display: block;
-      height: 200px;
       max-width: 100%;
-      margin-left: auto;
-      margin-right: auto;
+      height: auto;
+      width: 100%\9;
+      min-width: 200px;
+      min-height: 200px;
     }
   }
 
-  .price {
+  .media {
+    width: 100%;
+  }
+
+  .item-properties {
+    padding: 15px;
     background: #F12A39;
     color: #FFFFFF;
-    font-size: 25px;
-    font-weight: bold;
-    height: 65px;
-    line-height: 65px;
-  }
+    font-weight: 700;
 
-  .title {
-    .favor, .like {
-      border-left: 1px solid #e1e1e1;
+    .media-left {
+      width: 60%;
+      border-right: 1px solid #FFFFFF;
+    }
+
+    .media-right {
+      width: 20%;
+      border-left: 1px solid #FFFFFF;
     }
   }
 
-  .summary {
-    .brand-saled-count {
-      /*margin-bottom: 5px;*/
-    }
-  } 
+  .item-shop-infos {
+    padding: 15px;
+    border-bottom: 1px solid #DDDDDD;
 
-  .properties {
-    .properties-title {
-      padding-top: 10px;
-      padding-bottom: 10px;
-      font-size: 20px;
+    .shop-avatar img {
+      width: 75px;
+      height: 75px;
+    }
+  }
+
+  .item-secodary-properties {
+    padding-top: 15px;
+    border-bottom: 1px solid #DDDDDD;
+  }
+
+  .item-descriptions {
+    padding: 15px;
+
+    .brief-desc {
+      padding: 5px 15px;
     }
 
-    .property-items {
-      padding-left: 5px;
+    .detail-desc {
+      padding: 15px 15px 0;
+
+      .avatar img {
+        max-width: 100%;
+        height: auto;
+        width: 100%\9;
+        min-width: 200px;
+        min-height: 200px;
+      }
+    }
+  }
+
+  .link-table {
+    display: table;
+    width: 100%;
+
+    .into-shop, .fav-button, .chat {
+      display: table-cell;
+      vertical-align: middle;
+      text-align: center;
+      padding: 5px 0;
+    }
+
+    .into-shop, .fav-button{
+      border-right: 1px solid #DDDDDD;
+    }
+
+    .into-shop{
+      color: #333333;
+    }
+
+    .chat{
+      color: #FFFFFF;
+      background-color: #F42B2B;
+    }
+  }
+
+  .property-item {
+    .item-key {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
   }
 }
