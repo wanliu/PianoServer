@@ -1,6 +1,6 @@
 #= require _common/event
 
-class @CategoryList extends @Event
+class @CategoryList extends @HuEvent
   constructor: (@container, @element, @categories, @level) ->
     super(@element)
     @generateCategoryItems(@categories)

@@ -21,6 +21,9 @@ class @CategoryItems extends @HuEvent
   bindEditCategory: () ->
     @$().find('.edit').bind('click', @onEditCategory.bind(@))
 
+  bindAllEvents: () ->
+    @$().on('change', '.toggle-checkbox', @toggleItemState.bind(@))
+
   generateCategoryItem: (item, index) ->
     { id, image_url, title, category_id, shop_category_title, price, public_price, inventory, on_sale } = item
 
@@ -56,9 +59,34 @@ class @CategoryItems extends @HuEvent
   onEditCategory: (e) ->
     e.preventDefault()
 
-    $tr = $(e.target).parents("tr");
+    $tr = $(e.target).parents("tr")
     item = $tr.data()
     id = $tr.data('itemId')
     url = @options.url.replace(/\$(\w+)/, (match, m) => item[m]) + "edit"
 
     Turbolinks.visit(url)
+
+  toggleItemState: (e) ->
+    e.stopPropagation()
+
+    $target = $(e.target)
+    $tr = $target.parents("tr:first")
+    item = $tr.data()
+    id = $tr.data('itemId')
+    on_sale = $target.prop('checked')
+    id = $tr.data('itemId')
+    url = @options.url.replace(/\$(\w+)/, (match, m) => item[m]) + 'change_sale_state'
+
+    $.ajax({
+      url: url,
+      type: 'PUT',
+      data: {
+        item: {
+          on_sale: on_sale
+        }
+      },
+      dataType: 'json',
+      success: () =>
+    })
+
+

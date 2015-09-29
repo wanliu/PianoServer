@@ -6,7 +6,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
 
   before_action :set_category, only: [:new_step2, :create]
   before_action :set_breadcrumb, only: [:new_step2, :create]
-  before_action :set_item, only: [ :edit, :update, :destroy ]
+  before_action :set_item, only: [:edit, :update, :destroy, :change_sale_state]
 
   def index
     # page = params[:page].presence || 1
@@ -109,13 +109,22 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     @breadcrumb = @category.ancestors
     @properties = @category.with_upper_properties
 
-    @item.send(:write_attribute, :images, params[:item][:filenames].split(','))
-
+    if params[:item][:filenames].present?
+      @item.send(:write_attribute, :images, params[:item][:filenames].split(','))
+    end
 
     if @item.update_attributes(item_basic_params)
       redirect_to shop_admin_items_path(@shop.name)
     else
       render :edit
+    end
+  end
+
+  def change_sale_state
+    if @item.update_attributes(item_state_param)
+      head :ok
+    else
+      render json: @item.errors, status: :unprocessable_entity
     end
   end
 
@@ -133,9 +142,13 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     raise ActionController::RoutingError.new('Not Found')
   end
 
+  def item_state_param
+    params.require(:item).permit(:on_sale)
+  end
+
   def item_basic_params
     _params = params.require(:item).permit(:name, :title, :brand_id, :images, :price, :public_price,
-      :income_price, :shop_category_id, :category_id, :description,)
+      :income_price, :shop_category_id, :category_id, :description)
     _params[:description] = sanitize _params[:description], tags: %w(script), attributes: %w(href)
     _params
   end
