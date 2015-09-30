@@ -122,7 +122,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
 
   def change_sale_state
     if @item.update_attributes(item_state_param)
-      head :ok
+      render json: { success: true }
     else
       render json: @item.errors, status: :unprocessable_entity
     end
