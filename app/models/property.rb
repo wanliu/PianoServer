@@ -87,7 +87,7 @@ class Property < ActiveRecord::Base
   def validate_rules=(rules)
     return if rules.blank?
 
-    value = value.first(250)
+    rules = rules.first(250)
 
     self.data ||= {}
     self.data[DATA_KEY_VALIDATE] = rules

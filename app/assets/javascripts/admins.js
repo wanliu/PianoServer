@@ -27,6 +27,11 @@
 //= require _common/qrcode
 //= require bootsy
 //= require lib/tablesaw
+//= require jquery-ui/core
+//= require jquery-ui/widget
+//= require jquery-ui/mouse
+//= require jquery-ui/position
+//= require jquery-ui/effect.all
 //= require_tree ./locales
 //= require_tree ./admins
 //= require_tree ./shop
