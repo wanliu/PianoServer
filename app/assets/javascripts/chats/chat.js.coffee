@@ -335,6 +335,7 @@ class @Chat
     pswpElement = $('.pswp')[0]
     options = {
         history: false,
+        maxSpreadZoom: 3,
         index: index # start at first slide
     }
 
