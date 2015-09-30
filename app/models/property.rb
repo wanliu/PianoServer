@@ -1,8 +1,13 @@
 class Property < ActiveRecord::Base
 
   DATA_KEY_MAP = "map"
+  DATA_KEY_GROUP = "group"
+  DATA_KEY_DEFAULT = "default_value"
+  DATA_KEY_VALIDATE = "validate_rules"
 
   PROP_TYPES = ["string", "number", "date", "boolean", DATA_KEY_MAP]
+
+  VALIDATE_MELPERS = %w(acceptance confirmation exclusion format inclusion length numericality presence absence uniqueness)
 
   has_and_belongs_to_many :categories
   belongs_to :unit
@@ -16,6 +21,8 @@ class Property < ActiveRecord::Base
     message: "'%{value}' 不是一个有效的属性名称，必须是有效的Ruby变量名称" }
 
   validates :name, uniqueness: true
+
+  validate :validate_rules_json_format
 
   def map_pairs
     map_data = data || {}
@@ -45,6 +52,45 @@ class Property < ActiveRecord::Base
     self.data[DATA_KEY_MAP] = pairs
   end
 
+  def is_group
+    jsonb_data = data || {}
+    jsonb_data[DATA_KEY_GROUP] == true
+  end
+
+  def is_group=(value)
+    self.data ||= {}
+
+    if "true" == value
+      self.data[DATA_KEY_GROUP] = true
+    elsif "false" == value
+      self.data[DATA_KEY_GROUP] = false
+    end
+  end
+
+  def default_value
+    jsonb_data = data || {}
+    jsonb_data[DATA_KEY_DEFAULT]
+  end
+
+  def default_value=(value)
+    return if value.blank?
+
+    self.data ||= {}
+    self.data[DATA_KEY_DEFAULT] = value
+  end
+
+  def validate_rules
+    jsonb_data = data || {}
+    jsonb_data[DATA_KEY_VALIDATE]
+  end
+
+  def validate_rules=(rules)
+    return if rules.blank?
+
+    self.data ||= {}
+    self.data[DATA_KEY_VALIDATE] = rules
+  end
+
   def category_id
     read_attribute(:category_id)
   end
@@ -60,4 +106,21 @@ class Property < ActiveRecord::Base
   def prop_types
     PROP_TYPES
   end
+
+  protected
+    def validate_rules_json_format
+      return if validate_rules.blank?
+
+      begin
+        rules = JSON.parse(validate_rules)
+
+        rules.keys.each do |validator|
+          unless VALIDATE_MELPERS.include? validator
+            errors.add(:validate_rules, "'#{validator}'为无效验证方法")
+          end
+        end
+      rescue JSON::ParserError => e
+        errors.add(:validate_rules, "格式不正确，必须是有效的json数据格式")
+      end
+    end
 end

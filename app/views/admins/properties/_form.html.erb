@@ -14,6 +14,24 @@
   </div>
 
   <div class="form-group">
+    <%= f.label :is_group, "是否集合属性:" %>
+    <%= f.radio_button(:is_group, "true") %>
+    <%= f.label(:is_group_true, "是") %>
+    <%= f.radio_button(:is_group, "false") %>
+    <%= f.label(:is_group_false, "否") %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :default_value, "默认值" %>
+    <%= f.text_field :default_value, class: 'form-control', placeholder: '属性默认值'%>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :validate_rules, "验证设置" %>
+    <%= f.text_field :validate_rules, class: 'form-control', placeholder: '属性验证设置'%>
+  </div>
+
+  <div class="form-group">
     <%= f.label :prop_type, "取值类型" %>
     <%= f.select :prop_type, property.prop_types, {}, {class: 'form-control'} %>
   </div>
