@@ -38,6 +38,8 @@
     <%= javascript_include_tag "admins" %>
 
     <%= analytics_init if Rails.env.production? %>
+    <%= render "user_socket" %>
+    <%= render "chat_notification" %>
   </head>
   <body class="<%= yield :module %>">
     <div class="navbar navbar-default navbar-fixed-top">
@@ -93,30 +95,8 @@
     </div> <!-- /container -->
 
     <%= render "qrcode" %>
-    <script type="text/javascript">
-      $(function() {
-        var inChats = {}
+    <%= render "shards/ajax_error" %>
 
-        userSocket.onPersonMessage(function(message) {
-          var channelId = message.channelId;
-          var senderId = message.senderId;
-          var senderLogin = message.senderLogin;
-          if (!inChats[channelId]) {
-            window.noticeCenter.addNotice(senderId, senderLogin, 1);
-            // todo process
-          }
-
-        });
-
-        $(document).on('inchats:enter', function(e, channelId) {
-          inChats[channelId] = true
-        });
-
-        $(document).on('inchats:leave', function(e, channelId) {
-          delete inChats[channelId];
-        });
-      });
-    </script>
     <script type="text/javascript">
       <% unless Rails.env.production? %>
         console.log('development version: <%= PianoServer::VERSION %>')

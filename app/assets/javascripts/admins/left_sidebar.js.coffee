@@ -59,6 +59,8 @@ class @LeftSideBar extends @HuEvent
     @$navbar.css('minWidth', 'auto')
     @$navbar.css('marginLeft', 0)
     @$().width(@width)
+    @$().css('backgroundColor', @originBackground)
+
 
   close: () ->
     @$().css({left: -@slideLeft})

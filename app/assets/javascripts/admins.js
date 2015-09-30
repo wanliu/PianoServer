@@ -20,6 +20,8 @@
 //= require _common/hammer
 //= require _common/util
 //= require _common/save_on_change
+//= require lib/socketcluster-client
+//= require lib/user-socket
 //= require lib/underscore
 //= require lib/underscore-template
 //= require lib/bootstrap-select
