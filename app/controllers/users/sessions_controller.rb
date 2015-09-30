@@ -4,7 +4,7 @@ class Users::SessionsController < Devise::SessionsController
 
   # skip_before_action :verify_signed_out_user, only: :destroy
 
-  respond_to :json, :html  
+  respond_to :json, :html
 
   TYPES = %w(mobile email name)
   helper ApplicationHelper
@@ -13,7 +13,7 @@ class Users::SessionsController < Devise::SessionsController
   # skip_before_filter :verify_authenticity_token
   # before_filter :configure_sign_in_params, only: [:create]
 
-  def _render_with_renderer_json (resource, options ={}) 
+  def _render_with_renderer_json (resource, options ={})
     options.merge! formats: [:json]
     template = File.read(Rails.root.join('app/views/api/users/_user.json.jbuilder'));
     resource_json = Jbuilder.new do |json|
@@ -39,17 +39,17 @@ class Users::SessionsController < Devise::SessionsController
   # 注意: 这里并没有实现 authentication_token 的 api logout
   # 因为在 session signout 没法确定 current_user , authenticate_user! 是
   # 基于 cookies 的来识别身份的。所以我们暂不支持 json 方式的登出
-  # 
+  #
   # ** 已改动
   # 通过新增 verify_signed_out_user_with_token filter in TokenAuthenticatable
   # 我们已经解决了登陆的问题
   def destroy
-    current_user.authentication_token = nil
+    current_user && current_user.authentication_token = nil
     # current_user.save
     super
-  end  
+  end
 
-  private 
+  private
 
   def login_type
     TYPES.include?(params[:login_type]) ? params[:login_type] : default_type

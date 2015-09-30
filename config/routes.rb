@@ -178,6 +178,7 @@ Rails.application.routes.draw do
 
         member do
           post "/upload_image", to: "items#upload_image"
+          put "/change_sale_state", to: "items#change_sale_state"
         end
       end
 

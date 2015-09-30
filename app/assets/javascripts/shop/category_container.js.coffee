@@ -1,6 +1,6 @@
 #= require _common/event
 
-class @CategoryContainer extends @Event
+class @CategoryContainer extends @HuEvent
   constructor: (@element, @length) ->
     super(@element)
     @element.width(290 * @length)

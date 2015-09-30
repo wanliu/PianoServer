@@ -13,6 +13,8 @@
 //= require jquery
 //= require jquery.turbolinks
 //= require jquery_ujs
+//= require es5-shim/es5-shim-min
+//= require es5-shim/es5-sham-min
 //= require data-confirm-modal
 //= require jquery-ui/core
 //= require jquery-ui/widget
@@ -24,11 +26,13 @@
 //= require turbolinks
 //= require nprogress-turbolinks
 //= require china_city/jquery.china_city
+//= require photoswipe
 //= require lib/socketcluster-client
 //= require lib/user-socket
 //= require lib/underscore
 //= require lib/underscore-template
 //= require lib/date_iso8601_polyfill
+//= require lib/pastemedia
 //= require _common/qrcode
 //= require _common/local-address
 //= require _common/hammer

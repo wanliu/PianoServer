@@ -1,6 +1,10 @@
 #= require lib/user-socket
 #= require lib/metadata
+#= require lib/pastemedia
+
 DAYS = 24 * 3600 * 1000
+
+TABLE_REGEXP = /^\<table\>*.?\<\/table\>$/m
 
 class @Chat
 
@@ -19,7 +23,7 @@ class @Chat
     @options = $.extend(Chat.defaultOptions, @options)
     console.warn('must set sentBtn param in options') unless @options.sendBtn?
     @sendBtn = @options.sendBtn
-    @textElement = @options.textElement || "input[name='chat-text']"
+    @textElement = @options.textElement || "textarea[name='chat-text']"
     @$messageList = $(@options.messageList || ".message-list")
     @$chatContainer = $(@options.container || ".chat-list")
     @$chatWrap = $(@options.container || ".chat-body")
@@ -27,7 +31,7 @@ class @Chat
 
     @boundOnMessage = @onMessage.bind(@)
     @userSocket.onPersonMessage(@boundOnMessage)
-    @metadata = window.metadata
+    @onwerId = @userSocket.userId
     @ownerChannelId = @options.userChannelId || @userSocket.getUserChannelId()
     @table = @options.table
     @greetings = @options.greetings
@@ -41,6 +45,9 @@ class @Chat
     @setSendBtn(@sendBtn)
 
     @getHistoryMessage(0, @_loadMoreProcess)
+
+    @bindAllEvents()
+    @enter()
 
     setTimeout () =>
       @$().trigger('chat:init', @userSocket)
@@ -56,6 +63,24 @@ class @Chat
   on: (event_name, callback) ->
     @$().on('chat:' + event_name, callback)
 
+  bindAllEvents: () ->
+    $(@textElement).on 'keyup', (e) =>
+      if e.which == 13 and e.ctrlKey
+        $(@sendBtn).trigger('click')
+      else if e.which == 13
+        count = Math.min($(@textElement).val().split("\n").length, 5)
+        $(@textElement).attr("rows", count)
+
+    $.pastemedia (type, data) =>
+      switch type
+        when "image"
+          @_sendImageMsg(data)
+        when "text"
+          if TABLE_REGEXP.test(data)
+            @_sendTableMsg(data)
+        else
+          @clearText()
+
   setSendBtn: (btnElement) ->
     @sendBtn = $(btnElement)
     @sendBtn.click(@_sendMsg.bind(@))
@@ -70,13 +95,22 @@ class @Chat
 
   send: (msg) ->
 
+  getChatChannelId: () ->
+    @chatChannelId ||= 'p:' + [@ownerChannelId[1..-1],@channelId[1..-1]].sort().join(':')
+
   enter: () ->
-    chatChannelId = 'p' + (@ownerChannelId + @channelId).replace(/p/g, ':')
-    $(document).trigger('inchats:enter', chatChannelId)
+    $(document).trigger('inchats:enter', @getChatChannelId())
+    @setActive(@)
 
   leave: () ->
-    chatChannelId = 'p' + (@ownerChannelId + @channelId).replace(/p/g, ':')
-    $(document).trigger('inchats:leave', chatChannelId)
+    $(document).trigger('inchats:leave', @getChatChannelId())
+    @setActive(null)
+
+  isActive: () ->
+    window.Chat.currentChat == @
+
+  setActive: (chat) ->
+    window.Chat.currentChat = chat
 
   autoScroll: (direction = 'down') ->
     $inner = @$chatContainer.find('.chat-inner')
@@ -113,17 +147,12 @@ class @Chat
   setTable: (@table) ->
 
   onMessage: (message) ->
-    unless @_isEnter
-      @_isEnter = true
-      @chatChannelId = message.channelId
-      @enter()
-
-    @_emitReadEvent()
-
-    if message.type == 'command'
-      @onCommand(message)
-    else
-      @_insertMessage(message)
+    if message.channelId == @getChatChannelId() && @isActive()
+      if message.type == 'command'
+        @onCommand(message)
+      else
+        @_insertMessage(message)
+        @_emitReadEvent() if @isActive()
 
   onCommand: (message) ->
     command = JSON.parse(message.content)
@@ -143,7 +172,7 @@ class @Chat
 
     if text.length > 0
 
-      if @metadata.debug
+      if window.metadata.debug
         @_insertMessage(text);
       else
         @userSocket.publish(@channelId, {
@@ -153,16 +182,73 @@ class @Chat
         }, (err) =>
           @clearText() unless err?
         )
+      $(@textElement).attr('rows', 1)
+
+  _sendImageMsg: (src) ->
+    @userSocket.publish(@channelId, {
+      'type': 'image',
+      'content': '',
+      'attachs': {
+        1: {
+          type: 'image/jpeg',
+          value: src
+        }
+      }
+    }, (err) =>
+        @clearText() unless err?
+    )
+
+  _sendTableMsg: (table) ->
+    @userSocket.publish(@channelId, {
+      'type': 'table',
+      'content': table
+    }, (err) =>
+      @clearText() unless err?
+    )
 
   _insertItemMessage: (message, direction = 'down') ->
     {id, senderId, content, senderAvatar, senderLogin, type, time} = message
 
     if type == 'command'
-      @onCommand(message)
+      return @onCommand(message)
 
-    if $("div[data-message-id=#{id}]").length > 0
-      $("div[data-message-id=#{id}] p.content").text(content)
-      return
+    try
+      if $("div[data-message-id=#{id}]").length > 0
+        $("div[data-message-id=#{id}] p.content").text(content)
+        return
+
+      context = @_prepareTemplateContext(message)
+
+      if type == 'normal'
+        if message.attachs
+          attach = message.attachs[Object.keys(message.attachs)[0]]
+          if attach && attach.type && attach.type.indexOf('image') == 0
+            type = 'image'
+        else
+          type = 'text'
+
+      template = switch(type)
+                   when 'text'
+                     @_buildTextMessage(content, context)
+                   when 'image'
+                     @_buildImageMessage(content, message.attachs, context)
+                   else
+                     @_buildTextMessage(content, context)
+
+      if @$messageList?
+        $elem = if direction == 'down'
+                  $(template).appendTo(@$messageList)
+                else
+                  $(template).prependTo(@$messageList)
+        if type == 'image'
+          @_bindImageEvents($elem)
+
+      @lastTime = time
+    catch e
+      console.error(e.stack)
+
+  _prepareTemplateContext: (message)  ->
+    {id, senderId, content, senderAvatar, senderLogin, type, time} = message
 
     toAddClass = if @_isOwnMessage(message) then 'you' else 'me'
 
@@ -180,24 +266,79 @@ class @Chat
                       """
                     else
                       ''
+    {prefixSection, senderAvatar, senderName, toAddClass, id, senderId, content, senderLogin, type, time}
 
-    template = """
+  _buildTextMessage: (text = null, context = {}) ->
+    {prefixSection, senderAvatar, senderName, toAddClass, id, senderId, content, senderLogin, type, time} = context
+
+    """
       #{prefixSection}
       <div class="chat #{toAddClass}" data-message-id="#{id}">
         <img src="#{senderAvatar}" />
         #{senderName}
         <div class="bubble #{toAddClass}">
-          <p class="content">#{content}</p>
+          <p class="content">#{text || content}</p>
         </div>
       </div>
     """
 
-    if @$messageList?
-      if direction == 'down'
-        $(template).appendTo(@$messageList)
-      else
-        $(template).prependTo(@$messageList)
-    @lastTime = time
+  _buildImageMessage: (text, images, context) ->
+    {prefixSection, senderAvatar, senderName, toAddClass, id, senderId, content, senderLogin, type, time} = context
+
+    $images = ["""<img src="#{image.value}" alt=#{key} />""" for key, image of images]
+
+    """
+      #{prefixSection}
+      <div class="chat #{toAddClass}" data-message-id="#{id}">
+        <img src="#{senderAvatar}" />
+        #{senderName}
+        <div class="bubble #{toAddClass}">
+          <p class="content">#{text || content}</p>
+          <div class="msg-images">
+            #{$images.join('')}
+          </div>
+        </div>
+      </div>
+    """
+
+  _buildTableMessage: (table, context) ->
+
+
+  _bindImageEvents: (elem) ->
+
+    adjustImage = (elem) =>
+      maxWidth = $(window).width()
+      maxHeight = $(window).height()
+
+
+
+      # h: $(ele).height() * ($(window).width() / $(ele).height())
+
+    $(elem).find(".msg-images>img").click () =>
+      index = 0;
+      items = $('.message-list .msg-images>img').map (i, ele) =>
+        index = i if $(ele).is($(elem).find(".msg-images>img"))
+
+        {
+          src: $(ele).attr('src'),
+          # w: $(ele).width(),
+          # h: $(ele).height(),
+          w: $(window).width(),
+          h: $(ele).height() * ($(window).width() / $(ele).width())
+
+        }
+      @_buildPSWPImage(items, index)
+
+  _buildPSWPImage: (items, index) ->
+    pswpElement = $('.pswp')[0]
+    options = {
+        history: false,
+        maxSpreadZoom: 3,
+        index: index # start at first slide
+    }
+
+    gallery = new PhotoSwipe( pswpElement, PhotoSwipeUI_Default, items, options);
+    gallery.init();
 
   _insertMessage: (message, direction = 'down') ->
     @_insertItemMessage(message, direction)
@@ -276,7 +417,7 @@ class @Chat
     @$chatContainer.find('.bubble-tip').remove()
 
   _isOwnMessage: (message) ->
-    @metadata.chatId == message.senderId.toString();
+    @onwerId == message.senderId.toString();
 
   _insertLoadMore: () ->
     $more = $('<div class="load-more">查看更多消息</div>').prependTo(@$messageList)

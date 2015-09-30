@@ -30,6 +30,7 @@ class Admins::VariablesController < Admins::BaseController
   end
 
   def search_promotion
+    params[:statuses] = [ "Published", "Active", "Finish" ]
     @promotions = Promotion.find(:all, params: query_params)
 
     render :show, formats: [:json]
@@ -112,7 +113,8 @@ class Admins::VariablesController < Admins::BaseController
       page: params[:page] || 1,
       category_id: params[:category_id],
       inline: params[:inline],
-      q: params[:q]
+      q: params[:q],
+      statuses: params[:statuses]
     }
   end
 
