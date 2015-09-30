@@ -21,29 +21,34 @@ class AdjustPromotionImage
     imageWidth = $image.width()
     imageHeight = $image.height()
 
-    $image.parent().height(width)
+    $image.css({
+      width: width,
+      height: width
+    })
 
-    if imageHeight == 0
-      $image.height(imageWidth)
-    else
-      if imageWidth >= imageHeight
-        _height = Math.floor(width * imageHeight / imageWidth)
-        marginTop = (width - _height) / 2
-        $image.css({
-          width: width,
-          height: _height,
-          marginLeft: 0,
-          marginTop: marginTop
-        })
-      else
-        _width = Math.floor(width * imageWidth / imageHeight)
-        marginLeft = (width - _width) / 2
-        $image.css({
-          width: _width,
-          height: width,
-          marginLeft: marginLeft,
-          marginTop: 0
-        })
+    # $image.parent().height(width)
+
+    # if imageHeight == 0
+    #   $image.height(imageWidth)
+    # else
+    #   if imageWidth >= imageHeight
+    #     _height = Math.floor(width * imageHeight / imageWidth)
+    #     marginTop = (width - _height) / 2
+    #     $image.css({
+    #       width: width,
+    #       height: _height,
+    #       marginLeft: 0,
+    #       marginTop: marginTop
+    #     })
+    #   else
+    #     _width = Math.floor(width * imageWidth / imageHeight)
+    #     marginLeft = (width - _width) / 2
+    #     $image.css({
+    #       width: _width,
+    #       height: width,
+    #       marginLeft: marginLeft,
+    #       marginTop: 0
+    #     })
 
 adjustImage = null
 
