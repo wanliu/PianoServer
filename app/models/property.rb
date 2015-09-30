@@ -87,6 +87,8 @@ class Property < ActiveRecord::Base
   def validate_rules=(rules)
     return if rules.blank?
 
+    value = value.first(250)
+
     self.data ||= {}
     self.data[DATA_KEY_VALIDATE] = rules
   end
@@ -120,7 +122,7 @@ class Property < ActiveRecord::Base
           end
         end
       rescue JSON::ParserError => e
-        errors.add(:validate_rules, "格式不正确，必须是有效的json数据格式")
+        errors.add(:validate_rules, "格式不正确，必须是有效的json数据格式并且长度不能超过250个字符")
       end
     end
 end
