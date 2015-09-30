@@ -22,7 +22,7 @@ class @CategoryListWrap extends @HuEvent
     else
       @params = {}
 
-    @box = new CategoryContainer(@element)
+    @box = new CategoryContainer(@element, @length)
     @on('category:change', @categoryChanged.bind(@))
     @on('category:empty', @categoryEmptyed.bind(@))
 
