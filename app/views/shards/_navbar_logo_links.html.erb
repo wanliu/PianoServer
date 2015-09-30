@@ -6,8 +6,12 @@
         <% end %>
       </li>
       <li>
-        <%= link_to content_for(:navbar_link), class: "navbar-brand navbar-title" do %>
-          <%= content_for?(:navbar) ? yield(:navbar) : Settings.app.title %>
+        <% if content_for(:navbar_link).blank? %>
+          <p class="navbar-text"><%= content_for?(:navbar) ? yield(:navbar) : Settings.app.title %></p>
+        <% else %>
+          <%= link_to content_for(:navbar_link), class: "navbar-brand navbar-title" do %>
+            <%= content_for?(:navbar) ? yield(:navbar) : Settings.app.title %>
+          <% end %>
         <% end %>
       </li>
     </ul>

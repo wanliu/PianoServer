@@ -38,18 +38,16 @@
         this.notices.splice(index, 1);
       }
 
+      userSocket.emit('readChannel', {
+        channelId: 'p' + senderId
+      }, function(err) {
+        if (err) {
+          return console.error(err);
+        }
+      });
+
       if (redirect) {
         Turbolinks.visit('/chats/' + chatId);
-
-        // userSocket.emit('readChannel', {
-        //   channelId: 'p' + senderId
-        // }, function(err) {
-        //   if (err) {
-        //     return console.error(err);
-        //   }
-
-        //   Turbolinks.visit('/chats/' + chatId);
-        // });
       }
     }
   };

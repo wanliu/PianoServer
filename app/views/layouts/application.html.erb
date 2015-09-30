@@ -36,7 +36,7 @@
 
     <%= javascript_include_tag "application" %>
 
-    <%= analytics_init if Rails.env.production? %>
+    <%= analytics_init if Rails.env.production? and Settings.GA.track %>
 
     <!--[if lt IE 9]>
       <style type="text/css">
@@ -70,10 +70,6 @@
           float: left;
         }
 
-        .col-xs-6, .col-sm-3 {
-          width: 25%;
-        }
-
         body {
           padding-top: 80px;
         }
@@ -84,6 +80,8 @@
 
       </style>
     <![endif]-->
+    <%= render "user_socket" %>
+    <%= render "chat_notification" %>
   </head>
   <body class="<%= yield :module %>">
     <%= render "shards/navbar" %>
@@ -105,48 +103,9 @@
       <div class="linkmen-overlayer"></div>
     </div> <!-- /container -->
     <%= render "shards/ajax_error" %>
+    <%= render "pswp" %>
     <script type="text/javascript">
-      var inChats = {};
 
-      if (!window._notificationInited) {
-        window._notificationInited = true;
-
-        userSocket.emit('unreadCount', {}, function(err, unreadCounts) {
-          if (err) {
-            return;
-          }
-
-          for(var channelId in unreadCounts) {
-            var unreadCount = unreadCounts[channelId],
-                count = unreadCount.count,
-                senderId = unreadCount.user_id,
-                username = unreadCount.realname;
-
-            window.noticeCenter.addNotice(senderId, username, count);
-          }
-        });
-
-        $(document).unbind('inchats:enter').bind('inchats:enter', function(e, channelId) {
-          inChats[channelId] = true;
-        });
-
-        $(document).unbind('inchats:leave').bind('inchats:leave', function(e, channelId) {
-          delete inChats[channelId];
-        });
-
-        userSocket.onPersonMessage(function(message) {
-          var channelId = message.channelId,
-              senderId = message.senderId,
-              type = message.type,
-              senderLogin = message.senderLogin,
-              ownChannelId = window.userSocket.getUserChannelId(),
-              chatChannelId = 'p' + senderId;
-
-          if ((chatChannelId !== ownChannelId) && type !== 'command' && !inChats[channelId]) {
-            window.noticeCenter.addNotice(senderId, senderLogin, 1);
-          }
-        });
-      }
     </script>
     <script type="text/javascript">
       <% unless Rails.env.production? %>

@@ -5,7 +5,7 @@
 <%= render "chat_order_header" %>
 <div class="container chat-order-body">
   <div class="row">
-    <div class="order-table-wrap col-sm-6 col-xs-12">
+    <div class="order-table-wrap col-xs-12 col-sm-6">
       <div class="order-table">
         <%= render "chat_order_table" %>
       </div>
@@ -20,16 +20,16 @@
         </div>
         <div class="buttons-consult">
           <div class="col-sm-6 col-xs-6 btn-wrap left">
-            <button class="btn btn-agrees">按住3秒同意</button>
+            <button class="btn btn-lg btn-agrees">按住3秒同意</button>
           </div>
           <div class="col-sm-6 col-xs-6 btn-wrap right">
-            <button class="btn btn-disagrees">拒绝</button>
+            <button class="btn btn-lg btn-disagrees">拒绝</button>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="chat-list col-sm-6 col-xs-12">
+    <div class="chat-list col-xs-12 col-sm-6">
       <div class="chat-inner" >
         <div class="message-list clearfix">
         </div>
@@ -43,19 +43,19 @@
 </div>
 
 <script type="text/javascript">
-  $(function() {
+  // $(function(){
     var StatusLoadUrl = window.StatusLoadUrl,
         MiniTable     = window.MiniTable,
         Chat          = window.Chat,
         userSocket    = window.userSocket,
-        buyerId       = '<%= @order.buyer_id %>',
         greetings     = '<%= @greetings %>',
         chatChannelId,
         targetId;
 
     <% unless @target.nil? %>
       targetId  = "<%= @target.id %>";
-      chatChannelId = 'p' + targetId;
+      userId = "<%= current_anonymous_or_user.id %>";
+      chatChannelId = 'p' + targetId; // [targetId, userId].sort().join(":");
     <% end %>
 
     Chat.defaultOptions.avatarDefault = '<%= image_path "avatar.gif" %>';
@@ -72,38 +72,35 @@
     if (!targetId) {
       alert('无效的聊天对象！');
       $('.btn-send').attr('disabled', 'disabled');
-      return;
+    } else {
+
+      var chat = new Chat($('.chat-order-header'), chatChannelId, {
+        sendBtn: $('.btn-send'),
+        greetings: greetings
+      });
+
+      <% if Settings.dev.feature.order.chat and @order %>
+      chat.setTable(miniTable);
+      <% end %>
+
+      chat.on('init', function(e, socket) {
+        var chatId = '<%= @chat.id %>';
+        socket.emit('set', { channelId: chatChannelId, key: 'chat_id', value: chatId });
+
+        <% unless @order.nil? %>
+        var orderId = '<%= @order.id %>';
+        socket.emit('set', { channelId: chatChannelId, key: 'order_id', value: orderId })
+        <% end %>
+      });
+
+      $(document).on('page:before-unload', function() {
+        chat.leave();
+        $(window).off('resize.linkmen');
+      });
     }
 
-    var chat = new Chat($('.chat-order-header'), chatChannelId, {
-      sendBtn: $('.btn-send'),
-      greetings: greetings
-    });
-
-    chat.enter();
-
-    <% if Settings.dev.feature.order.chat %>
-    chat.setTable(miniTable);
-    <% end %>
-
-    chat.on('init', function(e, socket) {
-      var chatId = '<%= @chat.id %>';
-      socket.emit('set', { channelId: chatChannelId, key: 'chat_id', value: chatId });
-
-      <% unless @order.nil? %>
-      var orderId = '<%= @order.id %>';
-      socket.emit('set', { channelId: chatChannelId, key: 'order_id', value: orderId })
-      <% end %>
-    });
-
-    $(document).on('page:before-unload', function() {
-      chat.leave();
-      $(window).off('resize.linkmen');
-    });
-
-
     <% if Settings.dev.feature.linkmen %>
-      var hammer = new Hammer.Manager($('body')[0]),
+      /**var hammer = new Hammer.Manager($('body')[0]),
           chatListShown = $(window).width() > 867;
 
       hammer.add(new Hammer.Swipe({
@@ -164,7 +161,7 @@
             $('.linkmen-overlayer').show();
           }
         }
-      });
+      });*/
 
       $('.chat-linkman-container .remove-linkman').on('click', function(event) {
         event.preventDefault();
@@ -175,5 +172,5 @@
         });
       });
     <% end %>
-  });
+  // });
 </script>

@@ -157,6 +157,9 @@ GEM
       activesupport (>= 3.1, < 5.0)
     equalizer (0.0.11)
     erubis (2.7.0)
+    es5-shim-rails (4.0.1)
+      actionpack (>= 3.1)
+      railties (>= 3.1)
     eventmachine (1.0.7)
     execjs (2.4.0)
     factory_girl (4.5.0)
@@ -260,6 +263,7 @@ GEM
     nprogress-rails (0.1.6.7)
     orm_adapter (0.5.0)
     pg (0.18.1)
+    photoswipe-rails (4.1.0)
     poseidon (0.0.5)
     pry (0.10.1)
       coderay (~> 1.1.0)
@@ -443,6 +447,7 @@ DEPENDENCIES
   elasticsearch-model
   elasticsearch-persistence
   elasticsearch-rails
+  es5-shim-rails
   factory_girl_rails
   google-analytics-rails
   guard-rails
@@ -465,6 +470,7 @@ DEPENDENCIES
   momentjs-rails (>= 2.9.0)
   nprogress-rails
   pg
+  photoswipe-rails (~> 4.1.0)
   poseidon
   public_activity!
   punching_bag

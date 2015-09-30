@@ -7,4 +7,8 @@ class VariablesDrop < Liquid::Drop
   def before_method(name)
     @variables[name]
   end
+
+  def all
+    @variables
+  end
 end
