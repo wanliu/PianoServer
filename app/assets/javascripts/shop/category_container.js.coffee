@@ -3,11 +3,11 @@
 class @CategoryContainer extends @HuEvent
   constructor: (@element, @length) ->
     super(@element)
-    @element.width(290 * @length)
-
+    @itemWidth = 290
+    @element.width(@itemWidth * @length)
+    @wrapper = @$().parents(".category-wrap")
     @$leftBtn = @element.prev()
     @$rightBtn = @element.next()
-
     @bindPrevBtnClickEvent()
     @bindNextBtnClickEvent()
 
@@ -16,7 +16,7 @@ class @CategoryContainer extends @HuEvent
     @currentLevel = 1
 
     @on('level:change', @levelChanged.bind(@))
-    # $(window).bind('resize', @resizeHandler.bind(@))
+    $(window).bind('resize', @resizeHandler.bind(@))
 
   getCols: () ->
     width = $(window).width()
@@ -40,25 +40,40 @@ class @CategoryContainer extends @HuEvent
     @scrollContainer(diff)
 
   bindPrevBtnClickEvent: () ->
-    @$leftBtn.bind('click', @scrolleLeft.bind(@))
+    @$leftBtn.bind('click', @scrollLeft.bind(@))
 
   bindNextBtnClickEvent: () ->
     @$rightBtn.bind('click', @scrollRight.bind(@))
 
-  scrolleLeft: () ->
-    @maxLevelIndex -= 1
-    @scrollContainer(-1)
+  scrollLeft: () ->
+    return if @scroll
+
+    @scroll = true
+
+    currentLeft = parseInt(@$().css('marginLeft'))
+
+    if currentLeft < 0
+      @scrollContainer(-1)
 
   scrollRight: () ->
-    @maxLevelIndex += 1
-    @scrollContainer(1)
+    return if @scroll
+
+    @scroll = true
+
+    currentLeft = parseInt(@$().css('marginLeft'))
+    if currentLeft > @getWrapperWidth() - @$().width()
+      @scrollContainer(1)
+
+  getWrapperWidth: () ->
+    @wrapper.width()
 
   scrollContainer: (diff) ->
     return if diff == 0
 
     @element.stop(true, true).animate({
-      'margin-left': '-=' + diff * 290
+      'margin-left': '-=' + diff * @itemWidth
     }, 250, () =>
+      @scroll = false
       @changeMaxLevelIndex()
     )
 
@@ -66,42 +81,40 @@ class @CategoryContainer extends @HuEvent
     @element.animate({
       'margin-left': 0
     }, 250, () =>
-      @maxLevelIndex = @cols
       @$leftBtn.removeClass('btn-visible')
       @$rightBtn.removeClass('btn-visible')
     )
 
   changeMaxLevelIndex: () ->
-    if @maxLevelIndex > @cols
+    console.log(@minLevel(), @maxLevel())
+    if @minLevel() > 0
       @$leftBtn.addClass('btn-visible')
     else
       @$leftBtn.removeClass('btn-visible')
 
-    if @maxLevelIndex < @currentLevel
+    if @maxLevel() < @currentLevel
       @$rightBtn.addClass('btn-visible')
     else
       @$rightBtn.removeClass('btn-visible')
 
-  resetBtnStatus: () ->
-    @$rightBtn.removeClass('btn-visible')
-
-    if @currentLevel <= @cols
-      @$leftBtn.removeClass('btn-visible')
-    else
-      @$leftBtn.addClass('btn-visible')
-
   levelChanged: (e, level) ->
-    diff = level - @maxLevelIndex
+    diff = level - @currentLevel
 
     @currentLevel = level
 
-    if level < @cols
+    if level <= @cols
       @resetPosition()
-    else if diff > 0
+    else
       @scrollContainer(diff)
-      @maxLevelIndex += diff
 
+  currentLeft: () ->
+    parseInt(@$().css('marginLeft'))
 
+  maxLevel: () ->
+    @minLevel() + @cols
+
+  minLevel: () ->
+    Math.abs(@currentLeft()) / @itemWidth
 
 
 
