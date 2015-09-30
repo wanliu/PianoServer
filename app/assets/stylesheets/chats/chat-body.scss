@@ -27,7 +27,7 @@
     width: 100%;
 
     .msg-images img {
-      max-width: 25em;
+      max-width: 15em;
     }
   }
 
@@ -44,6 +44,10 @@
 
 .order-total-edit{
   margin-top: 10px;
+}
+
+.popupImage {
+  display: none;
 }
 
 @media (max-width: 768px) {
@@ -77,5 +81,6 @@
     width: 100%;
   }
 }
+
 
 

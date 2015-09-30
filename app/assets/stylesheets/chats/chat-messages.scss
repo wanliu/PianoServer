@@ -143,4 +143,37 @@
       border-left: none;
     }
   }
+
+  .chat-list {
+    .chat-inner {
+      padding: 0 10px;
+    }
+
+    .bubble {
+      padding: 5px;
+    }
+
+    .chat.me {
+      padding-left: 50px;
+    }
+
+    .chat.me > img:first-child {
+      position: absolute;
+      left: 0px;
+      width: 40px;
+      height: 40px;
+    }
+
+    .chat.you {
+      padding-right: 50px;
+    }
+
+
+    .chat.you > img:first-child {
+      position: absolute;
+      right: 0px;
+      width: 40px;
+      height: 40px;
+    }
+  }
 }

@@ -263,6 +263,7 @@ GEM
     nprogress-rails (0.1.6.7)
     orm_adapter (0.5.0)
     pg (0.18.1)
+    photoswipe-rails (4.1.0)
     poseidon (0.0.5)
     pry (0.10.1)
       coderay (~> 1.1.0)
@@ -469,6 +470,7 @@ DEPENDENCIES
   momentjs-rails (>= 2.9.0)
   nprogress-rails
   pg
+  photoswipe-rails (~> 4.1.0)
   poseidon
   public_activity!
   punching_bag
