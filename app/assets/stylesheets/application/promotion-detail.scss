@@ -25,27 +25,27 @@ body.detail {
     }
   }
 
-  .price-period{
+  .price-period {
     display: table;
     width: 100%;
 
-    .price-desc{
+    .price-desc {
       display: table-cell;
       background-color: #F12A39;
       color: #FFFFFF;
+      width: 60%;
+      white-space: nowrap;
       padding: 10px;
 
-      .promotion-price{
+      .promotion-price {
         float: left;
         font-size: 2em;
         font-weight: 700;
         line-height: 1.5em;
+        padding-right: 10px;
       }
 
       .dicount-desc{
-        float: left;
-        padding-left: 1em;
-
         p {
           margin: 0;
           padding-top: 0.2em;
@@ -62,23 +62,27 @@ body.detail {
 
     .period-desc{
       display: table-cell;
-      width: 40%;
       vertical-align: middle;
       background: #F6D33C;
       color: #FF2B2B;
-
-      &.finished{
-        background: #2A2A2A;
-        font-size: 1.5em;
-        text-align: center;
-        color: #FFFFFF;
-      }
 
       .desc-wrap{
         padding: 0 10px;
 
         p{
           margin: 0;
+        }
+      }
+
+      &.finished{
+        background: #2A2A2A;
+        font-size: 1.5em;
+        text-align: center;
+        color: #FFFFFF;
+        white-space: nowrap;
+
+        .desc-wrap {
+          padding: 0;
         }
       }
     }
