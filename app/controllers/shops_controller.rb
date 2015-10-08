@@ -33,7 +33,7 @@ class ShopsController < ApplicationController
 
   def shop_page_info
     self.page_title += [ t("titles.shops", shop_name: @shop.title) ]
-    self.page_navbar = @shop.title
+    self.page_navbar = @shop.title || @shop.name
     self.page_navbar_link = shop_site_path(@shop.name)
   end
 end

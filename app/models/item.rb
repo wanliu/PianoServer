@@ -62,4 +62,12 @@ class Item < ActiveRecord::Base
   def image
     images[0] || ItemImageUploader.new(self)
   end
+
+  def avatar_url
+    image.url(:avatar)
+  end
+
+  def cover_url
+    image.url(:cover)
+  end
 end
