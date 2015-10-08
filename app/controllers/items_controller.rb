@@ -16,6 +16,8 @@ class ItemsController < ShopsController
   end
 
   def show
+    @item.punch(request)
+
   end
 
   private

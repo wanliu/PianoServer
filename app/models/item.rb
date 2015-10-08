@@ -4,6 +4,8 @@ class Item < ActiveRecord::Base
 
   # paginates_per 5
 
+  acts_as_punchable
+
   belongs_to :shop_category
   belongs_to :category
   belongs_to :brand

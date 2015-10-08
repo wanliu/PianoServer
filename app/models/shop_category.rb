@@ -7,6 +7,8 @@ class ShopCategory < ActiveRecord::Base
 
   paginates_per 12
 
+  acts_as_punchable
+
   belongs_to :shop
 
   has_many :items, foreign_key: :shop_category_id
