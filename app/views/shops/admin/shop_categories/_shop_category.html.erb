@@ -4,8 +4,8 @@
     <%#= link_to child_shop_admin_shop_category_path(@shop.name, @root, shop_category) , class: "thumbnail" do %>
       <%= image_tag shop_category.image.url(:cover) || Settings.assets.gray_image %>
       <h2><%= shop_category.title %></h2>
-      <input type="text" name="name" class="title-input" placeholder="分类名称" maxlength="20" />
-      <div class="actions">
+      <input type="text" name="name" class="title-input disabled-xs" placeholder="分类名称" maxlength="20" />
+      <div class="actions visible-md-block visible-lg-block">
         <div type="button" class="uploader-btn">
           <%= icon :picture %>
           <input type="file" name="upload" class="uploader" required />
@@ -15,7 +15,7 @@
         <% end %>
       </div>
 
-      <div class="deleted">
+      <div class="deleted visible-md-block visible-lg-block">
         <%= link_to child_shop_admin_shop_category_path(@shop.name, @root, shop_category), class: 'btn btn-danger', method: :delete, remote: true, data: { confirm: '删除此分类吗？' } do %>
           <%= icon :remove %>
         <% end %>

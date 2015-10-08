@@ -70,5 +70,4 @@ class Item < ActiveRecord::Base
   def cover_url
     image.url(:cover)
   end
-
 end

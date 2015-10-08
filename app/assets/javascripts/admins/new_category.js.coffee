@@ -2,7 +2,7 @@
 #= require admins/edit_category
 EditShopCategory = @EditShopCategory
 
-class @NewShopCategory extends @Event
+class @NewShopCategory extends @HuEvent
   events:
     'click': 'onClick',
     'click a>h2': 'onClickTitle',

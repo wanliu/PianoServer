@@ -1,0 +1,35 @@
+<div>单位列表</div>
+
+<table class='table'>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>名称</th>
+      <th>标题</th>
+      <th>描述</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @units.each do |unit| %>
+      <tr data-unit-id='<%= unit.id %>'>
+        <td><%= unit.id %></td>
+        <td><%= unit.name %></td>
+        <td><%= unit.title %></td>
+        <td><%= unit.summary %></td>
+        <td>
+          <%= link_to edit_admins_unit_path(unit), class: 'btn btn-default' do %>
+            <span class='glyphicon glyphicon-edit'>编辑</span>
+          <% end %>
+          <%= link_to admins_unit_path(unit), class: 'btn btn-default', method: 'DELETE', remote: true, data: { confirm: "确定要删除这个单位么？" } do %>
+            <span class='glyphicon glyphicon-remove-sign'>删除</span>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to "创建新单位", new_admins_unit_path, class: 'btn btn-default' %>
+
+<%= paginate(@units) %>

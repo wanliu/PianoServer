@@ -1,5 +1,5 @@
 #= require _common/event
-class @SelectedPromotion extends @Event
+class @SelectedPromotion extends @HuEvent
 
   events:
     'click .remove-promotion': 'removeSelectedItem'

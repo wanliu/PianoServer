@@ -1,0 +1,33 @@
+
+<script type="text/javascript" data-turbolinks-eval=false>
+  var TPL;
+  TPL = "<div class=\"error\">\n  <h1 class=\"text-center\">$message</h1>\n</div>";
+
+  $(window).load(function() {
+    return $(document).ajaxError((function(_this) {
+      return function(event, jqXHR, ajaxSettings, thrownError) {
+        var $error, tpl;
+        var context = {
+          message: thrownError
+        };
+
+        $error = $(".global-ajaxError").length ? $(".global-ajaxError") : $("<div class=\"global-ajaxError\" />").appendTo("body");
+        $error.html(TPL.replace(/\$(\w+)/, function(m, key) {
+          return context[key];
+        }));
+
+        return $error.css({
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: 100,
+          zIndex: 1053,
+          color: 'white',
+          backgroundColor: '#D41B1B',
+          opacity: 0.95
+        }).fadeIn().delay(3000).fadeOut();
+      };
+    })(this));
+  });
+</script>

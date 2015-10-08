@@ -1,75 +1,100 @@
-<div class="item">
-  <div class='col-xs-12 col-sm-6 avatar row-line'>
-  {{ item.avatar_url | image_url | image_tag }}
+<div class="shop-item col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1">
+  <div class="shop-item-image">
+    {{ item.image_url | image_tag }}
   </div>
 
-  <div class='col-xs-12 col-sm-6 price row-line'>
-    ￥ {{ item.price }}
-  </div>
-
-  <div class='col-xs-12 col-sm-6 title row-line'>
-    <div class='product-name col-xs-7 col-sm-4'>
-      {{ item.title }}
-    </div>
-    <div class='favor col-xs-3 col-sm-1'>
-      <div class='favor-title text-center'>收藏</div>
-      <div class='favor-count text-center'>12</div>
-    </div>
-    <div class='like  col-xs-2 col-sm-1'>
-      <div class='like-title text-center'>赞</div>
-      <div class='like-count text-center'>21</div>
-    </div>
-  </div>
-
-  <div class='col-xs-12 col-sm-6 shop-info row-line'>
-    <div class='shop-avatar col-xs-2 col-sm-1'>
-      {{ shop.avatar_url | image_url | image_tag }}
-    </div>
-    <div class='shop-info col-xs-10 col-sm-5'>
-      <div class='name'>供应商： {{ shop.title }}</div>
-      <div class='address'>地址：{{ shop.address }}</div>
-      <div class='follow'>关注：22</div>
+  <div class="item-properties">
+    <div class="media">
+      <div class="media-left media-middle">
+        商品名:{{ item.title }}
+        <div>价格:￥{{ item.price }}</div>
+      </div>
+      <div class="media-body media-middle">
+        <div class='favor-title text-center'>收藏</div>
+        <div class='favor-count text-center'>12</div>
+      </div>
+      <div class="media-right media-middle">
+        <div class='like-title text-center'>赞</div>
+        <div class='like-count text-center'>21</div>
+      </div>
     </div>
   </div>
 
-  <div class='col-xs-12 col-sm-6 summary row-line'>
+  <div class='item-shop-infos'>
+    <div class="media">
+      <div class="media-left media-middle">
+        <div class='shop-avatar'>
+          {{ shop.image_url | image_tag }}
+        </div>
+      </div>
+      <div class="media-body media-middle">
+        <div class='name'>供应商： {{ shop.title }}</div>
+        <div class='address'>地址：{{ shop.address }}</div>
+        <div class='follow'>关注：22</div>
+      </div>
+    </div>
+  </div>
+
+  <div class='item-secodary-properties clearfix'>
     <div class='brand-saled-count'>
-      <div class='brand col-xs-6 col-sm-3'>品牌：{{ item.brand_name }}</div>
-      <div class='sale-count col-xs-6 col-sm-3'>总销量：155</div>
+      <p class='brand col-xs-6 col-sm-6 col-md-6'>品牌：{{ item.brand_name }}</p>
+      <p class='sale-count col-xs-6 col-sm-6 col-md-6 text-right'>总销量：155</p>
     </div>
-    <div class='inventory col-xs-6 col-sm-6 '>库存数量：222</div>
+    <p class='inventory col-xs-6 col-sm-6 col-md-6 '>库存数量：222</p>
   </div>
 
-  <div class='col-xs-12 col-sm-12 properties row-line'>
-    <div class='properties-title'>参数规格</div>
-    <div class='col-xs-6 col-sm-6 avatar'>
-      {{ item.avatar_url | image_url | image_tag }}
+  <div class='item-descriptions'>
+    <div class="item-brief-description">
+      <label>商品介绍</label>
+      <p class="brief-desc">
+        {% if item.description.blank? %}
+          暂无简介
+        {% else %}
+          {{ item.description }}
+        {% endif %}
+      </p>
     </div>
-    <div class='col-xs-6 col-sm-6 property-items'>
-      <%# @item.additional_fields.attributes.each do |key, value| %>
-        <%# unless key =~ /原始链接/ %>
-          <p><%#= key %>: <%#= value %></p>
-        <%# end %>
-      <%# end %>
-    </div>
-  </div>
-</div>
 
-<div class="promotion-detail-container">
+    <div class="item-detail-decription"></div>
+      <label class='properties-title'>参数规格</label>
+      <div class="detail-desc">
+        <div class="media">
+          <div class="media-left media-top">
+            <div class='avatar'>
+              {{ item.image_url | image_tag }}
+            </div>
+          </div>
+          <div class="media-body media-top">
+            <div class='property-items'>
+              {% for attribute in item.additional_fields.attributes %}
+                <div class="property-item col-xs-12 col-sm-12 col-md-6">
+                  {% for item in attribute %}
+                    <div class="item-key col-md-3">{{items[0]}}:</div>
+                    <div class="item-value col-md-9">{{items[1]}}</div>
+                  {% endfor %}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+
   <div class="navbar-bottom navbar navbar-default navbar-fixed-bottom">
     <div class="link-table">
-
-      <%#= link_to shop_site_path(@item.shop.name), class: "into-shop" do %>
+      <a class="into-shop" href="/{{shop.name}}">
         <span class="button-icon glyphicon glyphicon-home"></span>
         <div class="button-text">商家</div>
-      <% end %>
+      </a>
 
       <div class="fav-button">
         <span class="button-icon glyphicon glyphicon-star-empty"></span>
         <div class="button-text">收藏</div>
       </div>
 
-      <%= link_to '洽谈', chats_path(item_id: @item, shop_id: @shop), class: "chat", method: 'POST' %>
+      <a href="/items/{{item.id}}/chats?shop_id={{shop.id}}" class="chat" method="POST">
+        洽谈
+      </a>
     </div>
   </div>
 </div>

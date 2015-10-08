@@ -13,6 +13,8 @@ class Shop < ActiveRecord::Base
   has_many :items
   has_many :members, class_name: "User", foreign_key: 'shop_id'
 
+  validates :title, presence: true
+
   store_accessor :settings, :greetings
 
   mount_uploader :logo, ImageUploader

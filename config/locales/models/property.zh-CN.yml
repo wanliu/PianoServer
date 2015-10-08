@@ -1,0 +1,8 @@
+zh-CN:
+  activerecord:
+    models:
+      property: "订单项"
+    attributes:
+      property:
+        validate_rules: "验证设置"
+        is_group: "集合属性"

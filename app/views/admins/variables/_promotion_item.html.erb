@@ -7,6 +7,13 @@
     </div>
     <div class="shop-infor">
       商店: <%= promotion_item.shop_name %>
+      <% if promotion_item.status == 'Active' %>
+        <label class="label label-success">正在进行</label>
+      <% elsif promotion_item.status == 'Finish' %>
+        <label class="label label-danger">已结束</label>
+      <% elsif promotion_item.status == 'Published' %>
+        <label class="label label-default">暂未开始</label>
+      <% end %>
     </div>
   </div>
 </a>

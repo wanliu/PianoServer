@@ -125,27 +125,5 @@
     });
   }
 
-  window.userSocket = new UserSocket();
+  window.UserSocket = UserSocket;
 })();
-
-
-$(function() {
-  var chatId = $('meta[name=chatId]').attr('content');
-  var chatToken = $('meta[name=chatToken]').attr('content');
-  var user = {
-    id: chatId,
-    chatToken: chatToken
-  };
-
-  var hostname = $('meta[name=pusherHost]').attr('content');
-  var hostport = $('meta[name=pusherPort]').attr('content');
-  var socket = socketCluster.connect({
-    hostname: hostname,
-    port: hostport
-  });
-
-  window.userSocket.config({
-    user: user,
-    socket: socket
-  });
-});

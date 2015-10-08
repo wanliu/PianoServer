@@ -1,4 +1,5 @@
 //= require jquery
+//= require jquery.turbolinks
 //= require jquery_ujs
 //= require es5-shim/es5-shim-min
 //= require es5-shim/es5-sham-min
@@ -19,7 +20,20 @@
 //= require _common/hammer
 //= require _common/util
 //= require _common/save_on_change
+//= require lib/socketcluster-client
+//= require lib/user-socket
+//= require lib/underscore
+//= require lib/underscore-template
+//= require lib/bootstrap-select
+//= require _common/paginate
+//= require _common/qrcode
 //= require bootsy
+//= require lib/tablesaw
+//= require jquery-ui/core
+//= require jquery-ui/widget
+//= require jquery-ui/mouse
+//= require jquery-ui/position
+//= require jquery-ui/effect.all
 //= require_tree ./locales
 //= require_tree ./admins
 //= require_tree ./shop

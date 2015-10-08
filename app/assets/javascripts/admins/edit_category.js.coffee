@@ -1,6 +1,6 @@
 #= require _common/event
 #= require _common/fileuploader
-class @EditShopCategory extends @Event
+class @EditShopCategory extends @HuEvent
   events:
     'click': 'onClick'
     'click .thumbnail>h2': 'onClickTitle'
@@ -11,6 +11,8 @@ class @EditShopCategory extends @Event
 
   constructor: (@element, @url) ->
     super
+    @hammer = new Hammer.Manager(@$()[0])
+    @hammer.add(new Hammer.Press())
     @$img = @$().find('form input[name="shop_category_img"]')
     @$input = @$().find('.title-input')
     @shopCategoryId = @$().data('shopCategoryId')
@@ -34,6 +36,8 @@ class @EditShopCategory extends @Event
       onComplete: @onUploader.bind(@)
     })
 
+    @hammer.on('press', @.onPress.bind(@))
+
   onClickTitle: (e) ->
     e.preventDefault()
     e.stopPropagation()
@@ -48,6 +52,9 @@ class @EditShopCategory extends @Event
   onClick: (e) ->
     if $(e.target).is('.thumbnail>img') && @thumbnailClickable(e)
       Turbolinks.visit(@url)
+
+  onPress: () ->
+    $('#category-modal').modal("show");
 
   thumbnailClickable: (e) ->
     $(e.target).parent('.thumbnail').attr('data-limited-depth') is 'false'

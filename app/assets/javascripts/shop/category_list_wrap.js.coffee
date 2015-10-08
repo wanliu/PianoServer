@@ -1,23 +1,32 @@
+#= require _common/event
 #= require ./category_list
+#= require ./category_container
+#= require ./category_breadcrumb
 
-class @CategoryListWrap
-  constructor: (@$container, @$form) ->
-    @categoryLists = for level in [1..4]
+class @CategoryListWrap extends @HuEvent
+  constructor: (@element, @url, @length, @pagination) ->
+
+    super(@element)
+
+    @categoryLists = for level in [1..@length]
       @generateCategoryList(level)
 
-    @length = 4
-    @$leftBtn = @$container.prev()
-    @$rightBtn = @$container.next()
+    if @pagination?
+      page = @pagination.page
+      per = @pagination.per
+      @params = { page: page, per: per }
 
-    @bindPrevBtnClickEvent()
-    @bindNextBtnClickEvent()
+      @pagination.on('page:change', (e, page) =>
+        @loadPageData(page)
+      )
+    else
+      @params = {}
 
-    @loadCategoryData(null, (data) =>
-      @categoryChanged(data, 0)
-    )
+    @box = new CategoryContainer(@element, @length)
+    @on('category:change', @categoryChanged.bind(@))
+    @on('category:empty', @categoryEmptyed.bind(@))
 
-    @initColNumAndCurrentMax()
-    $(window).bind('resize', @resizeHandler.bind(@))
+    @loadFirstLevelCategory()
 
   generateCategoryList: (level) ->
     levelClass = ['level', level].join('')
@@ -28,172 +37,116 @@ class @CategoryListWrap
         </ul>
       </div>
     """
-    $list = $(template).appendTo(@$container)
+    $list = $(template).appendTo(@element)
     $element = $list.find('.list-group')
 
-    new CategoryList(@, $element, [], level, @$form)
+    new CategoryList(@, $element, [], level)
+
+  categoryChanged: (e, category_id, level, is_leaf) ->
+    @loadCategoryData(category_id, (data) =>
+      @categoryDataChanged(data, category_id, level, is_leaf)
+    )
+
+  loadFirstLevelCategory: () ->
+    @loadCategoryData(null, (data) =>
+      @categoryDataChanged(data, null, 0, false)
+    )
+
+  categoryEmptyed: (e) ->
+    @loadFirstLevelCategory()
 
   loadCategoryData: (category_id, callback) ->
-    data = {}
-    data['category_id'] = category_id if category_id?
+    if category_id
+      @params['category_id'] = category_id
+    else
+      delete @params['category_id']
 
+    @loadData(callback)
+
+  loadPageData: (page) ->
+    @params['page'] = page
+    @loadData((data) =>
+      @pageDataChanged(data)
+    )
+
+  loadData: (callback) ->
     $.ajax({
-      url: '/categories',
-      data: data,
+      url: @url,
+      data: @params,
       dataType: 'json',
       success: (datas) =>
         callback.call(@, datas) if $.isFunction(callback)
     })
 
-  categoryChanged: (data, level) ->
-    # 如果是最后一级分类点击则不作任何操作
-    return @lastLevelPicked if level == @length
+  pageDataChanged: (data) ->
+    { items, meta } = data
+    @items.send('items:change', [ items ]) if @items?
 
-    @resetListsContent(data, level)
-    @changeCategory(data)
-    #@changeBreadcrumb()
+    { page, per } = @params
+    @pagination.setup(page, per, meta.count)
+
+  categoryDataChanged: (data, category_id, level, is_leaf) ->
+    if @url.indexOf('items') > -1
+      { categories, items, meta } = data
+      @resetListsContent(categories, level)
+
+      @items.send('items:change', [ items ]) if @items?
+      { page, per } = @params
+      @pagination.setup(page, per, meta.count)
+    else
+      @resetListsContent(data, level)
+      @form.send('category:change', [ category_id, is_leaf ]) if @form?
 
   resetListsContent: (data, level) ->
-    @levelCount = level + 1
-
-    # 重新生成分类数据
-    for categoryList in @categoryLists
-      _level = categoryList.level
-
-      continue if _level <= level
-
-      if _level == @levelCount
-        categoryList.resetContent(data)
-      else
-        categoryList.emptyContent(data)
-
-  changeCategory: (data) =>
-    if @levelCount > @col
-      @currentLevel = @levelCount - 1
-
-      if data.length > 0
-        @scrollRight()
-      else if @levelCount = @col + 1
-        @currentLevel = @col
-        @resetPosition()
+    if level == @length
+      @levelCount = level
     else
-      @currentLevel = @col
-      @resetPosition()
+      @levelCount = level + 1
+
+      # 重新生成分类数据
+      for categoryList in @categoryLists
+        _level = categoryList.level
+
+        continue if _level <= level
+
+        if _level == @levelCount
+          categoryList.send('categories:change', [ data ])
+        else
+          categoryList.send('categories:empty')
+
+      level = @levelCount if data.length > 0
+
+      @box.send('level:change', [ level ])
+
+    @changeBreadcrumb() if @breadcrumb?
 
   changeBreadcrumb: () ->
-    $activeItems = @$container.find('.list-group-item.active')
-    pathNames = for item, index in $activeItems
+    $activeItems = @$().find('.list-group-item.active')
+
+    paths = for item, index in $activeItems
       $item = $(item)
       categoryName = $item.text()
       categoryId = $item.attr('category-id')
+      level = $item.attr('level')
+      is_leaf = !$item.hasClass('has-children')
 
-      if index == $activeItems.length - 1
-        """
-          <li class="active">#{categoryName}</li>
-        """
-      else
-        """
-          <li><a href="javascript:void(0)" category-id="#{categoryId}">#{categoryName}</a></li>
-        """
+      {
+        name: categoryName,
+        id: categoryId,
+        is_leaf: is_leaf,
+        level: level
+      }
 
-    @$breadcrumb.html(pathNames.join(''))
+    @breadcrumb.send('breadcrumb:change', [ paths ])
 
-    @$breadcrumb.find('a').bind('click', (e) =>
-      $target = $(e.currentTarget)
-      cateId = $target.attr('category-id')
-      $parent = $target.parent()
-      level = $parent.index() + 1
+  setBreadcrumb: (breadcrumb) ->
+    @breadcrumb = breadcrumb
 
-      loadCategoryData(cateId, (data) =>
-        changeCategory(data)
-      )
-    )
+  setCategoryItems: (items) ->
+    @items = items
 
-  bindPrevBtnClickEvent: () ->
-    @$leftBtn.bind('click', @scrolleLeft.bind(@))
-
-  bindNextBtnClickEvent: () ->
-    @$rightBtn.bind('click', @scrollRight.bind(@))
-
-  scrolleLeft: () ->
-    @$container.animate({
-      'margin-left': '+=290'
-    }, 250, () =>
-      @currentLevel -= 1
-      @currentLevelChanged()
-    )
-
-  scrollRight: () ->
-    @$container.animate({
-      'margin-left': '-=290'
-    }, 250, () =>
-      @currentLevel += 1
-      @currentLevelChanged()
-    )
-
-  resetPosition: () ->
-    @$container.animate({
-      'margin-left': '0'
-    }, 250, () =>
-      @$rightBtn.removeClass('btn-visible')
-      @$leftBtn.removeClass('btn-visible')
-    )
-
-  resizeHandler: () ->
-    width = $(window).width()
-
-    if width >= 1200
-      @col = 3
-    else if width >= 992
-      @col = 2
-    else
-      @col = 1
-
-    if @lastCol?
-      diffCol = @col - @lastCol
-    else
-      diffCol = 0
-
-    @lastCol = @col
-
-    return if @levelCount <= @col or diffCol == 0
-
-    marginLeft = parseInt(@$container.css('margin-left'))
-    min = Math.min(0, marginLeft + diffCol * 290)
-
-    @$container.animate({
-      'margin-left': min
-    }, 250, () =>
-      @currentLevelChanged()
-    )
-
-  initColNumAndCurrentMax: () ->
-    @resizeHandler()
-    @levelCount = 1
-    @currentLevel = 1
-
-  currentLevelChanged: () ->
-    if @levelCount > @col
-      if @currentLevel < @levelCount
-        @$rightBtn.addClass('btn-visible')
-
-      if @currentLevel > @col
-        @$leftBtn.addClass('btn-visible')
-
-        if @currentLevel == @levelCount
-          @$rightBtn.removeClass('btn-visible')
-      else
-        @$leftBtn.removeClass('btn-visible')
-    else
-      @$leftBtn.removeClass('btn-visible')
-      @$rightBtn.removeClass('btn-visible')
-
-  lastLevelPicked: () ->
-    @currentLevel = @levelCount = @length
-
-    @currentLevelChanged()
-
-
+  setForm: (form) ->
+    @form = form
 
 
 

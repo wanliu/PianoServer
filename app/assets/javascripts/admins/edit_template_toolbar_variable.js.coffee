@@ -1,6 +1,6 @@
 #= require _common/event
 
-class @EditTemplateToolbarVariable extends @Event
+class @EditTemplateToolbarVariable extends @HuEvent
 
   @defaultOptions = {
     item_link: '.toolbars li>a'
