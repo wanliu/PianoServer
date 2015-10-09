@@ -11,7 +11,7 @@ class ShopsController < ApplicationController
     end
 
     @root = @shop.shop_category(true)
-    @shop_categories = @root.children.page(params[:page]).per(params[:per])
+    @shop_categories = @root.children
 
     render :show
   end
