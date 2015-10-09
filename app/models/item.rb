@@ -4,6 +4,8 @@ class Item < ActiveRecord::Base
 
   # paginates_per 5
 
+  acts_as_punchable
+
   belongs_to :shop_category
   belongs_to :category
   belongs_to :brand
@@ -61,5 +63,13 @@ class Item < ActiveRecord::Base
 
   def image
     images[0] || ItemImageUploader.new(self)
+  end
+
+  def avatar_url
+    image.url(:avatar)
+  end
+
+  def cover_url
+    image.url(:cover)
   end
 end

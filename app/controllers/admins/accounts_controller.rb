@@ -120,9 +120,7 @@ class Admins::AccountsController < Admins::BaseController
       industry_id: shop.industry_id,
       license_no: shop.license_no,
       website: shop.website,
-      image: {
-        avatar_url: shop.image.try(:src)
-      },
+      logo: shop.image.try(:src),
       provider: 'import'
     }
   end

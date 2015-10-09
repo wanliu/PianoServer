@@ -11,6 +11,7 @@ class ShopsController < ApplicationController
     end
 
     @root = @shop.shop_category(true)
+    @shop.punch(request)
     @shop_categories = @root.children.page(params[:page]).per(params[:per])
 
     render :show
@@ -18,6 +19,7 @@ class ShopsController < ApplicationController
 
   def show
     @shop = Shop.find params[:id]
+    @shop.punch(request)
     @shop_categories = @shop.shop_category.children.page(params[:page]).per(params[:per])
   end
 
@@ -33,7 +35,7 @@ class ShopsController < ApplicationController
 
   def shop_page_info
     self.page_title += [ t("titles.shops", shop_name: @shop.title) ]
-    self.page_navbar = @shop.title
+    self.page_navbar = @shop.title || @shop.name
     self.page_navbar_link = shop_site_path(@shop.name)
   end
 end

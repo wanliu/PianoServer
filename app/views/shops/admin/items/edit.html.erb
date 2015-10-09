@@ -81,16 +81,10 @@
 
       <!-- 枚举全部属性 -->
       <% @properties.each do |property| %>
-      <div class="form-group">
-        <% property_name = "property_#{property.name}" %>
-        <%= label_tag property_name, property.title, class: "col-sm-2 control-label" %>
-        <div class="col-sm-10">
+
+        <% group_with_property_errors @item, property, f do %>
           <%= property_edit "item", property %>
-        </div>
-      </div>
-        <%# group_with_property_errors @item, property, f do %>
-          <%#= property_edit "item", property %>
-        <%# end %>
+        <% end %>
       <% end %>
 
       <% end %>
