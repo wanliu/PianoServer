@@ -63,6 +63,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
   def create
     @title = "创建自己的商品"
     @properties = @category.with_upper_properties
+    pp @properties
     prop_params = properties_params(@properties)
     @item = Item.new item_basic_params.merge(shop_id: @shop.id) do |item|
       item.properties ||= {}
@@ -155,7 +156,10 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
 
 
   def properties_params(properties)
-    params.require(:item).slice(*properties.map{ |prop| "property_#{prop.name}" })
+    _params = params[:item].slice(*properties.map{ |prop| "property_#{prop.name}" })
+
+    pp _params
+    _params
   end
 
   def set_category

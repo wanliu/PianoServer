@@ -83,7 +83,7 @@
       <% @properties.each do |property| %>
 
         <% group_with_property_errors @item, property, f do %>
-          <%= property_edit "item", property %>
+          <%= property_edit @item, property %>
         <% end %>
       <% end %>
 
