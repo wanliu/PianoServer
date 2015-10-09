@@ -37,7 +37,7 @@
 
     <%= javascript_include_tag "admins" %>
 
-    <%= analytics_init if Rails.env.production? %>
+    <%= analytics_init if Rails.env.production? and Settings.GA.track %>
   </head>
   <body class="<%= yield :module %>">
     <div class="navbar navbar-inverse navbar-fixed-top">
