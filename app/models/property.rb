@@ -5,7 +5,7 @@ class Property < ActiveRecord::Base
   DATA_KEY_DEFAULT = "default_value"
   DATA_KEY_VALIDATE = "validate_rules"
 
-  PROP_TYPES = ["string", "integer", "float", "date", "boolean", DATA_KEY_MAP]
+  PROP_TYPES = ["string", "integer", "number", "float", "date", "boolean", DATA_KEY_MAP]
 
   VALIDATE_MELPERS = %w(acceptance confirmation exclusion format inclusion length numericality presence absence uniqueness)
 

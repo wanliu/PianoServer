@@ -51,6 +51,8 @@ module DynamicProperty
       case config["type"]
       when "string"
         StringProperty.new prefix_name, self, _config
+      when "number"
+        NumberProperty.new prefix_name, self, _config
       when "integer"
         IntegerProperty.new prefix_name, self, _config
       when "float"

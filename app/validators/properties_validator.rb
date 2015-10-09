@@ -50,7 +50,7 @@ class PropertiesValidator < ActiveModel::EachValidator
     case type
     when "string", "boolean"
       "presence"
-    when "integer", "float"
+    when "integer", "float", "number"
       "numericality"
     when "date", "datetime"
       "presence"
