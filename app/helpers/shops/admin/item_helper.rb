@@ -27,7 +27,7 @@ module Shops::Admin::ItemHelper
     when "datetime"
       date_picker object, property_name
     when "map"
-      multi_set_select object, property_name, property
+      multi_set_select_and_title object, property_name, property
     else
       text_field object, property_name, class: 'form-control'
     end
@@ -83,7 +83,8 @@ module Shops::Admin::ItemHelper
     # @template_object.text_field(@object_name, @method_name + "[#{b.value}][value]", class: 'form-control') -->
 
     #TODO: 实现 edit in place
-    output = collection_check_boxes(object, name, collection_options_for_map(set), :id, :value) do |b, *args|
+    # item[property_milk_level][]
+    output = collection_check_boxes(object, name, collection_options_for_map(set), :id, :value, include_hidden: true) do |b, *args|
       raw <<-HTML
         <div class="col-sm-2" >
           <div class="input-group">
@@ -98,11 +99,46 @@ module Shops::Admin::ItemHelper
     raw "<div class=\"row\">#{output}</div>"
   end
 
+  def multi_set_select_and_title(object, name, property)
+    set = (property.data || {})['map']
+
+    output = collection_map(set).map do |item|
+      # byebug
+      fields_for "item[#{name}][]", item do |sub|
+        raw <<-HTML
+          <div class="col-sm-2" >
+            <div class="input-group">
+              <span class="input-group-addon">
+                #{sub.check_box :value}
+              </span>
+              #{sub.text_field :title, class: 'form-control'}
+            </div>
+          </div>
+        HTML
+      end
+    end.join
+
+    raw "<div class=\"row\">#{output}</div>"
+  end
+
   private
 
   def collection_options_for_map(map)
     map.map do |k, v|
-      OpenStruct.new id: k, value: v
+      OrderStruct.new id: k, value: v
     end
+  end
+
+  def collection_map(set)
+    set.map do |k, v|
+      OrderStruct.new id: k, value: k, title: v
+    end
+  end
+end
+
+class OrderStruct < OpenStruct
+
+  def to_param
+    id
   end
 end
