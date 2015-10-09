@@ -56,7 +56,7 @@ class Category < ActiveRecord::Base
         unit_type: property.unit_type,
         unit_id: property.unit_id,
         default: property.data.try(:[], "default"),
-        validates: property.data.try(:[], "validates"),
+        validates: property.data.try(:[], "validate_rules"),
         value: property.data.try(:[], "value"),
         map: property.data.try(:[], "map")
       }]
