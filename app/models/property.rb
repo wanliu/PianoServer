@@ -5,7 +5,7 @@ class Property < ActiveRecord::Base
   DATA_KEY_DEFAULT = "default_value"
   DATA_KEY_VALIDATE = "validate_rules"
 
-  PROP_TYPES = ["string", "number", "date", "boolean", DATA_KEY_MAP]
+  PROP_TYPES = ["string", "integer", "float", "date", "boolean", DATA_KEY_MAP]
 
   VALIDATE_MELPERS = %w(acceptance confirmation exclusion format inclusion length numericality presence absence uniqueness)
 
@@ -87,10 +87,16 @@ class Property < ActiveRecord::Base
   def validate_rules=(rules)
     return if rules.blank?
 
-    rules = rules.first(250)
+    # rules = rules.first(250)
+
+    begin
+      valid_rules = JSON.parse(rules)
+    rescue JSON::ParserError => e
+      valid_rules = rules
+    end
 
     self.data ||= {}
-    self.data[DATA_KEY_VALIDATE] = rules
+    self.data[DATA_KEY_VALIDATE] = valid_rules
   end
 
   def category_id
@@ -113,16 +119,15 @@ class Property < ActiveRecord::Base
     def validate_rules_json_format
       return if validate_rules.blank?
 
-      begin
-        rules = JSON.parse(validate_rules)
-
-        rules.keys.each do |validator|
-          unless VALIDATE_MELPERS.include? validator
-            errors.add(:validate_rules, "'#{validator}'为无效验证方法")
-          end
-        end
-      rescue JSON::ParserError => e
+      unless validate_rules.is_a? Hash
         errors.add(:validate_rules, "格式不正确，必须是有效的json数据格式并且长度不能超过250个字符")
+        return
+      end
+
+      validate_rules.keys.each do |validator|
+        unless VALIDATE_MELPERS.include? validator
+          errors.add(:validate_rules, "'#{validator}'为无效验证方法")
+        end
       end
     end
 end

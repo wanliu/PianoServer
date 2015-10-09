@@ -28,7 +28,7 @@
 
   <div class="form-group">
     <%= f.label :validate_rules, "验证设置" %>
-    <%= f.text_field :validate_rules, class: 'form-control', placeholder: '属性验证设置', length: 250%>
+    <%= f.text_field :validate_rules, class: 'form-control', placeholder: '属性验证设置', length: 250, value: property.validate_rules.to_json %>
   </div>
 
   <div class="form-group">

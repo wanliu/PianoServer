@@ -46,12 +46,15 @@ module DynamicProperty
   def property_config(name, config)
     prefix_name = "#{properties_prefix}_#{name}"
     _config = config.merge "name" => name
+
     property_delagates[name] ||=
       case config["type"]
       when "string"
         StringProperty.new prefix_name, self, _config
-      when "number"
-        NumberProperty.new prefix_name, self, _config
+      when "integer"
+        IntegerProperty.new prefix_name, self, _config
+      when "float"
+        FloatProperty.new prefix_name, self, _config
       when "boolean"
         BooleanProperty.new prefix_name, self, _config
       else
@@ -60,7 +63,8 @@ module DynamicProperty
   end
 
   def property_config_with_properties(name)
-    config = (read_attribute(:properties) || {})[name]
+    config = (definition_properties || {})[name]
+
     if config.nil?
       NullProperty.new "#{properties_prefix}_#{name}"
     else

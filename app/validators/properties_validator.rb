@@ -24,7 +24,6 @@ class PropertiesValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
     validates_config_of(record, attribute) do |type, options|
       validator = method_of_validator(type).call(attribute, options)
-      # pp validator
       validator.validate_each record, attribute, value
     end
   end
@@ -51,7 +50,7 @@ class PropertiesValidator < ActiveModel::EachValidator
     case type
     when "string", "boolean"
       "presence"
-    when "number"
+    when "integer", "float"
       "numericality"
     when "date", "datetime"
       "presence"
@@ -70,7 +69,7 @@ class PropertiesValidator < ActiveModel::EachValidator
       config = definitions[remove_prefix_name]
       if config["validates"]
         config["validates"].each do |validate, options|
-          yield validate, options == true ? {} : options
+          yield validate, options == true ? {} : options.symbolize_keys
         end
       elsif config["type"]
         yield resolve_type_of_validator(config["type"]), {}
