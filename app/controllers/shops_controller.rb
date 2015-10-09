@@ -11,6 +11,7 @@ class ShopsController < ApplicationController
     end
 
     @root = @shop.shop_category(true)
+    @shop.punch(request)
     @shop_categories = @root.children.page(params[:page]).per(params[:per])
 
     render :show
@@ -18,6 +19,7 @@ class ShopsController < ApplicationController
 
   def show
     @shop = Shop.find params[:id]
+    @shop.punch(request)
     @shop_categories = @shop.shop_category.children.page(params[:page]).per(params[:per])
   end
 
