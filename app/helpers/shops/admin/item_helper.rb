@@ -108,9 +108,9 @@ module Shops::Admin::ItemHelper
         raw <<-HTML
           <div class="col-sm-2" >
             <div class="input-group">
-              <span class="input-group-addon">
+              <label class="input-group-addon">
                 #{sub.check_box :value}
-              </span>
+              </label>
               #{sub.text_field :title, class: 'form-control'}
             </div>
           </div>
