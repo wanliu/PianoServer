@@ -1,1 +1,1 @@
-json.promotions @promotions, partial: 'promotion', as: :promotion
+json.promotions @promotions, partial: 'promotion_line', as: :promotion
