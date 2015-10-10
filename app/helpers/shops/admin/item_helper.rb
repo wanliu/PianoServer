@@ -107,14 +107,13 @@ module Shops::Admin::ItemHelper
 
     item_class = options[:item_class] || "col-lg-2 col-md-3 col-sm-4 col-xs-6"
 
-    output = collection_map(set).map do |item|
-      # byebug
+    output = collection_check_box_map(set, object, name).map do |item|
       fields_for "item[#{name}][]", item do |sub|
         raw <<-HTML
           <div class="#{item_class}" >
             <div class="input-group">
               <label class="input-group-addon">
-                #{sub.check_box :value}
+                #{sub.check_box :check}
               </label>
               #{sub.text_field :title, class: 'form-control'}
             </div>
@@ -130,13 +129,21 @@ module Shops::Admin::ItemHelper
 
   def collection_options_for_map(map)
     map.map do |k, v|
-      OrderStruct.new id: k, value: v
+      OrderStruct.new key: k, check: v
     end
   end
 
   def collection_map(set)
     set.map do |k, v|
-      OrderStruct.new id: k, value: k, title: v
+      OrderStruct.new key: k, check: k, title: v
+    end
+  end
+
+  def collection_check_box_map(set, object, name)
+    set.map do |key, title|
+      item_check = object.send(name)[key]["check"]
+      item_title = object.send(name)[key]["title"] || title
+      OrderStruct.new key: key, check: item_check, title: item_title
     end
   end
 end
@@ -144,6 +151,6 @@ end
 class OrderStruct < OpenStruct
 
   def to_param
-    id
+    key
   end
 end

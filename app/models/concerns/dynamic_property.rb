@@ -60,7 +60,6 @@ module DynamicProperty
       when "boolean"
         BooleanProperty.new prefix_name, self, _config
       when "map"
-        pp _config
         MapProperty.new prefix_name, self, _config
       else
         NullProperty.new prefix_name, self, _config
