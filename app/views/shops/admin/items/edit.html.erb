@@ -79,13 +79,27 @@
 
       <% if Settings.dev.feature.dynamic_property %>
 
-      <!-- 枚举全部属性 -->
-      <% @properties.each do |property| %>
+        <!-- 枚举全部属性 -->
+        <% @properties.each do |property| %>
 
-        <% group_with_property_errors @item, property, f do %>
-          <%= property_edit @item, property %>
+          <% group_with_property_errors @item, property, f do %>
+            <%= property_edit @item, property %>
+          <% end %>
         <% end %>
-      <% end %>
+
+        <% unless @inventory_properties.blank? %>
+
+          <hr />
+          <!-- 枚举库存属性  -->
+          <% @inventory_properties.each do |property| %>
+            <% group_with_property_errors @item, property, f do %>
+              <%= property_edit @item, property %>
+            <% end %>
+          <% end %>
+
+          <hr />
+
+        <% end %>
 
       <% end %>
 

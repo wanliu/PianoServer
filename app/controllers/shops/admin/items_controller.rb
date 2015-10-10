@@ -42,12 +42,14 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
   def new_step2
     @title = "创建自己的商品"
     @item = Item.new(category_id: @category.id, shop_id: @shop.id)
-    @properties = @category.with_upper_properties
+    @properties = normal_properties(@category.with_upper_properties)
+    @inventory_properties = inventory_properties(@category.with_upper_properties)
   end
 
   def create
     @title = "创建自己的商品"
-    @properties = @category.with_upper_properties
+    @properties = normal_properties(@category.with_upper_properties)
+    @inventory_properties = inventory_properties(@category.with_upper_properties)
     prop_params = properties_params(@properties)
     @item = Item.new item_basic_params.merge(shop_id: @shop.id) do |item|
       item.properties ||= {}
@@ -76,7 +78,8 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
   def update
     @category = @item.category
     @breadcrumb = @category.ancestors
-    @properties = @category.with_upper_properties
+    @properties = normal_properties(@category.with_upper_properties)
+    @inventory_properties = inventory_properties(@category.with_upper_properties)
 
     if params[:item][:filenames].present?
       @item.send(:write_attribute, :images, params[:item][:filenames].split(','))
@@ -105,7 +108,8 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
   def edit
     @category = @item.category
     @breadcrumb = @category.ancestors
-    @properties = @category.with_upper_properties
+    @properties = normal_properties(@category.with_upper_properties)
+    @inventory_properties = inventory_properties(@category.with_upper_properties)
   end
 
   def upload_image
@@ -148,9 +152,16 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     _params
   end
 
-
   def properties_params(properties)
     params.require(:item).slice(*properties.map{ |prop| "property_#{prop.name}" })
+  end
+
+  def normal_properties(properties)
+    properties.reject { |prop| prop.data.try(:[], "group") }
+  end
+
+  def inventory_properties(properties)
+    properties.select { |prop| prop.data.try(:[], "group") }
   end
 
   def set_category
