@@ -110,6 +110,8 @@ group :development, :test do
   gem 'spring'
 
   gem 'rspec-rails', '~> 3.0'
+  gem 'i18n-debug' if ENV['I18N_DEBUG']
+  gem 'quiet_assets'
 
   gem 'factory_girl_rails'
   gem 'thin'

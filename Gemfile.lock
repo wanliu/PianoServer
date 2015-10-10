@@ -272,6 +272,8 @@ GEM
     punching_bag (0.4.0)
       railties (>= 3.2, < 5)
       voight_kampff (~> 0.2)
+    quiet_assets (1.1.0)
+      railties (>= 3.1, < 5.0)
     rack (1.6.4)
     rack-cors (0.4.0)
     rack-raw-upload (1.1.1)
@@ -474,6 +476,7 @@ DEPENDENCIES
   poseidon
   public_activity!
   punching_bag
+  quiet_assets
   rack-cors
   rack-raw-upload (~> 1.1.1)
   rails (= 4.2.0)

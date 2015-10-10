@@ -91,7 +91,8 @@
 
       <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
-          <%= f.submit class: "btn btn-primary btn-lg" %>
+          <%= f.submit t(:create_and_continue, scope: 'helpers.submit.item'), class: "btn btn-primary btn-lg" %>
+          <%= f.submit t(:create, scope: 'helpers.submit.item'), class: "btn btn-info btn-lg" %>
         </div>
       </div>
     <% end %>

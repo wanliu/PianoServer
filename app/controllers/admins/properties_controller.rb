@@ -14,7 +14,7 @@ class Admins::PropertiesController < Admins::BaseController
     if @property.save
       redirect_to admins_products_path
     else
-      flash[:error] = @property.errors.full_messages.join(', ')
+      flash.now[:error] = @property.errors.full_messages.join(', ')
       render :new, status: :unprocessable_entity
     end
   end
@@ -23,7 +23,7 @@ class Admins::PropertiesController < Admins::BaseController
     if @property.update(property_params)
       redirect_to admins_products_path
     else
-      flash[:error] = @property.errors.full_messages.join(', ')
+      flash.now[:error] = @property.errors.full_messages.join(', ')
       render :edit, status: :unprocessable_entity
     end
   end
