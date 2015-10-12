@@ -23,10 +23,19 @@ module BootstrapHelper
   end
 
   def group_with_errors(object, name, helper)
-    valid = object.errors[name].present?
+    error = object.errors[name]
+    error_name = t('attributes.' + name.to_s)
+    valid = error.present?
+    label_content = helper.label name, class: "col-sm-2 control-label" do
+      if valid
+        "#{error_name}<div class=\"error-tip\">#{error_name}#{error.join(' ')}</div>"
+      else
+        "#{error_name}"
+      end.html_safe
+    end
 
     s "<div class=\"form-group#{" has-error has-feedback" if valid}\">"
-      s "#{helper.label name, class: "col-sm-2 control-label"}"
+      s "#{label_content}"
       s "<div class=\"col-sm-10\">"
         s "#{yield}"
         s "#{error_block if valid}"
