@@ -63,6 +63,40 @@ class Category < ActiveRecord::Base
     end]
   end
 
+  def item_desc
+    lookup_path = item_desc_lookup_path
+
+    if lookup_path.present?
+      File.read(lookup_path)
+    else
+      ""
+    end
+  end
+
+  def item_desc=(content)
+    unless File.exist? item_desc_dir
+      FileUtils.mkdir_p item_desc_dir
+    end
+
+    File.write item_desc_path, content
+  end
+
+  def item_desc_lookup_path
+    cate_with_template = path.reverse_order.find do |cate|
+      File.exists? cate.item_desc_path
+    end
+
+    cate_with_template.item_desc_path if cate_with_template.present?
+  end
+
+  def item_desc_path
+    "#{item_desc_dir}/#{id}.txt"
+  end
+
+  def item_desc_dir
+    "#{Rails.root}/.sites/system/category_item_descriptions"
+  end
+
   def inhibit_count
     Category.joins(:properties).where("categories_properties.category_id = ? and categories_properties.state = 1", id).count
   end

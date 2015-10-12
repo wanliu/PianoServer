@@ -72,4 +72,8 @@ class Item < ActiveRecord::Base
   def cover_url
     image.url(:cover)
   end
+
+  def description_lookup
+    description || category.try(:item_desc)
+  end
 end
