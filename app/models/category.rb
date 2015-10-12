@@ -49,17 +49,25 @@ class Category < ActiveRecord::Base
 
   def definition_properties
     @defintion_properties ||= HashEx[with_upper_properties.map do |property|
-      [property.name, {
+      _hash = {
         name: property.name,
         title: property.title,
         type: property.prop_type,
-        unit_type: property.unit_type,
-        unit_id: property.unit_id,
-        default: property.data.try(:[], "default"),
-        validates: property.data.try(:[], "validate_rules"),
         value: property.data.try(:[], "value"),
-        map: property.data.try(:[], "map")
-      }]
+      }
+
+      _hash["unit_type"] = property.data["unit_type"] if property.data.try :has_key?, "unit_type"
+      _hash["unit_id"] = property.data["unit_id"] if property.data.try :has_key?, "unit_id"
+      _hash["default"] = property.data["default"] if property.data.try :has_key?, "default"
+      _hash["validates"] = property.data["validate_rules"] if property.data.try :has_key?, "validate_rules"
+
+      case property.prop_type
+      when "map"
+        _hash["map"] = property.data["map"]
+        _hash["group"] = property.data["group"] if property.data.try :has_key?, "group"
+      end
+
+      [property.name, _hash]
     end]
   end
 

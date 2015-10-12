@@ -23,22 +23,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
       shop_category_root.children
     end
 
-    # respond_to do |format|
-    #   format.json { render :index }
-    #   format.html { render :index }
-    # end
-    # render :index, formats: [ :json ]
-    # render json: {categories: @categories.as_json(methods: [:is_leaf]), items: @items }
   end
-
-  # def index
-  #   @items = Item.with_shop(@shop.id)
-  #                .with_category(query_params[:category_id])
-  #                .with_query(query_params[:q])
-  #                .page(query_params[:page])
-
-  #   # @categories = shop_category_root.children
-  # end
 
   def new
     redirect_to new_step1_shopitems_path(@shop.name)
@@ -57,38 +42,74 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
   def new_step2
     @title = "创建自己的商品"
     @item = Item.new(category_id: @category.id, shop_id: @shop.id)
-    @properties = @category.with_upper_properties
+    @properties = normal_properties(@category.with_upper_properties)
+    @inventory_properties = inventory_properties(@category.with_upper_properties)
   end
 
   def create
     @title = "创建自己的商品"
-    @properties = @category.with_upper_properties
+    @properties = normal_properties(@category.with_upper_properties)
+    @inventory_properties = inventory_properties(@category.with_upper_properties)
     prop_params = properties_params(@properties)
     @item = Item.new item_basic_params.merge(shop_id: @shop.id) do |item|
       item.properties ||= {}
 
-      @properties.each do |prop|
-        config = item.properties[prop.name] = {
-          title: prop.title,
-          type: prop.prop_type,
-          unit_id: prop.unit_id,
-          unit_type: prop.unit_type
-        }
-
-        if prop.prop_type == "map"
-          config["map"] = prop.data["map"]
-        end
-        config["value"] = prop_params["property_#{prop.name}"]
+      prop_params.each do |prop_name, value|
+        item.send("#{prop_name}=", value)
       end
 
       item.send(:write_attribute, :images, params[:item][:filenames].split(','))
-      item.save
     end
 
-    @item = Item.new(category_id: @category.id, shop_id: @shop.id) if @item.valid?
+    if @item.save
+      if params[:submit] == "create_and_continue"
+        @item = Item.new(category_id: @category.id, shop_id: @shop.id)
+        flash.now[:notice] = t(:create, scope: "flash.notice.controllers.items.create")
+        render :new_step2
+      else
+        redirect_to shop_admin_items_path(@shop.name), notice: t(:create, scope: "flash.notice.controllers.items.create")
+      end
+    else
+      flash.now[:error] = t(:create, scope: "flash.error.controllers.items")
+      render :new_step2
+    end
+  end
 
-    flash[:notice] = t("notices.controllers.items.create")
-    render :new_step2
+  def update
+    @category = @item.category
+    @breadcrumb = @category.ancestors
+    @properties = normal_properties(@category.with_upper_properties)
+    @inventory_properties = inventory_properties(@category.with_upper_properties)
+
+    if params[:item][:filenames].present?
+      @item.send(:write_attribute, :images, params[:item][:filenames].split(','))
+    end
+
+    item_basic_params.each do |k , v|
+      @item.send("#{k}=", v)
+    end
+
+    prop_params = properties_params(@properties)
+
+    @item.properties ||= {}
+
+    prop_params.each do |prop_name, value|
+      @item.send("#{prop_name}=", value)
+    end
+
+    if @item.save
+      redirect_to shop_admin_items_path(@shop.name), notice: t(:update, scope: "flash.notice.controllers.items")
+    else
+      flash.now[:error] = t(:update, scope: "flash.error.controllers.items")
+      render :edit
+    end
+  end
+
+  def edit
+    @category = @item.category
+    @breadcrumb = @category.ancestors
+    @properties = normal_properties(@category.with_upper_properties)
+    @inventory_properties = inventory_properties(@category.with_upper_properties)
   end
 
   def upload_image
@@ -96,28 +117,6 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     uploader.store! params[:file]
 
     render json: { success: true, url: uploader.url(:cover)  , filename: uploader.filename }
-  end
-
-  def edit
-    @category = @item.category
-    @breadcrumb = @category.ancestors
-    @properties = @category.with_upper_properties
-  end
-
-  def update
-    @category = @item.category
-    @breadcrumb = @category.ancestors
-    @properties = @category.with_upper_properties
-
-    if params[:item][:filenames].present?
-      @item.send(:write_attribute, :images, params[:item][:filenames].split(','))
-    end
-
-    if @item.update_attributes(item_basic_params)
-      redirect_to shop_admin_items_path(@shop.name)
-    else
-      render :edit
-    end
   end
 
   def change_sale_state
@@ -153,9 +152,16 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     _params
   end
 
-
   def properties_params(properties)
     params.require(:item).slice(*properties.map{ |prop| "property_#{prop.name}" })
+  end
+
+  def normal_properties(properties)
+    properties.reject { |prop| prop.data.try(:[], "group") }
+  end
+
+  def inventory_properties(properties)
+    properties.select { |prop| prop.data.try(:[], "group") }
   end
 
   def set_category

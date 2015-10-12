@@ -48,7 +48,7 @@ class PropertiesValidator < ActiveModel::EachValidator
   # resolve_type_of_validator 返回属性类型的验证类型
   def resolve_type_of_validator(type)
     case type
-    when "string", "boolean"
+    when "string"
       "presence"
     when "integer", "float", "number"
       "numericality"
