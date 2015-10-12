@@ -141,10 +141,14 @@ module Shops::Admin::ItemHelper
 
   def collection_check_box_map(set, object, name)
     set.map do |key, title|
-      item_check = object.send(name)[key]["check"]
-      item_title = object.send(name)[key]["title"] || title
+      item_check = check_options(object, name, key)["check"] || true
+      item_title = check_options(object, name, key)["title"] || title
       OrderStruct.new key: key, check: item_check, title: item_title
     end
+  end
+
+  def check_options(object, name, key)
+    (object.send(name) || {})[key] || {}
   end
 end
 
