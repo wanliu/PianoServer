@@ -36,7 +36,7 @@
     <%= f.select :prop_type, property.prop_types, {}, {class: 'form-control'} %>
   </div>
 
-  <div class="form-group map-pairs-editing <%= property.prop_type == 'map' ? '' : 'hidden' %>">
+  <div class="form-group map-pairs-editing <%= property.map_type? ? '' : 'hidden' %>">
     <%= f.label :map_values, "map类型编辑" %> <button class='btn btn-default add-map-pair' roll='button' type='button'>添加键值对</button>
     <% index = 0 %>
     <% property.map_pairs.each do |key, value| %>
@@ -82,7 +82,8 @@
     });
 
     $('select[name="property[prop_type]"]').change(function (e) {
-      if ($(this).val() == 'map') {
+      var type = $(this).val();
+      if ( type == "sale_map" ||  type == "stock_map") {
         $('.map-pairs-editing').removeClass('hidden');
       } else {
         $('.map-pairs-editing').addClass('hidden');
