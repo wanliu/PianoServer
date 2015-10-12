@@ -237,6 +237,7 @@ zh-CN:
     dashboard: 面板
   actions:
     new: 新增
+    new_step2: 创建
     index: ''
     edit: 编辑
     show: 显示

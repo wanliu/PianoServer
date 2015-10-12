@@ -13,8 +13,8 @@
 //= require jquery
 //= require jquery.turbolinks
 //= require jquery_ujs
-//= require es5-shim/es5-shim-min
-//= require es5-shim/es5-sham-min
+//= require lib/es5-shim
+//= require lib/lib/es5-sham
 //= require data-confirm-modal
 //= require jquery-ui/core
 //= require jquery-ui/widget
