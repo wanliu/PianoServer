@@ -82,6 +82,8 @@ Rails.application.routes.draw do
           get :show_inhibit
           get :hide_inhibit
           get :children
+          post :write_item_desc
+          get :read_item_desc
         end
       end
     end

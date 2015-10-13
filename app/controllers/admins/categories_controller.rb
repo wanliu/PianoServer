@@ -1,6 +1,6 @@
 class Admins::CategoriesController < Admins::BaseController
   before_action :get_industry
-  before_action :get_category, only: [:properties, :add_property, :update_property, :remove_property, :show_inhibit, :hide_inhibit, :children, :edit]
+  before_action :get_category, only: [:properties, :add_property, :update_property, :remove_property, :show_inhibit, :hide_inhibit, :children, :edit, :write_item_desc, :read_item_desc]
   before_action :get_property, only: [:add_property, :update_property, :remove_property]
 
   respond_to :js, only: [:new_property]
@@ -23,6 +23,16 @@ class Admins::CategoriesController < Admins::BaseController
 
   def category_edit
 
+  end
+
+  def write_item_desc
+    @category.item_desc = params[:template]
+
+    render json: {}, status: :ok
+  end
+
+  def read_item_desc
+    render json: {template: @category.item_desc}, status: :ok
   end
 
   def show_inhibit
