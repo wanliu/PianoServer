@@ -1,4 +1,6 @@
 module Shops::Admin::ItemHelper
+  COLORS_GROUP = %w(primary success info warning danger default)
+
   def new_step1_shopitems_path(*args)
     new_step1_shop_admin_items_path(*args)
   end
@@ -125,6 +127,10 @@ module Shops::Admin::ItemHelper
     raw "<div class=\"row\">#{output}</div>"
   end
 
+  def label_color(name)
+    "label-#{COLORS_GROUP[name.each_byte.to_a.sum %  6]}"
+  end
+
   private
 
   def collection_options_for_map(map)
@@ -141,10 +147,14 @@ module Shops::Admin::ItemHelper
 
   def collection_check_box_map(set, object, name)
     set.map do |key, title|
-      item_check = object.send(name)[key]["check"]
-      item_title = object.send(name)[key]["title"] || title
+      item_check = check_options(object, name, key)["check"] || true
+      item_title = check_options(object, name, key)["title"] || title
       OrderStruct.new key: key, check: item_check, title: item_title
     end
+  end
+
+  def check_options(object, name, key)
+    (object.send(name) || {})[key] || {}
   end
 end
 

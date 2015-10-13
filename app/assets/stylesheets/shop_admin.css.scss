@@ -5,6 +5,7 @@
  *= require _common/fileuploader
  *= require _common/checkbox
  *= require lib/tablesaw
+ *= require lib/range 
  *= require ./chats/chat-item
  *= require_tree ./shop_admin
  *= require_self

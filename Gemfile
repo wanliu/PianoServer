@@ -1,4 +1,4 @@
-source 'http://ruby.taobao.org'
+source 'https://ruby.taobao.org'
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -8,17 +8,19 @@ gem "rails-api"
 # Use sqlite3 as the database for Active Record
 gem 'pg'
 # Use SCSS for stylesheets
-gem 'sass-rails', '5.0.3'
+# gem 'sass-rails', '5.0.3'
+gem 'sassc-rails'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.1.0'
-gem "therubyracer", :platforms => :ruby
+# gem "therubyracer", :platforms => :ruby
 
 gem 'jbuilder', '~> 2.0'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
+# gem "libv8"
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
@@ -29,7 +31,7 @@ gem 'turbolinks'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
 
-gem "less-rails" #Sprockets (what Rails 3.1 uses for its asset pipeline) supports LESS
+# gem "less-rails" #Sprockets (what Rails 3.1 uses for its asset pipeline) supports LESS
 gem 'bootstrap-sass', '~> 3.3.5'
 gem 'nprogress-rails'
 gem 'momentjs-rails', '>= 2.9.0'
@@ -38,7 +40,6 @@ gem 'ace-rails-ap'
 gem 'best_in_place', '~> 3.0.1'
 gem 'bootsy'
 gem 'jquery-turbolinks'
-gem 'es5-shim-rails'
 gem 'photoswipe-rails', '~> 4.1.0'
 
 gem 'activeresource'
@@ -111,7 +112,7 @@ group :development, :test do
 
   gem 'rspec-rails', '~> 3.0'
   gem 'i18n-debug' if ENV['I18N_DEBUG']
-  gem 'quiet_assets'
+  gem 'quiet_assets' if ENV['ENABLE_ASSETS_LOG']
 
   gem 'factory_girl_rails'
   gem 'thin'
