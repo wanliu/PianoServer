@@ -61,7 +61,6 @@ class ChatsController < ApplicationController
       .where(supplier_id: @shop.id, buyer_id: current_anonymous_or_user.id)
       .first_or_initialize({})
 
-    pp @order
     @order.update_attributes({
       title: @item.title,
       bid: Order.last_bid(current_anonymous_or_user.id) + 1
