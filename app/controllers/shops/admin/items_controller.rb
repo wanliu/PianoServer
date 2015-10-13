@@ -16,6 +16,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
                  .with_category(query_params[:category_id])
                  .with_query(query_params[:q])
                  .page(query_params[:page])
+                 .order(id: :desc)
 
     @categories = if params[:category_id].present?
       ShopCategory.where(parent_id: params[:category_id])
@@ -121,7 +122,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
   end
 
   def change_sale_state
-    if @item.update_attributes(item_state_param)
+    if @item.update_attribute(item_state_param)
       render json: { success: true }
     else
       render json: @item.errors, status: :unprocessable_entity
