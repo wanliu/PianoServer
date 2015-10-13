@@ -45,7 +45,7 @@ module CombinationHash
 	def each_combine_hash(arrs, level = 0, args = {}, results = [], &block)
 		arrs[level].each do |key, values|
 			values.each do |id, value|
-				hash = Hash[key, value]
+				hash = Hash[key, id]
 				if level < arrs.length - 1 
 					each_combine_hash(arrs, level + 1, args.merge(hash), results, &block )
 				else

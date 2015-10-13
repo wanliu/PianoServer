@@ -54,6 +54,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     @title = "创建自己的商品"
     @properties = normal_properties(@category.with_upper_properties)
     @inventory_properties = inventory_properties(@category.with_upper_properties)
+
     prop_params = properties_params(@properties)
     @item = Item.new item_basic_params.merge(shop_id: @shop.id) do |item|
       item.properties ||= {}
@@ -64,6 +65,9 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
 
       item.send(:write_attribute, :images, params[:item][:filenames].split(','))
     end
+
+    pp params["inventories"] # remove for production
+    @inventory_combination = combination_properties(@item, @inventory_properties)
 
     if @item.save
       if params[:submit] == "create_and_continue"
@@ -115,6 +119,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     @properties = normal_properties(@category.with_upper_properties)
     @inventory_properties = inventory_properties(@category.with_upper_properties)
     @inventory_combination = combination_properties(@item, @inventory_properties)
+
   end
 
   def upload_image
@@ -185,24 +190,17 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
 
   def combination_properties(item, properties)
     props = format_hash(item, properties)
-    pp props
     hash = combination_hash(*props) do |*args|
       Hash[*args]
-    end
+    end    
+    hash
   end
 
   def format_hash(item, properties)
     props = properties.map do |_prop|
-      item_config(item, _prop)
-      # prop = item.send("property_#{_prop.name}") || _prop.data["map"]
-      # hash = {}
-      # values = prop.select do |key, value|
-      #   checked = (value || {})["check"]
-      #   checked == "1" or checked == 1 or checked == true
-      # end.each do |key, value|
-      #   hash[key] = (value || {})["title"]
-      # end
-      # Hash[_prop.title, hash]
+      item_config(item, _prop) do |prop, hash|
+        Hash[prop, hash]
+      end
     end
   end
 
@@ -221,6 +219,6 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
       hash = prop.data["map"]
     end
 
-    Hash[prop.title, hash]      
+    yield prop, hash if block_given?
   end
 end

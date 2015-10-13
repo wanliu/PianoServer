@@ -39,6 +39,10 @@ class Property < ActiveRecord::Base
     map_data[DATA_KEY_MAP] || {}
   end
 
+  def title_of(value)
+    map_pairs[value]
+  end
+
   # FROM: "map_pairs"=>{"keys"=>{"0"=>"a"}, "values"=>{"0"=>"2"}}}
   # TO:   data: { map : {"a": "2"}}
   def map_pairs=(hash)
