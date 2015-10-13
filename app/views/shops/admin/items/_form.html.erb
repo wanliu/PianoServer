@@ -12,7 +12,7 @@
   <div class="panel-body">
     <% path_method = @item.persisted? ? :shop_admin_item_path : :new_step2_shopitems_path %>
     <% url = send(path_method, @shop.name, @item, category_id: @category ) %>
-    <%= form_for @item, url: url, html: { class: "form-horizontal" } do |f| %>
+    <%= form_for @item, url: url, html: { class: "form-horizontal item-form" } do |f| %>
       <%= f.hidden_field :filenames %>
 
       <!-- 错误显示 -->
@@ -83,7 +83,6 @@
 
         <!-- 枚举全部属性 -->
         <% @properties.each do |property| %>
-
           <% group_with_property_errors @item, property, f do %>
             <%= property_edit @item, property %>
           <% end %>
@@ -93,17 +92,22 @@
 
           <hr />
           <!-- 枚举库存属性  -->
+          <div class="inventory_properties">
+
           <% @inventory_properties.each do |property| %>
             <% group_with_property_errors @item, property, f do %>
               <%= property_edit @item, property %>
             <% end %>
           <% end %>
 
+          </div>
           <hr />
-          <!-- 库存设置 -->
-          <%= render partial: "inventory_form", locals: {builder: f} %>
         <% end %>
 
+        <!-- 库存设置 -->
+        <div class="inventory_settings" >
+        <%= render partial: "inventory_form", locals: {builder: f} %>
+        </div>
       <% end %>
 
       <!-- 详情 -->
@@ -132,4 +136,16 @@
   var url = '<%= upload_image_shop_admin_items_path(@shop.name) %>';
 
   new NewItemPosters($('.new-item-poster'), url, $('input#item_filenames'));
+
+  $(".inventory_properties .check-inventory").change(function(e) {
+    var url = "<%= sa_item_inventory_config_path(@shop.name, @item) %>";
+    $.ajax({ 
+      url: url,
+      type: 'PUT', 
+      data: $('.item-form').serialize()
+    }).then(function(data) {
+      $(".inventory_settings").hide().html(data).fadeIn("highlight");
+    });
+  })
+
 </script

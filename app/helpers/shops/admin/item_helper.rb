@@ -115,7 +115,7 @@ module Shops::Admin::ItemHelper
           <div class="#{item_class}" >
             <div class="input-group">
               <label class="input-group-addon">
-                #{sub.check_box :check}
+                #{sub.check_box :check, class: 'check-inventory'}
               </label>
               #{sub.text_field :title, class: 'form-control'}
             </div>
@@ -129,6 +129,11 @@ module Shops::Admin::ItemHelper
 
   def label_color(name)
     "label-#{COLORS_GROUP[name.each_byte.to_a.sum %  6]}"
+  end
+
+  def sa_item_inventory_config_path(shop_name, item)
+    method_name =  item.persisted? ? :shop_admin_item_path : :shop_admin_items_path
+    File.join send(method_name, shop_name, item), "inventory_config"
   end
 
   private

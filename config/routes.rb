@@ -176,11 +176,13 @@ Rails.application.routes.draw do
           get "/new/step2/category/:category_id", to: "items#new_step2", as: :with_category
           post "/new/step2/category/:category_id", to: "items#create"
           post "/upload_image", to: "items#upload_image"
+          put "/inventory_config", to: "items#inventory_config"
         end
 
         member do
           post "/upload_image", to: "items#upload_image"
           put "/change_sale_state", to: "items#change_sale_state"
+          put "/inventory_config", to: "items#inventory_config"
         end
       end
 

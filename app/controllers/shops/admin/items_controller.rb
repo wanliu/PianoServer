@@ -48,7 +48,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     @properties = normal_properties(@category.with_upper_properties)
     @inventory_properties = inventory_properties(@category.with_upper_properties)
 
-    if Settings.dev.feature.inventory_combination 
+    if Settings.dev.feature.inventory_combination and @inventory_properties.present?
       @inventory_combination = combination_properties(@item, @inventory_properties)
     end
   end
@@ -69,8 +69,12 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
       item.send(:write_attribute, :images, params[:item][:filenames].split(','))
     end
 
-    if Settings.dev.feature.inventory_combination 
+    if Settings.dev.feature.inventory_combination and @inventory_properties.present?
       @inventory_combination = combination_properties(@item, @inventory_properties)
+    end
+
+    if Rails.env.development?
+      pp params["inventories"]
     end
 
     if @item.save
@@ -92,9 +96,14 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     @breadcrumb = @category.ancestors
     @properties = normal_properties(@category.with_upper_properties)
     @inventory_properties = inventory_properties(@category.with_upper_properties)
-    if Settings.dev.feature.inventory_combination 
+
+    if Settings.dev.feature.inventory_combination and @inventory_properties.present?
       @inventory_combination = combination_properties(@item, @inventory_properties)
     end
+
+    if Rails.env.development?
+      pp params["inventories"]
+    end    
 
     if params[:item][:filenames].present?
       @item.send(:write_attribute, :images, params[:item][:filenames].split(','))
@@ -125,9 +134,28 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     @breadcrumb = @category.ancestors
     @properties = normal_properties(@category.with_upper_properties)
     @inventory_properties = inventory_properties(@category.with_upper_properties)
-    if Settings.dev.feature.inventory_combination 
+    if Settings.dev.feature.inventory_combination and @inventory_properties.present?
       @inventory_combination = combination_properties(@item, @inventory_properties)
     end
+  end
+
+  def inventory_config
+    @item = Item.new(item_basic_params)
+    @category = @item.category
+    @inventory_properties = inventory_properties(@category.with_upper_properties)
+    @item.properties ||= {}
+
+    prop_params = properties_params(@inventory_properties)
+
+    prop_params.each do |prop_name, value|
+      @item.send("#{prop_name}=", value)
+    end
+
+    if Settings.dev.feature.inventory_combination and @inventory_properties.present?
+      @inventory_combination = combination_properties(@item, @inventory_properties)
+    end
+
+    render partial: "inventory_form", layout: false
   end
 
   def upload_image
