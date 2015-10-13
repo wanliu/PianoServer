@@ -7,7 +7,7 @@ class ChatsController < ApplicationController
   # before_action :set_page_info, only: [:show]
 
   def index
-    @chats = Chat.in(current_anonymous_or_user.id).reverse
+    @chats = Chat.in(current_anonymous_or_user.id).reverse_order
     # @chats = current_anonymous_or_user.chats
   end
 
