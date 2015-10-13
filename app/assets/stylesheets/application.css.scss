@@ -118,6 +118,8 @@ footer {
   }
 
   .navbar-responsive-collapse.collapse.in {
+    overflow: visible;
+
     .navbar-right {
       position: absolute;
       right: 20px;
@@ -132,9 +134,9 @@ footer {
   .navbar-responsive-collapse.collapsing {
     position: absolute;
     top: 49px;
-    right: 35px;
+    right: 20px;
     width: 150px;
-    max-height: 400px;
+    // max-height: 400px;
     height: auto;
     background-color: white;
     padding: 0px;
