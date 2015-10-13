@@ -15,10 +15,12 @@
 
       <!-- 错误显示 -->
       <% if @item.errors.any? %>
-      <div class="list-group col-sm-offset-2 col-sm-10">
-        <% @item.errors.full_messages.each do |msg| %>
-          <a href="#" class="list-group-item list-group-item-danger"><%= msg %></a>
-        <% end %>
+      <div class="row">
+        <ul class="col-sm-offset-2 col-sm-10">
+          <% @item.errors.full_messages.each do |msg| %>
+            <li class="list-group-item list-group-item-danger"><%= msg %></li>
+          <% end %>
+        </ul>
       </div>
       <% end %>
 
