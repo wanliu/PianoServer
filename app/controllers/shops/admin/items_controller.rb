@@ -47,6 +47,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     @item = Item.new(category_id: @category.id, shop_id: @shop.id)
     @properties = normal_properties(@category.with_upper_properties)
     @inventory_properties = inventory_properties(@category.with_upper_properties)
+    @inventory_combination = combination_properties(@item, @inventory_properties)
   end
 
   def create
@@ -184,22 +185,42 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
 
   def combination_properties(item, properties)
     props = format_hash(item, properties)
+    pp props
     hash = combination_hash(*props) do |*args|
       Hash[*args]
     end
- end
+  end
 
   def format_hash(item, properties)
     props = properties.map do |_prop|
-      prop = item.send("property_#{_prop.name}") || {}
-      hash = {}
-      values = prop.select do |key, value|
+      item_config(item, _prop)
+      # prop = item.send("property_#{_prop.name}") || _prop.data["map"]
+      # hash = {}
+      # values = prop.select do |key, value|
+      #   checked = (value || {})["check"]
+      #   checked == "1" or checked == 1 or checked == true
+      # end.each do |key, value|
+      #   hash[key] = (value || {})["title"]
+      # end
+      # Hash[_prop.title, hash]
+    end
+  end
+
+  def item_config(item, prop)
+    config = item.send("property_#{prop.name}")
+    hash = {}
+
+    if !config.blank?
+      config.select do |key, value|
         checked = (value || {})["check"]
         checked == "1" or checked == 1 or checked == true
       end.each do |key, value|
         hash[key] = (value || {})["title"]
       end
-      Hash[_prop.title, hash]
+    else
+      hash = prop.data["map"]
     end
+
+    Hash[prop.title, hash]      
   end
 end

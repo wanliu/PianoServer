@@ -1,0 +1,25 @@
+<div class="form-group">
+  <label class="col-sm-2 control-label" >库存设置</label>
+  <div class="col-sm-10">
+    <div class="row">
+      <% @inventory_combination.each do |item| %>
+        <%= fields_for "inventories[]", item do |f| %>
+          <div class="col-md-6 col-sm-12">
+            <div class="input-group" >
+              <span class="input-group-addon"> 
+                <% item.each_with_index do |arr, index| %>
+                  <%#= f.hidden_field :name %>
+                  <% title, value = *arr %>
+                  <%= title %>
+                  <span class="label <%= label_color(value) %>"><%= value %></span>
+                <% end %>
+                <!-- <input type="range" class="form-control" placeholder="库存" aria-describedby="basic-addon1"> -->
+              </span>
+              <input type="number" class="form-control" placeholder="库存" >
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>
