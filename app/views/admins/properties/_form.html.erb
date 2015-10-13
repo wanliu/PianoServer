@@ -70,6 +70,7 @@
 
     var index = <%= property.map_pairs.keys.length %>;
     var template = _.template($('#map-pair-tempalte').html());
+    var mapTypes = <%= raw Property::MAP_TYPES.to_json %>;
 
     $('button.add-map-pair').click(function (e) {
       var html = template({index: index});
@@ -83,7 +84,7 @@
 
     $('select[name="property[prop_type]"]').change(function (e) {
       var type = $(this).val();
-      if ( type == "sale_map" ||  type == "stock_map") {
+      if (~mapTypes.indexOf(type)) {
         $('.map-pairs-editing').removeClass('hidden');
       } else {
         $("#property_is_group_false").prop("checked", true);
