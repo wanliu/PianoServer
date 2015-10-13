@@ -1,11 +1,13 @@
 class Property < ActiveRecord::Base
 
+
   DATA_KEY_MAP = "map"
   DATA_KEY_GROUP = "group"
   DATA_KEY_DEFAULT = "default_value"
   DATA_KEY_VALIDATE = "validate_rules"
 
-  PROP_TYPES = ["string", "integer", "number", "float", "date", "boolean", DATA_KEY_MAP]
+  MAP_TYPES = %w(sale_map stock_map)
+  PROP_TYPES = %w(string integer number float date boolean) + MAP_TYPES
 
   VALIDATE_MELPERS = %w(acceptance confirmation exclusion format inclusion length numericality presence absence uniqueness)
 
@@ -23,6 +25,14 @@ class Property < ActiveRecord::Base
   validates :name, uniqueness: true
 
   validate :validate_rules_json_format
+
+  def self.map_type?(type)
+    MAP_TYPES.include? type
+  end
+
+  def map_type?
+    self.class.map_type? prop_type
+  end
 
   def map_pairs
     map_data = data || {}

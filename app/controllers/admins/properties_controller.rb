@@ -41,7 +41,7 @@ class Admins::PropertiesController < Admins::BaseController
 
     def property_params
       params.require(:property).permit(:name, :title, :unit_id, :prop_type, :is_group, :default_value, :validate_rules).tap do |whitelisted|
-        if params[:property][:prop_type] == Property::DATA_KEY_MAP
+        if Property.map_type? params[:property][:prop_type]
           whitelisted[:map_pairs] =  params[:property][:map_pairs]
         end
       end

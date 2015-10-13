@@ -108,7 +108,7 @@
 
       <!-- 详情 -->
       <% group_with_errors @item, :description, f do %>
-        <%= f.bootsy_area :description, class: "form-control", rows: 12 %>
+        <%= f.bootsy_area :description, class: "form-control", rows: 12, value: @item.description_lookup %>
       <% end %>
 
       <!-- 隐藏字段 -->
