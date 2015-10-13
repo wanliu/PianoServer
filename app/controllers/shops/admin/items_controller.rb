@@ -47,7 +47,10 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     @item = Item.new(category_id: @category.id, shop_id: @shop.id)
     @properties = normal_properties(@category.with_upper_properties)
     @inventory_properties = inventory_properties(@category.with_upper_properties)
-    @inventory_combination = combination_properties(@item, @inventory_properties)
+
+    if Settings.dev.feature.inventory_combination 
+      @inventory_combination = combination_properties(@item, @inventory_properties)
+    end
   end
 
   def create
@@ -66,8 +69,9 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
       item.send(:write_attribute, :images, params[:item][:filenames].split(','))
     end
 
-    pp params["inventories"] # remove for production
-    @inventory_combination = combination_properties(@item, @inventory_properties)
+    if Settings.dev.feature.inventory_combination 
+      @inventory_combination = combination_properties(@item, @inventory_properties)
+    end
 
     if @item.save
       if params[:submit] == "create_and_continue"
@@ -88,6 +92,9 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     @breadcrumb = @category.ancestors
     @properties = normal_properties(@category.with_upper_properties)
     @inventory_properties = inventory_properties(@category.with_upper_properties)
+    if Settings.dev.feature.inventory_combination 
+      @inventory_combination = combination_properties(@item, @inventory_properties)
+    end
 
     if params[:item][:filenames].present?
       @item.send(:write_attribute, :images, params[:item][:filenames].split(','))
@@ -118,8 +125,9 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     @breadcrumb = @category.ancestors
     @properties = normal_properties(@category.with_upper_properties)
     @inventory_properties = inventory_properties(@category.with_upper_properties)
-    @inventory_combination = combination_properties(@item, @inventory_properties)
-
+    if Settings.dev.feature.inventory_combination 
+      @inventory_combination = combination_properties(@item, @inventory_properties)
+    end
   end
 
   def upload_image
