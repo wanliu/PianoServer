@@ -1,4 +1,6 @@
 module Shops::Admin::ItemHelper
+  COLORS_GROUP = %w(primary success info warning danger default)
+
   def new_step1_shopitems_path(*args)
     new_step1_shop_admin_items_path(*args)
   end
@@ -123,6 +125,10 @@ module Shops::Admin::ItemHelper
     end.join
 
     raw "<div class=\"row\">#{output}</div>"
+  end
+
+  def label_color(name)
+    "label-#{COLORS_GROUP[name.each_byte.to_a.sum %  6]}"
   end
 
   private

@@ -1,6 +1,9 @@
+require 'combination_hash'
+
 class Shops::Admin::ItemsController < Shops::Admin::BaseController
   include Shops::Admin::ItemHelper
   include ActionView::Helpers::SanitizeHelper
+  include CombinationHash
 
   respond_to :json, :html
 
@@ -89,7 +92,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
       @item.send("#{k}=", v)
     end
 
-    prop_params = properties_params(@properties)
+    prop_params = properties_params(@properties + @inventory_properties)
 
     @item.properties ||= {}
 
@@ -110,6 +113,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     @breadcrumb = @category.ancestors
     @properties = normal_properties(@category.with_upper_properties)
     @inventory_properties = inventory_properties(@category.with_upper_properties)
+    @inventory_combination = combination_properties(@item, @inventory_properties)
   end
 
   def upload_image
@@ -174,5 +178,28 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
 
   def set_item
     @item = Item.find(params[:id])
+  end
+
+  private
+
+  def combination_properties(item, properties)
+    props = format_hash(item, properties)
+    hash = combination_hash(*props) do |*args|
+      Hash[*args]
+    end
+ end
+
+  def format_hash(item, properties)
+    props = properties.map do |_prop|
+      prop = item.send("property_#{_prop.name}") || {}
+      hash = {}
+      values = prop.select do |key, value|
+        checked = (value || {})["check"]
+        checked == "1" or checked == 1 or checked == true
+      end.each do |key, value|
+        hash[key] = (value || {})["title"]
+      end
+      Hash[_prop.title, hash]
+    end
   end
 end
