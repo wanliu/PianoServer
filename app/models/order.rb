@@ -84,7 +84,7 @@ class Order < ActiveRecord::Base
         owner.create_status state: :pending
 
         proxy_association.create({
-          title: shop_product.name,
+          title: shop_product.title,
           price: shop_product.price,
           amount: shop_product.try(:amount) || MIN_AMOUNT,
           item_type: 'product',
