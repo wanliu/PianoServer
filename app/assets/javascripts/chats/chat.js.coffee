@@ -348,10 +348,10 @@ class @Chat
     if !@_isOwnMessage(message) && (@_checkChatContentIsOverlayed() || !isVisible)
       @_insertBubbleTip(message)
 
-    if @_checkChatContentIsOverlayed() || (isVisible && @options.isMessageScroll)
-      @autoScroll(direction)
+    # if @_checkChatContentIsOverlayed() || (isVisible && @options.isMessageScroll)
+    #   @autoScroll(direction)
 
-    #@autoScroll(direction) if @options.isMessageScroll
+    @autoScroll(direction) if @options.isMessageScroll
 
   _insertGreetingMessage: () ->
     if @greetings?
@@ -368,7 +368,7 @@ class @Chat
     for message in messages
       @_insertItemMessage(message, 'up')
 
-    # @autoScroll(direction) if @options.isMessageScroll
+    @autoScroll(direction) if @options.isMessageScroll
 
   _checkIsVisible: (isInsert) ->
     $inner = @$chatContainer.find('.chat-inner')
