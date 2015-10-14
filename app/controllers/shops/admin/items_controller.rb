@@ -50,6 +50,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
 
     if Settings.dev.feature.inventory_combination and @inventory_properties.present?
       @inventory_combination = combination_properties(@item, @inventory_properties)
+      @stocks_with_index = []
     end
   end
 
@@ -76,6 +77,9 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     if Rails.env.development?
       pp params["inventories"]
     end
+
+    stock_options = params["inventories"] || params["inventory"]
+    @item.build_stocks(current_user, stock_options)
 
     if @item.save
       if params[:submit] == "create_and_continue"
@@ -121,6 +125,16 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
       @item.send("#{prop_name}=", value)
     end
 
+    stock_options = params["inventories"] || params["inventory"]
+
+    if stock_options.present?
+      @item.adjust_stocks(current_user, stock_options)
+    else
+      flash.now[:error] = "库存设置错误，请正确填写"
+      render :edit
+      return
+    end
+
     if @item.save
       redirect_to shop_admin_items_path(@shop.name), notice: t(:update, scope: "flash.notice.controllers.items")
     else
@@ -134,9 +148,13 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     @breadcrumb = @category.ancestors
     @properties = normal_properties(@category.with_upper_properties)
     @inventory_properties = inventory_properties(@category.with_upper_properties)
+
     if Settings.dev.feature.inventory_combination and @inventory_properties.present?
       @inventory_combination = combination_properties(@item, @inventory_properties)
+      @stocks_with_index = @item.stocks_with_index
     end
+
+    @stock = @item.stock_changes.sum(:quantity)
   end
 
   def inventory_config

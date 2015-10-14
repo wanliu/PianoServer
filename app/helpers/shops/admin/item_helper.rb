@@ -29,7 +29,7 @@ module Shops::Admin::ItemHelper
       date_picker object_name, property_name
     when "datetime"
       date_picker object_name, property_name
-    when "map"
+    when "stock_map", "sale_map"
       multi_set_select_and_title object, property_name, property
     else
       text_field object_name, property_name, class: 'form-control'
