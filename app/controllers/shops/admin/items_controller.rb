@@ -192,10 +192,8 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
   end
 
   def item_basic_params
-    _params = params.require(:item).permit(:name, :title, :brand_id, :images, :price, :public_price,
+    params.require(:item).permit(:name, :title, :brand_id, :images, :price, :public_price,
       :income_price, :shop_category_id, :category_id, :description)
-    _params[:description] = sanitize _params[:description], tags: %w(script), attributes: %w(href)
-    _params
   end
 
   def properties_params(properties)
