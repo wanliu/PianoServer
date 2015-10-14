@@ -122,7 +122,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
   end
 
   def change_sale_state
-    if @item.update_attribute(item_state_param)
+    if @item.update_attribute("on_sale", params[:item][:on_sale])
       render json: { success: true }
     else
       render json: @item.errors, status: :unprocessable_entity
@@ -141,10 +141,6 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
 
   def raise_404
     raise ActionController::RoutingError.new('Not Found')
-  end
-
-  def item_state_param
-    params.require(:item).permit(:on_sale)
   end
 
   def item_basic_params
