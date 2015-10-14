@@ -121,7 +121,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
   end
 
   def change_sale_state
-    if @item.update_attribute("on_sale", params[:on_sale])
+    if @item.update_attribute("on_sale", params[:item][:on_sale])
       render json: { success: true }
     else
       render json: @item.errors, status: :unprocessable_entity
