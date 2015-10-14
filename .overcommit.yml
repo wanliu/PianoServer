@@ -34,3 +34,6 @@
 PostCheckout:
   GitGuilt:
     enabled: true
+  MustReadInformation:
+    enabled: true
+    description: 'Must read important information in commit message'
