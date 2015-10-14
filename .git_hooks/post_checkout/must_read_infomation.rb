@@ -1,6 +1,10 @@
 module Overcommit::Hook::PostCheckout
   class MustReadInfomation < Base
+    SCRIPT_LOCATION = Overcommit::Utils.script_path('gerrit-change-id')
+
     def run
+      result = execute(['sh', SCRIPT_LOCATION, commit_message_file])
+
       # errors = []
 
       # applicable_files.each do |file|
