@@ -12,6 +12,6 @@ class ChangeTemplatesToPolymorphic < ActiveRecord::Migration
       t.remove_references :templable, :polymorphic => true
     end
 
-    add_column templates:, :subject_id, :integer
+    add_column :templates, :subject_id, :integer
   end
 end
