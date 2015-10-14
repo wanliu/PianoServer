@@ -4,7 +4,9 @@ module Overcommit::Hook::PostCheckout
 
     def run
       result = execute(['sh', SCRIPT_LOCATION, commit_message_file])
+      return :pass if result.success?
 
+      [:fail, result.stdout]
       # errors = []
 
       # applicable_files.each do |file|
