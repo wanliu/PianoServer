@@ -6,32 +6,23 @@ module Overcommit::Hook::PostCheckout
       range = last_read_commit.empty? ? '' : "#{last_read_commit}..HEAD"
       revs = `git log #{range} --pretty=oneline --grep "must_read\:"`
 
-
       lines = revs.lines.map do |line|
         rev = line.split(' ')[0]
         msg = `git show -s --format=%B #{rev}`
-        msg =~ /must_read\:\s+(.*)\n?\n?/m
-        # touch rev
-        $1.strip!
+        msg =~ /must_read\:(.*)\n?\n?/m
+        touch rev
+        Overcommit::Utils.log.success "\n" + $1
       end
 
-      if !lines.empty?
-        lines.unshift <<-OUTPUT
-
-###################################
-###### Important Information ######
-###################################
-
-        OUTPUT
-
-        [ :warn, lines.join("\n") ]
-      else
+      if lines.empty?
         :pass
+      else
+        [:warn]
       end
     end
 
     def last_filename
-      Dir.glob(File.expand_path('../must_read_information/.read/*', __FILE__)).max { |a,b| File.ctime(a) <=> File.ctime(b) }
+      Dir.glob(File.expand_path('../.read/*', __FILE__)).max { |a,b| File.ctime(a) <=> File.ctime(b) }
     end
 
     def last_read_commit
@@ -39,7 +30,7 @@ module Overcommit::Hook::PostCheckout
     end
 
     def touch(id)
-      FileUtils.touch File.expand_path('../must_read_information/.read/' + id, __FILE__)
+      FileUtils.touch File.expand_path('../.read/' + id, __FILE__)
     end
   end
 end
