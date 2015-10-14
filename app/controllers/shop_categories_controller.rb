@@ -9,10 +9,10 @@ class ShopCategoriesController < ShopsController
     add_page_title t("titles.shop_category", category: @shop_category.title)
 
     if @shop_category.has_children
-      @shop_categories = ShopCategory.where(parent_id: @shop_category).order(id: :asc).page(params[:page]).per(params[:per])
+      @shop_categories = ShopCategory.where(parent_id: @shop_category).order(id: :asc)
       @items = []
     else
-      @items = Item.where(shop_category_id: params[:id]).page(params[:page]).per(params[:per])
+      @items = Item.where(shop_category_id: params[:id])
       @shop_categories = []
     end
   end
