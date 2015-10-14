@@ -29,7 +29,7 @@ class Shops::Admin::ShopCategoriesController < Shops::Admin::BaseController
   end
 
   def show_by_child
-    @children = @shop_category.children
+    @children = @shop_category.children.page(params[:page]).per(params[:per])
 
     render :show
   end
