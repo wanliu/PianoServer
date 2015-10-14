@@ -115,4 +115,17 @@
   var url = '<%= upload_image_shop_admin_items_path(@shop.name) %>';
 
   new NewItemPosters($('.new-item-poster'), url, $('input#item_filenames'));
+
+  var brand_id = '<%= @item.brand_id %>',
+      shop_category_id = '<%= @item.shop_category_id %>',
+      $brand_opt = $('select#item_brand_id>option[value=' + brand_id +']'),
+      $category_op = $('select#item_shop_category_id>option[value=' + shop_category_id +']');
+
+  if ($brand_opt.length > 0) {
+    $brand_opt.attr('selected', 'selected');
+  }
+
+  if ($category_op.length > 0) {
+    $category_op.attr('selected', 'selected');
+  }
 </script>
