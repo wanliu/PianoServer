@@ -5,7 +5,7 @@ class Subject < ActiveRecord::Base
 
   acts_as_punchable
 
-  has_many :templates
+  has_many :templates, as: :templable
 
   validates :title, presence: true
   validates :name, uniqueness: true
@@ -21,6 +21,10 @@ class Subject < ActiveRecord::Base
   end
 
   # default_scope { where(status: 0) }
+
+  def path
+    File.join(SubjectService.subject_root, name)
+  end
 
   protected
 

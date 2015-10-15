@@ -1,4 +1,17 @@
 module ContentManagementService
+  extend self
+
+  def update_template(template, content)
+    file = template.send(:template_path)
+
+    directory = File.dirname(file)
+    FileUtils.mkdir_p directory unless File.directory?(directory)
+
+    File.write file, content
+    logger.info "\033[32mWriting\033[0m to #{file}..."
+    logger.debug content
+  end
+
   module ContentController
     extend ActiveSupport::Concern
 
@@ -113,5 +126,10 @@ module ContentManagementService
     def merge_variables(_variables)
       _variables.uniq { |var| var.name }
     end
+  end
+
+  private
+  def logger
+    Rails.logger
   end
 end

@@ -8,17 +8,6 @@ module SubjectService
     Rails::Generators.invoke 'subject', [ name ]
   end
 
-  def update_template(subject, template, content)
-    file = template_path(subject, template)
-
-    directory = File.dirname(file)
-    FileUtils.mkdir_p directory unless File.directory?(directory)
-
-    File.write file, content
-    logger.info "\033[32mWriting\033[0m to #{file}..."
-    logger.debug content
-  end
-
   def subject_root
     File.join(Rails.root, Settings.sites.system.root, "subjects")
   end
