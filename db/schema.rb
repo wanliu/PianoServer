@@ -394,10 +394,11 @@ ActiveRecord::Schema.define(version: 20151015055327) do
     t.string   "name"
     t.string   "filename"
     t.integer  "last_editor_id"
-    t.integer  "subject_id"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
     t.string   "type"
+    t.integer  "templable_id"
+    t.string   "templable_type"
   end
 
   create_table "units", force: :cascade do |t|
