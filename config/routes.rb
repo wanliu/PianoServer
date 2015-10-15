@@ -149,7 +149,7 @@ Rails.application.routes.draw do
     end
 
     resources :shop_categories, path: "categories"
-    resources :items
+    resources :items, key: :sid
 
     namespace :admin, module: 'shops/admin' do
       get "/", to: "dashboard#index", as: :index
@@ -168,7 +168,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :items do
+      resources :items, key: :sid do
         collection do
           # get "load_categories", to: "items#load_categories"
           get "/new/step1",  to: "items#new_step1"

@@ -17,7 +17,7 @@ class Item < ActiveRecord::Base
 
   # dynamic_property prefix: 'property'
 
-  validates :shop_category_id, :category_id, :shop_id, :brand_id, presence: true
+  validates :shop_category_id, :category_id, :shop_id, :brand_id, :sid, presence: true
   validates :title, presence: true
   validates :public_price, :income_price, :price, numericality: true
   validates :description, length: { minimum: 4 }
@@ -50,6 +50,10 @@ class Item < ActiveRecord::Base
   scope :with_shop, -> (shop_id) do
     shop_id.nil? ? all : where("shop_id = ?", shop_id)
   end
+
+  scope :last_sid, -> (shop) do
+    where(shop: shop).maximum(:sid) || 0
+  end  
 
   def product
     Product.find(product_id)

@@ -116,6 +116,7 @@ module Shops::Admin::ItemHelper
             <div class="input-group">
               <label class="input-group-addon">
                 #{sub.check_box :check, class: 'check-inventory'}
+                #{sub.check_box :value}
               </label>
               #{sub.text_field :title, class: 'form-control'}
             </div>
@@ -133,7 +134,7 @@ module Shops::Admin::ItemHelper
 
   def sa_item_inventory_config_path(shop_name, item)
     method_name =  item.persisted? ? :shop_admin_item_path : :shop_admin_items_path
-    File.join send(method_name, shop_name, item), "inventory_config"
+    File.join send(method_name, shop_name, item.sid), "inventory_config"
   end
 
   private
