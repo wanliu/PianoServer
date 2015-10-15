@@ -116,6 +116,7 @@ module Shops::Admin::ItemHelper
             <div class="input-group">
               <label class="input-group-addon">
                 #{sub.check_box :check, class: 'check-inventory'}
+                #{sub.check_box :value}
               </label>
               #{sub.text_field :title, class: 'form-control'}
             </div>
