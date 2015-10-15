@@ -25,3 +25,5 @@ config/environments/*.local.yml
 /public/uploads
 .gitver
 .powenv
+.git-hooks/post_checkout/.read
+
