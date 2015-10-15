@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151014032405) do
+ActiveRecord::Schema.define(version: 20151015055327) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -360,7 +360,7 @@ ActiveRecord::Schema.define(version: 20151014032405) do
   create_table "stock_changes", force: :cascade do |t|
     t.integer  "item_id",                                                 null: false
     t.decimal  "quantity",       precision: 10, scale: 2,                 null: false
-    t.jsonb    "data"
+    t.jsonb    "data",                                    default: {}
     t.integer  "unit_id"
     t.integer  "operator_id",                                             null: false
     t.integer  "operation_id"
