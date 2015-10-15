@@ -12,11 +12,29 @@ module ContentManagementService
     logger.debug content
   end
 
+  def set_file_system(path)
+    Liquid::Template.file_system = ContentManagement::FileSystem.new(path, "_%s.html.liquid".freeze)
+  end
+
+  def set_resource_file_system(resource, *args)
+    resource_file_system(resource)
+    set_file_system File.join(resource_file_system(resource), *args)
+  end
+
+  def resource_file_system(resource)
+    pathname = resource.model_name.to_s.underscore.pluralize
+    File.join root_path(resource), pathname, resource.name
+  end
+
+  def root_path(resource)
+    resource.respond_to?(:root_path) ? resource.root_path : Settings.sites.root
+  end
+
   module ContentController
     extend ActiveSupport::Concern
 
     included do |klass|
-      include ContentManagementService::Methods
+      include ContentManagementService::Helpers
 
       klass.class_attribute :content_templates
       attr_accessor :cached_all_templates
@@ -80,7 +98,7 @@ module ContentManagementService
 
   end
 
-  module Methods
+  module Helpers
     VALID_VAR_NAME = /\A[_\p{letter}]+[\p{Alnum}_]*\z/
 
     def load_attachments

@@ -32,6 +32,27 @@ Rails.application.routes.draw do
     resources :chats
   end
 
+  concern :templable do |options|
+    resources :templates, options do
+      member do
+        post :upload
+        post :preview
+      end
+
+      collection do
+        post :preview, to: 'templates#preview_new'
+      end
+
+      resources :variables, except: [:new ] do
+        collection do
+          get :new_promotion_variable
+          get :new_promotion_set_variable
+          get :search_promotion
+        end
+      end
+    end
+  end
+
   match "admins", to: "admins/dashboards#index", via: :get
 
   namespace :admins do
@@ -44,24 +65,25 @@ Rails.application.routes.draw do
     end
     resources :promotions
     resources :subjects do
-      resources :templates do
-        member do
-          post :upload
-          post :preview
-        end
+      # resources :templates do
+      #   member do
+      #     post :upload
+      #     post :preview
+      #   end
 
-        collection do
-          post :preview, to: 'templates#preview_new'
-        end
+      #   collection do
+      #     post :preview, to: 'templates#preview_new'
+      #   end
 
-        resources :variables, except: [:new ] do
-          collection do
-            get :new_promotion_variable
-            get :new_promotion_set_variable
-            get :search_promotion
-          end
-        end
-      end
+      #   resources :variables, except: [:new ] do
+      #     collection do
+      #       get :new_promotion_variable
+      #       get :new_promotion_set_variable
+      #       get :search_promotion
+      #     end
+      #   end
+      # end
+      concerns :templable, templable_type: 'Subject'
     end
     resources :messages
     resources :contacts

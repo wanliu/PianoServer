@@ -24,11 +24,11 @@ class Template < ActiveRecord::Base
     ContentManagementService.update_template(self, content)
   end
 
-  protected
-
   def template_path
     File.join(templable.path, filename)
   end
+
+  protected
 
   alias_method_chain :update_attributes, :content
 end

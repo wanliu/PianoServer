@@ -23,7 +23,11 @@ class Subject < ActiveRecord::Base
   # default_scope { where(status: 0) }
 
   def path
-    File.join(SubjectService.subject_root, name)
+    File.join(root_path, name)
+  end
+
+  def root_path
+    SubjectService.subject_root
   end
 
   protected

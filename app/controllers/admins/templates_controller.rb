@@ -1,13 +1,11 @@
 require 'tempfile'
 
 class Admins::TemplatesController < Admins::BaseController
-  include ConcernParentResource # 废弃 请使用 ParentResource
-  include ContentManagementService::Methods
-  include SubjectsHelper
+  include ContentManagementService::Helpers
 
-  set_parent_param :subject_id
+  before_action :set_parent
   before_action :set_template, only: [ :update, :upload]
-  before_filter :set_subject_and_view_path, only: [:preview, :preview_new]
+  before_filter :set_view_path, only: [:preview, :preview_new]
   after_filter :rm_temp_file, only: [ :preview ]
 
   def show
@@ -15,28 +13,26 @@ class Admins::TemplatesController < Admins::BaseController
 
   def update
     old_filename = @template.filename
-    @subject = Subject.find(params[:subject_id])
 
     @template.update_attributes(template_params)
 
     if @template.valid? && old_filename != @template.filename
-      old_path = "#{SubjectService.subject_path(@subject)}/#{old_filename}"
+      old_path = "#{SubjectService.subject_path(@parent)}/#{old_filename}"
       File.delete(old_path) if File.exist?(old_path)
     end
   end
 
   def create
-    @subject = Subject.find(params[:subject_id])
-    @template = @subject.templates.build(template_params)
+    @template = @parent.templates.build(template_params)
 
-    filename = "#{SubjectService.subject_path(@subject)}/#{@template.filename}"
+    filename = @template.template_path
     File.write filename, template_params[:content]
 
     # generate a name base on filename, and do not repeat in the same subject
     if @template.name.blank?
       name = File.basename(filename)
 
-      while Template.exists?(subject_id: @subject, name: name)
+      while Template.exists?(templable: @parent, name: name)
         name.succ!
       end
 
@@ -56,7 +52,7 @@ class Admins::TemplatesController < Admins::BaseController
   end
 
   def preview
-    @template = @subject.templates.find(params[:id])
+    @template = @parent.templates.find(params[:id])
 
     load_all_variables @template.variables
     load_attachments
@@ -101,8 +97,12 @@ class Admins::TemplatesController < Admins::BaseController
     @template = @parent.templates.find(params[:id])
   end
 
-  def set_subject_and_view_path
-    @subject = Subject.find(params[:subject_id])
-    set_file_system(@subject)
+  def set_parent
+    templable_id = params["#{params[:templable_type].underscore}_id"]
+    @parent = params[:templable_type].constantize.find(templable_id)
+  end
+
+  def set_view_path
+    ContentManagementService.set_resource_file_system(@parent, 'views')
   end
 end
