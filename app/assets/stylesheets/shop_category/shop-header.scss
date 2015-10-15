@@ -2,14 +2,21 @@
 body.shop .brand-board{
   padding: 0;
   height: initial;
+  position: relative;
+  overflow: hidden;
 
   .shop-bgi{
     width: 100%;
+    @media (max-width: 768px){
+      width: 135%;
+    }
   }
 
   .shop-info{
     background-color: rgba(0,0,0,.5);
-    position: relative;
+    position: absolute;
+    bottom: 0;
+    left: 0;
 
     .shop-logo {
       width: 50px;
@@ -18,13 +25,26 @@ body.shop .brand-board{
 
     .media-left {
       padding: 10px;
+      @media (max-width: 484px){
+        padding:0;
+        margin-right: 10px;
+      }
     }
 
     .name-address {
       padding: 10px 0;
       color: #FFFFFF;
-    }
+      @media (max-width: 484px){
+        padding:0 0 0 10px;
+      }
+      .name,
+      .address{
+        margin: 0;
+        line-height: 24px;
 
+
+      }
+    }
     .attention{
       background-color: #f60;
       text-align: center;
@@ -33,9 +53,17 @@ body.shop .brand-board{
       min-width: 50px;
       padding: 0;
 
+      @media (min-width: 484px){
+        min-width: 70px;
+      }
+
       &:hover {
         background-color: #f00;
       }
     }
   }
+
+
+
 }
+
