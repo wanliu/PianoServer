@@ -113,6 +113,7 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.0'
   gem 'i18n-debug' if ENV['I18N_DEBUG']
   gem 'quiet_assets' if ENV['ENABLE_ASSETS_LOG']
+  gem 'rails-backup-migrate'
 
   gem 'factory_girl_rails'
   gem 'thin'

@@ -1,7 +1,7 @@
 require 'tempfile'
 
 class Admins::TemplatesController < Admins::BaseController
-  include ConcernParentResource
+  include ConcernParentResource # 废弃 请使用 ParentResource
   include ContentManagementService::Methods
   include SubjectsHelper
 
