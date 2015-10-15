@@ -1,0 +1,25 @@
+<div class="form-group">
+  <label class="col-sm-2 control-label" >库存设置</label>
+  <div class="col-sm-10">
+    <% if @inventory_combination %>
+      <div class="row">
+        <% @inventory_combination.each_with_index do |item, index| %>
+          <div class="col-md-6 col-sm-12">
+            <div class="input-group" >
+              <span class="input-group-addon"> 
+                <% item.each do |prop, value| %>
+                  <%= hidden_field_tag "inventories[#{index}][key][#{prop.name}]", value %>                  
+                  <%= prop.title %>
+                  <span class="label <%= label_color(value) %>"><%= prop.title_of(value) %></span>
+                <% end %>
+              </span>
+              <input type="number" class="form-control" placeholder="库存" name="<%= "inventories[#{index}][value]" %>">
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <input type="number" class="form-control" placeholder="库存" name="<%= "inventory" %>">
+    <% end %>
+  </div>
+</div>

@@ -24,3 +24,4 @@ config/environments/*.local.yml
 /public/assets
 /public/uploads
 .gitver
+.powenv

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150917091122) do
+ActiveRecord::Schema.define(version: 20151012064047) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -357,6 +357,23 @@ ActiveRecord::Schema.define(version: 20150917091122) do
     t.datetime "updated_at",     null: false
   end
 
+  create_table "stock_changes", force: :cascade do |t|
+    t.integer  "item_id",                                 null: false
+    t.decimal  "quantity",       precision: 10, scale: 2, null: false
+    t.jsonb    "data"
+    t.integer  "unit_id"
+    t.integer  "operator_id",                             null: false
+    t.integer  "operation_id"
+    t.string   "operation_type"
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
+  end
+
+  add_index "stock_changes", ["item_id"], name: "index_stock_changes_on_item_id", using: :btree
+  add_index "stock_changes", ["operation_type", "operation_id"], name: "index_stock_changes_on_operation_type_and_operation_id", using: :btree
+  add_index "stock_changes", ["operator_id"], name: "index_stock_changes_on_operator_id", using: :btree
+  add_index "stock_changes", ["unit_id"], name: "index_stock_changes_on_unit_id", using: :btree
+
   create_table "subjects", force: :cascade do |t|
     t.string   "name"
     t.string   "title"
@@ -430,4 +447,7 @@ ActiveRecord::Schema.define(version: 20150917091122) do
   end
 
   add_foreign_key "shop_categories", "shops"
+  add_foreign_key "stock_changes", "items"
+  add_foreign_key "stock_changes", "units"
+  add_foreign_key "stock_changes", "users", column: "operator_id"
 end

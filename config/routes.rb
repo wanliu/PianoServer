@@ -82,6 +82,8 @@ Rails.application.routes.draw do
           get :show_inhibit
           get :hide_inhibit
           get :children
+          post :write_item_desc
+          get :read_item_desc
         end
       end
     end
@@ -147,7 +149,7 @@ Rails.application.routes.draw do
     end
 
     resources :shop_categories, path: "categories"
-    resources :items
+    resources :items, key: :sid
 
     namespace :admin, module: 'shops/admin' do
       get "/", to: "dashboard#index", as: :index
@@ -166,7 +168,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :items do
+      resources :items, key: :sid do
         collection do
           # get "load_categories", to: "items#load_categories"
           get "/new/step1",  to: "items#new_step1"
@@ -174,11 +176,13 @@ Rails.application.routes.draw do
           get "/new/step2/category/:category_id", to: "items#new_step2", as: :with_category
           post "/new/step2/category/:category_id", to: "items#create"
           post "/upload_image", to: "items#upload_image"
+          put "/inventory_config", to: "items#inventory_config"
         end
 
         member do
           post "/upload_image", to: "items#upload_image"
           put "/change_sale_state", to: "items#change_sale_state"
+          put "/inventory_config", to: "items#inventory_config"
         end
       end
 

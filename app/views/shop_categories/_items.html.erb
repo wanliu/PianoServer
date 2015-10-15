@@ -1,7 +1,7 @@
 <div class="row items">
   <% items.each do |item| %>
     <div class="col-xs-6 col-sm-4 item">
-      <%= link_to item_path(item), class: 'text-center' do %>
+      <%= link_to item_path(item.sid), class: 'text-center' do %>
         <%= image_tag item.avatar, class: 'item-avatar' %>
       <% end %>
       <span class='text text-center'><%= item.name %></span>

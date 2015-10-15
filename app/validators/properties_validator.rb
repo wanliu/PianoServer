@@ -48,7 +48,7 @@ class PropertiesValidator < ActiveModel::EachValidator
   # resolve_type_of_validator 返回属性类型的验证类型
   def resolve_type_of_validator(type)
     case type
-    when "string", "boolean"
+    when "string"
       "presence"
     when "integer", "float", "number"
       "numericality"
@@ -66,7 +66,7 @@ class PropertiesValidator < ActiveModel::EachValidator
   def validates_config_of(record, attribute)
     record_definitions record do |definitions|
       remove_prefix_name = attribute.sub(/\A#{@method_prefix}_/, '')
-      config = definitions[remove_prefix_name]
+      config = definitions[remove_prefix_name] || {}
       if config["validates"]
         config["validates"].each do |validate, options|
           yield validate, options == true ? {} : options.symbolize_keys

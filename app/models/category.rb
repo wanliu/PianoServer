@@ -49,18 +49,60 @@ class Category < ActiveRecord::Base
 
   def definition_properties
     @defintion_properties ||= HashEx[with_upper_properties.map do |property|
-      [property.name, {
+      _hash = {
         name: property.name,
         title: property.title,
         type: property.prop_type,
-        unit_type: property.unit_type,
-        unit_id: property.unit_id,
-        default: property.data.try(:[], "default"),
-        validates: property.data.try(:[], "validate_rules"),
         value: property.data.try(:[], "value"),
-        map: property.data.try(:[], "map")
-      }]
+      }
+
+      _hash["unit_type"] = property.data["unit_type"] if property.data.try :has_key?, "unit_type"
+      _hash["unit_id"] = property.data["unit_id"] if property.data.try :has_key?, "unit_id"
+      _hash["default"] = property.data["default"] if property.data.try :has_key?, "default"
+      _hash["validates"] = property.data["validate_rules"] if property.data.try :has_key?, "validate_rules"
+
+      case property.prop_type
+      when "map"
+        _hash["map"] = property.data["map"]
+        _hash["group"] = property.data["group"] if property.data.try :has_key?, "group"
+      end
+
+      [property.name, _hash]
     end]
+  end
+
+  def item_desc
+    lookup_path = item_desc_lookup_path
+
+    if lookup_path.present?
+      File.read(lookup_path)
+    else
+      ""
+    end
+  end
+
+  def item_desc=(content)
+    unless File.exist? item_desc_dir
+      FileUtils.mkdir_p item_desc_dir
+    end
+
+    File.write item_desc_path, content
+  end
+
+  def item_desc_lookup_path
+    cate_with_template = path.reverse_order.find do |cate|
+      File.exists? cate.item_desc_path
+    end
+
+    cate_with_template.item_desc_path if cate_with_template.present?
+  end
+
+  def item_desc_path
+    "#{item_desc_dir}/#{id}.txt"
+  end
+
+  def item_desc_dir
+    "#{Rails.root}/.sites/system/category_item_descriptions"
   end
 
   def inhibit_count
