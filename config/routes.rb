@@ -110,6 +110,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :items, concerns: [ :chatable ]
+
   resources :categories
   resources :units, only: [:index, :show]
 

@@ -60,11 +60,13 @@ class ChatsController < ApplicationController
     @order = Order
       .where(supplier_id: @shop.id, buyer_id: current_anonymous_or_user.id)
       .first_or_initialize({})
+
     @order.update_attributes({
-      title: @item.name,
+      title: @item.title,
       bid: Order.last_bid(current_anonymous_or_user.id) + 1
     })
     @order.items.add_shop_product(@item)
+    @order
   end
 
 	def show

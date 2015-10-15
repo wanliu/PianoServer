@@ -1,0 +1,41 @@
+
+body.shop .brand-board{
+  padding: 0;
+  height: initial;
+
+  .shop-bgi{
+    width: 100%;
+  }
+
+  .shop-info{
+    background-color: rgba(0,0,0,.5);
+    position: relative;
+
+    .shop-logo {
+      width: 50px;
+      height: 50px;
+    }
+
+    .media-left {
+      padding: 10px;
+    }
+
+    .name-address {
+      padding: 10px 0;
+      color: #FFFFFF;
+    }
+
+    .attention{
+      background-color: #f60;
+      text-align: center;
+      color: #fff;
+      text-decoration: none;
+      min-width: 50px;
+      padding: 0;
+
+      &:hover {
+        background-color: #f00;
+      }
+    }
+  }
+}
