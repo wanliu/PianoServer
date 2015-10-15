@@ -82,7 +82,6 @@ class Admins::TemplatesController < Admins::BaseController
     render :upload, formats: [:json]
   end
 
-
   private
 
   def template_params
