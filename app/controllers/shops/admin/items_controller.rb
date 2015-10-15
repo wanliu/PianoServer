@@ -62,6 +62,8 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     @item = Item.new item_basic_params.merge(shop_id: @shop.id) do |item|
       item.properties ||= {}
 
+      item.sid = Item.last_sid(@shop) + 1
+
       prop_params.each do |prop_name, value|
         item.send("#{prop_name}=", value)
       end
@@ -217,7 +219,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
   end
 
   def set_item
-    @item = Item.find(params[:id])
+    @item = @shop.items.find_by_key(params)
   end
 
   private
