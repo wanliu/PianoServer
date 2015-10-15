@@ -36,3 +36,4 @@ PostCheckout:
     enabled: true
   MustReadInformation:
     enabled: true
+verify_plugin_signatures: false
