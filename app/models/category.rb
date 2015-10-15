@@ -61,9 +61,9 @@ class Category < ActiveRecord::Base
       _hash["default"] = property.data["default"] if property.data.try :has_key?, "default"
       _hash["validates"] = property.data["validate_rules"] if property.data.try :has_key?, "validate_rules"
 
-      case property.prop_type
-      when "map"
-        _hash["map"] = property.data["map"]
+      prop_type = property.prop_type
+      if Property::MAP_TYPES.include? prop_type
+        _hash[prop_type] = property.data[prop_type]
         _hash["group"] = property.data["group"] if property.data.try :has_key?, "group"
       end
 

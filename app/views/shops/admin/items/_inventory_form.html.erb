@@ -14,7 +14,7 @@
                   <span class="label <%= label_color(value) %>"><%= prop.title_of(value) %></span>
                 <% end %>
               </span>
-              <input type="number" class="form-control" placeholder="库存" name="<%= "inventories[#{index}][value]" %>" value="<%= @item.new_record? ? "" : @stocks_with_index.find { |stock| stock["index"] == find_key }.try(:[], "quantity") %>">
+              <input type="number" class="form-control" placeholder="库存" name="<%= "inventories[#{index}][value]" %>" value="<%= @stocks_with_index[find_key].try(:[], :quantity) %>">
             </div>
           </div>
         <% end %>

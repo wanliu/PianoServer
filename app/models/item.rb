@@ -91,35 +91,10 @@ class Item < ActiveRecord::Base
 
   def adjust_stocks(operator, options)
     if options.is_a? Hash
-      stocks_origin = stocks_with_index.reduce({}) do |cache, item|
-        cache[item["index"]] = { quantity: item["quantity"], data: item["data"] }
-        cache
-      end
+      stocks_origin = stocks_with_index
 
-      stocks_adjust = options.values.reduce({}) do |cache, item|
-        key = item[:key].keys.sort.map {|k| "#{k}:#{item[:key][k]}"}.join(';')
-        cache[key] = { quantity: item[:value], data: item[:key] }
-        cache
-      end
-
-      adjust_options = stocks_origin.merge(stocks_adjust) do |key, old, new|
-        data = new[:data] || old[:data]
-
-        # 对于之前有库存，但是在编辑市取消勾选的项目的处理
-        if new[:quantity].blank?
-          quantity = - old[:quantity]
-          data[:is_reset] = true
-        else
-          quantity = new[:quantity].to_f - old[:quantity]
-        end
-
-        {
-          quantity: quantity,
-          data: data
-        }
-      end
-
-      adjust_options = adjust_options.values.select { |item| item[:quantity] != 0 }
+      stocks_now = StockChange.extract_stocks_with_index(options)
+      adjust_options = StockChange.merge_for_adjust(stocks_origin, stocks_now)
 
       adjust_options.each do |option|
         is_reset = !!option[:data].delete(:is_reset)
@@ -139,8 +114,10 @@ class Item < ActiveRecord::Base
   def stocks_with_index
     stocks.to_a
       .map(&:attributes)
-      .each { |stock|
-        stock["index"] = stock["data"].keys.sort.map {|k| "#{k}:#{stock['data'][k]}"}.join(';')
-      }
+      .reduce({}) do |cache, stock|
+        index = stock["data"].keys.sort.map {|k| "#{k}:#{stock['data'][k]}"}.join(';')
+        cache[index] = { quantity: stock["quantity"], data: stock["data"] }
+        cache
+      end
   end
 end

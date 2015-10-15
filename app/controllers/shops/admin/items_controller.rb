@@ -50,7 +50,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
 
     if Settings.dev.feature.inventory_combination and @inventory_properties.present?
       @inventory_combination = combination_properties(@item, @inventory_properties)
-      @stocks_with_index = []
+      @stocks_with_index = {}
     end
   end
 
@@ -91,7 +91,9 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
       end
     else
       flash.now[:error] = t(:create, scope: "flash.error.controllers.items")
-      render :new_step2
+      set_stocks_for_feedback
+
+      render :new_step2, status: :unprocessable_entity
     end
   end
 
@@ -131,6 +133,8 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
       @item.adjust_stocks(current_user, stock_options)
     else
       flash.now[:error] = "库存设置错误，请正确填写"
+      set_stocks_for_feedback
+
       render :edit
       return
     end
@@ -139,7 +143,9 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
       redirect_to shop_admin_items_path(@shop.name), notice: t(:update, scope: "flash.notice.controllers.items")
     else
       flash.now[:error] = t(:update, scope: "flash.error.controllers.items")
-      render :edit
+      set_stocks_for_feedback
+
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -171,6 +177,8 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
 
     if Settings.dev.feature.inventory_combination and @inventory_properties.present?
       @inventory_combination = combination_properties(@item, @inventory_properties)
+
+      set_stocks_for_feedback
     end
 
     render partial: "inventory_form", layout: false
@@ -272,5 +280,11 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     end
 
     yield prop, hash if block_given?
+  end
+
+  def set_stocks_for_feedback
+    if params[:inventories].present?
+      @stocks_with_index = StockChange.extract_stocks_with_index(params[:inventories])
+    end
   end
 end
