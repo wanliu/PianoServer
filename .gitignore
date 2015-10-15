@@ -26,4 +26,3 @@ config/environments/*.local.yml
 .gitver
 .powenv
 .git-hooks/post_checkout/.read
-
