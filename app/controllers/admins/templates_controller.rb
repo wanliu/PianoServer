@@ -8,6 +8,10 @@ class Admins::TemplatesController < Admins::BaseController
   before_filter :set_view_path, only: [:preview, :preview_new]
   after_filter :rm_temp_file, only: [ :preview ]
 
+  def index
+    @templates = @parent.templates
+  end
+
   def show
   end
 

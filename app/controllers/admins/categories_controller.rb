@@ -19,6 +19,7 @@ class Admins::CategoriesController < Admins::BaseController
   def edit
     @properties = @category.with_upper_properties
     @remind_properties = (Property.all - @category.with_upper_properties)
+    @templates = @category.templates
   end
 
   def category_edit

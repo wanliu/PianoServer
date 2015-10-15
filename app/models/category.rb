@@ -11,6 +11,7 @@ class Category < ActiveRecord::Base
   belongs_to :brand
 
   has_and_belongs_to_many :properties
+  has_many :templates, as: :templable
 
   def with_upper_properties(inhibit = true)
     cond_string = [ "u.rk = 1", inhibit ? "u.state = 0" : nil ].compact.join(" and ")
