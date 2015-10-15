@@ -3,13 +3,14 @@ require 'tempfile'
 class Admins::TemplatesController < Admins::BaseController
   include ContentManagementService::Helpers
 
-  before_action :set_parent
+  before_action :set_templable
+  before_action :set_parents
   before_action :set_template, only: [ :update, :upload]
   before_filter :set_view_path, only: [:preview, :preview_new]
   after_filter :rm_temp_file, only: [ :preview ]
 
   def index
-    @templates = @parent.templates
+    @templates = @parent.default_templates
   end
 
   def show
@@ -21,7 +22,7 @@ class Admins::TemplatesController < Admins::BaseController
     @template.update_attributes(template_params)
 
     if @template.valid? && old_filename != @template.filename
-      old_path = "#{SubjectService.subject_path(@parent)}/#{old_filename}"
+      old_path = File.join @parent.path, old_filename
       File.delete(old_path) if File.exist?(old_path)
     end
   end
@@ -100,9 +101,27 @@ class Admins::TemplatesController < Admins::BaseController
     @template = @parent.templates.find(params[:id])
   end
 
-  def set_parent
+  def set_templable
     templable_id = params["#{params[:templable_type].underscore}_id"]
-    @parent = params[:templable_type].constantize.find(templable_id)
+    @templable = params[:templable_type].constantize.find(templable_id)
+  end
+
+  def set_parents
+    if params[:parents_type] && params[:parents_type].is_?(Array)
+      @parents = params[:parents_type].map do |parent_type|
+        parent_id = params["#{parent_type.underscore}_id"]
+        parent_type.constantize.find(parent_id)
+      end
+      @parent = @parents[0]
+    elsif params[:parent_type]
+      parent_type = params[:parent_type]
+      parent_id = params["#{parent_type.underscore}_id"]
+      @parent = parent_type.constantize.find(parent_id)
+      @parents = [ @parent ]
+    elsif @templable
+      @parent = @templable
+      @parents = [ @parent ]
+    end
   end
 
   def set_view_path

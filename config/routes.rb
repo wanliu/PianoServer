@@ -65,7 +65,7 @@ Rails.application.routes.draw do
     end
     resources :promotions
     resources :subjects do
-      concerns :templable, templable_type: 'Subject'
+      concerns :templable, templable_type: 'Subject', parent_type: 'Subject'
     end
     resources :messages
     resources :contacts
@@ -77,7 +77,7 @@ Rails.application.routes.draw do
       end
 
       resources :categories do
-        concerns :templable, templable_type: 'Category'
+        concerns :templable, templable_type: 'Category', parents_type: [ 'Category', 'Industry' ]
         resources :properties
 
         member do

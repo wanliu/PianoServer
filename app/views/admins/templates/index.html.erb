@@ -1,11 +1,5 @@
 <h1 class="page-header"><%= @parent.model_name.human %> &middot; <%= @parent.title || @parent.name %> <small>模版管理</small></h1>
 
-<ul class="nav nav-tabs">
-  <% @templates.each do |template| %>
-    <li role="presentation" class="active"><a href="#"><%= template.name %></a></li>
-  <% end %>
-</ul>
-
 <ul class="nav nav-tabs" role="tablist">
   <% @templates.each do |template| %>
     <li role="presentation">
@@ -16,6 +10,6 @@
 
 <!-- Tab panes -->
 <div class="tab-content">
-  <%# render partial:  %>
+  <%= render partial: "template", collection: @templates, locals: { parent: @parent } %>
 
 </div>

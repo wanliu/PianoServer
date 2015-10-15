@@ -1,5 +1,5 @@
 <div id="edit-new-template" class="tab-pane fade in panel panel-default edit-template active">
-  <%= form_for([:admins, *parents, template], remote: true, html: {"data-type" => 'html'}) do |f| %>
+  <%= form_for([:admins, parent, template.becomes(::Template)], remote: true, html: {"data-type" => 'html'}) do |f| %>
   <div class="panel-heading">
     <h3 class="panel-title">
       <%= f.text_field :filename, class: "form-control template-filename", autofocus: true, placeholder: '请输入文件名称' %>

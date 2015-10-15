@@ -5,6 +5,8 @@ class Category < ActiveRecord::Base
   include Elasticsearch::Model::Callbacks
   include ESModel
 
+  class_attribute :default_templates
+
   acts_as_tree :cache_depth => true
 
   belongs_to :upper, class_name: "Category", foreign_key: 'upper_properties_id'
@@ -47,6 +49,10 @@ class Category < ActiveRecord::Base
 
     Property.find_by_sql [query.squish, ancestry_depth, sort_ancestor_ids]
   end
+
+  # def with_upper_templates
+
+  # end
 
   def definition_properties
     @defintion_properties ||= HashEx[with_upper_properties.map do |property|
@@ -131,3 +137,10 @@ class Category < ActiveRecord::Base
     !has_children?
   end
 end
+
+
+Category.default_templates = [
+  PartialTemplate.new(name: 'sale_options'),
+  PartialTemplate.new(name: 'edit_options'),
+  PageTemplate.new(name: 'item')
+]
