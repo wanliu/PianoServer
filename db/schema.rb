@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151014065805) do
+ActiveRecord::Schema.define(version: 20151015055327) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -358,17 +358,21 @@ ActiveRecord::Schema.define(version: 20151014065805) do
   end
 
   create_table "stock_changes", force: :cascade do |t|
-    t.integer  "item_id",                                 null: false
-    t.decimal  "quantity",       precision: 10, scale: 2, null: false
-    t.jsonb    "data"
+    t.integer  "item_id",                                                 null: false
+    t.decimal  "quantity",       precision: 10, scale: 2,                 null: false
+    t.jsonb    "data",                                    default: {}
     t.integer  "unit_id"
-    t.integer  "operator_id",                             null: false
+    t.integer  "operator_id",                                             null: false
     t.integer  "operation_id"
     t.string   "operation_type"
-    t.datetime "created_at",                              null: false
-    t.datetime "updated_at",                              null: false
+    t.datetime "created_at",                                              null: false
+    t.datetime "updated_at",                                              null: false
+    t.string   "index"
+    t.boolean  "is_reset",                                default: false, null: false
+    t.integer  "kind",                                                    null: false
   end
 
+  add_index "stock_changes", ["is_reset"], name: "index_stock_changes_on_is_reset", using: :btree
   add_index "stock_changes", ["item_id"], name: "index_stock_changes_on_item_id", using: :btree
   add_index "stock_changes", ["operation_type", "operation_id"], name: "index_stock_changes_on_operation_type_and_operation_id", using: :btree
   add_index "stock_changes", ["operator_id"], name: "index_stock_changes_on_operator_id", using: :btree

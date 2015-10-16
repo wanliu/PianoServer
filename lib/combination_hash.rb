@@ -39,7 +39,7 @@ module CombinationHash
 	end
 
 	def combination_hash(*args, &block)
-		each_combine_hash(args, &block)
+		each_combine_hash(args, &block) if args.present?
 	end
 
 	def each_combine_hash(arrs, level = 0, args = {}, results = [], &block)
