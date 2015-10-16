@@ -214,13 +214,13 @@ zh-CN:
     updated_at: 更新时间
     title: 标题
     name: 名称
-    price: 价格
+    price: 批发价
     brand: 品牌
     brand_id: 品牌
     public_price: 零售价
     income_price: 进货价
     shop_category: 商品分类
-    shop_category_id: 商品分类
+    shop_category_id: 本店分类
     images: 图像
     image: 图像
     description: 描述

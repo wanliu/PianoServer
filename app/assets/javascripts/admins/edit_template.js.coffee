@@ -4,7 +4,7 @@
 
 EditTemplateToolbarVariable = @EditTemplateToolbarVariable
 
-class @EditTemplate extends @Event
+class @EditTemplate extends @HuEvent
 
   LiquidMode = ace.require("ace/mode/liquid").Mode
   events:

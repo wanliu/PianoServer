@@ -1,40 +1,25 @@
-.shop-items-container{
-  min-width: 898px;
+.shop-admin-container{
+  // min-width: 898px;
+  .btn-toolbar {
+    margin-bottom: 20px;
+  }
+
+  .breadcrumb-container {
+    display: inline-block;
+    margin-left: 15px;
+    line-height: 34px;
+  }
 
   .list-group {
     margin-bottom: 0;
   }
 
   .category-panel {
-    .breadcrumb {
-      display: inline-block;
-      padding: 0;
-      margin: 0 0 0 10px;
-    }
-
-    .category-col .list-group{
-      height: 250px;
-      background: #EEEEEE;
-      overflow-y: auto;
-      border-radius: 5px;
-
-      .list-group-item {
-        padding: 5px 15px;
-
-        .children {
-          position: absolute;
-          right: 8px;
-          top: 10px;
-          background-image: image-url('next.png');
-          width: 5px;
-          height: 7px;
-        }
-
-        &.active .children {
-          background-image: image-url('next-red.png');
-        }
-      }
-    }
+    margin-bottom: 20px;
+    display: none;
+    border: 1px solid #CCCCCC;
+    border-radius: 5px;
+    padding: 15px 0;
 
     .items-search {
       display: inline-block;
@@ -58,7 +43,7 @@
 
     .panel-body {
       padding: 0;
-      min-height: 150px;
+      min-height: 250px;
 
       .table > thead > tr > th {
         border-width: 0 1px 1px 0;
@@ -72,8 +57,18 @@
       }
     }
 
-    .panel-footer{
-      height: 40px;
+    .item-image {
+      margin-right: 10px;
+      width: 50px;
+      height: 50px;
+    }
+
+    .panel-footer .pagination {
+      margin: 0;
+
+      > li{
+        display: inline-block;
+      }
     }
   }
 }

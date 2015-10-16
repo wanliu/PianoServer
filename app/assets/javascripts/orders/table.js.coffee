@@ -3,7 +3,7 @@
 #= require _common/popup
 
 Popup = @Popup
-class @OrderTable extends @Event
+class @OrderTable extends @HuEvent
   @defaultOptions = {
     maxDelaySyncMs: 300,
     maxWaitAccpetingMS: 1500

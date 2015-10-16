@@ -1,5 +1,5 @@
 #= require _common/event
-class @ModalBase extends @Event
+class @ModalBase extends @HuEvent
 
   constructor: (@element, @url, @variableList) ->
     super(@element)

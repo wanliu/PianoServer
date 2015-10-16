@@ -1,5 +1,5 @@
 #= require _common/event
-class @TemplateVariable extends @Event
+class @TemplateVariable extends @HuEvent
 
   events:
     # 'click .edit-icon': 'editVariable'

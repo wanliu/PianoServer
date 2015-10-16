@@ -37,6 +37,11 @@
 
 .category-edit {
 
+  &.affix {
+    position: fixed;
+    top: 60px;
+  }
+
   .add-property {
     .dropdown-menu {
       left: auto;

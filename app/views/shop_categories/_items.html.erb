@@ -8,3 +8,7 @@
     </div>
   <% end %>
 </div>
+
+<% if items.present? %>
+  <%= paginate(items) %>
+<% end %>

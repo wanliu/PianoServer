@@ -37,7 +37,7 @@
 
     <%= javascript_include_tag "admins" %>
 
-    <%= analytics_init if Rails.env.production? %>
+    <%= analytics_init if Rails.env.production? and Settings.GA.track %>
   </head>
   <body class="<%= yield :module %>">
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -84,6 +84,7 @@
 
 
     </div> <!-- /container -->
+    <%= render "shards/ajax_error" %>
 
     <script type="text/javascript">
       $(function() {
@@ -114,5 +115,6 @@
         console.log('development version: <%= PianoServer::VERSION %>')
       <% end %>
     </script>
+
   </body>
 </html>

@@ -1,10 +1,18 @@
 <div class="brand-board">
+  <img src="/" class="shop-bgi">
   <div class='shop-info'>
-    <img src="{{ shop.logo_url_cover }}" class="shop-logo" alt="{{ shop.name }}" />
-    <div class='name-address'>
-      <span class='name'>{{ shop.title }}</span>
-      <span class='address'>{{ shop.address }}</span>
+    <div class="media">
+      <div class="media-left media-top">
+        <img src="{{ shop.logo_url_cover }}" class="shop-logo" alt="{{ shop.name }}" />
+      </div>
+      <div class='name-address media-body media-top'>
+        <p class='name'>{{ shop.title }}</p>
+        <p class='address'>{{ shop.address }}</p>
+      </div>
+      <a class="attention media-right media-middle" href="#">
+        <div>关注</div>
+        2
+      </a>
     </div>
-    <div style='clear:both'></div>
   </div>
 </div>

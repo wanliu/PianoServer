@@ -2,17 +2,21 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
   include Shops::Admin::ItemHelper
   include ActionView::Helpers::SanitizeHelper
 
+  respond_to :json, :html
+
   before_action :set_category, only: [:new_step2, :create]
   before_action :set_breadcrumb, only: [:new_step2, :create]
+  before_action :set_item, only: [:edit, :update, :destroy, :change_sale_state]
 
-  def load_categories
-    page = params[:page].presence || 1
-    per = params[:per].presence || 25
+  def index
+    # page = params[:page].presence || 1
+    # per = params[:per].presence || 25
 
     @items = Item.with_shop(@shop.id)
                  .with_category(query_params[:category_id])
                  .with_query(query_params[:q])
                  .page(query_params[:page])
+                 .order(id: :desc)
 
     @categories = if params[:category_id].present?
       ShopCategory.where(parent_id: params[:category_id])
@@ -20,17 +24,22 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
       shop_category_root.children
     end
 
-    render json: {categories: @categories.as_json(methods: [:is_leaf]), items: @items }
+    # respond_to do |format|
+    #   format.json { render :index }
+    #   format.html { render :index }
+    # end
+    # render :index, formats: [ :json ]
+    # render json: {categories: @categories.as_json(methods: [:is_leaf]), items: @items }
   end
 
-  def index
-    # @items = Item.with_shop(@shop.id)
-    #              .with_category(query_params[:category_id])
-    #              .with_query(query_params[:q])
-    #              .page(query_params[:page])
+  # def index
+  #   @items = Item.with_shop(@shop.id)
+  #                .with_category(query_params[:category_id])
+  #                .with_query(query_params[:q])
+  #                .page(query_params[:page])
 
-    # @categories = shop_category_root.children
-  end
+  #   # @categories = shop_category_root.children
+  # end
 
   def new
     redirect_to new_step1_shopitems_path(@shop.name)
@@ -90,10 +99,40 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     render json: { success: true, url: uploader.url(:cover)  , filename: uploader.filename }
   end
 
+  def edit
+    @category = @item.category
+    @breadcrumb = @category.ancestors
+    @properties = @category.with_upper_properties
+  end
+
+  def update
+    @category = @item.category
+    @breadcrumb = @category.ancestors
+    @properties = @category.with_upper_properties
+
+    if params[:item][:filenames].present?
+      @item.send(:write_attribute, :images, params[:item][:filenames].split(','))
+    end
+
+    if @item.update_attributes(item_basic_params)
+      redirect_to shop_admin_items_path(@shop.name)
+    else
+      render :edit
+    end
+  end
+
+  def change_sale_state
+    if @item.update_attribute("on_sale", params[:item][:on_sale])
+      render json: { success: true }
+    else
+      render json: @item.errors, status: :unprocessable_entity
+    end
+  end
+
   protected
 
   def query_params
-    params.permit(:shop_id, :category_id, :q, :page)
+    params.permit(:shop_id, :category_id, :q, :page, :per)
   end
 
   def shop_category_root
@@ -122,5 +161,9 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
 
   def set_breadcrumb
     @breadcrumb = @category.ancestors
+  end
+
+  def set_item
+    @item = Item.find(params[:id])
   end
 end

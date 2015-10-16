@@ -1,0 +1,124 @@
+.shop-admin-container {
+  .breadcrumb {
+    border: 1px solid #DDDDDD;
+    padding: 8px 10px;
+    display: inline-block;
+    margin: 0 0 0 5px;
+    background-color: #FFFFFF;
+    display: none;
+    line-height: 1;
+
+    .remove-icon {
+      cursor: pointer;
+      margin-left: 10px;
+      font-size: 12px;
+
+      &:hover {
+        color: #FF2B2B;
+      }
+    }
+  }
+
+  .category-wrap {
+    overflow: hidden;
+    position: relative;
+    height: 250px;
+    margin: 0 auto;
+
+    .category-list {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      white-space: nowrap;
+
+      .category-list-item {
+        width: 290px;
+        padding: 0 15px;
+        float: left;
+      }
+    }
+
+    .btn-left, .btn-right {
+      position: absolute;
+      width: 40px;
+      height: 72px;
+      top: 50%;
+      margin-top: -36px;
+      cursor: pointer;
+      display: none;
+      visibility: hidden;
+      z-index: 2;
+
+      &.btn-visible {
+        display: block;
+        visibility: visible;
+      }
+    }
+
+    .btn-left {
+      left: 0;
+      background-image: image-url('arr-left.png');
+
+      &:hover {
+        background-image: image-url('arr-left-red.png');
+      }
+    }
+
+    .btn-right {
+      right: 0;
+      background-image: image-url('arr-right.png');
+
+      &:hover{
+        background-image: image-url('arr-right-red.png');
+      }
+    }
+  }
+
+  .list-group {
+    height: 250px;
+    background-color: #EEE;
+    border-radius: 4px;
+    overflow-y: auto;
+    margin-bottom: 0;
+  }
+
+  .list-group-item {
+    padding: 5px 15px;
+    cursor: pointer;
+
+    .children {
+      position: absolute;
+      right: 8px;
+      top: 8px;
+      color: #515151;
+      font-size: 10px;
+    }
+
+    &.active .children {
+      color: #FFFFFF;
+    }
+  }
+}
+
+@media (min-width: 992px) {
+  .shop-admin-container .category-wrap {
+    width: 580px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .shop-admin-container .category-wrap {
+    width: 870px;
+  }
+}
+
+@media (max-width: 991px) {
+  .shop-admin-container .category-wrap {
+    width: 290px;
+  }
+}
+
+
+
+

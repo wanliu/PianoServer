@@ -1,60 +1,48 @@
-class @CategoryList
+#= require _common/event
 
-  constructor: (@container, @element, @categories, @level, @$form) ->
+class @CategoryList extends @HuEvent
+  constructor: (@container, @element, @categories, @level) ->
+    super(@element)
     @generateCategoryItems(@categories)
+    @on('categories:change', @categoriesChanged.bind(@))
+    @on('categories:empty', @emptyCategories.bind(@))
 
   generateCategoryItems: (categories) ->
-    @element.html('')
-
     for category in categories
-      @generateCategoryItem(category).appendTo(@element)
-
-    @bindClickEvent()
+      @generateCategoryItem(category).appendTo(@$())
 
   generateCategoryItem: (category) ->
-    { id, name, is_leaf } = category
+    { id, title, is_leaf } = category
 
     if is_leaf
-      template = """
-        <li class="list-group-item" category-id="#{id}">
-          #{name}
-        </li>
-      """
+      template = """<li class="list-group-item" category-id="#{id}">
+        #{title}</li>"""
     else
       template = """
         <li class="list-group-item has-children" category-id="#{id}">
-          #{name}
-          <span class="children"></span>
-        </li>
-      """
+          #{title}<span class="glyphicon glyphicon-chevron-right children"></span>
+        </li>"""
 
     $(template)
 
-  bindClickEvent: () ->
-    @element.find('.list-group-item').bind('click', @clickHandler.bind(@))
+  bindAllEvents: () ->
+    @$().bind 'click', '.list-group-item', @clickHandler.bind(@)
 
   clickHandler: (e) ->
-    $target = $(e.currentTarget)
+    $target = $(e.target)
 
     $target.addClass('active').siblings().removeClass('active')
     category_id = $target.attr('category-id')
-    $submit = @$form.find('input[type=submit]')
-    $input = @$form.find('input[name=category_id]')
+    is_leaf = !$target.hasClass('has-children')
 
-    if $target.hasClass('has-children')
-      $submit.attr('disabled', 'disabled')
-    else
-      $submit.removeAttr('disabled')
-      $input.val(category_id)
+    @container.send('category:change', [ category_id, @level, is_leaf ])
 
-    @container.loadCategoryData(category_id, (data) =>
-      @container.categoryChanged(data, @level)
-    )
+  categoriesChanged: (e, data) ->
+    @$().html('')
 
-  resetContent: (data) ->
     @generateCategoryItems(data)
 
-  emptyContent: () ->
-    @element.html('')
+  emptyCategories: (e) ->
+    @$().html('')
 
 

@@ -10,4 +10,5 @@ test:
   host: localhost
 production:
   <<: *default
-  host: <%= ENV['REDIS_PORT_6379_TCP_ADDR'] || 'localhost' %>
+  host: <%= ENV['REDISDEV_PORT_6379_TCP_ADDR'] || ENV['REDISBETA_PORT_6379_TCP_ADDR'] || ENV['REDISDEVRC_PORT_6379_TCP_ADDR'] %>
+

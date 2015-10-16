@@ -5,27 +5,20 @@ class ShopsController < ApplicationController
 
   def show_by_name
     set_page_title @shop.title
-    # @title = @shop.title
-    page = params[:page].presence || 1
-    per = params[:per].presence || 9
 
     unless ShopService.valid?(@shop)
       ShopService.build(params[:shop_name])
     end
 
     @root = @shop.shop_category(true)
-    @shop_categories = @root.children.page(page).per(per)
+    @shop_categories = @root.children
 
     render :show
   end
 
   def show
     @shop = Shop.find params[:id]
-
-    page = params[:page].presence || 1
-    per = params[:per].presence || 12
-
-    @shop_categories = @shop.shop_category.children.page(page).per(per)
+    @shop_categories = @shop.shop_category.children.page(params[:page]).per(params[:per])
   end
 
   private
@@ -40,7 +33,7 @@ class ShopsController < ApplicationController
 
   def shop_page_info
     self.page_title += [ t("titles.shops", shop_name: @shop.title) ]
-    self.page_navbar = @shop.title
+    self.page_navbar = @shop.title || @shop.name
     self.page_navbar_link = shop_site_path(@shop.name)
   end
 end
