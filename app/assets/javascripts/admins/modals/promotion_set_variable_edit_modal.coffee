@@ -13,6 +13,7 @@ class @PromotionSetVariableEditModal extends @ModalBase
     @$seleteds = @$().find('.selected-promotions')
     @$list = @$().find('.promotion-set-variable .list-group')
     @$ids = @$().find('#variable_promotion_string')
+    @handleSortable()
 
   toggleSelectedItem: (e) ->
     $target = $(e.currentTarget)
@@ -98,4 +99,17 @@ class @PromotionSetVariableEditModal extends @ModalBase
       $promotions.addClass('has-error').find('.help-block').text(fields['promotion_string'])
     else
       $promotions.removeClass('has-error').find('.help-block').text('')
+
+  handleSortable: () ->
+    $ids = @$ids
+
+    @$().find('ul.selected-promotions').sortable({
+      update: (e, ui) ->
+        ids = []
+        $(this).find('li').map(() ->
+          ids.push($(this).attr('id'))
+        )
+
+        $ids.val(ids.join(','))
+    })
 

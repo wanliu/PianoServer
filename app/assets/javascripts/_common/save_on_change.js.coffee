@@ -1,6 +1,6 @@
 #= require ./event
 
-class @SaveOnChange extends @Event
+class @SaveOnChange extends @HuEvent
 
   events:
     'change [save_on_change]': 'preformChange'

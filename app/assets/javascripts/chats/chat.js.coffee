@@ -23,7 +23,7 @@ class @Chat
     @options = $.extend(Chat.defaultOptions, @options)
     console.warn('must set sentBtn param in options') unless @options.sendBtn?
     @sendBtn = @options.sendBtn
-    @textElement = @options.textElement || "input[name='chat-text']"
+    @textElement = @options.textElement || "textarea[name='chat-text']"
     @$messageList = $(@options.messageList || ".message-list")
     @$chatContainer = $(@options.container || ".chat-list")
     @$chatWrap = $(@options.container || ".chat-body")
@@ -80,7 +80,6 @@ class @Chat
             @_sendTableMsg(data)
         else
           @clearText()
-
 
   setSendBtn: (btnElement) ->
     @sendBtn = $(btnElement)
@@ -206,7 +205,6 @@ class @Chat
     }, (err) =>
       @clearText() unless err?
     )
-
 
   _insertItemMessage: (message, direction = 'down') ->
     {id, senderId, content, senderAvatar, senderLogin, type, time} = message
@@ -350,10 +348,10 @@ class @Chat
     if !@_isOwnMessage(message) && (@_checkChatContentIsOverlayed() || !isVisible)
       @_insertBubbleTip(message)
 
-    if @_checkChatContentIsOverlayed() || (isVisible && @options.isMessageScroll)
-      @autoScroll(direction)
+    # if @_checkChatContentIsOverlayed() || (isVisible && @options.isMessageScroll)
+    #   @autoScroll(direction)
 
-    #@autoScroll(direction) if @options.isMessageScroll
+    @autoScroll(direction) if @options.isMessageScroll
 
   _insertGreetingMessage: () ->
     if @greetings?
@@ -370,7 +368,7 @@ class @Chat
     for message in messages
       @_insertItemMessage(message, 'up')
 
-    # @autoScroll(direction) if @options.isMessageScroll
+    @autoScroll(direction) if @options.isMessageScroll
 
   _checkIsVisible: (isInsert) ->
     $inner = @$chatContainer.find('.chat-inner')

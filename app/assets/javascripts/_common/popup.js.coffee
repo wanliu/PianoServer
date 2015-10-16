@@ -1,6 +1,6 @@
 #= require ./event
 
-class @Popup extends @Event
+class @Popup extends @HuEvent
   constructor: (@element, @options = {}) ->
     super(@element)
     @modal = @options['modal'] || false

@@ -24,6 +24,7 @@
  *= require_tree ./chats
  *= require_tree ./locations
  *= require_tree ./contacts
+ *= require_tree ./shop_category
  *= require_self
  */
 html{
@@ -33,7 +34,7 @@ html{
 
 body {
   background-image: image-url('bj.jpg');
-  padding-top: 60px;
+  padding-top: 51px;
 }
 
 footer {
@@ -119,7 +120,6 @@ footer {
 
   .navbar-responsive-collapse.collapse.in {
     overflow: visible;
-
     .navbar-right {
       position: absolute;
       right: 20px;

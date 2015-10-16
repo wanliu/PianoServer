@@ -15,3 +15,7 @@
     </div>
   <% end %>
 </div>
+
+<% if shop_categories.present? %>
+  <%= paginate(shop_categories) %>
+<% end %>

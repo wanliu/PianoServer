@@ -69,9 +69,7 @@ module Shops::Admin::ItemHelper
         </span>
       </div>
       <script type="text/javascript">
-          $(function () {
-              $('##{id}').datetimepicker();
-          });
+        $('##{id}').datetimepicker();
       </script>
     HTML
   end
