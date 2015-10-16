@@ -3,13 +3,5 @@
 <% end %>
 
 <% content_for :module, :shop %>
-<div class="col-md-12">
-  <%= shop_render "header.html" %>
 
-  <div class="cate-items-list">
-    <div class='title'>
-      <%= title_chain_render(@shop, @shop_category) %>
-    </div>
-    <%= render partial: 'shop_categories/shop_categories', locals: { shop: @shop, shop_categories: @shop_categories } %>
-  </div>
-</div>
+<%= shop_render :shop_category_list %>

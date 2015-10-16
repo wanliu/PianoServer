@@ -78,19 +78,21 @@ class Order < ActiveRecord::Base
     end
 
     def add_shop_product(shop_product)
-      item = where("data -> 'product_id' = :product_id", product_id: shop_product.product_id.to_s).first
+      item = where("data -> 'item_id' = :item_id", item_id: shop_product.id.to_s).first
+
+      # item = where("data -> 'product_id' = :product_id", product_id: shop_product.product_id.to_s).first
 
       if item.blank?
         owner.create_status state: :pending
 
         proxy_association.create({
-          title: shop_product.name,
+          title: shop_product.title,
           price: shop_product.price,
           amount: shop_product.try(:amount) || MIN_AMOUNT,
           item_type: 'product',
           iid: OrderItem.last_iid(owner) + 1,
           data: {
-            product_id: shop_product.product_id,
+            item_id: shop_product.id,
             product_inventory: shop_product.try(:inventory)
           },
           image: {

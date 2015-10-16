@@ -13,15 +13,6 @@
     <%= form_for @item, url: new_step2_shopitems_path(@shop.name, category_id: @category), html: { class: "form-horizontal" } do |f| %>
       <%= f.hidden_field :filenames %>
 
-      <!-- 错误显示 -->
-      <% if @item.errors.any? %>
-      <div class="list-group col-sm-offset-2 col-sm-10">
-        <% @item.errors.full_messages.each do |msg| %>
-          <a href="#" class="list-group-item list-group-item-danger"><%= msg %></a>
-        <% end %>
-      </div>
-      <% end %>
-
       <!-- 图片 -->
       <div class="form-group">
         <%= f.label :images, class: "col-sm-2 control-label" %>
@@ -50,17 +41,17 @@
 
       <!-- 参考价 -->
       <% group_with_errors @item, :price, f do %>
-          <%= f.number_field :price, class: 'form-control' %>
+          <%= f.text_field :price, class: 'form-control' %>
       <% end %>
 
       <!-- 零售价 -->
       <% group_with_errors @item, :public_price, f do %>
-          <%= f.number_field :public_price, class: 'form-control' %>
+          <%= f.text_field :public_price, class: 'form-control' %>
       <% end %>
 
       <!-- 进货价 -->
       <% group_with_errors @item, :income_price, f do %>
-          <%= f.number_field :income_price, class: 'form-control' %>
+          <%= f.text_field :income_price, class: 'form-control' %>
       <% end %>
 
       <!-- 商店分类 -->
@@ -108,4 +99,31 @@
   var url = '<%= upload_image_shop_admin_items_path(@shop.name) %>';
 
   new NewItemPosters($('.new-item-poster'), url, $('input#item_filenames'));
+
+
+  //表单数字验证
+  $('.form-horizontal').on('submit',function(e){
+    e.preventDefault();
+
+    var $price = $('#item_price'),
+        $public_price = $('#item_public_price'),
+        $income_price = $('#item_income_price');
+
+    function checkNumber($o){
+      var value = $o.val();
+      if(isNaN(value)){
+        $('.error-tip').remove();
+        $('.form-group').removeClass('has-error');
+        $o.focus().closest('.form-group').addClass('has-error');
+        $o[0].scrollIntoViewIfNeeded();
+      }else{
+        return true;
+      }
+    }
+
+    checkNumber($price) 
+      && checkNumber($public_price)
+        && checkNumber($income_price)
+          && this.submit();
+  });
 </script>
