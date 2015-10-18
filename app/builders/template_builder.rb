@@ -21,6 +21,7 @@ class TemplateBuilder < ActionView::Helpers::FormBuilder
 
     @template.form_for @object.becomes(::Template), options.merge(default_options) do |f|
       f.hidden_field(:name) +
+      f.hidden_field(:filename) +
       @template.hidden_field_tag("#{self.class.name.underscore}_id", object_id) +
       f.submit(title, class: %w(btn btn-default))
     end

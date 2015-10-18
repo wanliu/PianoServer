@@ -18,17 +18,16 @@ module Admins::TemplateHelper
     end
   end
 
-  def form_for(*args, &block)
-    pp self.class.ancestors
-    super *args, &block
-  end
-
-  def ace_editor(*args, &block)
-    super *args, &block
-  end
-
   def new_admins_template
     [:new, :admins, *@parents, :template ]
+  end
+
+  def ace_editor(template, *args, &block)
+    options = args.extract_options!
+    options[:url] = template.persisted?  ? [:admins, *@parents, template.becomes(::Template)] : [:admins, *@parents, :templates]
+    options[:url] = url_for(options[:url])
+    args.push options
+    super template, *args, &block
   end
 
   def button_new(title, template, options = {}, &block)
@@ -39,19 +38,23 @@ module Admins::TemplateHelper
 
     form_for template.becomes(::Template), options.merge(default_options) do |f|
       f.hidden_field(:name) +
+      f.hidden_field(:filename) +
       f.submit(title, class: %w(btn btn-default))
     end
     # button_to title, new_admins_template, options.merge(default_options), &block
   end
 
-  # def url_for_template(template)
-  #   urls = [:admins, *@parents, template.becomes(::Template)]
-  #   urls.unshift(:new) if @edit_mode
-  #   urls
-  # end
+  def button(*args, &block)
+    options = args.extract_options!
+
+    bind = options.delete(:bind) || BindHelper::BindOptions.new(nil)
+    bind_options = bind && bind.to_options
+    args.push options.merge(bind_options)
+    super *args, &block
+  end
 
   default_options :template_panel, class: "tab-pane fade panel panel-default"
   default_options :button_new, class: 'btn btn-default button_new', remote: true
-  default_options :ace_editor, class: 'source-editor'
+  default_options :ace_editor, class: 'source-editor', theme: 'solarized_dark'
   default_options :form_for, build: ::TemplateBuilder
 end

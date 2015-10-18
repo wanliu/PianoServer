@@ -14,15 +14,42 @@ module AceEditorHelper
 
     theme = options.delete(:theme) || 'twilight'
     mode = options.delete(:mode) || 'liquid'
+    save_button = options[:save_button]
+
+    bind = options.delete(:save_button)
+    bind_options = bind && bind.to_options
+
+    url = options[:url]
+    url = url_for(object) unless url
+    http_options = options.slice(:method, :data_type)
+    data_options = { template: { filename: filename, name: object.name } }
+    http_options.merge!(url: url, method: :patch, data: data_options )
+    http_options[:method] = :post unless object.persisted?
+
+
     default_options = {
       'ace-editor-id': obj_id
-    }
+    }.merge(bind_options)
 
     scripts = <<-JAVASCRIPT
       var element = $('[ace-editor-id="#{obj_id}"]')[0];
       var editor = ace.edit(element);
+      var http_options = #{http_options.to_json};
+
       editor.setTheme('ace/theme/#{theme}');
       editor.getSession().setMode('ace/mode/#{mode}');
+
+      $(function() {
+        $("#{bind.to_jquery(:to)}").on('#{bind.event}', function(e) {
+          e.preventDefault();
+
+          http_options['data']['template']['content'] = editor.getValue();
+
+          $.ajax(http_options).success(function() {
+
+          });
+        })
+      });
     JAVASCRIPT
 
 

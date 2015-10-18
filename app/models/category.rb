@@ -4,6 +4,7 @@ class Category < ActiveRecord::Base
   include Elasticsearch::Model
   include Elasticsearch::Model::Callbacks
   include ESModel
+  include ContentPath
 
   class_attribute :default_templates
 
@@ -144,7 +145,7 @@ end
 
 
 Category.default_templates = [
-  PartialTemplate.new(name: 'sale_options', templable: Category.new),
-  PartialTemplate.new(name: 'edit_options', templable: Category.new),
-  PageTemplate.new(name: 'item', templable: Category.new)
+  PartialTemplate.new(name: 'sale_options', filename: 'views/_sale_options.html.liquid', templable: Category.new),
+  PartialTemplate.new(name: 'edit_options', filename: 'views/_edit_options.html.liquid', templable: Category.new),
+  PageTemplate.new(name: 'item', filename: 'views/_item.html.liquid', templable: Category.new)
 ]

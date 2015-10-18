@@ -1,23 +1,19 @@
 = template_panel template do |p|
 
   .panel-body
-    - if @edit_mode.nil?
-      h1.text-center 此模版使用是的默认的模版 #{p.button_new '使用一个新模板' }
-
-    - else
+    - if @edit_mode || template.persisted?
       .panel-body-content
-        = ace_editor template, :content, template.filename, theme: 'solarized_dark'
+        = ace_editor template, :content, template.filename, save_button: bind_to([template, :save], :click)
 
         .variables
           .btn-group-vertical
             .btn-group
               = dropdown :menu
 
-      = form_for [:admins, *parents, template.becomes(::Template)], layout: :inline, remote: true do |f|
-        = f.hidden_field :content, class: "template_content"
+    - else
+      h1.text-center 此模版使用是的默认的模版 #{p.button_new '使用一个新模板' }
+
 
   .panel-footer
-    = button :save, context: :primary
-
-javascript:
+    = button :save, context: :primary, name: 'save', bind: bind([template, :save])
 

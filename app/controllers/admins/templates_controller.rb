@@ -19,7 +19,15 @@ class Admins::TemplatesController < Admins::BaseController
   end
 
   def index
-    @templates = @parent.default_templates
+    default_templates = @parent.try(:default_templates) || @parent.templates
+    @templates = default_templates.map do |tpl|
+      @parent.templates.select {|t| t.name == tpl.name }[0] || tpl
+    end
+  end
+
+  def search
+    @templates = Template.search_for(params[:q]).where(templable: @templable)
+    render :index
   end
 
   def show
@@ -40,6 +48,8 @@ class Admins::TemplatesController < Admins::BaseController
     @template = @parent.templates.build(template_params)
 
     filename = @template.template_path
+
+    FileUtils.mkdir_p File.dirname(filename)
     File.write filename, template_params[:content]
 
     # generate a name base on filename, and do not repeat in the same subject

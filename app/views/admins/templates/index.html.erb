@@ -1,11 +1,26 @@
 <h1 class="page-header"><%= @parent.model_name.human %> &middot; <%= @parent.title || @parent.name %> <small>模版管理</small></h1>
 
+
 <%= nav do %>
   <% @templates.each do |template| %>
     <%= link_to "##{template.name}", data: {toggle: "tab"}, role: "tab", 'aria-label' => template.name do %>
-      <%= best_in_place template, :name, url: url_for, inner_class: 'form-control input-sm' %>
+      <%= best_in_place_if !template.reserved?, template, :name, url: url_for, inner_class: 'form-control input-sm', as: :input %>
     <% end %>
   <% end %>
+  <%= link_to '#' do %>
+    <%= icon :plus %>
+  <% end %>
+  <div class="btn-toolbar pull-right" >
+    <div class="btn-group ">
+      <%= button context: 'default' do %>
+        <%= icon :fullscreen %>
+      <% end %>
+    </div>
+
+    <div class="btn-group ">
+      <%= search_form [ :search, :admins, *@parents, :templates ], value: params[:q] %>
+    </div>
+  </div>
 <% end %>
 
 

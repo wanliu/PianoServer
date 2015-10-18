@@ -41,6 +41,7 @@ Rails.application.routes.draw do
 
       collection do
         post :preview, to: 'templates#preview_new'
+        get :search
       end
 
       resources :variables, except: [:new ] do

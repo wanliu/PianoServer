@@ -13,6 +13,8 @@ class Template < ActiveRecord::Base
   validates :filename, uniqueness: { scope: [:templable_type, :templable_id] }, presence: true
   validates :name, uniqueness: { scope: [:templable_type, :templable_id] }, presence: true
 
+  scoped_search on: [ :name, :filename ]
+
   def content
     content!
   rescue
@@ -31,7 +33,7 @@ class Template < ActiveRecord::Base
   end
 
   def template_path
-    File.join(templable.path, filename)
+    File.join(templable.content_path, filename)
   rescue
     nil
   end
