@@ -3,7 +3,19 @@
     <li><%= link_to '工作台', admins_dashboards_path %></li>
     <li><%= link_to '帐号', admins_accounts_path %></li>
     <li><%= link_to '专题', admins_subjects_path %></li>
-    <li><%= link_to '行业', admins_industries_path %></li>
+    <li>
+      <%= link_to '行业', admins_industries_path %>
+      <% @industries = Industry.all %>
+      <% if @industries.count > 0 %>
+        <ul class="nav">
+          <% @industries.each do |industry| %>
+            <li>
+            <%= link_to industry.title, [ :edit, :admins, industry ] %>
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
+    </li>
     <li><%= link_to '单位管理', admins_units_path %></li>
     <li><%= link_to '商品中心', admins_products_path %></li>
     <li><%= link_to '活动', admins_promotions_path %></li>
@@ -27,6 +39,9 @@
 
       $(elem).removeClass('active')
     });
+
+    $(activeElem).addClass('active')
+
   };
 
   $(window).load(function() {

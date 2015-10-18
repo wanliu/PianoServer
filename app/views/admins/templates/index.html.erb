@@ -1,5 +1,20 @@
-<h1 class="page-header"><%= @parent.model_name.human %> &middot; <%= @parent.title || @parent.name %> <small>模版管理</small></h1>
+<%= content_for :module, 'templates' %>
+<%= content_for :wrapper_layout, 'three-layout' %>
 
+<%= content_for :second_sidebar do %>
+   <div class="list-group template-list">
+    <% @templates.each do |template| %>
+      <%= link_to "##{template.name}", class: 'list-group-item', data: {toggle: "tab"}, role: "tab", 'aria-label' => template.name do %>
+        <%= best_in_place_if !template.reserved?, template, :name, url: url_for, inner_class: 'form-control input-sm', as: :input %>
+      <% end %>
+    <% end %>
+    <%= link_to '#', class: 'list-group-item' do %>
+      <%= icon :plus %>
+    <% end %>
+  </div>
+<% end %>
+
+<h1 class="page-header"><%= @parent.model_name.human %> &middot; <%= @parent.title || @parent.name %> <small>模版管理</small></h1>
 
 <%= nav do %>
   <% @templates.each do |template| %>
@@ -7,11 +22,21 @@
       <%= best_in_place_if !template.reserved?, template, :name, url: url_for, inner_class: 'form-control input-sm', as: :input %>
     <% end %>
   <% end %>
+
   <%= link_to '#' do %>
     <%= icon :plus %>
   <% end %>
+
   <div class="btn-toolbar pull-right" >
     <div class="btn-group ">
+      <%= dropdown 'Theme', class: 'theme-dropdown' do %>
+        <% AceEditorHelper::THEMES.each do |theme| %>
+          <%= link_to theme.titleize, '#', theme: theme, class: 'theme-item' %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div class="btn-group" >
       <%= button context: 'default' do %>
         <%= icon :fullscreen %>
       <% end %>
@@ -25,10 +50,23 @@
 
 
 <!-- Tab panes -->
-<div class="tab-content">
+<div class="tab-content template-edit">
   <%= render partial: "template", collection: @templates, locals: { parents: @parents } %>
 
 </div>
 <script type="text/javascript">
   $(".best_in_place").best_in_place();
+  $('.theme-item').on('click', function(e) {
+    $(document).trigger('settings:theme:change', $(this).attr('theme'))
+  });
+
+  $(document).on("settings:theme:change", function(e, theme) {
+    $('[ace-editor-id]').each(function(i, elem) {
+      var editor = $(elem).data('ace_edit')
+      if (editor) {
+        editor.setTheme("ace/theme/" + theme);
+      }
+    });
+  });
 </script>
+

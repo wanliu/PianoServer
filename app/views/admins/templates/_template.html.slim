@@ -2,7 +2,7 @@
 
   .panel-body
     - if @edit_mode || template.persisted?
-      .panel-body-content
+      .panel-content
         = ace_editor template, :content, template.filename, save_button: bind_to([template, :save], :click)
 
         .variables
@@ -15,5 +15,15 @@
 
 
   .panel-footer
-    = button :save, context: :primary, name: 'save', bind: bind([template, :save])
+    .btn-toolbar
+      .btn-group
+        = button :save, context: :primary, name: 'save', bind: bind([template, :save])
+
+      .btn-group
+        = button :edit
+        = dropdown :preview
+          = link_to :preview_lg
+          = link_to :preview_md
+          = link_to :preview_sm
+          = link_to :preview_xs
 

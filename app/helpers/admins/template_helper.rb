@@ -53,7 +53,7 @@ module Admins::TemplateHelper
     super *args, &block
   end
 
-  default_options :template_panel, class: "tab-pane fade panel panel-default"
+  default_options :template_panel, class: "tab-pane fade panel panel-default template-panel"
   default_options :button_new, class: 'btn btn-default button_new', remote: true
   default_options :ace_editor, class: 'source-editor', theme: 'solarized_dark'
   default_options :form_for, build: ::TemplateBuilder

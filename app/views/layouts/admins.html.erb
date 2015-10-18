@@ -67,21 +67,21 @@
 
     <div class="chat-notices"></div>
     <div class="container-fluid">
-      <div class="row normal-layout">
+      <%= layout do %>
         <%= render "left_sidebar" %>
-
+        <%= yield :second_sidebar if content_for?(:second_sidebar) %>
 
         <div class="content container-fluid">
           <%= bootstrap_flash %>
           <%= yield %>
-        </div>
-        <div class="container-fluid">
           <footer>
             <p><%= raw Settings.app.footer %> <%= PianoServer::VERSION unless Rails.env.production? %></p>
           </footer>
         </div>
-      </div><!--/row-->
+        <div class="container-fluid">
 
+        </div>
+      <% end %>
 
     </div> <!-- /container -->
     <%= render "shards/ajax_error" %>
