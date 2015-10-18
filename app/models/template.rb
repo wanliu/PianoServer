@@ -1,5 +1,4 @@
 class Template < ActiveRecord::Base
-  RESERVED_NAMES = ["homepage_header", "index", "promotion"]
 
   mattr_accessor :available_variables
   mattr_accessor :constants_variables
@@ -15,7 +14,14 @@ class Template < ActiveRecord::Base
   validates :name, uniqueness: { scope: [:templable_type, :templable_id] }, presence: true
 
   def content
-    @content ||= File.read template_path
+    content!
+  rescue
+  ensure
+    nil
+  end
+
+  def content!
+    @content ||= File.read template_path unless template_path.nil?
   end
 
   def update_attributes_with_content(attributes)
@@ -26,6 +32,16 @@ class Template < ActiveRecord::Base
 
   def template_path
     File.join(templable.path, filename)
+  rescue
+    nil
+  end
+
+  def empty?
+    content.nil?
+  end
+
+  def reserved?
+    templable.try(:name_reserved?, name)
   end
 
   protected

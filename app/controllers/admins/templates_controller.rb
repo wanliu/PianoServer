@@ -9,6 +9,15 @@ class Admins::TemplatesController < Admins::BaseController
   before_filter :set_view_path, only: [:preview, :preview_new]
   after_filter :rm_temp_file, only: [ :preview ]
 
+  def new
+    @edit_mode = true
+    @template = Template.new template_params
+    @template_builder_id = params[:template_builder_id]
+    respond_to do |format|
+      format.js { render :new }
+    end
+  end
+
   def index
     @templates = @parent.default_templates
   end
@@ -107,12 +116,12 @@ class Admins::TemplatesController < Admins::BaseController
   end
 
   def set_parents
-    if params[:parents_type] && params[:parents_type].is_?(Array)
+    if params[:parents_type] && params[:parents_type].is_a?(Array)
       @parents = params[:parents_type].map do |parent_type|
         parent_id = params["#{parent_type.underscore}_id"]
         parent_type.constantize.find(parent_id)
       end
-      @parent = @parents[0]
+      @parent = @parents.last
     elsif params[:parent_type]
       parent_type = params[:parent_type]
       parent_id = params["#{parent_type.underscore}_id"]

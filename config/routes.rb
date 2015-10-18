@@ -77,7 +77,7 @@ Rails.application.routes.draw do
       end
 
       resources :categories do
-        concerns :templable, templable_type: 'Category', parents_type: [ 'Category', 'Industry' ]
+        concerns :templable, templable_type: 'Category', parents_type: [ 'Industry', 'Category' ]
         resources :properties
 
         member do

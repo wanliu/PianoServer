@@ -1,15 +1,19 @@
 <h1 class="page-header"><%= @parent.model_name.human %> &middot; <%= @parent.title || @parent.name %> <small>模版管理</small></h1>
 
-<ul class="nav nav-tabs" role="tablist">
+<%= nav do %>
   <% @templates.each do |template| %>
-    <li role="presentation">
-      <%= link_to template.name, "##{template.name}", data: {toggle: "tab"}, role: "tab", 'aria-label' => template.name %>
-    </li>
+    <%= link_to "##{template.name}", data: {toggle: "tab"}, role: "tab", 'aria-label' => template.name do %>
+      <%= best_in_place template, :name, url: url_for, inner_class: 'form-control input-sm' %>
+    <% end %>
   <% end %>
-</ul>
+<% end %>
+
 
 <!-- Tab panes -->
 <div class="tab-content">
-  <%= render partial: "template", collection: @templates, locals: { parent: @parent } %>
+  <%= render partial: "template", collection: @templates, locals: { parents: @parents } %>
 
 </div>
+<script type="text/javascript">
+  $(".best_in_place").best_in_place();
+</script>

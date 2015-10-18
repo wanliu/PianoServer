@@ -1,6 +1,7 @@
 module ApplicationHelper
   include SubjectsHelper
   include BootstrapHelper
+  include AceEditorHelper
 
   def avatar_url(user)
     user.image || identicon_url(user)

@@ -136,11 +136,15 @@ class Category < ActiveRecord::Base
   def is_leaf
     !has_children?
   end
+
+  def name_reserved?(template_name)
+    default_templates.select { |tpl| tpl.name == template_name }
+  end
 end
 
 
 Category.default_templates = [
-  PartialTemplate.new(name: 'sale_options'),
-  PartialTemplate.new(name: 'edit_options'),
-  PageTemplate.new(name: 'item')
+  PartialTemplate.new(name: 'sale_options', templable: Category.new),
+  PartialTemplate.new(name: 'edit_options', templable: Category.new),
+  PageTemplate.new(name: 'item', templable: Category.new)
 ]

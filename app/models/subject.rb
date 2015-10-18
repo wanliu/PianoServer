@@ -1,4 +1,6 @@
 class Subject < ActiveRecord::Base
+  RESERVED_NAMES = ["homepage_header", "index", "promotion"]
+
   include Liquid::Rails::Droppable
 
   enum status: [ :open, :close ]
@@ -28,6 +30,10 @@ class Subject < ActiveRecord::Base
 
   def root_path
     SubjectService.subject_root
+  end
+
+  def name_reserved?(name)
+    RESERVED_NAMES.include? name
   end
 
   protected
