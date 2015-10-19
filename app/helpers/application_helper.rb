@@ -4,6 +4,7 @@ module ApplicationHelper
   include AceEditorHelper
   include BindHelper
   include SearchHelper
+  include WindowHelper
 
   def avatar_url(user)
     user.image || identicon_url(user)

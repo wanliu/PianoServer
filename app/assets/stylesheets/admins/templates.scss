@@ -1,3 +1,27 @@
+.demo {
+  z-index: 2;
+  -webkit-transform: perspective(1200px) scaleZ(1) rotateY(45deg);
+  -moz-transform: perspective(1200px) scaleZ(1) rotateY(45deg);
+  -ms-transform: perspective(1200px) scaleZ(1) rotateY(45deg);
+  -o-transform: perspective(1200px) scaleZ(1) rotateY(45deg);
+  transform: perspective(1200px) scaleZ(1) rotateY(45deg);
+  height: 50vh;
+  margin-bottom: 12.5vh;
+
+  .window-content {
+    padding: 0px;
+  }
+
+  iframe {
+    height: 50vh;
+    padding-top: 20px;
+    border: 0px;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+  }
+}
+
+
 .template-list {
   position: fixed;
   top: 0px;
