@@ -258,7 +258,7 @@ class @Chat
                       diffDay = Math.floor((time - @lastTime) / DAYS)
                       time = new Date(time)
                       timeStr = if diffDay > 0
-                                  "#{time.getFullYear()}-#{time.getMonth()}-#{time.getDate()} #{time.getHours()}:#{time.getMinutes()}"
+                                  "#{time.getFullYear()}-#{time.getMonth()+1}-#{time.getDate()} #{time.getHours()}:#{time.getMinutes()}"
                                 else
                                   "#{time.getHours()}:#{time.getMinutes()}"
                       """
