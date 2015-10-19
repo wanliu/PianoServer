@@ -1,0 +1,19 @@
+<%= content_for :second_sidebar do %>
+   <div class="list-group template-list">
+    <% if action_name == 'search' %>
+      <%= link_to [:admins, *@parents, :templates], class: 'list-group-item list-group-item-info' do %>
+        <%= "查找: " + params[:q] %>
+        <%= icon :remove, class: 'pull-right' %>
+      <% end %>
+    <% end %>
+
+    <% @templates.each do |template| %>
+      <%= link_to "##{template.name}", class: 'list-group-item', data: {toggle: "tab"}, role: "tab", 'aria-label' => template.name do %>
+        <%= best_in_place_if !template.reserved?, template, :name, url: url_for, inner_class: 'form-control input-sm', as: :input %>
+      <% end %>
+    <% end %>
+    <%= link_to '#', class: 'list-group-item' do %>
+      <%= icon :plus %>
+    <% end %>
+  </div>
+<% end %>

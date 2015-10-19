@@ -64,6 +64,10 @@ module ApplicationHelper
     html_class.select {|k,v| v }.map { |k,v| k }.join(' ')
   end
 
+  def bh_clear
+    Bh::Classes::Stack.class_variable_get(:@@stack).clear
+  end
+
   private
 
   def user_profile_path(user)

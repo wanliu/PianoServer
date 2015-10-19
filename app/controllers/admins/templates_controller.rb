@@ -6,6 +6,7 @@ class Admins::TemplatesController < Admins::BaseController
   before_action :set_templable
   before_action :set_parents
   before_action :set_template, only: [ :update, :upload]
+  before_action :set_titles
   before_filter :set_view_path, only: [:preview, :preview_new]
   after_filter :rm_temp_file, only: [ :preview ]
 
@@ -19,18 +20,21 @@ class Admins::TemplatesController < Admins::BaseController
   end
 
   def index
-    default_templates = @parent.try(:default_templates) || @parent.templates
-    @templates = default_templates.map do |tpl|
-      @parent.templates.select {|t| t.name == tpl.name }[0] || tpl
-    end
+    @templates = combine @parent.templates, default_templates
+    @template = @templates.first
   end
 
   def search
-    @templates = Template.search_for(params[:q]).where(templable: @templable)
+    @templates = Template
+      .where(templable: @templable)
+      .with_search(params[:q])
+
     render :index
   end
 
   def show
+    @templates = combine @parent.templates, default_templates
+    @template = @parent.templates.find_by(name: params[:id])
   end
 
   def update
@@ -125,6 +129,11 @@ class Admins::TemplatesController < Admins::BaseController
     @templable = params[:templable_type].constantize.find(templable_id)
   end
 
+  def set_titles
+    @primary_title = @parent.model_name.human + "&middot;" + @parent.title || @parent.name
+    @subject_title = "模版管理"
+  end
+
   def set_parents
     if params[:parents_type] && params[:parents_type].is_a?(Array)
       @parents = params[:parents_type].map do |parent_type|
@@ -145,5 +154,15 @@ class Admins::TemplatesController < Admins::BaseController
 
   def set_view_path
     ContentManagementService.set_resource_file_system(@parent, 'views')
+  end
+
+  def combine(targets, defaults)
+    defaults.map do |tpl|
+      targets.select {|t| t.name == tpl.name }[0] || tpl
+    end
+  end
+
+  def default_templates
+    @parent.try(:default_templates) || @parent.templates
   end
 end

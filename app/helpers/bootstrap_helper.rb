@@ -64,10 +64,8 @@ module BootstrapHelper
   #   HTML
   # end
 
-  def small(tilte = nil, &block)
-    r <<-HTML
-      <small>#{title}#{yield if block_given?}<small>
-    HTML
+  def sm(sub_title = nil, &block)
+    content_tag :small, sub_title
   end
 
   def link_to_modal(modal, *args, &block)
@@ -122,6 +120,26 @@ module BootstrapHelper
       end
 
     content_tag(:div, options, &block)
+  end
+
+  def input_group(*args, &block)
+    options = args.extract_options!
+
+    default_options = {
+      class: ["input-group", options[:class] ].join(' ')
+    }
+
+    content_tag(:div, options.merge(default_options), &block)
+  end
+
+  def addon(*args, &block)
+    options = args.extract_options!
+
+    default_options = {
+      class: "input-group-addon"
+    }
+
+    content_tag(:span, *args, options.merge(default_options), &block)
   end
 
   private

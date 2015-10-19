@@ -14,6 +14,8 @@
     <![endif]-->
 
     <%= stylesheet_link_tag "admins", :media => "all", 'data-turbolinks-track' => true %>
+    <!--TODO: 未来要转换成本地 -->
+    <%= stylesheet_link_tag font_awesome_css %>
 
     <!-- For third-generation iPad with high-resolution Retina display: -->
     <!-- Size should be 144 x 144 pixels -->
@@ -40,6 +42,7 @@
     <%= analytics_init if Rails.env.production? %>
   </head>
   <body class="<%= yield :module %>">
+    <% bh_clear %>
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
@@ -78,9 +81,6 @@
             <p><%= raw Settings.app.footer %> <%= PianoServer::VERSION unless Rails.env.production? %></p>
           </footer>
         </div>
-        <div class="container-fluid">
-
-        </div>
       <% end %>
 
     </div> <!-- /container -->
@@ -115,6 +115,5 @@
         console.log('development version: <%= PianoServer::VERSION %>')
       <% end %>
     </script>
-
   </body>
 </html>

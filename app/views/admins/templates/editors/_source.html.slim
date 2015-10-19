@@ -1,0 +1,23 @@
+= editor_panel template, id: "#{template.name}-source" do
+
+  .panel-body
+    - if @edit_mode || template.persisted?
+      .panel-content
+        = source_editor template, :content, template.filename, save_button: bind_to([template, :save], :click)
+
+        .variables
+          .btn-group-vertical
+            .btn-group
+              = dropdown :menu
+
+    - else
+      h1.text-center 此模版使用是的默认的模版 #{builder.button_new '使用一个新模板' }
+
+
+  .panel-footer
+    .btn-toolbar
+      .btn-group
+        = button :save, context: :primary, name: 'save', bind: bind([template, :save])
+
+
+

@@ -41,6 +41,10 @@ module AceEditorHelper
 
       editor.setTheme('ace/theme/#{theme}');
       editor.getSession().setMode('ace/mode/#{mode}');
+      editor.setOptions({
+        enableBasicAutocompletion: true,
+        enableSnippets: true,
+      });
 
       $(function() {
         $("#{bind.to_jquery(:to)}").on('#{bind.event}', function(e) {

@@ -10,8 +10,12 @@ module SearchHelper
     })
 
     form_tag url, options do
-      search_field_tag(:q, options[:value], class: "form-control") +
-      submit_tag(:search, class: "btn btn-primary")
+      input_group do
+        search_field_tag(:q, options[:value], class: "form-control") +
+        addon do
+          icon :search
+        end
+      end
     end
   end
 end

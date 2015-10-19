@@ -1,0 +1,20 @@
+= editor_panel template, id: "#{template.name}-preview" do
+
+  .panel-heading
+    .btn-group.btn-group-xs.pull-right
+      = button do
+        = icon :mobile, library: :font_awesome
+      = button do
+        = icon :tablet, library: :font_awesome
+      = button do
+        = icon :laptop, library: :font_awesome
+
+    h3 =
+
+
+  .panel-body
+
+  .panel-footer
+    .btn-toolbar
+      .btn-group
+        = button :save, context: :primary, name: 'save', bind: bind([template, :save])

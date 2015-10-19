@@ -9,6 +9,14 @@
   margin-bottom: 0px;
 }
 
+.types-group {
+  li>a>.glyphicon {
+    border: 1px solid;
+    padding: 5px;
+    border-radius: 3px;
+  }
+}
+
 .template-panel {
   .panel-body {
     padding: 0;
@@ -16,7 +24,12 @@
 }
 
 .template-edit {
-  padding-top: 20px;
+  // padding-top: 20px;
+  margin-top: -1px;
+  &>.panel {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+  }
 }
 
 

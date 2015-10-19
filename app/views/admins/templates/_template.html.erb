@@ -1,0 +1,85 @@
+<%= template_panel template do |p| %>
+  <%#= render "page_header" %>
+
+  <%= form_for template, url: url_for do |f| %>
+    <%= input_group class: 'input-group-lg' do %>
+      <%= addon "模版文件名" %>
+      <%= f.text_field :filename, class: 'form-control', disabled: template.reserved? %>
+    <% end %>
+  <% end %>
+
+  <br />
+
+  <%= nav class: "types-group" do %>
+    <%# @templates.each do |template| %>
+      <%#= link_to "##{template.name}", data: {toggle: "tab"}, role: "tab", 'aria-label' => template.name do %>
+        <%# = best_in_place_if !template.reserved?, template, :name, url: url_for, inner_class: 'form-control input-sm', as: :input %>
+      <%# end %>
+    <%# end %>
+
+    <%= link_to "##{template.name}-source", data: {toggle: "tab"}, role: "tab" do %>
+      <%= icon :edit %>
+      <%= t :source %>
+    <% end %>
+
+    <%= link_to "##{template.name}-javascript", data: {toggle: "tab"}, role: "tab" do %>
+      <%= icon :console %>
+      <%= t :javascript %>
+    <% end %>
+
+    <%= link_to "##{template.name}-stylesheet", data: {toggle: "tab"}, role: "tab" do %>
+      <%= icon :asterisk %>
+      <%= t :stylesheets %>
+    <% end %>
+
+    <%= link_to "##{template.name}-preview", data: {toggle: "tab"}, role: "tab" do %>
+      <%= icon 'eye-open' %>
+      <%= t :preview %>
+    <% end %>
+
+    <div class="btn-toolbar pull-right" >
+      <div class="btn-group ">
+        <%= dropdown 'Theme', class: 'theme-dropdown' do %>
+          <% AceEditorHelper::THEMES.each do |theme| %>
+            <%= link_to theme.titleize, '#', theme: theme, class: 'theme-item' %>
+          <% end %>
+        <% end %>
+      </div>
+
+      <div class="btn-group" >
+        <%= button context: 'default' do %>
+          <%= icon :fullscreen %>
+        <% end %>
+      </div>
+
+      <div class="btn-group ">
+        <%#= search_form [ :search, :admins, *@parents, :templates ], value: params[:q] %>
+      </div>
+    </div>
+  <% end %>
+
+
+  <!-- Tab panes -->
+  <div class="tab-content template-edit">
+    <% @current_tab ||= "#{template.name}-source" %>
+    <%= render partial: "admins/templates/editors/source", locals: { template: @template, parents: @parents, builder: p } %>
+    <%= render partial: "admins/templates/editors/javascript", locals: { template: @template, parents: @parents, builder: p } %>
+    <%= render partial: "admins/templates/editors/stylesheet", locals: { template: @template, parents: @parents, builder: p } %>
+    <%= render partial: "admins/templates/editors/preview", locals: { template: @template, parents: @parents, builder: p } %>
+  </div>
+<% end %>
+<script type="text/javascript">
+  $(".best_in_place").best_in_place();
+  $('.theme-item').on('click', function(e) {
+    $(document).trigger('settings:theme:change', $(this).attr('theme'))
+  });
+
+  $(document).on("settings:theme:change", function(e, theme) {
+    $('[ace-editor-id]').each(function(i, elem) {
+      var editor = $(elem).data('ace_edit')
+      if (editor) {
+        editor.setTheme("ace/theme/" + theme);
+      }
+    });
+  });
+</script>

@@ -18,6 +18,18 @@ module Admins::TemplateHelper
     end
   end
 
+  def editor_panel(*args, &block)
+    options = args.extract_options!
+
+    default_options = {
+      class: [options[:class]]
+    }
+
+    default_options[:class].push("active in") if @current_tab == options[:id]
+
+    panel *args, options.merge(default_options), &block
+  end
+
   def new_admins_template
     [:new, :admins, *@parents, :template ]
   end
@@ -29,6 +41,19 @@ module Admins::TemplateHelper
     args.push options
     super template, *args, &block
   end
+
+  def source_editor(*args, &block)
+    ace_editor(*args, &block)
+  end
+
+  def javascript_editor(*args, &block)
+    ace_editor(*args, &block)
+  end
+
+  def stylesheet_editor(*args, &block)
+    ace_editor(*args, &block)
+  end
+
 
   def button_new(title, template, options = {}, &block)
     default_options = {
@@ -53,8 +78,13 @@ module Admins::TemplateHelper
     super *args, &block
   end
 
-  default_options :template_panel, class: "tab-pane fade panel panel-default template-panel"
+  default_options :template_panel, class: "tab-pane fade template-panel"
+  default_options :editor_panel, class: "tab-pane fade template-panel "
   default_options :button_new, class: 'btn btn-default button_new', remote: true
-  default_options :ace_editor, class: 'source-editor', theme: 'solarized_dark'
+  default_options :ace_editor, class: 'source-editor', theme: 'chrome'
+  default_options :source_editor, class: 'source-editor', theme: 'chrome'
+  default_options :javascript_editor, class: 'source-editor', theme: 'chrome', mode: :javascript
+  default_options :stylesheet_editor, class: 'source-editor', theme: 'chrome', mode: :css
+
   default_options :form_for, build: ::TemplateBuilder
 end

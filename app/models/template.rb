@@ -15,6 +15,14 @@ class Template < ActiveRecord::Base
 
   scoped_search on: [ :name, :filename ]
 
+  scope :with_search,  -> (query) {
+    if query.blank?
+      all
+    else
+      search_for(query)
+    end
+  }
+
   def content
     content!
   rescue
