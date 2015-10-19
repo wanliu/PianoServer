@@ -46,7 +46,9 @@
 
     <div class="shop-brief clearfix">
       <div class="shop-logo">
-         <%= image_tag shop.logo_url %>
+        <a href="/<%= shop.name %>">
+          <%= image_tag shop.logo_url %>
+        </a>
       </div>
 
       <div class="shop-desc">
