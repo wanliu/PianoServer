@@ -86,6 +86,7 @@ class Item < ActiveRecord::Base
   def build_stocks(operator, options)
     if options.is_a? Hash
       options.values.each do |option|
+        next if option[:value].blank? || option[:value].to_f == 0
         stock_changes.build(data: option[:key], operator: operator, quantity: option[:value], kind: :purchase)
       end
     else
