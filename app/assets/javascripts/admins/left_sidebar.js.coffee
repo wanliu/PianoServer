@@ -18,13 +18,21 @@ class @LeftSideBar extends @HuEvent
 
     @$navbar = $(@navbar)
     @hammer = new Hammer.Manager(document.body)
-    @hammer.add(new Hammer.Pan({ threshold: 0, pointers: 0 }));
+    # @hammer.add(new Hammer.Pan({ threshold: 0, pointers: 0 }));
     # @hammer.add(new Hammer.Swipe({
     #   direction: Hammer.DIRECTION_ALL
     # })).recognizeWith(@hammer.get('pan'));
 
-    @hammer.on("panright swiperight", @slideOpen.bind(@))
-    @hammer.on("panleft swipeleft", @slideClose.bind(@))
+    # @hammer.on("panright swiperight", @slideOpen.bind(@))
+    # @hammer.on("panleft swipeleft", @slideClose.bind(@))
+
+    @hammer.add(new Hammer.Swipe({
+      direction: Hammer.DIRECTION_HORIZONTAL,
+      velocity: 0.1,
+      threshold: 1
+    }))
+    @hammer.on("swiperight", @slideOpen.bind(@))
+    @hammer.on("swipeleft", @slideClose.bind(@))
 
     @$().on(TRANSITION_ENDS, @onTransEnd.bind(@))
 

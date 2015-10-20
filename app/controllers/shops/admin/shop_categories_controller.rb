@@ -1,5 +1,5 @@
 class Shops::Admin::ShopCategoriesController < Shops::Admin::BaseController
-  before_action :is_descendant_of_category, only: [:show_by_child, :update_by_child, :upload_image, :destroy_by_child]
+  before_action :is_descendant_of_category, only: [:show_by_child, :update_by_child, :upload_image, :destroy_by_child, :edit, :update_category]
   before_action :set_paginating, only: [:show, :show_by_child]
 
   def create
@@ -28,10 +28,24 @@ class Shops::Admin::ShopCategoriesController < Shops::Admin::BaseController
     @root = @shop_category
   end
 
+  def edit
+
+  end
+
   def show_by_child
     @children = @shop_category.children.page(params[:page]).per(params[:per])
 
     render :show
+  end
+
+  def update
+    @root = @shop.shop_category
+    @shop_category = ShopCategory.find(params[:child_id])
+  end
+
+  def update_category
+    @shop_category.update shop_category_params
+    render :edit
   end
 
   def update_by_child

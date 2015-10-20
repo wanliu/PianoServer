@@ -16,6 +16,7 @@
       <!-- 图片 -->
       <div class="form-group">
         <%= f.label :images, class: "col-sm-2 control-label" %>
+
         <div class="col-sm-10">
           <div class="item-poster-list row">
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-3 new-item-poster">
@@ -36,7 +37,7 @@
 
       <!-- 品牌 -->
       <% group_with_errors @item, :brand_id, f do %>
-        <%= f.select :brand_id, options_from_collection_for_select(Brand.all, 'id', 'title'), {}, class: 'form-control' %>
+        <%= f.select :brand_id, options_from_collection_for_select(Brand.all, 'id', 'title', @item.brand_id), {}, class: 'form-control' %>
       <% end %>
 
       <!-- 参考价 -->
@@ -56,7 +57,7 @@
 
       <!-- 商店分类 -->
       <% group_with_errors @item, :shop_category_id, f do %>
-        <%= f.select :shop_category_id, options_from_collection_for_select(@shop.shop_category.descendants, 'id', 'title'), {}, class: 'form-control' %>
+        <%= f.select :shop_category_id, options_from_collection_for_select(@shop.shop_category.descendants, 'id', 'title', @item.shop_category_id), {}, class: 'form-control' %>
       <% end %>
 
       <hr />
@@ -96,9 +97,16 @@
 </div>
 
 <script type="text/javascript">
-  var url = '<%= upload_image_shop_admin_items_path(@shop.name) %>';
+  var url = '<%= upload_image_shop_admin_items_path(@shop.name) %>',
+      $filenames = $('input#item_filenames');
 
-  new NewItemPosters($('.new-item-poster'), url, $('input#item_filenames'));
+  new NewItemPosters($('.new-item-poster'), url, $filenames);
+
+  var $container = $('.item-poster-list');
+
+  <% (@item.images || []).each do |uploader| %>
+    new EditItemPoster($container, url, uploader.filename ,uploader.url(:cover), $filenames);
+  <% end %>
 
 
   //表单数字验证
@@ -121,7 +129,7 @@
       }
     }
 
-    checkNumber($price) 
+    checkNumber($price)
       && checkNumber($public_price)
         && checkNumber($income_price)
           && this.submit();

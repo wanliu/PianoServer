@@ -23,10 +23,14 @@ class @NewShopCategory extends @HuEvent
 
   enterTitle: (e) ->
     if e.which == 13
+      title = @$input.val()
+
+      return if title.length == 0
+
       $.post(@url, {
         parent_id: @category.id,
         shop_category: {
-          title: @$input.val(),
+          title: title,
           image_url: @$img.val()
         }
       }).success (data) =>

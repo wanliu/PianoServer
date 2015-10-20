@@ -39,6 +39,8 @@ class @EditShopCategory extends @HuEvent
     @hammer.on('press', @.onPress.bind(@))
 
   onClickTitle: (e) ->
+    return if $(window).width() < 768
+
     e.preventDefault()
     e.stopPropagation()
 
@@ -54,7 +56,7 @@ class @EditShopCategory extends @HuEvent
       Turbolinks.visit(@url)
 
   onPress: () ->
-    $('#category-modal').modal("show");
+    $('#category-modal').data('url', @url).modal("show")
 
   thumbnailClickable: (e) ->
     $(e.target).parent('.thumbnail').attr('data-limited-depth') is 'false'
