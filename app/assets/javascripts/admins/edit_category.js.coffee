@@ -38,6 +38,8 @@ class @EditShopCategory extends @HuEvent
 
     @hammer.on('press', @.onPress.bind(@))
 
+
+
   onClickTitle: (e) ->
     e.preventDefault()
     e.stopPropagation()
@@ -50,8 +52,21 @@ class @EditShopCategory extends @HuEvent
       .select()
 
   onClick: (e) ->
-    if $(e.target).is('.thumbnail>img') && @thumbnailClickable(e)
-      Turbolinks.visit(@url)
+    if $(e.target).is('.thumbnail>img') 
+
+      if @thumbnailClickable(e)
+        Turbolinks.visit(@url)
+        @$().addClass('animate-reversal-enter')
+
+      else
+        @$()
+          .addClass('animate-shiver')
+          .one(@animationend(), () -> 
+            $(@).removeClass('animate-shiver')
+          )
+
+  animationend: () -> 
+    ['animationend','webkitAnimationEnd','oanimationend','MSAnimationEnd'].join(' ')
 
   onPress: () ->
     $('#category-modal').modal("show");
@@ -79,7 +94,6 @@ class @EditShopCategory extends @HuEvent
         @leaveEdit()
         @setTitle(data.title)
 
-
   leaveEdit: () ->
     @$input.hide()
     @$title.show()
@@ -94,3 +108,7 @@ class @EditShopCategory extends @HuEvent
   setImage: (url) ->
     @$img.val(url)
     @$().find('.thumbnail>img').attr('src', url)
+
+$(document).on('page:change', (event) ->
+  $('.animate-reversal-enter').removeClass('animate-reversal-enter')
+)
