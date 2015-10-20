@@ -5,7 +5,7 @@ class User < ActiveRecord::Base
   before_save :ensure_authentication_token
 
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable, :timeoutable,
+  devise :database_authenticatable, :registerable, :timeoutable, :async,
          :recoverable, :rememberable, :trackable, :validatable,
          :authentication_keys => [:login]
 

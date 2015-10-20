@@ -62,6 +62,8 @@ gem 'rack-cors', :require => 'rack/cors'
 gem 'rack-raw-upload', '~> 1.1.1'
 
 gem 'devise', '3.4.0'
+gem 'devise-async'
+
 gem 'mobylette'
 # gem 'nio4r'
 gem "mini_magick", '~> 4.2.7'
