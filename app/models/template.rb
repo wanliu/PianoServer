@@ -54,6 +54,10 @@ class Template < ActiveRecord::Base
     templable.try(:name_reserved?, name)
   end
 
+  def default?
+    !persisted?
+  end
+
   protected
 
   alias_method_chain :update_attributes, :content

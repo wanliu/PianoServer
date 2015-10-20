@@ -1,22 +1,24 @@
 <%= content_tag :div, options do %>
-  <div class="titlebar">
-    <div class="buttons">
-      <div class="window-close">
-        <a class="closebutton" href="#"><span><strong>x</strong></span></a>
-        <!-- close button link -->
+  <div class="window-box" >
+    <div class="titlebar">
+      <div class="buttons">
+        <div class="window-close">
+          <a class="closebutton" href="#"><span><strong>x</strong></span></a>
+          <!-- close button link -->
+        </div>
+        <div class="window-minimize">
+          <a class="minimizebutton" href="#"><span><strong>&ndash;</strong></span></a>
+          <!-- minimize button link -->
+        </div>
+        <div class="window-zoom">
+          <a class="zoombutton" href="#"><span><strong>+</strong></span></a>
+          <!-- zoom button link -->
+        </div>
       </div>
-      <div class="window-minimize">
-        <a class="minimizebutton" href="#"><span><strong>&ndash;</strong></span></a>
-        <!-- minimize button link -->
-      </div>
-      <div class="window-zoom">
-        <a class="zoombutton" href="#"><span><strong>+</strong></span></a>
-        <!-- zoom button link -->
-      </div>
-    </div>
     <%= title %>
+    </div>
+    <%= content_tag :div, inner_options do %>
+      <% inline_block.call() %>
+    <% end %>
   </div>
-  <%= content_tag :div, inner_options do %>
-    <% inline_block.call() %>
-  <% end %>
 <% end %>

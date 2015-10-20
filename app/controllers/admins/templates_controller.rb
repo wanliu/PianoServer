@@ -34,7 +34,11 @@ class Admins::TemplatesController < Admins::BaseController
 
   def show
     @templates = combine @parent.templates, default_templates
-    @template = @parent.templates.find_by(name: params[:id])
+    @template = @templates.select { |tpl| tpl.name == params[:id] } [0]
+  end
+
+  def show_by_name
+
   end
 
   def update

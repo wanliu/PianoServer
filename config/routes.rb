@@ -33,6 +33,7 @@ Rails.application.routes.draw do
   end
 
   concern :templable do |options|
+
     resources :templates, options do
       member do
         post :upload

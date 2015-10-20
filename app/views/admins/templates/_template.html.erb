@@ -9,33 +9,40 @@
   <% end %>
 
   <br />
-
-  <%= nav class: "types-group" do %>
+  <ul class="nav nav-tabs types-group" role="tablist">
     <%# @templates.each do |template| %>
       <%#= link_to "##{template.name}", data: {toggle: "tab"}, role: "tab", 'aria-label' => template.name do %>
         <%# = best_in_place_if !template.reserved?, template, :name, url: url_for, inner_class: 'form-control input-sm', as: :input %>
       <%# end %>
     <%# end %>
 
-    <%= link_to "##{template.name}-source", data: {toggle: "tab"}, role: "tab" do %>
-      <%= icon :edit %>
-      <%= t :source %>
-    <% end %>
+    <li class="active">
+      <%= link_to "##{template.name}-source", data: {toggle: "tab"}, role: "tab" do %>
+        <%= icon :edit %>
+        <%= t :source %>
+      <% end %>
+    </li>
 
-    <%= link_to "##{template.name}-javascript", data: {toggle: "tab"}, role: "tab" do %>
-      <%= icon :console %>
-      <%= t :javascript %>
-    <% end %>
+    <li>
+      <%= link_to "##{template.name}-javascript", data: {toggle: "tab"}, role: "tab" do %>
+        <%= icon :console %>
+        <%= t :javascript %>
+      <% end %>
+    </li>
 
-    <%= link_to "##{template.name}-stylesheet", data: {toggle: "tab"}, role: "tab" do %>
-      <%= icon :asterisk %>
-      <%= t :stylesheets %>
-    <% end %>
+    <li>
+      <%= link_to "##{template.name}-stylesheet", data: {toggle: "tab"}, role: "tab" do %>
+        <%= icon :asterisk %>
+        <%= t :stylesheets %>
+      <% end %>
+    </li>
 
-    <%= link_to "##{template.name}-preview", data: {toggle: "tab"}, role: "tab" do %>
-      <%= icon 'eye-open' %>
-      <%= t :preview %>
-    <% end %>
+    <li>
+      <%= link_to "##{template.name}-preview", data: {toggle: "tab"}, role: "tab" do %>
+        <%= icon 'eye-open' %>
+        <%= t :preview %>
+      <% end %>
+    </li>
 
     <div class="btn-toolbar pull-right" >
       <div class="btn-group ">
@@ -56,7 +63,7 @@
         <%#= search_form [ :search, :admins, *@parents, :templates ], value: params[:q] %>
       </div>
     </div>
-  <% end %>
+  </ul>
 
 
   <!-- Tab panes -->
@@ -73,6 +80,7 @@
   $('.theme-item').on('click', function(e) {
     $(document).trigger('settings:theme:change', $(this).attr('theme'))
   });
+  // $(".types-group a:first").tab('show');
 
   $(document).on("settings:theme:change", function(e, theme) {
     $('[ace-editor-id]').each(function(i, elem) {

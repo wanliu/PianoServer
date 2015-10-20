@@ -78,7 +78,22 @@ module Admins::TemplateHelper
     super *args, &block
   end
 
-  default_options :template_panel, class: "tab-pane fade template-panel"
+  def views_for(templable, name)
+    File.join("admins", templable.class.name.underscore.pluralize, ["templates", name.to_s].join('_'))
+  end
+
+  def render_for(templable, name)
+    path = File.join("admins", templable.class.name.underscore.pluralize)
+    file_name = File.join(path, "_templates_#{name}")
+
+    if lookup_context.find_all(file_name).any?
+      render views_for(templable, name)
+    else
+      render "templates_index"
+    end
+  end
+
+  default_options :template_panel, class: "template-panel"
   default_options :editor_panel, class: "tab-pane fade template-panel "
   default_options :button_new, class: 'btn btn-default button_new', remote: true
   default_options :ace_editor, class: 'source-editor', theme: 'chrome'
