@@ -73,6 +73,8 @@ class Admins::TemplatesController < Admins::BaseController
 
     respond_to do |format|
       if @template.save
+        @templates = combine @parent.templates, default_templates
+
         format.html { render :show, layout: false }
         format.js { render :show, layout: false, status: :created }
         format.json  { render json: {}, status: :created }

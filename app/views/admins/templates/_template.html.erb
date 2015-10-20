@@ -23,20 +23,21 @@
       <% end %>
     </li>
 
-    <li>
-      <%= link_to "##{template.name}-javascript", data: {toggle: "tab"}, role: "tab" do %>
-        <%= icon :console %>
-        <%= t :javascript %>
-      <% end %>
-    </li>
+    <% if false %>
+      <li>
+        <%= link_to "##{template.name}-javascript", data: {toggle: "tab"}, role: "tab" do %>
+          <%= icon :console %>
+          <%= t :javascript %>
+        <% end %>
+      </li>
 
-    <li>
-      <%= link_to "##{template.name}-stylesheet", data: {toggle: "tab"}, role: "tab" do %>
-        <%= icon :asterisk %>
-        <%= t :stylesheets %>
-      <% end %>
-    </li>
-
+      <li>
+        <%= link_to "##{template.name}-stylesheet", data: {toggle: "tab"}, role: "tab" do %>
+          <%= icon :asterisk %>
+          <%= t :stylesheets %>
+        <% end %>
+      </li>
+    <% end %>
     <li>
       <%= link_to "##{template.name}-preview", data: {toggle: "tab"}, role: "tab" do %>
         <%= icon 'eye-open' %>
@@ -70,8 +71,8 @@
   <div class="tab-content template-edit">
     <% @current_tab ||= "#{template.name}-source" %>
     <%= render partial: "admins/templates/editors/source", locals: { template: @template, parents: @parents, builder: p } %>
-    <%= render partial: "admins/templates/editors/javascript", locals: { template: @template, parents: @parents, builder: p } %>
-    <%= render partial: "admins/templates/editors/stylesheet", locals: { template: @template, parents: @parents, builder: p } %>
+    <%#= render partial: "admins/templates/editors/javascript", locals: { template: @template, parents: @parents, builder: p } %>
+    <%#= render partial: "admins/templates/editors/stylesheet", locals: { template: @template, parents: @parents, builder: p } %>
     <%= render partial: "admins/templates/editors/preview", locals: { template: @template, parents: @parents, builder: p } %>
   </div>
 <% end %>

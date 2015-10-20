@@ -25,6 +25,8 @@
 //= require lib/underscore
 //= require lib/underscore-template
 //= require lib/bootstrap-select
+//= require lib/ace_editor
+//= require lib/ajax_status
 //= require _common/paginate
 //= require _common/qrcode
 //= require bootsy

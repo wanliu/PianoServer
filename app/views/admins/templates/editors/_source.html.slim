@@ -3,8 +3,7 @@
   .panel-body
     - if @edit_mode || template.persisted?
       .panel-content
-        = source_editor template, :content, template.filename, save_button: bind_to([template, :save], :click)
-
+        = source_editor template, :content, template.filename, save_button: :save
         .variables
           .btn-group-vertical
             .btn-group
@@ -17,7 +16,7 @@
   .panel-footer
     .btn-toolbar
       .btn-group
-        = button :save, context: :primary, name: 'save', bind: bind([template, :save])
+        = button :save, context: :primary, name: :save
 
 
 

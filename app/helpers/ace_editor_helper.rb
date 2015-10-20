@@ -17,8 +17,8 @@ module AceEditorHelper
     mode = options.delete(:mode) || 'liquid'
     save_button = options[:save_button]
 
-    bind = options.delete(:save_button)
-    bind_options = bind && bind.to_options
+    # bind = options.delete(:save_button)
+    # bind_options = bind && bind.to_options
 
     url = options[:url]
     url = url_for(object) unless url
@@ -27,10 +27,9 @@ module AceEditorHelper
     http_options.merge!(url: url, method: :patch, data: data_options )
     http_options[:method] = :post unless object.persisted?
 
-
     default_options = {
       'ace-editor-id': obj_id
-    }.merge(bind_options)
+    } #.merge(bind_options)
 
     scripts = <<-JAVASCRIPT
       var element = $('[ace-editor-id="#{obj_id}"]')[0];
@@ -38,6 +37,7 @@ module AceEditorHelper
       var http_options = #{http_options.to_json};
 
       $(element).data('ace_edit', editor);
+      $(element).data('http_options', http_options)
 
       editor.setTheme('ace/theme/#{theme}');
       editor.getSession().setMode('ace/mode/#{mode}');
@@ -46,17 +46,23 @@ module AceEditorHelper
         enableSnippets: true,
       });
 
-      $(function() {
-        $("#{bind.to_jquery(:to)}").on('#{bind.event}', function(e) {
-          e.preventDefault();
+      $(element).editor();
 
-          http_options['data']['template']['content'] = editor.getValue();
+      /*
+       $(function() {
+      #   console.log('binding', ".#{options[:target]}", $(".#{options[:target]}")[0]);
 
-          $.ajax(http_options).success(function() {
+      #   $(".#{options[:target]}").off("click");
+      #   $(".#{options[:target]}").on("click", function(e) {
+      #     e.preventDefault();
 
-          });
-        })
-      });
+      #     http_options['data']['template']['content'] = editor.getValue();
+
+      #     $.ajax(http_options).success(function() {
+
+      #     });
+      #   })
+      # }); */
     JAVASCRIPT
 
 
