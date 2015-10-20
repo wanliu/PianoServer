@@ -46,11 +46,13 @@
 
     <div class="shop-brief clearfix">
       <div class="shop-logo">
-         <%= image_tag shop.logo_url %>
+        <a href="/<%= shop.name %>">
+          <%= image_tag shop.logo_url %>
+        </a>
       </div>
 
       <div class="shop-desc">
-        <p>供应商:<%= shop.name %></p>
+        <p>供应商:<%= shop.title %></p>
         <p>地址:<%= shop.address %></p>
         <p>关注:100<button class="btn btn-follow"><span class="glyphicon glyphicon-plus"/>关注</button></p>
       </div>
