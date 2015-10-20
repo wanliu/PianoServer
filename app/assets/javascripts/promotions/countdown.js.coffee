@@ -117,7 +117,7 @@ class @CountDown
   _formatFullyTime: (date) ->
     date = new Date(date)
     years = date.getFullYear()
-    months = @_formatValue(date.getMonth())
+    months = @_formatValue(date.getMonth() + 1)
     days = @_formatValue(date.getDate())
     hours = @_formatValue(date.getHours())
     minutes = @_formatValue(date.getMinutes())

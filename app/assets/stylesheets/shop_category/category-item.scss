@@ -14,15 +14,14 @@
   .promotion{
     padding:0;
     background-color: #fff;
-    border-radius: 3px;
     overflow: hidden;
   }
 
   .promotion-image-wrap{
     display: block;
     text-align: center;
-    height: 235px;
-    @media (max-width: 992px){
+    height: 230px;
+    @media (max-width: 484px){
         height: 180px;
     }
   }
