@@ -20,27 +20,32 @@ body.shop .brand-board{
     left: 0;
     width: 100%;
 
+    .shop-logo-wrapper{
+      display: table-cell;
+      width: 70px;
+      padding: 10px;
+      vertical-align: top;
+      @media (max-width: 484px){
+        padding:0 5px 0 0;
+        width: 50px;
+      }
+    }
+
     .shop-logo {
       width: 50px;
       height: 50px;
-    }
-
-    .media-left {
-      padding: 10px;
-      @media (max-width: 484px){
-        padding:0;
-        margin-right: 10px;
-      }
     }
 
     .name-address {
       padding: 10px 0;
       color: #FFFFFF;
       max-width: 0;
+      display: table-cell;
+      white-space: nowrap;
       overflow: hidden;
 
       @media (max-width: 484px){
-        padding:0 0 0 10px;
+        padding:0;
       }
       .name,
       .address{
