@@ -37,13 +37,8 @@ class Admins::TemplatesController < Admins::BaseController
     @template = @templates.select { |tpl| tpl.name == params[:id] } [0]
   end
 
-  def show_by_name
-
-  end
-
   def update
     old_filename = @template.filename
-    sleep 10
 
     @template.update_attributes(template_params)
 

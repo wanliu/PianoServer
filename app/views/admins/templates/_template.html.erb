@@ -39,7 +39,7 @@
       </li>
     <% end %>
     <li>
-      <%= link_to "##{template.name}-preview", data: {toggle: "tab"}, role: "tab" do %>
+      <%= link_to "##{template.name}-preview", id: 'toggle-preview', data: {toggle: "tab"}, role: "tab" do %>
         <%= icon 'eye-open' %>
         <%= t :preview %>
       <% end %>

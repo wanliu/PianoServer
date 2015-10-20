@@ -11,10 +11,17 @@
 
     h3 =
 
-
   .panel-body
+    =form_tag url_for([:preview, :admins, *parents, template]), id: 'preview-form', target: :source_preview do
+      = hidden_field_tag :source, nil
 
-  .panel-footer
-    .btn-toolbar
-      .btn-group
-        = button :save, context: :primary, name: 'save', bind: bind([template, :save])
+    iframe id="source_preview" name="source_preview"
+
+javascript:
+
+  $("#toggle-preview").on('show.bs.tab', function () {
+    $saveButton = $('[name=save]');
+    editor = $saveButton.data('ace_edit');
+    $('#preview-form [name=source]').val(editor.getValue())
+    $('#preview-form').submit()
+  });
