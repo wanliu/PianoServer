@@ -11,7 +11,7 @@
 
   <% @templates.each do |template| %>
     <% url = File.join(url_for([ :admins, *@parents, :templates ]), template.name) %>
-    <%= link_to url do %>
+    <%= link_to url, class: "list-group-item"  do %>
       <%= best_in_place_if !template.reserved?, template, :name, url: url_for, inner_class: 'form-control input-sm', as: :input %>
     <% end %>
   <% end %>
