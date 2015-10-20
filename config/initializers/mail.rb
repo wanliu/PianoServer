@@ -1,6 +1,4 @@
-require "yaml"
-
-email = YAML.load_file("config/email.yml")[::Rails.env]
+email = Settings.mail
 
 ActionMailer::Base.smtp_settings = {
     :address => email["address"],
