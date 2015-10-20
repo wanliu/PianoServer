@@ -161,8 +161,10 @@ Rails.application.routes.draw do
       resources :shop_categories,  path: "categories", constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do
         member do
           get "/:child_id", to: "shop_categories#show_by_child", as: :child
+          get "/:child_id/edit", to: "shop_categories#edit"
           post "/:parent_id", to: "shop_categories#create_by_child"
           put "/:child_id", to: "shop_categories#update_by_child"
+          patch "/:child_id", to: "shop_categories#update_category"
           post "/:child_id/upload_image", to: "shop_categories#upload_image"
           delete "/:child_id", to: "shop_categories#destroy_by_child"
         end

@@ -86,6 +86,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
       item.save
     end
 
+    pp @item
     @item = Item.new(category_id: @category.id, shop_id: @shop.id) if @item.valid?
 
     flash[:notice] = t("notices.controllers.items.create")

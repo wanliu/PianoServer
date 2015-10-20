@@ -26,7 +26,7 @@ class @CategoryList extends @HuEvent
     $(template)
 
   bindAllEvents: () ->
-    @$().bind 'click', '.list-group-item', @clickHandler.bind(@)
+    @$().on 'click', '.list-group-item', @clickHandler.bind(@)
 
   clickHandler: (e) ->
     $target = $(e.target)
