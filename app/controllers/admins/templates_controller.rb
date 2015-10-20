@@ -43,6 +43,7 @@ class Admins::TemplatesController < Admins::BaseController
 
   def update
     old_filename = @template.filename
+    sleep 10
 
     @template.update_attributes(template_params)
 

@@ -46,8 +46,12 @@ AjaxStatusProcess = (type, event, jqXHR, args...) ->
     switch type
       when 'ajaxStart', 'beforeSend'
         disable($fromElement)
-        $prompt ||= $(container).find('.ajax-prompt')
-        $prompt = $("<span class=\"ajax-prompt label label-warning\">#{sending}</span>").appendTo($(container)) unless $prompt.length
+        $prompt =
+          if $(container).find('.ajax-prompt').length
+            $(container).find('.ajax-prompt')
+          else
+            $("<span class=\"ajax-prompt label label-warning\">#{sending}</span>").appendTo($(container))
+
         [ w, h ] = [$prompt.width(), $prompt.height()]
 
         $prompt
@@ -126,9 +130,6 @@ AjaxStatusProcess = (type, event, jqXHR, args...) ->
         }).fadeIn().delay(3000).fadeOut();
       else
         ;
-
-    console.log $fromElement
-
 
 parseAjaxConfig = (element) ->
 
