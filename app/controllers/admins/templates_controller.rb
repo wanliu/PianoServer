@@ -132,7 +132,7 @@ class Admins::TemplatesController < Admins::BaseController
   end
 
   def rm_temp_file
-    #@file.close!
+    @file.close!
   end
 
   def set_template

@@ -1,4 +1,3 @@
-require 'content_management/subject/file_system'
 
 module SubjectsHelper
   def subject_render(subject, template, *args)
