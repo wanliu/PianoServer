@@ -12,9 +12,11 @@ class Admins::TemplatesController < Admins::BaseController
 
   def new
     @edit_mode = true
-    @template = Template.new template_params
+    @templates = combine @parent.templates, default_templates
+    @template = Template.new default_or_template_params
     @template_builder_id = params[:template_builder_id]
     respond_to do |format|
+      format.html { render :new }
       format.js { render :new }
     end
   end
@@ -118,8 +120,18 @@ class Admins::TemplatesController < Admins::BaseController
     params.require(:template).permit(:name, :filename, :content)
   end
 
+  def default_or_template_params
+    if params.has_key?(:template)
+      params.require(:template).permit(:name, :filename, :content)
+    else
+      {
+
+      }
+    end
+  end
+
   def rm_temp_file
-    @file.close!
+    #@file.close!
   end
 
   def set_template
@@ -159,8 +171,8 @@ class Admins::TemplatesController < Admins::BaseController
   end
 
   def combine(targets, defaults)
-    defaults.map do |tpl|
-      targets.select {|t| t.name == tpl.name }[0] || tpl
+    (targets + defaults).uniq do | tpl|
+      tpl.name
     end
   end
 

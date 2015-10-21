@@ -12,7 +12,7 @@
     h3 =
 
   .panel-body
-    =form_tag url_for([:preview, :admins, *parents, template]), id: 'preview-form', target: :source_preview do
+    =form_tag url_for([:preview, :admins, *parents, template.becomes(::Template)]), id: 'preview-form', target: :source_preview do
       = hidden_field_tag :source, nil
 
     iframe id="source_preview" name="source_preview"

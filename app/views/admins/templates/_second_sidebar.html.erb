@@ -15,7 +15,7 @@
       <%= best_in_place_if !template.reserved?, template, :name, url: url_for, inner_class: 'form-control input-sm', as: :input %>
     <% end %>
   <% end %>
-    <%= link_to '#', class: 'list-group-item' do %>
+    <%= link_to './new', class: 'list-group-item' do %>
       <%= icon :plus %>
     <% end %>
 <% end %>

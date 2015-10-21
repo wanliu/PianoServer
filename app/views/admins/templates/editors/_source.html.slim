@@ -18,5 +18,27 @@
       .btn-group
         = button :save, context: :primary, name: :save
 
+javascript:
 
+  editor = $(".source-editor").data('ace_edit');
+  http_options = $(".source-editor").data('http_options');
+
+  $save_button = $("[name=save]")
+
+  $save_button.data('ace_edit', editor)
+  $save_button.data('http_options', http_options)
+
+  $save_button
+    .unbind('click')
+    .bind('click', function(e) {
+      $target = $(e.currentTarget);
+
+      editor = $target.data('ace_edit');
+      filename = $(".filename").val();
+      http_options = $target.data('http_options');
+      http_options['data']['template']['filename'] = filename;
+      http_options['data']['template']['content'] = editor.getValue();
+
+      Ajax($target, http_options)
+    });
 

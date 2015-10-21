@@ -46,7 +46,7 @@ module AceEditorHelper
         enableSnippets: true,
       });
 
-      $(element).editor();
+      // $(element).editor();
 
       /*
        $(function() {

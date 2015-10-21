@@ -1,10 +1,10 @@
 <%= template_panel template do |p| %>
   <%#= render "page_header" %>
 
-  <%= form_for template, url: url_for do |f| %>
+  <%= form_for template.becomes(::Template), url: url_for do |f| %>
     <%= input_group class: 'input-group-lg' do %>
       <%= addon "模版文件名" %>
-      <%= f.text_field :filename, class: 'form-control', disabled: template.reserved? %>
+      <%= f.text_field :filename, class: 'form-control filename', disabled: template.reserved? %>
     <% end %>
   <% end %>
 
