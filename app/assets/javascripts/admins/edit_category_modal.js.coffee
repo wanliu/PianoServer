@@ -34,7 +34,7 @@ class @EditCategoryModal extends @HuEvent
 
     dataConfirmModal.confirm({
       title: '删除提示',
-      text: '确认删除此参数吗?',
+      text: '确认删除此分类吗?',
       commit: '删除',
       cancel: '取消',
       dataType: 'script',

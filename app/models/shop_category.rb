@@ -3,6 +3,8 @@ require 'chinese_pinyin'
 class ShopCategory < ActiveRecord::Base
   LIMITED_DEPTH = 3
 
+  html_fragment :description, :scrub => :prune  # scrubs `body` using the :prune scrubber
+
   acts_as_nested_set
 
   paginates_per 12

@@ -161,11 +161,13 @@ Rails.application.routes.draw do
       resources :shop_categories,  path: "categories", constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do
         member do
           get "/:child_id", to: "shop_categories#show_by_child", as: :child
+          get "/:child_id/new", to: "shop_categories#new_by_child"
           get "/:child_id/edit", to: "shop_categories#edit"
           post "/:parent_id", to: "shop_categories#create_by_child"
           put "/:child_id", to: "shop_categories#update_by_child"
           patch "/:child_id", to: "shop_categories#update_category"
           post "/:child_id/upload_image", to: "shop_categories#upload_image"
+          post "/:parent_id/upload_image_by_child", to: "shop_categories#upload_image_by_child"
           delete "/:child_id", to: "shop_categories#destroy_by_child"
         end
       end
@@ -181,7 +183,7 @@ Rails.application.routes.draw do
         end
 
         member do
-          post "/upload_image", to: "items#upload_image"
+          post "/upload_image", to: "items#upload_image_file"
           put "/change_sale_state", to: "items#change_sale_state"
         end
       end
