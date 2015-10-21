@@ -8,6 +8,7 @@ class Admins::TemplatesController < Admins::BaseController
   before_action :set_template, only: [ :update, :upload]
   before_action :set_titles
   before_filter :set_view_path, only: [:preview, :preview_new]
+  before_action :set_xxs_protection, only: [:preview, :preview_new]
   after_filter :rm_temp_file, only: [ :preview ]
 
   def new
@@ -178,5 +179,9 @@ class Admins::TemplatesController < Admins::BaseController
 
   def default_templates
     @parent.try(:default_templates) || @parent.templates
+  end
+
+  def set_xxs_protection
+    response.headers['X-XSS-Protection'] = "0"
   end
 end
