@@ -10,12 +10,12 @@
     <% end %>
 
   <% @templates.each do |template| %>
-    <% url = File.join(url_for([ :admins, *@parents, :templates ]), template.name) %>
+    <% url = File.join(url_for([ :admins, *@parents, :templates ]), "blob", template.filename) %>
     <%= link_to url, class: "list-group-item"  do %>
-      <%= best_in_place_if !template.reserved?, template, :name, url: url_for, inner_class: 'form-control input-sm', as: :input %>
+      <%= best_in_place_if false, template, :name, url: url_for, inner_class: 'form-control input-sm', as: :input %>
     <% end %>
   <% end %>
-    <%= link_to './new', class: 'list-group-item' do %>
+    <%= link_to request.fullpath.sub(/\/templates\S*\z/, '/templates/new'), class: 'list-group-item' do %>
       <%= icon :plus %>
     <% end %>
 <% end %>
