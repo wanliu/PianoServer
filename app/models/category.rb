@@ -4,7 +4,7 @@ class Category < ActiveRecord::Base
   include Elasticsearch::Model
   include Elasticsearch::Model::Callbacks
   include ESModel
-  include ContentPath
+  include ContentManagement::Model
 
   class_attribute :default_templates
 
@@ -141,11 +141,16 @@ class Category < ActiveRecord::Base
   def name_reserved?(template_name)
     default_templates.select { |tpl| tpl.name == template_name }
   end
+
+  def instance_name
+    "#{id}_#{name}"
+  end
 end
 
 
 Category.default_templates = [
   PartialTemplate.new(name: 'sale_options', filename: 'views/_sale_options.html.liquid', templable: Category.new),
   PartialTemplate.new(name: 'edit_options', filename: 'views/_edit_options.html.liquid', templable: Category.new),
-  PageTemplate.new(name: 'item', filename: 'views/_item.html.liquid', templable: Category.new)
+  PageTemplate.new(name: 'item', filename: 'views/_item.html.liquid', templable: Category.new),
+  PageTemplate.new(name: 'items/show', filename: 'views/items/show.html.liquid', templable: Category.new)
 ]
