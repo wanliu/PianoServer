@@ -1,16 +1,16 @@
 <div class="shop-category-container">
-  <ul class="error-messages clearfix">
-    <% if @shop_category.errors.any? %>
-      <% @shop_category.errors.full_messages.each do |msg| %>
-        <li class="error-message"><%= msg %></li>
-      <% end %>
-    <% end %>
-  </ul>
   <div class="panel panel-default">
     <div class="panel-heading">
       店铺分类编辑
     </div>
     <div class="panel-body">
+      <ul class="error-messages clearfix">
+        <% if @shop_category.errors.any? %>
+          <% @shop_category.errors.full_messages.each do |msg| %>
+            <li class="error-message"><%= msg %></li>
+          <% end %>
+        <% end %>
+      </ul>
       <% url = child_shop_admin_shop_category_path(@shop.name, @root.name, @shop_category) %>
       <%= form_for(@shop_category, url: url)do |f| %>
         <div class="form-group">
