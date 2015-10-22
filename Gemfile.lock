@@ -131,6 +131,8 @@ GEM
       responders
       thread_safe (~> 0.1)
       warden (~> 1.2.3)
+    devise-async (0.10.1)
+      devise (~> 3.2)
     diff-lcs (1.2.5)
     elasticsearch (1.0.12)
       elasticsearch-api (= 1.0.12)
@@ -436,6 +438,7 @@ DEPENDENCIES
   coffee-rails (~> 4.1.0)
   data-confirm-modal!
   devise (= 3.4.0)
+  devise-async
   elasticsearch-model
   elasticsearch-persistence
   elasticsearch-rails
