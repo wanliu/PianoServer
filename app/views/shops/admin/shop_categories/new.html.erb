@@ -1,7 +1,7 @@
 <div class="shop-category-container">
   <div class="panel panel-default">
     <div class="panel-heading">
-      店铺分类编辑
+      店铺分类创建
     </div>
     <div class="panel-body">
       <ul class="error-messages clearfix">
@@ -11,8 +11,9 @@
           <% end %>
         <% end %>
       </ul>
-      <% url = child_shop_admin_shop_category_path(@shop.name, @root.name, @shop_category) %>
-      <%= form_for(@shop_category, url: url)do |f| %>
+      <% url = child_shop_admin_shop_category_path(@shop.name, @root.name, @parent) %>
+      <%= form_for(@shop_category, url: url) do |f| %>
+        <%= f.hidden_field :image, class: 'category-logo' %>
         <div class="form-group">
           <%= f.label :title %>
           <%= f.text_field :title, class: 'form-control', focus: true %>
@@ -53,17 +54,18 @@
 
 <script type="text/javascript">
   var $thumbnail = $('.category-image .thumbnail'),
-      url = $thumbnail.data('link'),
+      url = '<%= child_shop_admin_shop_category_path(@shop.name, @root.name, @parent) %>',
       token = $('meta[name="csrf-token"]').attr('content');
 
   new qq.FileUploader({
     element: $('.image-upload .upload-btn')[0],
-    action: url + "/upload_image",
+    action: url + "/upload_image_by_child",
     customHeaders: { "X-CSRF-Token": token },
     multiple: false,
     template: $(".file-uploader-template").html(),
     onComplete: function (id, filename, responseJSON) {
       $thumbnail.find('img').attr('src', responseJSON.url)
+      $('.category-logo').val(responseJSON.filename)
     }
   })
 </script>

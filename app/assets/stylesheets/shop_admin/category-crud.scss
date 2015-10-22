@@ -1,4 +1,4 @@
-.edit-category-container {
+.shop-category-container {
   .category-image {
     .image-preview {
       float: left;
@@ -35,5 +35,11 @@
         }
       }
     }
+  }
+
+  .error-messages {
+    padding: 0;
+    list-style: none;
+    color: #FF2B2B;
   }
 }

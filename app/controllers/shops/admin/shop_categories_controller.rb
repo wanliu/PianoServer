@@ -1,5 +1,6 @@
 class Shops::Admin::ShopCategoriesController < Shops::Admin::BaseController
-  before_action :is_descendant_of_category, only: [:show_by_child, :update_by_child, :upload_image, :destroy_by_child, :edit, :update_category]
+  before_action :is_descendant_of_category, only: [:show_by_child, :update_by_child, :upload_image,
+    :destroy_by_child, :edit, :update_category]
   before_action :set_paginating, only: [:show, :show_by_child]
 
   def create
@@ -15,10 +16,22 @@ class Shops::Admin::ShopCategoriesController < Shops::Admin::BaseController
     raise ActionController::RoutingError.new('Not Found') unless @parent.is_or_is_descendant_of?(@root)
     @shop_category = @parent.children.build(shop_category_params)
 
-    if @shop_category.save
-      render :show, formats: [ :json ]
-    else
-      render json: { errors: @shop_category.errors.full_messages }, status: :unprocessable_entity
+    respond_to do |format|
+      format.json do
+        if @shop_category.save
+          render :show, formats: [ :json ]
+        else
+          render json: { errors: @shop_category.errors.full_messages }, status: :unprocessable_entity
+        end
+      end
+
+      format.html do
+        if @shop_category.save
+          render :show
+        else
+          render :new
+        end
+      end
     end
   end
 
@@ -26,6 +39,14 @@ class Shops::Admin::ShopCategoriesController < Shops::Admin::BaseController
     @shop_category = @shop.shop_category
     @children = @shop_category.children.page(params[:page]).per(params[:per])
     @root = @shop_category
+  end
+
+  def new_by_child
+    @root = @shop.shop_category
+    @parent = ShopCategory.find(params[:child_id])
+    @shop_category = ShopCategory.new
+
+    render :new
   end
 
   def edit
@@ -60,6 +81,13 @@ class Shops::Admin::ShopCategoriesController < Shops::Admin::BaseController
   def destroy_by_child
     @shop_category.destroy
     render :destroy, formats: [:js]
+  end
+
+  def upload_image_by_child
+    uploader = ImageUploader.new(ShopCategory.new, :image)
+    uploader.store! params[:file]
+
+    render json: { success: true, url: uploader.url(:cover), filename: uploader.filename }
   end
 
   def upload_image
