@@ -1,6 +1,6 @@
 class ShopsController < ApplicationController
   before_action :prepare_shop_views_path
-  before_action :set_shop, only: [ :show_by_name, :show ]
+  before_action :set_shop, only: [ :show_by_name, :show, :about ]
   before_action :shop_page_info
 
   def show_by_name
@@ -11,16 +11,18 @@ class ShopsController < ApplicationController
     end
 
     @root = @shop.shop_category(true)
-    @shop.punch(request)
-    @shop_categories = @root.children.page(params[:page]).per(params[:per])
+    @shop_categories = @root.children
 
     render :show
   end
 
   def show
-    @shop = Shop.find params[:id]
-    @shop.punch(request)
+    # @shop = Shop.find params[:id]
     @shop_categories = @shop.shop_category.children.page(params[:page]).per(params[:per])
+  end
+
+  def about
+    render :about
   end
 
   private
@@ -30,7 +32,7 @@ class ShopsController < ApplicationController
   end
 
   def set_shop
-    @shop = Shop.find_by name: params[:shop_name]
+    @shop = Shop.find_by name: params[:shop_name] || params[:id]
   end
 
   def shop_page_info

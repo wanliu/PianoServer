@@ -336,7 +336,6 @@ ActiveRecord::Schema.define(version: 20151015055327) do
     t.string   "operation_type"
     t.datetime "created_at",                                              null: false
     t.datetime "updated_at",                                              null: false
-    t.string   "index"
     t.boolean  "is_reset",                                default: false, null: false
     t.integer  "kind",                                                    null: false
   end
