@@ -16,6 +16,8 @@ class ItemsController < ShopsController
   end
 
   def show
+    @current_user = current_anonymous_or_user
+    pp @current_user
   end
 
   private
