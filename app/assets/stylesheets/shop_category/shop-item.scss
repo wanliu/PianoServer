@@ -84,7 +84,7 @@
       padding: 5px 0;
     }
 
-    .into-shop, .fav-button{
+    .into-shop, .fav-button {
       border-right: 1px solid #DDDDDD;
     }
 
@@ -95,6 +95,23 @@
     .chat{
       color: #FFFFFF;
       background-color: #F42B2B;
+    }
+
+    .contact-button {
+      display: table-cell;
+      position: relative;
+
+      input[type=submit] {
+        position: absolute;
+        border: none;
+        outline: none medium;
+        color: #FFFFFF;
+        background-color: #F42B2B;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+      }
     }
   }
 
