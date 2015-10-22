@@ -1,16 +1,6 @@
 module ContentManagement
   module ControllerHelper
-    # extend ActiveSupport::Concern
-
-    protected
-
-    def push_view_paths(path)
-      self.lookup_context.view_paths.unshift path
-    end
-
-    def pop_view_paths()
-      self.lookup_context.view_paths.shift
-    end
+    include Paths
 
     private
 

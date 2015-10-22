@@ -2,6 +2,7 @@ module ContentManagement
   class TemplateObject
     def initialize(object, options = {})
       @object = object
+      @default_prefix = options[:prefix] || "views"
       @root = options[:root] || ContentManagement::Config.options.root
     end
 
@@ -24,7 +25,7 @@ module ContentManagement
         end
 
       if template
-        extract_extname(template.filename)
+        _normalize_path(template.filename)
       else
         name
       end
@@ -34,6 +35,10 @@ module ContentManagement
 
     def extract_extname(filename)
       File.join(File.dirname(filename), File.basename(filename).split('.')[0])
+    end
+
+    def _normalize_path(filename)
+      extract_extname(filename).sub /#{@default_prefix}\//, ''
     end
 
     def class_tableize_name
@@ -49,6 +54,7 @@ module ContentManagement
     def respond_method(*args)
       args.find { |meth| @object.respond_to? meth }
     end
+
   end
 
   class PartialTemplateObject < TemplateObject

@@ -145,6 +145,10 @@ class Category < ActiveRecord::Base
   def instance_name
     "#{id}_#{name}"
   end
+
+  def content_paths
+    ancestors.map { |cate| cate.content_path } + [ content_path ]
+  end
 end
 
 

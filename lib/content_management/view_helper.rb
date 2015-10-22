@@ -3,6 +3,7 @@
 module ContentManagement
   module ViewHelper
     extend ActiveSupport::Concern
+    include Paths
 
     included do
       alias_method_chain :render, :content
@@ -39,14 +40,6 @@ module ContentManagement
       render_without_content(options, &block)
     end
 
-    protected
 
-    def push_view_paths(path)
-      self.lookup_context.view_paths.unshift path
-    end
-
-    def pop_view_paths()
-      self.lookup_context.view_paths.shift
-    end
   end
 end

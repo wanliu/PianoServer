@@ -13,6 +13,8 @@ module ContentManagement
     include Singleton
 
     def self.options
+
+      instance.views_prefix ||= "views"
       instance
     end
   end
