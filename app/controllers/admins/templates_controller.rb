@@ -37,7 +37,7 @@ class Admins::TemplatesController < Admins::BaseController
 
   def show
     @templates = combine @parent.templates, default_templates
-    @template = @templates.select { |tpl| tpl.name == params[:id] } [0]
+    @template = @templates.select { |tpl| tpl.filename == params[:id] } [0]
   end
 
   def update
@@ -61,7 +61,8 @@ class Admins::TemplatesController < Admins::BaseController
 
     # generate a name base on filename, and do not repeat in the same subject
     if @template.name.blank?
-      name = File.basename(filename)
+      name = File.basename(filename).split('.').first
+      name.sub!(/\A_/, '')
 
       while Template.exists?(templable: @parent, name: name)
         name.succ!
