@@ -100,12 +100,15 @@
     .contact-button {
       display: table-cell;
       position: relative;
+      vertical-align: middle;
+      text-align: center;
+      background-color: #F42B2B;
+      color: #FFFFFF;
 
       input[type=submit] {
         position: absolute;
         border: none;
         outline: none medium;
-        color: #FFFFFF;
         background-color: #F42B2B;
         left: 0;
         top: 0;
