@@ -6,7 +6,7 @@ module ContentManagement
     end
 
     def instance_name
-      respond_to?(name) ? name : to_param
+      respond_to?(:name) ? name : to_param
     end
 
     def content_path

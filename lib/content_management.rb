@@ -1,5 +1,3 @@
-# require 'action_controller'
-# require 'action_view'
 require 'active_support/concern'
 
 require 'content_management/view_helper'

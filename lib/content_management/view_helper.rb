@@ -36,19 +36,6 @@ module ContentManagement
         end
       end
 
-      # if tpl.nil?
-      #   render options
-      # elsif is_partial?(tpl.filename)
-      #   set_file_system subject
-      #   path = File.join("subjects", subject.name, tpl.filename.sub(/^views\/_/, 'views/'))
-      #   set_file_system subject
-      #   render({ partial: path }.reverse_merge(options))
-      # else
-      #   set_file_system subject
-      #   path = File.join("subjects", subject.name, tpl.filename)
-      #   render path
-      # end
-
       render_without_content(options, &block)
     end
 
