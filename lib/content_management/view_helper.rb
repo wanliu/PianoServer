@@ -35,11 +35,10 @@ module ContentManagement
         template_object.paths.each do |path|
           push_view_paths path
         end
+        options.delete(:with)
       end
 
       render_without_content(options, &block)
     end
-
-
   end
 end

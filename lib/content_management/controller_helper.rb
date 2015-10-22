@@ -4,8 +4,9 @@ module ContentManagement
 
     private
 
-    def _normalize_render(*args, &block)
-      options = _normalize_args(*args, &block)
+    def _normalize_options(options)
+      super
+
       template_class = options[:template_class] || TemplateObject
 
       if with_object = options[:with]
@@ -16,15 +17,8 @@ module ContentManagement
         template_object.paths.each do |path|
           push_view_paths path
         end
+        options.delete(:with)
       end
-
-      #TODO: remove defined? when we restore AP <=> AV dependency
-      if defined?(request) && request.variant.present?
-        options[:variant] = request.variant
-      end
-      _normalize_options(options)
-      options
     end
-
   end
 end
