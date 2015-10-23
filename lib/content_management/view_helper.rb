@@ -29,6 +29,7 @@ module ContentManagement
 
       if with_object = options[:with]
         template_object = template_class.new(with_object)
+        # self.assigns["templable_object"] = template_object
 
         options[:partial] = options[:filename] || template_object.view_name(options[:partial])
 
