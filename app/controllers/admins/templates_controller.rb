@@ -5,7 +5,7 @@ class Admins::TemplatesController < Admins::BaseController
 
   before_action :set_templable
   before_action :set_parents
-  before_action :set_template, only: [ :update, :upload]
+  before_action :set_template, only: [ :update, :upload, :preview ]
   before_action :set_titles
   before_filter :set_view_path, only: [:preview, :preview_new]
   before_action :set_xxs_protection, only: [:preview, :preview_new]
@@ -86,8 +86,6 @@ class Admins::TemplatesController < Admins::BaseController
   end
 
   def preview
-    @template = @parent.templates.find(params[:id])
-
     load_all_variables @template.variables
     load_attachments
 
@@ -137,7 +135,9 @@ class Admins::TemplatesController < Admins::BaseController
   end
 
   def set_template
-    @template = @parent.templates.find(params[:id])
+    @template = @parent.templates.find_by(filename: params[:id])
+
+    raise ActiveRecord::RecordNotFound if @template.blank?
   end
 
   def set_templable
@@ -166,6 +166,8 @@ class Admins::TemplatesController < Admins::BaseController
       @parent = @templable
       @parents = [ @parent ]
     end
+
+    @subject = Subject.find(params[:subject_id])
   end
 
   def set_view_path
