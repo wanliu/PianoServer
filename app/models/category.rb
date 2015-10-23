@@ -4,6 +4,9 @@ class Category < ActiveRecord::Base
   include Elasticsearch::Model
   include Elasticsearch::Model::Callbacks
   include ESModel
+  include ContentPath
+
+  class_attribute :default_templates
 
   acts_as_tree :cache_depth => true
 
@@ -11,6 +14,7 @@ class Category < ActiveRecord::Base
   belongs_to :brand
 
   has_and_belongs_to_many :properties
+  has_many :templates, as: :templable
 
   def with_upper_properties(inhibit = true)
     cond_string = [ "u.rk = 1", inhibit ? "u.state = 0" : nil ].compact.join(" and ")
@@ -46,6 +50,10 @@ class Category < ActiveRecord::Base
 
     Property.find_by_sql [query.squish, ancestry_depth, sort_ancestor_ids]
   end
+
+  # def with_upper_templates
+
+  # end
 
   def definition_properties
     @defintion_properties ||= HashEx[with_upper_properties.map do |property|
@@ -129,4 +137,15 @@ class Category < ActiveRecord::Base
   def is_leaf
     !has_children?
   end
+
+  def name_reserved?(template_name)
+    default_templates.select { |tpl| tpl.name == template_name }
+  end
 end
+
+
+Category.default_templates = [
+  PartialTemplate.new(name: 'sale_options', filename: 'views/_sale_options.html.liquid', templable: Category.new),
+  PartialTemplate.new(name: 'edit_options', filename: 'views/_edit_options.html.liquid', templable: Category.new),
+  PageTemplate.new(name: 'item', filename: 'views/_item.html.liquid', templable: Category.new)
+]

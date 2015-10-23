@@ -1,1 +1,10 @@
-<%= render 'form', locals: { template: @template, subject: @subject } %>
+<%#= render partial: 'template', object: @template, locals: { parents: @parents } %>
+<%= content_for :main do %>
+  <div class="tab-content" >
+    <%#= render partial: "template", collection: @templates, locals: { parents: @parents, template: @template} %>
+    <%= render partial: "template", locals: { parents: @parents, template: @template} %>
+  </div>
+<% end %>
+
+<%= render "layout" %>
+

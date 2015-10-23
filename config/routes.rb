@@ -32,6 +32,30 @@ Rails.application.routes.draw do
     resources :chats
   end
 
+  concern :templable do |options|
+    resources :templates, options.merge(only: [:index, :new, :create]) do
+      collection do
+        post :preview, to: 'templates#preview_new'
+        get :search
+      end
+    end
+
+    resources :templates, options.merge(path: 'templates/blob', only: [:show, :edit, :update, :destroy], constraints: {id: /[\S]+/}) do
+      member do
+        post :upload
+        post :preview
+      end
+
+      resources :variables, except: [:new ] do
+        collection do
+          get :new_promotion_variable
+          get :new_promotion_set_variable
+          get :search_promotion
+        end
+      end
+    end
+  end
+
   match "admins", to: "admins/dashboards#index", via: :get
 
   namespace :admins do
@@ -44,24 +68,7 @@ Rails.application.routes.draw do
     end
     resources :promotions
     resources :subjects do
-      resources :templates do
-        member do
-          post :upload
-          post :preview
-        end
-
-        collection do
-          post :preview, to: 'templates#preview_new'
-        end
-
-        resources :variables, except: [:new ] do
-          collection do
-            get :new_promotion_variable
-            get :new_promotion_set_variable
-            get :search_promotion
-          end
-        end
-      end
+      concerns :templable, templable_type: 'Subject', parent_type: 'Subject'
     end
     resources :messages
     resources :contacts
@@ -73,6 +80,7 @@ Rails.application.routes.draw do
       end
 
       resources :categories do
+        concerns :templable, templable_type: 'Category', parents_type: [ 'Industry', 'Category' ]
         resources :properties
 
         member do

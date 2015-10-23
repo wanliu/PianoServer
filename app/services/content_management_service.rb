@@ -1,9 +1,40 @@
 module ContentManagementService
+  extend self
+
+  def update_template(template, content)
+    file = template.send(:template_path)
+
+    directory = File.dirname(file)
+    FileUtils.mkdir_p directory unless File.directory?(directory)
+
+    File.write file, content
+    logger.info "\033[32mWriting\033[0m to #{file}..."
+    logger.debug content
+  end
+
+  def set_file_system(path)
+    Liquid::Template.file_system = ContentManagement::FileSystem.new(path, "_%s.html.liquid".freeze)
+  end
+
+  def set_resource_file_system(resource, *args)
+    resource_file_system(resource)
+    set_file_system File.join(resource_file_system(resource), *args)
+  end
+
+  def resource_file_system(resource)
+    pathname = resource.model_name.to_s.underscore.pluralize
+    File.join root_path(resource), pathname, resource.name
+  end
+
+  def root_path(resource)
+    resource.respond_to?(:root_path) ? resource.root_path : Settings.sites.root
+  end
+
   module ContentController
     extend ActiveSupport::Concern
 
     included do |klass|
-      include ContentManagementService::Methods
+      include ContentManagementService::Helpers
 
       klass.class_attribute :content_templates
       attr_accessor :cached_all_templates
@@ -67,7 +98,7 @@ module ContentManagementService
 
   end
 
-  module Methods
+  module Helpers
     VALID_VAR_NAME = /\A[_\p{letter}]+[\p{Alnum}_]*\z/
 
     def load_attachments
@@ -113,5 +144,10 @@ module ContentManagementService
     def merge_variables(_variables)
       _variables.uniq { |var| var.name }
     end
+  end
+
+  private
+  def logger
+    Rails.logger
   end
 end
