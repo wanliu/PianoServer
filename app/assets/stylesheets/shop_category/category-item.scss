@@ -11,6 +11,13 @@
     color:#f60;
   }
 
+  .item-link-a:visited,
+  .item-link-a:link,
+  .item-link-a:active{
+    text-decoration: none;
+    color:#333;
+  }
+
   .promotion{
     padding:0;
     background-color: #fff;
