@@ -1,0 +1,22 @@
+<%= content_for :second_sidebar do %>
+
+
+<%= nav as: :pills, layout: :stacked, class: 'template-list' do %>
+    <% if action_name == 'search' %>
+      <%= link_to [:admins, *@parents, :templates], class: 'list-group-item list-group-item-info' do %>
+        <%= "查找: " + params[:q] %>
+        <%= icon :remove, class: 'pull-right' %>
+      <% end %>
+    <% end %>
+
+  <% @templates.each do |template| %>
+    <% url = File.join(url_for([ :admins, *@parents, :templates ]), "blob", template.filename) %>
+    <%= link_to url, class: "list-group-item"  do %>
+      <%= best_in_place_if false, template, :name, url: url_for, inner_class: 'form-control input-sm', as: :input %>
+    <% end %>
+  <% end %>
+    <%= link_to request.fullpath.sub(/\/templates\S*\z/, '/templates/new'), class: 'list-group-item' do %>
+      <%= icon :plus %>
+    <% end %>
+<% end %>
+<% end %>

@@ -16,6 +16,8 @@ class ItemsController < ShopsController
   end
 
   def show
+    @item.punch(request)
+    render :show, with: @item.category
   end
 
   private
@@ -24,6 +26,6 @@ class ItemsController < ShopsController
     end
 
     def set_item
-      @item = @shop.items.find(params[:id])
+      @item = @shop.items.find_by_key(params)
     end
 end
