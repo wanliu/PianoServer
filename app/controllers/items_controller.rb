@@ -17,7 +17,7 @@ class ItemsController < ShopsController
 
   def show
     @item.punch(request)
-
+    render :show, with: @item.category
   end
 
   private

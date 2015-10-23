@@ -1,4 +1,3 @@
-require 'content_management/subject/file_system'
 require 'rails/generators'
 
 module ShopService

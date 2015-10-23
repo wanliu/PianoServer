@@ -1,5 +1,5 @@
 class Subject < ActiveRecord::Base
-  include ContentPath
+  include ContentManagement::Model
 
   RESERVED_NAMES = ["homepage_header", "index", "promotion"]
 
