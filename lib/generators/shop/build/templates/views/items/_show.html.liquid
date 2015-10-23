@@ -1,185 +1,184 @@
 <div class="shop-item col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1">
-  <div class="shop-item-image">
-    {{ item.image_url | image_tag }}
-  </div>
+<div class="shop-item-image">
+  {{ item.image_url | image_tag }}
+</div>
 
-  <div class="item-properties">
-    <div class="media">
-      <div class="media-left media-middle">
-        商品名:{{ item.title }}
-        <div>价格:￥{{ item.price }}</div>
-      </div>
-      <div class="media-body media-middle">
-        <div class='favor-title text-center'>收藏</div>
-        <div class='favor-count text-center'>0</div>
-      </div>
-      <div class="media-right media-middle">
-        <div class='like-title text-center'>赞</div>
-        <div class='like-count text-center'>0</div>
-      </div>
+<div class="item-properties">
+  <div class="media">
+    <div class="media-left media-middle">
+      商品名:{{ item.title }}
+      <div>价格:￥{{ item.price }}</div>
+    </div>
+    <div class="media-body media-middle">
+      <div class='favor-title text-center'>收藏</div>
+      <div class='favor-count text-center'>0</div>
+    </div>
+    <div class="media-right media-middle">
+      <div class='like-title text-center'>赞</div>
+      <div class='like-count text-center'>0</div>
     </div>
   </div>
+</div>
 
-  <div class='item-shop-infos'>
-    <div class="media">
-      <div class="media-left media-middle">
-        <a class='shop-avatar' href="/{{ shop.name }}">
-          <img src="{{ shop.logo_url_cover }}" alt="">
-          {% comment %}{{ shop.image_url | image_tag }}{% endcomment %}
-        </a>
-      </div>
-      <div class="media-body media-middle">
-        <div class='name'>供应商： {{ shop.title }}</div>
-        <div class='address'>地址：{{ shop.address }}</div>
-        <div class='follow'>
-          <span>关注：0</span>
-          <button class="btn btn-follow">
-            <span class="glyphicon glyphicon-plus"></span>
-            <span>关注</span>
-          </button>
-        </div>
-      </div>
-
+<div class='item-shop-infos'>
+  <div class="media">
+    <div class="media-left media-middle">
+      <a class='shop-avatar' href="/{{ shop.name }}">
+        <img src="{{ shop.logo_url_cover }}" alt="">
+        {% comment %}{{ shop.image_url | image_tag }}{% endcomment %}
+      </a>
     </div>
-  </div>
-
-  <div class='item-secodary-properties clearfix'>
-    <div class='brand-saled-count'>
-      <p class='brand col-xs-6 col-sm-6 col-md-6'>品牌:{{ item.brand_name }}</p>
-      <p class='sale-count col-xs-6 col-sm-6 col-md-6 text-right'>总销量：0</p>
+    <div class="media-body media-middle">
+      <div class='name'>供应商： {{ shop.title }}</div>
+      <div class='address'>地址：{{ shop.address }}</div>
+      <div class='follow'>
+        <span>关注：0</span>
+        <button class="btn btn-follow">
+          <span class="glyphicon glyphicon-plus"></span>
+          <span>关注</span>
+        </button>
+      </div>
     </div>
-    <p class='inventory col-xs-6 col-sm-6 col-md-6 '>库存数量：充足</p>
+
   </div>
+</div>
+
+<div class='item-secodary-properties clearfix'>
+  <div class='brand-saled-count'>
+    <p class='brand col-xs-6 col-sm-6 col-md-6'>品牌:{{ item.brand_name }}</p>
+    <p class='sale-count col-xs-6 col-sm-6 col-md-6 text-right'>总销量：0</p>
+  </div>
+  <p class='inventory col-xs-6 col-sm-6 col-md-6 '>库存数量：充足</p>
+</div>
 
 {% comment %}
-  <div class='item-descriptions'>
-   <div class="item-brief-description">
-      <label>商品介绍</label>
-      <p class="brief-desc">
-      {% if item.description.blank? %}
-      暂无简介
-      {% else %}
-      {{ item.description }}
-      {% endif %}
-      </p>
-    </div>
+<div class='item-descriptions'>
+ <div class="item-brief-description">
+    <label>商品介绍</label>
+    <p class="brief-desc">
+    {% if item.description.blank? %}
+    暂无简介
+    {% else %}
+    {{ item.description }}
+    {% endif %}
+    </p>
+  </div>
 
-    <div class="item-detail-decription"></div>
-    <label class='properties-title'>参数规格</label>
-    <div class="detail-desc">
-      <div class="media">
-        <div class="media-left media-top">
-          <div class='avatar'>
-          {{ item.image_url | image_tag }}
-          </div>
+  <div class="item-detail-decription"></div>
+  <label class='properties-title'>参数规格</label>
+  <div class="detail-desc">
+    <div class="media">
+      <div class="media-left media-top">
+        <div class='avatar'>
+        {{ item.image_url | image_tag }}
         </div>
-        <div class="media-body media-top">
-          <div class='property-items'>
-            {% for attribute in item.additional_fields.attributes %}
-            <div class="property-item col-xs-12 col-sm-12 col-md-6">
-              {% for item in attribute %}
-              <div class="item-key col-md-3">{{items[0]}}:</div>
-              <div class="item-value col-md-9">{{items[1]}}</div>
-              {% endfor %}
-            </div>
+      </div>
+      <div class="media-body media-top">
+        <div class='property-items'>
+          {% for attribute in item.additional_fields.attributes %}
+          <div class="property-item col-xs-12 col-sm-12 col-md-6">
+            {% for item in attribute %}
+            <div class="item-key col-md-3">{{items[0]}}:</div>
+            <div class="item-value col-md-9">{{items[1]}}</div>
             {% endfor %}
           </div>
+          {% endfor %}
         </div>
       </div>
     </div>
   </div>
+</div>
 {% endcomment %}
-  <div class="navbar-bottom navbar navbar-default navbar-fixed-bottom">
-    <div class="link-table">
-      <a class="into-shop" href="/{{shop.name}}">
-        <span class="button-icon glyphicon glyphicon-home"></span>
-        <div class="button-text">商家</div>
-      </a>
+<div class="navbar-bottom navbar navbar-default navbar-fixed-bottom">
+  <div class="link-table">
+    <a class="into-shop" href="/{{shop.name}}">
+      <span class="button-icon glyphicon glyphicon-home"></span>
+      <div class="button-text">商家</div>
+    </a>
 
-      <div class="fav-button">
-        <span class="button-icon glyphicon glyphicon-star-empty"></span>
-        <div class="button-text">收藏</div>
-      </div>
-
-      <div class="cart-button">
-        <span class="button-icon glyphicon glyphicon-shopping-cart"></span>
-        <div class="button-text">购物车</div>
-      </div>
-
-      <a class="buy-button" href="#">
-        购买
-      </a>
-
-      {% if shop.owner_id == current_user.id %}
-        <div class="contact-button">您的店铺</div>
-      {% else %}
-        {{ '洽谈' | button_to_chat: item, shop, form_class: 'contact-button'}}
-      {% endif %}
-
+    <div class="fav-button">
+      <span class="button-icon glyphicon glyphicon-star-empty"></span>
+      <div class="button-text">收藏</div>
     </div>
-  </div>
 
+    <div class="cart-button">
+      <span class="button-icon glyphicon glyphicon-shopping-cart"></span>
+      <div class="button-text">购物车</div>
+    </div>
+
+    <a class="buy-button" href="#">
+      购买
+    </a>
+
+    {% if shop.owner_id == current_user.id %}
+      <div class="contact-button chat">您的店铺</div>
+    {% else %}
+      {{ '洽谈' | button_to_chat: item, shop, form_class: 'contact-button chat'}}
+    {% endif %}
+
+  </div>
+</div>
 </div>
 
 <style>
 body {
-  padding-top: 51px;
+    padding-top: 51px;
 }
 
 .link-table > div, .link-table > a {
-  width: 20%;
+    width: 20%;
 }
 
 .shop-item {
-  background: #FFFFFF;
-  margin-bottom: 50px;
+    background: #FFFFFF;
+    margin-bottom: 50px;
 }
 
 .shop-item .shop-item-image {
-  width: 50%;
-  margin: 15px auto;
-  overflow: hidden;
-  text-align: center;
+    width: 50%;
+    margin: 15px auto;
+    overflow: hidden;
+    text-align: center;
 }
 
 .shop-item .shop-item-image img {
-  max-width: 100%;
-  height: auto;
-  width: 100%;
-  min-width: 200px;
-  min-height: 200px;
+    max-width: 100%;
+    height: auto;
+    width: 100%;
+    min-width: 200px;
+    min-height: 200px;
 }
 
 .shop-item .media {
-  width: 100%;
+    width: 100%;
 }
 
 .shop-item .item-properties {
-  padding: 0 20px;
-  background: #F12A39;
-  color: #FFFFFF;
-  font-weight: 700;
+    padding: 0 20px;
+    background: #F12A39;
+    color: #FFFFFF;
+    font-weight: 700;
 }
 
 .shop-item .item-properties .media-left {
-  width: 60%;
-  border-right: 1px solid #FFFFFF;
-  padding: 10px 0;
+    width: 60%;
+    border-right: 1px solid #FFFFFF;
+    padding: 10px 0;
 }
 
 .shop-item .item-properties .media-right {
-  width: 20%;
-  border-left: 1px solid #FFFFFF;
+    width: 20%;
+    border-left: 1px solid #FFFFFF;
 }
 
 .shop-item .item-shop-infos {
-  padding: 15px;
-  border-bottom: 1px solid #DDDDDD;
+    padding: 15px;
+    border-bottom: 1px solid #DDDDDD;
 }
 
 .shop-item .item-shop-infos .shop-avatar img {
-  width: 75px;
-  height: 75px;
+    width: 75px;
+    height: 75px;
 }
 .shop-item .item-shop-infos .btn-follow{
   background: #EC2A39;
@@ -190,33 +189,33 @@ body {
 }
 
 .shop-item .item-secodary-properties {
-  padding-top: 15px;
-  border-bottom: 1px solid #DDDDDD;
+    padding-top: 15px;
+    border-bottom: 1px solid #DDDDDD;
 }
 
 .shop-item .item-descriptions {
-  padding: 15px;
+    padding: 15px;
 }
 
 .shop-item .item-descriptions .brief-desc {
-  padding: 5px 15px;
+    padding: 5px 15px;
 }
 
 .shop-item .item-descriptions .detail-desc {
-  padding: 15px 15px 0;
+    padding: 15px 15px 0;
 }
 
 .shop-item .item-descriptions .detail-desc .avatar img {
-  max-width: 100%;
-  height: auto;
-  width: 100% \9;
-  min-width: 200px;
-  min-height: 200px;
+    max-width: 100%;
+    height: auto;
+    width: 100% \9;
+    min-width: 200px;
+    min-height: 200px;
 }
 
 .shop-item .link-table {
-  display: table;
-  width: 100%;
+    display: table;
+    width: 100%;
 }
 
 .shop-item .link-table .into-shop,
@@ -224,16 +223,16 @@ body {
 .shop-item .link-table .buy-button,
 .shop-item .link-table .fav-button,
 .shop-item .link-table .chat {
-  display: table-cell;
-  vertical-align: middle;
-  text-align: center;
-  padding: 5px 0;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    padding: 5px 0;
 }
 
 .shop-item .link-table .cart-button,
 .shop-item .link-table .into-shop,
 .shop-item .link-table .fav-button {
-  border-right: 1px solid #DDDDDD;
+    border-right: 1px solid #DDDDDD;
 }
 
 .shop-item .link-table .buy-button{
@@ -241,18 +240,18 @@ body {
   color:#fff;
 }
 .shop-item .link-table .into-shop {
-  color: #333333;
+    color: #333333;
 }
 
 .shop-item .link-table .chat {
-  color: #FFFFFF;
-  background-color: #F42B2B;
+    color: #FFFFFF;
+    background-color: #F42B2B;
 }
 
 .shop-item .property-item .item-key {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 @media (max-width: 768px){
@@ -265,7 +264,7 @@ body {
   }
 
   .shop-item .item-properties .media-left {
-    padding: 5px 0;
+      padding: 5px 0;
   }
 }
 </style>

@@ -1,9 +1,9 @@
-<div class="col-xs-4 col-sm-4 col-md-4 col-lg-3 shop-category" data-category-id="<%= shop_category.id %>">
+<div class="col-xs-4 col-sm-4 col-md-4 col-lg-3 shop-category" data-shop-category-id="<%= shop_category.id %>">
   <div class="box">
     <div class="thumbnail" data-link="<%= child_shop_admin_shop_category_path(@shop.name, @root.name, shop_category) %>" data-limited-depth="<%= shop_category.depth_limited_reached %>">
     <%#= link_to child_shop_admin_shop_category_path(@shop.name, @root, shop_category) , class: "thumbnail" do %>
       <%= image_tag shop_category.image.url(:cover) || Settings.assets.gray_image %>
-      <h2><%= shop_category.title %></h2>
+      <h2 class="disabled-xs"><%= shop_category.title %></h2>
       <input type="text" name="name" class="title-input disabled-xs" placeholder="分类名称" maxlength="20" />
       <div class="actions visible-md-block visible-lg-block">
         <div type="button" class="uploader-btn">

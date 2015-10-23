@@ -1,0 +1,45 @@
+.shop-category-container {
+  .category-image {
+    .image-preview {
+      float: left;
+      width: 200px;
+      height: 200px;
+      border: 1px solid #CCCCCC;
+      margin-bottom: 0;
+    }
+
+    .image-upload {
+      margin-left: 220px;
+
+      .uploader-btn {
+        padding: 0;
+      }
+
+      .input-group-addon {
+        position: relative;
+        padding: 0;
+        overflow: hidden;
+
+        .btn {
+          border: none;
+        }
+
+        .image-file {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          opacity: 0;
+          height: 100%;
+          font-size: 120px;
+        }
+      }
+    }
+  }
+
+  .error-messages {
+    padding: 0;
+    list-style: none;
+    color: #FF2B2B;
+  }
+}
