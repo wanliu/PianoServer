@@ -6,16 +6,15 @@
     margin-bottom: 30px;
   }
 
-  .item-link-a:hover{
-    text-decoration: none;
-    color:#f60;
-  }
-
   .item-link-a:visited,
   .item-link-a:link,
   .item-link-a:active{
     text-decoration: none;
     color:#333;
+  }
+  .item-link-a:hover{
+    text-decoration: none;
+    color:#f60;
   }
 
   .promotion{
@@ -65,7 +64,6 @@
     font-weight: 400;
   }
 }
-
 
 @media (max-width: 768px) {
   .shop-items {
