@@ -4,6 +4,9 @@
  *= require nprogress-bootstrap
  *= require _common/fileuploader
  *= require _common/checkbox
+ *= require lib/tablesaw
+ *= require lib/range 
+ *= require ./chats/chat-item
  *= require_tree ./shop_admin
  *= require_self
 */
@@ -19,6 +22,27 @@ body {
 
 body[module="signup"] {
   background: #ddd;
+}
+
+.navbar-left > li {
+  float: left;
+}
+
+.navbar-fixed-top {
+  -webkit-transition: all 0.45s ease-in-out 0s;
+  transition: all 0.45s ease-in-out 0s;
+}
+
+.navbar-left > li > a {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.navbar-brand > img {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+  float: left;
 }
 
 .shop-admin-container {
@@ -42,16 +66,17 @@ body[module="signup"] {
 .content {
   position: absolute;
   left: 240px;
-  -webkit-transition: left 0.45s ease-in-out 0s;
-  transition: left 0.45s ease-in-out 0s;
+  -webkit-transition: all 0.45s ease-in-out 0s;
+  transition: all 0.45s ease-in-out 0s;
   right: 0;
 }
 
 .shop.left-sidebar {
   position: absolute;
-  -webkit-transition: left 0.45s ease-in-out 0s;
-  transition: left 0.45s ease-in-out 0s;
-  top: 21px;
+  -webkit-transition: all 0.45s ease-in-out 0s;
+  transition: all 0.45s ease-in-out 0s;
+  top: 0px;
+  padding-top: 60px;
 }
 
 .left-sidebar {
@@ -77,6 +102,11 @@ body[module="signup"] {
     color: #fff;
     background-color: #337ab7;
   }
+
+  .nav > li.divider {
+    border-top: 1px solid #ccc;
+  }
+
 }
 
 .shop-admin-overlayer {
@@ -90,7 +120,20 @@ body[module="signup"] {
   display: none;
 }
 
+@media (min-width: 768px) {
+  .navbar-header {
+    float: none;
+  }
+}
+
+
 @media (max-width: 768px) {
+  .navbar-fixed-top {
+    .navbar-left {
+      float: left !important;
+    }
+  }
+
   .shop.left-sidebar {
     position: fixed;
     left: -300px;

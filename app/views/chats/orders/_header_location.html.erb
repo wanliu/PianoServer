@@ -4,18 +4,18 @@
     <div class="col-xs-8 col-sm-10">
       <div class="text-right">
         <div class="dropdown">
-          <span class="toggle-button" data-toggle="dropdown" role="button">
-            <span class="button-text" id="address-text"></span>
+          <div class="toggle-button" data-toggle="dropdown" role="button">
+            <div class="button-text" id="address-text"></div>
             <% if @order.buyer_id == current_anonymous_or_user.id %>
               <span class="caret"></span>
             <% end %>
-          </span>
+          </div>
           <% if @order.buyer_id == current_anonymous_or_user.id %>
             <ul class="dropdown-menu address-menu locations">
               <% if current_anonymous_or_user.locations.last(5).length > 0 %>
                 <% current_anonymous_or_user.locations.last(5).reverse.each do |location| %>
                   <li>
-                    <%= link_to location, 'javascript:void(0)', :"data-default-location-id" => location.id,:"data-order-id" => @order.id , :"data-location" => location ,:class => "set-default-address" %>
+                    <%= link_to location, 'javascript:void(0)', :"data-location-id" => location.id,:"data-order-id" => @order.id , :"data-location" => location ,:class => "set-default-address" %>
                   </li>
                 <% end %>
                 <li role="separator" class="divider"></li>
@@ -43,7 +43,8 @@
     var buyer_id = '<%= @order.buyer_id %>',
         user_id = '<%= current_anonymous_or_user.id %>',
         address_title = '<%= @order.delivery_address_title %>',
-        $locations = $(".locations");
+        $locations = $(".locations"),
+        default_location_id = '<%= @order.default_location_id %>';
 
     if (address_title === '') {
       address_title = '暂无收货地址';
@@ -70,16 +71,15 @@
     }
 
     //设置默认地址
-    <% if @order["data"] && @order["data"]["delivery_address"] && @order["data"]["delivery_address"]["location_id"] %>
-      var locationId = '<%= @order["data"]["delivery_address"]["location_id"] %>',
-          $link = $locations.find('a[data-location-id=' + locationId +']');
+    if (default_location_id != '') {
+      var $link = $locations.find('a[data-location-id=' + default_location_id +']');
 
       if ($link.length > 0) {
         var text = $link.text();
 
         $link.parent().addClass('selected');
       }
-    <% end %>
+    }
 
     $('.set-default-address').click(function (e) {
       var $parent = $(this).parent();

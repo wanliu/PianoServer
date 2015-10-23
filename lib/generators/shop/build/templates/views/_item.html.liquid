@@ -1,0 +1,27 @@
+<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+  <div class="promotion">
+    <a href="{{ item.link | shop_link: shop }}">
+      {{ item.image_url | image_tag: class: 'promotion-image' }}
+      <p class="promotion-title">
+         {{ item.title }}
+      </p>
+      <div class="price-board clearfix">
+        <a class="snap-up" href="javascript:void(0);">马上抢购</a>
+        <div class="prices">
+          <span class="disount-price">￥{{ item.price }}</span>
+          <span class="origin-price"><s>￥{{ item.public_price }}></s></span>
+        </div>
+      </div>
+    </a>
+    <div class="provider-wrap">
+      <a href="/{{ promotion.shop_name }}" >
+        <div class="provider">
+          <div class="provider-name">
+            {{ item.shop_name }}
+            <div>{{ item.created_at | date: '%Y/%m/%d %H:%M' }}</div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>

@@ -1,6 +1,17 @@
+body.detail {
+  margin-bottom: 50px;
+
+  footer {
+    display: none;
+  }
+}
+
 .promotion-detail-container{
   margin-bottom: 2em;
-  background: #FFFFFF;
+
+  .promotion-detail-content {
+    background: #FFFFFF;
+  }
 
   .promotion-poster-image{
     width: 50%;
@@ -173,6 +184,8 @@
     .link-table{
       display: table;
       width: 100%;
+      min-height: 50px;
+      font-size: 1.5rem;
     }
 
     .contact-button{

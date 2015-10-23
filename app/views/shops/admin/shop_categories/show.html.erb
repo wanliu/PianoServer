@@ -16,14 +16,14 @@
 </ol>
 <% end %>
 <div class="shop-category-list row">
-  <%= render partial: "shop_category", collection: @shop_category.children %>
+  <%= render partial: "shop_category", collection: @children %>
   <% unless @shop_category.depth >= 3 %>
     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-3 new-shop-category">
       <div class="box">
         <a href="#" class="thumbnail">
           <img src="<%= Settings.assets.gray_image %>" alt="new shop_category">
           <h2>+</h2>
-          <input type="text" name="name" class="title-input" placeholder="分类名称" />
+          <input type="text" name="name" class="title-input" placeholder="分类名称" maxlength="20"/>
           <p class="second-title">新增一个分类</p>
         </a>
       </div>
@@ -33,7 +33,32 @@
       <p class="text-center">新增一个分类</p>
     </div>
   <% end %>
+
+  <div style='clear: both;'>
+    <%= paginate(@children) %>
+  </div>
 </div>
+
+<div class="modal fade" id="category-modal">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">分类操作</h4>
+      </div>
+      <div class="modal-body">
+        <div class="list-group">
+          <a href="#" class="list-group-item active">进入</a>
+          <a href="#" class="list-group-item">编辑</a>
+          <a href="#" class="list-group-item">拍照</a>
+          <a href="#" class="list-group-item">上传图片</a>
+          <a href="#" class="list-group-item">删除</a>
+        </div>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 
 <script type="text/javascript">
   // $(ready);
@@ -53,12 +78,4 @@
       new EditShopCategory($(e))
     });
   // };
-
-
-  // $(document).on('page:before-unload', function() {
-  //   if (newCategory) {
-  //     newCategory.unbindAllEvents();
-  //     delete newCategory;
-  //   }
-  // });
 </script>

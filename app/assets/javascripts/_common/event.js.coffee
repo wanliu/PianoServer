@@ -1,6 +1,6 @@
 #= require ./element
 
-class @Event extends @Element
+class @HuEvent extends @Element
   constructor: (@element) ->
     super(@element)
     @bindAllEvents()

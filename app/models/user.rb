@@ -5,15 +5,16 @@ class User < ActiveRecord::Base
   before_save :ensure_authentication_token
 
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable, :timeoutable,
+  devise :database_authenticatable, :registerable, :timeoutable, :async,
          :recoverable, :rememberable, :trackable, :validatable,
          :authentication_keys => [:login]
 
   # has_many :memberings, :dependent => :destroy
   belongs_to :latest_location, class_name: 'Location'
+  belongs_to :shop
 
+  has_one :owner_shop, class_name: 'Shop', foreign_key: 'owner_id'
   has_many :chats, foreign_key: 'owner_id'
-
   has_many :locations
 
   has_many :followers, as: :followable, class_name: 'Follow'
@@ -95,6 +96,10 @@ class User < ActiveRecord::Base
     id < 0
   end
 
+  def join_shop
+    shop || owner_shop
+  end
+
   private
 
   def generate_authentication_token
@@ -119,5 +124,6 @@ class User < ActiveRecord::Base
     # TODO what to do when sync fails?
     end
   end
+
   alias_method :name, :nickname
 end

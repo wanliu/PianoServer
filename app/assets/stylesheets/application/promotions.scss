@@ -3,19 +3,18 @@
 }*/
 $border-color: #CCCCCC;
 
+.piano footer {
+  position: static;
+}
+
 .promotions-list {
   .promotion-wrap {
     padding-left: 0px;
     padding-right: 0px;
+    border-right: 1px solid $border-color;
+    overflow: hidden;
   }
 }
-
-.promotion-wrap:nth-child(odd) {
-  border-right: 1px solid $border-color;
-  overflow: hidden;
-}
-
-
 
 .promotion {
   background: #FFFFFF;
@@ -25,6 +24,10 @@ $border-color: #CCCCCC;
   overflow: hidden;
   //box-shadow: 0 2px 2px #DDDDDD;
   border-bottom: 1px solid $border-color;
+
+  >a {
+    display: block;
+  }
 
   .promotion-image {
     height: auto;
@@ -42,8 +45,6 @@ $border-color: #CCCCCC;
     z-index: 9;
     text-align: center;
     font-size: 1.5em;
-    width: 45px;
-    height: 30px;
 
     img {
       width: 100%;
@@ -51,11 +52,6 @@ $border-color: #CCCCCC;
     }
 
     .type-text{
-      position: absolute;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
       line-height: 30px;
       color: #FFFFFF;
     }
@@ -85,6 +81,11 @@ $border-color: #CCCCCC;
       .provider-name{
         vertical-align: middle;
         display: table-cell;
+        max-width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: hidden;
+        padding-right: 10px;
       }
 
       .avatar-wrap{
@@ -134,13 +135,14 @@ $border-color: #CCCCCC;
   }
 }
 
-@media screen and (min-width: 768px) {
-  .promotion-wrap{
-    border-right: 1px solid $border-color;
-    overflow: hidden;
+@media screen and (max-widht: 767px) {
+  .promotion-wrap:nth-child(even) {
+    border-color: transparent;
+  }
+}
 
-    &:nth-child(4n) {
-      border-right: none;
-    }
+@media screen and (min-width: 768px) {
+  .promotion-wrap:nth-child(4n) {
+    border-color: transparent;
   }
 }

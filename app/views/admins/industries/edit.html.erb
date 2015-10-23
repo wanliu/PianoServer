@@ -1,3 +1,4 @@
+<!-- 顶部 -->
 <h1 class="page-header template-page-header">
   编辑行业
   <small><%= @industry.title %></small>
@@ -11,6 +12,7 @@
   </div>
 </h1>
 
+<!-- 顶部编辑表单 -->
 <%= render "form" %>
 
 <div class="panel panel-default">
@@ -20,15 +22,18 @@
   </div>
 </div>
 
+<!-- 下部 -->
 <div class="panel panel-default">
   <div class="panel-heading">分类</div>
   <div class="panel-body">
     <div class="row">
+      <!-- 下部分类树 -->
       <div class="col-sm-6 category-left">
         <div class="list-group category-tree">
           <%= render partial: 'category_item', collection: @categories %>
         </div>
       </div>
+      <!-- 下部分类及属性编辑框 -->
       <div class="col-sm-6 category-right">
         <%if @selected %>
           <%= render partial: "admins/categories/category_edit", locals: { category: @selected } %>
@@ -42,10 +47,33 @@
   </div>
 </div>
 <script type="text/javascript">
-  var CategoryTree = window.CategoryTree;
-  var industryUrl = "<%= admins_industry_path(@industry) %>";
-  var cateTree = new CategoryTree($('.category-tree'), industryUrl);
-  /* Activating Best In Place */
-  $(".best_in_place").best_in_place();
+  (function () {
+    var CategoryTree = window.CategoryTree;
+    var industryUrl = "<%= admins_industry_path(@industry) %>";
+    var cateTree = new CategoryTree($('.category-tree'), industryUrl);
+    /* Activating Best In Place */
+    $(".best_in_place").best_in_place();
 
+    // $('.category-right').on('click', '.item-desc-title', function (event) {
+    //   $(this).children(".glyphicon").toggleClass("glyphicon-menu-right")
+    //     .toggleClass("glyphicon-menu-up");
+
+    //   $(this).siblings('.cate-item-desc').toggle();
+    // });
+
+    var templateLock = false;
+    $('.category-right').on('click', '.update-template', function (event) {
+      if(templateLock) return;
+      templateLock = true;
+
+      var url = $(this).attr('data-update-url');
+      var content = $(this).siblings('textarea').val();
+      $.post(url, {template: content})
+        .done()
+        .fail()
+        .always(function () {
+          templateLock = false;
+        });
+    });
+  })();
 </script>

@@ -14,18 +14,16 @@ class Admins::PropertiesController < Admins::BaseController
     if @property.save
       redirect_to admins_products_path
     else
-      flash[:error] = @property.errors.full_messages.join(', ')
+      flash.now[:error] = @property.errors.full_messages.join(', ')
       render :new, status: :unprocessable_entity
     end
   end
 
   def update
-    @property.update(property_params)
-
-    if @property.valid?
+    if @property.update(property_params)
       redirect_to admins_products_path
     else
-      flash[:error] = @property.errors.full_messages.join(', ')
+      flash.now[:error] = @property.errors.full_messages.join(', ')
       render :edit, status: :unprocessable_entity
     end
   end
@@ -42,6 +40,10 @@ class Admins::PropertiesController < Admins::BaseController
     end
 
     def property_params
-      params.require(:property).permit(:name, :title, :prop_type)
+      params.require(:property).permit(:name, :title, :unit_id, :prop_type, :is_group, :default_value, :validate_rules).tap do |whitelisted|
+        if Property.map_type? params[:property][:prop_type]
+          whitelisted[:map_pairs] =  params[:property][:map_pairs]
+        end
+      end
     end
 end

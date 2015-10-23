@@ -11,11 +11,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150916084344) do
+ActiveRecord::Schema.define(version: 20151015055327) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "hstore"
+
+  create_table "activities", force: :cascade do |t|
+    t.integer  "trackable_id"
+    t.string   "trackable_type"
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.string   "key"
+    t.text     "parameters"
+    t.integer  "recipient_id"
+    t.string   "recipient_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "activities", ["owner_id", "owner_type"], name: "index_activities_on_owner_id_and_owner_type", using: :btree
+  add_index "activities", ["recipient_id", "recipient_type"], name: "index_activities_on_recipient_id_and_recipient_type", using: :btree
+  add_index "activities", ["trackable_id", "trackable_type"], name: "index_activities_on_trackable_id_and_trackable_type", using: :btree
 
   create_table "admins", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
@@ -323,13 +340,13 @@ ActiveRecord::Schema.define(version: 20150916084344) do
     t.string   "status"
     t.string   "phone"
     t.integer  "industry_id"
-    t.jsonb    "image"
     t.text     "description"
     t.string   "provider"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
     t.string   "logo"
     t.string   "address"
+    t.jsonb    "settings",    default: {}
   end
 
   create_table "statuses", force: :cascade do |t|
@@ -339,6 +356,26 @@ ActiveRecord::Schema.define(version: 20150916084344) do
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
   end
+
+  create_table "stock_changes", force: :cascade do |t|
+    t.integer  "item_id",                                                 null: false
+    t.decimal  "quantity",       precision: 10, scale: 2,                 null: false
+    t.jsonb    "data",                                    default: {}
+    t.integer  "unit_id"
+    t.integer  "operator_id",                                             null: false
+    t.integer  "operation_id"
+    t.string   "operation_type"
+    t.datetime "created_at",                                              null: false
+    t.datetime "updated_at",                                              null: false
+    t.boolean  "is_reset",                                default: false, null: false
+    t.integer  "kind",                                                    null: false
+  end
+
+  add_index "stock_changes", ["is_reset"], name: "index_stock_changes_on_is_reset", using: :btree
+  add_index "stock_changes", ["item_id"], name: "index_stock_changes_on_item_id", using: :btree
+  add_index "stock_changes", ["operation_type", "operation_id"], name: "index_stock_changes_on_operation_type_and_operation_id", using: :btree
+  add_index "stock_changes", ["operator_id"], name: "index_stock_changes_on_operator_id", using: :btree
+  add_index "stock_changes", ["unit_id"], name: "index_stock_changes_on_unit_id", using: :btree
 
   create_table "subjects", force: :cascade do |t|
     t.string   "name"
@@ -356,10 +393,11 @@ ActiveRecord::Schema.define(version: 20150916084344) do
     t.string   "name"
     t.string   "filename"
     t.integer  "last_editor_id"
-    t.integer  "subject_id"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
     t.string   "type"
+    t.integer  "templable_id"
+    t.string   "templable_type"
   end
 
   create_table "units", force: :cascade do |t|
@@ -392,6 +430,7 @@ ActiveRecord::Schema.define(version: 20150916084344) do
     t.integer  "latest_location_id"
     t.jsonb    "data",                   default: {}
     t.integer  "sex",                    default: 1
+    t.integer  "shop_id"
   end
 
   add_index "users", ["authentication_token"], name: "index_users_on_authentication_token", unique: true, using: :btree
@@ -412,4 +451,7 @@ ActiveRecord::Schema.define(version: 20150916084344) do
   end
 
   add_foreign_key "shop_categories", "shops"
+  add_foreign_key "stock_changes", "items"
+  add_foreign_key "stock_changes", "units"
+  add_foreign_key "stock_changes", "users", column: "operator_id"
 end

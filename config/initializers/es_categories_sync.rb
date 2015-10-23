@@ -13,10 +13,10 @@ class EsCategoriesSync
         record = Category.find_by(id: id)
 
         if record.present?
-          update_attributes = attributes.except(:id, :created_at, :updated_at, :deleted_at).to_hash
+          update_attributes = attributes.slice(*Category.attribute_names).except(:id, :created_at, :updated_at).to_hash
           record.update update_attributes if overwrite_model == "overwrite"
         else
-          update_attributes = attributes.except(:created_at, :updated_at, :deleted_at).to_hash
+          update_attributes = attributes.slice(*Category.attribute_names).except(:created_at, :updated_at).to_hash
           Category.create update_attributes
         end
       end

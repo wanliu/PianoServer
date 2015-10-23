@@ -9,11 +9,87 @@
   </div>
 
   <div class="form-group">
+    <%= f.label :unit_id, "单位" %>
+    <%= f.select :unit_id, Unit.all.map {|unit| [unit.name_title, unit.id] }, {prompt: '-单位-'}, {class: 'form-control selectpicker', "data-live-search" => "true"} %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :default_value, "默认值" %>
+    <%= f.text_field :default_value, class: 'form-control', placeholder: '属性默认值'%>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :validate_rules, "验证设置" %>
+    <%= f.text_field :validate_rules, class: 'form-control', placeholder: '属性验证设置', length: 250, value: property.validate_rules.to_json %>
+  </div>
+
+  <div class="form-group">
     <%= f.label :prop_type, "取值类型" %>
     <%= f.select :prop_type, property.prop_types, {}, {class: 'form-control'} %>
+  </div>
+
+  <div class="form-group map-pairs-editing <%= property.map_type? ? '' : 'hidden' %>">
+    <%= f.label :is_group, "是否集合属性:" %>
+    <%= f.radio_button(:is_group, "true") %>
+    <%= f.label(:is_group_true, "是") %>
+    <%= f.radio_button(:is_group, "false") %>
+    <%= f.label(:is_group_false, "否") %>
+  </div>
+
+  <div class="form-group map-pairs-editing <%= property.map_type? ? '' : 'hidden' %>">
+    <%= f.label :map_values, "map类型编辑" %> <button class='btn btn-default add-map-pair' roll='button' type='button'>添加键值对</button>
+    <% index = 0 %>
+    <% property.map_pairs.each do |key, value| %>
+      <div class='map-pair' data-pair-index=<%= index %>>
+        <%= label_tag "键值对(key-value):" %>
+        <%= text_field_tag "property[map_pairs][keys][#{index}]", "#{key}", class: "form-control pair-input" %> <span class="key-value"> => </span>
+        <%= text_field_tag "property[map_pairs][values][#{index}]", "#{value}", class: "form-control pair-input" %>
+        <button class='btn btn-default remove-map-pair' roll='button' type='button' data-pair-index=<%= index %>>删除</button>
+        <% index += 1 %>
+      </div>
+    <% end %>
   </div>
 
   <div class="form-group">
     <%= f.submit "提交" %>
   </div>
 <% end %>
+
+<script type="text/template" id='map-pair-tempalte'>
+  <div class='map-pair' data-pair-index={{= index }}>
+    <%= label_tag "键值对(key-value):" %>
+    <%= text_field_tag "property[map_pairs][keys][{{=index}}]", "", class: "form-control pair-input" %> <span class="key-value"> => </span>
+    <%= text_field_tag "property[map_pairs][values][{{=index}}]", "", class: "form-control pair-input" %>
+    <button class='btn btn-default remove-map-pair' roll='button' type='button' data-pair-index={{= index }}>删除</button>
+  </div>
+</script>
+
+<script type="text/javascript">
+  (function () {
+    $('.selectpicker').selectpicker();
+
+    var index = <%= property.map_pairs.keys.length %>;
+    var template = _.template($('#map-pair-tempalte').html());
+    var mapTypes = <%= raw Property::MAP_TYPES.to_json %>;
+
+    $('button.add-map-pair').click(function (e) {
+      var html = template({index: index});
+      $(".map-pairs-editing").append(html);
+      index ++;
+    });
+
+    $('.map-pairs-editing').on('click', 'button.remove-map-pair', function (e) {
+      $(e.target).parent('div.map-pair').remove();
+    });
+
+    $('select[name="property[prop_type]"]').change(function (e) {
+      var type = $(this).val();
+      if (~mapTypes.indexOf(type)) {
+        $('.map-pairs-editing').removeClass('hidden');
+      } else {
+        $("#property_is_group_false").prop("checked", true);
+        $('.map-pairs-editing').addClass('hidden');
+      }
+    });
+  })();
+</script>

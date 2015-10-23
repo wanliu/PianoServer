@@ -1,8 +1,10 @@
 app:
   website: http://m.wanliu.biz
-  page_title: 万流网
+  name: 万流网
   title: 万流电商社区
   footer: "&copy; Wanliu.biz 2015  湘ICP备：13005289号-1"
+  keywords: "万流 电商 社区 O2O O2O2C B2C2C 母婴 奶粉"
+  description:
 admin:
   title: 万流工作平台
 system:
@@ -43,9 +45,21 @@ dev:
     user:
       sign_in: true
 sites:
+  root: .sites
   shops:
     root: '.sites/shops'
   user:
     root: '.sites/users'
   system:
     root: '.sites/system'
+GA:
+  track: false
+mail:
+  sender: service@wanliu.biz
+  address: smtp.ym.163.com
+  port: 25
+  user_name: service@wanliu.biz
+  password: asdfasdf
+  domain: http://m.wanliu.biz/
+  url_host: http://m.wanliu.biz
+  url_port: 80

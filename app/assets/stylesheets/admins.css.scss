@@ -4,6 +4,9 @@
  *= require nprogress-bootstrap
  *= require _common/checkbox
  *= require _common/upload
+ *= require lib/range
+ *= require lib/bootstrap-select
+ *= require lib/window
  *= require_tree ./admins
  *= require_self
 */
@@ -34,4 +37,11 @@ body[module="signup"] {
 
 .shop.left-sidebar {
   position: absolute;
+}
+
+.navbar-brand > img {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+  float: left;
 }

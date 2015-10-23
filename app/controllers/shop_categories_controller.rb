@@ -1,21 +1,20 @@
-class ShopCategoriesController < ApplicationController
-  before_filter :set_shop
+class ShopCategoriesController < ShopsController
   before_filter :set_shop_category, only: [ :show ]
 
   def index
-    @shop_categories = @shop.shop_category.children.page(page).per(per)
+    @shop_categories = @shop.shop_category.children.page(params[:page]).per(params[:per])
   end
 
   def show
-    page = params[:page].presence || 1
+    add_page_title t("titles.shop_category", category: @shop_category.title)
+
+    @shop_category.punch(request)
 
     if @shop_category.has_children
-      per = params[:per].presence || 9
-      @shop_categories = ShopCategory.where(parent_id: @shop_category).order(id: :asc).page(page).per(per)
+      @shop_categories = ShopCategory.where(parent_id: @shop_category).order(id: :asc).page(params[:page]).per(params[:per])
       @items = []
     else
-      per = params[:per].presence || 8
-      @items = Item.where(shop_category_id: params[:id]).page(page).per(per)
+      @items = Item.where(shop_category_id: params[:id]).page(params[:page]).per(params[:per])
       @shop_categories = []
     end
   end

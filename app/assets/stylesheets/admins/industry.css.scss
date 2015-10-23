@@ -37,6 +37,11 @@
 
 .category-edit {
 
+  &.affix {
+    position: fixed;
+    top: 60px;
+  }
+
   .add-property {
     .dropdown-menu {
       left: auto;
@@ -84,4 +89,24 @@
 
 .empty-category h1 {
   color: #ccc;
+}
+
+
+.item-desc-title {
+  padding-bottom: 5px;
+  border-bottom: 1px solid #ddd;
+  // cursor: pointer;
+
+  .glyphicon {
+    margin-left: 5px;
+    top: 3px;
+  }
+}
+
+.cate-item-desc {
+  .textarea {
+    width: 100%;
+  }
+
+  // display: none;
 }

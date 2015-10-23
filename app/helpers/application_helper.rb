@@ -1,6 +1,10 @@
 module ApplicationHelper
   include SubjectsHelper
   include BootstrapHelper
+  include AceEditorHelper
+  include BindHelper
+  include SearchHelper
+  include WindowHelper
 
   def avatar_url(user)
     user.image || identicon_url(user)
@@ -61,13 +65,17 @@ module ApplicationHelper
     html_class.select {|k,v| v }.map { |k,v| k }.join(' ')
   end
 
+  def bh_clear
+    Bh::Classes::Stack.class_variable_get(:@@stack).clear
+  end
+
   private
 
   def user_profile_path(user)
     if user.id < 0
       '#'
     else
-      profile_path(user)
+      profile_path(user.name)
     end
   end
 

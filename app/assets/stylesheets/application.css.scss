@@ -14,31 +14,34 @@
  *= require bootstrap-launcher
  *= require nprogress
  *= require nprogress-bootstrap
+ *= require photoswipe
  *= require _common/bubble
  *= require _common/animate
  *= require _common/popup
  *= require _common/checkbox
  *= require _common/upload
+ *= require lib/range
  *= require_tree ./application
  *= require_tree ./chats
  *= require_tree ./locations
+ *= require_tree ./contacts
  *= require_self
  */
 html{
   position: relative;
   min-height: 100%;
-
-  /**footer{
-    position: absolute;
-    bottom: 0;
-    word-break: break-all;
-  }*/
 }
 
 body {
   background-image: image-url('bj.jpg');
-  padding-top: 50px;
-  margin-bottom: 60px;
+  padding-top: 60px;
+}
+
+footer {
+  // position: fixed;
+  bottom: 0;
+  text-align: center;
+  word-break: break-word;
 }
 
 .detail .navbar-fixed-top{
@@ -49,7 +52,13 @@ body {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  max-width: 70%;
+}
+
+.navbar-brand > img {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+  float: left;
 }
 
 .chat-notices{
@@ -79,6 +88,15 @@ body {
   }
 }
 
+.nav > li > a.navbar-title {
+  padding-left: 0px;
+}
+
+@media (min-width: 768px) {
+  .navbar-header {
+    float: none;
+  }
+}
 
 @media (max-width: 768px) {
   .navbar-fixed-top {
@@ -96,8 +114,8 @@ body {
   }
 
   .navbar-nav > li > a {
-      padding-top: 15px;
-      padding-bottom: 15px;
+    padding-top: 15px;
+    padding-bottom: 15px;
   }
 
   .navbar-responsive-collapse.collapse.in {
@@ -144,4 +162,8 @@ body {
     width: 30px;
     height: 30px;
   }
+}
+
+.ie-warning {
+  display: none;
 }

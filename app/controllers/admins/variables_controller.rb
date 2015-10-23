@@ -1,6 +1,8 @@
 class Admins::VariablesController < Admins::BaseController
   before_action :set_parents
 
+  rescue_from ActiveRecord::RecordInvalid, with: :raise_validates_errors
+
   def show
 
   end
@@ -28,6 +30,7 @@ class Admins::VariablesController < Admins::BaseController
   end
 
   def search_promotion
+    params[:statuses] = [ "Published", "Active", "Finish" ]
     @promotions = Promotion.find(:all, params: query_params)
 
     render :show, formats: [:json]
@@ -40,7 +43,8 @@ class Admins::VariablesController < Admins::BaseController
       create_params = send(params_name)
       create_params.merge! template_id: params[:template_id], type: variable_params[:type].classify
       klass = variable_params[:type].classify.safe_constantize
-      @variable = klass.create(create_params) if klass
+
+      @variable = klass.create!(create_params) if klass
 
       render json: @variable
     else
@@ -79,7 +83,7 @@ class Admins::VariablesController < Admins::BaseController
       params_name = "#{variable_params[:type]}_params".to_sym
       update_params = send(params_name)
       update_params.delete(:type)
-      @variable.update_attributes(update_params)
+      @variable.update_attributes!(update_params)
 
       render json: @variable
     else
@@ -109,7 +113,8 @@ class Admins::VariablesController < Admins::BaseController
       page: params[:page] || 1,
       category_id: params[:category_id],
       inline: params[:inline],
-      q: params[:q]
+      q: params[:q],
+      statuses: params[:statuses]
     }
   end
 
@@ -123,5 +128,19 @@ class Admins::VariablesController < Admins::BaseController
 
   def promotion_set_variable_params
     params.require(:variable).permit(:id, :type, :name, :promotion_string, :template_id)
+  end
+
+  def raise_validates_errors(e)
+    variable = e.record
+    if variable && !variable.valid?
+      errors_hash = Hash[
+        variable.errors.map {|name, errors| [name, variable.errors[name].join(',') ] }
+      ]
+
+      render json: { errors: {
+        text: variable.errors.full_messages.join(','),
+        fields: errors_hash
+      }}, status: 422
+    end
   end
 end

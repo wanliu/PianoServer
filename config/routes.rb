@@ -32,6 +32,30 @@ Rails.application.routes.draw do
     resources :chats
   end
 
+  concern :templable do |options|
+    resources :templates, options.merge(only: [:index, :new, :create]) do
+      collection do
+        post :preview, to: 'templates#preview_new'
+        get :search
+      end
+    end
+
+    resources :templates, options.merge(path: 'templates/blob', only: [:show, :edit, :update, :destroy], constraints: {id: /[\S]+/}) do
+      member do
+        post :upload
+        post :preview
+      end
+
+      resources :variables, except: [:new ] do
+        collection do
+          get :new_promotion_variable
+          get :new_promotion_set_variable
+          get :search_promotion
+        end
+      end
+    end
+  end
+
   match "admins", to: "admins/dashboards#index", via: :get
 
   namespace :admins do
@@ -44,24 +68,7 @@ Rails.application.routes.draw do
     end
     resources :promotions
     resources :subjects do
-      resources :templates do
-        member do
-          post :upload
-          post :preview
-        end
-
-        collection do
-          post :preview, to: 'templates#preview_new'
-        end
-
-        resources :variables, except: [:new ] do
-          collection do
-            get :new_promotion_variable
-            get :new_promotion_set_variable
-            get :search_promotion
-          end
-        end
-      end
+      concerns :templable, templable_type: 'Subject', parent_type: 'Subject'
     end
     resources :messages
     resources :contacts
@@ -73,6 +80,7 @@ Rails.application.routes.draw do
       end
 
       resources :categories do
+        concerns :templable, templable_type: 'Category', parents_type: [ 'Industry', 'Category' ]
         resources :properties
 
         member do
@@ -82,12 +90,16 @@ Rails.application.routes.draw do
           get :show_inhibit
           get :hide_inhibit
           get :children
+          post :write_item_desc
+          get :read_item_desc
         end
       end
     end
 
     resources :products
     resources :properties
+
+    resources :units
   end
 
   namespace :api do
@@ -110,8 +122,7 @@ Rails.application.routes.draw do
   end
 
   resources :categories
-
-  resources :shops, only: [ :show ]
+  resources :units, only: [:index, :show]
 
   resources :chats
   resources :orders do
@@ -137,6 +148,8 @@ Rails.application.routes.draw do
   #
   get '/about' => 'home#about'
 
+  match '@:profile', :to => 'profile#username', as: :profile, via: [ :get ]
+
   match ':shop_name', :to => 'shops#show_by_name', constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ }, via: [ :get ], as: :shop_site
 
   resources :shops, path: '/', only: [], constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do
@@ -144,8 +157,8 @@ Rails.application.routes.draw do
       get "/about", to: "shops#about"
     end
 
-    resources :shop_categories
-    resources :items
+    resources :shop_categories, path: "categories"
+    resources :items, key: :sid
 
     namespace :admin, module: 'shops/admin' do
       get "/", to: "dashboard#index", as: :index
@@ -154,7 +167,7 @@ Rails.application.routes.draw do
       end
 
       resources :dashboard
-      resources :shop_categories, constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do
+      resources :shop_categories,  path: "categories", constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do
         member do
           get "/:child_id", to: "shop_categories#show_by_child", as: :child
           post "/:parent_id", to: "shop_categories#create_by_child"
@@ -164,21 +177,27 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :items do
-
+      resources :items, key: :sid do
         collection do
-          get "load_categories", to: "items#load_categories"
+          # get "load_categories", to: "items#load_categories"
           get "/new/step1",  to: "items#new_step1"
           post "/new/step1", to: "items#commit_step1"
           get "/new/step2/category/:category_id", to: "items#new_step2", as: :with_category
           post "/new/step2/category/:category_id", to: "items#create"
+          post "/upload_image", to: "items#upload_image"
+          put "/inventory_config", to: "items#inventory_config"
+        end
+
+        member do
+          post "/upload_image", to: "items#upload_image"
+          put "/change_sale_state", to: "items#change_sale_state"
+          put "/inventory_config", to: "items#inventory_config"
         end
       end
+
+      resources :settings
     end
   end
-
-  match '@:profile', :to => 'profile#username', as: :profile, via: [ :get ]
-
 
   root to: "promotions#index"
 end

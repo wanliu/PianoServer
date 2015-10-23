@@ -11,7 +11,10 @@
 // about supported directives.
 //
 //= require jquery
+//= require jquery.turbolinks
 //= require jquery_ujs
+//= require lib/es5-shim
+//= require lib/es5-sham
 //= require data-confirm-modal
 //= require jquery-ui/core
 //= require jquery-ui/widget
@@ -19,14 +22,18 @@
 //= require jquery-ui/position
 //= require jquery-ui/effect.all
 //= require bootstrap-sprockets
-//= require turbolinks
 //= require nprogress
+//= require turbolinks
 //= require nprogress-turbolinks
 //= require china_city/jquery.china_city
+//= require photoswipe
 //= require lib/socketcluster-client
 //= require lib/user-socket
 //= require lib/underscore
 //= require lib/underscore-template
+//= require lib/date_iso8601_polyfill
+//= require lib/pastemedia
+//= require lib/ajax_status
 //= require _common/qrcode
 //= require _common/local-address
 //= require _common/hammer

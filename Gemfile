@@ -1,4 +1,4 @@
-source 'http://ruby.taobao.org'
+source 'https://ruby.taobao.org'
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -8,17 +8,19 @@ gem "rails-api"
 # Use sqlite3 as the database for Active Record
 gem 'pg'
 # Use SCSS for stylesheets
-gem 'sass-rails', '5.0.3'
+# gem 'sass-rails', '5.0.3'
+gem 'sassc-rails'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.1.0'
-gem "therubyracer", :platforms => :ruby
+# gem "therubyracer", :platforms => :ruby
 
 gem 'jbuilder', '~> 2.0'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
+# gem "libv8"
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
@@ -29,7 +31,8 @@ gem 'turbolinks'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
 
-gem "less-rails" #Sprockets (what Rails 3.1 uses for its asset pipeline) supports LESS
+# 前端库
+# gem "less-rails" #Sprockets (what Rails 3.1 uses for its asset pipeline) supports LESS
 gem 'bootstrap-sass', '~> 3.3.5'
 gem 'nprogress-rails'
 gem 'momentjs-rails', '>= 2.9.0'
@@ -37,7 +40,12 @@ gem 'bootstrap3-datetimepicker-rails', '~> 4.15.35'
 gem 'ace-rails-ap'
 gem 'best_in_place', '~> 3.0.1'
 gem 'bootsy'
+gem 'jquery-turbolinks'
+gem 'photoswipe-rails', '~> 4.1.0'
+gem 'bh', '~> 1.3'
+gem "slim-rails"
 
+# 后端库
 gem 'activeresource'
 gem 'scoped_search'
 gem 'json-patch'
@@ -47,17 +55,20 @@ gem 'data-confirm-modal', github: 'ifad/data-confirm-modal'
 gem 'liquid-rails'
 gem "punching_bag"
 gem "loofah-activerecord"
-gem 'public_activity'
+gem 'public_activity', github: 'pokonski/public_activity'
 
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'
 gem 'elasticsearch-persistence'
 # gem 'active_model_serializers', github: 'rails-api/active_model_serializers', tag: 'v0.10.0.rc2'
 
+# 中间件
 gem 'rack-cors', :require => 'rack/cors'
 gem 'rack-raw-upload', '~> 1.1.1'
 
 gem 'devise', '3.4.0'
+gem 'devise-async'
+
 gem 'mobylette'
 # gem 'nio4r'
 gem "mini_magick", '~> 4.2.7'
@@ -68,7 +79,7 @@ gem 'kaminari'
 gem 'awesome_nested_set'
 gem 'ancestry' # 暂时的支持，旧的 neil
 
-gem "rails_config"
+gem "rails_config", '~> 0.4.2'
 
 gem 'jwt'
 
@@ -107,6 +118,9 @@ group :development, :test do
   gem 'spring'
 
   gem 'rspec-rails', '~> 3.0'
+  gem 'i18n-debug' if ENV['I18N_DEBUG']
+  gem 'quiet_assets' if ENV['ENABLE_ASSETS_LOG']
+  gem 'rails-backup-migrate'
 
   gem 'factory_girl_rails'
   gem 'thin'

@@ -16,6 +16,7 @@ class PromotionsController < ApplicationController
   # GET /promotions/1
   # GET /promotions/1.json
   def show
+    self.page_title = [ @promotion.title ]
     @promotion.punch request
     @shop = Shop.find(@promotion.shop_id)
   end

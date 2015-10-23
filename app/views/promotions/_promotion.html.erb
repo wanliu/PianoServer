@@ -1,22 +1,9 @@
 <div class="col-xs-6 col-sm-3 promotion-wrap">
   <div class="promotion">
   	<%= link_to promotion_path(promotion) do %>
-	    <% if promotion.type == 'promotions/discount' %>
-        <div class="type-flag discount">
-        	<%= image_tag 'discount.png' %>
-            <div class="type-text"><%= promotion.discount.try(:gsub, '小于', '') %></div>
-        </div>
-	    <% elsif promotion.type == 'promotions/time_limited_sale' %>
-        <div class="type-flag limit-time">
-        	<%= image_tag 'limit-time.png' %>
-          <div class="type-text">限时</div>
-        </div>
-	    <% else %>
-        <div class="type-flag full-present">
-        	<%= image_tag 'full-present.png' %>
-        </div>
-	    <% end %>
-	    <%= image_tag promotion.image_mobile_url, class: 'promotion-image' %>
+      <div class="image-wrap">
+	     <%= image_tag promotion.image_mobile_url, class: 'promotion-image' %>
+      </div>
 	    <p class="promotion-title">
 	      <% if promotion.title.length > 30 %>
 	        <%= promotion.title[0, 29] %>...

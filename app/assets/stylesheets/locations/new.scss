@@ -1,6 +1,12 @@
-.new_location {
-  margin-top: 20px;
+body.location {
+  padding-bottom: 50px;
 
+  footer {
+    position: absolute;
+  }
+}
+
+.new_location {
   label {
     font-weight: normal;
 
@@ -22,7 +28,6 @@
 
 .error-messages {
   padding: 0 15px;
-  margin: 15px 0;
   list-style: none;
   color: #FF2B2B;
 

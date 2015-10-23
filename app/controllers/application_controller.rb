@@ -2,19 +2,14 @@ require 'active_resource'
 class ApplicationController < ActionController::Base
   include DebugMode
   include ContentFor
-
-  class_attribute :page_title
+  include Piano::PageInfo
+  include Errors::RescueError
 
   # include TokenAuthenticatable
-  layout "mobile"
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :null_session
-  # protect_from_forgery
-  # protect_from_forgery with: :exception
-  # skip_before_filter :verify_authenticity_token, only: [ :create ]
 
-  # before_action :configure_permitted_parameters, if: :devise_controller?
   # before_action :authenticate_user!
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_meta_user_data
@@ -59,9 +54,11 @@ class ApplicationController < ActionController::Base
       set_meta_tags chatId: anonymous.id, chatToken: anonymous.chat_token
     end
 
-    set_meta_tags pusherHost: Settings.pusher.socket_host, pusherPort: Settings.pusher.socket_port
-    set_meta_tags user: current_anonymous_or_user.as_json(include_methods: :avatar_url )
-    set_meta_tags debug: Settings.debug
+    set_meta_tags pusherHost: Settings.pusher.socket_host, pusherPort: Settings.pusher.socket_port,
+                  user: current_anonymous_or_user.as_json(include_methods: :avatar_url ),
+                  debug: Settings.debug,
+                  keywords: Settings.app.keywords,
+                  description: Settings.app.description
   end
 
   def set_locale
@@ -70,23 +67,6 @@ class ApplicationController < ActionController::Base
 
   def module
     nil
-  end
-
-  def render_with_page_title(*args)
-    prefix = "titles."
-    self.page_title +=
-      if @title.nil?
-        [ t( "titles.controllers.#{controller_name}",
-             default: [ :"controllers.#{controller_name}", controller_name ]),
-          t( "titles.actions.#{controller_name}.#{action_name}",
-             default: [ :"actions.#{action_name}", action_name ]) ]
-      else
-        [ @title ]
-      end
-
-    content_for :title, self.page_title.reverse.join(' ').humanize
-
-    render_without_page_title(*args)
   end
 
   private
@@ -106,10 +86,7 @@ class ApplicationController < ActionController::Base
     prepend_view_path File.join(Rails.root, Settings.sites.system.root)
   end
 
-  alias_method_chain :render, :page_title
   def wx_client
     WeixinClient.instance.client
   end
 end
-
-ApplicationController.page_title = [ Settings.app.page_title ]
