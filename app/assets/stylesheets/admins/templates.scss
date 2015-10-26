@@ -73,6 +73,18 @@
   padding-top: 60px;
   background-color: #ccc;
   margin-bottom: 0px;
+
+  .list-group-item {
+
+    .remove-template {
+      display: none;
+    }
+    
+    &:hover .remove-template {
+      display: inline-block;
+      float: right;
+    } 
+  }
 }
 
 .types-group {
