@@ -6,10 +6,22 @@ class @EditCategoryModal extends @HuEvent
     'click .edit-category': 'editCategory',
     'click .take-photo': 'takePhoto',
     'click .upload-image': 'uploadImage',
+    'click .show-category': 'showCategory',
+    'click .hide-category': 'hideCategory',
     'click .delete-category': 'deleteCategory'
 
   constructor: (@element) ->
     super(@element)
+
+    @$().on('shown.bs.modal', (e) =>
+      status = @$().data('status')
+      $menu = @$().find('.list-group')
+
+      if status
+        $menu.addClass('category-shown')
+      else
+        $menu.removeClass('category-shown')
+    )
 
   showChildCategories: () ->
     url = @$().data('url')
@@ -49,3 +61,44 @@ class @EditCategoryModal extends @HuEvent
         })
     })
 
+  hideCategory: () ->
+    url =  @$().data('url')
+
+    $.ajax({
+      url: url + '/update_status',
+      type: 'PUT',
+      dateType: 'json',
+      data: {
+        shop_category: {
+          status: false
+        }
+      },
+      success: () =>
+        @$().modal('hide')
+
+        $toggle = @$().data('$related').find('.toggle-button')
+
+        if $toggle.length > 0
+          $toggle.addClass('closed')
+    })
+
+  showCategory: () ->
+    url =  @$().data('url')
+
+    $.ajax({
+      url: url + '/update_status',
+      type: 'PUT',
+      dateType: 'json',
+      data: {
+        shop_category: {
+          status: true
+        }
+      },
+      success: () =>
+        @$().modal('hide')
+
+        $toggle = @$().data('$related').find('.toggle-button')
+
+        if $toggle.length > 0
+          $toggle.removeClass('closed')
+    })

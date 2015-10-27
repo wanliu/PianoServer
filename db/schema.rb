@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151021062919) do
+ActiveRecord::Schema.define(version: 20151023062934) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -293,6 +293,7 @@ ActiveRecord::Schema.define(version: 20151021062919) do
     t.string   "title"
     t.integer  "shop_id"
     t.text     "description"
+    t.boolean  "status",                     default: true
   end
 
   add_index "shop_categories", ["iid"], name: "index_shop_categories_on_iid", using: :btree
