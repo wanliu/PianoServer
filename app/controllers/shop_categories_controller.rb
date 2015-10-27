@@ -11,10 +11,10 @@ class ShopCategoriesController < ShopsController
     @shop_category.punch(request)
 
     if @shop_category.has_children
-      @shop_categories = ShopCategory.where(parent_id: @shop_category).order(id: :asc)
+      @shop_categories = ShopCategory.where(parent_id: @shop_category).order(id: :desc)
       @items = []
     else
-      @items = Item.where(shop_category_id: params[:id], on_sale: true)
+      @items = Item.where(shop_category_id: params[:id], on_sale: true).order(id: :desc)
       @shop_categories = []
     end
   end

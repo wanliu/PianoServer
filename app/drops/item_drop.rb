@@ -1,5 +1,5 @@
 class ItemDrop < Liquid::Rails::Drop
-  attributes :id, :title, :public_price, :price, :created_at, :updated_at, :image_url, :description, :hits
+  attributes :id, :title, :public_price, :price, :created_at, :updated_at, :image_url, :description, :hits, :shop_id
 
   def image_url
     object.image.url

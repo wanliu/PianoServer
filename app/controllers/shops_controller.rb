@@ -28,7 +28,7 @@ class ShopsController < ApplicationController
   private
 
   def prepare_shop_views_path
-    prepend_view_path Settings.sites.shops.root
+    prepend_view_path ShopService.root
   end
 
   def set_shop
