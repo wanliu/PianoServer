@@ -40,6 +40,26 @@
         color: inherit;
       }
     }
+
+    .toggle-button {
+      position: absolute;
+      bottom: 10px;
+      left: 55px;
+
+      .btn-closed {
+        display: none;
+      }
+
+      &.closed {
+        .btn-opened {
+          display: none;
+        }
+
+        .btn-closed {
+          display: block;
+        }
+      }
+    }
   }
 
   .box:hover {
@@ -142,5 +162,21 @@
 #category-modal {
   .modal-body {
     padding: 0;
+
+    .list-group {
+      .hide-category {
+        display: none;
+      }
+
+      &.category-shown {
+        .show-category {
+          display: none;
+        }
+
+        .hide-category {
+          display: block;
+        }
+      }
+    }
   }
 }
