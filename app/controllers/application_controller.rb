@@ -83,7 +83,8 @@ class ApplicationController < ActionController::Base
   end
 
   def prepare_system_view_path
-    prepend_view_path File.join(Rails.root, Settings.sites.system.root)
+    # prepend_view_path File.join(Rails.root, Settings.sites.system.root)
+    Liquid::Template.file_system = ContentManagement::FileSystem.new("/", "_%s.html.liquid".freeze)
   end
 
   def wx_client

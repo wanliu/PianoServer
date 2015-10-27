@@ -1,34 +1,34 @@
 
 module SubjectsHelper
-  def subject_render(subject, template, *args)
-    options = args.extract_options!
+  # def subject_render(subject, template, *args)
+  #   options = args.extract_options!
 
-    if options[:partial] && subject.nil?
-      render options
-    elsif subject.nil?
-      return
-    else
-      tpl = subject.templates.find_by(name: template)
-      if tpl.nil?
-        render options
-      elsif is_partial?(tpl.filename)
-        set_file_system subject
-        path = File.join("subjects", subject.name, tpl.filename.sub(/^views\/_/, 'views/'))
-        set_file_system subject
-        render({ partial: path }.reverse_merge(options))
-      else
-        set_file_system subject
-        path = File.join("subjects", subject.name, tpl.filename)
-        render path
-      end
-    end
-  end
+  #   if options[:partial] && subject.nil?
+  #     render options
+  #   elsif subject.nil?
+  #     return
+  #   else
+  #     tpl = subject.templates.find_by(name: template)
+  #     if tpl.nil?
+  #       render options
+  #     elsif is_partial?(tpl.filename)
+  #       set_file_system subject
+  #       path = File.join("subjects", subject.name, tpl.filename.sub(/^views\/_/, 'views/'))
+  #       set_file_system subject
+  #       render({ partial: path }.reverse_merge(options))
+  #     else
+  #       set_file_system subject
+  #       path = File.join("subjects", subject.name, tpl.filename)
+  #       render path
+  #     end
+  #   end
+  # end
 
-  protected
+  # protected
 
-  def set_file_system(subject)
-    Liquid::Template.file_system = ContentManagement::FileSystem.new(subject_views_path(subject), "_%s.html.liquid".freeze)
-  end
+  # def set_file_system(subject)
+  #   Liquid::Template.file_system = ContentManagement::FileSystem.new(subject_views_path(subject), "_%s.html.liquid".freeze)
+  # end
 
   private
 

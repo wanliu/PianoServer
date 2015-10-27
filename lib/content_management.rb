@@ -1,7 +1,6 @@
 require 'active_support/concern'
 
 require 'content_management/paths'
-require 'content_management/include_tag'
 require 'content_management/view_helper'
 require 'content_management/controller_helper'
 require 'content_management/template_object'
