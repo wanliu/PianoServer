@@ -4,7 +4,20 @@
   transform:scale(20);
 
   .box{
-    background: #fff!important;
+    background: #fefefe!important;
+  }
+  .thumbnail{
+    opacity: 0;
+    transition: all 0.1s;
+  }
+}
+
+.animate-reversal-back{
+  animation: reversal-back .5s 1;
+  transform:scale(1);
+
+  .box{
+    background: #fefefe!important;
   }
   .thumbnail{
     opacity: 0;
@@ -15,6 +28,7 @@
 .animate-shiver{
   animation: shiver .1s 5;
 }
+
 
 @keyframes shiver {
     0% {
@@ -38,10 +52,24 @@
     0% {
       transform:scale(1);
     }
-    10% {
+    15% {
       transform:scale(0.8);
     }
     100% {
       transform:scale(20);
+      opacity: .8;
+    }
+}
+
+@keyframes reversal-back {
+    0% {
+      transform:scale(20);
+      opacity: .8;
+    }
+    70% {
+      transform:scale(0.8);
+    }
+    100% {
+      transform:scale(1);
     }
 }
