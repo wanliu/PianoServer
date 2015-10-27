@@ -24,7 +24,7 @@
     <div class="media">
       <div class="media-left media-middle">
         <div class='shop-avatar'>
-          {{ shop.image_url | image_tag }}
+          {{ shop.avatar_url | image_tag }}
         </div>
       </div>
       <div class="media-body media-middle">
@@ -92,7 +92,7 @@
         <div class="button-text">收藏</div>
       </div>
 
-      <a href="/items/{{item.id}}/chats?shop_id={{shop.id}}" class="chat" method="POST">
+      <a href="/items/{{item.sid}}/chats?shop_id={{shop.id}}" class="chat" method="POST">
         洽谈
       </a>
     </div>
