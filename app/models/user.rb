@@ -17,6 +17,9 @@ class User < ActiveRecord::Base
   has_many :chats, foreign_key: 'owner_id'
   has_many :locations
 
+  has_many :followers, as: :followable, class_name: 'Follow'
+  has_many :followables, as: :follower, class_name: 'Follow'
+
   validates :username, presence: true, uniqueness: true
 
   after_commit :sync_to_pusher
@@ -67,6 +70,30 @@ class User < ActiveRecord::Base
 
   def avatar_url
     image.url(:avatar)
+  end
+
+  def follows?(target)
+    if anonymous?
+      false
+    else
+      followables.exists?(followable_type: target.class, followable_id: target.id)
+    end
+  end
+
+  def follows!(target)
+    unless anonymous?
+      followables.create!(followable_type: target.class, followable_id: target.id)
+    end
+  end
+
+  def unfollows!(target)
+    unless anonymous?
+      followables.find_by(followable_type: target.class, followable_id: target.id).destroy!
+    end
+  end
+
+  def anonymous?
+    id < 0
   end
 
   def join_shop

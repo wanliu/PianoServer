@@ -46,11 +46,13 @@
 
     <div class="shop-brief clearfix">
       <div class="shop-logo">
-         <%= image_tag shop.logo_url %>
+        <a href="/<%= shop.name %>">
+          <%= image_tag shop.logo_url %>
+        </a>
       </div>
 
       <div class="shop-desc">
-        <p>供应商:<%= shop.name %></p>
+        <p>供应商:<%= shop.title %></p>
         <p>地址:<%= shop.address %></p>
         <p>关注:100<button class="btn btn-follow"><span class="glyphicon glyphicon-plus"/>关注</button></p>
       </div>
@@ -156,6 +158,33 @@
              .text(isFavorited ? '收藏' : '已收藏');
       });
     });
+
+    // var followButtonLocked = false;
+    // $('.btn-follow').click(function (e) {
+    //   if (followButtonLocked) {
+    //     return;
+    //   } else {
+    //     followButtonLocked = true;
+    //   }
+
+    //   var actionToggle = {
+    //     "已关注" : "关注",
+    //     "关注" : "已关注"
+    //   };
+
+    //   $.post('<%=  toggle_follow_promotion_path(promotion) %>')
+    //     .done(function (data, status, xhr) {
+    //       var toggleStatus = $('.btn-follow span').text().replace(/^\s+|\s+$/g,'');
+    //       var newToggleStatus = actionToggle[toggleStatus];
+    //       var stauts = $('.btn-follow span').text(newToggleStatus);
+    //     })
+    //     .fail(function (err, status, xhr) {
+    //       // Todo alert error message
+    //     })
+    //     .always(function () {
+    //       followButtonLocked = false;
+    //     })
+    // });
 
     // $('a.contact-button').click(function() {
     //   userSocket.emit('readChannel', {

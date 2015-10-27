@@ -61,20 +61,19 @@
 
 
 <script type="text/javascript">
-  var shop_category = <%=raw @shop_category.to_json %>,
-      createCategoryUrl = '<%= child_shop_admin_shop_category_path(@shop.name, @root.name, @shop_category) %>',
-      newCategory = new NewShopCategory($('.shop-category-list .new-shop-category')[0], shop_category, createCategoryUrl),
-      $modal = $('#category-modal');
+  (function() {
+    var EditShopCategory = window.EditShopCategory;
+    var EditCategoryModal = window.EditCategoryModal;
 
-  $('.shop-category-list .shop-category').each(function(i, e) {
-    new EditShopCategory($(e))
-  });
+    var shop_category = <%=raw @shop_category.to_json %>,
+        createCategoryUrl = '<%= child_shop_admin_shop_category_path(@shop.name, @root.name, @shop_category) %>',
+        newCategory = new NewShopCategory($('.shop-category-list .new-shop-category')[0], shop_category, createCategoryUrl),
+        $modal = $('#category-modal');
 
-  new EditCategoryModal($modal);
-  // $(document).on('page:before-unload', function() {
-  //   if (newCategory) {
-  //     newCategory.unbindAllEvents();
-  //     delete newCategory;
-  //   }
-  // });
+    $('.shop-category-list .shop-category').each(function(i, e) {
+      new EditShopCategory($(e))
+    });
+
+    new EditCategoryModal($modal);
+  })();
 </script>

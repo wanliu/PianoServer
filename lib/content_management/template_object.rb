@@ -12,7 +12,7 @@ module ContentManagement
       elsif @object.respond_to?(:content_path)
         [ @object.content_path ]
       elsif @object.is_a? ActiveRecord::Base
-        [ Rails.root.json(@root, class_tableize_name, instance_name) ]
+        [ Rails.root.join(@root, class_tableize_name, instance_name) ]
       end
     end
 

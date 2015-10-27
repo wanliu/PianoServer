@@ -5,7 +5,7 @@ class Admins::TemplatesController < Admins::BaseController
 
   before_action :set_templable
   before_action :set_parents
-  before_action :set_template, only: [ :update, :upload, :preview ]
+  before_action :set_template, only: [ :update, :upload, :preview, :destroy ]
   before_action :set_titles
   before_filter :set_view_path, only: [:preview, :preview_new]
   before_action :set_xxs_protection, only: [:preview, :preview_new]
@@ -112,6 +112,14 @@ class Admins::TemplatesController < Admins::BaseController
     @attachment = @template.attachments.create(name: params[:file].original_filename, filename: params[:file])
 
     render :upload, formats: [:json]
+  end
+
+  def destroy
+    if @template.destroy
+      render json: {}, status: :no_content
+    else
+      render json: {errors: @tamplate.errors.full_messages}, status: :unprocessable_entity
+    end
   end
 
   private

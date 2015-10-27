@@ -11,4 +11,3 @@ test:
 production:
   <<: *default
   host: <%= ENV['REDISDEV_PORT_6379_TCP_ADDR'] || ENV['REDISBETA_PORT_6379_TCP_ADDR'] || ENV['REDISDEVRC_PORT_6379_TCP_ADDR'] %>
-
