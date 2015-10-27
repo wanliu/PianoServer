@@ -28,7 +28,7 @@ module AceEditorHelper
     http_options[:method] = :post unless object.persisted?
 
     default_options = {
-      'ace-editor-id': obj_id
+      'ace-editor-id' => obj_id
     } #.merge(bind_options)
 
     scripts = <<-JAVASCRIPT

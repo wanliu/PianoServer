@@ -41,9 +41,9 @@ module BindHelper
 
     def to_options
       {
-        "bind-id": parse(@name),
-        "bind-event": @event,
-        "bind-to": parse(@to)
+        "bind-id" => parse(@name),
+        "bind-event" => @event,
+        "bind-to" => parse(@to)
       }
     end
 

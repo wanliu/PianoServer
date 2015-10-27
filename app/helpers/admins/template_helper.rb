@@ -7,8 +7,8 @@ module Admins::TemplateHelper
     builder = TemplateBuilder.new 'template', template, self, {parents: @parents}
 
     default_options = {
-      id: template.name,
-      "template-panel-id": builder.object_id
+      "id" => template.name,
+      "template-panel-id" => builder.object_id
     }
 
     default_options[:class] = options[:class] + " active in" if @edit_mode
