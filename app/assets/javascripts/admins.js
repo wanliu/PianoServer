@@ -35,6 +35,7 @@
 //= require jquery-ui/widget
 //= require jquery-ui/mouse
 //= require jquery-ui/position
+//= require jquery-ui/sortable
 //= require jquery-ui/effect.all
 //= require_tree ./locales
 //= require_tree ./admins
