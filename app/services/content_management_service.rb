@@ -12,9 +12,9 @@ module ContentManagementService
     logger.debug content
   end
 
-  def set_file_system(path)
-    Liquid::Template.file_system = ContentManagement::FileSystem.new(path, "_%s.html.liquid".freeze)
-  end
+  # def set_file_system(path)
+  #   Liquid::Template.file_system = SubjectService::FileSystem.new(path, "_%s.html.liquid".freeze)
+  # end
 
   def set_resource_file_system(resource, *args)
     resource_file_system(resource)

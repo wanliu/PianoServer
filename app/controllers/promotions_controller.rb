@@ -1,6 +1,6 @@
 class PromotionsController < ApplicationController
   include DefaultAssetHost
-  include ContentManagementService::ContentController
+  include ::ContentManagementService::ContentController
 
   before_action :set_promotion, only: [:show, :update, :destroy, :chat, :shop, :toggle_follow]
 
