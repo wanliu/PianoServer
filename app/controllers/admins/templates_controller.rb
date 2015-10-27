@@ -174,8 +174,6 @@ class Admins::TemplatesController < Admins::BaseController
       @parent = @templable
       @parents = [ @parent ]
     end
-
-    @subject = Subject.find(params[:subject_id])
   end
 
   def set_view_path
