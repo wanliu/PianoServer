@@ -116,6 +116,7 @@ Rails.application.routes.draw do
   resources :promotions, concerns: [ :chatable ] do
     member do
       put "favorited", to: "promotions#favrited"
+      post "toggle_follow"
       get 'shop/:shop_id', to: "promotions#shop", as: :shop
     end
   end
