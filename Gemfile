@@ -40,6 +40,8 @@ gem 'bootsy'
 gem 'jquery-turbolinks'
 gem 'es5-shim-rails'
 gem 'photoswipe-rails', '~> 4.1.0'
+gem "slim-rails"
+gem 'bh', '~> 1.3'
 
 gem 'activeresource'
 gem 'scoped_search'
@@ -61,6 +63,7 @@ gem 'rack-cors', :require => 'rack/cors'
 gem 'rack-raw-upload', '~> 1.1.1'
 
 gem 'devise', '3.4.0'
+gem 'devise-async'
 gem 'mobylette'
 # gem 'nio4r'
 gem "mini_magick", '~> 4.2.7'

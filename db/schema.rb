@@ -136,6 +136,15 @@ ActiveRecord::Schema.define(version: 20151021062919) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "follows", force: :cascade do |t|
+    t.integer  "follower_id"
+    t.string   "follower_type"
+    t.integer  "followable_id"
+    t.string   "followable_type"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
   create_table "industries", force: :cascade do |t|
     t.string   "name"
     t.string   "title"
@@ -166,6 +175,17 @@ ActiveRecord::Schema.define(version: 20151021062919) do
     t.text     "description"
   end
 
+  create_table "likes", force: :cascade do |t|
+    t.string   "liker_type"
+    t.integer  "liker_id"
+    t.string   "likeable_type"
+    t.integer  "likeable_id"
+    t.datetime "created_at"
+  end
+
+  add_index "likes", ["likeable_id", "likeable_type"], name: "fk_likeables", using: :btree
+  add_index "likes", ["liker_id", "liker_type"], name: "fk_likes", using: :btree
+
   create_table "locations", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "province_id"
@@ -188,6 +208,17 @@ ActiveRecord::Schema.define(version: 20151021062919) do
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
   end
+
+  create_table "mentions", force: :cascade do |t|
+    t.string   "mentioner_type"
+    t.integer  "mentioner_id"
+    t.string   "mentionable_type"
+    t.integer  "mentionable_id"
+    t.datetime "created_at"
+  end
+
+  add_index "mentions", ["mentionable_id", "mentionable_type"], name: "fk_mentionables", using: :btree
+  add_index "mentions", ["mentioner_id", "mentioner_type"], name: "fk_mentions", using: :btree
 
   create_table "messages", force: :cascade do |t|
     t.integer  "messable_id"
@@ -327,6 +358,26 @@ ActiveRecord::Schema.define(version: 20151021062919) do
     t.datetime "updated_at",     null: false
   end
 
+  create_table "stock_changes", force: :cascade do |t|
+    t.integer  "item_id",                                                 null: false
+    t.decimal  "quantity",       precision: 10, scale: 2,                 null: false
+    t.jsonb    "data",                                    default: {}
+    t.integer  "unit_id"
+    t.integer  "operator_id",                                             null: false
+    t.integer  "operation_id"
+    t.string   "operation_type"
+    t.datetime "created_at",                                              null: false
+    t.datetime "updated_at",                                              null: false
+    t.boolean  "is_reset",                                default: false, null: false
+    t.integer  "kind",                                                    null: false
+  end
+
+  add_index "stock_changes", ["is_reset"], name: "index_stock_changes_on_is_reset", using: :btree
+  add_index "stock_changes", ["item_id"], name: "index_stock_changes_on_item_id", using: :btree
+  add_index "stock_changes", ["operation_type", "operation_id"], name: "index_stock_changes_on_operation_type_and_operation_id", using: :btree
+  add_index "stock_changes", ["operator_id"], name: "index_stock_changes_on_operator_id", using: :btree
+  add_index "stock_changes", ["unit_id"], name: "index_stock_changes_on_unit_id", using: :btree
+
   create_table "subjects", force: :cascade do |t|
     t.string   "name"
     t.string   "title"
@@ -343,10 +394,11 @@ ActiveRecord::Schema.define(version: 20151021062919) do
     t.string   "name"
     t.string   "filename"
     t.integer  "last_editor_id"
-    t.integer  "subject_id"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
     t.string   "type"
+    t.integer  "templable_id"
+    t.string   "templable_type"
   end
 
   create_table "units", force: :cascade do |t|
@@ -400,4 +452,7 @@ ActiveRecord::Schema.define(version: 20151021062919) do
   end
 
   add_foreign_key "shop_categories", "shops"
+  add_foreign_key "stock_changes", "items"
+  add_foreign_key "stock_changes", "units"
+  add_foreign_key "stock_changes", "users", column: "operator_id"
 end
