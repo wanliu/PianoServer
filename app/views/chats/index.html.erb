@@ -1,3 +1,14 @@
 <div class="col-sm-12 chat-items-container">
-<%= render partial: "chat_item", collection: @chats %>
+  <%= render partial: "chat_item", collection: @chats %>
 </div>
+
+<script type="text/javascript">
+  var other_sides = <%= raw json_escape(@other_sides.to_json) %>,
+      channelIds = [];
+
+  for (var i=0; i < other_sides.length; i++) {
+    channelIds.push(other_sides[i].id);
+  }
+
+  new Linkmen($('.chat-items-container'), channelIds);
+</script>

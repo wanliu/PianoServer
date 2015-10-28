@@ -1,0 +1,74 @@
+<%= content_for :second_sidebar do %>
+
+
+<%= nav as: :pills, layout: :stacked, class: 'template-list' do %>
+    <% if action_name == 'search' %>
+      <%= link_to [:admins, *@parents, :templates], class: 'list-group-item list-group-item-info' do %>
+        <%= "查找: " + params[:q] %>
+        <%= icon :remove, class: 'pull-right' %>
+      <% end %>
+    <% end %>
+
+  <% @templates.each do |template| %>
+    <% url = File.join(url_for([ :admins, *@parents, :templates ]), "blob", template.filename) %>
+    <%= link_to url, class: "list-group-item"  do %>
+      <%= best_in_place_if false, template, :name, url: url_for, inner_class: 'form-control input-sm', as: :input %>
+      <% unless template.reserved? %>
+        <span class='remove-template glyphicon glyphicon-remove' data-url='<%= url %>'></span>
+      <% end %>
+    <% end %>
+  <% end %>
+    <%= link_to request.fullpath.sub(/\/templates\S*\z/, '/templates/new'), class: 'list-group-item' do %>
+      <%= icon :plus %>
+    <% end %>
+<% end %>
+<% end %>
+
+<div class="modal fade" id="rmTempModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">删除模板</h4>
+      </div>
+      <div class="modal-body">
+        <p>确定要删除"<span class='template-name'></span>"这个模板么？</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary">确定删除</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  (function () {
+    var tempEl;
+
+    $('.template-list').on('click', '.remove-template', function (event) {
+      tempEl = this;
+      event.preventDefault();
+
+      var tempName = $(tempEl).parent().text();
+      $('#rmTempModal .template-name').text(tempName);
+      $('#rmTempModal').modal('show')
+    });
+
+    $('#rmTempModal .btn-primary').click(function (event) {
+      var url = $(tempEl).attr('data-url');
+      $('#rmTempModal').modal('hide');
+
+      $.post(url, {
+        _method: "DELETE"
+      }).done(function (data, statue, xhr) {
+        $(tempEl).parent().remove();
+      }).fail(function (data, statue, xhr) {
+        // TODO error handling
+      }).always(function (data, statue, xhr) {
+        tempEl = null;
+        $('#rmTempModal .template-name').text('');
+      })
+    });
+  })();
+</script>

@@ -41,7 +41,7 @@ module PianoServer
 
     config.active_job.queue_adapter = :sidekiq
     config.api_only = false
-    config.autoload_paths += %w(services drops jobs validators models/variables models/templates models/properties)
+    config.autoload_paths += %w(builders services drops jobs validators models/variables models/templates models/properties)
       .map { |_p| Rails.root.join('app', _p) }
   end
 end

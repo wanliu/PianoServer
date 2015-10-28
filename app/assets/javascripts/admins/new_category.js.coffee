@@ -17,16 +17,24 @@ class @NewShopCategory extends @HuEvent
   onClickTitle: (e) ->
     e.preventDefault()
 
-    @$title = $(e.target).hide()
-    @$input.show()
-      .focus()
+    if $(window).width() < 768
+      edit_url = @url + '/edit'
+      Turbolinks.visit(edit_url)
+    else
+      @$title = $(e.target).hide()
+      @$input.show()
+        .focus()
 
   enterTitle: (e) ->
     if e.which == 13
+      title = @$input.val()
+
+      return if title.length == 0
+
       $.post(@url, {
         parent_id: @category.id,
         shop_category: {
-          title: @$input.val(),
+          title: title,
           image_url: @$img.val()
         }
       }).success (data) =>
@@ -39,4 +47,5 @@ class @NewShopCategory extends @HuEvent
     @$title.show()
 
   onClick: (e) ->
-
+    if $(window).width() < 768
+      Turbolinks.visit(@url + '/new')

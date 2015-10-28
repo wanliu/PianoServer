@@ -4,6 +4,9 @@ class Category < ActiveRecord::Base
   include Elasticsearch::Model
   include Elasticsearch::Model::Callbacks
   include ESModel
+  include ContentManagement::Model
+
+  class_attribute :default_templates
 
   acts_as_tree :cache_depth => true
 
@@ -11,6 +14,7 @@ class Category < ActiveRecord::Base
   belongs_to :brand
 
   has_and_belongs_to_many :properties
+  has_many :templates, as: :templable
 
   def with_upper_properties(inhibit = true)
     cond_string = [ "u.rk = 1", inhibit ? "u.state = 0" : nil ].compact.join(" and ")
@@ -47,6 +51,10 @@ class Category < ActiveRecord::Base
     Property.find_by_sql [query.squish, ancestry_depth, sort_ancestor_ids]
   end
 
+  # def with_upper_templates
+
+  # end
+
   def definition_properties
     @defintion_properties ||= HashEx[with_upper_properties.map do |property|
       _hash = {
@@ -61,9 +69,9 @@ class Category < ActiveRecord::Base
       _hash["default"] = property.data["default"] if property.data.try :has_key?, "default"
       _hash["validates"] = property.data["validate_rules"] if property.data.try :has_key?, "validate_rules"
 
-      case property.prop_type
-      when "map"
-        _hash["map"] = property.data["map"]
+      prop_type = property.prop_type
+      if Property::MAP_TYPES.include? prop_type
+        _hash[prop_type] = property.data[prop_type]
         _hash["group"] = property.data["group"] if property.data.try :has_key?, "group"
       end
 
@@ -129,4 +137,24 @@ class Category < ActiveRecord::Base
   def is_leaf
     !has_children?
   end
+
+  def name_reserved?(template_name)
+    default_templates.select { |tpl| tpl.name == template_name }
+  end
+
+  def instance_name
+    "#{id}_#{name}"
+  end
+
+  def content_paths
+    ancestors.map { |cate| cate.content_path } + [ content_path ]
+  end
 end
+
+
+Category.default_templates = [
+  PartialTemplate.new(name: 'sale_options', filename: 'views/_sale_options.html.liquid', templable: Category.new),
+  PartialTemplate.new(name: 'edit_options', filename: 'views/_edit_options.html.liquid', templable: Category.new),
+  PageTemplate.new(name: 'item', filename: 'views/_item.html.liquid', templable: Category.new),
+  PageTemplate.new(name: 'items/show', filename: 'views/items/show.html.liquid', templable: Category.new)
+]

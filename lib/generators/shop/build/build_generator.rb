@@ -14,6 +14,7 @@ class Shop::BuildGenerator < Rails::Generators::NamedBase
   end
 
   def copy_shop_files
+    copy_file 'views/_about.html.liquid', "#{shop_path}/views/_about.html.liquid"
     copy_file 'views/_index.html.liquid', "#{shop_path}/views/_index.html.liquid"
     copy_file "views/_header.html.liquid", "#{shop_path}/views/_header.html.liquid"
     copy_file "views/_category.html.liquid", "#{shop_path}/views/_category.html.liquid"

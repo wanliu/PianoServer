@@ -139,13 +139,39 @@
 
   $(".inventory_properties .check-inventory").change(function(e) {
     var url = "<%= sa_item_inventory_config_path(@shop.name, @item) %>";
-    $.ajax({ 
+    $.ajax({
       url: url,
-      type: 'PUT', 
+      type: 'PUT',
       data: $('.item-form').serialize()
     }).then(function(data) {
       $(".inventory_settings").hide().html(data).fadeIn("highlight");
     });
   })
+
+  //表单数字验证
+  $('.form-horizontal').on('submit',function(e){
+    e.preventDefault();
+
+    var $price = $('#item_price'),
+        $public_price = $('#item_public_price'),
+        $income_price = $('#item_income_price');
+
+    function checkNumber($o){
+      var value = $o.val();
+      if(isNaN(value)){
+        $('.error-tip').remove();
+        $('.form-group').removeClass('has-error');
+        $o.focus().closest('.form-group').addClass('has-error');
+        $o[0].scrollIntoViewIfNeeded();
+      }else{
+        return true;
+      }
+    }
+
+    checkNumber($price)
+      && checkNumber($public_price)
+        && checkNumber($income_price)
+          && this.submit();
+  });
 
 </script

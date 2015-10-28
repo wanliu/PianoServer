@@ -19,6 +19,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
                  .with_category(query_params[:category_id])
                  .with_query(query_params[:q])
                  .page(query_params[:page])
+                 .order(id: :desc)
 
     @categories = if params[:category_id].present?
       ShopCategory.where(parent_id: params[:category_id])
@@ -50,6 +51,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
 
     if Settings.dev.feature.inventory_combination and @inventory_properties.present?
       @inventory_combination = combination_properties(@item, @inventory_properties)
+      @stocks_with_index = {}
     end
   end
 
@@ -79,6 +81,9 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
       pp params["inventories"]
     end
 
+    stock_options = params["inventories"] || params["inventory"]
+    @item.build_stocks(current_user, stock_options)
+
     if @item.save
       if params[:submit] == "create_and_continue"
         @item = Item.new(category_id: @category.id, shop_id: @shop.id)
@@ -89,7 +94,9 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
       end
     else
       flash.now[:error] = t(:create, scope: "flash.error.controllers.items")
-      render :new_step2
+      set_stocks_for_feedback
+
+      render :new_step2, status: :unprocessable_entity
     end
   end
 
@@ -123,11 +130,25 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
       @item.send("#{prop_name}=", value)
     end
 
+    stock_options = params["inventories"] || params["inventory"]
+
+    if stock_options.present?
+      @item.adjust_stocks(current_user, stock_options)
+    else
+      flash.now[:error] = "库存设置错误，请正确填写"
+      set_stocks_for_feedback
+
+      render :edit
+      return
+    end
+
     if @item.save
       redirect_to shop_admin_items_path(@shop.name), notice: t(:update, scope: "flash.notice.controllers.items")
     else
       flash.now[:error] = t(:update, scope: "flash.error.controllers.items")
-      render :edit
+      set_stocks_for_feedback
+
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -136,9 +157,13 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     @breadcrumb = @category.ancestors
     @properties = normal_properties(@category.with_upper_properties)
     @inventory_properties = inventory_properties(@category.with_upper_properties)
+
     if Settings.dev.feature.inventory_combination and @inventory_properties.present?
       @inventory_combination = combination_properties(@item, @inventory_properties)
+      @stocks_with_index = @item.stocks_with_index
     end
+
+    @stock = @item.stock_changes.sum(:quantity)
   end
 
   def inventory_config
@@ -155,6 +180,8 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
 
     if Settings.dev.feature.inventory_combination and @inventory_properties.present?
       @inventory_combination = combination_properties(@item, @inventory_properties)
+
+      set_stocks_for_feedback
     end
 
     render partial: "inventory_form", layout: false
@@ -168,7 +195,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
   end
 
   def change_sale_state
-    if @item.update_attributes(item_state_param)
+    if @item.update_attribute("on_sale", params[:item][:on_sale])
       render json: { success: true }
     else
       render json: @item.errors, status: :unprocessable_entity
@@ -187,10 +214,6 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
 
   def raise_404
     raise ActionController::RoutingError.new('Not Found')
-  end
-
-  def item_state_param
-    params.require(:item).permit(:on_sale)
   end
 
   def item_basic_params
@@ -256,5 +279,11 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     end
 
     yield prop, hash if block_given?
+  end
+
+  def set_stocks_for_feedback
+    if params[:inventories].present?
+      @stocks_with_index = StockChange.extract_stocks_with_index(params[:inventories])
+    end
   end
 end

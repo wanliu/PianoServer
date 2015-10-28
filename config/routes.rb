@@ -32,6 +32,30 @@ Rails.application.routes.draw do
     resources :chats
   end
 
+  concern :templable do |options|
+    resources :templates, options.merge(only: [:index, :new, :create]) do
+      collection do
+        post :preview, to: 'templates#preview_new'
+        get :search
+      end
+    end
+
+    resources :templates, options.merge(path: 'templates/blob', only: [:show, :edit, :update, :destroy], constraints: {id: /[\S]+/}) do
+      member do
+        post :upload
+        post :preview
+      end
+
+      resources :variables, except: [:new ] do
+        collection do
+          get :new_promotion_variable
+          get :new_promotion_set_variable
+          get :search_promotion
+        end
+      end
+    end
+  end
+
   match "admins", to: "admins/dashboards#index", via: :get
 
   namespace :admins do
@@ -44,24 +68,7 @@ Rails.application.routes.draw do
     end
     resources :promotions
     resources :subjects do
-      resources :templates do
-        member do
-          post :upload
-          post :preview
-        end
-
-        collection do
-          post :preview, to: 'templates#preview_new'
-        end
-
-        resources :variables, except: [:new ] do
-          collection do
-            get :new_promotion_variable
-            get :new_promotion_set_variable
-            get :search_promotion
-          end
-        end
-      end
+      concerns :templable, templable_type: 'Subject', parent_type: 'Subject'
     end
     resources :messages
     resources :contacts
@@ -73,6 +80,7 @@ Rails.application.routes.draw do
       end
 
       resources :categories do
+        concerns :templable, templable_type: 'Category', parents_type: [ 'Industry', 'Category' ]
         resources :properties
 
         member do
@@ -108,9 +116,12 @@ Rails.application.routes.draw do
   resources :promotions, concerns: [ :chatable ] do
     member do
       put "favorited", to: "promotions#favrited"
+      post "toggle_follow"
       get 'shop/:shop_id', to: "promotions#shop", as: :shop
     end
   end
+
+  resources :items, concerns: [ :chatable ]
 
   resources :categories
   resources :units, only: [:index, :show]
@@ -161,9 +172,13 @@ Rails.application.routes.draw do
       resources :shop_categories,  path: "categories", constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do
         member do
           get "/:child_id", to: "shop_categories#show_by_child", as: :child
+          get "/:child_id/new", to: "shop_categories#new_by_child"
+          get "/:child_id/edit", to: "shop_categories#edit"
           post "/:parent_id", to: "shop_categories#create_by_child"
           put "/:child_id", to: "shop_categories#update_by_child"
+          patch "/:child_id", to: "shop_categories#update_category"
           post "/:child_id/upload_image", to: "shop_categories#upload_image"
+          post "/:parent_id/upload_image_by_child", to: "shop_categories#upload_image_by_child"
           delete "/:child_id", to: "shop_categories#destroy_by_child"
         end
       end
@@ -180,7 +195,7 @@ Rails.application.routes.draw do
         end
 
         member do
-          post "/upload_image", to: "items#upload_image"
+          post "/upload_image", to: "items#upload_image_file"
           put "/change_sale_state", to: "items#change_sale_state"
           put "/inventory_config", to: "items#inventory_config"
         end

@@ -1,1 +1,9 @@
-<%= render partial: "admins/subjects/edit_preview_template", locals: { subject: @subject, template: @template } %>
+<%= content_for :main do %>
+  <div class="tab-content" >
+    <%#= render partial: "template", collection: @templates, locals: { parents: @parents, template: @template} %>
+    <%= render partial: "template", locals: { parents: @parents, template: @template} %>
+  </div>
+<% end %>
+
+<%= render "layout" %>
+

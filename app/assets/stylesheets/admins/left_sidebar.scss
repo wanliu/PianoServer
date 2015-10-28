@@ -6,6 +6,23 @@
   top: 51px;
   background-color: #ddd;
   z-index: 1040;
+
+  .nav .nav > li > a {
+    padding-left: 30px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+
+  .nav > li {
+    position: relative;
+    display: block;
+  }
+
+  .nav > li >a {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+  }
 }
 
 .nav-sidebar {
@@ -24,9 +41,17 @@
 	padding-left: 240px;
 }
 
+.three-layout {
+  padding-left: 440px;
+}
+
 
 @media (max-width: 768px) {
   .normal-layout {
+    padding-left: 0px;
+  }
+
+  .three-layout {
     padding-left: 0px;
   }
 }

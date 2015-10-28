@@ -16,7 +16,7 @@
   <%= render partial: "edit_preview_template", collection: @subject.templates.order(id: :asc), as: :template, locals: {subject: @subject} %>
 </div>
 
-<%= render partial: "admins/templates/new_template", locals: {template: @new_template, subject: @subject} %>
+<%= render partial: "admins/templates/new_template", locals: { template: @new_template, parents: [@subject] } %>
 
 <div id="variable_editor_modal" class="modal fade">
   <div class="modal-dialog modal-lg">

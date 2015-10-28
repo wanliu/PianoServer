@@ -17,7 +17,8 @@ class ItemsController < ShopsController
 
   def show
     @item.punch(request)
-
+    render :show, with: @item.category
+    @current_user = current_anonymous_or_user
   end
 
   private

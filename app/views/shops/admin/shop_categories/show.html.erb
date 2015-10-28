@@ -48,11 +48,11 @@
       </div>
       <div class="modal-body">
         <div class="list-group">
-          <a href="#" class="list-group-item active">进入</a>
-          <a href="#" class="list-group-item">编辑</a>
-          <a href="#" class="list-group-item">拍照</a>
-          <a href="#" class="list-group-item">上传图片</a>
-          <a href="#" class="list-group-item">删除</a>
+          <a href="javascript:void(0);" class="list-group-item active enter-category">进入</a>
+          <a href="javascript:void(0);" class="list-group-item edit-category">编辑</a>
+          <a href="javascript:void(0);" class="list-group-item take-photo">拍照</a>
+          <a href="javascript:void(0);" class="list-group-item upload-image">上传图片</a>
+          <a href="javascript:void(0);" class="list-group-item delete-category">删除</a>
         </div>
       </div>
     </div><!-- /.modal-content -->
@@ -61,21 +61,19 @@
 
 
 <script type="text/javascript">
-  // $(ready);
+  (function() {
+    var EditShopCategory = window.EditShopCategory;
+    var EditCategoryModal = window.EditCategoryModal;
 
-  var newCategory;
-
-  // function ready () {
-    var NewShopCategory = window.NewShopCategory;
-    var EditCategory = window.EditCategory;
-
-    var shop_category = <%=raw @shop_category.to_json %>;
-    var createCategoryUrl = '<%= child_shop_admin_shop_category_path(@shop.name, @root.name, @shop_category) %>';
-
-    newCategory = new NewShopCategory($('.shop-category-list .new-shop-category')[0], shop_category, createCategoryUrl);
+    var shop_category = <%=raw @shop_category.to_json %>,
+        createCategoryUrl = '<%= child_shop_admin_shop_category_path(@shop.name, @root.name, @shop_category) %>',
+        newCategory = new NewShopCategory($('.shop-category-list .new-shop-category')[0], shop_category, createCategoryUrl),
+        $modal = $('#category-modal');
 
     $('.shop-category-list .shop-category').each(function(i, e) {
       new EditShopCategory($(e))
     });
-  // };
+
+    new EditCategoryModal($modal);
+  })();
 </script>

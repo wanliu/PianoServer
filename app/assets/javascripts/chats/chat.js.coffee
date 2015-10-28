@@ -258,7 +258,7 @@ class @Chat
                       diffDay = Math.floor((time - @lastTime) / DAYS)
                       time = new Date(time)
                       timeStr = if diffDay > 0
-                                  "#{time.getFullYear()}-#{time.getMonth()}-#{time.getDate()} #{time.getHours()}:#{time.getMinutes()}"
+                                  "#{time.getFullYear()}-#{time.getMonth()+1}-#{time.getDate()} #{time.getHours()}:#{time.getMinutes()}"
                                 else
                                   "#{time.getHours()}:#{time.getMinutes()}"
                       """
@@ -348,10 +348,10 @@ class @Chat
     if !@_isOwnMessage(message) && (@_checkChatContentIsOverlayed() || !isVisible)
       @_insertBubbleTip(message)
 
-    if @_checkChatContentIsOverlayed() || (isVisible && @options.isMessageScroll)
-      @autoScroll(direction)
+    # if @_checkChatContentIsOverlayed() || (isVisible && @options.isMessageScroll)
+    #   @autoScroll(direction)
 
-    #@autoScroll(direction) if @options.isMessageScroll
+    @autoScroll(direction) if @options.isMessageScroll
 
   _insertGreetingMessage: () ->
     if @greetings?
@@ -368,7 +368,7 @@ class @Chat
     for message in messages
       @_insertItemMessage(message, 'up')
 
-    # @autoScroll(direction) if @options.isMessageScroll
+    @autoScroll(direction) if @options.isMessageScroll
 
   _checkIsVisible: (isInsert) ->
     $inner = @$chatContainer.find('.chat-inner')

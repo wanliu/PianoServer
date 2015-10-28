@@ -37,7 +37,7 @@
 
     <%= javascript_include_tag "admins" %>
 
-    <%= analytics_init if Rails.env.production? %>
+    <%= analytics_init if Rails.env.production? and Settings.GA.track %>
     <%= render "user_socket" %>
     <%= render "chat_notification" %>
   </head>
@@ -95,7 +95,7 @@
     </div> <!-- /container -->
 
     <%= render "qrcode" %>
-    <%= render "shards/ajax_error" %>
+    <%#= render "shards/ajax_error" %>
 
     <script type="text/javascript">
       <% unless Rails.env.production? %>

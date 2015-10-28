@@ -10,4 +10,11 @@ class Admins::BaseController < ApplicationController
     self.page_navbar = '工作后台'
     self.page_navbar_link = "/admins"
   end
+
+  def primary_title
+
+  end
+
+  def subtitle
+  end
 end
