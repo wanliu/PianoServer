@@ -50,17 +50,17 @@
 
       <!-- 参考价 -->
       <% group_with_errors @item, :price, f do %>
-          <%= f.number_field :price, class: 'form-control' %>
+          <%= f.number_field :price, step: "0.01", class: 'form-control' %>
       <% end %>
 
       <!-- 零售价 -->
       <% group_with_errors @item, :public_price, f do %>
-          <%= f.number_field :public_price, class: 'form-control' %>
+          <%= f.number_field :public_price, step: "0.01", class: 'form-control' %>
       <% end %>
 
       <!-- 进货价 -->
       <% group_with_errors @item, :income_price, f do %>
-          <%= f.number_field :income_price, class: 'form-control' %>
+          <%= f.number_field :income_price, step: "0.01", class: 'form-control' %>
       <% end %>
 
       <!-- 商店分类 -->
@@ -139,30 +139,6 @@
     });
   })
 
-  //表单数字验证
-  $('.form-horizontal').on('submit',function(e){
-    e.preventDefault();
 
-    var $price = $('#item_price'),
-        $public_price = $('#item_public_price'),
-        $income_price = $('#item_income_price');
 
-    function checkNumber($o){
-      var value = $o.val();
-      if(isNaN(value)){
-        $('.error-tip').remove();
-        $('.form-group').removeClass('has-error');
-        $o.focus().closest('.form-group').addClass('has-error');
-        $o[0].scrollIntoViewIfNeeded();
-      }else{
-        return true;
-      }
-    }
-
-    checkNumber($price)
-      && checkNumber($public_price)
-        && checkNumber($income_price)
-          && this.submit();
-  });
-
-</script
+</script>
