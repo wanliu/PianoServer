@@ -25,7 +25,9 @@ module ContentManagement
         # self.assigns["templable_object"] = template_object
 
         name, type = template_object.view_name(options[:partial])
-        if type == :file
+        if type == :file && options[:collection]
+          options[:partial] = template_object.send(:_normalize_path, name)
+        elsif type == :file
           options[:file] = File.join(template_object.path, name)
           options.delete(:partial)
         else
@@ -38,6 +40,11 @@ module ContentManagement
         options.delete(:with)
       end
       super(options, &block)
+    end
+
+    def render_collection(*args)
+      byebug
+      super
     end
   end
 end

@@ -44,7 +44,7 @@ module ContentManagement
     end
 
     def _normalize_path(filename)
-      extract_extname(filename).sub /#{@default_prefix}\//, ''
+      extract_extname(filename).sub /#{@default_prefix}\//, './'
     end
 
     def class_tableize_name

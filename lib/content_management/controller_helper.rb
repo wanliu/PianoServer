@@ -27,7 +27,6 @@ module ContentManagement
 
         options.delete(:with)
       end
-      pp options
     end
   end
 end
