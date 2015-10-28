@@ -41,12 +41,17 @@ class Admins::VariablesController < Admins::BaseController
     when "promotion_variable", "promotion_set_variable"
       params_name = "#{variable_params[:type]}_params".to_sym
       create_params = send(params_name)
-      create_params.merge! template_id: params[:template_id], type: variable_params[:type].classify
+      create_params.merge! type: variable_params[:type].classify
       klass = variable_params[:type].classify.safe_constantize
 
-      @variable = klass.create!(create_params) if klass
+      if klass
+        @variable = klass.new(create_params)
+        @variable.host = @host
 
-      render json: @variable
+        @variable.save!
+
+        render json: @variable
+      end
     else
 
     end
@@ -92,7 +97,7 @@ class Admins::VariablesController < Admins::BaseController
   end
 
   def destroy
-    @variable = @template.variables.find(params[:id])
+    @variable = @host.variables.find(params[:id])
 
     if @variable.destroy
       head :no_content
@@ -105,7 +110,12 @@ class Admins::VariablesController < Admins::BaseController
 
   def set_parents
     @subject = Subject.find(params[:subject_id])
-    @template = Template.find(params[:template_id])
+
+    if params[:host_type]
+      host_type = params[:host_type]
+      host_id = params["#{host_type.underscore}_id"]
+      @host = host_type.constantize.find_by(filename: host_id)
+    end
   end
 
   def query_params
@@ -123,11 +133,11 @@ class Admins::VariablesController < Admins::BaseController
   end
 
   def promotion_variable_params
-    params.require(:variable).permit(:id, :type, :name, :promotion_id, :template_id)
+    params.require(:variable).permit(:id, :type, :name, :promotion_id)
   end
 
   def promotion_set_variable_params
-    params.require(:variable).permit(:id, :type, :name, :promotion_string, :template_id)
+    params.require(:variable).permit(:id, :type, :name, :promotion_string)
   end
 
   def raise_validates_errors(e)
