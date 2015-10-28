@@ -1,0 +1,45 @@
+<div class="col-xs-6 col-sm-3 promotion-wrap">
+  <div class="promotion">
+    <a href="/promotions/{{ promotion.id }}">
+      {% if promotion.type == 'promotions/discount' %}
+        <div class="type-flag discount">
+          {{ 'discount.png' | assets_url | image_tag }}
+            <div class="type-text">{{ promotion.discount }}></div>
+        </div>
+      {% elsif promotion.type == 'promotions/time_limited_sale' %}
+        <div class="type-flag limit-time">
+          {{ 'limit-time.png' | assets_url | image_tag }}
+          <div class="type-text">限时</div>
+        </div>
+      {% else %}
+        <div class="type-flag full-present">
+            {{ 'full-present.png' | assert_url | image_tag }}
+        </div>
+      {% endif %}
+      {{ promotion.image_url | image_tag: class: 'promotion-image' }}
+      <p class="promotion-title">
+         {{ promotion.title }}
+      </p>
+      <div class="price-board clearfix">
+        <a class="snap-up" href="javascript:void(0);">马上抢购</a>
+        <div class="prices">
+          <span class="disount-price">￥{{ promotion.discount_price }}</span>
+          <span class="origin-price"><s>￥{{ promotion.product_price }}</s></span>
+        </div>
+      </div>
+    </a>
+    <div class="provider-wrap">
+      <a href="/{{ promotion.shop_name }}" >
+        <div class="provider">
+          <div class="provider-name">
+            {{ promotion.shop_name }}
+            <div>{{ promotion.created_at | date: '%Y/%m/%d %H:%M' }}</div>
+          </div>
+          <div class="avatar-wrap">
+            {{ promotion.publisher_avatar | image_tag: class: "publish-avatar" }}
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
