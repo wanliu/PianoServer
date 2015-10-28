@@ -15,6 +15,10 @@ class Template < ActiveRecord::Base
 
   scoped_search on: [ :name, :filename ]
 
+  before_save do |template|
+    template.used = true
+  end
+
   scope :with_search,  -> (query) {
     if query.blank?
       all
