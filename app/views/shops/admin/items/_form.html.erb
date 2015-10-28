@@ -17,12 +17,10 @@
 
       <!-- 错误显示 -->
       <% if @item.errors.any? %>
-      <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-          <% @item.errors.full_messages.each do |msg| %>
-            <a href="#" class="list-group-item list-group-item-danger"><%= msg %></a>
-          <% end %>
-        </div>
+      <div class="list-group col-sm-offset-2 col-sm-10">
+        <% @item.errors.full_messages.each do |msg| %>
+          <a href="#" class="list-group-item list-group-item-danger"><%= msg %></a>
+        <% end %>
       </div>
       <% end %>
 
