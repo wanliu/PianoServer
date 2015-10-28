@@ -86,6 +86,7 @@ class Admins::TemplatesController < Admins::BaseController
   end
 
   def preview
+    # TODO： 需要重构
     load_all_variables @template.variables
     load_attachments
 
@@ -94,7 +95,7 @@ class Admins::TemplatesController < Admins::BaseController
     @file.write source
     @file.rewind
 
-    render file: @file.path, layout: "preview"
+    render file: @file.path, layout: "preview", with: @templable
   end
 
   def preview_new
