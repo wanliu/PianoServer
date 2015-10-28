@@ -9,7 +9,9 @@ module BootstrapHelper
 
     flash.map do |k, title|
       <<-HTML
-        <div class="alert alert-#{flash_class[k]}" role="alert">#{title}</div>
+        <div class="alert alert-#{flash_class[k]} alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <strong>#{t(k, scope: 'flash.title')}!</strong>&nbsp;#{title}</div>
       HTML
     end.join('').html_safe
   end

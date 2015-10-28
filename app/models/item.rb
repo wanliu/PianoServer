@@ -139,4 +139,8 @@ class Item < ActiveRecord::Base
   def category_content_paths
     category && category.content_paths || []
   end
+
+  def to_param
+    sid.to_s
+  end
 end
