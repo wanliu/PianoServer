@@ -94,12 +94,10 @@
           </div>
           <hr />
         <% end %>
-
-        <!-- 库存设置 -->
-        <div class="inventory_settings" >
-        <%= render partial: "inventory_form", locals: {builder: f} %>
-        </div>
       <% end %>
+
+      <!-- 库存设置 -->
+      <%= render partial: "inventory_form", locals: {builder: f} %>
 
       <!-- 详情 -->
       <% group_with_errors @item, :description, f do %>

@@ -79,7 +79,7 @@
       itemsContainer = $('.items-panel'),
       pagination = new Paginate($('.items-panel .pagination'), 1, 25, 0)
       container = new CategoryListWrap(categoryContainer, url, 3, pagination),
-      itemUrl = "<%= shop_admin_items_path(@shop.name) %>" + "/$itemId/";
+      itemUrl = "<%= shop_admin_items_path(@shop.name) %>" + "/$itemSid/";
 
   new CategoryBreadcrumb($('.breadcrumb-container .breadcrumb'), container);
   new CategoryItems($('.items-panel tbody'), container, { url: itemUrl });
