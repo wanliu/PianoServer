@@ -7,9 +7,9 @@ class Admins::SubjectsController < Admins::BaseController
 
   def new
     @subject = Subject.new
-    defaults_templates.each do |template|
-      @subject.templates.build template
-    end
+    # defaults_templates.each do |template|
+    #   @subject.templates.build template
+    # end
   end
 
   def edit
@@ -18,11 +18,13 @@ class Admins::SubjectsController < Admins::BaseController
 
   def create
     @subject = Subject.create subject_params
+    SubjectService.build @subject.name
     redirect_to edit_admins_subject_path(@subject)
   end
 
   def update
     @subject.update_attributes(subject_params)
+
     if request.xhr?
       render json: @subject
     else
