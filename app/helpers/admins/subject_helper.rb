@@ -33,6 +33,10 @@ module Admins::SubjectHelper
     File.join(path, "new_#{type}")
   end
 
+  def template_edit_path(subject, template)
+    [:admins, subject, :template, {id: template.filename }]
+  end
+
   def modal_target(config)
     # '#' + config[:class].name.underscore
     '#variable_editor_modal'
