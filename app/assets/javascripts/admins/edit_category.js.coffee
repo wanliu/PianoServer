@@ -63,7 +63,6 @@ class @EditShopCategory extends @HuEvent
           .one(@animationend(), () -> 
             $(@).removeClass('animate-reversal-back')
           )
-
       else
         @$()
           .addClass('animate-shiver')
@@ -117,6 +116,6 @@ class @EditShopCategory extends @HuEvent
 
 $(document).on('page:change', (event) ->
   $('.animate-reversal-enter')
-  .removeClass('animate-reversal-enter')
-  .addClass('animate-reversal-back')
+    .removeClass('animate-reversal-enter')
+    .addClass('animate-reversal-back')
 )
