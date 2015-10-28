@@ -15,15 +15,6 @@
     <%= form_for @item, url: url, html: { class: "form-horizontal item-form" } do |f| %>
       <%= f.hidden_field :filenames %>
 
-      <!-- 错误显示 -->
-      <% if @item.errors.any? %>
-      <div class="list-group col-sm-offset-2 col-sm-10">
-        <% @item.errors.full_messages.each do |msg| %>
-          <a href="#" class="list-group-item list-group-item-danger"><%= msg %></a>
-        <% end %>
-      </div>
-      <% end %>
-
       <!-- 图片 -->
       <div class="form-group">
         <%= f.label :images, class: "col-sm-2 control-label" %>
