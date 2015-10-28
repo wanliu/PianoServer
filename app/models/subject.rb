@@ -55,8 +55,8 @@ class Subject < ActiveRecord::Base
 end
 
 Subject.default_templates = [
-  PageTemplate.new(name: 'index', filename: 'views/index.html.liquid', templable: Subject.new),
-  PartialTemplate.new(name: 'promotion', filename: 'views/_promotion.html.liquid', templable: Subject.new),
-  HomepageTemplate.new(name: 'homepage_header', filename: 'views/_homepage_header.html.liquid', templable: Subject.new)
+  PageTemplate.new(name: 'index', filename: 'views/subjects/index.html.liquid', templable: Subject.new),
+  PartialTemplate.new(name: 'promotion', filename: 'views/promotions/_promotion.html.liquid', templable: Subject.new),
+  HomepageTemplate.new(name: 'homepage_header', filename: 'views/promotions/_homepage_header.html.liquid', templable: Subject.new)
 ]
 

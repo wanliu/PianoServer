@@ -8,13 +8,13 @@ class SubjectGenerator < Rails::Generators::NamedBase
   def copy_subject_files
     check_subject
 
-    self.index_template = "views/index.html.liquid"
+    self.index_template = "views/subjects/index.html.liquid"
     copy_file index_template, "#{subject_path}/views/subjects/index.html.liquid"
 
-    self.promotion_template = "views/_promotion.html.liquid"
+    self.promotion_template = "views/promotions/_promotion.html.liquid"
     copy_file promotion_template, "#{subject_path}/views/promotions/_promotion.html.liquid"
 
-    self.homepage_header = "views/_homepage_header.html.liquid"
+    self.homepage_header = "views/promotions/_homepage_header.html.liquid"
     copy_file homepage_header, "#{subject_path}/views/promotions/_homepage_header.html.liquid"
 
     bind_templates

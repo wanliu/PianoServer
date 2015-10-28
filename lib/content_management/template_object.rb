@@ -9,10 +9,16 @@ module ContentManagement
     def paths
       if @object.respond_to?(:content_paths)
         @object.content_paths
-      elsif @object.respond_to?(:content_path)
-        [ @object.content_path ]
+      else
+        [ path ]
+      end
+    end
+
+    def path
+      if @object.respond_to?(:content_path)
+        @object.content_path
       elsif @object.is_a? ActiveRecord::Base
-        [ Rails.root.join(@root, class_tableize_name, instance_name) ]
+        Rails.root.join(@root, class_tableize_name, instance_name)
       end
     end
 
@@ -24,10 +30,10 @@ module ContentManagement
           @object.templates.find_by(name: name)
         end
 
-      if template
-        _normalize_path(template.filename)
+      if template && template.used
+        [template.filename, :file]
       else
-        name
+        [name, :partial]
       end
     end
 

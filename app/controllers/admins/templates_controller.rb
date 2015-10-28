@@ -145,7 +145,7 @@ class Admins::TemplatesController < Admins::BaseController
   def set_template
     @template = @parent.templates.find_by(filename: params[:id])
 
-    raise ActiveRecord::RecordNotFound if @template.blank?
+    raise ActiveRecord::RecordNotFound if @template.nil?
   end
 
   def set_templable
@@ -177,7 +177,7 @@ class Admins::TemplatesController < Admins::BaseController
   end
 
   def set_view_path
-    ContentManagementService.set_resource_file_system(@parent, 'views')
+    ContentManagement::Utils.set_resource_file_system(@parent, 'views')
   end
 
   def combine(targets, defaults)
