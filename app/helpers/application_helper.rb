@@ -46,7 +46,7 @@ module ApplicationHelper
     args.push options
 
     link_to user_profile_path(user), *args do
-      avatar_image_tag(user.avatar_url) + user.nickname + caret
+      avatar_image_tag(user.avatar_url) + " " + user.nickname + caret
     end
   end
 
