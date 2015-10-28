@@ -59,7 +59,6 @@ class @EditShopCategory extends @HuEvent
       if @thumbnailClickable(e)
         Turbolinks.visit(@url)
         @$()
-          .removeClass('animate-reversal-back')
           .addClass('animate-reversal-enter')
           .one(@animationend(), () -> 
             $(@).removeClass('animate-reversal-back')
