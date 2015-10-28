@@ -69,11 +69,15 @@
         <%= f.select :shop_category_id, options_from_collection_for_select(@shop.shop_category.descendants, 'id', 'title'), {}, class: 'form-control' %>
       <% end %>
 
-      <hr />
 
       <% if Settings.dev.feature.dynamic_property %>
 
         <!-- 枚举全部属性 -->
+        <% unless @properties.blank? %>
+          <hr>
+        <% end %>
+
+
         <% @properties.each do |property| %>
           <% group_with_property_errors @item, property, f do %>
             <%= property_edit @item, property %>
@@ -131,6 +135,7 @@
 
   $(".inventory_properties .check-inventory").change(function(e) {
     var url = "<%= sa_item_inventory_config_path(@shop.name, @item) %>";
+
     $.ajax({
       url: url,
       type: 'PUT',
