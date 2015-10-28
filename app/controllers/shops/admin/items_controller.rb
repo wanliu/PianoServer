@@ -47,6 +47,8 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     @title = "创建自己的商品"
     @item = Item.new(category_id: @category.id, shop_id: @shop.id)
     @properties = normal_properties(@category.with_upper_properties)
+    pp @properties
+
     @inventory_properties = inventory_properties(@category.with_upper_properties)
 
     if Settings.dev.feature.inventory_combination and @inventory_properties.present?
@@ -112,7 +114,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
 
     if Rails.env.development?
       pp params["inventories"]
-    end    
+    end
 
     if params[:item][:filenames].present?
       @item.send(:write_attribute, :images, params[:item][:filenames].split(','))
@@ -226,11 +228,11 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
   end
 
   def normal_properties(properties)
-    properties.reject { |prop| prop.data.try(:[], "group") }
+    properties.reject { |prop| prop.prop_type == "stock_map" }
   end
 
   def inventory_properties(properties)
-    properties.select { |prop| prop.data.try(:[], "group") }
+    properties.select { |prop| prop.prop_type == "stock_map" }
   end
 
   def set_category
@@ -251,7 +253,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     props = format_hash(item, properties)
     hash = combination_hash(*props) do |*args|
       Hash[*args]
-    end    
+    end
     hash
   end
 

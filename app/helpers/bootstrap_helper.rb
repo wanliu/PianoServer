@@ -50,7 +50,7 @@ module BootstrapHelper
     error = object.errors[property_name]
     valid = error.present?
     title = object[property_name]
-    label_content = helper.label name, class: "col-sm-2 control-label" do
+    label_content = helper.label property_name, class: "col-sm-2 control-label" do
       if valid
         "#{title}<div class=\"error-tip\">#{title}#{error.join(' ')}</div>"
       else
