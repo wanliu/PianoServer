@@ -58,8 +58,11 @@ class @EditShopCategory extends @HuEvent
 
       if @thumbnailClickable(e)
         Turbolinks.visit(@url)
-        @$().addClass('animate-reversal-enter')
-
+        @$()
+          .addClass('animate-reversal-enter')
+          .one(@animationend(), () -> 
+            $(@).removeClass('animate-reversal-back')
+          )
       else
         @$()
           .addClass('animate-shiver')
@@ -112,5 +115,7 @@ class @EditShopCategory extends @HuEvent
     @$().find('.thumbnail>img').attr('src', url)
 
 $(document).on('page:change', (event) ->
-  $('.animate-reversal-enter').removeClass('animate-reversal-enter')
+  $('.animate-reversal-enter')
+    .removeClass('animate-reversal-enter')
+    .addClass('animate-reversal-back')
 )
