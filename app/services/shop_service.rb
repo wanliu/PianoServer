@@ -1,5 +1,4 @@
 require 'rails/generators'
-require_relative './subject/file_system'
 
 module ShopService
   extend self

@@ -10,7 +10,7 @@ module Piano
       end
 
       def button_to_chat(name, item, shop, html_options = {})
-        @context.registers[:view].button_to(name, @context.registers[:view].item_chats_path(item.id, shop_id: shop.id), html_options)
+        @context.registers[:view].button_to(name, @context.registers[:view].item_chats_path(item.sid, shop_id: shop.id), html_options)
       end
 
       def button_to(name, options, html_options = {})

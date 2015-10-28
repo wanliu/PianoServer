@@ -11,7 +11,7 @@ class PromotionsController < ApplicationController
   # GET /promotions.json
   def index
     @promotions = Promotion.find(:all, from: :active, params: query_params).to_a
-    render :index
+    render :homepage, with: @subject
   end
 
   # GET /promotions/1

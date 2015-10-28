@@ -13,7 +13,7 @@ class ShopsController < ApplicationController
     @root = @shop.shop_category(true)
     @shop_categories = @root.children
 
-    render :show
+    render :show #, with: @shop
   end
 
   def show
