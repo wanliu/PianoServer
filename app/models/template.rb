@@ -7,7 +7,7 @@ class Template < ActiveRecord::Base
   attr_accessor :content
 
   belongs_to :templable, polymorphic: true
-  has_many :variables, dependent: :destroy
+  has_many :variables, as: :host, dependent: :destroy
   has_many :attachments, dependent: :destroy, as: :attachable
 
   validates :filename, uniqueness: { scope: [:templable_type, :templable_id] }, presence: true

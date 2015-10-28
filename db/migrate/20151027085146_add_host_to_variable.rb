@@ -15,7 +15,7 @@ class AddHostToVariable < ActiveRecord::Migration
   end
 
   def down
-    add_column :variables, :template_id, :integer, index: true
+    add_reference :variables, :template
 
     Variable.find_each do |variable|
       if variable.host_type.end_with? "Template"
