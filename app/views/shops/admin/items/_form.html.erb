@@ -17,10 +17,12 @@
 
       <!-- 错误显示 -->
       <% if @item.errors.any? %>
-      <div class="list-group col-sm-offset-2 col-sm-10">
-        <% @item.errors.full_messages.each do |msg| %>
-          <a href="#" class="list-group-item list-group-item-danger"><%= msg %></a>
-        <% end %>
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <% @item.errors.full_messages.each do |msg| %>
+            <a href="#" class="list-group-item list-group-item-danger"><%= msg %></a>
+          <% end %>
+        </div>
       </div>
       <% end %>
 
@@ -103,12 +105,10 @@
           </div>
           <hr />
         <% end %>
-
-        <!-- 库存设置 -->
-        <div class="inventory_settings" >
-        <%= render partial: "inventory_form", locals: {builder: f} %>
-        </div>
       <% end %>
+
+      <!-- 库存设置 -->
+      <%= render partial: "inventory_form", locals: {builder: f} %>
 
       <!-- 详情 -->
       <% group_with_errors @item, :description, f do %>

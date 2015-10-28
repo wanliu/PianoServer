@@ -1,0 +1,12 @@
+
+zh-CN:
+  activerecord:
+    models:
+      item: 商品
+    attributes:
+      quantity: 库存
+      stock_changes:
+        quantity: 库存
+  attributes:
+    stock_changes:
+        quantity: 库存
