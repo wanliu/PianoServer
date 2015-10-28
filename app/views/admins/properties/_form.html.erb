@@ -28,7 +28,7 @@
     <%= f.select :prop_type, property.prop_types, {}, {class: 'form-control'} %>
   </div>
 
-  <div class="form-group map-pairs-editing <%= property.map_type? ? '' : 'hidden' %>">
+  <div class="form-group map-pairs-toggle <%= property.map_type? ? '' : 'hidden' %>">
     <%= f.label :is_group, "是否集合属性:" %>
     <%= f.radio_button(:is_group, "true") %>
     <%= f.label(:is_group_true, "是") %>
@@ -36,7 +36,7 @@
     <%= f.label(:is_group_false, "否") %>
   </div>
 
-  <div class="form-group map-pairs-editing <%= property.map_type? ? '' : 'hidden' %>">
+  <div class="form-group map-pairs-editing map-pairs-toggle <%= property.map_type? ? '' : 'hidden' %>">
     <%= f.label :map_values, "map类型编辑" %> <button class='btn btn-default add-map-pair' roll='button' type='button'>添加键值对</button>
     <% index = 0 %>
     <% property.map_pairs.each do |key, value| %>
@@ -85,10 +85,10 @@
     $('select[name="property[prop_type]"]').change(function (e) {
       var type = $(this).val();
       if (~mapTypes.indexOf(type)) {
-        $('.map-pairs-editing').removeClass('hidden');
+        $('.map-pairs-toggle').removeClass('hidden');
       } else {
         $("#property_is_group_false").prop("checked", true);
-        $('.map-pairs-editing').addClass('hidden');
+        $('.map-pairs-toggle').addClass('hidden');
       }
     });
   })();
