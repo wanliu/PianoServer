@@ -1,4 +1,4 @@
-.edit-preview-template {
+.template-panel {
   .nav-tabs{
     border-bottom: none;
   }
@@ -160,6 +160,10 @@
       vertical-align: top;
 
       .btn-upload {
+        border-radius: 0;
+        border-color: #CCCCCC;
+        padding: 0;
+
         .qq-upload-drop-area {
           position: absolute;
           left: 200px;

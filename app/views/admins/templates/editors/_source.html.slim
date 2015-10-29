@@ -14,9 +14,21 @@
 
 
   .panel-footer
-    .btn-toolbar
-      .btn-group
-        = button :save, context: :primary, name: :save
+    .panel-actions
+      .btn-toolbar
+        .btn-group
+          = button :save, context: :primary, name: :save
+          button.btn-upload[data-url=url_for([:upload, :admins, *parents, template.becomes(::Template)])]
+          /= link_to '上传', [:upload, :admins, *parents, template.becomes(::Template)], class: ["btn-upload"]
+
+    .panel-attachments
+      .progress
+        .progress-bar role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"
+         |
+           0%
+      ul[class="row-fluid file-list"]
+        li[class="drop-zone col-12 text-center hide"] 拖动到这里上传
+
 
 javascript:
 
@@ -27,6 +39,34 @@ javascript:
 
   $save_button.data('ace_edit', editor)
   $save_button.data('http_options', http_options)
+
+  token = $('meta[name="csrf-token"]').attr('content')
+
+  $upload = $('.btn-upload')
+  $filelist = $('.file-list')
+  $progress = $('.progress')
+  url = $upload.attr('url')
+  $uploader = new qq.FileUploader({
+    element: $upload[0],
+    action:  url,
+    uploadButtonText: '上传',
+    dragText: '拖动到这里上传',
+    customHeaders: { "X-CSRF-Token": token },
+    multiple: false,
+    onComplete: function(id, filename, json) {
+      $(json.html).appendTo($filelist )
+      $progress.hide();
+    },
+    onProgress: function(id, fileName, loaded, total) {
+      percent = Math.round(loaded / total * 100, 0) + '%'
+
+      if (loaded > 0) {
+        $progress.show()
+      }
+
+      $progress.find('.progress-bar').width(percent).text(percent)
+    }
+  })
 
   $save_button
     .unbind('click')
