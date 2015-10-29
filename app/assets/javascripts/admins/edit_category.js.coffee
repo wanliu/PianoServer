@@ -54,26 +54,80 @@ class @EditShopCategory extends @HuEvent
       .select()
 
   onClick: (e) ->
-    if $(e.target).is('.thumbnail>img') 
+    @enterAnimation(e,()=>
+      Turbolinks.visit(@url)
+    )
+    # if $(e.target).is('.thumbnail>img') 
 
+    #   if @thumbnailClickable(e)
+    #     _url = @url
+        
+    #     setTimeout () =>
+    #       Turbolinks.visit(_url)
+    #     , 400
+        
+    #     @$()
+    #       .addClass('animate-scale-enter')
+    #       .one(@animationend(), () -> 
+    #         $(@).removeClass('animate-scale-back')
+    #       )
+    #   else
+    #     @$()
+    #       .addClass('animate-shiver')
+    #       .one(@animationend(), () -> 
+    #         $(@).removeClass('animate-shiver')
+    #       )
+
+  enterAnimation: (e,fn) ->
+    if $(e.target).is('.thumbnail>img')
       if @thumbnailClickable(e)
-        _url = @url
-        
-        setTimeout () =>
-          Turbolinks.visit(_url)
-        , 400
-        
-        @$()
-          .addClass('animate-scale-enter')
-          .one(@animationend(), () -> 
-            $(@).removeClass('animate-scale-back')
-          )
+
+        reference       = @$().children('.box')
+
+        orginTop        = reference.offset().top
+        orginLeft       = reference.offset().left
+
+        referenceHeight = reference.height()
+        referenceWidth  = reference.width()
+
+        screenWith      = $(window).width()
+        screenheight    = $(window).height()
+
+        maskHeight      = referenceHeight
+        maskWidth       = maskHeight
+
+        maskTop         = orginTop  + (referenceHeight - maskHeight) / 2
+        maskLeft        = orginLeft + (referenceWidth  - maskHeight) / 2
+
+
+        $('body').append('<div class="animate-mask"></div>')
+        @$().animate({'opacity':0})
+
+        $('.animate-mask').css({
+          'z-index': 999,
+          'opacity': 0.5,
+          'left'   : maskLeft   + 'px',
+          'top'    : maskTop    + 'px',
+          'width'  : maskWidth  + 'px',
+          'height' : maskHeight + 'px'
+        });
+
+        $('.animate-mask').animate({
+          'left'   : 0,
+          'top'    : 0,
+          'opacity': 0.8,
+          'width'  : screenWith  + 'px',
+          'height' : screenheight + 'px'
+        });
+
+        # fn()
       else
         @$()
           .addClass('animate-shiver')
           .one(@animationend(), () -> 
             $(@).removeClass('animate-shiver')
           )
+
 
   animationend: () -> 
     ['animationend','webkitAnimationEnd','oanimationend','MSAnimationEnd'].join(' ')

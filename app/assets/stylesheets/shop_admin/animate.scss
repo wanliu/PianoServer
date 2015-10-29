@@ -1,3 +1,11 @@
+
+.animate-mask{
+  position: absolute;
+  background-color: #f60;
+  transition: all 0.5s;
+}
+
+
 .animate-scale-enter{
   z-index: 9999;
   animation: reversal 0.5s 1;
