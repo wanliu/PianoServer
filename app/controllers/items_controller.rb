@@ -24,6 +24,7 @@ class ItemsController < ApplicationController
   private
     def set_shop
       @shop = Shop.find_by(name: params[:shop_id])
+      @shop.punch(request)
     end
 
     def set_item

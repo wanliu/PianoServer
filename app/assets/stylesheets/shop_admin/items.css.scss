@@ -7,12 +7,23 @@
 
   .panel-body {
     padding: 15px 0;
+
+
   }
 }
 
 .panel-items {
   .pagination {
     margin: 0px;
+  }
+}
+
+.inventory_properties {
+
+  label {
+    small {
+      color: #ccc;
+    }
   }
 }
 
