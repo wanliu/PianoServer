@@ -57,80 +57,57 @@ class @EditShopCategory extends @HuEvent
     @enterAnimation(e,()=>
       Turbolinks.visit(@url)
     )
-    # if $(e.target).is('.thumbnail>img') 
-
-    #   if @thumbnailClickable(e)
-    #     _url = @url
-        
-    #     setTimeout () =>
-    #       Turbolinks.visit(_url)
-    #     , 400
-        
-    #     @$()
-    #       .addClass('animate-scale-enter')
-    #       .one(@animationend(), () -> 
-    #         $(@).removeClass('animate-scale-back')
-    #       )
-    #   else
-    #     @$()
-    #       .addClass('animate-shiver')
-    #       .one(@animationend(), () -> 
-    #         $(@).removeClass('animate-shiver')
-    #       )
 
   enterAnimation: (e,fn) ->
     if $(e.target).is('.thumbnail>img')
-      if @thumbnailClickable(e)
+      if @thumbnailClickable(e) && !$('.animate-mask')[0]
 
         reference       = @$().children('.box')
-
         orginTop        = reference.offset().top
         orginLeft       = reference.offset().left
-
         referenceHeight = reference.height()
         referenceWidth  = reference.width()
-
         screenWith      = $(window).width()
         screenheight    = $(window).height()
-
-        maskHeight      = referenceHeight
+        maskHeight      = referenceHeight - 100
         maskWidth       = maskHeight
-
-        maskTop         = orginTop  + (referenceHeight - maskHeight) / 2
-        maskLeft        = orginLeft + (referenceWidth  - maskHeight) / 2
-
+        maskTop         = orginTop  + (referenceHeight - maskHeight) / 2 + 5
+        maskLeft        = orginLeft + (referenceWidth  - maskHeight) / 2 + 5
 
         $('body').append('<div class="animate-mask"></div>')
-        @$().animate({'opacity':0})
 
-        $('.animate-mask').css({
-          'z-index': 999,
-          'opacity': 0.5,
-          'left'   : maskLeft   + 'px',
-          'top'    : maskTop    + 'px',
-          'width'  : maskWidth  + 'px',
-          'height' : maskHeight + 'px'
-        });
+        mask = $('.animate-mask')
+        mask
+          .css({
+            'left'    : maskLeft   + 'px'
+            'top'     : maskTop    + 'px'
+            'width'   : maskWidth  + 'px'
+            'height'  : maskHeight + 'px'
+          })
+          .one('transitionend', ()=> fn())
 
-        $('.animate-mask').animate({
-          'left'   : 0,
-          'top'    : 0,
-          'opacity': 0.8,
-          'width'  : screenWith  + 'px',
-          'height' : screenheight + 'px'
-        });
+        reference.css({
+          'opacity'   : 0
+          'visibility': 'hidden'
+          'transform' : 'scale(0.8)'
+        }).addClass('animated')
 
-        # fn()
+        setTimeout () =>
+          mask.css({
+            'opacity' : 0.8
+            'left'    : 0
+            'top'     : 0
+            'width'   : screenWith   + 'px'
+            'height'  : screenheight + 'px'
+          })
+        , 10
+        
       else
         @$()
           .addClass('animate-shiver')
-          .one(@animationend(), () -> 
+          .one('animationend', () -> 
             $(@).removeClass('animate-shiver')
           )
-
-
-  animationend: () -> 
-    ['animationend','webkitAnimationEnd','oanimationend','MSAnimationEnd'].join(' ')
 
   onPress: () ->
     $('#category-modal').data('url', @url).modal("show")
@@ -173,8 +150,33 @@ class @EditShopCategory extends @HuEvent
     @$img.val(url)
     @$().find('.thumbnail>img').attr('src', url)
 
-$(document).on('page:change', (event) ->
-  $('.animate-scale-enter')
-    .removeClass('animate-scale-enter')
-    .addClass('animate-scale-back')
+
+$(document).on('page:change', (event) =>
+  mask = $('.animate-mask')
+ 
+  if mask[0]
+    reference = $('.animated')
+    reference.css({'transform' : 'scale(1)'})
+
+    maskWidth   = reference.width()  - 50
+    maskHeight  = reference.height() - 50
+    maskTop     = reference.offset().top  + 30
+    maskLeft    = reference.offset().left + 30
+
+    mask.css({
+      'left'    : maskLeft   + 'px'
+      'top'     : maskTop    + 'px'
+      'width'   : maskWidth  + 'px'
+      'height'  : maskHeight + 'px'
+    })
+
+    mask.one('transitionend', ()=>
+      mask.remove()
+
+      reference.css({
+        'visibility' : 'visible'
+        'opacity'    : 1
+      }).removeClass('animated')
+      
+    )
 )

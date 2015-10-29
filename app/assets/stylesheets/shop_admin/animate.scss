@@ -1,36 +1,16 @@
-
 .animate-mask{
-  position: absolute;
-  background-color: #f60;
   transition: all 0.5s;
-}
+  z-index: 999;
+  opacity: 0;
+  position: absolute;
+  background-color: #333;
+  border-radius : 5px;
 
-
-.animate-scale-enter{
-  z-index: 9999;
-  animation: reversal 0.5s 1;
-  transform:scale(10);
-  opacity: 0.8;
-
-  .thumbnail{
-    opacity: 0;
-    transition: none!important;
-  }
-}
-
-.animate-scale-back{
-  animation: reversal-back 0.5s 1;
-  transform: scale(1);
-
-  .thumbnail{
-    opacity: 0;
-  }
 }
 
 .animate-shiver{
   animation: shiver 0.1s 5;
 }
-
 
 @keyframes shiver {
     0% {
