@@ -47,7 +47,6 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     @title = "创建自己的商品"
     @item = Item.new(category_id: @category.id, shop_id: @shop.id)
     @properties = normal_properties(@category.with_upper_properties)
-    pp @properties
 
     @inventory_properties = inventory_properties(@category.with_upper_properties)
 
