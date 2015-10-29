@@ -1,5 +1,7 @@
 class Item < ActiveRecord::Base
   include DynamicProperty
+  include ContentManagement::Model
+
   html_fragment :description, :scrub => :prune  # scrubs `body` using the :prune scrubber
 
   # paginates_per 5
@@ -53,7 +55,7 @@ class Item < ActiveRecord::Base
 
   scope :last_sid, -> (shop) do
     where(shop: shop).maximum(:sid) || 0
-  end  
+  end
 
   def product
     Product.find(product_id)
@@ -124,5 +126,21 @@ class Item < ActiveRecord::Base
         cache[index] = { quantity: stock["quantity"], data: stock["data"] }
         cache
       end
+  end
+
+  def instance_name
+    "#{shop.name}_items_#{id}"
+  end
+
+  def content_paths
+    category_content_paths + [ content_path ]
+  end
+
+  def category_content_paths
+    category && category.content_paths || []
+  end
+
+  def to_param
+    sid.to_s
   end
 end

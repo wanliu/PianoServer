@@ -12,8 +12,17 @@
 
 <%= render "form" %>
 
+<div class="panel panel-default">
+  <div class="panel-heading"><%= ::Template.model_name.human || "模版列表" %></div>
+  <div class="list-group">
+    <%= render partial: "template_item", collection: @subject.templates.order(id: :asc), as: :template, locals: {subject: @subject} %>
+  </div>
+</div>
+
+
 <div class="edit_template_wrap">
-  <%= render partial: "edit_preview_template", collection: @subject.templates.order(id: :asc), as: :template, locals: {subject: @subject} %>
+  <%#= render partial: "edit_preview_template", collection: @subject.templates.order(id: :asc), as: :template, locals: {subject: @subject} %>
+
 </div>
 
 <%= render partial: "admins/templates/new_template", locals: { template: @new_template, parents: [@subject] } %>
