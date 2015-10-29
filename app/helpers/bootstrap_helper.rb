@@ -9,7 +9,9 @@ module BootstrapHelper
 
     flash.map do |k, title|
       <<-HTML
-        <div class="alert alert-#{flash_class[k]}" role="alert">#{title}</div>
+        <div class="alert alert-#{flash_class[k]} alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <strong>#{t(k, scope: 'flash.title')}!</strong>&nbsp;#{title}</div>
       HTML
     end.join('').html_safe
   end
@@ -49,8 +51,8 @@ module BootstrapHelper
 
     error = object.errors[property_name]
     valid = error.present?
-    title = object[property_name]
-    label_content = helper.label name, class: "col-sm-2 control-label" do
+    title = "#{property.title}&nbsp;<small>#{property.name}</small>".html_safe
+    label_content = helper.label property_name, class: "col-sm-2 control-label" do
       if valid
         "#{title}<div class=\"error-tip\">#{title}#{error.join(' ')}</div>"
       else

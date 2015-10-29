@@ -1,5 +1,5 @@
-class ItemsController < ShopsController
-  # before_filter :set_shop
+class ItemsController < ApplicationController
+  before_filter :set_shop
   before_filter :set_item, only: [ :show ]
 
   def index
@@ -17,13 +17,14 @@ class ItemsController < ShopsController
 
   def show
     @item.punch(request)
-    render :show, with: @item.category
     @current_user = current_anonymous_or_user
+    render :show, with: @item.category
   end
 
   private
     def set_shop
       @shop = Shop.find_by(name: params[:shop_id])
+      @shop.punch(request)
     end
 
     def set_item

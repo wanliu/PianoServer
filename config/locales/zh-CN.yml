@@ -266,3 +266,7 @@ zh-CN:
         items:
           create: 对不起，商品创建失败。
           update: 对不起，保存失败
+    titles:
+      notice: 成功
+      warning: 警告
+      error: 错误

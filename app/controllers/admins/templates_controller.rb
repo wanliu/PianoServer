@@ -86,6 +86,7 @@ class Admins::TemplatesController < Admins::BaseController
   end
 
   def preview
+    # TODO： 需要重构
     load_all_variables @template.variables
     load_attachments
 
@@ -94,7 +95,7 @@ class Admins::TemplatesController < Admins::BaseController
     @file.write source
     @file.rewind
 
-    render file: @file.path, layout: "preview"
+    render file: @file.path, layout: "preview", with: @templable
   end
 
   def preview_new
@@ -145,7 +146,7 @@ class Admins::TemplatesController < Admins::BaseController
   def set_template
     @template = @parent.templates.find_by(filename: params[:id])
 
-    raise ActiveRecord::RecordNotFound if @template.blank?
+    raise ActiveRecord::RecordNotFound if @template.nil?
   end
 
   def set_templable
@@ -177,7 +178,7 @@ class Admins::TemplatesController < Admins::BaseController
   end
 
   def set_view_path
-    ContentManagementService.set_resource_file_system(@parent, 'views')
+    ContentManagement::Utils.set_resource_file_system(@parent, 'views')
   end
 
   def combine(targets, defaults)
