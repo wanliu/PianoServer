@@ -1,4 +1,4 @@
-<div id="new-template" class="edit-preview-template" data-preview-url="<%= preview_admins_subject_templates_path(subject) %>">
+<div id="new-template" class="edit-preview-template" data-preview-url="<%= url_for [:preview, :admins, *parents, template] %>">
   <ul class="nav nav-tabs">
     <li role="presentation" class="active">
       <a href="#edit-new-template" role="tab" data-toggle="tab">编辑</a>
@@ -9,7 +9,7 @@
   </ul>
 
   <div class="tab-content">
-    <%= render partial: "admins/templates/form", locals: { subject: subject, template: template } %>
+    <%= render partial: "admins/templates/form", locals: { parents: parents, template: template } %>
 
     <div id="preview-new-template" class="tab-pane panel panel-default preview-template fade">
       <div class="panel-heading">

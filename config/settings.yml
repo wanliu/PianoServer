@@ -45,6 +45,7 @@ dev:
     user:
       sign_in: true
 sites:
+  root: .sites
   shops:
     root: '.sites/shops'
   user:
@@ -53,3 +54,12 @@ sites:
     root: '.sites/system'
 GA:
   track: false
+mail:
+  sender: service@wanliu.biz
+  address: smtp.ym.163.com
+  port: 25
+  user_name: service@wanliu.biz
+  password: asdfasdf
+  domain: http://m.wanliu.biz/
+  url_host: http://m.wanliu.biz
+  url_port: 80

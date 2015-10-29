@@ -3,19 +3,17 @@ class Shops::Admin::ProfilesController < Shops::Admin::BaseController
   end
 
   def update
-    @shop.update(shop_profile_params)
-
-    redirect_to shop_admin_profile_path(@shop.name)
+    if @shop.update(shop_profile_params)
+      redirect_to shop_admin_profile_path(@shop.name)
+    else
+      flash.now[:error] = @shop.errors.full_messages.join(', ')
+      render :show, status: :unprocessable_entity
+    end
   end
 
   def upload_shop_logo
-    @shop.logo = params[:file] || params[:qqfile]
-
-    if @shop.save
-      render json: {success: true, url: @shop.logo.url(:cover)}, status: :ok, content_type: "text/html"
-    else
-      render json: {errors: @shop.errors}, status: :unprocessable_entity, content_type: "text/html"
-    end
+    @shop.update_attribute("logo", params[:file] || params[:qqfile])
+    render json: {success: true, url: @shop.logo.url(:cover)}, status: :ok, content_type: "text/html"
   end
 
   protected

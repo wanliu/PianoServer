@@ -1,6 +1,11 @@
 module ApplicationHelper
   include SubjectsHelper
   include BootstrapHelper
+  include AceEditorHelper
+  include BindHelper
+  include SearchHelper
+  include WindowHelper
+  include UploadHelper
 
   def avatar_url(user)
     user.image || identicon_url(user)
@@ -59,6 +64,10 @@ module ApplicationHelper
     end
 
     html_class.select {|k,v| v }.map { |k,v| k }.join(' ')
+  end
+
+  def bh_clear
+    Bh::Classes::Stack.class_variable_get(:@@stack).clear
   end
 
   private

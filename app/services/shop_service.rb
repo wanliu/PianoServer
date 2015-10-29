@@ -1,4 +1,3 @@
-require 'content_management/subject/file_system'
 require 'rails/generators'
 
 module ShopService
@@ -29,7 +28,7 @@ module ShopService
   end
 
   def set_file_system(shop)
-    Liquid::Template.file_system = ContentManagement::FileSystem.new(views_path(shop), "_%s.html.liquid".freeze)
+    Liquid::Template.file_system = ShopService::FileSystem.new(views_path(shop), "_%s.html.liquid".freeze)
   end
 
   private
@@ -42,4 +41,10 @@ module ShopService
     @main_menu_cate = shop.shop_category || shop.create_shop_category(attributes)
   end
 
+  class FileSystem < ::Liquid::LocalFileSystem
+    def read_template_file(template_path, context)
+      template_path   = "#{template_path}" unless template_path.include?('/')
+      super
+    end
+  end
 end

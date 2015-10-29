@@ -44,6 +44,22 @@
     <ul class="list-group property-list">
       <%= render partial: "property", collection: @properties, locals: { category: category, industry: industry } %>
     </ul>
+    <h4>模版列表</h4>
+    <ul class="list-group templates-list">
+      <%= render partial: "template", collection: @templates, locals: { category: category, industry: industry } %>
+    </ul>
+    <div>
+      <%= link_to t("actions.edit"), [:admins, @industry, @category, :templates], class: "btn btn-default" %>
+    </div>
+    <h4 class="item-desc-title" data-category-id='<%= category.id %>'>
+      商店商品默认描述模板<!--<span class='glyphicon glyphicon-menu-right'></span> -->
+    </h4>
+    <div class='cate-item-desc' data-category-id='<%= category.id %>'>
+      <%= text_area_tag category, category.item_desc, cols: '61', rows: '12' %>
+      <button type='button' role='button' class='btn btn-default update-template' data-update-url="<%=  write_item_desc_admins_industry_category_path(@industry, category)  %>">
+        更新模板
+      </button>
+    </div>
   </div>
 </div>
 

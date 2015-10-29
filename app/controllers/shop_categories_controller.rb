@@ -8,11 +8,13 @@ class ShopCategoriesController < ShopsController
   def show
     add_page_title t("titles.shop_category", category: @shop_category.title)
 
+    @shop_category.punch(request)
+
     if @shop_category.has_children
       @shop_categories = ShopCategory.where(parent_id: @shop_category, status: true).order(id: :asc)
       @items = []
     else
-      @items = Item.where(shop_category_id: params[:id], on_sale: true)
+      @items = Item.where(shop_category_id: params[:id], on_sale: true).order(id: :desc)
       @shop_categories = []
     end
   end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151023062934) do
+ActiveRecord::Schema.define(version: 20151028022238) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -134,6 +134,15 @@ ActiveRecord::Schema.define(version: 20151023062934) do
     t.text     "message"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "follows", force: :cascade do |t|
+    t.integer  "follower_id"
+    t.string   "follower_type"
+    t.integer  "followable_id"
+    t.string   "followable_type"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
   end
 
   create_table "industries", force: :cascade do |t|
@@ -293,7 +302,7 @@ ActiveRecord::Schema.define(version: 20151023062934) do
     t.string   "title"
     t.integer  "shop_id"
     t.text     "description"
-    t.boolean  "status",                     default: true
+    t.boolean  "status"
   end
 
   add_index "shop_categories", ["iid"], name: "index_shop_categories_on_iid", using: :btree
@@ -328,6 +337,26 @@ ActiveRecord::Schema.define(version: 20151023062934) do
     t.datetime "updated_at",     null: false
   end
 
+  create_table "stock_changes", force: :cascade do |t|
+    t.integer  "item_id",                                                 null: false
+    t.decimal  "quantity",       precision: 10, scale: 2,                 null: false
+    t.jsonb    "data",                                    default: {}
+    t.integer  "unit_id"
+    t.integer  "operator_id",                                             null: false
+    t.integer  "operation_id"
+    t.string   "operation_type"
+    t.datetime "created_at",                                              null: false
+    t.datetime "updated_at",                                              null: false
+    t.boolean  "is_reset",                                default: false, null: false
+    t.integer  "kind",                                                    null: false
+  end
+
+  add_index "stock_changes", ["is_reset"], name: "index_stock_changes_on_is_reset", using: :btree
+  add_index "stock_changes", ["item_id"], name: "index_stock_changes_on_item_id", using: :btree
+  add_index "stock_changes", ["operation_type", "operation_id"], name: "index_stock_changes_on_operation_type_and_operation_id", using: :btree
+  add_index "stock_changes", ["operator_id"], name: "index_stock_changes_on_operator_id", using: :btree
+  add_index "stock_changes", ["unit_id"], name: "index_stock_changes_on_unit_id", using: :btree
+
   create_table "subjects", force: :cascade do |t|
     t.string   "name"
     t.string   "title"
@@ -344,10 +373,12 @@ ActiveRecord::Schema.define(version: 20151023062934) do
     t.string   "name"
     t.string   "filename"
     t.integer  "last_editor_id"
-    t.integer  "subject_id"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
     t.string   "type"
+    t.integer  "templable_id"
+    t.string   "templable_type"
+    t.boolean  "used",           default: false
   end
 
   create_table "units", force: :cascade do |t|
@@ -391,14 +422,20 @@ ActiveRecord::Schema.define(version: 20151023062934) do
   add_index "users", ["username"], name: "index_users_on_username", unique: true, using: :btree
 
   create_table "variables", force: :cascade do |t|
-    t.integer  "template_id"
     t.string   "name"
     t.string   "data_type"
     t.jsonb    "data"
     t.string   "type"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer  "host_id"
+    t.string   "host_type"
   end
 
+  add_index "variables", ["host_type", "host_id"], name: "index_variables_on_host_type_and_host_id", using: :btree
+
   add_foreign_key "shop_categories", "shops"
+  add_foreign_key "stock_changes", "items"
+  add_foreign_key "stock_changes", "units"
+  add_foreign_key "stock_changes", "users", column: "operator_id"
 end

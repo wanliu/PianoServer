@@ -5,7 +5,7 @@ class User < ActiveRecord::Base
   before_save :ensure_authentication_token
 
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable, :timeoutable,
+  devise :database_authenticatable, :registerable, :timeoutable, :async,
          :recoverable, :rememberable, :trackable, :validatable,
          :authentication_keys => [:login]
 
@@ -16,6 +16,9 @@ class User < ActiveRecord::Base
   has_one :owner_shop, class_name: 'Shop', foreign_key: 'owner_id'
   has_many :chats, foreign_key: 'owner_id'
   has_many :locations
+
+  has_many :followers, as: :followable, class_name: 'Follow'
+  has_many :followables, as: :follower, class_name: 'Follow'
 
   validates :username, presence: true, uniqueness: true
 
@@ -67,6 +70,30 @@ class User < ActiveRecord::Base
 
   def avatar_url
     image.url(:avatar)
+  end
+
+  def follows?(target)
+    if anonymous?
+      false
+    else
+      followables.exists?(followable_type: target.class, followable_id: target.id)
+    end
+  end
+
+  def follows!(target)
+    unless anonymous?
+      followables.create!(followable_type: target.class, followable_id: target.id)
+    end
+  end
+
+  def unfollows!(target)
+    unless anonymous?
+      followables.find_by(followable_type: target.class, followable_id: target.id).destroy!
+    end
+  end
+
+  def anonymous?
+    id < 0
   end
 
   def join_shop

@@ -1,0 +1,75 @@
+.animate-reversal-enter{
+  z-index: 9999;
+  animation: reversal 1s 1;
+  transform:scale(20);
+
+  .thumbnail{
+    opacity: 0;
+    background: #fefefe;
+  }
+}
+
+.animate-reversal-back{
+  animation: reversal-back 0.5s 1;
+  transform: scale(1);
+
+  .thumbnail{
+    opacity: 0;
+    background: #fefefe;
+  }
+}
+
+.animate-shiver{
+  animation: shiver 0.1s 5;
+}
+
+
+@keyframes shiver {
+    0% {
+      transform:rotate(0);
+    }
+    25% {
+      transform:rotate(-10deg);
+    }
+    50% {
+      transform:rotate(0);
+    }
+    75% {
+      transform:rotate(10deg);
+    }
+    100% {
+      transform:rotate(0);
+    }
+}
+
+@keyframes reversal {
+    0% {
+      transform:scale(1);
+      opacity: 1;
+    }
+    15% {
+      transform:scale(0.8);
+      opacity: 1;
+
+    }
+    100% {
+      transform:scale(20);
+      opacity: 0.5;
+    }
+}
+
+@keyframes reversal-back {
+    0% {
+      transform:scale(20);
+      opacity: 0.5;
+    }
+    70% {
+      transform:scale(0.8);
+      opacity: 1;
+
+    }
+    100% {
+      transform:scale(1);
+      opacity: 1;
+    }
+}
