@@ -13,7 +13,7 @@ class ShopsController < ApplicationController
     @root = @shop.shop_category(true)
     @shop_categories = @root.children
 
-    render :show #, with: @shop
+    render :show, with: @shop
   end
 
   def show
@@ -33,6 +33,7 @@ class ShopsController < ApplicationController
 
   def set_shop
     @shop = Shop.find_by name: params[:shop_name] || params[:id]
+    @shop.punch(request)
   end
 
   def shop_page_info
