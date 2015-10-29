@@ -1,6 +1,6 @@
 class Admins::SubjectsController < Admins::BaseController
 
-  before_action :set_subject, only: [:edit, :show, :update, :destroy]
+  before_action :set_subject, only: [:edit, :show, :update, :destroy, :upload]
   def index
     @subjects = Subject.page
   end
@@ -28,6 +28,10 @@ class Admins::SubjectsController < Admins::BaseController
     else
       redirect_to admins_subjects_path # (@subject)
     end
+  end
+
+  def upload
+
   end
 
   private
