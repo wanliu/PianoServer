@@ -1,33 +1,36 @@
-<style>
-  .feedback-table-th{
-    text-align: center;
-    vertical-align: middle;
-  }
-
-</style>
-
 <% if @feedbacks.length > 0%>
   <h1 class"page-header">反馈信息</h1>
 
   <table class="table table-bordered table-hover">
     <thead>
       <tr>
-        <th class="feedback-table-th">姓名</th>
-        <th class="feedback-table-th">联系电话</th>
-        <th class="feedback-table-th">反馈内容</th>
-        <th class="feedback-table-th">回复内容</th>
-        <th class="feedback-table-th">是否显示</th>
+        <th class="text-center">姓名/电话</th>
+        <th class="text-center" width="40%">留言内容</th>
+        <th class="text-center" width="40%">官方回复</th>
+        <th class="text-center">是否显示</th>
       </tr>
     </thead>
 
     <tbody>
     <% @feedbacks.each do |feedback| %>
       <tr>
-        <th><%= feedback.name %></th>
-        <td><%= feedback.mobile %></td>
-        <td><%= feedback.information %>速度速度素速度速度素速度速度素速度速度素速度速度素速度速度素速度速度素速度速度素</td>
-        <td>123</td>
-        <td>button</td>
+        <th class="text-center" style="vertical-align: middle">
+          <%= feedback.name %> <br>
+          <%= feedback.mobile %>
+        </th>
+
+        <td>
+          <%= feedback.information %>
+        </td>
+
+        <td style="padding:0">
+        <textarea style="width:100%;height:100%;border:none;display:block;padding:0;outline:none;"><%= feedback.reply %></textarea>
+        </td>
+
+        <th class="text-center" style="vertical-align: middle">
+          <button class="btn btn-danger">关闭</button>
+        </th>
+
       </tr>
     <% end %>
 
