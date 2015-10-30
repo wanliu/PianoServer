@@ -6,8 +6,16 @@
         = source_editor template, :content, template.filename, save_button: :save
         .variables
           .btn-group-vertical
-            .btn-group
-              = dropdown :menu
+            .btn-group.add-variable
+              = dropdown :menu do
+                - template.customize_variables.each do |config|
+                    =link_to config[:title], 'javascript: void(0)', \
+                      data: { \
+                        toggle: 'modal', \
+                        target: modal_target(config), \
+                        link: File.join(url_for([ :admins, *@parents, :templates ]),"blob", template.filename, "variables"), \
+                        class: config[:name], \
+                        op: 'new' }
 
     - else
       h1.text-center 此模版使用是的默认的模版 #{builder.button_new '使用一个新模板' }
@@ -18,27 +26,39 @@
       .btn-group
         = button :save, context: :primary, name: :save
 
+=modal title: '添加变量', id: "variable_editor_modal", class: 'modal fade'  do
+  .modal-body
+    p 加载中...
+  .modal-footer
+    =button "Close", "data-dismiss": "modal"
+    =button "Save Change", context: :primary, class: 'save'
+
+
 javascript:
 
-  editor = $(".source-editor").data('ace_edit');
-  http_options = $(".source-editor").data('http_options');
+  (function() {
+    editor = $(".source-editor").data('ace_edit');
+    http_options = $(".source-editor").data('http_options');
 
-  $save_button = $("[name=save]")
+    $save_button = $("[name=save]")
 
-  $save_button.data('ace_edit', editor)
-  $save_button.data('http_options', http_options)
+    $save_button.data('ace_edit', editor)
+    $save_button.data('http_options', http_options)
 
-  $save_button
-    .unbind('click')
-    .bind('click', function(e) {
-      $target = $(e.currentTarget);
+    $save_button
+      .unbind('click')
+      .bind('click', function(e) {
+        $target = $(e.currentTarget);
 
-      editor = $target.data('ace_edit');
-      filename = $(".filename").val();
-      http_options = $target.data('http_options');
-      http_options['data']['template']['filename'] = filename;
-      http_options['data']['template']['content'] = editor.getValue();
+        editor = $target.data('ace_edit');
+        filename = $(".filename").val();
+        http_options = $target.data('http_options');
+        http_options['data']['template']['filename'] = filename;
+        http_options['data']['template']['content'] = editor.getValue();
 
-      Ajax($target, http_options)
-    });
+        Ajax($target, http_options)
+      });
 
+    var EditVariableModal = window.EditVariableModal;
+    var variableModal = EditVariableModal.getModal();
+  })();
