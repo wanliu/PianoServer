@@ -145,6 +145,19 @@
     });
   })
 
+  <% if @item.persisted? %>
+    var brand_id = '<%= @item.brand_id %>',
+        $brand = $('select#item_brand_id option[value="' + brand_id +'"]');
 
+    if ($brand.length > 0) {
+      $brand.attr('selected', 'selected');
+    }
 
+    var category_id = '<%= @item.shop_category_id%>',
+        $category = $('select#item_shop_category_id option[value="' + category_id +'"]');
+
+    if ($category.length > 0) {
+      $category.attr('selected', 'selected');
+    }
+  <% end %>
 </script>
