@@ -1,4 +1,4 @@
-<div class="col-xs-4 col-sm-4 col-md-4 col-lg-3 shop-category" data-shop-category-id="<%= shop_category.id %>">
+<div class="col-xs-4 col-sm-4 col-md-4 col-lg-3 shop-category" data-shop-category-id="<%= shop_category.id %>" data-status="<%=shop_category.status %>">
   <div class="box">
     <div class="thumbnail" data-link="<%= child_shop_admin_shop_category_path(@shop.name, @root.name, shop_category) %>" data-limited-depth="<%= shop_category.depth_limited_reached %>">
     <%#= link_to child_shop_admin_shop_category_path(@shop.name, @root, shop_category) , class: "thumbnail" do %>
@@ -19,6 +19,14 @@
         <%= link_to child_shop_admin_shop_category_path(@shop.name, @root, shop_category), class: 'btn btn-danger', method: :delete, remote: true, data: { confirm: '删除此分类吗？' } do %>
           <%= icon :remove %>
         <% end %>
+      </div>
+      <div class="toggle-button visible-md-block visible-lg-block">
+        <button class="btn btn-default btn-warning btn-opened" title="隐藏此分类">
+          <%= icon 'eye-open'.to_sym %>
+        </button>
+        <button class="btn btn-default btn-warning btn-closed" title="显示此分类">
+          <%= icon 'eye-close'.to_sym %>
+        </button>
       </div>
     <%# end %>
     </div>
