@@ -16,7 +16,9 @@ class @CategoryItems extends @HuEvent
     @refreshTable()
 
   refreshTable: () ->
-    @$().parents('table').table()
+    $table = @$().parents('table').table()
+    table = $table.data('table')
+    table.refresh()
 
   bindEditCategory: () ->
     @$().find('.edit').bind('click', @onEditCategory.bind(@))

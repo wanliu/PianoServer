@@ -86,12 +86,12 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     @item.build_stocks(current_user, stock_options)
 
     if @item.save
-      if params[:submit] == "create_and_continue"
+      if params[:commit] == "新增并继续"
         @item = Item.new(category_id: @category.id, shop_id: @shop.id)
-        flash.now[:notice] = t(:create, scope: "flash.notice.controllers.items.create")
+        flash.now[:notice] = t(:create, scope: "flash.notice.controllers.items")
         render :new_step2
       else
-        redirect_to shop_admin_items_path(@shop.name), notice: t(:create, scope: "flash.notice.controllers.items.create")
+        redirect_to shop_admin_items_path(@shop.name), notice: t(:create, scope: "flash.notice.controllers.items")
       end
     else
       flash.now[:error] = t(:create, scope: "flash.error.controllers.items")
