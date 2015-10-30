@@ -226,3 +226,7 @@
     }
   }
 }
+
+button[data-target="#variable_editor_modal"] {
+  display: none;
+}

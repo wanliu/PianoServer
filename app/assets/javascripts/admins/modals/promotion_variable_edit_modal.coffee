@@ -6,7 +6,7 @@ class @PromotionVariableEditModal extends @ModalBase
     'click .save': 'onSave'
     'click .selected': 'showPromotions'
     'click .promotion': 'onSelectedItem'
-    'change input[name=q]': 'onVariableNameChange'
+    'keyup input': 'onVariableNameChange'
 
   constructor: (@element, @url, @$variableList) ->
     super(@element, @url, @$variableList)

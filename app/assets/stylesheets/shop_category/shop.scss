@@ -170,6 +170,9 @@ body.shop {
 
 @media (max-width: 484px) {
   body.shop {
+    .cate-items-list {
+      padding:0;
+    }
     .cate{
       padding: 0 2.5px;
 
