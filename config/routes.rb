@@ -180,6 +180,7 @@ Rails.application.routes.draw do
           get "/:child_id/edit", to: "shop_categories#edit"
           post "/:parent_id", to: "shop_categories#create_by_child"
           put "/:child_id", to: "shop_categories#update_by_child"
+          put "/:child_id/update_status", to: "shop_categories#update_status"
           patch "/:child_id", to: "shop_categories#update_category"
           post "/:child_id/upload_image", to: "shop_categories#upload_image"
           post "/:parent_id/upload_image_by_child", to: "shop_categories#upload_image_by_child"

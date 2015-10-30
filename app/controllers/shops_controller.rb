@@ -11,14 +11,14 @@ class ShopsController < ApplicationController
     end
 
     @root = @shop.shop_category(true)
-    @shop_categories = @root.children
+    @shop_categories = @root.children.where(status: true)
 
     render :show, with: @shop
   end
 
   def show
     # @shop = Shop.find params[:id]
-    @shop_categories = @shop.shop_category.children.page(params[:page]).per(params[:per])
+    @shop_categories = @shop.shop_category.children.where(status: true).page(params[:page]).per(params[:per])
   end
 
   def about
