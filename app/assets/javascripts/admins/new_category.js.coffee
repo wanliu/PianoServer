@@ -5,7 +5,7 @@ EditShopCategory = @EditShopCategory
 class @NewShopCategory extends @HuEvent
   events:
     'click': 'onClick',
-    'click a>h2': 'onClickTitle',
+    'click a': 'onClickTitle',
     'keypress .title-input': 'enterTitle',
     'blur .title-input': 'leaveEdit'
 
@@ -21,7 +21,7 @@ class @NewShopCategory extends @HuEvent
       edit_url = @url + '/edit'
       Turbolinks.visit(edit_url)
     else
-      @$title = $(e.target).hide()
+      @$title = $(e.currentTarget).find('h2').hide()
       @$input.show()
         .focus()
 
