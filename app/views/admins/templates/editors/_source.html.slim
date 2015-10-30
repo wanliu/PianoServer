@@ -90,7 +90,7 @@ javascript:
 
     // 添加与编辑变量
     var subject_id = "#{@parents.first.id}",
-        template_id = "#{template.id}",
+        template_id = "#{template.filename}",
         selector = ".variable-items";
     new TemplateVariables($(selector), subject_id, template_id);
 
