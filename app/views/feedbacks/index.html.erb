@@ -1,0 +1,20 @@
+<div class="container contacts-new-container">
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
+      <h2>意见列表</h2>
+
+        <% @feedbacks.each do |feedback| %>
+          <% if feedback.is_show %>
+
+            <%= feedback.name %>：
+            <%= feedback.information %> <br>
+
+          <% end %>
+        <% end %>
+
+      <%= link_to '提建议', new_feedback_path, class: "btn btn-primary" %>
+
+    </div>
+  </div>
+</div>
+

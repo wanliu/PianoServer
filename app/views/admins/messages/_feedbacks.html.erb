@@ -1,0 +1,36 @@
+<% if @feedbacks.length > 0%>
+  <h1 class"page-header">反馈信息</h1>
+
+  <% @feedbacks.each do |feedback| %>
+    <%= form_for feedback, :url => feedback_path(feedback), :method => :patch do |f| %>
+      <div class="form-group">
+        <%= label :feedback, :name do %>
+          姓名<span class="required">*</span>
+        <% end %>
+
+        <%= f.text_field :name, class: "form-control" %>
+      </div>
+
+      <div class="form-group">
+        <%= label :feedback, :mobile do %>
+          手机/座机号<span class="required">*</span>
+        <% end %>
+
+        <%= f.text_field :mobile, class: "form-control" %>
+      </div>
+
+      <div class="form-group">
+        <%= label :feedback, :information do %>
+          您的建议<span class="required">*</span>
+        <% end %>
+
+        <%= f.text_area :information, rows: 1, class: "form-control" %>
+      </div>
+
+      <div class="form-group text-right">
+        <%= f.submit "更新", class: "btn btn-primary" %>
+      </div>
+      
+    <% end %>
+  <% end %>
+<% end %>
