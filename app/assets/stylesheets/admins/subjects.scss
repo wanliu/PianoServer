@@ -192,16 +192,24 @@
 
         &>li {
           white-space: nowrap;
-
+          position: relative;
         }
+
         .icon {
+          position: absolute;
+          top: 0;
+          left: 0;
           width: 16px;
           height: 16px;
         }
 
         .title {
+          display: inline-block;
+          width: 100%;
+          white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
+          padding: 0 3px;
         }
 
         input {
@@ -209,6 +217,9 @@
         }
 
         .delete {
+          position: absolute;
+          right: 2px;
+          top: 0;
         }
       }
     }
