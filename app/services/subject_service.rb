@@ -5,7 +5,7 @@ module SubjectService
   extend self
 
   def build(name)
-    Rails::Generators.invoke 'subject', [ name ]
+    Rails::Generators.invoke 'subject', [ name, "--skip"  ]
   end
 
   def subject_root

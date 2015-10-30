@@ -47,7 +47,7 @@ Rails.application.routes.draw do
         post :preview
       end
 
-      resources :variables, except: [:new ] do
+      resources :variables, host_type: 'Template', except: [:new ] do
         collection do
           get :new_promotion_variable
           get :new_promotion_set_variable

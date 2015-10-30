@@ -1,5 +1,5 @@
 <div class="promotion-variable" >
-  <%= form_for @variable, url: variables_path(@subject, @template) do |f| %>
+  <%= form_for @variable, url: variables_path(@subject, @host) do |f| %>
     <div class="form-group">
       <%= f.text_field :name, class: "form-control", placeholder: "对象名" %>
     </div>

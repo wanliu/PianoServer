@@ -4,4 +4,8 @@ class ShopDrop < Liquid::Rails::Drop
   def link
     "/#{object.name}"
   end
+
+  def week_hits
+    @object.hits(1.week.ago)
+  end
 end

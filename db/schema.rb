@@ -443,14 +443,17 @@ ActiveRecord::Schema.define(version: 20151028022238) do
   add_index "users", ["username"], name: "index_users_on_username", unique: true, using: :btree
 
   create_table "variables", force: :cascade do |t|
-    t.integer  "template_id"
     t.string   "name"
     t.string   "data_type"
     t.jsonb    "data"
     t.string   "type"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer  "host_id"
+    t.string   "host_type"
   end
+
+  add_index "variables", ["host_type", "host_id"], name: "index_variables_on_host_type_and_host_id", using: :btree
 
   add_foreign_key "shop_categories", "shops"
   add_foreign_key "stock_changes", "items"

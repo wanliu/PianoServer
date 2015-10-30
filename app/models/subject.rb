@@ -1,7 +1,7 @@
 class Subject < ActiveRecord::Base
   include ContentManagement::Model
 
-  RESERVED_NAMES = ["homepage_header", "index", "promotion"]
+  RESERVED_NAMES = ["homepage_header", "index", "promotion", "homepage"]
 
   include Liquid::Rails::Droppable
 
