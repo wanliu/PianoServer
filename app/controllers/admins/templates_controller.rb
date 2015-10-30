@@ -87,15 +87,13 @@ class Admins::TemplatesController < Admins::BaseController
 
   def preview
     # TODO： 需要重构
-    load_all_variables @template.variables
     load_attachments
 
     source = params[:source]
     @file = Tempfile.new(["template", ".html.liquid"], "#{Rails.root}/tmp/")
     @file.write source
     @file.rewind
-
-    render file: @file.path, layout: "preview", with: @templable
+    render file: @file.path, layout: "preview", with: @templable, variables_host: @template
   end
 
   def preview_new
