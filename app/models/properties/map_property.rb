@@ -1,3 +1,2 @@
 class MapProperty < PropertyBase
-
 end

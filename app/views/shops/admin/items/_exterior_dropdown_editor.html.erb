@@ -1,0 +1,3 @@
+<% set = collection_map(property.data["map"]) %>
+<% options = options_from_collection_for_select set, :key, :title, object.send(property_name) %>
+<%= select object_name, property_name, options, {}, class: 'form-control' %>
