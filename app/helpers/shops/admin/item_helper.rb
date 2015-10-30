@@ -79,7 +79,9 @@ module Shops::Admin::ItemHelper
         </span>
       </div>
       <script type="text/javascript">
-        $('##{id}').datetimepicker();
+        $('##{id}').datetimepicker({
+          format: "YYYY-MM-DD HH:mm:ss"
+        });
       </script>
     HTML
   end
