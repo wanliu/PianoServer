@@ -5,34 +5,37 @@
       <% @feedbacks.each do |feedback| %>
         <% if feedback.is_show %>
 
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <div class="media">
+                <div class="media-left">
+                  <a href="#">
+                    <img class="media-object" style="width: 42px; height: 42px;">
+                  </a>
+                </div>
+                <div class="media-body">
+                  <h4 class="media-heading"><%= feedback.name %></h4>
+                  <%= feedback.information %>
+                </div>
+              </div>
 
-        <div class="panel panel-default">
-          <div class="panel-body">
-            <div class="media">
-              <div class="media-left">
-                <a href="#">
-                  <img class="media-object" style="width: 64px; height: 64px;">
-                </a>
-              </div>
-              <div class="media-body">
-                <h4 class="media-heading"><%= feedback.name %></h4>
-                <%= feedback.information %>
-              </div>
-            </div>
-            <hr>
-            <div class="media">
-              <div class="media-left">
-                <a href="#">
-                  <%= image_tag 'logo.png', class: "media-object", style: "width: 64px; height: 64px;" %>
-                </a>
-              </div>
-              <div class="media-body">
-                <h4 class="media-heading">官方回复</h4>
-                <%= feedback.reply %>
-              </div>
+              <% if feedback.reply %>
+                <hr>
+                <div class="media">
+                  <div class="media-left">
+                    <a href="#">
+                      <%= image_tag 'logo.png', class: "media-object", style: "width: 42px; height: 42px;" %>
+                    </a>
+                  </div>
+                  <div class="media-body">
+                    <h5 class="media-heading">官方回复</h5>
+                    <%= feedback.reply %>
+                  </div>
+                </div>
+              <% end %>
+
             </div>
           </div>
-        </div>
         <% end %>
       <% end %>
 
