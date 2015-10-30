@@ -6,30 +6,31 @@
         = source_editor template, :content, template.filename, save_button: :save
         .variables
           .btn-group-vertical
-            = dropdown :添加对象, class: "btn-group-justified" do
-              - template.customize_variables.each do |config|
-                  =link_to config[:title], 'javascript: void(0)', \
-                    data: { \
-                      toggle: 'modal', \
-                      target: modal_target(config), \
-                      link: File.join(url_for([ :admins, *@parents, :templates ]), "blob", template.filename, "variables"), \
-                      class: config[:name], \
-                      op: 'new' }
-            .btn-group-vertical.variable-items role="group" aria-label="variables"
-              - template.variables.each do |var|
-                .variable-item variable-id="#{var.id}"
-                  span.variable_name
-                    = var.name
-                  .variable-tools
-                    = link_to '#', data: { \
-                      toggle: 'modal', \
-                      target: modal_target(var), \
-                      link: File.join(url_for([ :admins, *@parents, :templates ]), "blob", template.filename, "variables", var.id.to_s), \
-                      class: var[:type].underscore, \
-                        op: 'edit' \
-                      } do
-                      span.glyphicon.glyphicon-pencil.edit-icon aria-hidden="true"
-                    span.glyphicon.glyphicon-remove.remove-icon aria-hidden="true"
+            - unless template.new_record?
+              = dropdown :添加对象, class: "btn-group-justified" do
+                - template.customize_variables.each do |config|
+                    =link_to config[:title], 'javascript: void(0)', \
+                      data: { \
+                        toggle: 'modal', \
+                        target: modal_target(config), \
+                        link: File.join(url_for([ :admins, *@parents, :templates ]), "blob", template.filename, "variables"), \
+                        class: config[:name], \
+                        op: 'new' }
+              .btn-group-vertical.variable-items role="group" aria-label="variables"
+                - template.variables.each do |var|
+                  .variable-item variable-id="#{var.id}"
+                    span.variable_name
+                      = var.name
+                    .variable-tools
+                      = link_to '#', data: { \
+                        toggle: 'modal', \
+                        target: modal_target(var), \
+                        link: File.join(url_for([ :admins, *@parents, :templates ]), "blob", template.filename, "variables", var.id.to_s), \
+                        class: var[:type].underscore, \
+                          op: 'edit' \
+                        } do
+                        span.glyphicon.glyphicon-pencil.edit-icon aria-hidden="true"
+                      span.glyphicon.glyphicon-remove.remove-icon aria-hidden="true"
 
     - else
       h1.text-center 此模版使用是的默认的模版 #{builder.button_new '使用一个新模板' }
