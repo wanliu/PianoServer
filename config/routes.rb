@@ -36,13 +36,14 @@ Rails.application.routes.draw do
     resources :templates, options.merge(only: [:index, :new, :create]) do
       collection do
         post :preview, to: 'templates#preview_new'
+        post :upload, as: :upload
         get :search
       end
     end
 
     resources :templates, options.merge(path: 'templates/blob', only: [:show, :edit, :update, :destroy], constraints: {id: /[\S]+/}) do
       member do
-        post :upload
+        post :upload, as: :upload
         post :preview
       end
 
@@ -69,6 +70,9 @@ Rails.application.routes.draw do
     resources :promotions
     resources :subjects do
       concerns :templable, templable_type: 'Subject', parent_type: 'Subject'
+      member do
+        get "upload", to: 'subjects#upload', as: :upload
+      end
     end
     resources :messages
     resources :contacts
@@ -176,6 +180,7 @@ Rails.application.routes.draw do
           get "/:child_id/edit", to: "shop_categories#edit"
           post "/:parent_id", to: "shop_categories#create_by_child"
           put "/:child_id", to: "shop_categories#update_by_child"
+          put "/:child_id/update_status", to: "shop_categories#update_status"
           patch "/:child_id", to: "shop_categories#update_category"
           post "/:child_id/upload_image", to: "shop_categories#upload_image"
           post "/:parent_id/upload_image_by_child", to: "shop_categories#upload_image_by_child"

@@ -1,0 +1,64 @@
+<div class="panel-body template-images-panel">
+  <!-- <div class="toggle-search-block">
+    <%= icon 'eye-open'.to_sym %>
+    <%= icon 'eye-close'.to_sym %>
+  </div> -->
+  <div class="template-image-upload clearfix">
+    <div class="image-preview"></div>
+
+    <%= button_tag '上传', class: 'btn-upload', data: {url: url_for([:upload, :admins, *@parents]) } %>
+  </div>
+
+  <div class="template-image-show">
+    <form class="form-horizontal">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="图片名称">
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="button">搜索</button>
+        </span>
+      </div>
+    </form>
+    <ul class="list-group">
+      <li class="list-group-item">
+        <div class="media">
+          <div class="media-left">
+            <img src="" class="template-image-src">
+          </div>
+          <div class="media-body media-middle">图片</div>
+          <div class="media-right media-middle">
+            <%= icon :remove %>
+          </div>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="media">
+          <div class="media-left">
+            <img src="" class="template-image-src">
+          </div>
+          <div class="media-body media-middle">图片</div>
+          <div class="media-right media-middle">
+            <%= icon :remove %>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<script type="text/javascript">
+  token = $('meta[name="csrf-token"]').attr('content')
+
+  $upload = $('.btn-upload')
+  url = $upload.attr('url')
+  $uploader = new qq.FileUploader({
+    element: $upload[0],
+    action:  url,
+    uploadButtonText: '上传',
+    dragText: '拖动到这里上传',
+    customHeaders: { "X-CSRF-Token": token },
+    multiple: false,
+    onComplete: function(id, filename, json) {
+
+    }
+  })
+</script>

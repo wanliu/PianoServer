@@ -2,7 +2,7 @@ class ShopCategoriesController < ShopsController
   before_filter :set_shop_category, only: [ :show ]
 
   def index
-    @shop_categories = @shop.shop_category.children.page(params[:page]).per(params[:per])
+    @shop_categories = @shop.shop_category.children.where(status: true).page(params[:page]).per(params[:per])
   end
 
   def show
@@ -11,7 +11,7 @@ class ShopCategoriesController < ShopsController
     @shop_category.punch(request)
 
     if @shop_category.has_children
-      @shop_categories = ShopCategory.where(parent_id: @shop_category).order(id: :desc)
+      @shop_categories = ShopCategory.where(parent_id: @shop_category, status: true).order(id: :asc)
       @items = []
     else
       @items = Item.where(shop_category_id: params[:id], on_sale: true).order(id: :desc)
