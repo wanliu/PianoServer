@@ -17,5 +17,3 @@ class @ModalBase extends @HuEvent
     if templateVariables
       methodName = [op, 'Variable'].join('')
       templateVariables[methodName](id, name)
-
-
