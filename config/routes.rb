@@ -70,9 +70,6 @@ Rails.application.routes.draw do
     resources :promotions
     resources :subjects do
       concerns :templable, templable_type: 'Subject', parent_type: 'Subject'
-      member do
-        get "upload", to: 'subjects#upload', as: :upload
-      end
     end
     resources :messages
     resources :contacts
