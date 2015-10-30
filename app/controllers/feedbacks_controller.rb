@@ -27,7 +27,7 @@ class FeedbacksController < ApplicationController
     @feedback = Feedback.find(params[:id])
     @feedback.update(feedback_params)
 
-    redirect_to feedback_url(@feedback)
+    redirect_to :back
 
   end
 
