@@ -27,6 +27,14 @@
   }
 }
 
+.date-select-container {
+  select {
+    width: 16.66666667%;
+    display: inline;
+    margin-right: 10px;
+  }
+}
+
 .tablesaw-columntoggle td.title a,
 .tablesaw-swipe td.title a {
   display: block;

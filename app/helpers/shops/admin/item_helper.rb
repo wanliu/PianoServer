@@ -25,10 +25,16 @@ module Shops::Admin::ItemHelper
       number_field object_name, property_name, class: 'form-control'
     when "boolean", "bool"
       radio_toggle object_name, property_name
-    when "date"
-      date_picker object_name, property_name
-    when "datetime"
-      date_picker object_name, property_name
+    when "date", "datetime"
+      exterior_name = property.exterior.nil? ? "exterior_date_select_editor" : "exterior_#{property.exterior}_editor"
+
+      render exterior_name, with: property, locals: {
+        object: object,
+        object_name: object_name,
+        property_name: property_name,
+        property: property
+      }
+      # date_picker object_name, property_name
     when "map", "stock_map", "sale_map"
       exterior_name = property.exterior.nil? ? "exterior_dropdown_editor" : "exterior_#{property.exterior}_editor"
 

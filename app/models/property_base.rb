@@ -28,4 +28,8 @@ class PropertyBase
   def typecast(value)
     value
   end
+
+  def self.exteriors
+    {}
+  end
 end

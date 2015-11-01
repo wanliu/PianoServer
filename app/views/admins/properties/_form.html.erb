@@ -28,10 +28,10 @@
     <%= f.select :prop_type, property.prop_types, {}, {class: 'form-control'} %>
   </div>
 
-  <% if property.map_type? %>
+  <% unless property.exteriors.blank? %>
   <div class="form-group">
     <%= f.label :exterior, "外观" %>
-    <%= f.select :exterior, options_for_select(Property::EXTERIORS), {}, {class: 'form-control'} %>
+    <%= f.select :exterior, options_for_select(property.exteriors), {}, {class: 'form-control'} %>
   </div>
   <% end %>
 
