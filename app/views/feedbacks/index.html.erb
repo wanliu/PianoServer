@@ -13,7 +13,7 @@
                   </a>
                 </div>
                 <div class="media-body">
-                  <h4 class="media-heading"><%= feedback.name %></h4>
+                  <h5 class="media-heading"><%= feedback.name %>:</h5>
                   <%= feedback.information %>
                 </div>
               </div>
@@ -27,7 +27,7 @@
                     </a>
                   </div>
                   <div class="media-body">
-                    <h5 class="media-heading">官方回复</h5>
+                    <h5 class="media-heading">官方回复:</h5>
                     <%= feedback.reply %>
                   </div>
                 </div>
@@ -40,6 +40,10 @@
 
       <div class="text-right">
         <%= link_to '提建议', new_feedback_path, class: "btn btn-primary" %>
+      </div>
+
+      <div class="text-center">
+        <%= paginate @feedbacks %>
       </div>
     </div>
   </div>

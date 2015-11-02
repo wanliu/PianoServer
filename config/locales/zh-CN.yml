@@ -224,6 +224,7 @@ zh-CN:
     images: 图像
     image: 图像
     description: 描述
+    information: 信息
   controllers:
     shops: 商店
     items: 商品
