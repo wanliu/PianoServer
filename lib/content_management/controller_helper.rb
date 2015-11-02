@@ -1,6 +1,7 @@
 module ContentManagement
   module ControllerHelper
     include Paths
+    include ContentManagementService::Helpers
 
     private
 
@@ -23,6 +24,17 @@ module ContentManagement
 
         template_object.paths.each do |path|
           push_view_paths path
+        end
+
+        if with_object.respond_to? :templates
+          action_name = options[:action]
+          template_name = action_name || options[:template_name]
+          template = with_object.templates.find_by(name: template_name)
+
+          if template_name.present? && template.present?
+            load_all_variables template.variables
+            load_attachments template.attachments
+          end
         end
 
         options.delete(:with)
