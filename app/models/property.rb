@@ -10,7 +10,6 @@ class Property < ActiveRecord::Base
   PROP_TYPES = %w(string integer number float date boolean) + MAP_TYPES
 
   VALIDATE_MELPERS = %w(acceptance confirmation exclusion format inclusion length numericality presence absence uniqueness)
-  EXTERIORS = { "样版选择器" => "swatch_select", "下拉列表" => "dropdown" }
 
   store_accessor :data, :exterior
 
@@ -130,6 +129,31 @@ class Property < ActiveRecord::Base
 
   def prop_types
     PROP_TYPES
+  end
+
+  def exteriors
+    prop_class.exteriors || []
+  end
+
+  def prop_class
+    case prop_type
+    when "string"
+      StringProperty
+    when "number"
+      NumberProperty
+    when "integer"
+      IntegerProperty
+    when "float"
+      FloatProperty
+    when "boolean"
+      BooleanProperty
+    when "map", "stock_map", "sale_map"
+      MapProperty
+    when "date", "datetime"
+      DateTimeProperty
+    else
+      NullProperty
+    end
   end
 
   protected
