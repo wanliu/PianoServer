@@ -105,7 +105,7 @@ class Admins::TemplatesController < Admins::BaseController
 
   def upload
     # filename = params[:file].original_filename
-    @attachment = @template.attachments.create(name: params[:file].original_filename, filename:: params[:file])
+    @attachment = @template.attachments.create(name: params[:file].original_filename, filename: params[:file])
 
     render :upload, formats: [:json]
   end
