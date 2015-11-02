@@ -1,0 +1,16 @@
+<dt>
+  <%= property.title %>
+</dt>
+<dd>
+  <ul class="nav nav-pills">
+
+    <% config.each do |key, cfg| %>
+      <% if cfg["check"] == "1" %>
+      <li role="presentation"><a href="#"><%= cfg["title"] %></a></li>
+      <% end %>
+    <% end %>
+  </ul>
+</dd>
+<script type="text/javascript">
+  $("")
+</script>
