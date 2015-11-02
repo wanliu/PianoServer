@@ -39,6 +39,9 @@ class CartsController < ApplicationController
   end
 
   def remove
+    @cartitem = @cart.items.find(params[:id])
+    @cartitem.destroy if @cartitem
+    render :remove
   end
 
   def commit

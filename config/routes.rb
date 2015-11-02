@@ -3,7 +3,7 @@ Rails.application.routes.draw do
     get "/", to: "carts#index", as: :mycart
 
     post "/", to: "carts#add"
-    delete "/", to: "carts#remove"
+    delete "/:id", to: "carts#remove"
 
     post "commit", to: "carts#commit"
   end

@@ -9,9 +9,18 @@
     <% groups = @items.group_by {|item| item.supplier } %>
     <% groups.each do |supplier, items| %>
       <div class="panel panel-default">
-        <div class="panel-heading"><%= supplier.title %> ( <%= items.count %> 件商品)</div>
-        <ul class="list-group">
-          <%= render partial: "item_line", collection: items, as: :item %>
+        <div class="panel-heading">
+          <div class="btn-group pull-right">
+            <%#= link_to '#', class: 'btn btn-link' do %>
+              <%= caret %>
+            <%# end %>
+          </div>
+          <%= link_to shop_site_path(supplier.name) do %>
+            <%= supplier.title %> ( <%= items.count %> 件商品)
+          <% end %>
+        </div>
+        <ul class="list-group cart-item-details">
+          <%= render partial: "item_line", collection: items, as: :item, locals: { supplier: supplier } %>
         </ul>
         <div class="panel-footer">
           <%= button_to '生成订单', class: 'btn btn-primary' %>

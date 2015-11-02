@@ -9,8 +9,10 @@
       <li class="dropdown-header"><%= supplier.title %><span class="count pull-right">共 <%= number_with_delimiter _items.count %> 件</span></li>
 
       <% items.each do |item| %>
+        <% cartable = item.cartable %>
+        <% url = cartable && cartable.is_a?(Item) ? shop_item_path(supplier.name, cartable) : promotion_path(cartable) %>
         <li>
-          <%= link_to '#' do %>
+          <%= link_to url do %>
             <div class="media">
               <div class="media-left">
                 <%= image_tag item.image, class: 'cart-item-image' %>
@@ -24,7 +26,7 @@
           <% end %>
         </li>
       <% end %>
-      <% if _items.count > 0 %>
+      <% if _items.count > 4 %>
         <li>
           <%= link_to '#more', class: 'text-center more' do %>
             <small>更多...</small>
@@ -33,7 +35,7 @@
       <% end %>
       <li role="separator" class="divider"></li>
     <% end %>
-    <li><%= link_to '查看购物车...', mycart_path %></li>
+    <li><%= link_to '» 查看购物车...', mycart_path %></li>
   </ul>
 
 </li>
