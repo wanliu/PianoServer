@@ -86,14 +86,11 @@ class Admins::TemplatesController < Admins::BaseController
   end
 
   def preview
-    # TODO： 需要重构
-    load_attachments
-
     source = params[:source]
     @file = Tempfile.new(["template", ".html.liquid"], "#{Rails.root}/tmp/")
     @file.write source
     @file.rewind
-    render file: @file.path, layout: "preview", with: @templable, variables_host: @template
+    render file: @file.path, layout: "preview", with: @templable, template_name: @template.name
   end
 
   def preview_new
@@ -108,7 +105,7 @@ class Admins::TemplatesController < Admins::BaseController
 
   def upload
     # filename = params[:file].original_filename
-    @attachment = @template.attachments.create(name: params[:file].original_filename, filename: params[:file])
+    @attachment = @template.attachments.create(name: params[:file].original_filename, filename:: params[:file])
 
     render :upload, formats: [:json]
   end

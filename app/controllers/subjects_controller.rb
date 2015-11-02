@@ -1,9 +1,6 @@
 class SubjectsController < ApplicationController
   before_action :set_subject, only: [:show, :update, :destroy]
   include SubjectsHelper
-  include ContentManagementService::ContentController
-
-  register_render_template :index, only: [ :show ]
 
   def show
     @subject.punch(request)
