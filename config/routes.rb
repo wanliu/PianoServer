@@ -1,4 +1,13 @@
 Rails.application.routes.draw do
+  scope :cart do
+    get "/", to: "carts#index", as: :mycart
+
+    post "/", to: "carts#add"
+    delete "/", to: "carts#remove"
+
+    post "commit", to: "carts#commit"
+  end
+
   mount Bootsy::Engine => '/bootsy', as: 'bootsy'
   resources :subjects, except: [:index, :new, :edit] do
     member do

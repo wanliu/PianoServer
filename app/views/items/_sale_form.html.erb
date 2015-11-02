@@ -1,0 +1,59 @@
+<div class="item-sale-options">
+  <%= form_for cartitem, url: mycart_path, html: { class: 'sale_form' } do |f| %>
+    <%= row do %>
+      <% unless current_anonymous_or_user.user_type == "consumer" %>
+        <div class="form-group col-sm-12 ">
+          <div class="btn-group btn-group-lg" role="group" aria-label="Large button group">
+            <button type="button" class="btn btn-info">零售</button>
+            <button type="button" class="btn btn-primary active">批发</button>
+          </div>
+        </div>
+        <div class="form-group col-sm-12" >
+
+          <label>批发价</label>
+          <%= number_to_currency item.price %>
+        </div>
+      <% end %>
+
+      <% @inventory_properties.each do |property| %>
+        <% config = @item.send("property_#{property.name}") || {} %>
+        <%= render partial: "exterior_#{property.exterior}", with: @item.category, locals: { config: config, item: @item, property: property, shop: @shop } %>
+      <% end %>
+
+      <div class="form-group col-sm-6 col-md-3 col-lg-3" >
+        <%= label_tag "数量" %>
+          <%= minus_plus_button_field :cart_item, :quantity, value: cartitem.quantity, placeholder: "数量", class: 'form-control' %>
+      </div>
+
+      <div class="form-group col-sm-12" >
+        <%= f.submit :add, class: 'btn btn-info btn-lg add-to-cart' %>
+        <%= f.button :purchase, class: 'btn btn-danger btn-lg purchase' %>
+      </div>
+      <%= f.hidden_field :title %>
+      <%= f.hidden_field :image %>
+      <%= f.hidden_field :cartable_id %>
+      <%= f.hidden_field :cartable_type %>
+      <%= f.hidden_field :supplier_id %>
+    <% end %>
+  <% end %>
+</div>
+<script type="text/javascript">
+  $(".sale_form").on('submit', function(e) {
+    e.preventDefault();
+    $form = $(this);
+    url = $form.attr('action')
+
+    $.post(url, $form.serialize()).then(function(e) {
+
+    }).error(function() {
+
+    })
+
+  });
+
+  // $(".add-to-cart").click(function(e) {
+  //   $form = $(e.target).parents("form")
+  //   $form.submit();
+  // });
+
+</script>

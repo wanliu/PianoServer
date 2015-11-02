@@ -6,6 +6,7 @@ module ApplicationHelper
   include SearchHelper
   include WindowHelper
   include UploadHelper
+  include MinusPlusButtonHelper
 
   def avatar_url(user)
     user.image || identicon_url(user)

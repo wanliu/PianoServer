@@ -10,7 +10,7 @@ class DateTimeProperty < PropertyBase
   end
 
   def typecast(value)
-    DateTime.parse(value)
+    value.blank? ? nil : DateTime.parse(value)
   end
 
   def self.exteriors

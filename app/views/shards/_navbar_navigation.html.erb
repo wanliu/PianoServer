@@ -10,6 +10,7 @@
         <% if Settings.dev.feature.linkmen %>
         <li><%= link_to "最近联系人", "/chats" %></li>
         <% end %>
+        <%= render "shards/mycart" %>
         <%= render "shards/profile_menu" %>
       </ul>
     </div>

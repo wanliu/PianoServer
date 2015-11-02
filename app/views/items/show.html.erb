@@ -33,7 +33,7 @@
     </div>
   </div>
 
-  <%= render partial: "sale_options", with: @item.category %>
+  <%= render partial: "sale_form", with: @item.category, locals: { item: @item, cartitem: @cartitem } %>
 
   <div class='item-shop-infos'>
     <div class="media ">

@@ -1,0 +1,14 @@
+<li class="dropdown">
+  <%= link_to mycart_path, class: 'dropdown-toggle', "data-toggle" => 'dropdown' do %>
+    <%= icon "shopping-cart" %>【<%= @cart.items.count %>】
+  <% end %>
+  <ul class="dropdown-menu" aria-labelledby="mycartList">
+    <li class="dropdown-header">Dropdown header</li>
+    <li><a href="#">Action</a></li>
+    <li><a href="#">Another action</a></li>
+    <li><a href="#">Something else here</a></li>
+    <li role="separator" class="divider"></li>
+    <li><%= link_to '查看购物车...', mycart_path %></li>
+  </ul>
+
+</li>

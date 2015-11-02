@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
   include AnonymousUser
 
+  enum user_type: [ :consumer, :retail, :distributor, :wholesaler, :manufacturer ]
   # Include default devise modules. Others available are:
   before_save :ensure_authentication_token
 
@@ -14,6 +15,7 @@ class User < ActiveRecord::Base
   belongs_to :shop
 
   has_one :owner_shop, class_name: 'Shop', foreign_key: 'owner_id'
+  has_one :cart
   has_many :chats, foreign_key: 'owner_id'
   has_many :locations
 
@@ -98,6 +100,10 @@ class User < ActiveRecord::Base
 
   def join_shop
     shop || owner_shop
+  end
+
+  def cart
+    super || Cart.new(user_id: id)
   end
 
   private
