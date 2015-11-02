@@ -25,15 +25,16 @@ class FeedbacksController < ApplicationController
 
   def update
     @feedback = Feedback.find(params[:id])
-    @feedback.update(feedback_params)
-
-    redirect_to :back
-
+    @feedback.update_attributes(feedback_params)
+    
+    respond_to do |format|
+      format.json { render json: {sucess: true} }
+    end
   end
 
   private
 
   def feedback_params
-    params.require(:feedback).permit(:name, :mobile, :information)
+    params.require(:feedback).permit(:name, :mobile, :information, :reply, :is_show)
   end
 end

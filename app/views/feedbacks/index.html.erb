@@ -1,10 +1,9 @@
 <div class="container contacts-new-container">
   <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
-
+      <h3>意见列表</h3>
       <% @feedbacks.each do |feedback| %>
         <% if feedback.is_show %>
-
           <div class="panel panel-default">
             <div class="panel-body">
               <div class="media">
@@ -23,7 +22,7 @@
                 <hr>
                 <div class="media">
                   <div class="media-left">
-                    <a href="#">
+                    <a href="/">
                       <%= image_tag 'logo.png', class: "media-object", style: "width: 42px; height: 42px;" %>
                     </a>
                   </div>
@@ -39,14 +38,9 @@
         <% end %>
       <% end %>
 
-      <%= link_to '我也提建议', new_feedback_path, class: "btn btn-primary" %>
-
-
+      <div class="text-right">
+        <%= link_to '提建议', new_feedback_path, class: "btn btn-primary" %>
+      </div>
     </div>
   </div>
 </div>
-
-
-
-
-
