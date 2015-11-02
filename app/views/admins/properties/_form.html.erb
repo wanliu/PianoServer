@@ -28,6 +28,13 @@
     <%= f.select :prop_type, property.prop_types, {}, {class: 'form-control'} %>
   </div>
 
+  <% if property.map_type? %>
+  <div class="form-group">
+    <%= f.label :exterior, "外观" %>
+    <%= f.select :exterior, options_for_select(Property::EXTERIORS), {}, {class: 'form-control'} %>
+  </div>
+  <% end %>
+
   <div class="form-group map-pairs-toggle <%= property.map_type? ? '' : 'hidden' %>">
     <%= f.label :is_group, "是否集合属性:" %>
     <%= f.radio_button(:is_group, "true") %>
@@ -41,8 +48,8 @@
     <% index = 0 %>
     <% property.map_pairs.each do |key, value| %>
       <div class='map-pair' data-pair-index=<%= index %>>
-        <%= label_tag "键值对(key-value):" %>
-        <%= text_field_tag "property[map_pairs][keys][#{index}]", "#{key}", class: "form-control pair-input" %> <span class="key-value"> => </span>
+        <%= label_tag "键值 " %>
+        <%= text_field_tag "property[map_pairs][keys][#{index}]", "#{key}", class: "form-control pair-input" %> <span class="key-value"> 标题 </span>
         <%= text_field_tag "property[map_pairs][values][#{index}]", "#{value}", class: "form-control pair-input" %>
         <button class='btn btn-default remove-map-pair' roll='button' type='button' data-pair-index=<%= index %>>删除</button>
         <% index += 1 %>

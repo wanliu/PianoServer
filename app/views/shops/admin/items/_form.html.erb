@@ -74,36 +74,39 @@
 
         <!-- 枚举全部属性 -->
         <% unless @properties.blank? %>
-          <hr>
-        <% end %>
+          <fieldset >
+            <legend >分类属性</legend>
 
-
-        <% @properties.each do |property| %>
-          <% group_with_property_errors @item, property, f do %>
-            <%= property_edit @item, property %>
-          <% end %>
+            <% @properties.each do |property| %>
+              <% group_with_property_errors @item, property, f do %>
+                <%= property_edit @item, property %>
+              <% end %>
+            <% end %>
+          </fieldset>
         <% end %>
 
         <% unless @inventory_properties.blank? %>
+          <fieldset >
+            <legend >库存属性</legend>
+            <!-- 枚举库存属性  -->
+            <div class="inventory_properties">
 
-          <hr />
-          <!-- 枚举库存属性  -->
-          <div class="inventory_properties">
-
-          <% @inventory_properties.each do |property| %>
-            <% group_with_property_errors @item, property, f do %>
-              <%= property_edit @item, property %>
+            <% @inventory_properties.each do |property| %>
+              <% group_with_property_errors @item, property, f do %>
+                <%= property_edit @item, property %>
+              <% end %>
             <% end %>
-          <% end %>
 
-          </div>
-          <hr />
+            </div>
+          </fieldset>
         <% end %>
       <% end %>
 
       <!-- 库存设置 -->
-      <%= render partial: "inventory_form", locals: {builder: f} %>
-
+      <fieldset >
+        <legend >库存设置</legend>
+        <%= render partial: "inventory_form", locals: {builder: f} %>
+      </fieldset>
       <!-- 详情 -->
       <% group_with_errors @item, :description, f do %>
         <%= f.bootsy_area :description, class: "form-control", rows: 12, value: @item.description_lookup %>

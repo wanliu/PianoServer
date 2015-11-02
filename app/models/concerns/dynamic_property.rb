@@ -59,8 +59,10 @@ module DynamicProperty
         FloatProperty.new prefix_name, self, _config
       when "boolean"
         BooleanProperty.new prefix_name, self, _config
-      when "stock_map", "sale_map"
+      when "map", "stock_map", "sale_map"
         MapProperty.new prefix_name, self, _config
+      when "date", "datetime"
+        DateTimeProperty.new prefix_name, self, _config
       else
         NullProperty.new prefix_name, self, _config
       end

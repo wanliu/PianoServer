@@ -1,15 +1,18 @@
 class Property < ActiveRecord::Base
-
+  include ContentManagement::Model
 
   DATA_KEY_MAP = "map"
   DATA_KEY_GROUP = "group"
   DATA_KEY_DEFAULT = "default_value"
   DATA_KEY_VALIDATE = "validate_rules"
 
-  MAP_TYPES = %w(sale_map stock_map)
+  MAP_TYPES = %w(map sale_map stock_map)
   PROP_TYPES = %w(string integer number float date boolean) + MAP_TYPES
 
   VALIDATE_MELPERS = %w(acceptance confirmation exclusion format inclusion length numericality presence absence uniqueness)
+  EXTERIORS = { "样版选择器" => "swatch_select", "下拉列表" => "dropdown" }
+
+  store_accessor :data, :exterior
 
   has_and_belongs_to_many :categories
   belongs_to :unit
