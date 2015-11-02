@@ -31,7 +31,7 @@
   <% unless property.exteriors.blank? %>
   <div class="form-group">
     <%= f.label :exterior, "外观" %>
-    <%= f.select :exterior, options_for_select(property.exteriors), {}, {class: 'form-control'} %>
+    <%= f.select :exterior, options_for_select(property.exteriors, property.exterior), {}, {class: 'form-control'} %>
   </div>
   <% end %>
 
