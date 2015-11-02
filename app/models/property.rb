@@ -1,15 +1,17 @@
 class Property < ActiveRecord::Base
-
+  include ContentManagement::Model
 
   DATA_KEY_MAP = "map"
   DATA_KEY_GROUP = "group"
   DATA_KEY_DEFAULT = "default_value"
   DATA_KEY_VALIDATE = "validate_rules"
 
-  MAP_TYPES = %w(sale_map stock_map)
+  MAP_TYPES = %w(map sale_map stock_map)
   PROP_TYPES = %w(string integer number float date boolean) + MAP_TYPES
 
   VALIDATE_MELPERS = %w(acceptance confirmation exclusion format inclusion length numericality presence absence uniqueness)
+
+  store_accessor :data, :exterior
 
   has_and_belongs_to_many :categories
   belongs_to :unit
@@ -127,6 +129,31 @@ class Property < ActiveRecord::Base
 
   def prop_types
     PROP_TYPES
+  end
+
+  def exteriors
+    prop_class.exteriors || []
+  end
+
+  def prop_class
+    case prop_type
+    when "string"
+      StringProperty
+    when "number"
+      NumberProperty
+    when "integer"
+      IntegerProperty
+    when "float"
+      FloatProperty
+    when "boolean"
+      BooleanProperty
+    when "map", "stock_map", "sale_map"
+      MapProperty
+    when "date", "datetime"
+      DateTimeProperty
+    else
+      NullProperty
+    end
   end
 
   protected
