@@ -67,6 +67,7 @@ Rails.application.routes.draw do
     end
     resources :messages
     resources :contacts
+    resources :feedbacks
     resources :attachments
     resources :industries do
       collection do
