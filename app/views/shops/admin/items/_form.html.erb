@@ -21,14 +21,23 @@
         <%= f.label :images, class: "col-sm-2 control-label" %>
         <div class="col-sm-10">
           <div class="item-poster-list row">
-            <% (@item.images || []).each do |uploader| %>
-              <div class="col-xs-4 col-sm-4 col-md-4 col-lg-3 new-item-poster">
+            <% images = @item.read_attribute(:images) %>
+            <% (@item.images || []).each_with_index do |uploader, index| %>
+              <div class="col-xs-4 col-sm-4 col-md-4 col-lg-3 edit-item-poster poster-item" data-filename="<%= images[index] %>">
                 <div class="thumbnail">
                   <%= image_tag uploader.url(:cover), class: "item-poster" %>
+                  <div class="remove-icon">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                  </div>
+                  <div class="plus-icon">+</div>
+                  <div class="upload-btn"></div>
+                  <div class="sortable-handler">
+                    <span class="glyphicon glyphicon-move" aria-hidden="true"></span>
+                  </div>
                 </div>
               </div>
             <% end %>
-              <div class="col-xs-4 col-sm-4 col-md-4 col-lg-3 new-item-poster">
+              <div class="col-xs-4 col-sm-4 col-md-4 col-lg-3 new-item-poster poster-item">
                 <div class="thumbnail">
                   <img src="<%= Settings.assets.gray_image %>" alt="gray image" class="item-poster">
                   <div class="plus-icon">+</div>
@@ -51,22 +60,22 @@
 
       <!-- 参考价 -->
       <% group_with_errors @item, :price, f do %>
-          <%= f.number_field :price, step: "0.01", class: 'form-control' %>
+          <%= f.number_field :price, step: "0.01", min: '0.01', class: 'form-control' %>
       <% end %>
 
       <!-- 零售价 -->
       <% group_with_errors @item, :public_price, f do %>
-          <%= f.number_field :public_price, step: "0.01", class: 'form-control' %>
+          <%= f.number_field :public_price, step: "0.01", min: '0.01', class: 'form-control' %>
       <% end %>
 
       <!-- 进货价 -->
       <% group_with_errors @item, :income_price, f do %>
-          <%= f.number_field :income_price, step: "0.01", class: 'form-control' %>
+          <%= f.number_field :income_price, step: "0.01", min: '0.01', class: 'form-control' %>
       <% end %>
 
       <!-- 商店分类 -->
       <% group_with_errors @item, :shop_category_id, f do %>
-        <%= f.select :shop_category_id, options_from_collection_for_select(@shop.shop_category.descendants, 'id', 'title'), {}, class: 'form-control' %>
+        <%= f.select :shop_category_id, options_from_collection_for_select(@category_collection , 'id', 'title'), {}, class: 'form-control' %>
       <% end %>
 
 
@@ -131,7 +140,7 @@
 <script type="text/javascript">
   var url = '<%= upload_image_shop_admin_items_path(@shop.name) %>';
 
-  new NewItemPosters($('.new-item-poster'), url, $('input#item_filenames'));
+  new ItemPosters($('.item-poster-list'), url, $('input#item_filenames'));
 
   $(".inventory_properties .check-inventory").change(function(e) {
     var url = "<%= sa_item_inventory_config_path(@shop.name, @item) %>";
@@ -143,8 +152,5 @@
     }).then(function(data) {
       $(".inventory_settings").hide().html(data).fadeIn("highlight");
     });
-  })
-
-
-
+  });
 </script>
