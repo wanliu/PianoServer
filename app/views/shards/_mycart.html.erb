@@ -2,12 +2,37 @@
   <%= link_to mycart_path, class: 'dropdown-toggle', "data-toggle" => 'dropdown' do %>
     <%= icon "shopping-cart" %>【<%= @cart.items.count %>】
   <% end %>
-  <ul class="dropdown-menu" aria-labelledby="mycartList">
-    <li class="dropdown-header">Dropdown header</li>
-    <li><a href="#">Action</a></li>
-    <li><a href="#">Another action</a></li>
-    <li><a href="#">Something else here</a></li>
-    <li role="separator" class="divider"></li>
+  <ul class="dropdown-menu cart-item-list" aria-labelledby="mycartList">
+    <% groups = @cart.items.group_by {|item| item.supplier } %>
+    <% groups.to_a.first(3).each do |supplier, _items| %>
+      <% items = _items.first(4) %>
+      <li class="dropdown-header"><%= supplier.title %><span class="count pull-right">共 <%= number_with_delimiter _items.count %> 件</span></li>
+
+      <% items.each do |item| %>
+        <li>
+          <%= link_to '#' do %>
+            <div class="media">
+              <div class="media-left">
+                <%= image_tag item.image, class: 'cart-item-image' %>
+              </div>
+              <div class="media-body">
+                <h4 class="media-heading"><%= item.title %></h4>
+                <p class="quantity">x <%= number_with_delimiter item.quantity %></p>
+                <p class="price"><%= number_to_currency item.price %></p>
+              </div>
+            </div>
+          <% end %>
+        </li>
+      <% end %>
+      <% if _items.count > 0 %>
+        <li>
+          <%= link_to '#more', class: 'text-center more' do %>
+            <small>更多...</small>
+          <% end %>
+        </li>
+      <% end %>
+      <li role="separator" class="divider"></li>
+    <% end %>
     <li><%= link_to '查看购物车...', mycart_path %></li>
   </ul>
 

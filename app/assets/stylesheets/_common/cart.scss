@@ -1,0 +1,22 @@
+.cart-item-list {
+  .cart-item-image {
+
+    width: 60px;
+  }
+
+  .more {
+    color: #ccc;
+  }
+
+  .media-body {
+    min-width: 200px;
+
+    .media-heading {
+      text-overflow: ellipsis;
+    }
+
+    p {
+      margin: 0px
+    }
+  }
+}

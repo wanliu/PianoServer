@@ -6,6 +6,8 @@ class CreateCartItems < ActiveRecord::Migration
       t.belongs_to :supplier
       t.string :title
       t.string :image
+      t.integer :sale_mode, default: 0
+      t.decimal :price, precision: 10, scale: 2
       t.integer :quantity
       t.jsonb :properties
       t.jsonb :condition

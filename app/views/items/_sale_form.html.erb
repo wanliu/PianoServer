@@ -29,6 +29,8 @@
         <%= f.submit :add, class: 'btn btn-info btn-lg add-to-cart' %>
         <%= f.button :purchase, class: 'btn btn-danger btn-lg purchase' %>
       </div>
+
+      <%= f.hidden_field :sale_mode %>
       <%= f.hidden_field :title %>
       <%= f.hidden_field :image %>
       <%= f.hidden_field :cartable_id %>
@@ -45,7 +47,7 @@
 
     $.post(url, $form.serialize()).then(function(e) {
 
-    }).error(function() {
+    }).fail(function() {
 
     })
 

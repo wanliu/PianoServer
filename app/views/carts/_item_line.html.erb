@@ -1,0 +1,18 @@
+
+<li class="list-group-item">
+
+<div class="media">
+  <div class="media-left">
+    <%= link_to '#' do %>
+      <%= image_tag item.image, class: 'media-object' %>
+    <% end %>
+  </div>
+  <div class="media-body">
+    <h4 class="media-heading"><%= item.title %></h4>
+    <p class="summary"><%= item.cartable.description %></p>
+    <p class="price"><%= item.price %></p>
+    <p class="quantity"><%= item.quantity %></p>
+  </div>
+</div>
+</li>
+

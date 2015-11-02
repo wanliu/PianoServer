@@ -92,11 +92,13 @@ ActiveRecord::Schema.define(version: 20151102064725) do
     t.integer  "supplier_id"
     t.string   "title"
     t.string   "image"
+    t.integer  "sale_mode",                              default: 0
+    t.decimal  "price",         precision: 10, scale: 2
     t.integer  "quantity"
     t.jsonb    "properties"
     t.jsonb    "condition"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",                                         null: false
+    t.datetime "updated_at",                                         null: false
   end
 
   create_table "carts", force: :cascade do |t|
