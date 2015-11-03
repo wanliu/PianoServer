@@ -42,7 +42,8 @@ class Category < ActiveRecord::Base
               ON "cp"."property_id" = "p"."id"
               INNER JOIN "categories" c
                 ON "c"."id" = "cp"."category_id"
-                WHERE (cp.category_id in (?)) )
+                WHERE (cp.category_id in (?))
+                ORDER BY cp.sortid )
       SELECT u.*
           FROM uppers u
           WHERE #{cond_string}

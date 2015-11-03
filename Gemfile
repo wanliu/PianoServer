@@ -56,6 +56,8 @@ gem 'liquid-rails'
 gem "punching_bag"
 gem "loofah-activerecord"
 gem 'public_activity', github: 'pokonski/public_activity'
+gem 'rails-observers', git: 'https://github.com/rails/rails-observers.git'
+
 
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'
