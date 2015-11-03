@@ -1,0 +1,4 @@
+var templateId = <%= @template.id %>;
+var templateFilename = "<%= @template.filename %>";
+var url = "<%= File.join(url_for([ :admins, *@parents, :templates ]), "blob", @template.filename) %>"
+$("a[data-template-id=" + templateId + "]").attr('href', url);

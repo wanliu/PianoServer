@@ -42,11 +42,11 @@ class Admins::TemplatesController < Admins::BaseController
 
   def update
     old_filename = @template.filename
+    old_path = @template.template_path
 
     @template.update_attributes(template_params)
 
     if @template.valid? && old_filename != @template.filename
-      old_path = File.join @parent.path, old_filename
       File.delete(old_path) if File.exist?(old_path)
     end
   end
