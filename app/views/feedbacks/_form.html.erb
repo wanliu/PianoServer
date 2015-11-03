@@ -11,10 +11,10 @@
 
   <div class="form-group">
     <%= label :feedback, :mobile do %>
-      手机/座机号<span class="required">*</span>
+      手机<span class="required">*</span>
     <% end %>
 
-    <%= f.text_field :mobile, class: "form-control" %>
+    <%= f.number_field :mobile, class: "form-control" %>
   </div>
 
   <div class="form-group">
