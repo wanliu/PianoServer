@@ -9,6 +9,8 @@ class StockChange < ActiveRecord::Base
 
   enum kind: { purchase: 0, sale: 1, sale_refund: 2, stock_refund: 3, adjust: 4 }
 
+  validate :quantity_check
+
   after_commit :update_item_current_stock
 
   # Change form like:
@@ -73,6 +75,12 @@ class StockChange < ActiveRecord::Base
   end
 
   private
+
+  def quantity_check
+    if purchase? && quantity <= 0
+      errors.add(:quantity, "不能为零或者小于零")
+    end
+  end
 
   def update_item_current_stock
     item.update_current_stock! if persisted?
