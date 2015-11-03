@@ -114,6 +114,10 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     @breadcrumb = @category.ancestors
     @properties = normal_properties(@category.with_upper_properties)
     @inventory_properties = inventory_properties(@category.with_upper_properties)
+    @category_collection = @shop.shop_category.descendants.map do |category|
+      title = category.ancestors.pluck(:title).push(category.title).join('/')
+      ShopCategory.new :id => category.id, :title => title
+    end
 
     if Settings.dev.feature.inventory_combination and @inventory_properties.present?
       @inventory_combination = combination_properties(@item, @inventory_properties)
