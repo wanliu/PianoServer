@@ -1,6 +1,6 @@
 class FeedbacksController < ApplicationController
   def index
-    @feedbacks = Feedback.where(is_show: true).page(params[:page]).per(10).order(id: :desc)
+    @feedbacks = Feedback.where(is_show: true).page(params[:page]).order(id: :desc)
   end
 
   def show
