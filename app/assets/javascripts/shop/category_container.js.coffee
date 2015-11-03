@@ -36,7 +36,9 @@ class @CategoryContainer extends @HuEvent
 
     return if diff == 0
 
-    # @maxLevelIndex += diff
+    if Math.abs(diff) > @currentLevel
+      diff = if diff < 0 then -1 * @currentLevel else @currentLevel
+
     @scrollContainer(diff)
 
   bindPrevBtnClickEvent: () ->
