@@ -47,6 +47,10 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     @title = "创建自己的商品"
     @item = Item.new(category_id: @category.id, shop_id: @shop.id)
     @properties = normal_properties(@category.with_upper_properties)
+    @category_collection = @shop.shop_category.descendants.map do |category|
+      title = category.ancestors.pluck(:title).push(category.title).join('/')
+      ShopCategory.new :id => category.id, :title => title
+    end
 
     @inventory_properties = inventory_properties(@category.with_upper_properties)
 
@@ -60,6 +64,10 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     @title = "创建自己的商品"
     @properties = normal_properties(@category.with_upper_properties)
     @inventory_properties = inventory_properties(@category.with_upper_properties)
+    @category_collection = @shop.shop_category.descendants.map do |category|
+      title = category.ancestors.pluck(:title).push(category.title).join('/')
+      ShopCategory.new :id => category.id, :title => title
+    end
 
     prop_params = properties_params(@properties)
     @item = Item.new item_basic_params.merge(shop_id: @shop.id) do |item|
@@ -158,6 +166,10 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     @breadcrumb = @category.ancestors
     @properties = normal_properties(@category.with_upper_properties)
     @inventory_properties = inventory_properties(@category.with_upper_properties)
+    @category_collection = @shop.shop_category.descendants.map do |category|
+      title = category.ancestors.pluck(:title).push(category.title).join('/')
+      ShopCategory.new :id => category.id, :title => title
+    end
 
     if Settings.dev.feature.inventory_combination and @inventory_properties.present?
       @inventory_combination = combination_properties(@item, @inventory_properties)

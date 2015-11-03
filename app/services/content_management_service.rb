@@ -30,80 +30,84 @@ module ContentManagementService
     resource.respond_to?(:root_path) ? resource.root_path : Settings.sites.root
   end
 
-  module ContentController
-    extend ActiveSupport::Concern
+  # module ContentController
+  #   extend ActiveSupport::Concern
 
-    included do |klass|
-      include ContentManagementService::Helpers
+  #   included do |klass|
+  #     include ContentManagementService::Helpers
 
-      klass.class_attribute :content_templates
-      attr_accessor :cached_all_templates
-      attr_accessor :all_variables
+  #     klass.class_attribute :content_templates
+  #     attr_accessor :cached_all_templates
+  #     attr_accessor :all_variables
 
-      define_method :cached_all_templates do
-        @cached_all_templates ||= {}
-      end
+  #     define_method :cached_all_templates do
+  #       @cached_all_templates ||= {}
+  #     end
 
-      klass.content_templates = []
-      before_action :check_subject_variables
-    end
+  #     klass.content_templates = []
+  #     before_action :check_subject_variables
+  #   end
 
-    def check_subject_variables
-      unless @subject.nil?
-        prepare_load_variables
-        load_attachments
-      end
-    end
+  #   def check_subject_variables
+  #     unless @subject.nil?
+  #       prepare_load_variables
+  #       load_attachments
+  #     end
+  #   end
 
-    # 预载入所有模板中的 Variable
-    def prepare_load_variables
-      load_variables = []
-      self.content_templates.each do |section|
-        if valid_section?(section)
-          template = get_template(section[:name])
-          if template && template.is_a?(Template)
-            load_variables.concat template.variables
-          end
-        end
-      end
+  #   # 预载入所有模板中的 Variable
+  #   def prepare_load_variables
+  #     load_variables = []
+  #     self.content_templates.each do |section|
+  #       if valid_section?(section)
+  #         template = get_template(section[:name])
+  #         if template && template.is_a?(Template)
+  #           load_variables.concat template.variables
+  #         end
+  #       end
+  #     end
 
-      template_variables = merge_variables(load_variables)
+  #     template_variables = merge_variables(load_variables)
 
-      load_all_variables template_variables
-    end
+  #     load_all_variables template_variables
+  #   end
 
-    def valid_section?(section)
-      name = action_name.to_sym
+  #   def valid_section?(section)
+  #     name = action_name.to_sym
 
-      if section[:only]
-        section[:only].include? name
-      elsif section[:except]
-        !section[:except].include? name
-      else
-        true
-      end
-    end
+  #     if section[:only]
+  #       section[:only].include? name
+  #     elsif section[:except]
+  #       !section[:except].include? name
+  #     else
+  #       true
+  #     end
+  #   end
 
-    module ClassMethods
+  #   module ClassMethods
 
-      # 注册渲染模板
-      def register_render_template(template_name, *args)
-        options = args.extract_options!
-        section = options.slice(:only, :except)
+  #     # 注册渲染模板
+  #     def register_render_template(template_name, *args)
+  #       options = args.extract_options!
+  #       section = options.slice(:only, :except)
 
-        section[:name] = template_name
-        self.content_templates << section
-      end
-    end
+  #       section[:name] = template_name
+  #       self.content_templates << section
+  #     end
+  #   end
 
-  end
+  # end
 
   module Helpers
     VALID_VAR_NAME = /\A[_\p{letter}]+[\p{Alnum}_]*\z/
 
-    def load_attachments
-      @images = ImagesDrop.new(all_attachments)
-      @attachments = all_attachments
+    def load_attachments(attachments=all_attachments)
+      @attachments = attachments
+      @images = ImagesDrop.new(@attachments)
+    end
+
+    def load_variables
+
     end
 
     def all_attachments

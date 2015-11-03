@@ -3,6 +3,8 @@ class Variable < ActiveRecord::Base
 
   belongs_to :host, polymorphic: true
 
+  validates :name, uniqueness: { scope: :host }
+
   def call
     data
   end
