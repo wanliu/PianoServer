@@ -3,39 +3,37 @@
     <div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
       <h3>意见列表</h3>
         <% @feedbacks.each do |feedback| %>
-          <% if feedback.is_show %>
-            <div class="panel panel-default">
-              <div class="panel-body">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <div class="media">
+                <div class="media-left">
+                  <a href="#">
+                    <img class="media-object" style="width: 42px; height: 42px;">
+                  </a>
+                </div>
+                <div class="media-body">
+                  <h5 class="media-heading"><%= feedback.name %>:</h5>
+                  <%= feedback.information %>
+                </div>
+              </div>
+
+              <% if feedback.reply and feedback.reply != '' %>
+                <hr>
                 <div class="media">
                   <div class="media-left">
-                    <a href="#">
-                      <img class="media-object" style="width: 42px; height: 42px;">
+                    <a href="/">
+                      <%= image_tag 'logo.png', class: "media-object", style: "width: 42px; height: 42px;" %>
                     </a>
                   </div>
                   <div class="media-body">
-                    <h5 class="media-heading"><%= feedback.name %>:</h5>
-                    <%= feedback.information %>
+                    <h5 class="media-heading">官方回复:</h5>
+                    <%= feedback.reply %>
                   </div>
                 </div>
+              <% end %>
 
-                <% if feedback.reply %>
-                  <hr>
-                  <div class="media">
-                    <div class="media-left">
-                      <a href="/">
-                        <%= image_tag 'logo.png', class: "media-object", style: "width: 42px; height: 42px;" %>
-                      </a>
-                    </div>
-                    <div class="media-body">
-                      <h5 class="media-heading">官方回复:</h5>
-                      <%= feedback.reply %>
-                    </div>
-                  </div>
-                <% end %>
-
-              </div>
             </div>
-          <% end %>
+          </div>
         <% end %>
 
       <div class="text-right">
