@@ -64,8 +64,8 @@
 
 <script type="text/template" id='map-pair-tempalte'>
   <div class='map-pair' data-pair-index={{= index }}>
-    <%= label_tag "键值对(key-value):" %>
-    <%= text_field_tag "property[map_pairs][keys][{{=index}}]", "", class: "form-control pair-input" %> <span class="key-value"> => </span>
+    <%= label_tag "键值 " %>
+    <%= text_field_tag "property[map_pairs][keys][{{=index}}]", "", class: "form-control pair-input" %> <span class="key-value"> 标题 </span>
     <%= text_field_tag "property[map_pairs][values][{{=index}}]", "", class: "form-control pair-input" %>
     <button class='btn btn-default remove-map-pair' roll='button' type='button' data-pair-index={{= index }}>删除</button>
   </div>

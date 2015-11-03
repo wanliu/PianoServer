@@ -24,7 +24,11 @@
     </div>
   <% else %>
     <% group_with_errors @item, "stock_changes.quantity", builder do %>
-      <%= number_field_tag "inventory", @stock, class: "form-control", min: 1, placeholder: "库存" %>
+      <% if @item.new_record? %>
+        <%= number_field_tag "inventory", @stock, class: "form-control", min: 1, placeholder: "库存", require: true %>
+      <% else %>
+        <%= number_field_tag "inventory", @stock, class: "form-control", placeholder: "库存", require: true %>
+      <% end %>
     <% end %>
   <% end %>
 </div>
