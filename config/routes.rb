@@ -93,6 +93,7 @@ Rails.application.routes.draw do
           get :children
           post :write_item_desc
           get :read_item_desc
+          put :resort
         end
       end
     end

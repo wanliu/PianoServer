@@ -129,6 +129,8 @@ GEM
       execjs
     coffee-script-source (1.9.1)
     columnize (0.9.0)
+    composite_primary_keys (8.1.1)
+      activerecord (~> 4.2.0)
     connection_pool (2.2.0)
     daemons (1.2.2)
     debug_inspector (0.0.2)
@@ -455,6 +457,7 @@ DEPENDENCIES
   china_city
   chinese_pinyin
   coffee-rails (~> 4.1.0)
+  composite_primary_keys
   data-confirm-modal!
   devise (= 3.4.0)
   devise-async

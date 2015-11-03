@@ -1,7 +1,7 @@
 class Admins::CategoriesController < Admins::BaseController
   before_action :get_industry
-  before_action :get_category, only: [:properties, :add_property, :update_property, :remove_property, :show_inhibit, :hide_inhibit, :children, :edit, :write_item_desc, :read_item_desc]
-  before_action :get_property, only: [:add_property, :update_property, :remove_property]
+  before_action :get_category, only: [:properties, :add_property, :update_property, :remove_property, :show_inhibit, :hide_inhibit, :children, :edit, :write_item_desc, :read_item_desc, :resort]
+  before_action :get_property, only: [:add_property, :update_property, :remove_property, :resort]
 
   respond_to :js, only: [:new_property]
 
@@ -53,13 +53,39 @@ class Admins::CategoriesController < Admins::BaseController
   end
 
   def add_property
-    CategoryProperty.find_or_initialize_by category_id:  params[:id], property_id:  params[:property_id] do |cp|
-      cp.state = 0
-      cp.save
-    end
+    cp = CategoryProperty.find_or_initialize_by category_id:  params[:id], property_id:  params[:property_id]
+    cp.update(state: 0)
 
     respond_to do |format|
       format.js { render :add_property }
+    end
+  end
+
+  def resort
+    cp_list = @category.sorted_category_properties
+    # cp_list = CategoryProperty.where(category_id: params[:id], property_id: property_ids).order(:sortid).to_a
+    @cp = CategoryProperty.where(category_id:  params[:id], property_id:  params[:property_id]).first
+
+    _start = cp_list.index { |_cp| _cp.property_id == @cp.property_id }
+    _end = _start + params[:index].to_i
+
+    pp _start, _end
+    if _start > _end
+      min = cp_list[_end].sortid
+      cp_list[_end..._start].each do |cp|
+        cp.sortid += 1
+        cp.save
+      end
+      @cp.sortid = min
+      @cp.save
+    else
+      max = cp_list[_end].sortid
+      cp_list[_start+1.._end].each do |cp|
+        cp.sortid -= 1
+        cp.save
+      end
+      @cp.sortid = max
+      @cp.save
     end
   end
 
@@ -72,10 +98,9 @@ class Admins::CategoriesController < Admins::BaseController
 
     # Category.find_by_sql(conditions)
 
-    CategoryProperty.find_or_initialize_by category_id:  params[:id], property_id:  params[:property_id] do |cp|
-      cp.state = 1
-      cp.save
-    end
+
+    cp = CategoryProperty.find_or_initialize_by category_id:  params[:id], property_id:  params[:property_id]
+    cp.update(state: 1)
 
     respond_to do |format|
       format.js { render :remove_property }
