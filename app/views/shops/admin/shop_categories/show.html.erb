@@ -74,7 +74,10 @@
         $modal = $('#category-modal');
 
     $('.shop-category-list .shop-category').each(function(i, e) {
-      new EditShopCategory($(e))
+      var $target = $(e),
+          status = $target.data('status');
+
+      new EditShopCategory($target,status);
     });
 
     new EditCategoryModal($modal);
