@@ -102,7 +102,7 @@
             <div class="inventory_properties">
 
             <% @inventory_properties.each do |property| %>
-              <% group_with_property_errors @item, property, f do %>
+              <% group_with_property_errors @item, property, f, group_class: "property-#{property.name}" do %>
                 <%= property_edit @item, property %>
               <% end %>
             <% end %>

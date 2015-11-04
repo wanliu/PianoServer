@@ -24,10 +24,12 @@ module BootstrapHelper
     r "<span class=\"caret\"></span>"
   end
 
-  def group_with_errors(object, name, helper)
+  def group_with_errors(object, name, helper, options = {})
     error = object.errors[name]
     error_name = t('attributes.' + name.to_s)
     valid = error.present?
+
+    options[:group_class]
     label_content = helper.label name, class: "col-sm-2 control-label" do
       if valid
         "#{error_name}<div class=\"error-tip\">#{error_name}#{error.join(' ')}</div>"
@@ -36,7 +38,7 @@ module BootstrapHelper
       end.html_safe
     end
 
-    s "<div class=\"form-group#{" has-error has-feedback" if valid}\">"
+    s "<div class=\"form-group#{" has-error has-feedback" if valid} #{options[:group_class]} \">"
       s "#{label_content}"
       s "<div class=\"col-sm-10\">"
         s "#{yield}"
@@ -46,13 +48,13 @@ module BootstrapHelper
     nil
   end
 
-  def group_with_property_errors(object, property, helper)
+  def group_with_property_errors(object, property, helper, options = {})
     property_name = "property_#{property.name}"
 
     error = object.errors[property_name]
     valid = error.present?
-    title = "#{property.title}&nbsp;<small>#{property.name}</small>".html_safe
-    label_content = helper.label property_name, class: "col-sm-2 control-label" do
+    title = "#{property.title}".html_safe
+    label_content = helper.label property_name, class: "col-sm-2 control-label", title: property.name do
       if valid
         "#{title}<div class=\"error-tip\">#{title}#{error.join(' ')}</div>"
       else
@@ -60,7 +62,7 @@ module BootstrapHelper
       end.html_safe
     end
 
-    s "<div class=\"form-group#{" has-error has-feedback" if valid}\">"
+    s "<div class=\"form-group#{" has-error has-feedback" if valid} #{options[:group_class]}\">"
       s "#{label_content}"
       s "<div class=\"col-sm-10\">"
         s "#{yield}"
