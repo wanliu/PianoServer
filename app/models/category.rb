@@ -42,13 +42,53 @@ class Category < ActiveRecord::Base
               ON "cp"."property_id" = "p"."id"
               INNER JOIN "categories" c
                 ON "c"."id" = "cp"."category_id"
-                WHERE (cp.category_id in (?)) )
+                WHERE (cp.category_id in (?))
+                ORDER BY c.ancestry_depth, cp.sortid )
       SELECT u.*
           FROM uppers u
           WHERE #{cond_string}
     SQL
 
     Property.find_by_sql [query.squish, ancestry_depth, sort_ancestor_ids]
+  end
+
+  def sorted_category_properties(inhibit = true)
+    cond_string = [ "u.rk = 1", inhibit ? "u.state = 0" : nil ].compact.join(" and ")
+
+    # | id | name                      | title          | summary | unit_type | prop_type | state | upperd | category_id | ancestry_depth | rk |
+    # |----|---------------------------|----------------|---------|-----------|-----------|-------|--------|-------------|----------------|----|
+    # | 4  | factory                   | 生产厂家       |         |           | string    | 0     | f      | 5           | 3              | 1  |
+    # | 4  | factory                   | 生产厂家       |         |           | string    | 0     | t      | 3           | 1              | 2  |
+    # | 5  | production_license_number | 生产许可证编号 |         |           | number    | 0     | t      | 3           | 1              | 1  |
+    # | 6  | shelf_life                | 保质期         |         | 天        | days      | 1     | f      | 5           | 3              | 1  |
+    # | 6  | shelf_life                | 保质期         |         | 天        | days      | 0     | t      | 4           | 2              | 2  |
+
+    query = <<-SQL
+      WITH
+        uppers AS (
+          SELECT  p.*,
+            cp.state,
+            cp.sortid,
+            cp.property_id,
+            cp.category_id,
+            c.id as c_id,
+            c.ancestry_depth as ancestry_depth,
+            c.ancestry_depth < ? as upperd,
+            ROW_NUMBER() OVER(PARTITION BY p.name
+                                         ORDER BY c.ancestry_depth DESC) AS rk
+          FROM "properties" p
+            INNER JOIN "categories_properties" cp
+              ON "cp"."property_id" = "p"."id"
+              INNER JOIN "categories" c
+                ON "c"."id" = "cp"."category_id"
+                WHERE (cp.category_id in (?))
+                ORDER BY c.ancestry_depth, cp.sortid )
+      SELECT u.*
+          FROM uppers u
+          WHERE #{cond_string}
+    SQL
+
+    CategoryProperty.find_by_sql [query.squish, ancestry_depth, sort_ancestor_ids]
   end
 
   # def with_upper_templates

@@ -34,6 +34,14 @@ class Admins::PropertiesController < Admins::BaseController
     redirect_to admins_products_path
   end
 
+  def fuzzy_match
+    @category = Category.find(params[:category_id])
+    @properties = @category.with_upper_properties
+    properties = Property.where("title LIKE ? OR name LIKE ?", "%#{params[:q]}%", "%#{params[:q]}%")
+    matched_properties = properties - @properties
+    render json: { properties: matched_properties }
+  end
+
   private
     def get_property
       @property = Property.find(params[:id])
