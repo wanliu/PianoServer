@@ -58,6 +58,7 @@ class Admins::CategoriesController < Admins::BaseController
 
     respond_to do |format|
       format.js { render :add_property }
+      format.json { render :add_property }
     end
   end
 

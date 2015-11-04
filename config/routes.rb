@@ -82,7 +82,11 @@ Rails.application.routes.draw do
 
       resources :categories do
         concerns :templable, templable_type: 'Category', parents_type: [ 'Industry', 'Category' ]
-        resources :properties
+        resources :properties do
+          collection do
+            get "fuzzy_match", to: "properties#fuzzy_match"
+          end
+        end
 
         member do
           post :add_property
