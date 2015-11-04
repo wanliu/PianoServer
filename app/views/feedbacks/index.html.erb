@@ -1,0 +1,48 @@
+<div class="container contacts-new-container">
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
+      <h3>意见列表</h3>
+        <% @feedbacks.each do |feedback| %>
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <div class="media">
+                <div class="media-left">
+                  <a href="#">
+                    <img class="media-object" src="http://neil-img.b0.upaiyun.com/uploads/default_avatar.gif" style="width: 42px; height: 42px;">
+                  </a>
+                </div>
+                <div class="media-body">
+                  <h5 class="media-heading"><%= feedback.name %>:</h5>
+                  <%= feedback.information %>
+                </div>
+              </div>
+
+              <% if feedback.reply and feedback.reply != '' %>
+                <hr>
+                <div class="media">
+                  <div class="media-left">
+                    <a href="/">
+                      <%= image_tag 'logo.png', class: "media-object", style: "width: 42px; height: 42px;" %>
+                    </a>
+                  </div>
+                  <div class="media-body">
+                    <h5 class="media-heading">官方回复:</h5>
+                    <%= feedback.reply %>
+                  </div>
+                </div>
+              <% end %>
+
+            </div>
+          </div>
+        <% end %>
+
+      <div class="text-right">
+        <%= link_to '提建议', new_feedback_path, class: "btn btn-primary" %>
+      </div>
+
+      <div class="text-center">
+        <%= paginate @feedbacks %>
+      </div>
+    </div>
+  </div>
+</div>
