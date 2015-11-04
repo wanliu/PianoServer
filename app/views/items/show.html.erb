@@ -1,14 +1,14 @@
 <div class="shop-item col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1">
   <div class="shop-item-image">
-    {{ item.image_url | image_tag }}
+    <%= image_tag @item.image.url %>
   </div>
 <div class="price-period clearfix">
   <div class="price-desc">
     <div class="promotion-price">
-      ￥{{ item.price }}
+      ￥ <%= @item.price %>
     </div>
     <div class="dicount-desc">
-      <p><s>￥{{item.public_price}}</s></p>
+      <p><s>￥ <%= @item.public_price %></s></p>
     </div>
   </div>
 
@@ -20,7 +20,7 @@
   <div class="item-properties">
     <div class="media">
       <div class="media-left media-middle">
-        商品名:{{ item.title }}
+        商品名: <%= @item.title %>
       </div>
       <div class="media-body media-middle">
         <div class='favor-title text-center'>收藏</div>
@@ -33,23 +33,21 @@
     </div>
   </div>
 
+  <%= render partial: "sale_options", with: @item.category %>
+
   <div class='item-shop-infos'>
     <div class="media ">
       <div class="media-left media-middle">
-        <a class='shop-avatar' href="/{{ shop.name }}">
-          <img src="{{ shop.logo_url_cover }}" alt="">
-          {% comment %}{{ shop.image_url | image_tag }}{% endcomment %}
+        <% link_to shop_site_path(@shop), class: 'shop-avatar' do %>
+          <%= image_tag @shop.logo_url %>
         </a>
+        <% end %>
       </div>
       <div class="media-body media-middle">
-        <div class='name'>供应商：{{ shop.title }}</div>
-        <div class='address'>地&emsp;址：{{ shop.address }}</div>
+        <div class='name'>供应商：<%= @shop.title %></div>
+        <div class='address'>地&emsp;址：<%= @shop.address %></div>
         <div class='follow'>
           <span>关&emsp;注：0</span>
-         {% comment %} <button class="btn btn-follow">
-            <span class="glyphicon glyphicon-plus"></span>
-            <span>关注</span>
-          </button>{% endcomment %}
         </div>
       </div>
 
@@ -58,21 +56,21 @@
 
   <div class='item-secodary-properties clearfix'>
     <div class='brand-saled-count'>
-      <p class='brand col-xs-6 col-sm-6 col-md-6'>品牌:{{ item.brand_name }}</p>
+      <p class='brand col-xs-6 col-sm-6 col-md-6'>品牌: <% @item.brand.try :name %></p>
       <p class='sale-count col-xs-6 col-sm-6 col-md-6 text-right'>总销量：0</p>
     </div>
     <p class='inventory col-xs-6 col-sm-6 col-md-6 '>库存数量：充足</p>
   </div>
 
-{% comment %}
+<!--
   <div class='item-descriptions'>
    <div class="item-brief-description">
       <label>商品介绍</label>
       <p class="brief-desc">
-      {% if item.description.blank? %}
+      {% if @item.description.blank? %}
       暂无简介
       {% else %}
-      {{ item.description }}
+      {{ @item.description }}
       {% endif %}
       </p>
     </div>
@@ -83,12 +81,12 @@
       <div class="media">
         <div class="media-left media-top">
           <div class='avatar'>
-          {{ item.image_url | image_tag }}
+          {{ @item.image_url | image_tag }}
           </div>
         </div>
         <div class="media-body media-top">
           <div class='property-items'>
-            {% for attribute in item.additional_fields.attributes %}
+            {% for attribute in @item.additional_fields.attributes %}
             <div class="property-item col-xs-12 col-sm-12 col-md-6">
               {% for item in attribute %}
               <div class="item-key col-md-3">{{items[0]}}:</div>
@@ -101,13 +99,13 @@
       </div>
     </div>
   </div>
-{% endcomment %}
+-->
   <div class="navbar-bottom navbar navbar-default navbar-fixed-bottom">
     <div class="link-table">
-      <a class="into-shop" href="/{{shop.name}}">
+      <%= link_to shop_site_path(@shop.name), class: "into-shop" do %>
         <span class="button-icon glyphicon glyphicon-home"></span>
         <div class="button-text">商家</div>
-      </a>
+      <% end %>
 
       <div class="fav-button">
         <span class="button-icon glyphicon glyphicon-star-empty"></span>
@@ -123,12 +121,11 @@
         购买
       </a>
 
-      {% if shop.owner_id == current_user.id %}
+      <% if @shop.owner_id == current_user.id %>
         <div class="contact-button chat">您的店铺</div>
-      {% else %}
-        {{ '洽谈' | button_to_chat: item, shop, form_class: 'contact-button chat'}}
-      {% endif %}
-
+      <% else %>
+        <%= button_to '洽谈', [shop, item, :chat], form_class: 'contact-button chat' %>
+      <% end %>
     </div>
   </div>
 
