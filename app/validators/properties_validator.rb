@@ -23,8 +23,10 @@ class PropertiesValidator < ActiveModel::EachValidator
 
   def validate_each(record, attribute, value)
     validates_config_of(record, attribute) do |type, options|
-      validator = method_of_validator(type).call(attribute, options)
-      validator.validate_each record, attribute, value
+      if type
+        validator = method_of_validator(type).call(attribute, options)
+        validator.validate_each record, attribute, value
+      end
     end
   end
 
@@ -56,6 +58,8 @@ class PropertiesValidator < ActiveModel::EachValidator
       "presence"
     when "map"
       "presence"
+    when "boolean"
+      nil
     else
       "presence"
     end
