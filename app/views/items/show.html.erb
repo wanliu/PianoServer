@@ -124,7 +124,7 @@
       <% if @shop.owner_id == current_user.id %>
         <div class="contact-button chat">您的店铺</div>
       <% else %>
-        <%= button_to '洽谈', [shop, item, :chat], form_class: 'contact-button chat' %>
+        <%= button_to '洽谈', item_chats_path(@item.id, shop_id: @shop.id), form_class: 'contact-button chat' %>
       <% end %>
     </div>
   </div>
