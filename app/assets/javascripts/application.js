@@ -21,6 +21,7 @@
 //= require jquery-ui/mouse
 //= require jquery-ui/position
 //= require jquery-ui/effect.all
+//= require select2
 //= require bootstrap-sprockets
 //= require nprogress
 //= require turbolinks
