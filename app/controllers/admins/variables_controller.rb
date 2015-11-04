@@ -114,7 +114,7 @@ class Admins::VariablesController < Admins::BaseController
     if params[:host_type]
       host_type = params[:host_type]
       host_id = params["#{host_type.underscore}_id"]
-      @host = host_type.constantize.find_by(filename: host_id)
+      @host = host_type.constantize.find(host_id)
     end
   end
 

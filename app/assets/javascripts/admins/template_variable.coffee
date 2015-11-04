@@ -16,7 +16,7 @@ class @TemplateVariable extends @HuEvent
   removeVariable: (e) ->
     e.stopPropagation()
 
-    url = ['/admins/subjects/', @subject_id, '/templates/blob/', @template_id,
+    url = ['/admins/subjects/', @subject_id, '/templates/', @template_id,
       '/variables/', @variable_id].join('')
 
     $item = @$()
