@@ -42,11 +42,11 @@ class Admins::TemplatesController < Admins::BaseController
 
   def update
     old_filename = @template.filename
+    old_path = @template.template_path
 
     @template.update_attributes(template_params)
 
     if @template.valid? && old_filename != @template.filename
-      old_path = File.join @parent.path, old_filename
       File.delete(old_path) if File.exist?(old_path)
     end
   end
@@ -86,16 +86,11 @@ class Admins::TemplatesController < Admins::BaseController
   end
 
   def preview
-    # TODO： 需要重构
-    load_all_variables @template.variables
-    load_attachments
-
     source = params[:source]
     @file = Tempfile.new(["template", ".html.liquid"], "#{Rails.root}/tmp/")
     @file.write source
     @file.rewind
-
-    render file: @file.path, layout: "preview", with: @templable
+    render file: @file.path, layout: "preview", with: @templable, template_name: @template.name
   end
 
   def preview_new

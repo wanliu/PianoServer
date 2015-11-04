@@ -79,11 +79,52 @@
     .remove-template {
       display: none;
     }
-    
+
     &:hover .remove-template {
       display: inline-block;
       float: right;
-    } 
+    }
+  }
+
+  .template-images-panel {
+    position: relative;
+
+    .toggle-search-block {
+      position: absolute;
+      right: 5px;
+      top: 5px;
+    }
+
+    .template-image-upload {
+      padding-bottom: 10px;
+      border-bottom: 1px dashed #EEEEEE;
+
+      .image-preview {
+        width: 100px;
+        height: 100px;
+        float: left;
+        border-radius: 4px;
+        border: 1px solid #EEEEEE;
+      }
+
+      .btn-upload {
+        margin-left: 10px;
+        padding: 0;
+      }
+    }
+
+    .template-image-show {
+      padding-top: 10px;
+
+      .template-image-src {
+        width: 30px;
+        height: 30px;
+      }
+
+      .list-group {
+        margin: 10px 0 0 0;
+      }
+    }
   }
 }
 
@@ -184,4 +225,8 @@
       }
     }
   }
+}
+
+button[data-target="#variable_editor_modal"] {
+  display: none;
 }

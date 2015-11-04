@@ -18,12 +18,20 @@
   }
 }
 
-.inventory_properties {
+.panel-item-edit {
 
-  label {
+  .control-label {
     small {
       color: #ccc;
     }
+  }
+}
+
+.date-select-container {
+  select {
+    width: 16.66666667%;
+    display: inline;
+    margin-right: 10px;
   }
 }
 

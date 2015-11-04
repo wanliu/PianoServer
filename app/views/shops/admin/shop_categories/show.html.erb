@@ -47,11 +47,13 @@
         <h4 class="modal-title">分类操作</h4>
       </div>
       <div class="modal-body">
-        <div class="list-group">
+        <div class="list-group category-shown">
           <a href="javascript:void(0);" class="list-group-item active enter-category">进入</a>
           <a href="javascript:void(0);" class="list-group-item edit-category">编辑</a>
           <a href="javascript:void(0);" class="list-group-item take-photo">拍照</a>
           <a href="javascript:void(0);" class="list-group-item upload-image">上传图片</a>
+          <a href="javascript:void(0);" class="list-group-item show-category">显示此分类</a>
+          <a href="javascript:void(0);" class="list-group-item hide-category">隐藏此分类</a>
           <a href="javascript:void(0);" class="list-group-item delete-category">删除</a>
         </div>
       </div>
@@ -64,6 +66,7 @@
   (function() {
     var EditShopCategory = window.EditShopCategory;
     var EditCategoryModal = window.EditCategoryModal;
+    var NewShopCategory = window.NewShopCategory;
 
     var shop_category = <%=raw @shop_category.to_json %>,
         createCategoryUrl = '<%= child_shop_admin_shop_category_path(@shop.name, @root.name, @shop_category) %>',
@@ -71,7 +74,10 @@
         $modal = $('#category-modal');
 
     $('.shop-category-list .shop-category').each(function(i, e) {
-      new EditShopCategory($(e))
+      var $target = $(e),
+          status = $target.data('status');
+
+      new EditShopCategory($target,status);
     });
 
     new EditCategoryModal($modal);

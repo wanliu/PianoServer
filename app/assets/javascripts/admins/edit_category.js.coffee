@@ -8,8 +8,10 @@ class @EditShopCategory extends @HuEvent
     'blur .title-input': 'leaveEdit'
     'click input[name="file"]': 'onClickUploader'
     'click .uploader-btn': 'onClickUploader'
+    'click .btn-opened': 'hideCategory'
+    'click .btn-closed': 'showCategory'
 
-  constructor: (@element, @url) ->
+  constructor: (@element, @status) ->
     super
     @hammer = new Hammer.Manager(@$()[0])
     @hammer.add(new Hammer.Press())
@@ -18,6 +20,9 @@ class @EditShopCategory extends @HuEvent
     @shopCategoryId = @$().data('shopCategoryId')
     @url = @$().find('.thumbnail').data('link')
     token = $('meta[name="csrf-token"]').attr('content')
+
+    unless @status
+      @element.find('.toggle-button').addClass('closed')
 
     @$uploader = new qq.FileUploader({
       element: @$().find('.uploader-btn')[0],
@@ -37,8 +42,6 @@ class @EditShopCategory extends @HuEvent
     })
 
     @hammer.on('press', @.onPress.bind(@))
-
-
 
   onClickTitle: (e) ->
     return if $(window).width() < 768
@@ -110,7 +113,7 @@ class @EditShopCategory extends @HuEvent
           )
 
   onPress: () ->
-    $('#category-modal').data('url', @url).modal("show")
+    $('#category-modal').data({'url': @url, 'status': @status, $related: @$()}).modal("show")
 
   thumbnailClickable: (e) ->
     $(e.target).parent('.thumbnail').attr('data-limited-depth') is 'false'
@@ -150,6 +153,39 @@ class @EditShopCategory extends @HuEvent
     @$img.val(url)
     @$().find('.thumbnail>img').attr('src', url)
 
+  showCategory: (e) ->
+    $target = $(e.currentTarget)
+
+    $.ajax({
+      url: @url + '/update_status',
+      type: 'PUT',
+      dateType: 'json',
+      data: {
+        shop_category: {
+          status: true
+        }
+      },
+      success: () =>
+        @status = true
+        $target.parent().removeClass('closed')
+    })
+
+  hideCategory: (e) =>
+    $target = $(e.currentTarget)
+
+    $.ajax({
+      url: @url + '/update_status',
+      type: 'PUT',
+      dateType: 'json',
+      data: {
+        shop_category: {
+          status: false
+        }
+      },
+      success: () =>
+        @status = false
+        $target.parent().addClass('closed')
+    })
 
 $(document).on('page:change', (event) =>
   mask = $('.animate-mask')
@@ -172,7 +208,6 @@ $(document).on('page:change', (event) =>
 
     mask.one('transitionend', ()=>
       mask.remove()
-
       reference.css({
         'visibility' : 'visible'
         'opacity'    : 1

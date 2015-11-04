@@ -6,39 +6,124 @@
         = source_editor template, :content, template.filename, save_button: :save
         .variables
           .btn-group-vertical
-            .btn-group
-              = dropdown :menu
+            - unless template.new_record?
+              = dropdown :添加对象, class: "btn-group-justified" do
+                - template.customize_variables.each do |config|
+                    =link_to config[:title], 'javascript: void(0)', \
+                      data: { \
+                        toggle: 'modal', \
+                        target: modal_target(config), \
+                        link: File.join(url_for([ :admins, *@parents, :templates ]), "blob", template.filename, "variables"), \
+                        class: config[:name], \
+                        op: 'new' }
+              .btn-group-vertical.variable-items role="group" aria-label="variables"
+                - template.variables.each do |var|
+                  .variable-item variable-id="#{var.id}"
+                    span.variable_name
+                      = var.name
+                    .variable-tools
+                      = link_to '#', data: { \
+                        toggle: 'modal', \
+                        target: modal_target(var), \
+                        link: File.join(url_for([ :admins, *@parents, :templates ]), "blob", template.filename, "variables", var.id.to_s), \
+                        class: var[:type].underscore, \
+                          op: 'edit' \
+                        } do
+                        span.glyphicon.glyphicon-pencil.edit-icon aria-hidden="true"
+                      span.glyphicon.glyphicon-remove.remove-icon aria-hidden="true"
 
     - else
       h1.text-center 此模版使用是的默认的模版 #{builder.button_new '使用一个新模板' }
 
 
   .panel-footer
-    .btn-toolbar
-      .btn-group
-        = button :save, context: :primary, name: :save
+    .panel-actions
+      .btn-toolbar
+        .btn-group
+          = button '保存', context: :primary, name: :save
+
+          - if template.persisted?
+            button.btn-upload[data-url=url_for([:upload, :admins, *parents, template.becomes(::Template)])]
+
+    - if template.persisted?
+      .panel-attachments
+        .progress
+          .progress-bar role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"
+           |
+             0%
+        ul[class="row-fluid file-list"]
+          = render partial: "admins/templates/attachment", collection: template.attachments
+          li[class="drop-zone col-12 text-center hide"] 拖动到这里上传
+
+=modal title: '添加变量', id: "variable_editor_modal", class: 'modal fade'  do
+  .modal-body
+    p 加载中...
+  .modal-footer
+    =button "Close", "data-dismiss": "modal"
+    =button "Save Change", context: :primary, class: 'save'
+
 
 javascript:
 
-  editor = $(".source-editor").data('ace_edit');
-  http_options = $(".source-editor").data('http_options');
+  (function() {
+    editor = $(".source-editor").data('ace_edit');
+    http_options = $(".source-editor").data('http_options');
 
-  $save_button = $("[name=save]")
+    $save_button = $("[name=save]")
 
-  $save_button.data('ace_edit', editor)
-  $save_button.data('http_options', http_options)
+    $save_button.data('ace_edit', editor)
+    $save_button.data('http_options', http_options)
 
-  $save_button
-    .unbind('click')
-    .bind('click', function(e) {
-      $target = $(e.currentTarget);
+    $save_button
+      .unbind('click')
+      .bind('click', function(e) {
+        $target = $(e.currentTarget);
 
-      editor = $target.data('ace_edit');
-      filename = $(".filename").val();
-      http_options = $target.data('http_options');
-      http_options['data']['template']['filename'] = filename;
-      http_options['data']['template']['content'] = editor.getValue();
+        editor = $target.data('ace_edit');
+        filename = $(".filename").val();
+        http_options = $target.data('http_options');
+        http_options['data']['template']['filename'] = filename;
+        http_options['data']['template']['content'] = editor.getValue();
 
-      Ajax($target, http_options)
-    });
+        Ajax($target, http_options)
+      });
 
+    // 添加与编辑变量
+    var subject_id = "#{@parents.first.id}",
+        template_id = "#{template.filename}",
+        selector = ".variable-items";
+    new TemplateVariables($(selector), subject_id, template_id);
+
+    var EditVariableModal = window.EditVariableModal;
+    var variableModal = EditVariableModal.getModal();
+
+    $upload = $('.btn-upload')
+
+    if ($upload.length > 0) {
+      token = $('meta[name="csrf-token"]').attr('content')
+      $filelist = $('.file-list')
+      $progress = $('.progress')
+      url = $upload.data('url')
+      $uploader = new qq.FileUploader({
+        element: $upload[0],
+        action:  url,
+        uploadButtonText: '上传',
+        dragText: '拖动到这里上传',
+        customHeaders: { "X-CSRF-Token": token },
+        multiple: false,
+        onComplete: function(id, filename, json) {
+          $(json.html).appendTo($filelist )
+          $progress.hide();
+        },
+        onProgress: function(id, fileName, loaded, total) {
+          percent = Math.round(loaded / total * 100, 0) + '%'
+
+          if (loaded > 0) {
+            $progress.show()
+          }
+
+          $progress.find('.progress-bar').width(percent).text(percent)
+        }
+      })
+    }
+  })();
