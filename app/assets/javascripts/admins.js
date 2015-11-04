@@ -16,6 +16,7 @@
 //= require ace/mode-liquid
 //= require ace/ext-language_tools
 //= require best_in_place
+//= require select2
 //= require _common/fileuploader
 //= require _common/hammer
 //= require _common/util
