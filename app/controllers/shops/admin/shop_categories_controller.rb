@@ -76,7 +76,7 @@ class Shops::Admin::ShopCategoriesController < Shops::Admin::BaseController
   end
 
   def update_by_child
-    @shop_category.update new_category_params
+    @shop_category.update shop_category_params
     render :show, formats: [ :json ]
   end
 
