@@ -139,7 +139,7 @@ module Shops::Admin::ItemHelper
       end
     end.join
 
-    raw "<div class=\"row\">#{output}</div>"
+    raw "<div class=\"row items\">#{output}</div>"
   end
 
   def label_color(name)

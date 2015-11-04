@@ -13,7 +13,7 @@ class @EditCategoryModal extends @HuEvent
   constructor: (@element) ->
     super(@element)
 
-    @$().on('shown.bs.modal', (e) =>
+    @$().on('show.bs.modal', (e) =>
       status = @$().data('status')
       $menu = @$().find('.list-group')
 
@@ -76,7 +76,9 @@ class @EditCategoryModal extends @HuEvent
       success: () =>
         @$().modal('hide')
 
-        $toggle = @$().data('$related').find('.toggle-button')
+        related = @$().data('related')
+        $toggle = related.$().find('.toggle-button')
+        related.status = false
 
         if $toggle.length > 0
           $toggle.addClass('closed')
@@ -97,7 +99,9 @@ class @EditCategoryModal extends @HuEvent
       success: () =>
         @$().modal('hide')
 
-        $toggle = @$().data('$related').find('.toggle-button')
+        related = @$().data('related')
+        $toggle = related.$().find('.toggle-button')
+        related.status = true
 
         if $toggle.length > 0
           $toggle.removeClass('closed')

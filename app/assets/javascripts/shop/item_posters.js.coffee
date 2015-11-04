@@ -59,7 +59,7 @@ class @ItemPosters extends HuEvent
     filenames = $.trim(@$filenames.val()).split(',')
 
     if index > -1
-      filenames[index] = newFilename
+      filenames[index] = filename
       @$filenames.val(filenames.join(','))
 
   handleSortable: () ->

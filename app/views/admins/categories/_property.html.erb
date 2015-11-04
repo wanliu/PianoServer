@@ -1,4 +1,5 @@
-<li class="list-group-item property-<%= property.id %> <%= property.inhibit? ? "disabled" : "" %>">
+<%= property_item property do %>
+  <%= icon "resize-vertical" %>
   <%= best_in_place property, :title, :as => :input, url: admin_property_path(industry, category, property), inner_class: 'form-control' %>
 
   <div class="flags pull-right">
@@ -18,4 +19,4 @@
   </div>
 
   <%#= text_field_tag :title, property.title, placeholder: '新属性名', class: 'form-control', focus: true %>
-</li>
+<% end %>

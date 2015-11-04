@@ -44,6 +44,7 @@ gem 'jquery-turbolinks'
 gem 'photoswipe-rails', '~> 4.1.0'
 gem 'bh', '~> 1.3'
 gem "slim-rails"
+gem "select2-rails"
 
 # 后端库
 gem 'activeresource'
@@ -56,6 +57,8 @@ gem 'liquid-rails'
 gem "punching_bag"
 gem "loofah-activerecord"
 gem 'public_activity', github: 'pokonski/public_activity'
+gem 'rails-observers', git: 'https://github.com/rails/rails-observers.git'
+gem 'composite_primary_keys'
 
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'
