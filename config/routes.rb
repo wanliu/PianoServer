@@ -40,6 +40,11 @@ Rails.application.routes.draw do
         get :search
       end
 
+      member do
+        post :upload, as: :upload
+        post :preview
+      end
+
       resources :variables, host_type: 'Template', except: [:new ] do
         collection do
           get :new_promotion_variable
@@ -49,12 +54,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :templates, options.merge(path: 'templates/blob', only: [:show], constraints: {id: /[\S]+/}) do
-      member do
-        post :upload, as: :upload
-        post :preview
-      end
-    end
+    resources :templates, options.merge(path: 'templates/blob', only: [:show], constraints: {id: /[\S]+/})
   end
 
   match "admins", to: "admins/dashboards#index", via: :get
