@@ -1,7 +1,12 @@
 class DateTimeProperty < PropertyBase
 
   def value
-    typecast(super)
+    _value = super
+    if _value.is_a? String
+      typecast(super)
+    else
+      _value
+    end
   end
 
   def typecast(value)
