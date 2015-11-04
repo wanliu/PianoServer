@@ -7,11 +7,12 @@ class @EditItemPoster extends @HuEvent
   constructor: (@element, @container, @url) ->
     super(@element)
 
+    @filename = @$().data('filename')
     token = $('meta[name="csrf-token"]').attr('content')
 
     @$uploader = new qq.FileUploader({
       element: @element.find('.upload-btn')[0],
-      action: @action,
+      action: @url,
       customHeaders: { "X-CSRF-Token": token },
       multiple: false,
       onComplete: @onUploaded.bind(@)
@@ -21,6 +22,7 @@ class @EditItemPoster extends @HuEvent
     index = @$().index('.edit-item-poster')
     @container.send('poster:replace', [ index, filename ])
     @$().find('.item-poster').attr('src', responseJSON.url)
+    @filename = filename
 
   removeItemPoster: () ->
     dataConfirmModal.confirm({
@@ -29,7 +31,8 @@ class @EditItemPoster extends @HuEvent
       commit: '删除',
       cancel: '取消',
       onConfirm: () =>
-        @container.send('poster:remove', [ @filename ])
+        index = @$().index('.edit-item-poster')
+        @container.send('poster:remove', [ index, @filename ])
         @$().remove()
     })
 
