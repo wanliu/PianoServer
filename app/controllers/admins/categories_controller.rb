@@ -69,7 +69,6 @@ class Admins::CategoriesController < Admins::BaseController
     _start = cp_list.index { |_cp| _cp.property_id == @cp.property_id }
     _end = _start + params[:index].to_i
 
-    pp _start, _end
     if _start > _end
       min = cp_list[_end].sortid
       cp_list[_end..._start].each do |cp|
