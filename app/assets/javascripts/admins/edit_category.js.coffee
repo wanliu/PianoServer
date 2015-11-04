@@ -1,5 +1,9 @@
 #= require _common/event
 #= require _common/fileuploader
+
+TRANSITION_ENDS = 'webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend'
+ANIMATION_ENDS  = 'webkitAnimationEnd oanimationend oAnimationEnd msAnimationEnd Animation'
+
 class @EditShopCategory extends @HuEvent
   events:
     'click': 'onClick'
@@ -87,7 +91,7 @@ class @EditShopCategory extends @HuEvent
             'width'   : maskWidth  + 'px'
             'height'  : maskHeight + 'px'
           })
-          .one('transitionend', ()=> fn())
+          .one(TRANSITION_ENDS, fn)
 
         reference.css({
           'opacity'   : 0
@@ -108,7 +112,7 @@ class @EditShopCategory extends @HuEvent
       else
         @$()
           .addClass('animate-shiver')
-          .one('animationend', () -> 
+          .one(ANIMATION_ENDS, () -> 
             $(@).removeClass('animate-shiver')
           )
 
