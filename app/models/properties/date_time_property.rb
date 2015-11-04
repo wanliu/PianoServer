@@ -1,12 +1,12 @@
 class DateTimeProperty < PropertyBase
 
   def value
-    typecast(super)
+    super.is_a?(String) ? typecast(super) : super
   end
 
   def typecast(value)
     if value.blank?
-      Time.now
+      nil
     else
       DateTime.parse(value)
     end
