@@ -12,7 +12,7 @@ class @EditShopCategory extends @HuEvent
     'click .btn-closed': 'showCategory'
 
   constructor: (@element, @status) ->
-    super
+    super(@element)
     @hammer = new Hammer.Manager(@$()[0])
     @hammer.add(new Hammer.Press())
     @$img = @$().find('form input[name="shop_category_img"]')
@@ -77,7 +77,8 @@ class @EditShopCategory extends @HuEvent
     ['animationend','webkitAnimationEnd','oanimationend','MSAnimationEnd'].join(' ')
 
   onPress: () ->
-    $('#category-modal').data({'url': @url, 'status': @status, $related: @$()}).modal("show")
+    console.log('status:', @status)
+    $('#category-modal').data({'url': @url, 'status': @status, related: @}).modal("show")
 
   thumbnailClickable: (e) ->
     $(e.target).parent('.thumbnail').attr('data-limited-depth') is 'false'
@@ -123,7 +124,7 @@ class @EditShopCategory extends @HuEvent
     $.ajax({
       url: @url + '/update_status',
       type: 'PUT',
-      dateType: 'json',
+      dataType: 'json',
       data: {
         shop_category: {
           status: true
@@ -140,7 +141,7 @@ class @EditShopCategory extends @HuEvent
     $.ajax({
       url: @url + '/update_status',
       type: 'PUT',
-      dateType: 'json',
+      dataType: 'json',
       data: {
         shop_category: {
           status: false
