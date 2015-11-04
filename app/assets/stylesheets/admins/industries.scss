@@ -3,3 +3,16 @@
     margin-top: 10px;
   }
 }
+
+.property-list  {
+  .glyphicon-resize-vertical {
+    color: #5cb85c;
+    font-size: 0.8em;
+  }
+
+  .property-inherits {
+    .glyphicon-resize-vertical {
+      color: #ddd;
+    }
+  }
+}

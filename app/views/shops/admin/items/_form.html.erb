@@ -55,7 +55,8 @@
 
       <!-- 品牌 -->
       <% group_with_errors @item, :brand_id, f do %>
-        <%= f.select :brand_id, options_from_collection_for_select(Brand.all, 'id', 'title'), {}, class: 'form-control' %>
+        <%= select2 :item, :brand_id, options_from_collection_for_select(Brand.all, 'id', 'title', @item.brand_id), {}, class: 'form-control', style: 'width: 100%' %>
+        <%#= f.select :brand_id, options_from_collection_for_select(Brand.all, 'id', 'title', @item.brand_id), {}, class: 'form-control' %>
       <% end %>
 
       <!-- 参考价 -->
@@ -101,7 +102,7 @@
             <div class="inventory_properties">
 
             <% @inventory_properties.each do |property| %>
-              <% group_with_property_errors @item, property, f do %>
+              <% group_with_property_errors @item, property, f, group_class: "property-#{property.name}" do %>
                 <%= property_edit @item, property %>
               <% end %>
             <% end %>

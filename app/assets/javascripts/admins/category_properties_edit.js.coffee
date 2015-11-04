@@ -1,35 +1,47 @@
 #= require _common/event
 
 class @CategoryPropertiesEdit extends @HuEvent
+  @defaultOptions = {
+    lineHeight: ">li",
+    items: "li:not(.property-inherits)",
+    disableItems: ".property-inherits",
+    propertyList: ".property-list"
+  }
 
-  constructor: (@element) ->
-  #   super(@element)
-  #   @width = @$().outerWidth()
-  #   @top = @$().offset().top
-  #   $(window).resize(@onResize.bind(@))
-  #   $(window).scroll(@onScroll.bind(@))
+  constructor: (@element, @options = {}) ->
+    super(@element)
+    throw new Error("missing options.sortUrl params") unless @options.sortUrl?
 
-  #   @onScroll()
+    @options = $.extend(@options, CategoryPropertiesEdit.defaultOptions)
 
-  # onResize: (e) ->
-  #   @$().width('auto')
-  #   setTimeout () =>
-  #     @width = @$().width()
-  #   , 100
+    @$propertyList = @$().find(@options.propertyList)
+    @$propertyList.sortable({
+      update: @sortUpdate,
+      items: @options.items,
+      start: @sortStart,
+      stop: @sortStop,
+      revert: true
+    })
+    @$propertyList.disableSelection();
+    # @$propertyList.find(".property-inherits").disableSelection();
 
-  # onScroll: (e) ->
-  #   scrollY = $(window).scrollTop()
-  #   position = @$().css('position')
+  sortStart: (e, ui) =>
+    @$propertyList.find(@options.disableItems).addClass("disabled")
 
-  #   if position != 'fixed' && scrollY > @top
-  #     @$().css({
-  #       position: 'fixed',
-  #       width: @width,
-  #       top: 60
-  #     });
-  #   else if position == 'fixed' && scrollY < @top
-  #     @$().css({
-  #       position: 'static',
-  #       width: 'auto',
-  #       top: 'auto'
-  #     });
+  sortStop: (e, ui) =>
+    @$propertyList.find(@options.disableItems).removeClass("disabled")
+
+  sortUpdate: (e, ui) =>
+    height = @$propertyList.find(@options.lineHeight).outerHeight();
+    { position, originalPosition } = ui;
+    index = Math.round((position.top - originalPosition.top) / height)
+    $item = $(ui.item)
+    property_id = $item.data('id')
+    $.ajax({
+      url: @options.sortUrl,
+      type: "PUT",
+      data: { index: index , property_id: property_id }
+    }).error () =>
+      @$propertyList.sortable("cancel")
+      $item.effect("highlight", {color: "#FFB0B9"})
+

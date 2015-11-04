@@ -5,7 +5,11 @@ class DateTimeProperty < PropertyBase
   end
 
   def typecast(value)
-    DateTime.parse(value)
+    if value.blank?
+      Time.now
+    else
+      DateTime.parse(value)
+    end
   end
 
   def self.exteriors
