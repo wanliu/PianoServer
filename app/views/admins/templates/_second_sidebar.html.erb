@@ -11,10 +11,10 @@
 
   <% @templates.each do |template| %>
     <% url = File.join(url_for([ :admins, *@parents, :templates ]), "blob", template.filename) %>
-    <%= link_to url, class: "list-group-item"  do %>
+    <%= link_to url, class: "list-group-item", "data-template-id" => template.id  do %>
       <%= best_in_place_if false, template, :name, url: url_for, inner_class: 'form-control input-sm', as: :input %>
       <% unless template.reserved? %>
-        <span class='remove-template glyphicon glyphicon-remove' data-url='<%= url %>'></span>
+        <span class='remove-template glyphicon glyphicon-remove'></span>
       <% end %>
     <% end %>
   <% end %>
@@ -56,7 +56,7 @@
     });
 
     $('#rmTempModal .btn-primary').click(function (event) {
-      var url = $(tempEl).attr('data-url');
+      var url = $(tempEl).parent().attr('href');
       $('#rmTempModal').modal('hide');
 
       $.post(url, {
