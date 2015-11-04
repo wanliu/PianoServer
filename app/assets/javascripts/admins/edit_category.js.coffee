@@ -77,7 +77,6 @@ class @EditShopCategory extends @HuEvent
     ['animationend','webkitAnimationEnd','oanimationend','MSAnimationEnd'].join(' ')
 
   onPress: () ->
-    console.log('status:', @status)
     $('#category-modal').data({'url': @url, 'status': @status, related: @}).modal("show")
 
   thumbnailClickable: (e) ->
