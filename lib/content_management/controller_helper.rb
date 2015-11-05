@@ -1,7 +1,55 @@
 module ContentManagement
+  module Helpers
+    VALID_VAR_NAME = /\A[_\p{letter}]+[\p{Alnum}_]*\z/
+
+    def load_attachments(attachments=all_attachments)
+      @attachments = attachments
+      @images = ImagesDrop.new(@attachments)
+    end
+
+    def all_attachments
+      get_subject.templates.includes(:attachments).inject([]) {|s, t| s.concat(t.attachments) }
+    end
+
+    protected
+
+    # 获取模板对象
+    def get_template(name)
+      cached_all_templates
+      if cached_all_templates[name].nil?
+        cached_all_templates[name] = get_subject.templates.find_by(name: name)
+      else
+        cached_all_templates[name]
+      end
+    end
+
+    def load_all_variables(_variables)
+      @all_variables ||= {}
+      _variables.each do |variable|
+        value = variable.call if variable.respond_to?(:call)
+        if VALID_VAR_NAME =~ variable.name
+          name = '@' + variable.name
+          instance_variable_set name.to_sym, value
+        end
+        @all_variables[variable.name] = value
+      end
+
+      @variables = VariablesDrop.new(@all_variables)
+    end
+
+    def get_subject
+      throw StandardError.new 'must have subject instance' if @subject.nil?
+      @subject
+    end
+
+    def merge_variables(_variables)
+      _variables.uniq { |var| var.name }
+    end
+  end
+
   module ControllerHelper
     include Paths
-    include ContentManagementService::Helpers
+    include ContentManagement::Helpers
 
     private
 

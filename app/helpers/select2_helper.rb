@@ -4,7 +4,7 @@ module Select2Helper
     obj_id = caller.object_id
 
     _html_options = {
-      "select2-id": obj_id
+      "select2-id" => obj_id
     }
 
     html = <<-HTML
