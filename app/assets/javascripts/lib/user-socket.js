@@ -31,6 +31,8 @@
   }
 
   UserSocket.prototype.config = function(options) {
+    var _this = this;
+
     this.socket = options.socket;
 
     var user = this.user = options.user;
@@ -39,6 +41,14 @@
     this.chatToken = user.chatToken;
 
     this.loginAndSubscribe();
+
+    this.socket.on('error', function(err) {
+      if ('need login' == err) {
+        _this.loginAndSubscribe();
+      } else {
+        console.error(err);
+      }
+    });
   }
 
   UserSocket.prototype.isAnonymousUser = function(userOptions) {
