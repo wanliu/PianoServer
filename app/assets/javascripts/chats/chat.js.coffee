@@ -257,9 +257,8 @@ class @Chat
     senderAvatar = @options.avatarDefault if senderAvatar == '' or senderAvatar?
     senderName = if @options.displayUserName then "<h2>#{senderLogin}</h2>" else ''
     prefixSection = if @lastTime? and Math.abs(time - @lastTime) > @options.miniTimeGroupPeriod
-                      diffDay = Math.floor((time - @lastTime) / DAYS)
                       time = new Date(time)
-                      timeStr = if diffDay > 0
+                      timeStr = if time.getDate() != new Date(@lastTime).getDate()
                                   "#{time.getFullYear()}-#{time.getMonth()+1}-#{time.getDate()} #{time.getHours()}:#{time.getMinutes()}"
                                 else
                                   "#{time.getHours()}:#{time.getMinutes()}"
