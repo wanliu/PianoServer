@@ -11,7 +11,7 @@
 
     <div class="form-group">
       <%= f.label :description %>
-      <%= f.text_area :description, class: 'form-control', focus: true %>
+      <%= f.bootsy_area :description, class: 'form-control', rows: 5%>
     </div>
 
     <div class="form-group col-xs-12 col-md-6 col-lg-6 start-at">
@@ -43,6 +43,8 @@
   <% end %>
 </div>
 <script type="text/javascript">
-  $('.input-group.date').datetimepicker();
+  $('.input-group.date').datetimepicker({
+    format: "YYYY-MM-DD HH:mm:ss"
+  });
 
 </script>

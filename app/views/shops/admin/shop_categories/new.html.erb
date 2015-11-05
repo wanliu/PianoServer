@@ -1,0 +1,71 @@
+<div class="shop-category-container">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      店铺分类创建
+    </div>
+    <div class="panel-body">
+      <ul class="error-messages clearfix">
+        <% if @shop_category.errors.any? %>
+          <% @shop_category.errors.full_messages.each do |msg| %>
+            <li class="error-message"><%= msg %></li>
+          <% end %>
+        <% end %>
+      </ul>
+      <% url = child_shop_admin_shop_category_path(@shop.name, @root.name, @parent) %>
+      <%= form_for(@shop_category, url: url) do |f| %>
+        <%= f.hidden_field :image, class: 'category-logo' %>
+        <div class="form-group">
+          <%= f.label :title %>
+          <%= f.text_field :title, class: 'form-control', focus: true %>
+        </div>
+        <div class="form-group">
+          <label class="control-label">上传分类图片</label>
+          <div class="category-image clearfix">
+            <div class="image-preview thumbnail" data-link="<%= url %>">
+              <%= image_tag @shop_category.image.url(:cover) %>
+            </div>
+            <div class="image-upload">
+              <div class="upload-btn">上传文件</div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <%= f.label :description, "描述" %>
+          <%= f.bootsy_area :description, class: "form-control", rows: 12 %>
+        </div>
+        <div class="form-group">
+          <input type="submit" value="确认" class="btn btn-primary btn-lg">
+        </div>
+      <% end %>
+
+      <div class="file-uploader-template hidden">
+        <div class='qq-uploader'>
+          <div class='qq-upload-drop-area' style='display: none;'>
+            <span>拖动文件到这里上传</span>
+          </div>
+          <div class='qq-upload-button'>选择文件上传
+          </div>
+          <ul class='qq-upload-list' style='display: none;'></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  var $thumbnail = $('.category-image .thumbnail'),
+      url = '<%= child_shop_admin_shop_category_path(@shop.name, @root.name, @parent) %>',
+      token = $('meta[name="csrf-token"]').attr('content');
+
+  new qq.FileUploader({
+    element: $('.image-upload .upload-btn')[0],
+    action: url + "/upload_image_by_child",
+    customHeaders: { "X-CSRF-Token": token },
+    multiple: false,
+    template: $(".file-uploader-template").html(),
+    onComplete: function (id, filename, responseJSON) {
+      $thumbnail.find('img').attr('src', responseJSON.url)
+      $('.category-logo').val(responseJSON.filename)
+    }
+  })
+</script>

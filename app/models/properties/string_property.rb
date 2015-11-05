@@ -3,4 +3,7 @@ class StringProperty < PropertyBase
     super
   end
 
+  def typecast(value)
+    value.to_s
+  end
 end

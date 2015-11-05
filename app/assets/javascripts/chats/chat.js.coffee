@@ -44,6 +44,7 @@ class @Chat
     @earlyTime = @options.earlyTime
     @setSendBtn(@sendBtn)
 
+    @firstLoad = true
     @getHistoryMessage(0, @_loadMoreProcess)
 
     @bindAllEvents()
@@ -116,7 +117,7 @@ class @Chat
     $inner = @$chatContainer.find('.chat-inner')
 
     if direction == 'down'
-      $inner.scrollTop(@$messageList.innerHeight())
+      $inner.scrollTop(@$messageList.parent().innerHeight())
     else
       $inner.scrollTop(0)
 
@@ -133,6 +134,7 @@ class @Chat
       messages.reverse()
 
       @_batchInsertMessages(messages, 'up')
+      @firstLoad = false
       # for message in messages
       #     @_insertMessage(message, 'up')
 
@@ -258,7 +260,7 @@ class @Chat
                       diffDay = Math.floor((time - @lastTime) / DAYS)
                       time = new Date(time)
                       timeStr = if diffDay > 0
-                                  "#{time.getFullYear()}-#{time.getMonth()}-#{time.getDate()} #{time.getHours()}:#{time.getMinutes()}"
+                                  "#{time.getFullYear()}-#{time.getMonth()+1}-#{time.getDate()} #{time.getHours()}:#{time.getMinutes()}"
                                 else
                                   "#{time.getHours()}:#{time.getMinutes()}"
                       """
@@ -368,7 +370,10 @@ class @Chat
     for message in messages
       @_insertItemMessage(message, 'up')
 
-    @autoScroll(direction) if @options.isMessageScroll
+    if @firstLoad
+      @autoScroll('down') if @options.isMessageScroll
+    else
+      @autoScroll(direction) if @options.isMessageScroll
 
   _checkIsVisible: (isInsert) ->
     $inner = @$chatContainer.find('.chat-inner')

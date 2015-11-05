@@ -1,0 +1,8 @@
+<div class="item-sale-options">
+  <dl>
+    <% @inventory_properties.each do |property| %>
+      <% config = @item.send("property_#{property.name}") %>
+      <%= render partial: "exterior_#{property.exterior}", with: @item.category, locals: { config: config, item: @item, property: property, shop: @shop } %>
+    <% end %>
+  </dl>
+</div>

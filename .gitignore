@@ -20,7 +20,10 @@
 config/settings.local.yml
 config/settings/*.local.yml
 config/environments/*.local.yml
+config/email.yml
 
 /public/assets
 /public/uploads
 .gitver
+.powenv
+.git-hooks/post_checkout/.read

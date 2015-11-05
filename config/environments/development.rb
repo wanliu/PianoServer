@@ -25,7 +25,7 @@ Rails.application.configure do
   # Debug mode disables concatenation and preprocessing of assets.
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
-  config.assets.debug = true
+  config.assets.debug = ENV["RUBY_DEBUG"]
 
   # Asset digests allow you to set far-future HTTP expiration dates on all assets,
   # yet still be able to expire them through the digest params.
@@ -43,7 +43,7 @@ Rails.application.configure do
   require 'byebug'
 
   if ENV['RUBY_DEBUG']
-    Byebug.start_server 'localhost'
+    Byebug.start_server '0.0.0.0'
     # Byebug.start_server 'localhost', ENV['RUBY_DEBUG_PORT'].to_i
   end
 end

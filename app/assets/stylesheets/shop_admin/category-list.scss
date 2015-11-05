@@ -4,6 +4,7 @@
     border: 1px solid #ddd;
     border-radius: 4px;
     margin-bottom: 20px;
+    transition: all 0.5s;
 
     .deleted {
       display: none;
@@ -43,6 +44,26 @@
         word-break: break-all;
       }
     }
+
+    .toggle-button {
+      position: absolute;
+      bottom: 10px;
+      left: 55px;
+
+      .btn-closed {
+        display: none;
+      }
+
+      &.closed {
+        .btn-opened {
+          display: none;
+        }
+
+        .btn-closed {
+          display: block;
+        }
+      }
+    }
   }
 
   .box:hover {
@@ -69,6 +90,7 @@
     position: relative;
     padding: 0px;
     margin-bottom: 0px;
+    transition: opacity 0.3s;
   }
 
   .thumbnail > img {
@@ -145,5 +167,21 @@
 #category-modal {
   .modal-body {
     padding: 0;
+
+    .list-group {
+      .hide-category {
+        display: none;
+      }
+
+      &.category-shown {
+        .show-category {
+          display: none;
+        }
+
+        .hide-category {
+          display: block;
+        }
+      }
+    }
   }
 }

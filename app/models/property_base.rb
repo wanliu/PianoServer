@@ -9,14 +9,13 @@ class PropertyBase
   end
 
   def value
-    field = target[@name] ||= {}
+    field = target[@name] || {}
     field["value"]
   end
 
   def value=(value)
     field = target[@name] ||= {}
-    field["value"]
-    field["value"] = value
+    field["value"] = typecast(value)
   end
 
   def target
@@ -24,5 +23,13 @@ class PropertyBase
   end
 
   def type
+  end
+
+  def typecast(value)
+    value
+  end
+
+  def self.exteriors
+    {}
   end
 end

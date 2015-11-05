@@ -3,9 +3,13 @@ require 'chinese_pinyin'
 class ShopCategory < ActiveRecord::Base
   LIMITED_DEPTH = 3
 
+  html_fragment :description, :scrub => :prune  # scrubs `body` using the :prune scrubber
+
   acts_as_nested_set
 
   paginates_per 12
+
+  acts_as_punchable
 
   belongs_to :shop
 
@@ -15,7 +19,7 @@ class ShopCategory < ActiveRecord::Base
 
   # store_accessor :image, :avatar_url
 
-  mount_uploader :image, ImageUploader # , mount_on: :avatar_url
+  mount_uploader :image, ItemImageUploader # , mount_on: :avatar_url
 
   before_validation :default_values
   # alias_method :cover_url, :avatar_url

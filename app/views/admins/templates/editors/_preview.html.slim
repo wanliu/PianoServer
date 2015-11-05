@@ -1,0 +1,27 @@
+= editor_panel template, id: "#{template.name}-preview" do
+
+  .panel-heading
+    .btn-group.btn-group-xs.pull-right
+      = button do
+        = icon :mobile, library: :font_awesome
+      = button do
+        = icon :tablet, library: :font_awesome
+      = button do
+        = icon :laptop, library: :font_awesome
+
+    h3 =
+
+  .panel-body
+    =form_tag url_for([:preview, :admins, *parents, template.becomes(::Template)]), id: 'preview-form', target: :source_preview do
+      = hidden_field_tag :source, nil
+
+    iframe id="source_preview" name="source_preview"
+
+javascript:
+
+  $("#toggle-preview").on('show.bs.tab', function () {
+    $saveButton = $('[name=save]');
+    editor = $saveButton.data('ace_edit');
+    $('#preview-form [name=source]').val(editor.getValue())
+    $('#preview-form').submit()
+  });

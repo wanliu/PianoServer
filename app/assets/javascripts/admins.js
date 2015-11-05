@@ -1,8 +1,8 @@
 //= require jquery
 //= require jquery.turbolinks
 //= require jquery_ujs
-//= require es5-shim/es5-shim-min
-//= require es5-shim/es5-sham-min
+//= require lib/es5-shim
+//= require lib/es5-sham
 //= require data-confirm-modal
 //= require moment
 //= require moment/zh-cn
@@ -16,6 +16,8 @@
 //= require ace/mode-liquid
 //= require ace/ext-language_tools
 //= require best_in_place
+//= require select2
+//= require select2_locale_zh-CN
 //= require _common/fileuploader
 //= require _common/hammer
 //= require _common/util
@@ -25,6 +27,8 @@
 //= require lib/underscore
 //= require lib/underscore-template
 //= require lib/bootstrap-select
+//= require lib/ace_editor
+//= require lib/ajax_status
 //= require _common/paginate
 //= require _common/qrcode
 //= require bootsy

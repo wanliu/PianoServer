@@ -14,6 +14,8 @@
     <![endif]-->
 
     <%= stylesheet_link_tag "admins", :media => "all", 'data-turbolinks-track' => true %>
+    <!--TODO: 未来要转换成本地 -->
+    <%= stylesheet_link_tag font_awesome_css %>
 
     <!-- For third-generation iPad with high-resolution Retina display: -->
     <!-- Size should be 144 x 144 pixels -->
@@ -40,6 +42,7 @@
     <%= analytics_init if Rails.env.production? and Settings.GA.track %>
   </head>
   <body class="<%= yield :module %>">
+    <% bh_clear %>
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
@@ -67,24 +70,21 @@
 
     <div class="chat-notices"></div>
     <div class="container-fluid">
-      <div class="row normal-layout">
+      <%= layout do %>
         <%= render "left_sidebar" %>
-
+        <%= yield :second_sidebar if content_for?(:second_sidebar) %>
 
         <div class="content container-fluid">
           <%= bootstrap_flash %>
           <%= yield %>
-        </div>
-        <div class="container-fluid">
           <footer>
             <p><%= raw Settings.app.footer %> <%= PianoServer::VERSION unless Rails.env.production? %></p>
           </footer>
         </div>
-      </div><!--/row-->
-
+      <% end %>
 
     </div> <!-- /container -->
-    <%= render "shards/ajax_error" %>
+    <%#= render "shards/ajax_error" %>
 
     <script type="text/javascript">
       $(function() {
@@ -115,6 +115,5 @@
         console.log('development version: <%= PianoServer::VERSION %>')
       <% end %>
     </script>
-
   </body>
 </html>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151030061908) do
+ActiveRecord::Schema.define(version: 20151103021828) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -85,6 +85,28 @@ ActiveRecord::Schema.define(version: 20151030061908) do
     t.datetime "updated_at",   null: false
   end
 
+  create_table "cart_items", force: :cascade do |t|
+    t.integer  "cart_id"
+    t.integer  "cartable_id"
+    t.string   "cartable_type"
+    t.integer  "supplier_id"
+    t.string   "title"
+    t.string   "image"
+    t.integer  "sale_mode",                              default: 0
+    t.decimal  "price",         precision: 10, scale: 2
+    t.integer  "quantity"
+    t.jsonb    "properties"
+    t.jsonb    "condition"
+    t.datetime "created_at",                                         null: false
+    t.datetime "updated_at",                                         null: false
+  end
+
+  create_table "carts", force: :cascade do |t|
+    t.integer  "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "categories", force: :cascade do |t|
     t.string   "name"
     t.string   "title"
@@ -104,6 +126,7 @@ ActiveRecord::Schema.define(version: 20151030061908) do
     t.integer "category_id",             null: false
     t.integer "property_id",             null: false
     t.integer "state",       default: 0
+    t.integer "sortid",      default: 0
   end
 
   add_index "categories_properties", ["category_id", "property_id"], name: "index_categories_properties_on_category_id_and_property_id", using: :btree
@@ -183,6 +206,7 @@ ActiveRecord::Schema.define(version: 20151030061908) do
     t.integer  "brand_id"
     t.jsonb    "properties",                                default: {}
     t.text     "description"
+    t.decimal  "current_stock",    precision: 10, scale: 2
   end
 
   create_table "likes", force: :cascade do |t|
@@ -333,6 +357,8 @@ ActiveRecord::Schema.define(version: 20151030061908) do
     t.string   "image"
     t.string   "title"
     t.integer  "shop_id"
+    t.text     "description"
+    t.boolean  "status"
   end
 
   add_index "shop_categories", ["iid"], name: "index_shop_categories_on_iid", using: :btree
@@ -367,6 +393,26 @@ ActiveRecord::Schema.define(version: 20151030061908) do
     t.datetime "updated_at",     null: false
   end
 
+  create_table "stock_changes", force: :cascade do |t|
+    t.integer  "item_id",                                                 null: false
+    t.decimal  "quantity",       precision: 10, scale: 2,                 null: false
+    t.jsonb    "data",                                    default: {}
+    t.integer  "unit_id"
+    t.integer  "operator_id",                                             null: false
+    t.integer  "operation_id"
+    t.string   "operation_type"
+    t.datetime "created_at",                                              null: false
+    t.datetime "updated_at",                                              null: false
+    t.boolean  "is_reset",                                default: false, null: false
+    t.integer  "kind",                                                    null: false
+  end
+
+  add_index "stock_changes", ["is_reset"], name: "index_stock_changes_on_is_reset", using: :btree
+  add_index "stock_changes", ["item_id"], name: "index_stock_changes_on_item_id", using: :btree
+  add_index "stock_changes", ["operation_type", "operation_id"], name: "index_stock_changes_on_operation_type_and_operation_id", using: :btree
+  add_index "stock_changes", ["operator_id"], name: "index_stock_changes_on_operator_id", using: :btree
+  add_index "stock_changes", ["unit_id"], name: "index_stock_changes_on_unit_id", using: :btree
+
   create_table "subjects", force: :cascade do |t|
     t.string   "name"
     t.string   "title"
@@ -383,10 +429,12 @@ ActiveRecord::Schema.define(version: 20151030061908) do
     t.string   "name"
     t.string   "filename"
     t.integer  "last_editor_id"
-    t.integer  "subject_id"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
     t.string   "type"
+    t.integer  "templable_id"
+    t.string   "templable_type"
+    t.boolean  "used",           default: false
   end
 
   create_table "units", force: :cascade do |t|
@@ -420,6 +468,7 @@ ActiveRecord::Schema.define(version: 20151030061908) do
     t.jsonb    "data",                   default: {}
     t.integer  "sex",                    default: 1
     t.integer  "shop_id"
+    t.integer  "user_type",              default: 0
   end
 
   add_index "users", ["authentication_token"], name: "index_users_on_authentication_token", unique: true, using: :btree
@@ -430,14 +479,20 @@ ActiveRecord::Schema.define(version: 20151030061908) do
   add_index "users", ["username"], name: "index_users_on_username", unique: true, using: :btree
 
   create_table "variables", force: :cascade do |t|
-    t.integer  "template_id"
     t.string   "name"
     t.string   "data_type"
     t.jsonb    "data"
     t.string   "type"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer  "host_id"
+    t.string   "host_type"
   end
 
+  add_index "variables", ["host_type", "host_id"], name: "index_variables_on_host_type_and_host_id", using: :btree
+
   add_foreign_key "shop_categories", "shops"
+  add_foreign_key "stock_changes", "items"
+  add_foreign_key "stock_changes", "units"
+  add_foreign_key "stock_changes", "users", column: "operator_id"
 end

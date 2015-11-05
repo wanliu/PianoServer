@@ -5,18 +5,7 @@ module SubjectService
   extend self
 
   def build(name)
-    Rails::Generators.invoke 'subject', [ name ]
-  end
-
-  def update_template(subject, template, content)
-    file = template_path(subject, template)
-
-    directory = File.dirname(file)
-    FileUtils.mkdir_p directory unless File.directory?(directory)
-
-    File.write file, content
-    logger.info "\033[32mWriting\033[0m to #{file}..."
-    logger.debug content
+    Rails::Generators.invoke 'subject', [ name, "--skip"  ]
   end
 
   def subject_root
@@ -35,4 +24,6 @@ module SubjectService
   def logger
     Rails.logger
   end
+
+
 end

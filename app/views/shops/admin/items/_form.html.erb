@@ -1,0 +1,161 @@
+<% path_method = @item.persisted? ? :shop_admin_item_path : :new_step2_shopitems_path %>
+<% url = send(path_method, @shop.name, @item, category_id: @category ) %>
+<%= form_for @item, url: url, html: { class: "form-horizontal item-form" } do |f| %>
+<div class="panel panel-default panel-item-edit">
+  <div class="panel-heading">
+    <h3><%=t(action_name, scope: 'actions') %> 自己的产品
+      <small> ->
+      <ol class="breadcrumb">
+        <% @breadcrumb.each do |bread| %>
+          <li><a href="javascript:void(0)"><%= bread.title.humanize %></a></li>
+        <% end %>
+        <li class="active"><%= @category.title %></li>
+      </ol> </small></h3>
+  </div>
+  <div class="panel-body">
+
+      <%= f.hidden_field :filenames %>
+
+      <!-- 图片 -->
+      <div class="form-group">
+        <%= f.label :images, class: "col-sm-2 control-label" %>
+        <div class="col-sm-10">
+          <div class="item-poster-list row">
+            <% images = @item.read_attribute(:images) %>
+            <% (@item.images || []).each_with_index do |uploader, index| %>
+              <div class="col-xs-4 col-sm-4 col-md-4 col-lg-3 edit-item-poster poster-item" data-filename="<%= images[index] %>">
+                <div class="thumbnail">
+                  <%= image_tag uploader.url(:cover), class: "item-poster" %>
+                  <div class="remove-icon">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                  </div>
+                  <div class="plus-icon">+</div>
+                  <div class="upload-btn"></div>
+                  <div class="sortable-handler">
+                    <span class="glyphicon glyphicon-move" aria-hidden="true"></span>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+              <div class="col-xs-4 col-sm-4 col-md-4 col-lg-3 new-item-poster poster-item">
+                <div class="thumbnail">
+                  <img src="<%= Settings.assets.gray_image %>" alt="gray image" class="item-poster">
+                  <div class="plus-icon">+</div>
+                  <div class="upload-btn"></div>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 标题 -->
+      <% group_with_errors @item, :title, f do %>
+        <%= f.text_field :title, class: 'form-control' %>
+      <% end %>
+
+      <!-- 品牌 -->
+      <% group_with_errors @item, :brand_id, f do %>
+        <%= select2 :item, :brand_id, options_from_collection_for_select(Brand.all, 'id', 'title', @item.brand_id), {}, class: 'form-control', style: 'width: 100%' %>
+        <%#= f.select :brand_id, options_from_collection_for_select(Brand.all, 'id', 'title', @item.brand_id), {}, class: 'form-control' %>
+      <% end %>
+
+      <!-- 参考价 -->
+      <% group_with_errors @item, :price, f do %>
+          <%= f.number_field :price, step: "0.01", min: '0.01', class: 'form-control' %>
+      <% end %>
+
+      <!-- 零售价 -->
+      <% group_with_errors @item, :public_price, f do %>
+          <%= f.number_field :public_price, step: "0.01", min: '0.01', class: 'form-control' %>
+      <% end %>
+
+      <!-- 进货价 -->
+      <% group_with_errors @item, :income_price, f do %>
+          <%= f.number_field :income_price, step: "0.01", min: '0.01', class: 'form-control' %>
+      <% end %>
+
+      <!-- 商店分类 -->
+      <% group_with_errors @item, :shop_category_id, f do %>
+        <%#= f.select :shop_category_id, options_from_collection_for_select(@category_collection , 'id', 'title'), {}, class: 'form-control' %>
+        <%= f.select :shop_category_id, grouped_options_for_select(@category_groups, @item.shop_category_id), {}, class: 'form-control' %>
+      <% end %>
+
+
+      <% if Settings.dev.feature.dynamic_property %>
+
+        <!-- 枚举全部属性 -->
+        <% unless @properties.blank? %>
+          <fieldset >
+            <legend >分类属性</legend>
+
+            <% @properties.each do |property| %>
+              <% group_with_property_errors @item, property, f do %>
+                <%= property_edit @item, property %>
+              <% end %>
+            <% end %>
+          </fieldset>
+        <% end %>
+
+        <% unless @inventory_properties.blank? %>
+          <fieldset >
+            <legend >库存属性</legend>
+            <!-- 枚举库存属性  -->
+            <div class="inventory_properties">
+
+            <% @inventory_properties.each do |property| %>
+              <% group_with_property_errors @item, property, f, group_class: "property-#{property.name}" do %>
+                <%= property_edit @item, property %>
+              <% end %>
+            <% end %>
+
+            </div>
+          </fieldset>
+        <% end %>
+      <% end %>
+
+      <!-- 库存设置 -->
+      <fieldset >
+        <legend >库存设置</legend>
+        <%= render partial: "inventory_form", locals: {builder: f} %>
+      </fieldset>
+      <!-- 详情 -->
+      <% group_with_errors @item, :description, f do %>
+        <%= f.bootsy_area :description, class: "form-control", rows: 12, value: @item.description_lookup %>
+      <% end %>
+
+      <!-- 隐藏字段 -->
+      <%= f.hidden_field :category_id %>
+  </div>
+  <div class="panel-footer">
+    <div class="row">
+      <div class="col-sm-offset-2 col-sm-10">
+        <% if @item.persisted? %>
+            <%= f.submit class: "btn btn-primary btn-lg" %>
+        <% else %>
+          <%= f.submit t(:create_and_continue, scope: 'helpers.submit.item'), class: "btn btn-primary btn-lg" %>
+          <%= f.submit t(:create, scope: 'helpers.submit.item'), class: "btn btn-info btn-lg" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>
+
+
+<script type="text/javascript">
+  var url = '<%= upload_image_shop_admin_items_path(@shop.name) %>';
+
+  new ItemPosters($('.item-poster-list'), url, $('input#item_filenames'));
+
+  $(".inventory_properties .check-inventory").change(function(e) {
+    var url = "<%= sa_item_inventory_config_path(@shop.name, @item) %>";
+
+    $.ajax({
+      url: url,
+      type: 'PUT',
+      data: $('.item-form').serialize()
+    }).then(function(data) {
+      $(".inventory_settings").hide().html(data).fadeIn("highlight");
+    });
+  });
+</script>

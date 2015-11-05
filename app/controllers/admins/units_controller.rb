@@ -26,7 +26,7 @@ class Admins::UnitsController < Admins::BaseController
     if @unit.save
       redirect_to admins_units_path
     else
-      flash[:errors] = @unit.errors.full_messages.join(', ')
+      flash.now[:errors] = @unit.errors.full_messages.join(', ')
       render :new, status: :unprocessable_entity
     end
   end
@@ -35,7 +35,7 @@ class Admins::UnitsController < Admins::BaseController
     if @unit.update(unit_params)
       redirect_to admins_units_path
     else
-      flash[:error] = @unit.errors.full_messages.join(', ')
+      flash.now[:error] = @unit.errors.full_messages.join(', ')
       render :edit, status: :unprocessable_entity
     end
   end

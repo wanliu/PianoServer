@@ -1,65 +1,108 @@
-<%= shop_render "items/show" %>
-<!-- <div class="item">
-  <div class='col-xs-12 col-sm-6 avatar row-line'>
-    <img src="<%= @item.avatar_url %>" />
+<div class="shop-item col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1">
+  <div class="shop-item-image">
+    <%= image_tag @item.image.url %>
   </div>
-
-  <div class='col-xs-12 col-sm-6 price row-line'>
-    ￥<%= @item.price %>
-  </div>
-
-  <div class='col-xs-12 col-sm-6 title row-line'>
-    <div class='product-name col-xs-7 col-sm-4'>
-      <%= @item.title %>
+<div class="price-period clearfix">
+  <div class="price-desc">
+    <div class="promotion-price">
+      ￥ <%= @item.price %>
     </div>
-    <div class='favor col-xs-3 col-sm-1'>
-      <div class='favor-title text-center'>收藏</div>
-      <div class='favor-count text-center'>12</div>
-    </div>
-    <div class='like  col-xs-2 col-sm-1'>
-      <div class='like-title text-center'>赞</div>
-      <div class='like-count text-center'>21</div>
+    <div class="dicount-desc">
+      <p><s>￥ <%= @item.public_price %></s></p>
     </div>
   </div>
 
-  <div class='col-xs-12 col-sm-6 shop-info row-line'>
-    <div class='shop-avatar col-xs-2 col-sm-1'>
-      <%= image_tag @shop.avatar_url %>
-    </div>
-    <div class='shop-info col-xs-10 col-sm-5'>
-      <div class='name'>供应商：<%= @shop.title %></div>
-      <div class='address'>地址：<%= @shop.address %></div>
-      <div class='follow'>关注：22</div>
-    </div>
-  </div>
-
-  <div class='col-xs-12 col-sm-6 summary row-line'>
-    <div class='brand-saled-count'>
-      <div class='brand col-xs-6 col-sm-3'>品牌：<%= @item.brand.name %></div>
-      <div class='sale-count col-xs-6 col-sm-3'>总销量：155</div>
-    </div>
-    <div class='inventory col-xs-6 col-sm-6 '>库存数量：222<%#= @item.inventory %></div>
-  </div>
-
-  <div class='col-xs-12 col-sm-12 properties row-line'>
-    <div class='properties-title'>参数规格</div>
-    <div class='col-xs-6 col-sm-6 avatar'>
-      <img src="<%= @item.avatar_url %>" />
-    </div>
-    <div class='col-xs-6 col-sm-6 property-items'>
-      <%# @item.additional_fields.attributes.each do |key, value| %>
-        <%# unless key =~ /原始链接/ %>
-          <p><%#= key %>: <%#= value %></p>
-        <%# end %>
-      <%# end %>
-    </div>
+  <div class="period-desc finished">
+    <div class="desc-wrap"></div>
   </div>
 </div>
 
-<div class="promotion-detail-container">
+  <div class="item-properties">
+    <div class="media">
+      <div class="media-left media-middle">
+        商品名: <%= @item.title %>
+      </div>
+      <div class="media-body media-middle">
+        <div class='favor-title text-center'>收藏</div>
+        <div class='favor-count text-center'>0</div>
+      </div>
+      <div class="media-right media-middle">
+        <div class='like-title text-center'>赞</div>
+        <div class='like-count text-center'>0</div>
+      </div>
+    </div>
+  </div>
+
+  <%= render partial: "sale_options", with: @item.category %>
+
+  <div class='item-shop-infos'>
+    <div class="media ">
+      <div class="media-left media-middle">
+        <% link_to shop_site_path(@shop), class: 'shop-avatar' do %>
+          <%= image_tag @shop.logo_url %>
+        </a>
+        <% end %>
+      </div>
+      <div class="media-body media-middle">
+        <div class='name'>供应商：<%= @shop.title %></div>
+        <div class='address'>地&emsp;址：<%= @shop.address %></div>
+        <div class='follow'>
+          <span>关&emsp;注：0</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class='item-secodary-properties clearfix'>
+    <div class='brand-saled-count'>
+      <p class='brand col-xs-6 col-sm-6 col-md-6'>品牌: <% @item.brand.try :name %></p>
+      <p class='sale-count col-xs-6 col-sm-6 col-md-6 text-right'>总销量：0</p>
+    </div>
+    <p class='inventory col-xs-6 col-sm-6 col-md-6 '>库存数量：充足</p>
+  </div>
+
+<!--
+  <div class='item-descriptions'>
+   <div class="item-brief-description">
+      <label>商品介绍</label>
+      <p class="brief-desc">
+      {% if @item.description.blank? %}
+      暂无简介
+      {% else %}
+      {{ @item.description }}
+      {% endif %}
+      </p>
+    </div>
+
+    <div class="item-detail-decription"></div>
+    <label class='properties-title'>参数规格</label>
+    <div class="detail-desc">
+      <div class="media">
+        <div class="media-left media-top">
+          <div class='avatar'>
+          {{ @item.image_url | image_tag }}
+          </div>
+        </div>
+        <div class="media-body media-top">
+          <div class='property-items'>
+            {% for attribute in @item.additional_fields.attributes %}
+            <div class="property-item col-xs-12 col-sm-12 col-md-6">
+              {% for item in attribute %}
+              <div class="item-key col-md-3">{{items[0]}}:</div>
+              <div class="item-value col-md-9">{{items[1]}}</div>
+              {% endfor %}
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+-->
   <div class="navbar-bottom navbar navbar-default navbar-fixed-bottom">
     <div class="link-table">
-      <%= link_to shop_site_path(@item.shop.name), class: "into-shop" do %>
+      <%= link_to shop_site_path(@shop.name), class: "into-shop" do %>
         <span class="button-icon glyphicon glyphicon-home"></span>
         <div class="button-text">商家</div>
       <% end %>
@@ -69,8 +112,194 @@
         <div class="button-text">收藏</div>
       </div>
 
-      <%= link_to '洽谈', chats_path(item_id: @item, shop_id: @shop), class: "chat", method: 'POST' %>
+      <div class="cart-button">
+        <span class="button-icon glyphicon glyphicon-shopping-cart"></span>
+        <div class="button-text">购物车</div>
+      </div>
+
+      <a class="buy-button">
+        购买
+      </a>
+
+      <% if @shop.owner_id == current_user.id %>
+        <div class="contact-button chat">您的店铺</div>
+      <% else %>
+        <%= button_to '洽谈', item_chats_path(@item.id, shop_id: @shop.id), form_class: 'contact-button chat' %>
+      <% end %>
     </div>
   </div>
+
 </div>
- -->
+
+<style>
+.dicount-desc{
+  margin-top:15px;
+}
+.finished{
+  width: 40%
+}
+.price-period{
+    width:100%;
+    display:table;
+}
+.promotion-price{
+    font-size:2em;
+    font-weight:700;
+    float:left;padding-right:10px;
+    line-height:1.5em;
+}
+.price-desc{
+    background-color:#F12A39;
+    display:table-cell;
+    color:#FFFFFF;
+    width:60%;
+    white-space:nowrap;
+    padding:10px;
+}
+.period-desc{
+    background-color:#F6D33C;
+    font-size:1.5em;
+    text-align:center;
+    color:#FFFFFF;
+    white-space:nowrap;
+    display:table-cell;
+    vertical-align:middle;
+}
+body {
+  padding-top: 51px;
+}
+
+.link-table > div, .link-table > a {
+  width: 20%;
+}
+
+.shop-item {
+  background: #FFFFFF;
+  margin-bottom: 50px;
+}
+
+.shop-item .shop-item-image {
+  width: 50%;
+  margin: 15px auto;
+  overflow: hidden;
+  text-align: center;
+}
+
+.shop-item .shop-item-image img {
+  max-width: 100%;
+  height: auto;
+  width: 100%;
+  min-width: 200px;
+  min-height: 200px;
+}
+
+.shop-item .media {
+  width: 100%;
+}
+
+.shop-item .item-properties {
+  padding: 15px 0;
+  background: #FFFFFF;
+  color:#333333;
+  font-weight: normal;
+}
+
+.shop-item .item-properties .media-left {
+  width: 60%;
+  overflow: hidden;
+  padding: 10px 0;
+}
+
+.shop-item .item-properties .media-body {
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+}
+
+.shop-item .item-properties .media-right {
+  width: 20%;
+  border-left: 1px solid #FFFFFF;
+}
+
+.shop-item .item-shop-infos {
+  padding: 15px 0;
+  border-bottom: 1px solid #DDDDDD;
+}
+
+.shop-item .item-shop-infos .shop-avatar img {
+  width: 75px;
+  height: 75px;
+}
+.shop-item .item-shop-infos .btn-follow{
+  background: #EC2A39;
+  color: #FFF;
+  padding: 2px 5px;
+  border-radius: 2px;
+  margin-left: 5px;
+}
+
+.shop-item .item-secodary-properties {
+  padding-top: 15px;
+  border-bottom: 1px solid #DDDDDD;
+}
+
+.shop-item .item-descriptions {
+  padding: 15px;
+}
+
+.shop-item .item-descriptions .brief-desc {
+  padding: 5px 15px;
+}
+
+.shop-item .item-descriptions .detail-desc {
+  padding: 15px 15px 0;
+}
+
+.shop-item .item-descriptions .detail-desc .avatar img {
+  max-width: 100%;
+  height: auto;
+  width: 100% \9;
+  min-width: 200px;
+  min-height: 200px;
+}
+
+.shop-item .link-table {
+  display: table;
+  width: 100%;
+}
+
+.shop-item .link-table .into-shop,
+.shop-item .link-table .cart-button,
+.shop-item .link-table .buy-button,
+.shop-item .link-table .fav-button,
+.shop-item .link-table .chat {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+  padding: 5px 0;
+}
+
+.shop-item .link-table .cart-button,
+.shop-item .link-table .into-shop,
+.shop-item .link-table .fav-button {
+  border-right: 1px solid #DDDDDD;
+}
+
+.shop-item .link-table .buy-button{
+  background-color: #FF7C00;
+  color:#fff;
+}
+.shop-item .link-table .into-shop {
+  color: #333333;
+}
+
+.shop-item .link-table .chat {
+  color: #FFFFFF;
+  background-color: #F42B2B;
+}
+
+.shop-item .property-item .item-key {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+</style>

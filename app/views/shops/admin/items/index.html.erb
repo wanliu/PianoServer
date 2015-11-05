@@ -18,6 +18,12 @@
       分类路径:
       <ol class="breadcrumb"></ol>
     </div>
+    <div class="btn-group pull-right">
+      <%= link_to new_shop_admin_item_path(@shop.name), class: "btn btn-success btn-add" do%>
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        新增
+      <% end %>
+    </div>
   </div>
 
   <div class="category-panel">
@@ -46,13 +52,9 @@
       <h3 class="panel-title">
         店铺商品
       </h3>
-      <%= link_to new_shop_admin_item_path(@shop.name), class: "btn btn-success btn-add" do%>
-        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-        新增
-      <% end %>
     </div>
     <div class="panel-body">
-      <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack" data-tablesaw-mode-switch>
+      <table class="tablesaw tablesaw-swipe table table-hover" data-tablesaw-mode="swipe" data-tablesaw-sortable >
         <thead>
           <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">商品项名</th>
           <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="5">所属分类</th>
@@ -79,7 +81,7 @@
       itemsContainer = $('.items-panel'),
       pagination = new Paginate($('.items-panel .pagination'), 1, 25, 0)
       container = new CategoryListWrap(categoryContainer, url, 3, pagination),
-      itemUrl = "<%= shop_admin_items_path(@shop.name) %>" + "/$itemId/";
+      itemUrl = "<%= shop_admin_items_path(@shop.name) %>" + "/$itemSid/";
 
   new CategoryBreadcrumb($('.breadcrumb-container .breadcrumb'), container);
   new CategoryItems($('.items-panel tbody'), container, { url: itemUrl });

@@ -159,6 +159,33 @@
       });
     });
 
+    // var followButtonLocked = false;
+    // $('.btn-follow').click(function (e) {
+    //   if (followButtonLocked) {
+    //     return;
+    //   } else {
+    //     followButtonLocked = true;
+    //   }
+
+    //   var actionToggle = {
+    //     "已关注" : "关注",
+    //     "关注" : "已关注"
+    //   };
+
+    //   $.post('<%=  toggle_follow_promotion_path(promotion) %>')
+    //     .done(function (data, status, xhr) {
+    //       var toggleStatus = $('.btn-follow span').text().replace(/^\s+|\s+$/g,'');
+    //       var newToggleStatus = actionToggle[toggleStatus];
+    //       var stauts = $('.btn-follow span').text(newToggleStatus);
+    //     })
+    //     .fail(function (err, status, xhr) {
+    //       // Todo alert error message
+    //     })
+    //     .always(function () {
+    //       followButtonLocked = false;
+    //     })
+    // });
+
     // $('a.contact-button').click(function() {
     //   userSocket.emit('readChannel', {
     //     'channelId': 'p' + channelId,

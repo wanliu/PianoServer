@@ -13,14 +13,15 @@
 //= require jquery
 //= require jquery.turbolinks
 //= require jquery_ujs
-//= require es5-shim/es5-shim-min
-//= require es5-shim/es5-sham-min
+//= require lib/es5-shim
+//= require lib/es5-sham
 //= require data-confirm-modal
 //= require jquery-ui/core
 //= require jquery-ui/widget
 //= require jquery-ui/mouse
 //= require jquery-ui/position
 //= require jquery-ui/effect.all
+//= require select2
 //= require bootstrap-sprockets
 //= require nprogress
 //= require turbolinks
@@ -33,6 +34,7 @@
 //= require lib/underscore-template
 //= require lib/date_iso8601_polyfill
 //= require lib/pastemedia
+//= require lib/ajax_status
 //= require _common/qrcode
 //= require _common/local-address
 //= require _common/hammer

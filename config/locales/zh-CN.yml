@@ -142,6 +142,9 @@ zh-CN:
       create: 新增%{model}
       submit: 储存%{model}
       update: 更新%{model}
+      item:
+        create: 新增
+        create_and_continue: 新增并继续
   number:
     currency:
       format:
@@ -206,7 +209,7 @@ zh-CN:
       item: 商品
     attributes:
       user:
-        login: "Handle"
+        login: "帐户"
 
       # will translate User attribute "login" as "Handle"
   attributes:
@@ -235,15 +238,12 @@ zh-CN:
     dashboard: 面板
   actions:
     new: 新增
+    new_step2: 创建
     index: ''
     edit: 编辑
     show: 显示
     create: 创建
     destroy: 删除
-  notices:
-    controllers:
-      items:
-        create:: "恭喜您，商品创建成功。"
   modules:
     shop: 商店
     admin: 工作平台
@@ -256,4 +256,18 @@ zh-CN:
       contact:
         actions:
           create: 提交了
-
+  flash:
+    notice:
+      controllers:
+        items:
+          create: 恭喜您，商品创建成功。
+          update: 恭喜您，商品保存成功。
+    error:
+      controllers:
+        items:
+          create: 对不起，商品创建失败。
+          update: 对不起，保存失败
+    titles:
+      notice: 成功
+      alert: 警告
+      error: 错误

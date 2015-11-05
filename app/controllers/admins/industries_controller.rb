@@ -1,5 +1,5 @@
 class Admins::IndustriesController < Admins::BaseController
-  before_action :get_industry, only: [:edit, :udpate, :show]
+  before_action :get_industry, only: [:edit, :update, :show]
   def new
     @industry = Industry.new
   end
@@ -17,6 +17,11 @@ class Admins::IndustriesController < Admins::BaseController
     @categories = category_root.try(:children) || []
     # demo code, remove after impl
     @properties = Property.all
+  end
+
+  def update
+    @industry.update_attributes industry_params
+    redirect_to edit_admins_industry_path(@industry)
   end
 
   def sync_es_brands

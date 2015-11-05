@@ -7,12 +7,31 @@
 
   .panel-body {
     padding: 15px 0;
+
+
   }
 }
 
 .panel-items {
   .pagination {
     margin: 0px;
+  }
+}
+
+.panel-item-edit {
+
+  .control-label {
+    small {
+      color: #ccc;
+    }
+  }
+}
+
+.date-select-container {
+  select {
+    width: 16.66666667%;
+    display: inline;
+    margin-right: 10px;
   }
 }
 

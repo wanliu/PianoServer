@@ -14,21 +14,13 @@
   </div>
 
   <div class="form-group">
-    <%= f.label :is_group, "是否集合属性:" %>
-    <%= f.radio_button(:is_group, "true") %>
-    <%= f.label(:is_group_true, "是") %>
-    <%= f.radio_button(:is_group, "false") %>
-    <%= f.label(:is_group_false, "否") %>
-  </div>
-
-  <div class="form-group">
     <%= f.label :default_value, "默认值" %>
     <%= f.text_field :default_value, class: 'form-control', placeholder: '属性默认值'%>
   </div>
 
   <div class="form-group">
     <%= f.label :validate_rules, "验证设置" %>
-    <%= f.text_field :validate_rules, class: 'form-control', placeholder: '属性验证设置', length: 250%>
+    <%= f.text_field :validate_rules, class: 'form-control', placeholder: '属性验证设置', length: 250, value: property.validate_rules.to_json %>
   </div>
 
   <div class="form-group">
@@ -36,13 +28,28 @@
     <%= f.select :prop_type, property.prop_types, {}, {class: 'form-control'} %>
   </div>
 
-  <div class="form-group map-pairs-editing <%= property.prop_type == 'map' ? '' : 'hidden' %>">
+  <% unless property.exteriors.blank? %>
+  <div class="form-group">
+    <%= f.label :exterior, "外观" %>
+    <%= f.select :exterior, options_for_select(property.exteriors, property.exterior), {}, {class: 'form-control'} %>
+  </div>
+  <% end %>
+
+  <div class="form-group map-pairs-toggle <%= property.map_type? ? '' : 'hidden' %>">
+    <%= f.label :is_group, "是否集合属性:" %>
+    <%= f.radio_button(:is_group, "true") %>
+    <%= f.label(:is_group_true, "是") %>
+    <%= f.radio_button(:is_group, "false") %>
+    <%= f.label(:is_group_false, "否") %>
+  </div>
+
+  <div class="form-group map-pairs-editing map-pairs-toggle <%= property.map_type? ? '' : 'hidden' %>">
     <%= f.label :map_values, "map类型编辑" %> <button class='btn btn-default add-map-pair' roll='button' type='button'>添加键值对</button>
     <% index = 0 %>
     <% property.map_pairs.each do |key, value| %>
       <div class='map-pair' data-pair-index=<%= index %>>
-        <%= label_tag "键值对(key-value):" %>
-        <%= text_field_tag "property[map_pairs][keys][#{index}]", "#{key}", class: "form-control pair-input" %> <span class="key-value"> => </span>
+        <%= label_tag "键值 " %>
+        <%= text_field_tag "property[map_pairs][keys][#{index}]", "#{key}", class: "form-control pair-input" %> <span class="key-value"> 标题 </span>
         <%= text_field_tag "property[map_pairs][values][#{index}]", "#{value}", class: "form-control pair-input" %>
         <button class='btn btn-default remove-map-pair' roll='button' type='button' data-pair-index=<%= index %>>删除</button>
         <% index += 1 %>
@@ -57,8 +64,8 @@
 
 <script type="text/template" id='map-pair-tempalte'>
   <div class='map-pair' data-pair-index={{= index }}>
-    <%= label_tag "键值对(key-value):" %>
-    <%= text_field_tag "property[map_pairs][keys][{{=index}}]", "", class: "form-control pair-input" %> <span class="key-value"> => </span>
+    <%= label_tag "键值 " %>
+    <%= text_field_tag "property[map_pairs][keys][{{=index}}]", "", class: "form-control pair-input" %> <span class="key-value"> 标题 </span>
     <%= text_field_tag "property[map_pairs][values][{{=index}}]", "", class: "form-control pair-input" %>
     <button class='btn btn-default remove-map-pair' roll='button' type='button' data-pair-index={{= index }}>删除</button>
   </div>
@@ -70,6 +77,7 @@
 
     var index = <%= property.map_pairs.keys.length %>;
     var template = _.template($('#map-pair-tempalte').html());
+    var mapTypes = <%= raw Property::MAP_TYPES.to_json %>;
 
     $('button.add-map-pair').click(function (e) {
       var html = template({index: index});
@@ -82,10 +90,12 @@
     });
 
     $('select[name="property[prop_type]"]').change(function (e) {
-      if ($(this).val() == 'map') {
-        $('.map-pairs-editing').removeClass('hidden');
+      var type = $(this).val();
+      if (~mapTypes.indexOf(type)) {
+        $('.map-pairs-toggle').removeClass('hidden');
       } else {
-        $('.map-pairs-editing').addClass('hidden');
+        $("#property_is_group_false").prop("checked", true);
+        $('.map-pairs-toggle').addClass('hidden');
       }
     });
   })();

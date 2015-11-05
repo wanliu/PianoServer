@@ -16,7 +16,9 @@ class @CategoryItems extends @HuEvent
     @refreshTable()
 
   refreshTable: () ->
-    @$().parents('table').table()
+    $table = @$().parents('table').table()
+    table = $table.data('table')
+    table.refresh()
 
   bindEditCategory: () ->
     @$().find('.edit').bind('click', @onEditCategory.bind(@))
@@ -25,15 +27,15 @@ class @CategoryItems extends @HuEvent
     @$().on('change', '.toggle-checkbox', @toggleItemState.bind(@))
 
   generateCategoryItem: (item, index) ->
-    { id, image_url, title, category_id, shop_category_title, price, public_price, inventory, on_sale } = item
+    { sid, image_url, title, category_id, shop_category_title, price, public_price, on_sale, current_stock } = item
 
     template = """
-      <tr data-item-index="#{index}" data-item-id="#{id}" >
+      <tr data-item-index="#{index}" data-item-sid="#{sid}" >
         <td class="title"><img src="#{image_url}" alt="product image" class='item-image' />#{ title }</td>
         <td>#{ shop_category_title }</td>
         <td>#{ public_price }</td>
         <td>#{ price }</td>
-        <td>#{ inventory }</td>
+        <td>#{ current_stock }</td>
         <td>
           <div class="btn-group">
             <button class="btn btn-link edit"><span class="glyphicon glyphicon-edit"></span></button>
@@ -61,7 +63,7 @@ class @CategoryItems extends @HuEvent
 
     $tr = $(e.target).parents("tr")
     item = $tr.data()
-    id = $tr.data('itemId')
+    sid = $tr.data('itemSid')
     url = @options.url.replace(/\$(\w+)/, (match, m) => item[m]) + "edit"
 
     Turbolinks.visit(url)
@@ -72,9 +74,9 @@ class @CategoryItems extends @HuEvent
     $target = $(e.target)
     $tr = $target.parents("tr:first")
     item = $tr.data()
-    id = $tr.data('itemId')
+    sid = $tr.data('itemSid')
     on_sale = $target.prop('checked')
-    id = $tr.data('itemId')
+    sid = $tr.data('itemSid')
     url = @options.url.replace(/\$(\w+)/, (match, m) => item[m]) + 'change_sale_state'
 
     $.ajax({

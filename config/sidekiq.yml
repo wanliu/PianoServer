@@ -4,5 +4,6 @@
 :logfile: ./log/sidekiq.log
 :queues:
   - default
+  - mailer
   - [high_priority, 2]
 :daemon: false
