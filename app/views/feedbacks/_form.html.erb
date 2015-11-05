@@ -1,0 +1,39 @@
+
+
+<%= form_for(@feedback) do |f| %>
+  <div class="form-group">
+    <%= label :feedback, :name do %>
+      姓名<span class="required">*</span>
+    <% end %>
+
+    <%= f.text_field :name, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= label :feedback, :mobile do %>
+      手机<span class="required">*</span>
+    <% end %>
+
+    <%= f.number_field :mobile, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= label :feedback, :information do %>
+      您的建议<span class="required">*</span>
+    <% end %>
+
+    <%= f.text_area :information, rows: 5, class: "form-control" %>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-md-6 col-sm-6 col-xs-6">
+      <%= link_to '查看反馈列表', feedbacks_path, class: "btn btn-default" %>
+    </div>
+    <div class="col-md-6 col-sm-6 col-xs-6 text-right">
+      <%= f.submit "提交", class: "btn btn-primary" %>
+      <%= link_to '取消', feedbacks_path, class: "btn btn-danger" %>
+    </div>
+  </div>
+
+
+<% end %>
