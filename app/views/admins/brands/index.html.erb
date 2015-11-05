@@ -1,0 +1,12 @@
+<h1 class="page-header">品牌 <div class="btn-group pull-right" role="toolbar" aria-label="...">
+  <%= link_to new_admins_industry_path, class: "btn btn-default" do %>
+    <%= icon :plus%>
+  <% end %>
+  </div>
+</h1>
+
+
+<div class="brand-list clearfix">
+  <%= render partial: "brand", collection: @brands %>
+</div>
+

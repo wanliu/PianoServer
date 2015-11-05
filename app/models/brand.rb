@@ -6,9 +6,13 @@ class Brand < ActiveRecord::Base
   has_many :categories
   has_many :items
 
+  acts_as_punchable
+
+  mount_uploader :image, ImageUploader
+
   attr_reader :title
 
   def title
-    [name, chinese_name].join('/')
+    [name, chinese_name].compact.join('/')
   end
 end

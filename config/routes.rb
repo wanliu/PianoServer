@@ -6,6 +6,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :brands, only: [ :index, :update ]
+
   namespace :authorize do
     get :weixin
     get :weixin_redirect_url
@@ -106,6 +108,8 @@ Rails.application.routes.draw do
     resources :properties
 
     resources :units
+    resources :shops
+    resources :brands
   end
 
   namespace :api do
