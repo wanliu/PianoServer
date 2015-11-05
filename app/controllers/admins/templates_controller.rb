@@ -1,7 +1,6 @@
 require 'tempfile'
 
 class Admins::TemplatesController < Admins::BaseController
-  include ContentManagementService::Helpers
 
   before_action :set_templable
   before_action :set_parents
@@ -139,7 +138,7 @@ class Admins::TemplatesController < Admins::BaseController
   end
 
   def set_template
-    @template = @parent.templates.find_by(filename: params[:id])
+    @template = @parent.templates.find(params[:id])
 
     raise ActiveRecord::RecordNotFound if @template.nil?
   end
