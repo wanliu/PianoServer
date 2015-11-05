@@ -3,6 +3,8 @@ class Brand < ActiveRecord::Base
   include Elasticsearch::Model::Callbacks
   include ESModel
 
+  paginates_per 100
+
   has_many :categories
   has_many :items
 
