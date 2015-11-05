@@ -78,7 +78,6 @@
       <% group_with_errors @item, :shop_category_id, f do %>
         <%#= f.select :shop_category_id, options_from_collection_for_select(@category_collection , 'id', 'title'), {}, class: 'form-control' %>
         <%= f.select :shop_category_id, grouped_options_for_select(@category_groups, @item.shop_category_id), {}, class: 'form-control' %>
-
       <% end %>
 
 
