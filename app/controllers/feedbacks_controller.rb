@@ -1,4 +1,6 @@
 class FeedbacksController < ApplicationController
+  before_action :set_feedbacks_title
+
   def index
     @feedbacks = Feedback.where(is_show: true).page(params[:page]).order(id: :desc)
   end
@@ -33,6 +35,10 @@ class FeedbacksController < ApplicationController
   end
 
   private
+
+  def set_feedbacks_title
+    set_page_title '用户反馈'
+  end
 
   def feedback_params
     params.require(:feedback).permit(:name, :mobile, :information, :reply, :is_show)
