@@ -35,15 +35,13 @@ Rails.application.routes.draw do
   end
 
   concern :templable do |options|
-    resources :templates, options.merge(only: [:index, :new, :create]) do
+    resources :templates, options do
       collection do
         post :preview, to: 'templates#preview_new'
         post :upload, as: :upload
         get :search
       end
-    end
 
-    resources :templates, options.merge(path: 'templates/blob', only: [:show, :edit, :update, :destroy], constraints: {id: /[\S]+/}) do
       member do
         post :upload, as: :upload
         post :preview
@@ -57,6 +55,8 @@ Rails.application.routes.draw do
         end
       end
     end
+
+    resources :templates, options.merge(path: 'templates/blob', only: [:show], constraints: {id: /[\S]+/})
   end
 
   match "admins", to: "admins/dashboards#index", via: :get

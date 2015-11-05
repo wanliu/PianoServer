@@ -77,7 +77,7 @@ class StockChange < ActiveRecord::Base
   private
 
   def quantity_check
-    if purchase? && quantity <= 0
+    if purchase? && quantity.present? && quantity <= 0
       errors.add(:quantity, "不能为零或者小于零")
     end
   end

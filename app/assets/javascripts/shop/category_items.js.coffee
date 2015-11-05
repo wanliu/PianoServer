@@ -27,7 +27,7 @@ class @CategoryItems extends @HuEvent
     @$().on('change', '.toggle-checkbox', @toggleItemState.bind(@))
 
   generateCategoryItem: (item, index) ->
-    { sid, image_url, title, category_id, shop_category_title, price, public_price, inventory, on_sale } = item
+    { sid, image_url, title, category_id, shop_category_title, price, public_price, on_sale, current_stock } = item
 
     template = """
       <tr data-item-index="#{index}" data-item-sid="#{sid}" >
@@ -35,7 +35,7 @@ class @CategoryItems extends @HuEvent
         <td>#{ shop_category_title }</td>
         <td>#{ public_price }</td>
         <td>#{ price }</td>
-        <td>#{ inventory }</td>
+        <td>#{ current_stock }</td>
         <td>
           <div class="btn-group">
             <button class="btn btn-link edit"><span class="glyphicon glyphicon-edit"></span></button>

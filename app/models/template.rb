@@ -62,10 +62,6 @@ class Template < ActiveRecord::Base
     !persisted?
   end
 
-  def to_param
-    filename
-  end
-
   protected
 
   alias_method_chain :update_attributes, :content
