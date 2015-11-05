@@ -51,9 +51,6 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
       .group_by {|category| category.parent }
       .map {|group, items| [ group.self_and_ancestors.map{ |parent| parent.title }.join(' » '), items.map {|i| [i.title, i.id]}]}
 
-
-    @category_groups = @shop.shop_category.leaves.group_by {|category| category.parent }
-
     @inventory_properties = inventory_properties(@category.with_upper_properties)
 
     if Settings.dev.feature.inventory_combination and @inventory_properties.present?
@@ -119,8 +116,6 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     @category_groups = @shop.shop_category.leaves
       .group_by {|category| category.parent }
       .map {|group, items| [ group.self_and_ancestors.map{ |parent| parent.title }.join(' » '), items.map {|i| [i.title, i.id]}]}
-
-    @category_groups = @shop.shop_category.leaves.group_by {|category| category.parent }
 
     if Settings.dev.feature.inventory_combination and @inventory_properties.present?
       @inventory_combination = combination_properties(@item, @inventory_properties)

@@ -54,3 +54,6 @@ adjustImage = null
 
 $ ->
 	adjustImage ||= new AdjustPromotionImage
+
+$(document).on 'page:load', () ->
+  adjustImage && adjustImage.onResize()
