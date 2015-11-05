@@ -24,6 +24,8 @@ Rails.application.routes.draw do
   mount ChinaCity::Engine => '/china_city'
   resources :contacts, only: [:new, :show, :create, :destroy]
 
+  resources :feedbacks
+
   concern :messable do
     resources :messages
   end
@@ -73,6 +75,7 @@ Rails.application.routes.draw do
     end
     resources :messages
     resources :contacts
+    resources :feedbacks
     resources :attachments
     resources :industries do
       collection do

@@ -1,0 +1,26 @@
+<div class="container contacts-new-container">
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
+    <h3>意见反馈</h3>
+
+    <% if @feedback and  @feedback.errors.any? %>
+        <div id="error_explanation">
+          <div class="alert alert-danger" role="alert">
+            <% @feedback.errors.full_messages.each do |msg| %>
+              <div>
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">Error:</span>
+                <%= msg %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+    <% end %>
+
+    <%= render "form" %>
+
+    </div>
+  </div>
+</div>
+
+

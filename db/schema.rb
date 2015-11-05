@@ -159,6 +159,16 @@ ActiveRecord::Schema.define(version: 20151103021828) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "feedbacks", force: :cascade do |t|
+    t.string   "name"
+    t.string   "mobile"
+    t.text     "information"
+    t.boolean  "is_show"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.string   "reply"
+  end
+
   create_table "follows", force: :cascade do |t|
     t.integer  "follower_id"
     t.string   "follower_type"
