@@ -52,9 +52,11 @@ class AdjustPromotionImage
 
 adjustImage = null
 
-$(document).on('page:change', (e) ->
+$ ->
+	adjustImage ||= new AdjustPromotionImage
+
+$(document).on 'page:load', (e) ->
   url = parseURL(e.target.URL).pathname
 
   if (url == '/' || url == '/promotions')
-    adjustImage ||= new AdjustPromotionImage
-)
+    adjustImage && adjustImage.onResize()
