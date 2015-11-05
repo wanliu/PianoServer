@@ -1,7 +1,6 @@
 require 'tempfile'
 
 class Admins::TemplatesController < Admins::BaseController
-  include ContentManagementService::Helpers
 
   before_action :set_templable
   before_action :set_parents
