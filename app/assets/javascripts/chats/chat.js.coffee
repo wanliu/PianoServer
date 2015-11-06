@@ -257,18 +257,25 @@ class @Chat
     senderAvatar = @options.avatarDefault if senderAvatar == '' or senderAvatar?
     senderName = if @options.displayUserName then "<h2>#{senderLogin}</h2>" else ''
     prefixSection = if @lastTime? and Math.abs(time - @lastTime) > @options.miniTimeGroupPeriod
-                      diffDay = Math.floor((time - @lastTime) / DAYS)
                       time = new Date(time)
-                      timeStr = if diffDay > 0
-                                  "#{time.getFullYear()}-#{time.getMonth()+1}-#{time.getDate()} #{time.getHours()}:#{time.getMinutes()}"
+                      timeStr = if time.toDateString() != new Date(@lastTime).toDateString()
+                                  "#{time.getFullYear()}-#{time.getMonth()+1}-#{time.getDate()} #{@_formatDate(time.getHours())}:#{@_formatDate(time.getMinutes())}"
                                 else
-                                  "#{time.getHours()}:#{time.getMinutes()}"
+                                  "#{@_formatDate(time.getHours())}:#{@_formatDate(time.getMinutes())}"
                       """
                       <div class="time"><p class="text-center">#{timeStr}</p></div>
                       """
                     else
                       ''
     {prefixSection, senderAvatar, senderName, toAddClass, id, senderId, content, senderLogin, type, time}
+
+
+  _formatDate: (number) ->
+    if number < 10
+      '0' + number
+    else
+      number
+
 
   _buildTextMessage: (text = null, context = {}) ->
     {prefixSection, senderAvatar, senderName, toAddClass, id, senderId, content, senderLogin, type, time} = context
