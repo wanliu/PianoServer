@@ -1,5 +1,5 @@
 <div class="promotion-set-variable" >
-  <%= form_for @variable, as: :variable, url: variables_path(@subject, @template) do |f| %>
+  <%= form_for @variable, as: :variable, url: variables_path(@subject, @host) do |f| %>
     <%= f.hidden_field :promotion_string %>
 
     <div class="form-group field-name">

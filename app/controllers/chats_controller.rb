@@ -8,6 +8,7 @@ class ChatsController < ApplicationController
 
   def index
     @chats = Chat.in(current_anonymous_or_user.id).reverse_order
+    @other_sides = @chats.map{ |chat| chat.other_side(current_anonymous_or_user) }
     # @chats = current_anonymous_or_user.chats
   end
 

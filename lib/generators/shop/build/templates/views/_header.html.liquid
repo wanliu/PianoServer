@@ -1,17 +1,17 @@
 <div class="brand-board">
-  <img src="/" class="shop-bgi">
+  <img src="/商店头部背景" class="shop-bgi">
   <div class='shop-info'>
     <div class="media">
-      <div class="media-left media-top">
+      <div class="shop-logo-wrapper">
         <img src="{{ shop.logo_url_cover }}" class="shop-logo" alt="{{ shop.name }}" />
       </div>
-      <div class='name-address media-body media-top'>
+      <div class='name-address'>
         <p class='name'>{{ shop.title }}</p>
         <p class='address'>{{ shop.address }}</p>
       </div>
       <a class="attention media-right media-middle" href="#">
-        <div>关注</div>
-        2
+        <div>周流量</div>
+        {{ shop.week_hits }}
       </a>
     </div>
   </div>

@@ -1,4 +1,4 @@
-<div class="shop-item col-xs-12 col-sm-12 col-md-12 col-lg-12">
+<div class="shop-item col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1">
 <div class="shop-item-image">
   {{ item.image_url | image_tag }}
 </div>
@@ -23,13 +23,14 @@
 <div class='item-shop-infos'>
   <div class="media">
     <div class="media-left media-middle">
-      <div class='shop-avatar'>
+      <a class='shop-avatar' href="/{{ shop.name }}">
         <img src="{{ shop.logo_url_cover }}" alt="">
         {% comment %}{{ shop.image_url | image_tag }}{% endcomment %}
-      </div>
+      </a>
     </div>
     <div class="media-body media-middle">
       <div class='name'>供应商： {{ shop.title }}</div>
+      <div class='address'>地址：{{ shop.address }}</div>
       <div class='follow'>
         <span>关注：0</span>
         <button class="btn btn-follow">
@@ -38,7 +39,7 @@
         </button>
       </div>
     </div>
-    <div class='address'>地址：{{ shop.address }}</div>
+
   </div>
 </div>
 
@@ -50,8 +51,9 @@
   <p class='inventory col-xs-6 col-sm-6 col-md-6 '>库存数量：充足</p>
 </div>
 
+{% comment %}
 <div class='item-descriptions'>
-{% comment %} <div class="item-brief-description">
+ <div class="item-brief-description">
     <label>商品介绍</label>
     <p class="brief-desc">
     {% if item.description.blank? %}
@@ -84,9 +86,9 @@
         </div>
       </div>
     </div>
-  </div>{% endcomment %}
+  </div>
 </div>
-
+{% endcomment %}
 <div class="navbar-bottom navbar navbar-default navbar-fixed-bottom">
   <div class="link-table">
     <a class="into-shop" href="/{{shop.name}}">
@@ -104,33 +106,25 @@
       <div class="button-text">购物车</div>
     </div>
 
-    <a class="buy-button contact-button" href="#">
+    <a class="buy-button" href="#">
       购买
     </a>
 
-    <a href="javascript:void(0);" url="/items/{{item.id}}/chats?shop_id={{shop.id}}" class="chat contact-button">洽谈</a>
+    {% if shop.owner_id == current_user.id %}
+      <div class="contact-button chat">您的店铺</div>
+    {% else %}
+      {{ '洽谈' | button_to_chat: item, shop, form_class: 'contact-button chat'}}
+    {% endif %}
+
   </div>
 </div>
 </div>
-
-<script type="text/javascript">
-  $('.contact-button').click(function() {
-    var url = $(this).attr('url');
-
-    var form = document.createElement('form');
-    form.method = "POST";
-    form.action = url;
-    form.submit();
-  });
-</script>
 
 <style>
 body {
     padding-top: 51px;
 }
-.address{
-  padding-top: 10px;
-}
+
 .link-table > div, .link-table > a {
     width: 20%;
 }
@@ -169,7 +163,7 @@ body {
 .shop-item .item-properties .media-left {
     width: 60%;
     border-right: 1px solid #FFFFFF;
-    padding: 20px 0;
+    padding: 10px 0;
 }
 
 .shop-item .item-properties .media-right {

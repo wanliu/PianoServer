@@ -1,5 +1,5 @@
 <div class="container contacts-new-container">
-  <div class="row">
+  <div class="row feedbacks-container">
     <div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
       <h3>意见列表</h3>
         <% @feedbacks.each do |feedback| %>
@@ -8,26 +8,32 @@
               <div class="media">
                 <div class="media-left">
                   <a href="#">
-                    <img class="media-object" src="http://neil-img.b0.upaiyun.com/uploads/default_avatar.gif" style="width: 42px; height: 42px;">
+                    <img class="media-object avatar" src="http://neil-img.b0.upaiyun.com/uploads/default_avatar.gif">
                   </a>
                 </div>
                 <div class="media-body">
                   <h5 class="media-heading"><%= feedback.name %>:</h5>
-                  <%= feedback.information %>
+                  <p><%= feedback.information %></p>
+                  <div class="text-right">
+                    <small><%= time_ago_in_words feedback.created_at %> 前</small>
+                  </div>
                 </div>
               </div>
 
               <% if feedback.reply and feedback.reply != '' %>
-                <hr>
+                <hr/>
                 <div class="media">
                   <div class="media-left">
                     <a href="/">
-                      <%= image_tag 'logo.png', class: "media-object", style: "width: 42px; height: 42px;" %>
+                      <%= image_tag 'logo.png', class: "media-object avatar" %>
                     </a>
                   </div>
                   <div class="media-body">
                     <h5 class="media-heading">官方回复:</h5>
-                    <%= feedback.reply %>
+                    <p><%= feedback.reply %></p>
+                    <div class="text-right">
+                      <small><%= time_ago_in_words feedback.updated_at %> 前</small>
+                    </div>
                   </div>
                 </div>
               <% end %>

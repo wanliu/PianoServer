@@ -1,0 +1,4 @@
+$("[template-panel-id=<%= @template_builder_id %>]")
+  .hide()
+  .replaceWith("<%=j render partial: "template", object: @template, locals: { parents: @parents } %>")
+  .fadeIn();

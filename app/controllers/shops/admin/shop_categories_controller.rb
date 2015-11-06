@@ -1,5 +1,6 @@
 class Shops::Admin::ShopCategoriesController < Shops::Admin::BaseController
-  before_action :is_descendant_of_category, only: [:show_by_child, :update_by_child, :upload_image, :destroy_by_child]
+  before_action :is_descendant_of_category, only: [:show_by_child, :update_by_child, :upload_image,
+    :destroy_by_child, :edit, :update_category, :update_status]
   before_action :set_paginating, only: [:show, :show_by_child]
 
   def create
@@ -13,12 +14,28 @@ class Shops::Admin::ShopCategoriesController < Shops::Admin::BaseController
     @root = @shop.shop_category
     @parent = ShopCategory.find(params[:parent_id])
     raise ActionController::RoutingError.new('Not Found') unless @parent.is_or_is_descendant_of?(@root)
-    @shop_category = @parent.children.build(shop_category_params)
 
-    if @shop_category.save
-      render :show, formats: [ :json ]
-    else
-      render json: { errors: @shop_category.errors.full_messages }, status: :unprocessable_entity
+    respond_to do |format|
+      format.json do
+        @shop_category = @parent.children.build(shop_category_params)
+
+        if @shop_category.save
+          render :show, formats: [ :json ]
+        else
+          render json: { errors: @shop_category.errors.full_messages }, status: :unprocessable_entity
+        end
+      end
+
+      format.html do
+        @shop_category = @parent.children.build(shop_category_detail_params)
+        @shop_category.send(:write_attribute, :image, params[:shop_category][:image])
+
+        if @shop_category.save
+          redirect_to child_shop_admin_shop_category_path(@shop.name, @root.name, @parent)
+        else
+          render :new
+        end
+      end
     end
   end
 
@@ -28,10 +45,34 @@ class Shops::Admin::ShopCategoriesController < Shops::Admin::BaseController
     @root = @shop_category
   end
 
+  def new_by_child
+    @root = @shop.shop_category
+    @parent = ShopCategory.find(params[:child_id])
+    @shop_category = ShopCategory.new
+
+    render :new
+  end
+
+  def edit
+
+  end
+
   def show_by_child
     @children = @shop_category.children.page(params[:page]).per(params[:per])
 
     render :show
+  end
+
+  def update
+    @root = @shop.shop_category
+    @shop_category = ShopCategory.find(params[:child_id])
+  end
+
+  def update_category
+    @parent = @shop_category.parent
+    @shop_category.update shop_category_detail_params
+
+    redirect_to child_shop_admin_shop_category_path(@shop.name, @root.name, @parent)
   end
 
   def update_by_child
@@ -48,16 +89,35 @@ class Shops::Admin::ShopCategoriesController < Shops::Admin::BaseController
     render :destroy, formats: [:js]
   end
 
+  def upload_image_by_child
+    uploader = ShopCategoryImageUploader.new(ShopCategory.new, :image)
+    uploader.store! params[:file]
+
+    render json: { success: true, url: uploader.url(:cover), filename: uploader.filename }
+  end
+
   def upload_image
     @shop_category.image = params[:file]
     @shop_category.save
     render json: { success: true, url: @shop_category.image.url(:cover) }
   end
 
+  def update_status
+    if @shop_category.update_attribute("status", params[:shop_category][:status])
+      render json: { success: true }
+    else
+      render json: @item.errors, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def shop_category_params
     params.require(:shop_category).permit(:title)
+  end
+
+  def shop_category_detail_params
+    params.require(:shop_category).permit(:title, :description, :image)
   end
 
   def is_descendant_of_category

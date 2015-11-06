@@ -4,7 +4,8 @@ class Admins::AttachmentsController < Admins::BaseController
 
   def update
     @attachment.update_attributes(attachment_params)
-    render json: @attachment
+
+    respond_with_bip(@attachment)
   end
 
   def destroy

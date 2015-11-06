@@ -1,4 +1,4 @@
-<%= form_for @variable, as: :variable, url: variables_path(@subject, @template) do |f| %>
+<%= form_for @variable, as: :variable, url: variables_path(@subject, @host) do |f| %>
   <%= f.hidden_field :promotion_id %>
 
   <div class="form-group field-name">

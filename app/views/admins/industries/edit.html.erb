@@ -47,10 +47,33 @@
   </div>
 </div>
 <script type="text/javascript">
-  var CategoryTree = window.CategoryTree;
-  var industryUrl = "<%= admins_industry_path(@industry) %>";
-  var cateTree = new CategoryTree($('.category-tree'), industryUrl);
-  /* Activating Best In Place */
-  $(".best_in_place").best_in_place();
+  (function () {
+    var CategoryTree = window.CategoryTree;
+    var industryUrl = "<%= admins_industry_path(@industry) %>";
+    var cateTree = new CategoryTree($('.category-tree'), industryUrl);
+    /* Activating Best In Place */
+    $(".best_in_place").best_in_place();
 
+    // $('.category-right').on('click', '.item-desc-title', function (event) {
+    //   $(this).children(".glyphicon").toggleClass("glyphicon-menu-right")
+    //     .toggleClass("glyphicon-menu-up");
+
+    //   $(this).siblings('.cate-item-desc').toggle();
+    // });
+
+    var templateLock = false;
+    $('.category-right').on('click', '.update-template', function (event) {
+      if(templateLock) return;
+      templateLock = true;
+
+      var url = $(this).attr('data-update-url');
+      var content = $(this).siblings('textarea').val();
+      $.post(url, {template: content})
+        .done()
+        .fail()
+        .always(function () {
+          templateLock = false;
+        });
+    });
+  })();
 </script>

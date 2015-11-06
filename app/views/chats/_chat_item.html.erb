@@ -1,12 +1,14 @@
 <% other_side = chat_item.other_side(current_anonymous_or_user) %>
 
 <% unless other_side.nil? %>
-  <%= link_to chat_path(chat_item), class: "chat-item" do %>
-    <%= avatar_image_tag other_side.avatar_url, class: 'chat-item-avatar' %>
+  <%= link_to chat_path(chat_item), class: "chat-item", data: {target_id: other_side.id, updated_at: chat_item.updated_at.iso8601.to_s} do %>
+    <div class="avatar-container">
+      <%= avatar_image_tag other_side.avatar_url, class: 'chat-item-avatar' %>
+    </div>
     <h4>
       <%= other_side.name %>
       <div class="format-time"></div>
     </h4>
-    <p><%= chat_item.try :last_message %></p>
+    <p class="last-message"></p>
   <% end %>
 <% end %>

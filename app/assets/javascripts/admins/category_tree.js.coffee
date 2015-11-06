@@ -35,9 +35,10 @@ class @CategoryTree extends @HuEvent
     categoryId = $item.attr('data-category-id')
 
     editUrl = "#{@url}/categories/#{categoryId}/edit"
+    sortUrl = "#{@url}/categories/#{categoryId}/resort"
     $.get editUrl, (data) =>
       $('.category-right').html(data.edit_html)
-      new CategoryPropertiesEdit($('.category-edit'));
+      new CategoryPropertiesEdit($('.category-edit'), sortUrl: sortUrl);
 
 
   fetchChildren: ($item) ->
