@@ -31,6 +31,8 @@
   }
 
   UserSocket.prototype.config = function(options) {
+    var _this = this;
+
     this.socket = options.socket;
 
     var user = this.user = options.user;
@@ -39,6 +41,14 @@
     this.chatToken = user.chatToken;
 
     this.loginAndSubscribe();
+
+    this.socket.on('error', function(err) {
+      if ('need login' == err) {
+        _this.loginAndSubscribe();
+      } else {
+        console.error(err);
+      }
+    });
   }
 
   UserSocket.prototype.isAnonymousUser = function(userOptions) {
@@ -47,8 +57,18 @@
 
   // publish to other users
   UserSocket.prototype.publish = function(channelId, data, callback) {
+    var _this = this;
+
     if (this.personChannelReady) {
-      this.socket.publish(channelId, data, callback)
+      this.socket.publish(channelId, data, function(err) {
+        if (err && 'need login' == err) {
+          _this.loginAndSubscribe(function() {
+            _this.socket.publish(channelId, data, callback);
+          });
+        } else {
+          callback(err);
+        }
+      });
     } else {
       var error = 'socket not ready!';
       console.error(error);
@@ -86,9 +106,11 @@
     }
   }
 
-  UserSocket.prototype.loginAndSubscribe = function() {
+  UserSocket.prototype.loginAndSubscribe = function(callback) {
     var _this = this;
     var socket = this.socket;
+
+    callback || (callback = function() {});
 
     socket.emit('login', this.chatToken, function(err) {
       if (err) {
@@ -99,12 +121,18 @@
       }
 
       _this.readyAndSubscribe();
+      callback();
     });
   }
 
   UserSocket.prototype.readyAndSubscribe = function() {
     var _this = this,
       socket = this.socket;
+
+    if (this.personChannelReady) {
+      socket.subscribe(this.userChannelId);
+      return;
+    }
 
     this.userChannelId = this.getUserChannelId();
     this.personChannelReady = true;
