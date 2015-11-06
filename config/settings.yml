@@ -44,6 +44,7 @@ dev:
       chat: true
     user:
       sign_in: true
+    authorize: false
 sites:
   root: .sites
   shops:
