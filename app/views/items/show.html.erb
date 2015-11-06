@@ -38,9 +38,8 @@
   <div class='item-shop-infos'>
     <div class="media ">
       <div class="media-left media-middle">
-        <% link_to shop_site_path(@shop), class: 'shop-avatar' do %>
+        <%= link_to shop_site_path(@shop), class: 'shop-avatar' do %>
           <%= image_tag @shop.logo_url %>
-        </a>
         <% end %>
       </div>
       <div class="media-body media-middle">
