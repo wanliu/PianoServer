@@ -48,16 +48,17 @@
       position: absolute;
       right: 0;
       top: 0;
-      color: #515151;
+      color: #CCCCCC;
     }
   }
 
-  p{
+  .last-message {
     overflow: hidden;
     text-overflow: ellipsis;
     vertical-align: middle;
     white-space: nowrap;
     margin: 0;
+    color: #333333;
   }
 }
 
