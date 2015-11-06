@@ -2,4 +2,23 @@
   .required {
     color: #FF2B2B;
   }
+
+  .feedbacks-container{
+    p {
+      word-break: break-all;
+
+    }
+    small {
+      color: #888;
+    }
+    hr {
+      margin: 10px 0;
+    }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+    }
+
+  }
 }
