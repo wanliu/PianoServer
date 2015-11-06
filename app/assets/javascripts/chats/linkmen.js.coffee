@@ -27,7 +27,7 @@ class @Linkmen
       if (_data)
         {time, content, attachs, senderLogin, senderId} = _data
 
-        timeDesc = @_genereateTimeDesc(time)
+        timeDesc = window.fromNow(time)
 
         if +senderId < 0
           senderLogin += -1 * senderId
@@ -39,7 +39,7 @@ class @Linkmen
           message += '[图片]'
 
       else
-        timeDesc = @_genereateTimeDesc(Date.parse(updatedAt))
+        timeDesc = window.fromNow(updatedAt)
         message = '暂无聊天记录'
 
       $time.text(timeDesc)
