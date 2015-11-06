@@ -38,9 +38,8 @@
   <div class='item-shop-infos'>
     <div class="media ">
       <div class="media-left media-middle">
-        <% link_to shop_site_path(@shop), class: 'shop-avatar' do %>
+        <%= link_to shop_site_path(@shop.name), class: 'shop-avatar' do %>
           <%= image_tag @shop.logo_url %>
-        </a>
         <% end %>
       </div>
       <div class="media-body media-middle">
@@ -211,8 +210,8 @@ body {
 }
 
 .shop-item .item-properties .media-body {
-  border-left: 1px solid #ccc;
-  border-right: 1px solid #ccc;
+  border-left: 1px solid #DDDDDD;
+  border-right: 1px solid #DDDDDD;
 }
 
 .shop-item .item-properties .media-right {
@@ -223,6 +222,7 @@ body {
 .shop-item .item-shop-infos {
   padding: 15px 0;
   border-bottom: 1px solid #DDDDDD;
+  border-top: 1px solid #DDDDDD;
 }
 
 .shop-item .item-shop-infos .shop-avatar img {
