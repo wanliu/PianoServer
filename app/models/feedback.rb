@@ -1,4 +1,6 @@
 class Feedback < ActiveRecord::Base
+  include PublicActivity::Model
+  tracked
 
   paginates_per 10
 

@@ -1,12 +1,48 @@
-<h1 class="page-header">品牌 <div class="btn-group pull-right" role="toolbar" aria-label="...">
-  <%= link_to new_admins_industry_path, class: "btn btn-default" do %>
-    <%= icon :plus%>
-  <% end %>
-  </div>
+<h1 class="page-header">品牌
+    <div class="btn-group" role="toolbar" aria-label="...">
+      <%= search_form admins_brands_path, input: { class:  "live-search-brand", placeholder: "输入搜索品牌" }, group: { class: "input-group-lg col-sm-12" }%>
+    </div>
+    <div class="btn-group pull-right" role="toolbar" aria-label="...">
+      <button class='btn btn-default sync-es-brands'>同步品牌</button>
+      <%= link_to new_admins_industry_path, class: "btn btn-default" do %>
+        <%= icon :plus%>
+      <% end %>
+    </div>
+    <label>共计 <span class="total"><%=  @brands.total_count %></span> </label>
 </h1>
+
 
 
 <div class="brand-list clearfix">
   <%= render partial: "brand", collection: @brands %>
 </div>
 
+<div class="brand-paginate">
+  <%= render "paginate", locals: { brands: @brands } %>
+</div>
+
+<script type="text/javascript">
+  (function () {
+    $('button.sync-es-brands').click(function (e) {
+      $.post('<%= sync_es_brands_admins_industries_path %>')
+    });
+
+    $(".live-search-brand").keyup(function(e) {
+      $.ajax({
+        url: '<%= admins_brands_path %>',
+        type: 'get',
+        data: {q: $(this).val()},
+        dataType: 'json'
+      }).then(function(resp) {
+        var brands = resp["brands"];
+        $(".brand-list").empty();
+        $(".total").text(resp.total);
+        $(".brand-paginate").html(resp.paginate);
+        for (var i in brands) {
+          var brand = brands[i];
+          $(".brand-list").append(brand.html);
+        }
+      });
+    })
+  })();
+</script>

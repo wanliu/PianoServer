@@ -111,7 +111,7 @@ Rails.application.routes.draw do
     resources :properties
 
     resources :units
-    resources :shops
+    # resources :shops
     resources :brands
   end
 

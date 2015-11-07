@@ -1,3 +1,5 @@
-<div class="brand">
-  <%= brand.title %>
-</div>
+<%= link_to admins_brand_path(brand) do %>
+  <div class="brand">
+    <%= brand.title %>
+  </div>
+<% end %>

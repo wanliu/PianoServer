@@ -1,26 +1,25 @@
-<h1 class="page-header">商品中心</h1>
-
-<div class="btn-toolbar" role="toolbar" aria-label="...">
-
-</div>
-
-<div class="btn-toolbar" role="toolbar" aria-label="...">
-  <div class="btn-group" role="group" aria-label="...">
-    <button class='btn btn-default sync-es-categories'>同步ES分类</button>
+<h1 class="page-header">商品中心
+  <div class="btn-toolbar pull-right" role="toolbar" aria-label="...">
+    <div class="btn-group" role="group" aria-label="...">
+      <button class='btn btn-default sync-es-categories'>同步ES分类</button>
+    </div>
   </div>
-  <div class="btn-group" role="group" aria-label="...">
-    <button class='btn btn-default sync-es-brands'>同步ES品牌</button>
-  </div>
-</div>
+</h1>
+
+<%= nav layout: :justified do %>
+  <%= link_to '非标准化的商品', '#' %>
+  <%= link_to '标准商品', '#' %>
+<% end %>
+
+
+
+<%= simple_table_for Item.where(product_id: nil), with: ItemTable %>
+
 
 <script type="text/javascript">
-  (function () {
-    $('button.sync-es-brands').click(function (e) {
-      $.post('<%= sync_es_brands_admins_industries_path %>')
-    });
-
+  (function() {
     $('button.sync-es-categories').click(function (e) {
       $.post('<%= sync_es_categories_admins_industries_path %>')
     });
-  })();
+  })()
 </script>
