@@ -28,3 +28,45 @@
     display: none;
   }
 }
+
+#new_brand {
+
+  .image-uploader {
+    position: relative;
+    width: 200px;
+    height: 100px;
+    // padding-left: 220px;
+
+    .image-handle {
+      width: 200px;
+      height: 100px;
+
+      &>img {
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        width: 200px;
+        height: 100px;
+      }
+    }
+
+    &>div {
+      position: absolute;
+      top: 0px;
+      // left: 220px;
+
+    }
+
+    .qq-uploader {
+      left: 220px;
+    }
+
+    .qq-upload-button {
+      position: absolute;
+    }
+
+    .qq-upload-list {
+      display: none;
+    }
+  }
+}

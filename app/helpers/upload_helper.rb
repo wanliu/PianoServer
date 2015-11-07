@@ -13,11 +13,15 @@ module UploadHelper
     title = object.send(field)
     url = options[:url] || File.join(@options[:url], "upload")
     upload_object_id = caller.object_id
+    image_options = options.delete(:image) || {}
+    image_options[:class] = [image_options[:class]] + ["upload-image-#{upload_object_id}"]
 
     output = <<-HTML
       <div class="image-uploader">
-        #{image_tag object.send(field), class: "upload-image-#{upload_object_id}"}
-        <div class="image-uploader-button upload-#{upload_object_id}">
+        <div class="image-handle">
+          #{image_tag object.send(field), image_options}
+        </div>
+        <div class="upload-#{upload_object_id}">
         </div>
       </div>
       <script type="text/javascript">
@@ -51,7 +55,6 @@ module UploadHelper
     upload_object_id = caller.object_id
 
     disable_text = options.delete(:disable_text)
-    pp options
 
     image_options = options.delete(:image) || {}
     image_options[:class] = [image_options[:class]] + ["upload-image-#{upload_object_id}"]

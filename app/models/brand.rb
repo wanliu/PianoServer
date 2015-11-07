@@ -13,7 +13,7 @@ class Brand < ActiveRecord::Base
 
   acts_as_punchable
 
-  mount_uploader :image, ImageUploader
+  mount_uploader :image, ItemImageUploader
 
   attr_reader :title
 

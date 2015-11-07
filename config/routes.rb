@@ -116,6 +116,10 @@ Rails.application.routes.draw do
       member do
         post "upload", as: :upload
       end
+
+      collection  do
+        post "upload", as: :upload
+      end
     end
   end
 

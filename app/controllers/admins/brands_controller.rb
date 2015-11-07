@@ -1,5 +1,5 @@
 class Admins::BrandsController < Admins::BaseController
-  before_action :set_brand,  only: [ :show, :upload ]
+  before_action :set_brand,  only: [ :show ]
 
   def index
     @brands =
@@ -16,7 +16,12 @@ class Admins::BrandsController < Admins::BaseController
   end
 
   def new
+    @brand = Brand.new
+  end
 
+  def create
+    @brand = Brand.create(brand_params())
+    redirect_to admins_brands_path
   end
 
   def show
@@ -32,9 +37,17 @@ class Admins::BrandsController < Admins::BaseController
   end
 
   def upload
-    @brand.image = params[:file]
-    @brand.save
-    uploader = @brand.image
+    uploader =
+      if params[:id].blank?
+        uploader = ItemImageUploader.new(Brand.new, :image)
+        uploader.store! params[:file]
+        uploader
+      else
+        @brand = Brand.find(params[:id])
+        @brand.image = params[:file]
+        @brand.save
+        @brand.image
+      end
     # TODO img :brand
     render json: { success: true, url: uploader.url(:cover)  , filename: uploader.filename }
   end
@@ -43,5 +56,9 @@ class Admins::BrandsController < Admins::BaseController
 
   def set_brand
     @brand = Brand.find(params[:id])
+  end
+
+  def brand_params
+    params.require(:brand).permit(:name, :chinese_name, :description, :image)
   end
 end
