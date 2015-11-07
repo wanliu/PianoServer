@@ -45,6 +45,7 @@ gem 'photoswipe-rails', '~> 4.1.0'
 gem 'bh', '~> 1.3'
 gem "slim-rails"
 gem "select2-rails"
+gem 'picturefill'
 
 # 后端库
 gem 'activeresource'

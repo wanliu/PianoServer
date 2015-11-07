@@ -1,5 +1,5 @@
 class Admins::BrandsController < Admins::BaseController
-  before_action :set_brand,  only: [ :show ]
+  before_action :set_brand,  only: [ :show, :upload ]
 
   def index
     @brands =
@@ -15,6 +15,10 @@ class Admins::BrandsController < Admins::BaseController
     end
   end
 
+  def new
+
+  end
+
   def show
     @products = Product.search(query: {
       match: {
@@ -27,6 +31,13 @@ class Admins::BrandsController < Admins::BaseController
     @industries = []
   end
 
+  def upload
+    @brand.image = params[:file]
+    @brand.save
+    uploader = @brand.image
+    # TODO img :brand
+    render json: { success: true, url: uploader.url(:cover)  , filename: uploader.filename }
+  end
 
   private
 

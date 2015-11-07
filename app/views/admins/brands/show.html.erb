@@ -1,17 +1,11 @@
 <h1 class="page-header"><%= @brand.title %> <div class="btn-group pull-right" role="toolbar" aria-label="...">
-  <%#= link_to new_admins_industry_path, class: "btn btn-default" do %>
-    <%#= icon :plus%>
-  <%# end %>
-
   </div>
 </h1>
 
 <div class="brand-item">
   <div class="media brand-logo">
     <div class="media-left">
-      <a href="#">
-        <%= image_tag @brand.image.url %>
-      </a>
+      <%= image_upload_button :brand, :image, url: upload_admins_brand_path(@brand), disable_text: !@brand.image.blank_image?, image: { class: 'scale', data: { align: "center", scale: "best-fill" } } %>
     </div>
     <div class="media-body">
       <h4 class="media-heading"><%= best_in_place @brand, :title, :as => :input, url: admins_brand_path(@brand), inner_class: 'form-control' %></h4>
@@ -19,15 +13,7 @@
     </div>
   </div>
   <br />
-<!--   <div class="media brand-product-logo">
-    <div class="media-left">
-      <%= icon :briefcase %>
-    </div>
-    <div class="media-body">
-      <h4 class="media-heading">产品总数</h4>
-      <p><%= @products.total %></p>
-    </div>
-  </div> -->
+
   <%= panel_row column_class: 'col-sm-4' do %>
     <%= panel @products.total, heading: '产品总数' %>
     <%= panel @categories.count, heading: '分类总数' %>
@@ -38,4 +24,5 @@
 
 <script type="text/javascript">
   $(".best_in_place").best_in_place();
+  $("img.scale").imageScale();
 </script>

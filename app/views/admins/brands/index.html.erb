@@ -4,14 +4,12 @@
     </div>
     <div class="btn-group pull-right" role="toolbar" aria-label="...">
       <button class='btn btn-default sync-es-brands'>同步品牌</button>
-      <%= link_to new_admins_industry_path, class: "btn btn-default" do %>
+      <%= link_to new_admins_brand_path, class: "btn btn-default" do %>
         <%= icon :plus%>
       <% end %>
     </div>
     <label>共计 <span class="total"><%=  @brands.total_count %></span> </label>
 </h1>
-
-
 
 <div class="brand-list clearfix">
   <%= render partial: "brand", collection: @brands %>

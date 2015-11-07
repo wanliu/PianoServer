@@ -112,7 +112,11 @@ Rails.application.routes.draw do
 
     resources :units
     # resources :shops
-    resources :brands
+    resources :brands do
+      member do
+        post "upload", as: :upload
+      end
+    end
   end
 
   namespace :api do

@@ -40,3 +40,21 @@
     left: 0px;
   }
 }
+
+
+.image-uploader-button {
+  .qq-upload-button {
+    width: 100%;
+    padding: 0px;
+    border-bottom: 0px;
+
+    span {
+      position: absolute;
+      right: 0px;
+      left: 0px;
+      top: 50%;
+      margin-top: -0.5em;
+      text-align: center;
+    }
+  }
+}

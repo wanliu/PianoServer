@@ -28,6 +28,7 @@
 //= require nprogress-turbolinks
 //= require china_city/jquery.china_city
 //= require photoswipe
+//= require picturefill.all
 //= require lib/socketcluster-client
 //= require lib/user-socket
 //= require lib/underscore
@@ -39,6 +40,7 @@
 //= require _common/local-address
 //= require _common/hammer
 //= require _common/util
+//= require _common/image-scale
 //= require_tree ./application
 //= require_tree ./chats
 //= require_tree ./orders
