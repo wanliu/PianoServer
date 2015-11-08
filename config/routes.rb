@@ -28,6 +28,8 @@ Rails.application.routes.draw do
 
   resources :feedbacks
 
+  resources :after_registers
+
   concern :messable do
     resources :messages
   end
@@ -64,6 +66,7 @@ Rails.application.routes.draw do
   match "admins", to: "admins/dashboards#index", via: :get
 
   namespace :admins do
+    resources :settings, path: 'settings/key', only: [:show, :update], constraints: {id: /[\S]+/}
     resources :dashboards
     resources :accounts, except: [:new, :edit] do
       collection do

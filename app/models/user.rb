@@ -14,6 +14,7 @@ class User < ActiveRecord::Base
   belongs_to :shop
 
   has_one :owner_shop, class_name: 'Shop', foreign_key: 'owner_id'
+  has_one :status, as: :stateable, dependent: :destroy
   has_many :chats, foreign_key: 'owner_id'
   has_many :locations
 

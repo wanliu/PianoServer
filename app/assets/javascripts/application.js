@@ -29,6 +29,8 @@
 //= require china_city/jquery.china_city
 //= require photoswipe
 //= require picturefill.all
+//= require best_in_place
+//= require lib/best_in_place_form
 //= require lib/socketcluster-client
 //= require lib/user-socket
 //= require lib/underscore
@@ -36,6 +38,7 @@
 //= require lib/date_iso8601_polyfill
 //= require lib/pastemedia
 //= require lib/ajax_status
+//= require _common/fileuploader
 //= require _common/qrcode
 //= require _common/local-address
 //= require _common/hammer
