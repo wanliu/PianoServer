@@ -29,6 +29,8 @@
 //= require lib/bootstrap-select
 //= require lib/ace_editor
 //= require lib/ajax_status
+//= require utils/alert-dismiss
+//= require _common/fileuploader
 //= require _common/paginate
 //= require _common/qrcode
 //= require bootsy
