@@ -1,3 +1,12 @@
-<div>
-  index here
+{% include "style" %}
+<div class="wrapper">
+  <img class="hgeader-bg" src="{{ images['bg'] }}">
+  <img class="header-img-pc" src="{{ images['s12'] }}">
+  <img class="header-img-mobile" src="{{ images['sj2'] }}">
+</div>
+
+<div class="subject-promotions" >
+  {% comment %}调用其它模板，目前通进设置 Liquid::Template.file_system 使其指向 .sites/system/subjects 下{% endcomment %}
+  {% comment %} 注意 collection 必需是 Array 对象  {% endcomment %}
+  {% include 'promotion_2col' for demo %}
 </div>
