@@ -1,0 +1,20 @@
+<div class="col-sm-12">
+<div class="page-header">
+  <h1>快速开店<small> 请选择你的经营品类</small></h1>
+</div>
+
+<%= panel_row column_class: 'col-sm-3' do %>
+  <%= panel '奶粉' %>
+  <%= panel '纸尿库' %>
+  <%= panel '营养辅食' %>
+  <%= panel '玩具' %>
+  <%= panel '孕婴用品' %>
+
+<% end %>
+
+<hr />
+<div class="pull-right">
+  <%= link_to "以后再说", after_register_path(:distributor, step: :skip), class: 'btn btn-default btn-lg', method: :put %>
+  <%= link_to "下一步", after_register_path(:distributor, step: :category), class: 'btn btn-primary btn-lg', method: "PUT" %>
+</div>
+</div>

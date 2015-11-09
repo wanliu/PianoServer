@@ -1,12 +1,12 @@
 <div class="col-sm-12">
 <div class="page-header">
-  <h1>快速开店<small> 行业选择</small></h1>
+  <h1>快速开店<small> 选择你的主营品牌</small></h1>
 </div>
 
+<div class="brand-list clearfix">
+  <%= render "brand", collection: @brands %>
+</div>
 
-<%= panel_row column_class: 'col-sm-6' do %>
-  <%= render "industry", collection: Industry.all %>
-<% end %>
 <div class="pull-right">
   <%= button "以后再说", after_register_path(:distributor), context: :default, class: 'btn-lg' %>
   <%= button "下一步", after_register_path(:distributor), context: :primary, class: 'btn-lg' %>

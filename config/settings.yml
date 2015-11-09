@@ -63,3 +63,6 @@ mail:
   domain: http://m.wanliu.biz/
   url_host: http://m.wanliu.biz
   url_port: 80
+baidu:
+  ditu:
+    secret: gUvTx8taqFAAD8PIN9TGacNG

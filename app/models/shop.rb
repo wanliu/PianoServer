@@ -13,7 +13,8 @@ class Shop < ActiveRecord::Base
   has_many :items
   has_many :members, class_name: "User", foreign_key: 'shop_id'
 
-  validates :title, presence: true
+  validates :title, :phone, :name, presence: true
+  validates :description, length: { minimum: 4 }
 
   store_accessor :settings, :greetings
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151103021828) do
+ActiveRecord::Schema.define(version: 20151108141419) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -388,7 +388,7 @@ ActiveRecord::Schema.define(version: 20151103021828) do
   create_table "statuses", force: :cascade do |t|
     t.integer  "stateable_id"
     t.string   "stateable_type"
-    t.integer  "state"
+    t.string   "state"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
   end
@@ -469,6 +469,7 @@ ActiveRecord::Schema.define(version: 20151103021828) do
     t.integer  "sex",                    default: 1
     t.integer  "shop_id"
     t.integer  "user_type",              default: 0
+    t.integer  "industry_id"
   end
 
   add_index "users", ["authentication_token"], name: "index_users_on_authentication_token", unique: true, using: :btree

@@ -1,0 +1,9 @@
+<% if current_user.state.nil? or current_user.state == "select" %>
+  <%= render "after_registers/#{@user_type}/step1" %>
+<% elsif current_user.state == "industry" %>
+  <%= render "after_registers/#{@user_type}/step2" %>
+<% elsif current_user.state == "category" %>
+  <%= render "after_registers/#{@user_type}/step3" %>
+<% elsif current_user.state == "brand" %>
+  <% redirect_to root_path %>
+<% end %>

@@ -1,6 +1,6 @@
 class Status < ActiveRecord::Base
   belongs_to :stateable, polymorphic: true
 
-  enum state: [ :pending, :done, :deleted ]
+  # enum state: [ :pending, :done, :deleted ]
 
 end
