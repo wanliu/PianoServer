@@ -17,6 +17,17 @@ class Brand < ActiveRecord::Base
 
   attr_reader :title
 
+  scope :with_category, -> (category_id) do
+    if category_id.nil?
+      all
+    else
+      joins(:categories)
+        .group("brands.id")
+        .where("categories.id = ?", category_id)
+    end
+  end
+
+
   def title
     [name, chinese_name].compact.join('/')
   end

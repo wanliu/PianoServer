@@ -3,8 +3,10 @@
   <h1>快速开店<small> 请选择你的经营品类</small></h1>
 </div>
 
-<%= panel_row column_class: 'col-sm-3' do %>
-  <%= panel '奶粉' %>
+<%= panel_row column_class: 'col-sm-3', class: 'category-list' do %>
+  <%= link_to filter_brands_path(category_id: 3080) do %>
+    <%= panel '奶粉' %>
+  <% end %>
   <%= panel '纸尿库' %>
   <%= panel '营养辅食' %>
   <%= panel '玩具' %>
@@ -18,3 +20,16 @@
   <%= link_to "下一步", after_register_path(:distributor, step: :category), class: 'btn btn-primary btn-lg', method: "PUT" %>
 </div>
 </div>
+
+<script type="text/javascript">
+  $(".category-list>a").click(function(e) {
+    e.preventDefault();
+
+    var url = $(this).attr('href');
+    $.ajax({
+      url: url
+    }).then(function(resp) {
+      resp['results']
+    })
+  })
+</script>

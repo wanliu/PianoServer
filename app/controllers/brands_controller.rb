@@ -12,6 +12,13 @@ class BrandsController < ApplicationController
     }
   end
 
+  def filter
+    @brands = Brand.with_category(params[:category_id])
+    render json: {
+      results: @brands
+    }
+  end
+
   def update
     @brand = Brand.find(params[:id])
     @brand.punch(request)

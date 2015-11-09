@@ -8,7 +8,7 @@ class AfterRegistersController < ApplicationController
 
   def show
     case @current_user.user_type
-    when NilClass, "distributr"
+    when nil, "distributr"
       distributor_steps
     when "consumer"
       consumer_steps
@@ -36,11 +36,11 @@ class AfterRegistersController < ApplicationController
 
   def distributor_steps
     case @current_user.state
-    when "select", NilClass
-      @shop = Shop.new(owner_id: @current_user.id)
-    when "shop", nil
+    when "select", nil
     when "industry"
-      @current_user.industry = Industry.find_by(name: params[:industry])
+      @shop = Shop.new(owner_id: @current_user.id)
+    when "shop"
+      @shop = Shop.new(owner_id: @current_user.id)
     when "category"
     when "brand"
       @brands = Brand.first(100)
@@ -53,10 +53,12 @@ class AfterRegistersController < ApplicationController
     case params[:step]
     when "select", NilClass
       true
+    when "industry"
+      true
     when "shop"
       @shop = Shop.create shop_params
+      ShopService.build @shop.name
       return @shop.valid?
-    when "industry"
     when "category"
     when "brand"
     when NilClass

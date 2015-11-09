@@ -6,7 +6,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :brands, only: [ :index, :update ]
+  resources :brands, only: [ :index, :update ] do
+    collection do
+      get :filter
+    end
+  end
 
   namespace :authorize do
     get :weixin
@@ -179,6 +183,7 @@ Rails.application.routes.draw do
   match ':shop_name', :to => 'shops#show_by_name', constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ }, via: [ :get ], as: :shop_site
 
   match "create_shop", to: "shops#create", via: [:post], as: :create_shop
+  match "update_name", to: "shops#update_name", via: [:put], as: :update_shop
 
   resources :shops, path: '/', only: [], constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do
     member do

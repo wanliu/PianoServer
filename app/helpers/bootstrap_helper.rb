@@ -24,13 +24,40 @@ module BootstrapHelper
     r "<span class=\"caret\"></span>"
   end
 
-  def group_with_errors(object, name, helper, options = {})
+  def group_with_errors(object, name, helper, options = {}, &block)
+  #   error = object.errors[name]
+  #   error_name = t('attributes.' + name.to_s)
+  #   valid = error.present?
+    layout = options.delete(:layout) || 'horizontal'
+    if layout == 'horizontal'
+      group_by_horizontal(object, name, helper, options, &block)
+    else
+      group_by_normal(object, name, helper, options, &block)
+    end
+    # label_content = helper.label name, class: "col-sm-2 control-label" do
+    #   if valid
+    #     "#{error_name}<div class=\"error-tip\">#{error_name}#{error.join(' ')}</div>"
+    #   else
+    #     "#{error_name}"
+    #   end.html_safe
+    # end
+
+    # s "<div class=\"form-group#{" has-error has-feedback" if valid} #{options[:group_class]} \">"
+    #   s "#{label_content}"
+    #   s "<div class=\"col-sm-10\">"
+    #     s "#{yield}"
+    #     s "#{error_block if valid}"
+    #   s "</div>"
+    # s "</div>"
+    # nil
+  end
+
+  def group_by_horizontal(object, name, helper, options = {}, &block)
     error = object.errors[name]
     error_name = t('attributes.' + name.to_s)
     valid = error.present?
 
-    options[:group_class]
-    label_content = helper.label name, class: "col-sm-2 control-label" do
+    label_content = helper.label name, options[:title], class: "col-sm-2 control-label" do
       if valid
         "#{error_name}<div class=\"error-tip\">#{error_name}#{error.join(' ')}</div>"
       else
@@ -46,6 +73,34 @@ module BootstrapHelper
       s "</div>"
     s "</div>"
     nil
+  end
+
+  def group_by_normal(object, name, helper, options = {}, &block)
+    error = object.errors[name]
+    error_name = t('attributes.' + name.to_s)
+    valid = error.present?
+
+    label_content = helper.label name, options[:title], class: "control-label"
+    error_label = "<span class=\"help-block text-left\">#{error_name}#{error.join(' ')}</span>".html_safe
+
+    s "<div class=\"form-group#{" has-error has-feedback" if valid} #{options[:group_class]} \">"
+      s "#{label_content}"
+      group_with_input_group options do
+        s "#{yield}"
+      end
+      s "#{error_label if valid}"
+    s "</div>"
+    nil
+  end
+
+  def group_with_input_group(options = {}, &block)
+    if options[:input_group]
+      s  "<div class=\"input-group\">"
+        yield
+      s  "</div>"
+    else
+      yield
+    end
   end
 
   def group_with_property_errors(object, property, helper, options = {})

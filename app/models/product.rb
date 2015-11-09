@@ -27,7 +27,7 @@ class Product
   attribute :additional_fields, Hash
 
   def image
-    @avatar = Flf.avatar
+    @avatar = self.avatar
     {
       avatar_url: @avatar + '!avatar',
       preview_url: @avatar

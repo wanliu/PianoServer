@@ -2,12 +2,29 @@ class Admins::BrandsController < Admins::BaseController
   before_action :set_brand,  only: [ :show ]
 
   def index
+
     @brands =
       (if params[:q].present?
-        Brand.search(params[:q]).records
+        Brand.search(params[:q]).records.page(params[:page]).per(100)
       else
-        Brand
-      end).page(params[:page]).per(100)
+        query = {
+          aggs: { all_brands: { terms: {field: "brand_id", size: 100}}}
+        }
+        results = Product.search query
+        buckets = results.response.aggregations.all_brands.buckets
+
+        ids = buckets.map { |b| "(#{b['key']}, #{b['doc_count']})" }.join(',')
+        sql = <<-SQL
+          SELECT b.*
+          FROM brands b
+          JOIN (
+            VALUES
+              #{ids}
+          ) AS x (id, ordering) on b.id = x.id
+          ORDER BY x.ordering desc
+        SQL
+        Brand.find_by_sql sql.squish
+      end)
 
     respond_to do |format|
       format.html { render :index }
