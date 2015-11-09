@@ -16,8 +16,14 @@
         </ul>
       <% end %>
     </li>
-    <li><%= link_to '单位管理', admins_units_path %></li>
-    <li><%= link_to '商品中心', admins_products_path %></li>
+    <li><%= link_to '商品中心', admins_products_path %>
+      <ul class="nav">
+        <li><%= link_to '属性', admins_properties_path %></li>
+        <li><%= link_to '单位', admins_units_path %></li>
+        <li><%= link_to '品牌', admins_brands_path %></li>
+      </ul>
+    </li>
+
     <li><%= link_to '活动', admins_promotions_path %></li>
     <li><%= link_to '消息', admins_messages_path %></li>
     <li><%= link_to '用户反馈', admins_feedbacks_path %></li>
@@ -29,7 +35,7 @@
     var currentUrl = location.pathname;
     var maxLength = 0;
     var activeElem = null;
-    $('.nav-sidebar>li').each(function(i, elem) {
+    $('.left-sidebar .nav>li').each(function(i, elem) {
       var $href = $(elem).find('a');
       if (currentUrl.startsWith($href.attr('href'))) {
         if (maxLength < $href.attr('href').length) {

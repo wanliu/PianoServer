@@ -1,0 +1,13 @@
+<%= form_for @brand, url: admins_brands_path, layout: 'basic' do |f| %>
+  <div class="image-container">
+    <%= upload_button :brand, :image, url: upload_admins_brands_path, image: { class: 'scale', data: { align: "center", scale: "best-fill" }} %>
+  </div>
+  <%= f.text_field :name %>
+  <%= f.text_field :chinese_name %>
+  <%= f.text_area :description %>
+  <%= f.submit %>
+<% end %>
+
+<script type="text/javascript">
+  $("img.scale").imageScale();
+</script>

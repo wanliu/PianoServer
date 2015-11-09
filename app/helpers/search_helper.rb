@@ -9,9 +9,15 @@ module SearchHelper
       method: :get
     })
 
+    input_options = options.delete(:input)
+    group_options = options.delete(:group)
+
+    input_options[:class] = [input_options[:class]] + [ "form-control" ]
+
+
     form_tag url, options do
-      input_group do
-        search_field_tag(:q, options[:value], class: "form-control") +
+      input_group group_options do
+        search_field_tag(:q, options[:value], input_options) +
         addon do
           icon :search
         end

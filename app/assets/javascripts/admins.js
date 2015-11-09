@@ -18,10 +18,12 @@
 //= require best_in_place
 //= require select2
 //= require select2_locale_zh-CN
+//= require picturefill.all
 //= require _common/fileuploader
 //= require _common/hammer
 //= require _common/util
 //= require _common/save_on_change
+//= require _common/image-scale
 //= require lib/socketcluster-client
 //= require lib/user-socket
 //= require lib/underscore
