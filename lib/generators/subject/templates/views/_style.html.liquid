@@ -99,6 +99,8 @@ body{
   padding: 2px 5px;
 }
 
+.promotion .action-detail .snap-ready,
+.promotion .action-detail .snap-end,
 .promotion .action-detail .snap-up{
   text-align: center;
   background-color: #ff2b2b;
@@ -107,6 +109,13 @@ body{
   display: inline-block;
   font-weight: 700;
   padding: 4px 8px;
+}
+
+.promotion .action-detail .snap-ready{
+  background-color: #f60;
+}
+.promotion .action-detail .snap-end{
+  background-color: #666;
 }
 
 .promotion .action-detail .sales-mount{
@@ -140,13 +149,14 @@ body{
   color: white;
 }
 .promotions-list .promotion .price-board .snap-end{
-  background-color: #000;
+  background-color: #666;
 }
 .promotions-list .promotion .price-board .snap-ready{
   background-color: #f60;
 }
 
 .promotions-list .promotion .price-board .prices {
+  text-overflow: clip;
   font-size: 1em;
 }
 
@@ -207,7 +217,7 @@ body{
 }
 
 .subject-promotions .promotion .promotion-title {
-  height: 3em;
+  height: 2.8em;
 }
 
 .subject-promotions .promotion .promotion-image {
@@ -217,10 +227,6 @@ body{
 .subject-promotions .promotion .prices .origin-price {
   color: #999999;
   font-size: 18px;
-}
-
-.subject-promotions .promotion .promotion-title {
-  height: 3em;
 }
 
 .subject-promotions .promotion{
@@ -279,6 +285,10 @@ body{
 }
 
 @media (max-width: 484px) {
+  .container{ /*手机上两端padding减少*/
+    padding-left: 10px;
+    padding-right: 10px;
+  }
   .subject-promotions .promotion {
     height: 180px;
   }
