@@ -20,14 +20,20 @@
     </div>
    </div>
   </a>
-  <a href="{{ promotion.shop_name }}">
+  {% if promotion.shop_name %}
+    <a href="{{ promotion.shop_name }}">
+  {% else %}
+    <a href="javascript:void(0)">
+  {% endif %}
     <div class="provider-wrap">
       <div class="provider">
         <div class="provider-name">
         {% if promotion.shop_title %}
           {{ promotion.shop_title }}
-        {% else %}                    
+        {% elsif promotion.shop_name %}
           {{ promotion.shop_name }}
+        {% else %}
+          活动商家
         {% endif %}
           <div>{{ promotion.created_at | date: '%Y/%m/%d %H:%M' }}</div>
         </div>
