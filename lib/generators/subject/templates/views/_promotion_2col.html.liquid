@@ -13,7 +13,9 @@
                   <span class="origin-price"><s>￥{{ promotion_2col.product_price }}</s></span>
                 </div>
                 <div class="action-detail">
-                {% if promotion_2col.status == 'Published' or promotion_2col.status == 'Active' %}
+                {% if promotion_2col.status == 'Published'%}
+                  <span class="snap-up">即将开始</span>
+                {% elsif promotion_2col.status == 'Active' %}
                   <span class="snap-up">马上抢购</span>
                 {% else %}
                   <span class="snap-up" style="background:#666">活动结束</span>
