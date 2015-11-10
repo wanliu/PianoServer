@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+
+  resources :industry, only: [ :show ]
   mount Bootsy::Engine => '/bootsy', as: 'bootsy'
   resources :subjects, except: [:index, :new, :edit] do
     member do
@@ -87,6 +89,8 @@ Rails.application.routes.draw do
     resources :feedbacks
     resources :attachments
     resources :industries do
+      concerns :templable, templable_type: 'Industry', parent_type: 'Industry'
+
       collection do
         post :sync_es_brands
         post :sync_es_categories
