@@ -7,6 +7,8 @@ app:
   description:
 admin:
   title: 万流工作平台
+  register:
+    open: false
 system:
   agent:
     id: 0

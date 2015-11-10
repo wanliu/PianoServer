@@ -4,9 +4,12 @@ class Admin < ActiveRecord::Base
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable,
+  options = [ :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
-         :authentication_keys => [:login]
+         :authentication_keys => [:login]]
+
+  options.delete :registerable unless Settings.admin.register.open
+  devise *options
 
   has_many :activities, as: :recipient
 
