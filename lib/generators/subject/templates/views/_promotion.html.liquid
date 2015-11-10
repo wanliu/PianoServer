@@ -7,11 +7,11 @@
    </p>
    <div class="price-board clearfix">
     {% if  promotion.status == 'Published' %}
-      <span class="snap-up">暂未开始</span>
+      <span class="snap-ready">未开始</span>
     {% elsif promotion.status == 'Active' %}
-      <span class="snap-up">马上抢购</span>
+      <span class="snap-up">抢购</span>
     {% else %}
-      <span class="snap-end">活动结束</span>
+      <span class="snap-end">结束</span>
     {% endif %}
 
     <div class="prices">
