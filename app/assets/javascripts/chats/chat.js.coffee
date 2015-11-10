@@ -129,21 +129,23 @@ class @Chat
       'start': start,
       'step': @options.maxMessageGroup
     }, (err, messages) =>
-      return if err || messages.length == 0
+      return if err
 
-      messages.reverse()
+      if messages.length != 0
 
-      @_batchInsertMessages(messages, 'up')
+        messages.reverse()
+
+        @_batchInsertMessages(messages, 'up')
+        # for message in messages
+        #     @_insertMessage(message, 'up')
+
+        # if messages.length < @options.maxMessageGroup
+        #     @$messageList.find('.load-more').remove();
+        # else
+
+        @earlyTime = messages[messages.length - 1].time
+
       @firstLoad = false
-      # for message in messages
-      #     @_insertMessage(message, 'up')
-
-      # if messages.length < @options.maxMessageGroup
-      #     @$messageList.find('.load-more').remove();
-      # else
-
-      @earlyTime = messages[messages.length - 1].time
-
       callback.call(@, messages) if $.isFunction(callback)
 
   setTable: (@table) ->
