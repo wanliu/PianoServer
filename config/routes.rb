@@ -1,6 +1,15 @@
 Rails.application.routes.draw do
 
   resources :industry, only: [ :show ]
+  scope :cart do
+    get "/", to: "carts#index", as: :mycart
+
+    post "/", to: "carts#add"
+    delete "/:id", to: "carts#remove"
+
+    post "commit", to: "carts#commit"
+  end
+
   mount Bootsy::Engine => '/bootsy', as: 'bootsy'
   resources :subjects, except: [:index, :new, :edit] do
     member do

@@ -33,7 +33,7 @@
     </div>
   </div>
 
-  <%= render partial: "sale_options", with: @item.category %>
+  <%= render partial: "sale_form", with: @item.category, locals: { item: @item, cartitem: @cartitem } %>
 
   <div class='item-shop-infos'>
     <div class="media ">
@@ -124,7 +124,7 @@
       <% if @shop.owner_id == current_user.id %>
         <div class="contact-button chat">您的店铺</div>
       <% else %>
-        <%= button_to '洽谈', item_chats_path(@item.id, shop_id: @shop.id), form_class: 'contact-button chat' %>
+        <%= button_to '洽谈', item_chats_path(@item,  shop_id: @shop.id), form_class: 'contact-button chat' %>
       <% end %>
     </div>
   </div>

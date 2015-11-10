@@ -23,6 +23,8 @@ class ItemsController < ApplicationController
     @properties = normal_properties(@category.with_upper_properties)
     @inventory_properties = inventory_properties(@category.with_upper_properties)
 
+    @cartitem = CartItem.new(cartable: @item, supplier: @shop, title: @item.title, image: @item.image.url(:cover))
+
     # if Settings.dev.feature.inventory_combination and @inventory_properties.present?
     #   @inventory_combination = combination_properties(@item, @inventory_properties)
     #   @stocks_with_index = {}

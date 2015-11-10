@@ -19,6 +19,9 @@ class Item < ActiveRecord::Base
 
   mount_uploaders :images, ItemImageUploader
 
+  store_accessor :properties, :default_quantity
+
+
   # dynamic_property prefix: 'property'
 
   validates :shop_category_id, :category_id, :shop_id, :brand_id, :sid, presence: true

@@ -14,6 +14,7 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_meta_user_data
   before_action :current_subject
+  before_action :set_cart
   before_action :prepare_system_view_path
   before_action :set_locale
 
@@ -80,6 +81,10 @@ class ApplicationController < ActionController::Base
 
   def current_subject
     @subject ||= Subject.availables.first
+  end
+
+  def set_cart
+    @cart = current_anonymous_or_user.cart
   end
 
   def prepare_system_view_path

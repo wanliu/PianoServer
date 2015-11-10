@@ -1,8 +1,6 @@
-<dt>
-  <%= property.title %>
-</dt>
-<dd>
-  <ul class="nav nav-pills">
+<div class="form-group col-sm-12">
+  <%= label_tag property.title %>
+  <ul class="nav nav-pills swatch_select select-<%= property.name %>">
 
     <% config.each do |key, cfg| %>
       <% if cfg["check"] == "1" %>
@@ -10,7 +8,11 @@
       <% end %>
     <% end %>
   </ul>
-</dd>
+</div>
 <script type="text/javascript">
-  $("")
+  $(".swatch_select.select-<%= property.name %>>li>a").click(function(e) {
+    e.preventDefault();
+    $(e.currentTarget).parents("ul").find(".active").removeClass("active");
+    $(e.currentTarget).parent().addClass("active");
+  });
 </script>

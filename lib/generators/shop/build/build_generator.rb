@@ -20,6 +20,7 @@ class Shop::BuildGenerator < Rails::Generators::NamedBase
     copy_file "views/_category.html.liquid", "#{shop_path}/views/_category.html.liquid"
     copy_file "views/_item.html.liquid", "#{shop_path}/views/_item.html.liquid"
     copy_file "views/_shop_category_list.html.liquid", "#{shop_path}/views/_shop_category_list.html.liquid"
+    copy_file "views/shops/show.html.liquid", "#{shop_path}/views/shops/show.html.liquid"
     copy_file "views/items/_show.html.liquid", "#{shop_path}/views/items/_show.html.liquid"
 
     create_shop_category name: 'product_category', title: '商品分类', category_type: 'builtin'
