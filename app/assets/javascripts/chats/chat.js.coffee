@@ -172,10 +172,9 @@ class @Chat
     text = @getText()
     @sendBtn.blur()
 
-    if text.length > 0
-
+    unless /^\s+$/.test(text)
       if window.metadata.debug
-        @_insertMessage(text);
+        @_insertMessage(text)
       else
         @userSocket.publish(@channelId, {
           'content': text,
