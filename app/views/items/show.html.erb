@@ -61,7 +61,7 @@
       <p class='brand col-xs-6 col-sm-6 col-md-6'>品牌: <% @item.brand.try :name %></p>
       <p class='sale-count col-xs-6 col-sm-6 col-md-6 text-right'>总销量：0</p>
     </div>
-    <p class='inventory col-xs-6 col-sm-6 col-md-6 '>库存数量：充足</p>
+    <p class='inventory col-xs-6 col-sm-6 col-md-6 '>库存数量：<%= @item.current_stock.to_i %></p>
   </div>
 
   <!-- <div>商品属性位置</div> -->
