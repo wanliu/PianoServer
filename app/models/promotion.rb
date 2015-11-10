@@ -45,4 +45,8 @@ class Promotion < ActiveResource::Base
   def punches
     Punch.where("punchable_type = ? and punchable_id = ?", "Promotion", self.id)
   end
+
+  def shop
+    Shop.where(id: shop_id).first
+  end
 end
