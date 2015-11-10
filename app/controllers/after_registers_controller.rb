@@ -40,7 +40,7 @@ class AfterRegistersController < ApplicationController
     when "industry"
       @shop = Shop.new(owner_id: @current_user.id)
     when "shop"
-      @shop = Shop.new(owner_id: @current_user.id)
+      @industry = @current_user.industry
     when "category"
     when "brand"
       @brands = Brand.first(100)

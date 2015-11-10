@@ -4,14 +4,13 @@
 </div>
 
 <%= panel_row column_class: 'col-sm-3', class: 'category-list' do %>
-  <%= link_to filter_brands_path(category_id: 3080) do %>
-    <%= panel '奶粉' %>
+  <% if @industry.category %>
+    <% @industry.category.children.each do |category| %>
+      <%= link_to filter_brands_path(category_id: category.id ) do %>
+        <%= panel category.title %>
+      <% end %>
+    <% end %>
   <% end %>
-  <%= panel '纸尿库' %>
-  <%= panel '营养辅食' %>
-  <%= panel '玩具' %>
-  <%= panel '孕婴用品' %>
-
 <% end %>
 
 <hr />

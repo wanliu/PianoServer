@@ -3,6 +3,7 @@ class Industry < ActiveRecord::Base
   tracked
 
   has_many :templates, as: :templable
+  belongs_to :category
 
   class_attribute :default_templates
 
