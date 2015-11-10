@@ -73,6 +73,13 @@
         newCategory = new NewShopCategory($('.shop-category-list .new-shop-category')[0], shop_category, createCategoryUrl),
         $modal = $('#category-modal');
 
+    $('.shop-category-list .shop-category img').each(function(i, image) {
+      image.onerror = function () {
+        $this = $(this)
+        $this.height($this.parent().width())
+      };
+    });
+
     $('.shop-category-list .shop-category').each(function(i, e) {
       var $target = $(e),
           status = $target.data('status');
