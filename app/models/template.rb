@@ -1,4 +1,6 @@
 class Template < ActiveRecord::Base
+  include PublicActivity::Model
+  tracked
 
   mattr_accessor :available_variables
   mattr_accessor :constants_variables

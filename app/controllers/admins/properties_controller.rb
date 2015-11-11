@@ -1,6 +1,10 @@
 class Admins::PropertiesController < Admins::BaseController
   before_action :get_property, only: [:show, :edit, :update, :destroy]
 
+  def index
+    @properties = Property.order(id: :asc).page(params[:page]).per(params[:per])
+  end
+
   def new
     @property = Property.new
   end

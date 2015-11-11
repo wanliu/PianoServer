@@ -174,10 +174,9 @@ class @Chat
     text = @getText()
     @sendBtn.blur()
 
-    if text.length > 0
-
+    unless /^\s+$/.test(text)
       if window.metadata.debug
-        @_insertMessage(text);
+        @_insertMessage(text)
       else
         @userSocket.publish(@channelId, {
           'content': text,
@@ -282,13 +281,16 @@ class @Chat
   _buildTextMessage: (text = null, context = {}) ->
     {prefixSection, senderAvatar, senderName, toAddClass, id, senderId, content, senderLogin, type, time} = context
 
+    text ||= content
+    text = text.replace(/(<\/?(?!br)[^>\/]*)\/?>/gi,'').replace(/\s/g, '')
+
     """
       #{prefixSection}
       <div class="chat #{toAddClass}" data-message-id="#{id}">
         <img src="#{senderAvatar}" />
         #{senderName}
         <div class="bubble #{toAddClass}">
-          <p class="content">#{text || content}</p>
+          <p class="content">#{text}</p>
         </div>
       </div>
     """

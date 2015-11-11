@@ -33,7 +33,8 @@ class @Linkmen
           senderLogin += -1 * senderId
 
         if content.length > 0
-          message = content
+          message = content.replace(/(<\/?(?!br)[^>\/]*)\/?>/gi,'')
+            .replace(/<(\/*br\/*)>/gi, '[换行]')
 
         for key of attachs
           message += '[图片]'
