@@ -1,0 +1,34 @@
+<div class="sign-container">
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+    <%= devise_error_messages! %>
+    
+    <div class="sign-input-group-mobile">
+      <%= icon(:user)%>
+      <%= f.text_field :username, autofocus: true, placeholder: '输入账户' %>
+    </div>
+
+    <div class="sign-input-group-mobile">
+      <%= icon(:envelope)%>
+      <%= f.email_field :email, placeholder: '输入邮箱' %>
+    </div>
+
+    <div class="sign-input-group-mobile">
+      <%= icon(:phone)%>
+      <%= f.text_field :mobile, placeholder: '输入手机' %>
+    </div>
+
+    <div class="sign-input-group-mobile">
+      <%= icon(:lock)%>
+      <%= f.password_field :password, autocomplete: "off", placeholder: '输入密码' %>
+    </div>
+
+    <div class="sign-input-group-mobile">
+      <%= icon(:lock)%>
+      <%= f.password_field :password_confirmation, autocomplete: "off", placeholder: '再次输入密码' %>
+    </div>
+
+    <div class="text-center">
+      <%= f.submit "马上注册", class: 'sign-btn' %>
+    </div>
+  <% end %>
+</div>

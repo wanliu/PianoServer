@@ -2,6 +2,7 @@ class Users::SessionsController < Devise::SessionsController
   include TokenAuthenticatable
   include ApplicationHelper
 
+  layout "sign"
   # skip_before_action :verify_signed_out_user, only: :destroy
 
   respond_to :json, :html
@@ -9,7 +10,7 @@ class Users::SessionsController < Devise::SessionsController
   TYPES = %w(mobile email name)
   helper ApplicationHelper
 
-  # include Mobylette::RespondToMobileRequests
+  include Mobylette::RespondToMobileRequests
   # skip_before_filter :verify_authenticity_token
   # before_filter :configure_sign_in_params, only: [:create]
 

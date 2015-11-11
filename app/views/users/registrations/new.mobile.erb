@@ -1,0 +1,16 @@
+<!-- 注册页面 -->
+<%= content_for :module, :sign %>
+
+<header>
+  <%= icon('menu-left back-btn')%>
+  <img src="http://static.bootcss.com/www/assets/img/codeguide.png" class="header-img">
+</header>
+
+<%= render 'regist' %>
+
+
+<script type="text/javascript">
+  $('.back-btn').on('click',function(){
+    Turbolinks.visit('/users/sign_in');
+  });
+</script>

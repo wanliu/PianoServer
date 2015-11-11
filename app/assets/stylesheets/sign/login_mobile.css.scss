@@ -1,0 +1,78 @@
+// 手机登陆界面
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px white inset;
+}
+body.sign{
+  padding: 0;
+  background: #fff;
+  
+  header{
+    position: relative;
+    .header-img{
+      min-height: 100px;
+      width: 100%;
+      display: block;
+      margin-bottom: 5px;
+    }
+    .back-btn{
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: #fff;
+      font-size: 1.4em;
+    }
+  }
+  .sign-container{
+    padding: 0 15px;
+    color: #666;
+
+    input[type='checkbox']{
+      vertical-align: text-bottom;
+      margin: 0;
+    }
+
+    .sign-input-group-mobile{
+      position: relative;
+      padding: 10px;
+      margin: 10px 0;
+      border-bottom: 1px solid #ddd;
+
+      .glyphicon{
+        position: absolute;
+        top: 11px;
+        font-size: 1.4em;
+      }
+
+      input{
+        width: 100%;
+        padding-left: 38px;
+        border:none;
+        outline: none;
+      }
+    }
+    .remenber-wrap{
+      width: 60px;
+      margin-left: -10px;
+    }
+    label,
+    .link{
+      font-weight: 100;
+      color: #666;
+      display: inline-block;
+      text-decoration: none;
+
+    }
+    .sign-btn{
+      border: none;
+      outline: none;
+      width: 100%;
+      text-align: center;
+      background-color:#f10035;
+      color: #fff;
+      line-height:38px;
+      margin: 15px 0;
+      border-radius: 3px;
+    }
+
+  }
+}
