@@ -54,7 +54,7 @@ class SubjectGenerator < Rails::Generators::NamedBase
       subject.templates.create(name: 'index', filename: index_template, type: 'PageTemplate')
       subject.templates.create(name: 'footer', filename: footer_template, type: 'PageTemplate')
       subject.templates.create(name: 'promotion', filename: promotion_template, type: 'PageTemplate')
-      subject.templates.create(name: 'promotion_2col_template', filename: homepage_template, type: 'PageTemplate')
+      subject.templates.create(name: 'promotion_2col_template', filename: promotion_2col_template, type: 'PageTemplate')
       subject.templates.create(name: 'homepage_header', filename: homepage_header_template, type: 'PageTemplate')
       subject.templates.create(name: 'style', filename: style_template, type: 'PageTemplate')
     end
