@@ -1,1 +1,28 @@
 // pc登陆界面
+body.sign-pc{
+  .background-img{
+    position: absolute;
+    display: block;
+    left: 0;
+    top: 50px;
+    width: 100%;
+    z-index: -1;
+  }
+
+  .sign-container{
+    background-color: #fff;
+    width: 320px;
+    box-shadow: 0 0 10px #333;
+    padding: 10px;
+    float: right;
+    input{
+      width: 100%;
+      outline: none;
+      border: none;
+    }
+    .glyphicon{
+      position: absolute
+
+    }
+  }
+}

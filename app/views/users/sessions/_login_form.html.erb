@@ -1,11 +1,11 @@
 <div class="sign-container">
   <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-    <div class="sign-input-group-mobile">
+    <div class="sign-input-group">
       <%= icon(:user)%>
       <%= f.text_field :login, autofocus: true, placeholder: '输入账户' %>
     </div>
 
-    <div class="sign-input-group-mobile">
+    <div class="sign-input-group">
       <%= icon(:lock)%>
       <%= f.password_field :password, placeholder: '输入密码' %>
     </div>
@@ -13,8 +13,6 @@
     <div class="text-center">
       <%= f.submit "登 陆", class: 'sign-btn' %>
     </div>
-
-
     <% if devise_mapping.rememberable? -%>
       <div class="media">
         <div class="media-right">
