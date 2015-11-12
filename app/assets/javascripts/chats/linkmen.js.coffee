@@ -33,7 +33,6 @@ class @Linkmen
 
   lookupChat: (target_id) ->
     for chat in @chats
-      continue if chat.owner_id == chat.target_id
       return chat if chat.target_id == target_id || chat.owner_id == target_id
 
     return null
@@ -48,7 +47,7 @@ class @Linkmen
       time = Date.parse(chatData.updated_at)
       message = '暂无聊天记录'
 
-      continue if not other_side or not chatData
+      continue if !other_side or !chatData
 
       chat_username = other_side.nickname
       chat_avatar = other_side.avatar_url
@@ -72,12 +71,17 @@ class @Linkmen
     if @sortedArray.length == 0
       @sortedArray.push(object)
     else
+      target_index = -1
+
       for obj, index in @sortedArray
         if object.time < obj.time
           target_index = index
           break
 
-      @sortedArray.splice(target_index, 0, object)
+      if target_index > -1
+        @sortedArray.splice(target_index, 0, object)
+      else
+        @sortedArray.push(object)
 
   getMessage: (record) ->
     { content, attachs } = record
