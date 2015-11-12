@@ -172,9 +172,10 @@ class @Chat
   # private
   _sendMsg: () ->
     text = @getText()
+    text = text.replace(/\n/g, '<br>')
     @sendBtn.blur()
 
-    unless /^\s+$/.test(text)
+    unless /^\s*$/.test(text)
       if window.metadata.debug
         @_insertMessage(text)
       else
