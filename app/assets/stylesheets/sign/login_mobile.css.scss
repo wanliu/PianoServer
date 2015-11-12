@@ -3,10 +3,20 @@ input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0px 1000px white inset;
 }
 
-
 body.sign-mobile{
   padding: 0;
   background: #fff;
+
+  .regist-container{
+    display: none;
+  }
+  .back-btn{
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: #fff;
+    font-size: 1.4em;
+  }
   
   header{
     position: relative;
@@ -16,23 +26,10 @@ body.sign-mobile{
       display: block;
       margin-bottom: 5px;
     }
-    .back-btn{
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      color: #fff;
-      font-size: 1.4em;
-    }
   }
   .sign-container{
     padding: 0 15px;
     color: #666;
-
-    input[type='checkbox']{
-      vertical-align: text-bottom;
-      margin: 0;
-    }
-
     .sign-input-group{
       position: relative;
       padding: 10px;
@@ -50,8 +47,6 @@ body.sign-mobile{
         border: none;
         padding-left: 40px;
       }
-
-
     }
     .remenber-wrap{
       width: 60px;
@@ -63,8 +58,17 @@ body.sign-mobile{
       color: #666;
       display: inline-block;
       text-decoration: none;
-
     }
+    input[type="checkbox"]{
+      margin: 0;
+      vertical-align: text-bottom;
+    }
+    .regist_now{
+      border-right: 1px solid #ddd;
+      padding-right: 10px;
+      margin-right: 10px;
+    }
+    
     .sign-btn{
       border: none;
       outline: none;

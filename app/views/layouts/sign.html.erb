@@ -97,6 +97,16 @@
       <% unless Rails.env.production? %>
         console.log('development version: <%= PianoServer::VERSION %>')
       <% end %>
+      
+      //登陆注册切换
+      $(function(){
+        $('.toggle-btn').on('click',function(e){
+          e.preventDefault()
+          $('.login-container').toggle(0);
+          $('.regist-container').toggle(0);
+        });
+      });
+
     </script>
   </body>
 </html>

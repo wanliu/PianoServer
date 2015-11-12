@@ -1,8 +1,31 @@
 <!-- 电脑登陆页面 -->
+
 <%= content_for :module, 'sign-pc' %>
 
-<img src="http://dailypost.files.wordpress.com/2013/08/img_8488.jpg" class="background-img">
+<nav>
+  <%= link_to root_path, class: "navbar-brand", title: Settings.app.title do %>
+    <img src="<%= image_path('site-logo.png')%>" alt="">
+  <% end %>
+  <span class="welcome-title">欢迎登陆万流网</span>
+</nav>
 
+<!-- 登陆 -->
+<div class="sign-container login-container">
+  <h4>会员登陆</h4>
+  <%= render 'login_form' %>
+  <h5>使用其他方式登陆</h5>
+  <div class="other-link">
+    微信 | QQ | 网易 | 淘宝 | 豆瓣
+  </div>
+</div>
 
-<%= render 'login_form' %>
-<%= render "users/shared/links" %>
+<div class="background-wrap">
+  <img src="http://pic.qiantucdn.com/58pic/11/14/22/61y58PICNui.jpg" class="background-img">
+  <%= render "footer" %>
+</div>
+
+<!-- 注册 -->
+<div class="sign-container regist-container">
+  <h4>会员注册</h4>
+  <%= render '/users/registrations/regist' %>
+</div>
