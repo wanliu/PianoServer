@@ -19,10 +19,10 @@ body.sign-pc{
   margin-bottom: 60px;
   background-position-y: 50px;
   background-repeat: no-repeat;
-  background-size: auto 500px;
+  background-size: auto 550px;
   background-image: image-url("sign-bgi.jpg");
   @media (max-width: 992px){
-    background-size: auto 420px;
+    background-size: auto 500px;
   }
 
   footer {
@@ -34,10 +34,10 @@ body.sign-pc{
   }
   .sign-body{
     position: relative;
-    height: 550px;
+    height: 600px;
     overflow: hidden;
     @media (max-width: 992px){
-      height: 470px;
+      height: 550px;
     }
   }
   nav{
@@ -57,23 +57,6 @@ body.sign-pc{
       color: $gray
     }
   }
-  .container-fuild{
-    position: relative;
-    min-width: 890px;
-    background-image: image-url('sign-bgi.jpg');
-    height: 600px;
-    background-repeat: no-repeat;
-    background-color: #FF812C;
-    overflow: hidden;
-  }
-  .background-img{
-    position: absolute;
-    top: 50px;
-    left: 0;
-    height: 600px;
-    z-index: -1;
-  }
-
   .sign-logo{
     position: absolute;
     top: 150px;
@@ -90,6 +73,9 @@ body.sign-pc{
     background-color: #fff;
     box-shadow: 0 0 10px #333;
     transition: all 0.5s;
+    @media (max-width: 992px){
+      top: 100px
+    }
 
     .sign-input-group{
       position: relative;
