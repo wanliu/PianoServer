@@ -1,4 +1,4 @@
-class OrdersController < ApplicationController
+class IntentionsController < ApplicationController
   PROMPTS = {
     ALL: '$key从 $src 变更为 $dest ',
     ADD_ITEMS: '添加 $name ，价格： $price ，数量： $amount ',
@@ -10,26 +10,26 @@ class OrdersController < ApplicationController
     ITEMS: /items\[(\d+)\]\.(\w+)/
   }
 
-  class OrderInvalidState < StandardError; end
+  class IntentionInvalidState < StandardError; end
 
-  before_action :set_order_params,
+  before_action :set_intention_params,
     only: [:show, :status, :update, :diff, :accept, :ensure,
             :cancel, :reject, :items, :add_item, :set_address]
 
   def show
     # if params[:inline]
-    #   render json: { order: @order, html: :partial => "order" }
+    #   render json: { intention: @intention, html: :partial => "intention" }
     # else
-    #   render json: { order: @order.origin_hash }
+    #   render json: { intention: @intention.origin_hash }
     # end
   end
 
   def status
     response = {
-      state: @order.state
+      state: @intention.state
     }
 
-    response.merge!(url: @order.avatar_url) if @order.state == :done or @order.state == "done"
+    response.merge!(url: @intention.avatar_url) if @intention.state == :done or @intention.state == "done"
 
     respond_to do |format|
       format.json do
@@ -41,13 +41,13 @@ class OrdersController < ApplicationController
   def update
     begin
       # 应用修改记录， 返回一个新的 json
-      new_json    = @order.apply_patch(patch_params)
+      new_json    = @intention.apply_patch(patch_params)
 
       # 用差分算法比较两个同的 hash, 返回 diff 数组
-      @diffs = diff_hash @order.update_hash, new_json
+      @diffs = diff_hash @intention.update_hash, new_json
       unless @diffs.blank?
-        @order.updates = new_json
-        @order.save
+        @intention.updates = new_json
+        @intention.save
       end
     rescue Exception => ex
       puts ex.message
@@ -60,74 +60,74 @@ class OrdersController < ApplicationController
   end
 
   def set_address
-    old_address = @order.delivery_address_title
+    old_address = @intention.delivery_address_title
 
     delivery_address = params[:delivery_address]
 
     if delivery_address[:location_id].to_i > 0
-      @order.delivery_location_id = delivery_address[:location_id]
+      @intention.delivery_location_id = delivery_address[:location_id]
     else
-      @order[:data] ||= {}
-      @order[:data]["delivery_address"] = delivery_address
+      @intention[:data] ||= {}
+      @intention[:data]["delivery_address"] = delivery_address
     end
 
-    @order.save
+    @intention.save
 
-    new_address = @order.delivery_address_title
+    new_address = @intention.delivery_address_title
 
-    msg = modify_order('delivery_address', old_address, new_address)
+    msg = modify_intention('delivery_address', old_address, new_address)
 
     MessageSystemService.push_message current_anonymous_or_user.id, other_side, msg, to: [other_side], type: 'order'
     MessageSystemService.push_command current_anonymous_or_user.id, other_side, {command: 'order-address', dest: new_address}.to_json
 
-    # render json: @order.delivery_location
+    # render json: @intention.delivery_location
     head :ok
   end
 
   def diff
-    @diffs = diff_hash @order.origin_hash, @order.update_hash
+    @diffs = diff_hash @intention.origin_hash, @intention.update_hash
     render json: { diff: @diffs }
   end
 
   def accept
-    if @order.accept_state != "accepting"
-      @order.update(:accept_state => "accepting")
+    if @intention.accept_state != "accepting"
+      @intention.update(:accept_state => "accepting")
       MessageSystemService.push_command current_anonymous_or_user.id, other_side, {command: 'order', accept: 'accepting'}.to_json
     else
-      throw OrderInvalidState.new("invalid accept_state #{@order.accept_state} in accepting")
+      throw IntentionInvalidState.new("invalid accept_state #{@intention.accept_state} in accepting")
     end
-    render json: { accept_state: @order.accept_state }
+    render json: { accept_state: @intention.accept_state }
   end
 
   def ensure
-    update_hash = @order.update_hash
-    if @order.accept_state == 'accepting'
+    update_hash = @intention.update_hash
+    if @intention.accept_state == 'accepting'
       update_hash["accept_state"] = "accept"
-      @order.update(accept_state: "accept")
-      @order.update_patch(update_hash)
-      # @order.items_attributes = update_hash["items"]
-      # @order.save
+      @intention.update(accept_state: "accept")
+      @intention.update_patch(update_hash)
+      # @intention.items_attributes = update_hash["items"]
+      # @intention.save
 
       MessageSystemService.push_command current_anonymous_or_user.id, other_side, {command: 'order', accept: 'accept'}.to_json
     else
-      throw OrderInvalidState.new 'This accepting order job is cancel.'
+      throw IntentionInvalidState.new 'This accepting intention job is cancel.'
     end
 
     params[:inline] = true
     render :show, formats: [:json]
 
-    # render json: { accept_state: @order.accept_state }
+    # render json: { accept_state: @intention.accept_state }
   end
 
   def cancel
-    @order.update(:accept_state => "cancel")
+    @intention.update(:accept_state => "cancel")
     MessageSystemService.push_command current_anonymous_or_user.id, other_side, {command: 'order', accept: 'cancel'}.to_json
-    render json: { accept_state: @order.accept_state }
+    render json: { accept_state: @intention.accept_state }
   end
 
   def reject
-    @order.update(:accept_state => "reject")
-    @order.update(updates: nil)
+    @intention.update(:accept_state => "reject")
+    @intention.update(updates: nil)
     msg = '拒绝了提交的修改'
 
     MessageSystemService.push_command current_anonymous_or_user.id, other_side, {command: 'order', accept: 'reject'}.to_json
@@ -138,7 +138,7 @@ class OrdersController < ApplicationController
   end
 
   def items
-    # @order.supplier.
+    # @intention.supplier.
     @items = []
   end
 
@@ -147,9 +147,9 @@ class OrdersController < ApplicationController
 
   private
 
-  # 获取 order 对象
-  def set_order_params
-    @order = Order.find(params[:id])
+  # 获取 intention 对象
+  def set_intention_params
+    @intention = Intention.find(params[:id])
   end
 
   #将 params 数字为 key 的 hash 转换成 Array
@@ -162,10 +162,10 @@ class OrdersController < ApplicationController
   end
 
   def other_side
-    if @order.buyer_id == current_anonymous_or_user.id
-      @order.seller_id || @order.supplier.owner_id
+    if @intention.buyer_id == current_anonymous_or_user.id
+      @intention.seller_id || @intention.supplier.owner_id
     else
-      @order.buyer_id
+      @intention.buyer_id
     end
   end
 
@@ -180,8 +180,8 @@ class OrdersController < ApplicationController
 
     diffs.each do |op, path, src, dest|
       msg = case op
-          when '+' then add_order_item_message(src)
-          when '~' then update_order_message(diff_items, path, src, dest)
+          when '+' then add_intention_item_message(src)
+          when '~' then update_intention_message(diff_items, path, src, dest)
           end
 
       unless msg.nil?
@@ -223,25 +223,25 @@ class OrdersController < ApplicationController
     MessageSystemService.push_command user_id, other_side, {command: 'order', diff: diffs}.to_json
   end
 
-  def update_order_message(diff_items, path, src, dest)
+  def update_intention_message(diff_items, path, src, dest)
     if path =~ PROMPT_MATCHS[:ITEMS]
-      modify_order_items(diff_items, path, src, dest)
+      modify_intention_items(diff_items, path, src, dest)
     else
-      modify_order(path, src, dest)
+      modify_intention(path, src, dest)
     end
   end
 
-  def modify_order_items(diff_items, path, src, dest)
+  def modify_intention_items(diff_items, path, src, dest)
     m = path.match(PROMPT_MATCHS[:ITEMS])
     index, key = m[1].to_i, m[2]
-    order_item = @order.items[index]
+    intention_item = @intention.items[index]
 
     if key == "deleted" && src == false && dest == true
-      return remove_order_item_message(order_item)
+      return remove_intention_item_message(intention_item)
     end
 
     diff_item = diff_items[index] ||= {}
-    diff_item[:name] = order_item.title
+    diff_item[:name] = intention_item.title
 
     item = diff_item[key] ||= {}
 
@@ -249,19 +249,19 @@ class OrdersController < ApplicationController
     item[:dest] = dest
 
     nil
-    # name, key = @order.items[index].title, OrderItem.human_attribute_name(m[2])
+    # name, key = @intention.items[index].title, LineItem.human_attribute_name(m[2])
     # prompt = PROMPTS[:ITEMS]
   end
 
-  def modify_order(path, src, dest)
+  def modify_intention(path, src, dest)
     prompt_template(PROMPTS[:ALL], {
-      key: Order.human_attribute_name(path),
+      key: Intention.human_attribute_name(path),
       src: src,
       dest: dest
     })
   end
 
-  def add_order_item_message(src)
+  def add_intention_item_message(src)
     prompt_template(PROMPTS[:ADD_ITEMS], {
       name: src["title"],
       price: src["price"],
@@ -269,7 +269,7 @@ class OrdersController < ApplicationController
     })
   end
 
-  def remove_order_item_message(src)
+  def remove_intention_item_message(src)
     prompt_template(PROMPTS[:REMOVE_ITEMS], {
       name: src["title"],
       price: src["price"],
@@ -279,7 +279,7 @@ class OrdersController < ApplicationController
 
   def generate_prompt(prompt, key, context)
     prompt_template(prompt, {
-      key: OrderItem.human_attribute_name(key),
+      key: LineItem.human_attribute_name(key),
       src: context[:src],
       dest: context[:dest]
     })

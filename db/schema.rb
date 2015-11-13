@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151103021828) do
+ActiveRecord::Schema.define(version: 20151113073150) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -188,6 +188,24 @@ ActiveRecord::Schema.define(version: 20151103021828) do
     t.datetime "updated_at",              null: false
   end
 
+  create_table "intentions", force: :cascade do |t|
+    t.integer  "buyer_id"
+    t.integer  "seller_id"
+    t.integer  "supplier_id"
+    t.string   "contacts"
+    t.integer  "business_type"
+    t.integer  "bid"
+    t.integer  "sid"
+    t.datetime "created_at",                                    null: false
+    t.datetime "updated_at",                                    null: false
+    t.string   "title"
+    t.decimal  "total",                precision: 18, scale: 2
+    t.jsonb    "image"
+    t.jsonb    "data"
+    t.integer  "delivery_location_id"
+    t.integer  "send_location_id"
+  end
+
   create_table "items", force: :cascade do |t|
     t.integer  "shop_category_id"
     t.integer  "shop_id"
@@ -209,16 +227,22 @@ ActiveRecord::Schema.define(version: 20151103021828) do
     t.decimal  "current_stock",    precision: 10, scale: 2
   end
 
-  create_table "likes", force: :cascade do |t|
-    t.string   "liker_type"
-    t.integer  "liker_id"
-    t.string   "likeable_type"
-    t.integer  "likeable_id"
-    t.datetime "created_at"
+  create_table "line_items", force: :cascade do |t|
+    t.integer  "itemable_id"
+    t.string   "itemable_type"
+    t.string   "title"
+    t.jsonb    "data",                                   default: {}, null: false
+    t.integer  "iid"
+    t.string   "item_type"
+    t.datetime "created_at",                                          null: false
+    t.datetime "updated_at",                                          null: false
+    t.jsonb    "image",                                  default: {}, null: false
+    t.decimal  "price",         precision: 15, scale: 2
+    t.decimal  "amount",        precision: 15, scale: 8
+    t.decimal  "sub_total",     precision: 16, scale: 2
+    t.integer  "unit"
+    t.string   "unit_title"
   end
-
-  add_index "likes", ["likeable_id", "likeable_type"], name: "fk_likeables", using: :btree
-  add_index "likes", ["liker_id", "liker_type"], name: "fk_likes", using: :btree
 
   create_table "locations", force: :cascade do |t|
     t.integer  "user_id"
@@ -242,17 +266,6 @@ ActiveRecord::Schema.define(version: 20151103021828) do
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
   end
-
-  create_table "mentions", force: :cascade do |t|
-    t.string   "mentioner_type"
-    t.integer  "mentioner_id"
-    t.string   "mentionable_type"
-    t.integer  "mentionable_id"
-    t.datetime "created_at"
-  end
-
-  add_index "mentions", ["mentionable_id", "mentionable_type"], name: "fk_mentionables", using: :btree
-  add_index "mentions", ["mentioner_id", "mentioner_type"], name: "fk_mentions", using: :btree
 
   create_table "messages", force: :cascade do |t|
     t.integer  "messable_id"
@@ -280,41 +293,6 @@ ActiveRecord::Schema.define(version: 20151103021828) do
     t.boolean  "read",          default: false
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
-  end
-
-  create_table "order_items", force: :cascade do |t|
-    t.integer  "itemable_id"
-    t.string   "itemable_type"
-    t.string   "title"
-    t.jsonb    "data",                                   default: {}, null: false
-    t.integer  "iid"
-    t.string   "item_type"
-    t.datetime "created_at",                                          null: false
-    t.datetime "updated_at",                                          null: false
-    t.jsonb    "image",                                  default: {}, null: false
-    t.decimal  "price",         precision: 15, scale: 2
-    t.decimal  "amount",        precision: 15, scale: 8
-    t.decimal  "sub_total",     precision: 16, scale: 2
-    t.integer  "unit"
-    t.string   "unit_title"
-  end
-
-  create_table "orders", force: :cascade do |t|
-    t.integer  "buyer_id"
-    t.integer  "seller_id"
-    t.integer  "supplier_id"
-    t.string   "contacts"
-    t.integer  "business_type"
-    t.integer  "bid"
-    t.integer  "sid"
-    t.datetime "created_at",                                    null: false
-    t.datetime "updated_at",                                    null: false
-    t.string   "title"
-    t.decimal  "total",                precision: 18, scale: 2
-    t.jsonb    "image"
-    t.jsonb    "data"
-    t.integer  "delivery_location_id"
-    t.integer  "send_location_id"
   end
 
   create_table "properties", force: :cascade do |t|
@@ -381,8 +359,8 @@ ActiveRecord::Schema.define(version: 20151103021828) do
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
     t.string   "logo"
-    t.string   "address"
     t.jsonb    "settings",    default: {}
+    t.string   "address"
   end
 
   create_table "statuses", force: :cascade do |t|

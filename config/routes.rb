@@ -148,17 +148,17 @@ Rails.application.routes.draw do
   resources :units, only: [:index, :show]
 
   resources :chats
-  resources :orders do
+  resources :intentions do
     member do
-      get 'status', to: "orders#status", as: :status_of
-      get 'diff', to: "orders#diff", as: :diff
-      post 'accept', to: "orders#accept", as: :accept
-      post 'ensure', to: "orders#ensure", as: :ensure
-      post 'cancel', to: "orders#cancel", as: :cancel
-      post 'reject', to: "orders#reject", as: :reject
-      put 'set_address', to: "orders#set_address"
-      get 'items', to: 'orders#items'
-      put 'add_item', to: 'orders#add_item'
+      get 'status', to: "intentions#status", as: :status_of
+      get 'diff', to: "intentions#diff", as: :diff
+      post 'accept', to: "intentions#accept", as: :accept
+      post 'ensure', to: "intentions#ensure", as: :ensure
+      post 'cancel', to: "intentions#cancel", as: :cancel
+      post 'reject', to: "intentions#reject", as: :reject
+      put 'set_address', to: "intentions#set_address"
+      get 'items', to: 'intentions#items'
+      put 'add_item', to: 'intentions#add_item'
     end
   end
 

@@ -1,4 +1,4 @@
-class Order < ActiveRecord::Base
+class Intention < ActiveRecord::Base
   include ThumbImages
   store_accessor :image, :avatar_url
   store_accessor :data, :updates, :accept_state, :delivery_address
@@ -14,14 +14,14 @@ class Order < ActiveRecord::Base
   #   where(shadow_id: nil)
   # end
 
-  has_many :items, class_name: 'OrderItem', as: :itemable, dependent: :destroy, autosave: true do
+  has_many :items, class_name: 'LineItem', as: :itemable, dependent: :destroy, autosave: true do
     def build_with_promotion(promotion)
       build({
         title: promotion.title,
         price: promotion.discount_price,
         amount: promotion.try(:amount) || MIN_AMOUNT,
         item_type: 'product',
-        iid: OrderItem.last_iid(owner) + 1,
+        iid: LineItem.last_iid(owner) + 1,
         data: {
           product_id: promotion.product_id,
           product_inventory: promotion.product_inventory,
@@ -44,7 +44,7 @@ class Order < ActiveRecord::Base
           price: promotion.discount_price,
           amount: promotion.try(:amount) || MIN_AMOUNT,
           item_type: 'product',
-          iid: OrderItem.last_iid(owner) + 1,
+          iid: LineItem.last_iid(owner) + 1,
           data: {
             product_id: promotion.product_id,
             product_inventory: promotion.product_inventory
@@ -65,7 +65,7 @@ class Order < ActiveRecord::Base
         price: shop_product.price,
         amount: shop_product.try(:amount) || MIN_AMOUNT,
         item_type: 'product',
-        iid: OrderItem.last_iid(owner) + 1,
+        iid: LineItem.last_iid(owner) + 1,
         data: {
           product_id: shop_product.product_id,
           product_inventory: shop_product.try(:inventory)
@@ -90,7 +90,7 @@ class Order < ActiveRecord::Base
           price: shop_product.price,
           amount: shop_product.try(:amount) || MIN_AMOUNT,
           item_type: 'product',
-          iid: OrderItem.last_iid(owner) + 1,
+          iid: LineItem.last_iid(owner) + 1,
           data: {
             item_id: shop_product.id,
             product_inventory: shop_product.try(:inventory)
@@ -125,9 +125,9 @@ class Order < ActiveRecord::Base
   def initialize(attributes, *args)
     attrs = attributes.dup
     items = attrs.delete("items")
-    super(attrs) do |order|
+    super(attrs) do |intention|
       (items || []).each do |item|
-        order.items.build(item)
+        intention.items.build(item)
       end
     end
   end
@@ -217,7 +217,7 @@ class Order < ActiveRecord::Base
 
   def update_patch(attrs)
     diffs = HashDiff.best_diff origin_hash, attrs
-    Order.transaction do
+    Intention.transaction do
 
       diffs.each do |op, path, src, dest|
         case op
