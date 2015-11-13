@@ -19,7 +19,7 @@ body.sign-pc{
   margin-bottom: 60px;
   background-position-y: 50px;
   background-repeat: no-repeat;
-  background-size: auto 550px;
+  background-size: auto 600px;
   background-image: image-url("sign-bgi.jpg");
   @media (max-width: 992px){
     background-size: auto 500px;
@@ -34,7 +34,7 @@ body.sign-pc{
   }
   .sign-body{
     position: relative;
-    height: 600px;
+    height: 650px;
     overflow: hidden;
     @media (max-width: 992px){
       height: 550px;
