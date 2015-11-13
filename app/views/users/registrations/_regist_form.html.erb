@@ -1,5 +1,5 @@
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= devise_error_messages! %>
+  <%#= devise_error_messages! %>
   
   <div class="sign-input-group">
     <%= icon(:user)%>
@@ -28,6 +28,12 @@
 
   <div class="text-center">
     <%= f.submit "注册", class: 'sign-btn' %>
-    <%= link_to "返回登陆", new_session_path(resource_name),class: "link toggle-btn" %>  
+
+    <% if not is_mobile_request? %>
+      <div class="text-center">
+        <%= link_to "返回登陆", new_session_path(resource_name),class: "link toggle-btn" %>  
+      </div>
+    <% end -%>
+
   </div>
 <% end -%>

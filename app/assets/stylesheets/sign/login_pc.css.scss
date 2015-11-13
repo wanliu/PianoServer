@@ -2,11 +2,28 @@
 
 $gray : #888;
 
+
+body.regist .login-container{
+  opacity: 0;
+  visibility: hidden;
+}
+body.login .regist-container{
+  opacity: 0;
+  visibility: hidden;
+}
+
 body.sign-pc{
   font-family: '微软雅黑', Arial,Verdana, Sans-serif;
   padding: 0;
   background: #fff;
   margin-bottom: 60px;
+  background-position-y: 50px;
+  background-repeat: no-repeat;
+  background-size: auto 500px;
+  background-image: image-url("sign-bgi.jpg");
+  @media (max-width: 992px){
+    background-size: auto 420px;
+  }
 
   footer {
     position: absolute;
@@ -15,7 +32,14 @@ body.sign-pc{
     left: 0;
     height: 50px;
   }
-
+  .sign-body{
+    position: relative;
+    height: 550px;
+    overflow: hidden;
+    @media (max-width: 992px){
+      height: 470px;
+    }
+  }
   nav{
     width: 100%;
     height: 50px;
@@ -43,19 +67,16 @@ body.sign-pc{
     overflow: hidden;
   }
   .background-img{
-    width: 100%;
-    min-height: 600px;
-  }
-
-  .container{
-    position: relative;
-    height: 100%;
-    min-width: 998px;
-  }
-
-  .sing-logo{
     position: absolute;
-    top: 100px;
+    top: 50px;
+    left: 0;
+    height: 600px;
+    z-index: -1;
+  }
+
+  .sign-logo{
+    position: absolute;
+    top: 150px;
     left: 0;
     width: 90%;
   }
@@ -65,9 +86,10 @@ body.sign-pc{
     padding: 10px 20px;
     position: absolute;
     right: 15px;
-    top: 100px;
+    top: 150px;
     background-color: #fff;
     box-shadow: 0 0 10px #333;
+    transition: all 0.5s;
 
     .sign-input-group{
       position: relative;

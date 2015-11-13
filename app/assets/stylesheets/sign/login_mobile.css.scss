@@ -6,8 +6,11 @@ input:-webkit-autofill {
 body.sign-mobile{
   padding: 0;
   background: #fff;
+  &.login .back-btn{
+    display: none;
+  }
   .back-btn{
-    position: absolute;
+    position: fixed;
     top: 10px;
     left: 10px;
     color: #fff;
@@ -24,8 +27,13 @@ body.sign-mobile{
     }
   }
   .sign-container{
+    background: #fff;
     padding: 0 15px;
     color: #666;
+    position: absolute;
+    width: 100%;
+    left: 0;
+    transition: all 0.5s;
     .sign-input-group{
       position: relative;
       padding: 10px;
