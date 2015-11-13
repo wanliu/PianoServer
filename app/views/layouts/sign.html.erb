@@ -81,31 +81,47 @@
       </style>
     <![endif]-->
 
+  <style>
+  body.regist .login-container{
+    display: none;
+  }
+  body.login .regist-container{
+    display: none;
+  }
+</style>
   </head>
+
   <body class="<%= yield :module %>">
 
-    <div class="container">
-      <div class="row">
-        <%= bootstrap_flash %>
-        <%= yield %>
-      </div><!--/row-->
+    <%= yield %>
 
-      <%#= render "footer", with: @subject %>
-      <%#= render "qrcode" %>
-    </div> <!-- /container -->
     <script type="text/javascript">
       <% unless Rails.env.production? %>
         console.log('development version: <%= PianoServer::VERSION %>')
       <% end %>
-      
+
       //登陆注册切换
-      // $(function(){
-      //   $('.toggle-btn').on('click',function(e){
-      //     e.preventDefault()
-      //     $('.login-container').toggle(0);
-      //     $('.regist-container').toggle(0);
-      //   });
-      // });
+      $(function(){
+        $body = $("body");
+
+        $('.toggle-btn').click(function(e){
+          e.preventDefault();
+          if ($body.hasClass('login')) {
+            $body.removeClass('login').addClass('regist');
+
+            window.history.replaceState({}, "123", "/users/sign_up");
+
+          } else if ($body.hasClass('regist')){
+            $body.removeClass('regist').addClass('login');
+            history.replaceState({}, "13", "/users/sign_in");
+          };
+        });
+
+        $('.forget').click(function(e){
+          e.preventDefault();
+          window.location.href = this.href
+        });
+      });
 
     </script>
   </body>

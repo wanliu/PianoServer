@@ -3,17 +3,17 @@
   
   <div class="sign-input-group">
     <%= icon(:user)%>
-    <%= f.text_field :username, autofocus: true, placeholder: '输入账户' %>
+    <%= f.text_field :username, autocomplete: "off", placeholder: '输入账户' %>
   </div>
 
   <div class="sign-input-group">
     <%= icon(:envelope)%>
-    <%= f.email_field :email, placeholder: '输入邮箱' %>
+    <%= f.email_field :email, autocomplete: "off", placeholder: '输入邮箱' %>
   </div>
 
   <div class="sign-input-group">
     <%= icon(:phone)%>
-    <%= f.text_field :mobile, placeholder: '输入手机' %>
+    <%= f.text_field :mobile, autocomplete: "off", placeholder: '输入手机' %>
   </div>
 
   <div class="sign-input-group">
@@ -28,11 +28,6 @@
 
   <div class="text-center">
     <%= f.submit "注册", class: 'sign-btn' %>
+    <%= link_to "返回登陆", new_session_path(resource_name),class: "link toggle-btn" %>  
   </div>
-
-  <% if not is_mobile_request? %>
-    <%= link_to "返回登陆", new_session_path(resource_name),class: "link toggle-btn" %>
-  <% else %>
-    <%= link_to icon('menu-left toggle-btn  back-btn'), new_session_path(resource_name) %><br />
-  <% end -%>
 <% end -%>

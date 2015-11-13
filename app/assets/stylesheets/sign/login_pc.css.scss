@@ -1,20 +1,24 @@
 // pc登陆界面
 
 $gray : #888;
+
 body.sign-pc{
-  font-family:'微软雅黑',Arial,Verdana,Sans-serif;
+  font-family: '微软雅黑', Arial,Verdana, Sans-serif;
   padding: 0;
   background: #fff;
-  position: relative;
+  margin-bottom: 60px;
 
-  .regist-container{
-    display: none;
+  footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    left: 0;
+    height: 50px;
   }
 
   nav{
     width: 100%;
     height: 50px;
-    padding: 0 15px;
     .navbar-brand{
       padding: 8px;
     }
@@ -29,27 +33,39 @@ body.sign-pc{
       color: $gray
     }
   }
-  .background-wrap{
-    position: absolute;
+  .container-fuild{
+    position: relative;
+    min-width: 890px;
+    background-image: image-url('sign-bgi.jpg');
+    height: 600px;
+    background-repeat: no-repeat;
+    background-color: #FF812C;
     overflow: hidden;
-    left: 0;
+  }
+  .background-img{
     width: 100%;
-    z-index: -1;
-    img{
-      width: 100%;
-      margin-bottom: 30px;
-      min-width: 1170px;
-    }
+    min-height: 600px;
   }
 
+  .container{
+    position: relative;
+    height: 100%;
+    min-width: 998px;
+  }
+
+  .sing-logo{
+    position: absolute;
+    top: 100px;
+    left: 0;
+    width: 90%;
+  }
   .sign-container{
     color: $gray;
-    float: right;
     width: 320px;
     padding: 10px 20px;
-    margin-top: 100px;
-    margin-right: 15px;
-    position: relative;
+    position: absolute;
+    right: 15px;
+    top: 100px;
     background-color: #fff;
     box-shadow: 0 0 10px #333;
 
@@ -96,7 +112,6 @@ body.sign-pc{
       vertical-align: text-bottom;
       margin: 0;
     }
-
     .remenber-wrap{
       width: 60px;
       margin-left: -10px;
@@ -119,6 +134,5 @@ body.sign-pc{
     .other-link{
       margin-bottom: 10px;
     }
-
   }
 }

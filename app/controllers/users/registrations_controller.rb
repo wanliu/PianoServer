@@ -1,5 +1,6 @@
 class Users::RegistrationsController < Devise::RegistrationsController
   layout "sign"
+
   include Mobylette::RespondToMobileRequests
   
 # before_filter :configure_sign_up_params, only: [:create]

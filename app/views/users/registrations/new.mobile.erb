@@ -1,10 +1,4 @@
-<!-- 手机登陆页面 -->
+<!-- 手机注册页面 -->
+<%= content_for :module, 'sign-mobile regist' %>
 
-<%= content_for :module, 'sign-mobile' %>
-<header>
-  <img src="http://static.bootcss.com/www/assets/img/codeguide.png" class="header-img">
-</header>
-
-<div class="sign-container regist-container">
-  <%= render 'regist' %>
-</div>
+<%= render '/users/shared/sign' %>

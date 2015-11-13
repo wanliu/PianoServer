@@ -33,6 +33,7 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def create
+    params[:format] = "html"
     super
     # render :show, formats: [:json]
   end
