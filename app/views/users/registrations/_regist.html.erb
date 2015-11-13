@@ -31,8 +31,8 @@
   </div>
 
   <% if not is_mobile_request? %>
-    <span class="link toggle-btn">返回登陆</span>
+    <%= link_to "返回登陆", new_session_path(resource_name),class: "link toggle-btn" %>
   <% else %>
-    <%= icon('menu-left toggle-btn  back-btn ')%>
+    <%= link_to icon('menu-left toggle-btn  back-btn'), new_session_path(resource_name) %><br />
   <% end -%>
 <% end -%>

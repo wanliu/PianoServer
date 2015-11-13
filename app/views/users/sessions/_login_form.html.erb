@@ -22,8 +22,7 @@
         </div>
       </div>
       <div class="media-body text-right">
-
-        <span class="link toggle-btn">马上注册</span>
+        <%= link_to "马上注册", new_registration_path(resource_name), class: 'link toggle-btn' %>
         <% if is_mobile_request? %>
         &nbsp;|&nbsp;
         <% end -%>
