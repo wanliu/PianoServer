@@ -32,29 +32,31 @@
       return;
     }
 
+    var chatId = notice.options.chatId,
+        _this = this,
+        notices = this.notices;
+
     userSocket.emit('readChannel', {
       channelId: 'p' + senderId
     }, function(err) {
+      if (redirect) {
+        _this._removeAllNotice();
+
+        Turbolinks.visit('/chats/' + chatId);
+      } else {
+        notice.destroy();
+
+        var index = notices.indexOf(notice);
+
+        if (index > -1) {
+          notices.splice(index, 1);
+        }
+      }
+
       if (err) {
         return console.error(err);
       }
     });
-
-    var chatId = notice.options.chatId;
-
-    if (redirect) {
-      this._removeAllNotice();
-
-      Turbolinks.visit('/chats/' + chatId);
-    } else if (notice) {
-      notice.destroy();
-
-      var index = this.notices.indexOf(notice);
-
-      if (index > -1) {
-        this.notices.splice(index, 1);
-      }
-    }
   };
 
   NoticeCenter.prototype._removeAllNotice = function() {
