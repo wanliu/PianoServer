@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151113073150) do
+ActiveRecord::Schema.define(version: 20151113092752) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -295,6 +295,16 @@ ActiveRecord::Schema.define(version: 20151113073150) do
     t.datetime "updated_at",                    null: false
   end
 
+  create_table "orders", force: :cascade do |t|
+    t.integer "buyer_id"
+    t.integer "supplier_id"
+    t.decimal "total",            precision: 10, scale: 2
+    t.string  "delivery_address"
+  end
+
+  add_index "orders", ["buyer_id"], name: "index_orders_on_buyer_id", using: :btree
+  add_index "orders", ["supplier_id"], name: "index_orders_on_supplier_id", using: :btree
+
   create_table "properties", force: :cascade do |t|
     t.string   "name"
     t.string   "title"
@@ -469,6 +479,8 @@ ActiveRecord::Schema.define(version: 20151113073150) do
 
   add_index "variables", ["host_type", "host_id"], name: "index_variables_on_host_type_and_host_id", using: :btree
 
+  add_foreign_key "orders", "users", column: "buyer_id"
+  add_foreign_key "orders", "users", column: "supplier_id"
   add_foreign_key "shop_categories", "shops"
   add_foreign_key "stock_changes", "items"
   add_foreign_key "stock_changes", "units"

@@ -162,6 +162,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :orders
+
   resources :locations do
     collection do
       put 'user_default_address', to: "locations#user_default_address"
