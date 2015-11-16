@@ -57,6 +57,13 @@ body.sign-pc{
       color: $gray
     }
   }
+  .media{
+    margin: 0;
+  }
+  .alert{
+    padding: 5px 35px 5px 15px;
+    margin-bottom: 10px;
+  }
   .sign-logo{
     position: absolute;
     top: 150px;
@@ -79,7 +86,7 @@ body.sign-pc{
 
     .sign-input-group{
       position: relative;
-      margin: 15px 0;
+      height: 60px;
       input{
         color: $gray;
         width: 100%;
@@ -95,10 +102,13 @@ body.sign-pc{
       .glyphicon{
         position: absolute;
         text-align: center;
-        width: 40px;
+        width: 35px;
         line-height: 35px;
         font-size: 1.4em;;
       }
+    }
+    .error-block{
+      color: #ff2b2b;
     }
     .sign-btn{
       border: none;
