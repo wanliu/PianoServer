@@ -21,6 +21,7 @@ class User < ActiveRecord::Base
   has_many :followables, as: :follower, class_name: 'Follow'
 
   validates :username, presence: true, uniqueness: true
+  validates :mobile, presence: true, uniqueness: true
 
   after_commit :sync_to_pusher
 

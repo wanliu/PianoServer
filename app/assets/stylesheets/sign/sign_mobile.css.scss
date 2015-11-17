@@ -36,7 +36,6 @@ body.sign-mobile{
     transition: all 0.5s;
     .sign-input-group{
       position: relative;
-      height: 60px;
 
       .glyphicon{
         position: absolute;
@@ -44,8 +43,10 @@ body.sign-mobile{
         font-size: 1.4em;
       }
       .error-block{
-        text-align: right;
         color: #ff2b2b;
+        position: absolute;
+        right: 0;
+        bottom: 0;
       }
       input{
         width: 100%;

@@ -17,7 +17,7 @@ body.sign-pc{
   padding: 0;
   background: #fff;
   margin-bottom: 60px;
-  background-position-y: 50px;
+  background-position: 0 50px;
   background-repeat: no-repeat;
   background-size: auto 600px;
   background-image: image-url("sign-bgi.jpg");
@@ -102,8 +102,8 @@ body.sign-pc{
       .glyphicon{
         position: absolute;
         text-align: center;
-        width: 35px;
-        line-height: 35px;
+        width: 38px;
+        line-height: 38px;
         font-size: 1.4em;;
       }
     }
@@ -126,14 +126,19 @@ body.sign-pc{
         background-color:#C1002A;
       }
     }
-    input[type='checkbox']{
-      vertical-align: text-bottom;
-      margin: 0;
-    }
+
     .remenber-wrap{
-      width: 60px;
+      width: 65px;
+      height: 20px;
       margin-left: -10px;
       margin-bottom: 5px;
+      line-height: 24px;
+
+      input[type="checkbox"]{
+        vertical-align: middle;
+        margin: 0;
+        margin-right: 5px;
+      }
     }
     label,
     .link{
