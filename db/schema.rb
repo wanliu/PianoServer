@@ -479,8 +479,8 @@ ActiveRecord::Schema.define(version: 20151113092752) do
 
   add_index "variables", ["host_type", "host_id"], name: "index_variables_on_host_type_and_host_id", using: :btree
 
+  add_foreign_key "orders", "shops", column: "supplier_id"
   add_foreign_key "orders", "users", column: "buyer_id"
-  add_foreign_key "orders", "users", column: "supplier_id"
   add_foreign_key "shop_categories", "shops"
   add_foreign_key "stock_changes", "items"
   add_foreign_key "stock_changes", "units"

@@ -7,6 +7,6 @@ class CreateOrder < ActiveRecord::Migration
       t.string :delivery_address
     end
     add_foreign_key :orders, :users, column: :buyer_id
-    add_foreign_key :orders, :users, column: :supplier_id
+    add_foreign_key :orders, :shops, column: :supplier_id
   end
 end
