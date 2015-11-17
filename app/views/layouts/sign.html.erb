@@ -102,18 +102,20 @@
           e.preventDefault();
           if ($body.hasClass('login')) {
             $body.removeClass('login').addClass('regist');
-
-            window.history.replaceState({}, "123", "/users/sign_up");
-
+            window.history.replaceState({}, "", "/users/sign_up");
           } else if ($body.hasClass('regist')){
             $body.removeClass('regist').addClass('login');
-            history.replaceState({}, "13", "/users/sign_in");
+            history.replaceState({}, "", "/users/sign_in");
+          } else if ($body.hasClass('password')){
+            $body.removeClass('password').addClass('login');
+            history.replaceState({}, "", "/users/sign_in");
           };
         });
 
         $('.forget').click(function(e){
           e.preventDefault();
-          window.location.href = this.href
+          $body.removeClass('login').addClass('password');
+           window.history.replaceState({}, "", "/users/password");
         });
       });
 
