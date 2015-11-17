@@ -271,3 +271,8 @@ zh-CN:
       notice: 成功
       alert: 警告
       error: 错误
+
+  devise:
+    registrations:
+      user:
+        signed_up: 注册成功
