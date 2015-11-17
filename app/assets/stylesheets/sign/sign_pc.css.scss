@@ -17,7 +17,7 @@ body.sign-pc{
   padding: 0;
   background: #fff;
   margin-bottom: 60px;
-  background-position:0 50px;
+  background-position: 0 50px;
   background-repeat: no-repeat;
   background-size: auto 600px;
   background-image: image-url("sign-bgi.jpg");
@@ -92,7 +92,8 @@ body.sign-pc{
         width: 100%;
         outline: none;
         border: none;
-        padding: 8px 0px 8px 40px;
+        line-height: 35px;
+        padding-left: 40px;
         border: 1px solid #ddd;
         &:focus{
           border: 1px solid $gray;
@@ -101,14 +102,13 @@ body.sign-pc{
       .glyphicon{
         position: absolute;
         text-align: center;
-        width: 35px;
-        line-height: 35px;
+        width: 38px;
+        line-height: 38px;
         font-size: 1.4em;;
       }
     }
     .error-block{
       color: #ff2b2b;
-      text-align: right;
     }
     .sign-btn{
       border: none;
@@ -126,14 +126,19 @@ body.sign-pc{
         background-color:#C1002A;
       }
     }
-    input[type='checkbox']{
-      vertical-align: text-bottom;
-      margin: 0;
-    }
+
     .remenber-wrap{
-      width: 60px;
+      width: 65px;
+      height: 20px;
       margin-left: -10px;
       margin-bottom: 5px;
+      line-height: 24px;
+
+      input[type="checkbox"]{
+        vertical-align: middle;
+        margin: 0;
+        margin-right: 5px;
+      }
     }
     label,
     .link{
