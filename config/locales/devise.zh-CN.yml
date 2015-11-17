@@ -43,3 +43,7 @@
         subject: '重置密码信息'
       unlock_instructions:
         subject: '解锁信息'
+    registrations:
+      user:
+        signed_up:
+          "恭喜你注册成功"
