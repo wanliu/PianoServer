@@ -37,13 +37,13 @@ class ShopAnimationEnter
       'transition': 'all 0.3s'
       'transform': 'scale(0.5)'
     })
-
+    $body = $("body")
     @target.one TRANSITION_ENDS, ()=>
       @mask.css({
         'opacity'  : 0.8
         'left'     : 0
-        'top'      : 0
-        'width'    : $(window).width()
+        'top'      : $body.scrollTop()
+        'width'    : $body.width()
         'height'   : $(window).height()
         'transition': 'all 0.3s'
         'transform':'scale(1)'
