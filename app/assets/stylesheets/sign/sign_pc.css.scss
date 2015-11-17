@@ -17,7 +17,7 @@ body.sign-pc{
   padding: 0;
   background: #fff;
   margin-bottom: 60px;
-  background-position-y: 50px;
+  background-position:0 50px;
   background-repeat: no-repeat;
   background-size: auto 600px;
   background-image: image-url("sign-bgi.jpg");
@@ -92,8 +92,7 @@ body.sign-pc{
         width: 100%;
         outline: none;
         border: none;
-        line-height: 35px;
-        padding-left: 40px;
+        padding: 8px 0px 8px 40px;
         border: 1px solid #ddd;
         &:focus{
           border: 1px solid $gray;
