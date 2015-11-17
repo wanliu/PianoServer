@@ -8,14 +8,14 @@ class BrandsController < ApplicationController
     end
 
     render json: {
-      results: @brands
+      results: @brands.as_json(methods: :title)
     }
   end
 
   def filter
     @brands = Brand.with_category(params[:category_id])
     render json: {
-      results: @brands
+      results: @brands.as_json(methods: :title)
     }
   end
 

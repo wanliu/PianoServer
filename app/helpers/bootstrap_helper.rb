@@ -20,6 +20,15 @@ module BootstrapHelper
   #   r "<span class=\"button-icon glyphicon glyphicon-#{name}\"></span>"
   # end
 
+  def close
+    html = <<-HTML
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    HTML
+    html.html_safe
+  end
+
   def caret
     r "<span class=\"caret\"></span>"
   end

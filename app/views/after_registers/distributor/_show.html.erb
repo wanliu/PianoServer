@@ -1,11 +1,12 @@
-<% if current_user.state.nil? or current_user.state == "select" %>
+<% step = params[:step] || current_user.state %>
+<% if step.nil? or step == "select" %>
   <%= render "after_registers/distributor/step1" %>
-<% elsif current_user.state == "industry" %>
+<% elsif step == "industry" %>
   <%= render "after_registers/distributor/step2" %>
-<% elsif current_user.state == "shop" %>
+<% elsif step == "shop" %>
   <%= render "after_registers/distributor/step3" %>
-<% elsif current_user.state == "category" %>
+<% elsif step == "category" %>
   <%= render "after_registers/distributor/step4" %>
-<% elsif current_user.state == "brand" %>
+<% elsif step == "product" %>
   <% redirect_to root_path %>
 <% end %>

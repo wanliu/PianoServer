@@ -57,9 +57,10 @@
       </div>
     </div>
 
-    <div class="pull-right">
-      <%= button "以后再说", after_register_path(:distributor), context: :default, class: 'btn-lg' %>
-      <%= button_to "下一步", after_register_path(:distributor), context: :primary, class: 'btn-lg' %>
+    <div class="pull-right step-actions">
+
+      <%= button_to "以后再说", after_register_path(:distributor), context: :default, class: 'btn-lg' %>
+      <%= f.submit "下一步", context: :primary, class: 'btn-lg' %>
     </div>
   <% end %>
   <script type="text/javascript">

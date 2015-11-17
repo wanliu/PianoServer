@@ -71,3 +71,5 @@ baidu:
 after_registers:
   shop:
     validates: strict
+  total:
+    max_count: 15
