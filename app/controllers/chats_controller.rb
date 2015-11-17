@@ -7,9 +7,14 @@ class ChatsController < ApplicationController
   # before_action :set_page_info, only: [:show]
 
   def index
-    @chats = Chat.in(current_anonymous_or_user.id).reject{|chat| chat.owner_id == chat.target_id}
-      .reverse
-    @other_sides = @chats.map{ |chat| chat.other_side(current_anonymous_or_user) }
+    respond_to do |format|
+      format.html { render :index }
+      format.json do
+        @chats = Chat.in(current_anonymous_or_user.id).reverse_order
+        @other_sides = @chats.map{ |chat| chat.other_side(current_anonymous_or_user) }
+        render json: { chats: @chats, other_sides: @other_sides.as_json(include_methods: :avatar_url) }
+      end
+    end
   end
 
   def create
