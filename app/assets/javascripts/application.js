@@ -43,6 +43,8 @@
 //= require _common/hammer
 //= require _common/util
 //= require _common/image-scale
+//= require _common/side_menu
+//= require _common/side_menu_manager
 //= require_tree ./application
 //= require_tree ./chats
 //= require_tree ./orders

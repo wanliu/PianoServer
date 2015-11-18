@@ -1,0 +1,84 @@
+.menu-container {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 250px;
+  z-index: 11;
+  background: #CCCCCC;
+  left: -250px;
+  -moz-transition: left 0.25s ease-in-out;
+  -webkit-transtion: left 0.25s ease-in-out;
+  transition: left 0.25s ease-in-out;
+
+  .nav.menu-sections > li > a {
+    padding-left: 35px;
+  }
+
+  .nav > li.active {
+    background: #428BCA;
+
+    a {
+      color: #FFFFFF;
+    }
+  }
+
+  .nav > li.active a:hover {
+    background: #428BCA;
+  }
+}
+
+.chat-notices{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  opacity: 0.6;
+
+  .chat-notice{
+    background: #666666;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    color: #FFFFFF;
+    cursor: pointer;
+    margin-bottom: 1px;
+
+    span{
+      text-decoration: underline;
+
+      &.ignore{
+        margin-left: 15px;
+      }
+    }
+  }
+}
+
+.navbar-top {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  z-index: 10;
+}
+
+.fixed-height-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  overflow: hidden;
+  left: 0;
+  width: 100%;
+  -moz-transition: left 0.25s ease-in-out;
+  -webkit-transtion: left 0.25s ease-in-out;
+  transition: left 0.25s ease-in-out;
+
+  .scroll-container {
+    position: relative;
+    height: 100%;
+    padding-top: 60px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}

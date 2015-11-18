@@ -1,81 +1,119 @@
 class @SideMenu
-  constructor: (@$containment) ->
-    @element = $('<div class="side-menu"></div>').appendTo($containment)
+  constructor: (@$containment, @name) ->
+    @element = $('<ul class="nav nav-sidebar side-menu"></ul>').appendTo(@$containment)
     @groups = []
+    @isVisible = false
 
-  insertGroup: (name, title) ->
+  insertGroup: (name, title, dataOptions = {}) ->
+    if name.substring(0, 1) == '/'
+      name = name.slice(1)
+
     @groups.push({
       title: title,
       name: name,
       route: '/' + name,
-      routeAnchor: '#' + name,
-      sections: []
+      routeAnchor: 'group-' + name.replace(/\//g, '-'),
+      sections: [],
+      dataOptions: dataOptions
     })
 
-  insertSection: (groupName, route, name, title) ->
+  insertSection: (groupName, route, name, title, dataOptions = {}) ->
     group = @_lookupGroup(groupName)
+
+    if route.substring(0, 1) != '/'
+      route = '/' + route
+
+    if name.substring(0, 1) == '/'
+      name = name.slice(1)
 
     if group
       group.sections.push({
-        title: @title,
-        name: @name,
-        route: @route,
-        routeAnchor: '#' + @name
+        title: title,
+        name: name,
+        route: route,
+        routeAnchor: 'section-' + name.replace(/\//g, '-'),
+        dataOptions: dataOptions
       })
 
   generateMenuDOMFragment: () ->
     return if @groups.length == 0
 
     for group in @groups
-      { route, name, title, sections } = group
+      { route, name, title, sections, routeAnchor, dataOptions } = group
 
       if sections.length > 0
-        templates = [ '<li id="group-#{name}">#{name}</li>', '<li><ul class="menu-sections>"' ]
+        template = """
+          <li id="#{routeAnchor}">
+            <a href="javascript:void(0);">#{title}</a>
+        """
+
+        templates = [ template, '<ul class="nav menu-sections">' ]
 
         for section in sections
-          { route, name, title } = section
+          { route, name, title, routeAnchor, dataOptions } = section
+
+          bindings = []
+          for key, value of dataOptions
+            str = """
+              data-#{key}="#{value}"
+            """
+            bindings.push(str)
+
+          binding_str = if bindings.length > 0 then bindings.join(' ') else ''
 
           template = """
-            <li id="section-#{name}">
-              <a href="/#{route}">#{title}</a>
+            <li id="#{routeAnchor}">
+              <a href="#{route}" #{binding_str}>#{title}</a>
             </li>
           """
 
           templates.push(template)
 
         templates.push('</ul></li>')
-        $(templates.join('')).appendTo(@$containment)
+        $(templates.join('')).appendTo(@element)
 
       else
-        template = """
-          <li id="group-#{name}">
-            <a href="/#{route}">#{title}</a>
-          </li>
-        """
-        $(template).appendTo(@$containment)
+        if dataOptions['qrode']
+          template = """
+            <li id="group-qrode">
+              <a href="javascript:void(0);">#{title}</a>
+            </li>
+          """
+        else
+          template = """
+            <li id="#{routeAnchor}">
+              <a href="#{route}">#{title}</a>
+            </li>
+          """
+        $(template).appendTo(@element)
 
-    @highlightPath()
+    @_bindEvents()
+    @_highlightPath()
 
-  highlightPath: () ->
+  _bindEvents: () ->
+    $('#group-qrode a').click(() ->
+      $('#share-url-qrcode').modal()
+    )
+
+  _highlightPath: () ->
     pathname = location.pathname
-    index = pathname.lastIndexOf('/')
-    name = pathname.slice(index+1)
+    name = pathname.slice(1)
+    name = name.replace(/\//g, '-')
 
-    for group in groups
-      if group.name == name
-        selector = ['[group-name=', name, ']'].join('')
-        @$containment.find(selector).addClass('active')
-      else
-        selector = ['[group-name=', name, ']'].join('')
-        @$containment.find(selector).removeClass('active')
+    if name.indexOf('@') > -1
+      name = 'face'
 
-        if group.sections.length > 0
-          for section in group.sections
-            selector = ['[section-name=', name, ']'].join('')
-            if section.name == name
-              @$containment.find(selector).addClass('active')
-            else
-              @$containment.find(selector).removeClass('active')
+    @$containment.find('li').removeClass('active')
+    selector = ['#group-', name].join('')
+    $selectedGroup = @$containment.find(selector)
+    selector = ['#section-', name].join('')
+    $selectedSection = @$containment.find(selector)
+
+    if $selectedGroup.length > 0
+      $selectedGroup.addClass('active')
+
+    if $selectedSection.length > 0
+       $selectedSection.addClass('active')
 
   removeGroup: (groupName) ->
     group = @_lookupGroup(groupName)
@@ -97,5 +135,16 @@ class @SideMenu
 
   refreshMenu: () ->
     @$containment.html('')
-
     @generateMenuDOMFragment()
+
+  setVisible: (visible) ->
+    if visible
+      @isVisible = true
+      @element.show()
+    else
+      @isVisible = false
+      @element.hide()
+
+  destroy: () ->
+    @element.remove()
+
