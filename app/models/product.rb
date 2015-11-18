@@ -133,7 +133,7 @@ class Product
               aggs: {
                 all_products: {
                   top_hits: {
-                    sort: [:name],
+                    sort: [ "name" ],
                     _source: {
                       include: [
                         :id, :avatar, :name, :price, :category_id, :brand_id, :status, :created_at, :updated_at

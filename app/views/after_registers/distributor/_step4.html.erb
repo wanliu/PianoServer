@@ -3,6 +3,12 @@
   <h1>快速开店<small> 选择你的商品</small></h1>
 </div>
 
+<%= form_for @shop, url: after_register_path(:distributor, step: :product), method: :put do |f| %>
+  <% @select_params.each do |k, values| %>
+    <% values.each do |value| %>
+      <%= hidden_field_tag "select[#{k}][]", value %>
+    <% end %>
+  <% end %>
 <table class="product-groups table table table-striped table-bordered table-hover table-condensed">
   <thead>
     <tr>
@@ -65,7 +71,10 @@
                 <%= button brand[:total], context: :primary, class: 'btn-sm' %>
                 <%= button 3, context: :info, class: 'btn-sm' %>
                 <%= button context: :primary, class: 'btn-sm' do %>
-                <%= icon :trash %>
+                  <%= icon :ok %>
+                <% end %>
+                <%= button context: :primary, class: 'btn-sm' do %>
+                  <%= icon :trash %>
                 <% end %>
               </div>
             </div>
@@ -74,11 +83,15 @@
       <% end %>
 
       <td class="group-product" data-status="<%= product[:status] %>" >
-        <%= check_box :product, :id %>
+
         <%#= link_to product_path(product[:id]) do %>
+        <%= hidden_field_tag "products[][id]", product[:id] %>
+        <%= check_box_tag "products[][check]", "1", checked: true %>
+
+        <%= label "product[id]", product[:id] do %>
           <%= image_tag icon_url(product[:avatar]), class: "image-thumbnail", size: "16x16" %>
           <%= product[:name] %>
-        <%# end %>
+        <% end %>
         <div class="box">
           <div class="box-container">
             <div class="btn-group-vertical item-toolbar" role="group" aria-label="toolbar">
@@ -93,77 +106,98 @@
         <%= number_to_currency product[:price] %>
       </td>
       <td>
-        <%= number_field_tag :product, :stack_changes, value: 1, class: 'form-control input-sm' %>
+        <%= number_field_tag "products[][stack_changes]", 1, class: 'form-control input-sm' %>
       </td>
     </tr>
   <% end %>
 </table>
 
+<div class="pull-right step-actions">
+  <%= button_to "以后再说", after_register_path(:distributor, step: :skip), class: 'btn btn-default btn-lg skip', method: :put %>
+  <%= f.submit "下一步", class: 'btn btn-primary btn-lg next' %>
+</div>
+<% end %>
+
 <script type="text/javascript">
-  $("[spy=\"affix\"]").each(function(i, elem) {
-    var top = $(elem).position().top;
-    var bottom = $(document).height() - top + $(elem).outerHeight(true);
-    $(elem).affix({
-      offset: {
-        top: top,
-        bottom: function (span) {
-          var bottom = $(document).outerHeight(true) - this.top - $(span).parents('td').outerHeight(true) + 39 + $(span).outerHeight(true);
-          return (this.bottom = bottom);
-        }
-      }
-    }).on('affixed.bs.affix', function(e) {
-      $(e.target)
-        .attr('style', '')
-        .css({
-          width: $(e.target).parents('td').outerWidth(true),
-          backgroundColor: 'white',
-          top: 51,
-          padding: 10,
-          margin: -5
-        });
-    }).on('affixed-bottom.bs.affix, affixed-top.bs.affix', function(e) {
-      $(e.target).attr('style', '');
-    })
+  // $("[spy=\"affix\"]").each(function(i, elem) {
+  //   var top = $(elem).position().top;
+  //   var bottom = $(document).height() - top + $(elem).outerHeight(true);
+  //   $(elem).affix({
+  //     offset: {
+  //       top: top,
+  //       bottom: function (span) {
+  //         var bottom = $(document).outerHeight(true) - this.top - $(span).parents('td').outerHeight(true) + 39 + $(span).outerHeight(true);
+  //         return (this.bottom = bottom);
+  //       }
+  //     }
+  //   }).on('affixed.bs.affix', function(e) {
+  //     $(e.target)
+  //       .attr('style', '')
+  //       .css({
+  //         width: $(e.target).parents('td').outerWidth(true),
+  //         backgroundColor: 'white',
+  //         top: 51,
+  //         padding: 10,
+  //         margin: -5
+  //       });
+  //   }).on('affix-bottom.bs.affix, affix-top.bs.affix, affixed-bottom.bs.affix, affixed-top.bs.affix', function(e) {
+  //     $(e.target).attr('style', '');
+  //   })
+  // });
+
+  // $("[spy=\"affix-brand\"]").each(function(i, elem) {
+  //   var top = $(elem).position().top;
+  //   var bottom = $(document).height() - top + $(elem).outerHeight(true);
+  //   $(elem).affix({
+  //     offset: {
+  //       top: top,
+  //       bottom: function (span) {
+  //         var bottom = $(document).outerHeight(true) - this.top - $(span).parents('td').outerHeight(true) + 41;
+  //         return (this.bottom = bottom);
+  //       }
+  //     }
+  //   }).on('affixed.bs.affix', function(e) {
+  //     var $parent = $(e.target).parents('td');
+  //     var pos = $parent.position();
+  //     $(e.target)
+  //       .attr('style', '')
+  //       .removeClass('brand')
+  //       .css({
+  //         width: $(e.target).parents('td').outerWidth(true),
+  //         backgroundColor: 'white',
+  //         top: 51,
+  //         padding: 10,
+  //         margin: -5
+  //       });
+  //     }).on('affix-bottom.bs.affix, affix-top.bs.affix, affixed-bottom.bs.affix, affixed-top.bs.affix', function(e) {
+  //       $(e.target)
+  //         .attr('style', '')
+  //         .addClass('brand');
+  //     });
+  // });
+
+  $(".group-product").click(function(e){
+    // e.preventDefault();
+    // e.stopPropagation();
+
+    var $checkbox = $(this).find(":checkbox");
+
+    $checkbox.prop("checked", !$checkbox.prop("checked"));
+    $checkbox.trigger("change");
   });
 
-  $("[spy=\"affix-brand\"]").each(function(i, elem) {
-    var top = $(elem).position().top;
-    var bottom = $(document).height() - top + $(elem).outerHeight(true);
-    $(elem).affix({
-      offset: {
-        top: top,
-        bottom: function (span) {
-          var bottom = $(document).outerHeight(true) - this.top - $(span).parents('td').outerHeight(true) + 41;
-          return (this.bottom = bottom);
-        }
-      }
-    }).on('affixed.bs.affix', function(e) {
-      var $parent = $(e.target).parents('td');
-      var pos = $parent.position();
-      $(e.target)
-        .attr('style', '')
-        .removeClass('brand')
-        .css({
-          width: $(e.target).parents('td').outerWidth(true),
-          backgroundColor: 'white',
-          top: 51,
-          padding: 10,
-          margin: -5
-        });
-      }).on('affixed-bottom.bs.affix, affixed-top.bs.affix', function(e) {
-        $(e.target)
-          .attr('style', '')
-          .addClass('brand');
-      });
+  $(".group-product :checkbox").change(function() {
+    var parent = $(this).parents("td");
+    parent
+      .toggleClass("info")
+      .next()
+      .toggleClass("info")
+      .next()
+      .toggleClass("info");
   });
-
   // $("[spy=\"affix\"]").
 
   // $("[spy=\"affix-brand\"]")
 </script>
 
-<div class="pull-right step-actions">
-  <%= button "以后再说", after_register_path(:distributor), context: :default, class: 'btn-lg' %>
-  <%= button "下一步", after_register_path(:distributor), context: :primary, class: 'btn-lg' %>
-</div>
 </div>

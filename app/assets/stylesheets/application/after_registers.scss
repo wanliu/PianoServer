@@ -76,6 +76,28 @@
       }
     }
   }
+}
 
+@media (max-width: 768px) {
+  .product-groups {
+    width: 960px;
+  }
+}
 
+@media (min-width: 768px) {
+  .product-groups {
+    width: 960px;
+  }
+}
+
+@media (min-width: 992px) {
+  .product-groups {
+    width: 960px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .product-groups {
+    width: 100%;
+  }
 }
