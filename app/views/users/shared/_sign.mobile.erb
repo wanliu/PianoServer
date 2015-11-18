@@ -8,7 +8,7 @@
   <%= render '/users/sessions/login_form' %>
   <div class="other-link">
     <!-- 微信登陆 -->
-    <% if Settings.dev.feature.shop.website %>
+    <% if Settings.dev.feature.weixin %>
       <%= link_to authorize_weixin_path do %>
         <img src = <%= image_path('weixin.png')%>>
       <% end %>
