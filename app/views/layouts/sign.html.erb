@@ -106,17 +106,19 @@
           } else if ($body.hasClass('regist')){
             $body.removeClass('regist').addClass('login');
             history.replaceState({}, "", "/users/sign_in");
-          } else if ($body.hasClass('password')){
-            $body.removeClass('password').addClass('login');
+          } else {
+            $body.removeClass('password password-edit').addClass('login');
             history.replaceState({}, "", "/users/sign_in");
           };
+
         });
 
         $('.forget').click(function(e){
           e.preventDefault();
           $body.removeClass('login').addClass('password');
-           window.history.replaceState({}, "", "/users/password");
+           window.history.replaceState({}, "", "/users/password/new");
         });
+
       });
 
     </script>
