@@ -2,8 +2,8 @@
 <%= nav_back_button %>
 <%= content_for :module, :detail %>
 
-<div class="promotion-detail-container clearfix" data-promotion-id="<%= promotion.id %>" >
-  <div class="promotion-detail-content col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1">
+<div class="promotion-detail-container col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1 clearfix" data-promotion-id="<%= promotion.id %>" >
+  <div class="promotion-detail-content">
     <div class="promotion-poster-image">
       <%= image_tag(promotion.image_url, class: "promotion-poster") %>
     </div>
@@ -61,17 +61,13 @@
     <div class="product-brief">
       <div class="row">
         <div class="col-xs-7 col-md-7">
-          <p>品&nbsp;&nbsp;牌：高端大气上档次</p>
+          <p>库&nbsp;&nbsp;存：<%= promotion.product_inventory %>件</p>
         </div>
         <div class="col-xs-5 col-md-5">
           <p class="text-right">访问量：<%= promotion.hits %></p>
         </div>
       </div>
-      <div class="row">
-        <div class="col-xs-7 col-md-7">
-          <p>库&nbsp;&nbsp;存：<%= promotion.product_inventory %>件</p>
-        </div>
-      </div>
+
     </div>
 
     <div class="navbar-bottom navbar navbar-default navbar-fixed-bottom">
