@@ -1,0 +1,94 @@
+// 手机登陆界面
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px white inset;
+}
+
+body.sign-mobile{
+  padding: 0;
+  background: #fff;
+  &.login .back-btn{
+    display: none;
+  }
+  .back-btn{
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    color: #fff;
+    font-size: 1.4em;
+  }
+  
+  header{
+    position: relative;
+    .header-img{
+      min-height: 100px;
+      width: 100%;
+      display: block;
+      margin-bottom: 5px;
+    }
+  }
+  .sign-container{
+    background: #fff;
+    padding: 0 15px;
+    color: #666;
+    position: absolute;
+    width: 100%;
+    left: 0;
+    transition: all 0.5s;
+    .sign-input-group{
+      position: relative;
+
+      .glyphicon{
+        position: absolute;
+        top: 11px;
+        font-size: 1.4em;
+      }
+      .error-block{
+        color: #ff2b2b;
+        position: absolute;
+        right: 0;
+        bottom: 0;
+      }
+      input{
+        width: 100%;
+        outline: none;
+        border: none;
+        padding-left: 40px;
+        padding-bottom: 10px;
+        padding-top: 10px;
+        border-bottom: 1px solid #ddd;
+      }
+    }
+    .remenber-wrap{
+      width: 60px;
+      margin-left: -10px;
+    }
+    label,
+    .link{
+      font-weight: 100;
+      color: #666;
+      display: inline-block;
+      text-decoration: none;
+    }
+    input[type="checkbox"]{
+      margin: 0;
+      vertical-align: text-bottom;
+    }
+    .regist_now{
+      border-right: 1px solid #ddd;
+      padding-right: 10px;
+      margin-right: 10px;
+    }
+    
+    .sign-btn{
+      border: none;
+      outline: none;
+      width: 100%;
+      text-align: center;
+      background-color:#f10035;
+      color: #fff;
+      line-height:38px;
+      margin: 15px 0;
+      border-radius: 3px;
+    }
+  }
+}

@@ -1,0 +1,161 @@
+// pc登陆界面
+
+$gray : #888;
+
+
+body.regist .login-container{
+  opacity: 0;
+  visibility: hidden;
+}
+body.login .regist-container{
+  opacity: 0;
+  visibility: hidden;
+}
+
+body.sign-pc{
+  font-family: '微软雅黑', Arial,Verdana, Sans-serif;
+  padding: 0;
+  background: #fff;
+  margin-bottom: 60px;
+  background-position: 0 50px;
+  background-repeat: no-repeat;
+  background-size: auto 600px;
+  background-image: image-url("sign-bgi.jpg");
+  @media (max-width: 992px){
+    background-size: auto 500px;
+  }
+
+  footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    left: 0;
+    height: 50px;
+  }
+  .sign-body{
+    position: relative;
+    height: 650px;
+    overflow: hidden;
+    @media (max-width: 992px){
+      height: 550px;
+    }
+  }
+  nav{
+    width: 100%;
+    height: 50px;
+    .navbar-brand{
+      padding: 8px;
+    }
+    img{
+      width: auto;
+      height: 100%;
+    }
+    .welcome-title{
+      float: right;
+      line-height: 50px;
+      font-size: 1.2em;
+      color: $gray
+    }
+  }
+  .media{
+    margin: 0;
+  }
+  .alert{
+    padding: 5px 35px 5px 15px;
+    margin-bottom: 10px;
+  }
+  .sign-logo{
+    position: absolute;
+    top: 150px;
+    left: 0;
+    width: 90%;
+  }
+  .sign-container{
+    color: $gray;
+    width: 320px;
+    padding: 10px 20px;
+    position: absolute;
+    right: 15px;
+    top: 150px;
+    background-color: #fff;
+    box-shadow: 0 0 10px #333;
+    transition: all 0.5s;
+    @media (max-width: 992px){
+      top: 100px
+    }
+
+    .sign-input-group{
+      position: relative;
+      height: 60px;
+      input{
+        color: $gray;
+        width: 100%;
+        outline: none;
+        border: none;
+        line-height: 35px;
+        padding-left: 40px;
+        border: 1px solid #ddd;
+        &:focus{
+          border: 1px solid $gray;
+        }
+      }
+      .glyphicon{
+        position: absolute;
+        text-align: center;
+        width: 38px;
+        line-height: 38px;
+        font-size: 1.4em;;
+      }
+    }
+    .error-block{
+      color: #ff2b2b;
+    }
+    .sign-btn{
+      border: none;
+      outline: none;
+      width: 100%;
+      text-align: center;
+      background-color:#f10035;
+      color: #fff;
+      line-height:35px;
+      height:37px;
+      margin-bottom: 15px;
+      margin-top: 10px;
+      border-radius: 3px;
+      &:hover{
+        background-color:#C1002A;
+      }
+    }
+
+    .remenber-wrap{
+      width: 65px;
+      height: 20px;
+      margin-left: -10px;
+      margin-bottom: 5px;
+      line-height: 24px;
+
+      input[type="checkbox"]{
+        vertical-align: middle;
+        margin: 0;
+        margin-right: 5px;
+      }
+    }
+    label,
+    .link{
+      font-weight: 100;
+      color: $gray;
+    }
+    .toggle-btn{
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      line-height: 18px;
+      margin: 10px 0;
+      color: #39f;
+      cursor: pointer;
+    }
+    .other-link{
+      margin-bottom: 10px;
+    }
+  }
+}
