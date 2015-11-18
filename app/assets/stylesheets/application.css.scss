@@ -48,10 +48,6 @@ footer {
   word-break: break-word;
 }
 
-.detail .navbar-fixed-top{
-  background: #FFFFFF;
-}
-
 .navbar-brand {
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -63,6 +59,10 @@ footer {
   height: 20px;
   margin-right: 5px;
   float: left;
+}
+
+.caret{
+  border-top: 4px solid;
 }
 
 .nav > li > a.navbar-title {
