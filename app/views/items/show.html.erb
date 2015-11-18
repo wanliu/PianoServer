@@ -1,24 +1,26 @@
 
 <%= content_for :module, :item %>
 
-<div class="shop-item col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1">
+<div class="col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1">
+  <div class="shop-item">
   <div class="shop-item-image">
     <%= image_tag @item.image.url %>
   </div>
-<div class="price-period clearfix">
-  <div class="price-desc">
-    <span class="promotion-price">
-      ￥ <%= @item.price %>
-    </span>
-    <span class="dicount-desc">
-      <s>￥ <%= @item.public_price %></s>
-    </span>
-  </div>
 
-  <div class="period-desc finished">
-    <div class="desc-wrap"></div>
+  <div class="price-period clearfix">
+    <div class="price-desc">
+      <span class="promotion-price">
+        ￥ <%= @item.price %>
+      </span>
+      <span class="dicount-desc">
+        <s>￥ <%= @item.public_price %></s>
+      </span>
+    </div>
+
+    <div class="period-desc finished">
+      <div class="desc-wrap"></div>
+    </div>
   </div>
-</div>
 
   <div class="item-properties">
     <div class="media">
@@ -57,11 +59,10 @@
   </div>
 
   <div class='item-secodary-properties clearfix'>
-    <div class='brand-saled-count'>
-      <p class='brand col-xs-6 col-sm-6 col-md-6'>品牌: <% @item.brand.try :name %></p>
+    <div class='brand-saled-count row'>
+      <p class='inventory col-xs-6 col-sm-6 col-md-6 '>库 存：<%= @item.current_stock.to_i %></p>
       <p class='sale-count col-xs-6 col-sm-6 col-md-6 text-right'>总销量：0</p>
     </div>
-    <p class='inventory col-xs-6 col-sm-6 col-md-6 '>库存数量：<%= @item.current_stock.to_i %></p>
   </div>
 
   <!-- <div>商品属性位置</div> -->
@@ -102,4 +103,5 @@
       <% end %>
     </div>
   </div>
+</div>
 </div>

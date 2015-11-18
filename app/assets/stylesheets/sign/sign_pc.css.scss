@@ -2,14 +2,23 @@
 
 $gray : #888;
 
-
-body.regist .login-container{
-  opacity: 0;
-  visibility: hidden;
+body.regist .regist-container{
+  opacity: 1 !important;
+  visibility: visible !important;
 }
-body.login .regist-container{
-  opacity: 0;
-  visibility: hidden;
+body.login .login-container{
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+body.password .password-container{
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+body.password-edit .password-edit-container{
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 body.sign-pc{
@@ -76,12 +85,18 @@ body.sign-pc{
     padding: 10px 20px;
     position: absolute;
     right: 15px;
-    top: 150px;
+    top: 130px;
     background-color: #fff;
     box-shadow: 0 0 10px #333;
+    opacity: 0;
+    visibility: hidden;
     transition: all 0.5s;
+
     @media (max-width: 992px){
-      top: 100px
+      top: 90px
+    }
+    h4{
+      margin-bottom: 20px;
     }
 
     .sign-input-group{
@@ -109,6 +124,7 @@ body.sign-pc{
     }
     .error-block{
       color: #ff2b2b;
+      text-align: right;
     }
     .sign-btn{
       border: none;

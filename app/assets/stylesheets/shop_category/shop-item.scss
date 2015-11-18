@@ -1,6 +1,7 @@
 .shop-item {
   background: #FFFFFF;
   margin-bottom: 50px;
+  overflow: hidden;
 
   .shop-item-image {
     width: 50%;
@@ -32,7 +33,7 @@
     }
   }
   .item-properties {
-    margin: 15px 0;
+    padding: 15px;
 
     .media-left {
       width: 60%;
@@ -50,8 +51,7 @@
   }
 
   .item-shop-infos {
-    margin: 15px 0;
-    padding: 15px 0;
+    padding: 15px;
     border-bottom: 1px solid #ddd;
     border-top: 1px solid #ddd;
 
@@ -62,7 +62,7 @@
   }
 
   .item-secodary-properties {
-    margin: 15px 0;
+    padding: 15px;
   }
 
   .item-descriptions {

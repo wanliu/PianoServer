@@ -48,10 +48,6 @@ footer {
   word-break: break-word;
 }
 
-.detail .navbar-fixed-top{
-  background: #FFFFFF;
-}
-
 .navbar-brand {
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -92,6 +88,9 @@ footer {
   }
 }
 
+.caret{
+  border-top: 4px solid;
+}
 .nav > li > a.navbar-title {
   padding-left: 0px;
 }

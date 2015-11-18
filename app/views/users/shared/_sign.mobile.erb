@@ -1,12 +1,36 @@
 <header>
-  <img class="header-img" src="<%= image_path('sign-bakcground-mobile.jpg')%>">
+  <img class = "header-img" src="<%= image_path('sign-bakcground-mobile.jpg')%>">
   <%= link_to icon('menu-left toggle-btn  back-btn'), new_session_path(resource_name) %>
 </header>
 
-<div class="sign-container login-container">
+<!-- mobile 登陆 -->
+<div class = "sign-container login-container">
   <%= render '/users/sessions/login_form' %>
+  <div class="other-link">
+    <!-- 微信登陆 -->
+    <% if Settings.dev.feature.weixin %>
+      <%= link_to authorize_weixin_path do %>
+        <img src = <%= image_path('weixin.png')%>>
+      <% end %>
+    <% end %>
+    <!-- 其他登陆 ... -->
+  </div>
 </div>
 
+<!-- miblie 注册 -->
 <div class="sign-container regist-container">
   <%= render '/users/registrations/regist_form' %>
 </div>
+
+<!-- miblie 找回密码 -->
+<div class="sign-container password-container">
+  <h4>找回密码</h4>
+  <%= render '/users/passwords/password_form' %>
+</div>
+
+<!-- miblie 编辑密码 -->
+<div class="sign-container password-edit-container">
+  <h4>设置新密码</h4>
+  <%= render '/users/passwords/edit_form' %>
+</div>
+
