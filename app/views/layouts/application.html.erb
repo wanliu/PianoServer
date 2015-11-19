@@ -98,7 +98,16 @@
               <%= yield %>
             </div><!--/row-->
           </div> <!-- /container -->
-          <%= render "footer", with: @subject %>
+          
+          <% _module = content_for :module %>
+          <% case _module %>
+          <% when NilClass %>
+            <%= render "footer", with: @subject %>
+          <% when "shop" %>
+            <%= render "footer", with: @shop %>
+          <% else %>
+            <%= render "footer" %>
+          <% end %>
         </div>
       </div>
     </div>
