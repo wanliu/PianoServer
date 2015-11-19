@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="<%= I18n.locale %>">
   <head>
     <meta charset="utf-8">
@@ -84,25 +84,35 @@
     <%= render "chat_notification" %>
   </head>
   <body class="<%= yield :module %>">
-    <%= render "shards/navbar" %>
     <div class="chat-notices"></div>
+    <div class="fixed-height-container">
+      <div class="menu-container"></div>
+      <%= render "shards/navbar" %>
 
-    <div class="container">
-      <div class="row">
-        <%= bootstrap_flash %>
-        <%= yield %>
-      </div><!--/row-->
+      <div class="scroll-container">
+        <div class="container">
+          <div class="row">
+            <%= bootstrap_flash %>
+            <%= yield %>
+          </div><!--/row-->
+        </div> <!-- /container -->
+        <%= render "footer", with: @subject %>
+      </div>
+    </div>
 
-      <%= render "footer", with: @subject %>
-      <%= render "qrcode" %>
-      <div class="linkmen-overlayer"></div>
-    </div> <!-- /container -->
+    <%= render "qrcode" %>
+    <div class="linkmen-overlayer"></div>
     <%#= render "shards/ajax_error" %>
     <%= render "pswp" %>
-    <script type="text/javascript">
 
-    </script>
+    <%= render "sidebar_menu" %>
     <script type="text/javascript">
+      // var $fixedTop = $('.navbar-top');
+
+      // $(window).scroll(function(e) {
+      //   $fixedTop.css('top', $(this).scrollTop());
+      // })
+
       <% unless Rails.env.production? %>
         console.log('development version: <%= PianoServer::VERSION %>')
       <% end %>
