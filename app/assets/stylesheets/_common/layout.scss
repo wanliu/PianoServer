@@ -1,32 +1,58 @@
+body {
+  overflow: hidden;
+}
+
 .menu-container {
-  position: fixed;
+  position: absolute;
   top: 0;
   bottom: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  width: 250px;
+  width: 200px;
   z-index: 11;
-  background: #CCCCCC;
-  left: -250px;
-  -moz-transition: left 0.25s ease-in-out;
-  -webkit-transtion: left 0.25s ease-in-out;
-  transition: left 0.25s ease-in-out;
+  background: #E32929;
+  left: 0;
+
+  a {
+    color: #FFFFFF;
+  }
+
+  li.group-item {
+    border-bottom: 1px solid #CD1C1C;
+  }
+
+  .group-title {
+    display: block;
+    padding: 10px 15px;
+    color: #FFFFFF;
+  }
 
   .nav.menu-sections > li > a {
     padding-left: 35px;
   }
 
-  .nav > li.active {
-    background: #428BCA;
+  .nav > li:hover > a {
+    background: #BF0D0D;
+  }
 
-    a {
-      color: #FFFFFF;
+  .nav > li.active > a {
+    background: #FFD143;
+    color: #E32929;
+
+    &:hover {
+      background: #FFD143;
     }
   }
+}
 
-  .nav > li.active a:hover {
-    background: #428BCA;
-  }
+.content-container {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  -moz-transition: margin-left 0.25s ease-in-out;
+  -webkit-transtion: margin-left 0.25s ease-in-out;
+  transition: margin-left 0.25s ease-in-out;
+  -webkit-backface-visibility: hidden;
 }
 
 .chat-notices{
@@ -58,27 +84,39 @@
 
 .navbar-top {
   position: absolute;
-  width: 100%;
   top: 0;
   z-index: 10;
+  left: 200px;
+  right: 0;
 }
 
 .fixed-height-container {
   position: absolute;
   top: 0;
-  bottom: 0;
-  overflow: hidden;
-  left: 0;
-  width: 100%;
-  -moz-transition: left 0.25s ease-in-out;
-  -webkit-transtion: left 0.25s ease-in-out;
-  transition: left 0.25s ease-in-out;
+  left: -200px;
+  right: 0;
+  height: 100%;
 
   .scroll-container {
     position: relative;
+    width: 100%;
     height: 100%;
+    padding-left: 200px;
     padding-top: 60px;
     overflow-y: auto;
     overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+
+    .menu-overlayer {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: #333333;
+      opacity: 0.5;
+      display: none;
+      z-index: 10;
+    }
   }
 }
