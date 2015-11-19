@@ -1,9 +1,9 @@
 <li class="dropdown">
   <%= link_to mycart_path, class: 'dropdown-toggle', "data-toggle" => 'dropdown' do %>
-    <%= icon "shopping-cart" %>【<%= @cart.items.count %>】
+    <%= icon "shopping-cart" %>【<span id='cart-item-count'><%= current_cart.items.count %></span>】
   <% end %>
   <ul class="dropdown-menu cart-item-list" aria-labelledby="mycartList">
-    <% groups = @cart.items.group_by {|item| item.supplier } %>
+    <% groups = current_cart.items.group_by {|item| item.supplier } %>
     <% groups.to_a.first(3).each do |supplier, _items| %>
       <% items = _items.first(4) %>
       <li class="dropdown-header"><%= supplier.title %><span class="count pull-right">共 <%= number_with_delimiter _items.count %> 件</span></li>
@@ -11,7 +11,7 @@
       <% items.each do |item| %>
         <% cartable = item.cartable %>
         <% url = cartable && cartable.is_a?(Item) ? shop_item_path(supplier.name, cartable) : promotion_path(cartable) %>
-        <li>
+        <li class='cart-item' data-item-id='<%= item.id %>'>
           <%= link_to url do %>
             <div class="media">
               <div class="media-left">
@@ -19,7 +19,7 @@
               </div>
               <div class="media-body">
                 <h4 class="media-heading"><%= item.title %></h4>
-                <p class="quantity">x <%= number_with_delimiter item.quantity %></p>
+                <p>x <span class="quantity"><%= number_with_delimiter item.quantity %></span></p>
                 <p class="price"><%= number_to_currency item.price %></p>
               </div>
             </div>

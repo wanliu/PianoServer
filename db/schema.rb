@@ -227,6 +227,17 @@ ActiveRecord::Schema.define(version: 20151113092752) do
     t.decimal  "current_stock",    precision: 10, scale: 2
   end
 
+  create_table "likes", force: :cascade do |t|
+    t.string   "liker_type"
+    t.integer  "liker_id"
+    t.string   "likeable_type"
+    t.integer  "likeable_id"
+    t.datetime "created_at"
+  end
+
+  add_index "likes", ["likeable_id", "likeable_type"], name: "fk_likeables", using: :btree
+  add_index "likes", ["liker_id", "liker_type"], name: "fk_likes", using: :btree
+
   create_table "line_items", force: :cascade do |t|
     t.integer  "itemable_id"
     t.string   "itemable_type"
@@ -243,17 +254,6 @@ ActiveRecord::Schema.define(version: 20151113092752) do
     t.integer  "unit"
     t.string   "unit_title"
   end
-
-  create_table "likes", force: :cascade do |t|
-    t.string   "liker_type"
-    t.integer  "liker_id"
-    t.string   "likeable_type"
-    t.integer  "likeable_id"
-    t.datetime "created_at"
-  end
-
-  add_index "likes", ["likeable_id", "likeable_type"], name: "fk_likeables", using: :btree
-  add_index "likes", ["liker_id", "liker_type"], name: "fk_likes", using: :btree
 
   create_table "locations", force: :cascade do |t|
     t.integer  "user_id"
@@ -391,8 +391,8 @@ ActiveRecord::Schema.define(version: 20151113092752) do
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
     t.string   "logo"
-    t.jsonb    "settings",    default: {}
     t.string   "address"
+    t.jsonb    "settings",    default: {}
   end
 
   create_table "statuses", force: :cascade do |t|

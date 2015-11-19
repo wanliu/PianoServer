@@ -106,7 +106,7 @@
         <% end %>
 
         <% if Settings.dev.feature.purchase %>
-          <div class="buy-now contact-button">购买</div>
+          <div class="buy-now contact-button add-to-cart" data-cartable-type="Promotion" data-cartable-id="<%= promotion.id %>">购买</div>
         <% end %>
 
         <% if shop.owner.id === current_anonymous_or_user.id %>
