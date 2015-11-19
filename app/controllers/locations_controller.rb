@@ -3,7 +3,7 @@ class LocationsController < ApplicationController
 
   def new
     @location = Location.new(user_id: current_anonymous_or_user.id,
-      chat_id: params[:chat_id], order_id: params[:order_id])
+      chat_id: params[:chat_id], intention_id: params[:intention_id])
   end
 
   def show
@@ -17,9 +17,9 @@ class LocationsController < ApplicationController
 
     if @location.save
       # render json: @location, status: :created
-      #@order = Order.find(@location.order_id)
-      # @order.delivery_location_id = @location.id
-      #@order.save
+      #@intention = Intention.find(@location.intention_id)
+      # @intention.delivery_location_id = @location.id
+      #@intention.save
 
       redirect_to @location.chat_id ? chat_path(@location.chat_id) : location_path(@location)
     else
@@ -46,6 +46,6 @@ class LocationsController < ApplicationController
 
   def location_params
     params.require(:location)
-      .permit(:province_id,:city_id,:region_id,:contact, :id, :road, :zipcode, :contact_phone, :user_id, :chat_id, :order_id)
+      .permit(:province_id,:city_id,:region_id,:contact, :id, :road, :zipcode, :contact_phone, :user_id, :chat_id, :intention_id)
   end
 end

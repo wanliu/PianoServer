@@ -1,4 +1,4 @@
-class @OrderItem
+class @LineItem
   constructor: (@element, @parent, @itemId = $(@element).data('itemId')) ->
     @hammer = new Hammer.Manager(@$()[0])
     @hammer.add(new Hammer.Swipe({

@@ -189,6 +189,24 @@ ActiveRecord::Schema.define(version: 20151118071450) do
     t.integer  "category_id"
   end
 
+  create_table "intentions", force: :cascade do |t|
+    t.integer  "buyer_id"
+    t.integer  "seller_id"
+    t.integer  "supplier_id"
+    t.string   "contacts"
+    t.integer  "business_type"
+    t.integer  "bid"
+    t.integer  "sid"
+    t.datetime "created_at",                                    null: false
+    t.datetime "updated_at",                                    null: false
+    t.string   "title"
+    t.decimal  "total",                precision: 18, scale: 2
+    t.jsonb    "image"
+    t.jsonb    "data"
+    t.integer  "delivery_location_id"
+    t.integer  "send_location_id"
+  end
+
   create_table "items", force: :cascade do |t|
     t.integer  "shop_category_id"
     t.integer  "shop_id"
@@ -233,6 +251,23 @@ ActiveRecord::Schema.define(version: 20151118071450) do
 
   add_index "likes", ["likeable_id", "likeable_type"], name: "fk_likeables", using: :btree
   add_index "likes", ["liker_id", "liker_type"], name: "fk_likes", using: :btree
+
+  create_table "line_items", force: :cascade do |t|
+    t.integer  "itemable_id"
+    t.string   "itemable_type"
+    t.string   "title"
+    t.jsonb    "data",                                   default: {}, null: false
+    t.integer  "iid"
+    t.string   "item_type"
+    t.datetime "created_at",                                          null: false
+    t.datetime "updated_at",                                          null: false
+    t.jsonb    "image",                                  default: {}, null: false
+    t.decimal  "price",         precision: 15, scale: 2
+    t.decimal  "amount",        precision: 15, scale: 8
+    t.decimal  "sub_total",     precision: 16, scale: 2
+    t.integer  "unit"
+    t.string   "unit_title"
+  end
 
   create_table "locations", force: :cascade do |t|
     t.integer  "user_id"
@@ -296,40 +331,15 @@ ActiveRecord::Schema.define(version: 20151118071450) do
     t.datetime "updated_at",                    null: false
   end
 
-  create_table "order_items", force: :cascade do |t|
-    t.integer  "itemable_id"
-    t.string   "itemable_type"
-    t.string   "title"
-    t.jsonb    "data",                                   default: {}, null: false
-    t.integer  "iid"
-    t.string   "item_type"
-    t.datetime "created_at",                                          null: false
-    t.datetime "updated_at",                                          null: false
-    t.jsonb    "image",                                  default: {}, null: false
-    t.decimal  "price",         precision: 15, scale: 2
-    t.decimal  "amount",        precision: 15, scale: 8
-    t.decimal  "sub_total",     precision: 16, scale: 2
-    t.integer  "unit"
-    t.string   "unit_title"
+  create_table "orders", force: :cascade do |t|
+    t.integer "buyer_id"
+    t.integer "supplier_id"
+    t.decimal "total",            precision: 10, scale: 2
+    t.string  "delivery_address"
   end
 
-  create_table "orders", force: :cascade do |t|
-    t.integer  "buyer_id"
-    t.integer  "seller_id"
-    t.integer  "supplier_id"
-    t.string   "contacts"
-    t.integer  "business_type"
-    t.integer  "bid"
-    t.integer  "sid"
-    t.datetime "created_at",                                    null: false
-    t.datetime "updated_at",                                    null: false
-    t.string   "title"
-    t.decimal  "total",                precision: 18, scale: 2
-    t.jsonb    "image"
-    t.jsonb    "data"
-    t.integer  "delivery_location_id"
-    t.integer  "send_location_id"
-  end
+  add_index "orders", ["buyer_id"], name: "index_orders_on_buyer_id", using: :btree
+  add_index "orders", ["supplier_id"], name: "index_orders_on_supplier_id", using: :btree
 
   create_table "properties", force: :cascade do |t|
     t.string   "name"
@@ -506,6 +516,8 @@ ActiveRecord::Schema.define(version: 20151118071450) do
 
   add_index "variables", ["host_type", "host_id"], name: "index_variables_on_host_type_and_host_id", using: :btree
 
+  add_foreign_key "orders", "shops", column: "supplier_id"
+  add_foreign_key "orders", "users", column: "buyer_id"
   add_foreign_key "shop_categories", "shops"
   add_foreign_key "stock_changes", "items"
   add_foreign_key "stock_changes", "units"

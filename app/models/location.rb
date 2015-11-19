@@ -16,7 +16,7 @@ class Location < ActiveRecord::Base
 
   validate :too_many_record
 
-  attr_accessor :chat_id, :order_id
+  attr_accessor :chat_id, :intention_id
 
   def to_s
     %(#{contact}, #{province_name}#{city_name}#{region_name}#{road}, #{contact_phone})

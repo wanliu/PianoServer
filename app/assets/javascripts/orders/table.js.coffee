@@ -14,9 +14,9 @@ class @OrderTable extends @HuEvent
     super(@element)
     @$items = @$().find('.item-list > .list-group-item')
     @items = for item in @$items
-      new OrderItem(item, @element)
+      new LineItem(item, @element)
 
-    @orderId = @order.id
+    @intentionId = @order.id
     @options = $.extend({}, OrderTable.defaultOptions, @options)
     @patch = []
 
@@ -51,7 +51,7 @@ class @OrderTable extends @HuEvent
 
     @on 'init', () =>
       $.ajax({
-        url: "/orders/#{@orderId}/diff",
+        url: "/intentions/#{@intentionId}/diff",
         type: 'GET',
         dataType: 'json'
       }).success (data) =>
@@ -324,13 +324,13 @@ class @OrderTable extends @HuEvent
     e.preventDefault()
     unless @inAccepting
       @inAccepting = true
-      $.post("/orders/#{@orderId}/accept")
+      $.post("/intentions/#{@intentionId}/accept")
         .success () =>
           @showPopup()
 
           @ensureTickId = setTimeout () =>
             @inAccepting = false
-            $.post "/orders/#{@orderId}/ensure", (json) =>
+            $.post "/intentions/#{@intentionId}/ensure", (json) =>
               @unbindAllEvents()
               this.hideConsultButtons();
 
@@ -345,10 +345,10 @@ class @OrderTable extends @HuEvent
     if @inAccepting
       @closePopup()
 
-      $.post "/orders/#{@orderId}/cancel", (data) =>
+      $.post "/intentions/#{@intentionId}/cancel", (data) =>
 
   rejectOrderChanges: () ->
-    $.post "/orders/#{@orderId}/reject", { inline: true }, (json) =>
+    $.post "/intentions/#{@intentionId}/reject", { inline: true }, (json) =>
       @unbindAllEvents()
       $('.order-table').html(json.html) if json.html?
       @hideConsultButtons()
@@ -407,7 +407,7 @@ class @OrderTable extends @HuEvent
 
   removeItem: (el) ->
     itemId = el.attr('item-id')
-    orderId = el.parent().attr('order-id')
+    intentionId = el.parent().attr('order-id')
 
     @changeRadiusStyles(el)
 
@@ -430,7 +430,7 @@ class @OrderTable extends @HuEvent
         queue.push(@patch.shift()) for ele in @patch
 
         $.ajax({
-          url: "/orders/#{@orderId}",
+          url: "/intentions/#{@intentionId}",
           type: 'PATCH',
           dataType: 'json',
           contentType: 'application/json',
@@ -530,7 +530,7 @@ class @OrderTable extends @HuEvent
     @unbindAllEvents()
     @hideConsultButtons()
 
-    $.get "/orders/#{@orderId}", {inline: true}, (json) =>
+    $.get "/intentions/#{@intentionId}", {inline: true}, (json) =>
       $('.order-table').html(json.html) if json.html?
 
   removeItem: (event) ->

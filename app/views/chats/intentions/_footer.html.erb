@@ -5,7 +5,7 @@
         </div>
         <div class="col-xs-8 col-sm-8 total">
           <div class="text-right">
-            <span class="text"><%= number_to_currency(@order.total, unit:'￥') %>元</span>
+            <span class="text"><%= number_to_currency(@intention.total, unit:'￥') %>元</span>
             <span class="title"></span>
           </div>
         </div>
@@ -20,7 +20,7 @@
                   <span class="glyphicon glyphicon-minus"></span>
                 </button>
               </div>
-              <input type="text" name="total" class="form-control input-number" value="<%= @order.total %>" autocomplete="off">
+              <input type="text" name="total" class="form-control input-number" value="<%= @intention.total %>" autocomplete="off">
               <div class="input-group-btn">
                 <button type="button" class="btn btn-primary btn-plus">
                   <span class="glyphicon glyphicon-plus"></span>
