@@ -1,5 +1,5 @@
 class ShopCategoriesController < ShopsController
-  before_filter :set_shop_category, only: [ :show ]
+  before_action :set_shop_category, only: [ :show ]
 
   def index
     @shop_categories = @shop.shop_category.children.where(status: true).page(params[:page]).per(params[:per])
@@ -20,13 +20,15 @@ class ShopCategoriesController < ShopsController
   end
 
   private
-    def set_shop
-      @shop = Shop.find_by(name: params[:shop_id])
-      @shop.punch(request)
-    end
 
-    def set_shop_category
-      @shop_category = ShopCategory.find(params[:id])
-      @root = @shop.shop_category
-    end
+  def set_shop
+    @shop = Shop.find_by(name: params[:shop_id])
+    @shop.punch(request)
+  end
+
+  def set_shop_category
+    @root = @shop.shop_category
+    @shop_category = ShopCategory.find(params[:id])
+    raise ActionController::RoutingError.new('Not Found') unless @shop_category.is_or_is_descendant_of?(@root)
+  end
 end

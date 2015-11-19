@@ -17,6 +17,9 @@ body.detail {
     width: 50%;
     margin: 0 auto;
     overflow: hidden;
+    @media (max-width: 484px){
+      width: 100%;
+    }
 
     .promotion-poster{
       max-width: 100%;
