@@ -42,61 +42,65 @@
     <%= render "chat_notification" %>
   </head>
   <body class="<%= yield :module %>">
-    <div class="navbar navbar-default navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <ul class="nav navbar-left">
-            <%= yield :back %>
-            <li>
-              <%= link_to root_path, class: "navbar-brand" do %>
-                <%= image_tag 'logo.png' %>
-                <%= content_for?(:navbar) ? yield(:nabvar) : @shop.title %>
-              <% end %>
-            </li>
-            <li>
-              <%= link_to content_for(:navbar_link), class: "navbar-brand navbar-title" do %>
-                <%= content_for?(:navbar) ? yield(:navbar) : Settings.app.title %>
-              <% end %>
-            </li>
-          </ul>
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <div class="navbar-collapse collapse navbar-responsive-collapse hidden-xs">
-            <ul class="nav navbar-nav navbar-right">
-              <li><%= link_to "关于我们", about_path  %></li>
-              <li><%= link_to "二维码", "#share-url-qrcode" , "data-toggle"=>"modal" %></li>
-            </ul>
+    <div class="chat-notices"></div>
+    <div class="fixed-height-container">
+      <div class="content-container">
+        <div class="menu-container"></div>
+        <div class="navbar navbar-default navbar-top">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle visible-xs-block" data-menu-name="shop-admin">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <ul class="nav navbar-left">
+                <%= yield :back %>
+                <li>
+                  <%= link_to root_path, class: "navbar-brand" do %>
+                    <%= image_tag 'logo.png' %>
+                    <%= content_for?(:navbar) ? yield(:nabvar) : @shop.title %>
+                  <% end %>
+                </li>
+                <li>
+                  <%= link_to content_for(:navbar_link), class: "navbar-brand navbar-title" do %>
+                    <%= content_for?(:navbar) ? yield(:navbar) : Settings.app.title %>
+                  <% end %>
+                </li>
+              </ul>
+              <div class="navbar-collapse collapse navbar-responsive-collapse hidden-xs">
+                <ul class="nav navbar-nav navbar-right">
+                  <li><%= link_to "关于我们", about_path  %></li>
+                  <li><%= link_to "二维码", "#share-url-qrcode" , "data-toggle"=>"modal" %></li>
+                </ul>
+              </div>
+            </div>
           </div>
+        </div>
+        <div class="menu-overlayer"></div>
+
+        <div class="scroll-container">
+          <div class="container">
+            <%= render "left_sidebar" %>
+
+            <div class="shop-admin-container">
+              <div class="container-fluid ">
+                <div class="row">
+                  <%= bootstrap_flash %>
+                  <%= yield %>
+                </div><!--/row-->
+              </div>
+            </div>
+          </div> <!-- /container -->
+          <%= render "footer" %>
         </div>
       </div>
     </div>
 
-    <div class="chat-notices"></div>
-    <div class="shop-admin-container">
-      <div class="container relative">
-        <div class="row"> <!-- normal-layout -->
-          <%= render "left_sidebar" %>
-
-          <div class="content container-fluid">
-            <%= bootstrap_flash %>
-            <%= yield %>
-          </div>
-          <div class="container">
-            <footer>
-              <p><%= raw Settings.app.footer %> <%= PianoServer::VERSION unless Rails.env.production? %></p>
-            </footer>
-          </div>
-        </div><!--/row-->
-      </div>
-      <div class="shop-admin-overlayer"></div>
-    </div> <!-- /container -->
-
     <%= render "qrcode" %>
     <%#= render "shards/ajax_error" %>
 
+    <%= render "shop_admin/sidebar_menu" %>
     <script type="text/javascript">
       <% unless Rails.env.production? %>
         console.log('development version: <%= PianoServer::VERSION %>')

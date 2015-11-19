@@ -56,7 +56,7 @@
       <!-- 品牌 -->
       <% group_with_errors @item, :brand_id, f do %>
         <%#= select2 :item, :brand_id, options_from_collection_for_select(Brand.all, 'id', 'title', @item.brand_id), {}, class: 'form-control', style: 'width: 100%' %>
-        <% brand_select_option = options_from_collection_for_select( @item.brand.nil? ? [] : [ @item.brand ], 'id', 'title') %>
+        <% brand_select_option = options_from_collection_for_select([ @item.brand ].compact, 'id', 'title') %>
         <%= select2_url :item, :brand_id, brands_path, brand_select_option , {}, class: 'form-control', style: 'width: 100%' %>
         <%#= f.select :brand_id, options_from_collection_for_select(Brand.all, 'id', 'title', @item.brand_id), {}, class: 'form-control' %>
       <% end %>

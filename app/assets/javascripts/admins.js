@@ -35,6 +35,8 @@
 //= require _common/fileuploader
 //= require _common/paginate
 //= require _common/qrcode
+//= require _common/side_menu
+//= require _common/side_menu_manager
 //= require bootsy
 //= require lib/tablesaw
 //= require jquery-ui/core

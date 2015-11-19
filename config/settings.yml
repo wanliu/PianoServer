@@ -34,6 +34,7 @@ assets:
   gray_image: "data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
 dev:
   feature:
+    weixin: true
     camera: true
     shop:
       website: true
