@@ -33,6 +33,10 @@ module BootstrapHelper
     r "<span class=\"caret\"></span>"
   end
 
+  def badge(value)
+    r "<span class=\"badge\">#{value}</span>"
+  end
+
   def group_with_errors(object, name, helper, options = {}, &block)
   #   error = object.errors[name]
   #   error_name = t('attributes.' + name.to_s)

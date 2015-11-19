@@ -101,18 +101,16 @@ class AfterRegistersController < ApplicationController
     @select_params = select_params
     @shop = @current_user.owner_shop
 
-    JobService.start(:generate_products_group, @shop, @select_params, type: "after_registers/category")
-
-
-
+    @job = JobService.start(:generate_products_group, @shop, @select_params, type: "after_registers/category")
+    @products_group = @job.output["products_group"]
     [:show, "product"]
   end
 
   def go_product_step
     @shop = @current_user.owner_shop
 
-    JobService.start(:batch_import_products, @shop, @shop, products_params, select_params, type: "after_registers/product")
-
+    @job = JobService.start(:batch_import_products, @shop, @shop, products_params, select_params, type: "after_registers/product")
+    @created = @job.output["created"]
     [false, "shop"]
   end
 

@@ -12,7 +12,7 @@ class BatchImportProductsJob < ActiveJob::Base
       Product.search query: { terms: { id: ids}}, from: start, size: size
     end
 
-    job.output[:created] ||= []
+    job.output["created"] ||= []
 
     Item.skip_callback :save, :after, :store_attachment!
     index = Item.last_sid shop
@@ -29,7 +29,7 @@ class BatchImportProductsJob < ActiveJob::Base
           skip_batch: true) do |item|
           item.sid = index+=1
           item.write_attribute(:images, product.image_urls)
-          job.output[:created].push(product.attributes) if item.valid?
+          job.output["created"].push(product.attributes) if item.valid?
         end
       end
     end
