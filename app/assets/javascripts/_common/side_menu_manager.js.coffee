@@ -3,7 +3,7 @@
 class @SideMenuManager
   constructor: (@element) ->
     @menus = []
-    @$content = $('.fixed-height-container')
+    @$content = $('.content-container')
     @resizeHandler()
     $(window).bind 'resize', @resizeHandler.bind(@)
 
@@ -11,7 +11,8 @@ class @SideMenuManager
     @hammer.add(new Hammer.Swipe({
       direction: Hammer.DIRECTION_HORIZONTAL,
       velocity: 0.1,
-      threshold: 1
+      threshold: 1,
+      pointers: 1
     }))
     @hammer.on("swiperight", @_open.bind(@))
     @hammer.on("swipeleft", @_close.bind(@))
@@ -45,15 +46,13 @@ class @SideMenuManager
     menu.setVisible(false)
 
   _show: () ->
-    @element.css('left', 0)
-    @$content.css('left', 250)
-    $('body').css('overflow', 'hidden')
+    #@element.css('left', 0)
+    @$content.css('margin-left', 200)
     @isVisible = true
 
   _hide: () ->
-    @element.css('left', -250)
-    @$content.css('left', 0)
-    $('body').css('overflow', 'auto')
+    #@element.css('left', -250)
+    @$content.css('margin-left': 0)
     @isVisible = false
 
   _open: () ->
