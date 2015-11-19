@@ -6,6 +6,14 @@
         <span class="caret"></span>
       </button>
     </div>
+
+    <div class="btn-group">
+      <button type="button" class="btn btn-default dropdown-toggle btn-brand" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        品牌
+        <span class="caret"></span>
+      </button>
+    </div>
+
     <div class="btn-group col-md-3">
       <div class="input-group">
         <input type="text" class="form-control" placeholder="Search" aria-describedby="basic-addon2">
@@ -18,12 +26,28 @@
       分类路径:
       <ol class="breadcrumb"></ol>
     </div>
+    <div class="btn-group pull-right">
+      <%= link_to new_shop_admin_item_path(@shop.name), class: "btn btn-success btn-add" do%>
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        新增
+      <% end %>
+    </div>
   </div>
 
   <div class="category-panel">
     <div class="category-wrap">
       <div class="btn-left"></div>
       <div class="category-list"></div>
+      <div class="btn-right"></div>
+    </div>
+  </div>
+
+  <div class="brand-panel">
+    <div class="brand-wrap">
+      <div class="btn-left"></div>
+      <div class="brand-list clearfix">
+        <%= render partial: "brand", collection: @brands %>
+      </div>
       <div class="btn-right"></div>
     </div>
   </div>
@@ -46,13 +70,9 @@
       <h3 class="panel-title">
         店铺商品
       </h3>
-      <%= link_to new_shop_admin_item_path(@shop.name), class: "btn btn-success btn-add" do%>
-        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-        新增
-      <% end %>
     </div>
     <div class="panel-body">
-      <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack" data-tablesaw-mode-switch>
+      <table class="tablesaw tablesaw-swipe table table-hover" data-tablesaw-mode="swipe" data-tablesaw-sortable >
         <thead>
           <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">商品项名</th>
           <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="5">所属分类</th>

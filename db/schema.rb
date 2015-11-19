@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151102064725) do
+ActiveRecord::Schema.define(version: 20151113092752) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -126,6 +126,7 @@ ActiveRecord::Schema.define(version: 20151102064725) do
     t.integer "category_id",             null: false
     t.integer "property_id",             null: false
     t.integer "state",       default: 0
+    t.integer "sortid",      default: 0
   end
 
   add_index "categories_properties", ["category_id", "property_id"], name: "index_categories_properties_on_category_id_and_property_id", using: :btree
@@ -158,6 +159,16 @@ ActiveRecord::Schema.define(version: 20151102064725) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "feedbacks", force: :cascade do |t|
+    t.string   "name"
+    t.string   "mobile"
+    t.text     "information"
+    t.boolean  "is_show"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.string   "reply"
+  end
+
   create_table "follows", force: :cascade do |t|
     t.integer  "follower_id"
     t.string   "follower_type"
@@ -175,6 +186,24 @@ ActiveRecord::Schema.define(version: 20151102064725) do
     t.integer  "status",      default: 0
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
+  end
+
+  create_table "intentions", force: :cascade do |t|
+    t.integer  "buyer_id"
+    t.integer  "seller_id"
+    t.integer  "supplier_id"
+    t.string   "contacts"
+    t.integer  "business_type"
+    t.integer  "bid"
+    t.integer  "sid"
+    t.datetime "created_at",                                    null: false
+    t.datetime "updated_at",                                    null: false
+    t.string   "title"
+    t.decimal  "total",                precision: 18, scale: 2
+    t.jsonb    "image"
+    t.jsonb    "data"
+    t.integer  "delivery_location_id"
+    t.integer  "send_location_id"
   end
 
   create_table "items", force: :cascade do |t|
@@ -195,6 +224,24 @@ ActiveRecord::Schema.define(version: 20151102064725) do
     t.integer  "brand_id"
     t.jsonb    "properties",                                default: {}
     t.text     "description"
+    t.decimal  "current_stock",    precision: 10, scale: 2
+  end
+
+  create_table "line_items", force: :cascade do |t|
+    t.integer  "itemable_id"
+    t.string   "itemable_type"
+    t.string   "title"
+    t.jsonb    "data",                                   default: {}, null: false
+    t.integer  "iid"
+    t.string   "item_type"
+    t.datetime "created_at",                                          null: false
+    t.datetime "updated_at",                                          null: false
+    t.jsonb    "image",                                  default: {}, null: false
+    t.decimal  "price",         precision: 15, scale: 2
+    t.decimal  "amount",        precision: 15, scale: 8
+    t.decimal  "sub_total",     precision: 16, scale: 2
+    t.integer  "unit"
+    t.string   "unit_title"
   end
 
   create_table "likes", force: :cascade do |t|
@@ -270,40 +317,15 @@ ActiveRecord::Schema.define(version: 20151102064725) do
     t.datetime "updated_at",                    null: false
   end
 
-  create_table "order_items", force: :cascade do |t|
-    t.integer  "itemable_id"
-    t.string   "itemable_type"
-    t.string   "title"
-    t.jsonb    "data",                                   default: {}, null: false
-    t.integer  "iid"
-    t.string   "item_type"
-    t.datetime "created_at",                                          null: false
-    t.datetime "updated_at",                                          null: false
-    t.jsonb    "image",                                  default: {}, null: false
-    t.decimal  "price",         precision: 15, scale: 2
-    t.decimal  "amount",        precision: 15, scale: 8
-    t.decimal  "sub_total",     precision: 16, scale: 2
-    t.integer  "unit"
-    t.string   "unit_title"
+  create_table "orders", force: :cascade do |t|
+    t.integer "buyer_id"
+    t.integer "supplier_id"
+    t.decimal "total",            precision: 10, scale: 2
+    t.string  "delivery_address"
   end
 
-  create_table "orders", force: :cascade do |t|
-    t.integer  "buyer_id"
-    t.integer  "seller_id"
-    t.integer  "supplier_id"
-    t.string   "contacts"
-    t.integer  "business_type"
-    t.integer  "bid"
-    t.integer  "sid"
-    t.datetime "created_at",                                    null: false
-    t.datetime "updated_at",                                    null: false
-    t.string   "title"
-    t.decimal  "total",                precision: 18, scale: 2
-    t.jsonb    "image"
-    t.jsonb    "data"
-    t.integer  "delivery_location_id"
-    t.integer  "send_location_id"
-  end
+  add_index "orders", ["buyer_id"], name: "index_orders_on_buyer_id", using: :btree
+  add_index "orders", ["supplier_id"], name: "index_orders_on_supplier_id", using: :btree
 
   create_table "properties", force: :cascade do |t|
     t.string   "name"
@@ -369,8 +391,8 @@ ActiveRecord::Schema.define(version: 20151102064725) do
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
     t.string   "logo"
-    t.string   "address"
     t.jsonb    "settings",    default: {}
+    t.string   "address"
   end
 
   create_table "statuses", force: :cascade do |t|
@@ -479,6 +501,8 @@ ActiveRecord::Schema.define(version: 20151102064725) do
 
   add_index "variables", ["host_type", "host_id"], name: "index_variables_on_host_type_and_host_id", using: :btree
 
+  add_foreign_key "orders", "shops", column: "supplier_id"
+  add_foreign_key "orders", "users", column: "buyer_id"
   add_foreign_key "shop_categories", "shops"
   add_foreign_key "stock_changes", "items"
   add_foreign_key "stock_changes", "units"

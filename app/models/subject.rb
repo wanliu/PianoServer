@@ -1,5 +1,7 @@
 class Subject < ActiveRecord::Base
   include ContentManagement::Model
+  include PublicActivity::Model
+  tracked
 
   RESERVED_NAMES = ["homepage_header", "index", "promotion", "homepage"]
 

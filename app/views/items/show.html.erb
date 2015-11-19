@@ -1,3 +1,7 @@
+
+<%= content_for :module, :item %>
+
+
 <div class="shop-item col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1">
   <div class="shop-item-image">
     <%= image_tag @item.image.url %>
@@ -38,9 +42,8 @@
   <div class='item-shop-infos'>
     <div class="media ">
       <div class="media-left media-middle">
-        <% link_to shop_site_path(@shop), class: 'shop-avatar' do %>
+        <%= link_to shop_site_path(@shop.name), class: 'shop-avatar' do %>
           <%= image_tag @shop.logo_url %>
-        </a>
         <% end %>
       </div>
       <div class="media-body media-middle">
@@ -124,7 +127,7 @@
       <% if @shop.owner_id == current_user.id %>
         <div class="contact-button chat">您的店铺</div>
       <% else %>
-        <%= button_to '洽谈', item_chats_path(@item,  shop_id: @shop.id), form_class: 'contact-button chat' %>
+        <%= button_to '洽谈', item_chats_path(@item.id, shop_id: @shop.id), form_class: 'contact-button chat' %>
       <% end %>
     </div>
   </div>
@@ -211,8 +214,8 @@ body {
 }
 
 .shop-item .item-properties .media-body {
-  border-left: 1px solid #ccc;
-  border-right: 1px solid #ccc;
+  border-left: 1px solid #DDDDDD;
+  border-right: 1px solid #DDDDDD;
 }
 
 .shop-item .item-properties .media-right {
@@ -223,6 +226,7 @@ body {
 .shop-item .item-shop-infos {
   padding: 15px 0;
   border-bottom: 1px solid #DDDDDD;
+  border-top: 1px solid #DDDDDD;
 }
 
 .shop-item .item-shop-infos .shop-avatar img {

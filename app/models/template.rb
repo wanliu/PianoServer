@@ -1,4 +1,6 @@
 class Template < ActiveRecord::Base
+  include PublicActivity::Model
+  tracked
 
   mattr_accessor :available_variables
   mattr_accessor :constants_variables
@@ -60,10 +62,6 @@ class Template < ActiveRecord::Base
 
   def default?
     !persisted?
-  end
-
-  def to_param
-    filename
   end
 
   protected

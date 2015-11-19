@@ -1,6 +1,10 @@
 class Admins::PropertiesController < Admins::BaseController
   before_action :get_property, only: [:show, :edit, :update, :destroy]
 
+  def index
+    @properties = Property.order(id: :asc).page(params[:page]).per(params[:per])
+  end
+
   def new
     @property = Property.new
   end
@@ -32,6 +36,14 @@ class Admins::PropertiesController < Admins::BaseController
     @property.destroy
 
     redirect_to admins_products_path
+  end
+
+  def fuzzy_match
+    @category = Category.find(params[:category_id])
+    @properties = @category.with_upper_properties
+    properties = Property.where("title LIKE ? OR name LIKE ?", "%#{params[:q]}%", "%#{params[:q]}%")
+    matched_properties = properties - @properties
+    render json: { properties: matched_properties }
   end
 
   private

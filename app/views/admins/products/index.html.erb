@@ -1,52 +1,25 @@
-<h1 class="page-header">商品中心</h1>
-
-<div class="btn-toolbar" role="toolbar" aria-label="...">
-
-</div>
-
-<h1 class="page-header">
-  属性配置
-  <%= link_to new_admins_property_path, class: "btn btn-default pull-right" do %>
-    <span class='glyphicon glyphicon-plus'>添加新属性</span>
-  <% end %>
+<h1 class="page-header">商品中心
+  <div class="btn-toolbar pull-right" role="toolbar" aria-label="...">
+    <div class="btn-group" role="group" aria-label="...">
+      <button class='btn btn-default sync-es-categories'>同步ES分类</button>
+    </div>
+  </div>
 </h1>
 
-<div class="property-list">
-  <table class="table">
-    <thead>
-      <th>属性ID</th>
-      <th>名称</th>
-      <th>标题</th>
-      <th>集合属性</th>
-      <th>单位</th>
-      <th>取值类型</th>
-      <th>操作</th>
-    </thead>
-    <tbody>
-      <%= render partial: "property_item", collection: @properties %>
-    </tbody>
-  </table>
-</div>
+<%= nav layout: :justified do %>
+  <%= link_to '非标准化的商品', '#' %>
+  <%= link_to '标准商品', '#' %>
+<% end %>
 
-<%= paginate(@properties) %>
 
-<div class="btn-toolbar" role="toolbar" aria-label="...">
-  <div class="btn-group" role="group" aria-label="...">
-    <button class='btn btn-default sync-es-categories'>同步ES分类</button>
-  </div>
-  <div class="btn-group" role="group" aria-label="...">
-    <button class='btn btn-default sync-es-brands'>同步ES品牌</button>
-  </div>
-</div>
+
+<%= simple_table_for Item.where(product_id: nil), with: ItemTable %>
+
 
 <script type="text/javascript">
-  (function () {
-    $('button.sync-es-brands').click(function (e) {
-      $.post('<%= sync_es_brands_admins_industries_path %>')
-    });
-
+  (function() {
     $('button.sync-es-categories').click(function (e) {
       $.post('<%= sync_es_categories_admins_industries_path %>')
     });
-  })();
+  })()
 </script>

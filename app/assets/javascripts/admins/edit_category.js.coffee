@@ -1,5 +1,9 @@
 #= require _common/event
 #= require _common/fileuploader
+
+TRANSITION_ENDS = 'webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend'
+ANIMATION_ENDS  = 'webkitAnimationEnd oanimationend oAnimationEnd msAnimationEnd Animation'
+
 class @EditShopCategory extends @HuEvent
   events:
     'click': 'onClick'
@@ -12,7 +16,7 @@ class @EditShopCategory extends @HuEvent
     'click .btn-closed': 'showCategory'
 
   constructor: (@element, @status) ->
-    super
+    super(@element)
     @hammer = new Hammer.Manager(@$()[0])
     @hammer.add(new Hammer.Press())
     @$img = @$().find('form input[name="shop_category_img"]')
@@ -20,6 +24,7 @@ class @EditShopCategory extends @HuEvent
     @shopCategoryId = @$().data('shopCategoryId')
     @url = @$().find('.thumbnail').data('link')
     token = $('meta[name="csrf-token"]').attr('content')
+    @$progress = @$().find('.progress')
 
     unless @status
       @element.find('.toggle-button').addClass('closed')
@@ -38,7 +43,8 @@ class @EditShopCategory extends @HuEvent
           <ul class="qq-upload-list"></ul>
         </div>
       """,
-      onComplete: @onUploader.bind(@)
+      onComplete: @onUploader.bind(@),
+      onProgress: @onProgress.bind(@)
     })
 
     @hammer.on('press', @.onPress.bind(@))
@@ -57,27 +63,63 @@ class @EditShopCategory extends @HuEvent
       .select()
 
   onClick: (e) ->
-    if $(e.target).is('.thumbnail>img')
+    @enterAnimation(e,()=>
+      Turbolinks.visit(@url)
+    )
 
-      if @thumbnailClickable(e)
-        Turbolinks.visit(@url)
-        @$()
-          .addClass('animate-reversal-enter')
-          .one(@animationend(), () ->
-            $(@).removeClass('animate-reversal-back')
-          )
+  enterAnimation: (e,fn) ->
+    if $(e.target).is('.thumbnail>img')
+      if @thumbnailClickable(e) && !$('.animate-mask')[0]
+
+        reference       = @$().children('.box')
+        orginTop        = reference.offset().top
+        orginLeft       = reference.offset().left
+        referenceHeight = reference.height()
+        referenceWidth  = reference.width()
+        screenWith      = $(window).width()
+        screenheight    = $(window).height()
+        maskHeight      = referenceHeight - 100
+        maskWidth       = maskHeight
+        maskTop         = orginTop  + (referenceHeight - maskHeight) / 2 + 5
+        maskLeft        = orginLeft + (referenceWidth  - maskHeight) / 2 + 5
+
+        $('body').append('<div class="animate-mask"></div>')
+
+        mask = $('.animate-mask')
+        mask
+          .css({
+            'left'    : maskLeft   + 'px'
+            'top'     : maskTop    + 'px'
+            'width'   : maskWidth  + 'px'
+            'height'  : maskHeight + 'px'
+          })
+          .one(TRANSITION_ENDS, fn)
+
+        reference.css({
+          'opacity'   : 0
+          'visibility': 'hidden'
+          'transform' : 'scale(0.8)'
+        }).addClass('animated')
+
+        setTimeout () =>
+          mask.css({
+            'opacity' : 0.8
+            'left'    : 0
+            'top'     : 0
+            'width'   : screenWith   + 'px'
+            'height'  : screenheight + 'px'
+          })
+        , 10
+
       else
         @$()
           .addClass('animate-shiver')
-          .one(@animationend(), () ->
+          .one(ANIMATION_ENDS, () ->
             $(@).removeClass('animate-shiver')
           )
 
-  animationend: () ->
-    ['animationend','webkitAnimationEnd','oanimationend','MSAnimationEnd'].join(' ')
-
   onPress: () ->
-    $('#category-modal').data({'url': @url, 'status': @status, $related: @$()}).modal("show")
+    $('#category-modal').data({'url': @url, 'status': @status, related: @}).modal("show")
 
   thumbnailClickable: (e) ->
     $(e.target).parent('.thumbnail').attr('data-limited-depth') is 'false'
@@ -85,6 +127,14 @@ class @EditShopCategory extends @HuEvent
   onUploader: (id, filename, responseJSON) ->
     @setImage(responseJSON.url)
     $(@$uploader._listElement).empty()
+    @$progress.hide()
+
+  onProgress: (id, fileName, loaded, total) ->
+    percent = Math.round(loaded / total * 100, 0) + '%'
+    if loaded > 0
+      @$progress.show()
+
+    @$progress.find('.progress-bar').width(percent).text(percent)
 
   enterTitle: (e) ->
     if e.which == 13
@@ -123,7 +173,7 @@ class @EditShopCategory extends @HuEvent
     $.ajax({
       url: @url + '/update_status',
       type: 'PUT',
-      dateType: 'json',
+      dataType: 'json',
       data: {
         shop_category: {
           status: true
@@ -140,7 +190,7 @@ class @EditShopCategory extends @HuEvent
     $.ajax({
       url: @url + '/update_status',
       type: 'PUT',
-      dateType: 'json',
+      dataType: 'json',
       data: {
         shop_category: {
           status: false
@@ -151,8 +201,31 @@ class @EditShopCategory extends @HuEvent
         $target.parent().addClass('closed')
     })
 
-$(document).on('page:change', (event) ->
-  $('.animate-reversal-enter')
-    .removeClass('animate-reversal-enter')
-    .addClass('animate-reversal-back')
+$(document).on('page:change', (event) =>
+  mask = $('.animate-mask')
+
+  if mask[0]
+    reference = $('.animated')
+    reference.css({'transform' : 'scale(1)'})
+
+    maskWidth   = reference.width()  - 50
+    maskHeight  = reference.height() - 50
+    maskTop     = reference.offset().top  + 30
+    maskLeft    = reference.offset().left + 30
+
+    mask.css({
+      'left'    : maskLeft   + 'px'
+      'top'     : maskTop    + 'px'
+      'width'   : maskWidth  + 'px'
+      'height'  : maskHeight + 'px'
+    })
+
+    mask.one('transitionend', ()=>
+      mask.remove()
+      reference.css({
+        'visibility' : 'visible'
+        'opacity'    : 1
+      }).removeClass('animated')
+
+    )
 )

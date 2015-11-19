@@ -1,6 +1,8 @@
 class Item < ActiveRecord::Base
   include DynamicProperty
   include ContentManagement::Model
+  include PublicActivity::Model
+  tracked
 
   html_fragment :description, :scrub => :prune  # scrubs `body` using the :prune scrubber
 
@@ -145,5 +147,9 @@ class Item < ActiveRecord::Base
 
   def to_param
     sid.to_s
+  end
+
+  def update_current_stock!
+    update_attributes current_stock: stock_changes(true).sum(:quantity)
   end
 end

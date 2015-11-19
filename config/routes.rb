@@ -15,6 +15,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :brands, only: [ :index, :update ]
+
   namespace :authorize do
     get :weixin
     get :weixin_redirect_url
@@ -33,6 +35,8 @@ Rails.application.routes.draw do
   mount ChinaCity::Engine => '/china_city'
   resources :contacts, only: [:new, :show, :create, :destroy]
 
+  resources :feedbacks
+
   concern :messable do
     resources :messages
   end
@@ -42,15 +46,13 @@ Rails.application.routes.draw do
   end
 
   concern :templable do |options|
-    resources :templates, options.merge(only: [:index, :new, :create]) do
+    resources :templates, options do
       collection do
         post :preview, to: 'templates#preview_new'
         post :upload, as: :upload
         get :search
       end
-    end
 
-    resources :templates, options.merge(path: 'templates/blob', only: [:show, :edit, :update, :destroy], constraints: {id: /[\S]+/}) do
       member do
         post :upload, as: :upload
         post :preview
@@ -64,6 +66,8 @@ Rails.application.routes.draw do
         end
       end
     end
+
+    resources :templates, options.merge(path: 'templates/blob', only: [:show], constraints: {id: /[\S]+/})
   end
 
   match "admins", to: "admins/dashboards#index", via: :get
@@ -79,12 +83,10 @@ Rails.application.routes.draw do
     resources :promotions
     resources :subjects do
       concerns :templable, templable_type: 'Subject', parent_type: 'Subject'
-      member do
-        get "upload", to: 'subjects#upload', as: :upload
-      end
     end
     resources :messages
     resources :contacts
+    resources :feedbacks
     resources :attachments
     resources :industries do
       collection do
@@ -94,7 +96,11 @@ Rails.application.routes.draw do
 
       resources :categories do
         concerns :templable, templable_type: 'Category', parents_type: [ 'Industry', 'Category' ]
-        resources :properties
+        resources :properties do
+          collection do
+            get "fuzzy_match", to: "properties#fuzzy_match"
+          end
+        end
 
         member do
           post :add_property
@@ -105,6 +111,7 @@ Rails.application.routes.draw do
           get :children
           post :write_item_desc
           get :read_item_desc
+          put :resort
         end
       end
     end
@@ -113,6 +120,16 @@ Rails.application.routes.draw do
     resources :properties
 
     resources :units
+    # resources :shops
+    resources :brands do
+      member do
+        post "upload", as: :upload
+      end
+
+      collection  do
+        post "upload", as: :upload
+      end
+    end
   end
 
   namespace :api do
@@ -140,19 +157,21 @@ Rails.application.routes.draw do
   resources :units, only: [:index, :show]
 
   resources :chats
-  resources :orders do
+  resources :intentions do
     member do
-      get 'status', to: "orders#status", as: :status_of
-      get 'diff', to: "orders#diff", as: :diff
-      post 'accept', to: "orders#accept", as: :accept
-      post 'ensure', to: "orders#ensure", as: :ensure
-      post 'cancel', to: "orders#cancel", as: :cancel
-      post 'reject', to: "orders#reject", as: :reject
-      put 'set_address', to: "orders#set_address"
-      get 'items', to: 'orders#items'
-      put 'add_item', to: 'orders#add_item'
+      get 'status', to: "intentions#status", as: :status_of
+      get 'diff', to: "intentions#diff", as: :diff
+      post 'accept', to: "intentions#accept", as: :accept
+      post 'ensure', to: "intentions#ensure", as: :ensure
+      post 'cancel', to: "intentions#cancel", as: :cancel
+      post 'reject', to: "intentions#reject", as: :reject
+      put 'set_address', to: "intentions#set_address"
+      get 'items', to: 'intentions#items'
+      put 'add_item', to: 'intentions#add_item'
     end
   end
+
+  resources :orders
 
   resources :locations do
     collection do

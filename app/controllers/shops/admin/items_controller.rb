@@ -27,6 +27,8 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
       shop_category_root.children
     end
 
+    @brands = Brand.joins(:items).where("items.id in (?)", @items.map {|item| item.id }).group "brands.id"
+
   end
 
   def new
@@ -47,6 +49,9 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     @title = "创建自己的商品"
     @item = Item.new(category_id: @category.id, shop_id: @shop.id)
     @properties = normal_properties(@category.with_upper_properties)
+    @category_groups = @shop.shop_category.leaves
+      .group_by {|category| category.parent }
+      .map {|group, items| [ group.self_and_ancestors.map{ |parent| parent.title }.join(' » '), items.map {|i| [i.title, i.id]}]}
 
     @inventory_properties = inventory_properties(@category.with_upper_properties)
 
@@ -60,6 +65,10 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     @title = "创建自己的商品"
     @properties = normal_properties(@category.with_upper_properties)
     @inventory_properties = inventory_properties(@category.with_upper_properties)
+    @category_groups = @shop.shop_category.leaves
+      .group_by {|category| category.parent }
+      .map {|group, items| [ group.self_and_ancestors.map{ |parent| parent.title }.join(' » '), items.map {|i| [i.title, i.id]}]}
+
 
     prop_params = properties_params(@properties)
     @item = Item.new item_basic_params.merge(shop_id: @shop.id) do |item|
@@ -86,12 +95,12 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     @item.build_stocks(current_user, stock_options)
 
     if @item.save
-      if params[:submit] == "create_and_continue"
+      if params[:commit] == "新增并继续"
         @item = Item.new(category_id: @category.id, shop_id: @shop.id)
-        flash.now[:notice] = t(:create, scope: "flash.notice.controllers.items.create")
+        flash.now[:notice] = t(:create, scope: "flash.notice.controllers.items")
         render :new_step2
       else
-        redirect_to shop_admin_items_path(@shop.name), notice: t(:create, scope: "flash.notice.controllers.items.create")
+        redirect_to shop_admin_items_path(@shop.name), notice: t(:create, scope: "flash.notice.controllers.items")
       end
     else
       flash.now[:error] = t(:create, scope: "flash.error.controllers.items")
@@ -106,6 +115,9 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     @breadcrumb = @category.ancestors
     @properties = normal_properties(@category.with_upper_properties)
     @inventory_properties = inventory_properties(@category.with_upper_properties)
+    @category_groups = @shop.shop_category.leaves
+      .group_by {|category| category.parent }
+      .map {|group, items| [ group.self_and_ancestors.map{ |parent| parent.title }.join(' » '), items.map {|i| [i.title, i.id]}]}
 
     if Settings.dev.feature.inventory_combination and @inventory_properties.present?
       @inventory_combination = combination_properties(@item, @inventory_properties)
@@ -158,6 +170,9 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     @breadcrumb = @category.ancestors
     @properties = normal_properties(@category.with_upper_properties)
     @inventory_properties = inventory_properties(@category.with_upper_properties)
+    @category_groups = @shop.shop_category.leaves
+      .group_by {|category| category.parent }
+      .map {|group, items| [ group.self_and_ancestors.map{ |parent| parent.title }.join(' » '), items.map {|i| [i.title, i.id]}]}
 
     if Settings.dev.feature.inventory_combination and @inventory_properties.present?
       @inventory_combination = combination_properties(@item, @inventory_properties)

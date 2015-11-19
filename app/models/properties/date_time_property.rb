@@ -1,16 +1,15 @@
 class DateTimeProperty < PropertyBase
 
   def value
-    _value = super
-    if _value.is_a? String
-      typecast(super)
-    else
-      _value
-    end
+    super.is_a?(String) ? typecast(super) : super
   end
 
   def typecast(value)
-    value.blank? ? nil : DateTime.parse(value)
+    if value.nil?
+      nil
+    else
+      DateTime.parse(value)
+    end
   end
 
   def self.exteriors

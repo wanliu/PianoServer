@@ -276,9 +276,9 @@ qq.FileUploaderBasic = function(o){
         multiple: true,
         maxConnections: 3,
         // validation
-        allowedExtensions: [],
+        allowedExtensions: ['jpg', 'jpeg', 'png'],
         acceptFiles: null,		// comma separated string of mime-types for browser to display in browse dialog
-        sizeLimit: 0,
+        sizeLimit: 10 * 1024 * 1024,
         minSizeLimit: 0,
         abortOnFailure: true, // Fail all files if one doesn't meet the criteria
         // events
@@ -288,17 +288,17 @@ qq.FileUploaderBasic = function(o){
         onComplete: function(id, fileName, responseJSON){},
         onCancel: function(id, fileName){},
         onUpload: function(id, fileName, xhr){},
-		onError: function(id, fileName, xhr) {},
+		    onError: function(id, fileName, xhr) {},
         // messages
         messages: {
-            typeError: "Unfortunately the file(s) you selected weren't the type we were expecting. Only {extensions} files are allowed.",
-            sizeError: "{file} is too large, maximum file size is {sizeLimit}.",
-            minSizeError: "{file} is too small, minimum file size is {minSizeLimit}.",
-            emptyError: "{file} is empty, please select files again without it.",
-            onLeave: "The files are being uploaded, if you leave now the upload will be cancelled."
+            typeError: "请上传后缀名为{extensions}的文件.",
+            sizeError: "您上传的文件过大。最大尺寸为{sizeLimit}",
+            minSizeError: "您上传的文件太小，最小尺寸为{minSizeLimit}.",
+            emptyError: "请上传一个不为空的文件.",
+            onLeave: "文件上传中，离开此页面将取消上传."
         },
         showMessage: function(message){
-            alert(message);
+            new window.AlertDismiss('上传提示', message);
         },
         inputName: 'qqfile',
         extraDropzones : []
@@ -545,12 +545,12 @@ qq.FileUploader = function(o){
 
         // template for one item in file list
         fileTemplate: '<li>' +
-                '<span class="qq-progress-bar"></span>' +
-                '<span class="qq-upload-file"></span>' +
-                '<span class="qq-upload-spinner"></span>' +
-                '<span class="qq-upload-size"></span>' +
+                '<p class="qq-progress-bar"></p>' +
+                '<p class="qq-upload-file"></p>' +
+                '<p class="qq-upload-spinner"></p>' +
+                '<p class="qq-upload-size"></p>' +
                 '<a class="qq-upload-cancel" href="#">{cancelButtonText}</a>' +
-                '<span class="qq-upload-failed-text">{failUploadtext}</span>' +
+                '<p class="qq-upload-failed-text">{failUploadtext}</p>' +
             '</li>',
 
         classes: {

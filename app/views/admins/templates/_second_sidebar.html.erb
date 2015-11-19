@@ -1,49 +1,27 @@
 <%= content_for :second_sidebar do %>
-  <div class="template-list">
-    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-      <div class="panel panel-default">
-        <div class="panel-heading" role="tab" id="headingOne">
-          <h4 class="panel-title">
-            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">模板列表</a>
-          </h4>
-        </div>
-        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-          <%= nav as: :pills, layout: :stacked, class: 'list-group' do %>
-            <% if action_name == 'search' %>
-              <%= link_to [:admins, *@parents, :templates], class: 'list-group-item list-group-item-info' do %>
-                <%= "查找: " + params[:q] %>
-                <%= icon :remove, class: 'pull-right' %>
-              <% end %>
-            <% end %>
 
-            <% @templates.each do |template| %>
-              <% url = File.join(url_for([ :admins, *@parents, :templates ]), "blob", template.filename) %>
-              <%= link_to url, class: "list-group-item"  do %>
-                <%= best_in_place_if false, template, :name, url: url_for, inner_class: 'form-control input-sm', as: :input %>
-                <% unless template.reserved? %>
-                  <span class='remove-template glyphicon glyphicon-remove' data-url='<%= url %>'></span>
-                <% end %>
-              <% end %>
-            <% end %>
-            <%= link_to request.fullpath.sub(/\/templates\S*\z/, '/templates/new'), class: 'list-group-item' do %>
-              <%= icon :plus %>
-            <% end %>
-          <% end %>
-        </div>
-      </div>
-      <div class="panel panel-default">
-        <div class="panel-heading" role="tab" id="headingTwo">
-          <h4 class="panel-title">
-            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">图片管理</a>
-          </h4>
-        </div>
-        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-          <% upload_url = url_for([:upload, :admins, *@parents]) %>
-          <%= render partial: "template_images" %>
-        </div>
-      </div>
-    </div>
-  </div>
+
+<%= nav as: :pills, layout: :stacked, class: 'template-list' do %>
+    <% if action_name == 'search' %>
+      <%= link_to [:admins, *@parents, :templates], class: 'list-group-item list-group-item-info' do %>
+        <%= "查找: " + params[:q] %>
+        <%= icon :remove, class: 'pull-right' %>
+      <% end %>
+    <% end %>
+
+  <% @templates.each do |template| %>
+    <% url = File.join(url_for([ :admins, *@parents, :templates ]), "blob", template.filename) %>
+    <%= link_to url, class: "list-group-item", "data-template-id" => template.id  do %>
+      <%= best_in_place_if false, template, :name, url: url_for, inner_class: 'form-control input-sm', as: :input %>
+      <% unless template.reserved? %>
+        <span class='remove-template glyphicon glyphicon-remove'></span>
+      <% end %>
+    <% end %>
+  <% end %>
+    <%= link_to request.fullpath.sub(/\/templates\S*\z/, '/templates/new'), class: 'list-group-item' do %>
+      <%= icon :plus %>
+    <% end %>
+<% end %>
 <% end %>
 
 <div class="modal fade" id="rmTempModal">
@@ -78,7 +56,7 @@
     });
 
     $('#rmTempModal .btn-primary').click(function (event) {
-      var url = $(tempEl).attr('data-url');
+      var url = $(tempEl).parent().attr('href');
       $('#rmTempModal').modal('hide');
 
       $.post(url, {

@@ -13,6 +13,7 @@ class ItemsController < ApplicationController
   	else
       []
     end
+
   end
 
   def show

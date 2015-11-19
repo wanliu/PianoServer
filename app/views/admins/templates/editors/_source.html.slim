@@ -13,7 +13,7 @@
                       data: { \
                         toggle: 'modal', \
                         target: modal_target(config), \
-                        link: File.join(url_for([ :admins, *@parents, :templates ]), "blob", template.filename, "variables"), \
+                        link: File.join(url_for([ :admins, *@parents, :templates ]), template.id.to_s, "variables"), \
                         class: config[:name], \
                         op: 'new' }
               .btn-group-vertical.variable-items role="group" aria-label="variables"
@@ -25,7 +25,7 @@
                       = link_to '#', data: { \
                         toggle: 'modal', \
                         target: modal_target(var), \
-                        link: File.join(url_for([ :admins, *@parents, :templates ]), "blob", template.filename, "variables", var.id.to_s), \
+                        link: File.join(url_for([ :admins, *@parents, :templates ]), template.id.to_s, "variables", var.id.to_s), \
                         class: var[:type].underscore, \
                           op: 'edit' \
                         } do
@@ -90,7 +90,7 @@ javascript:
 
     // 添加与编辑变量
     var subject_id = "#{@parents.first.id}",
-        template_id = "#{template.filename}",
+        template_id = "#{template.id}",
         selector = ".variable-items";
     new TemplateVariables($(selector), subject_id, template_id);
 
