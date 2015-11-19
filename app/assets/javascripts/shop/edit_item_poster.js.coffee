@@ -19,7 +19,7 @@ class @EditItemPoster extends @HuEvent
     })
 
   onUploaded: (id, filename, responseJSON) ->
-    @container.send('poster:replace', [ index, responseJSON.filename ])
+    @container.send('poster:replace', [ responseJSON.filename ])
     @$().find('.item-poster').attr('src', responseJSON.url)
     @filename = responseJSON.filename
 
