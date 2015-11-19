@@ -26,7 +26,7 @@ class ShopCategoriesController < ShopsController
     end
 
     def set_shop_category
-      @shop_category = ShopCategory.find(params[:id])
+      @shop_category = ShopCategory.where(id: params[:id], shop_id: @shop.id)
       @root = @shop.shop_category
     end
 end
