@@ -43,8 +43,8 @@ class @SideMenu
 
       if sections.length > 0
         template = """
-          <li id="#{routeAnchor}">
-            <a href="javascript:void(0);">#{title}</a>
+          <li id="#{routeAnchor}" class="group-item">
+            <span href="javascript:void(0);" class="group-title">#{title}</span>
         """
 
         templates = [ template, '<ul class="nav menu-sections">' ]
@@ -75,13 +75,13 @@ class @SideMenu
       else
         if dataOptions['qrode']
           template = """
-            <li id="group-qrode">
+            <li id="group-qrode" class="group-item">
               <a href="javascript:void(0);">#{title}</a>
             </li>
           """
         else
           template = """
-            <li id="#{routeAnchor}">
+            <li id="#{routeAnchor}" class="group-item">
               <a href="#{route}">#{title}</a>
             </li>
           """

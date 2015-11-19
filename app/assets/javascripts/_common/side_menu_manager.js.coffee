@@ -4,6 +4,7 @@ class @SideMenuManager
   constructor: (@element) ->
     @menus = []
     @$content = $('.content-container')
+    @$layout = @$content.find('.menu-overlayer')
     @resizeHandler()
     $(window).bind 'resize', @resizeHandler.bind(@)
 
@@ -48,11 +49,13 @@ class @SideMenuManager
   _show: () ->
     #@element.css('left', 0)
     @$content.css('margin-left', 200)
+    @$layout.show()
     @isVisible = true
 
   _hide: () ->
     #@element.css('left', -250)
     @$content.css('margin-left': 0)
+    @$layout.hide()
     @isVisible = false
 
   _open: () ->

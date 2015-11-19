@@ -10,23 +10,38 @@ body {
   overflow-x: hidden;
   width: 200px;
   z-index: 11;
-  background: #CCCCCC;
+  background: #E32929;
   left: 0;
+
+  a {
+    color: #FFFFFF;
+  }
+
+  li.group-item {
+    border-bottom: 1px solid #CD1C1C;
+  }
+
+  .group-title {
+    display: block;
+    padding: 10px 15px;
+    color: #FFFFFF;
+  }
 
   .nav.menu-sections > li > a {
     padding-left: 35px;
   }
 
-  .nav > li.active {
-    background: #428BCA;
-
-    a {
-      color: #FFFFFF;
-    }
+  .nav > li:hover > a {
+    background: #BF0D0D;
   }
 
-  .nav > li.active a:hover {
-    background: #428BCA;
+  .nav > li.active > a {
+    background: #FFD143;
+    color: #E32929;
+
+    &:hover {
+      background: #FFD143;
+    }
   }
 }
 
@@ -91,5 +106,17 @@ body {
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
+
+    .menu-overlayer {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: #333333;
+      opacity: 0.5;
+      display: none;
+      z-index: 10;
+    }
   }
 }
