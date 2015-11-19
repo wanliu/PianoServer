@@ -56,8 +56,9 @@ class @ItemPosters extends HuEvent
       filenames.splice(index, 1)
       @$filenames.val(filenames.join(','))
 
-  replaceItemPoster: (e, index, filename) ->
+  replaceItemPoster: (e, filename) ->
     filenames = $.trim(@$filenames.val()).split(',')
+    index = filenames.indexOf(filename)
 
     if index > -1
       filenames[index] = filename
