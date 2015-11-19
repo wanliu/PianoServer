@@ -7,9 +7,10 @@ class ChatsController < ApplicationController
   # before_action :set_page_info, only: [:show]
 
   def index
-    @chats = Chat.in(current_anonymous_or_user.id).reverse_order
+    @chats = Chat.in(current_anonymous_or_user.id).reject{|chat| chat.owner_id == chat.target_id}.reverse
     @other_sides = @chats.map{ |chat| chat.other_side(current_anonymous_or_user) }
-    # @chats = current_anonymous_or_user.chats
+
+    render :index
   end
 
   def create

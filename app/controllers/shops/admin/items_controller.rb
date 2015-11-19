@@ -27,6 +27,8 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
       shop_category_root.children
     end
 
+    @brands = Brand.joins(:items).where("items.id in (?)", @items.map {|item| item.id }).group "brands.id"
+
   end
 
   def new

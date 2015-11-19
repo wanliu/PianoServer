@@ -1,6 +1,8 @@
 class Item < ActiveRecord::Base
   include DynamicProperty
   include ContentManagement::Model
+  include PublicActivity::Model
+  tracked
 
   html_fragment :description, :scrub => :prune  # scrubs `body` using the :prune scrubber
 

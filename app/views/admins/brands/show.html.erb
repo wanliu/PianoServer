@@ -1,0 +1,28 @@
+<h1 class="page-header"><%= @brand.title %> <div class="btn-group pull-right" role="toolbar" aria-label="...">
+  </div>
+</h1>
+
+<div class="brand-item">
+  <div class="media brand-logo">
+    <div class="media-left">
+      <%= image_upload_button :brand, :image, url: upload_admins_brand_path(@brand), disable_text: !@brand.image.blank_image?, image: { class: 'scale', data: { align: "center", scale: "best-fill" } } %>
+    </div>
+    <div class="media-body">
+      <h4 class="media-heading"><%= best_in_place @brand, :title, :as => :input, url: admins_brand_path(@brand), inner_class: 'form-control' %></h4>
+      <p><%= best_in_place @brand, :description, :as => :textarea, url: admins_brand_path(@brand), inner_class: 'form-control', place_holder: '编辑描述' %></p>
+    </div>
+  </div>
+  <br />
+
+  <%= panel_row column_class: 'col-sm-4' do %>
+    <%= panel @products.total, heading: '产品总数' %>
+    <%= panel @categories.count, heading: '分类总数' %>
+    <%= panel @industries.count, heading: '所属行业' %>
+  <% end %>
+</div>
+
+
+<script type="text/javascript">
+  $(".best_in_place").best_in_place();
+  $("img.scale").imageScale();
+</script>

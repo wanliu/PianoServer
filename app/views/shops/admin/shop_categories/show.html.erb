@@ -15,7 +15,7 @@
   <% end %>
 </ol>
 <% end %>
-<div class="shop-category-list row">
+<div class="shop-category-list">
   <%= render partial: "shop_category", collection: @children %>
   <% unless @shop_category.depth >= 3 %>
     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-3 new-shop-category">
@@ -72,6 +72,13 @@
         createCategoryUrl = '<%= child_shop_admin_shop_category_path(@shop.name, @root.name, @shop_category) %>',
         newCategory = new NewShopCategory($('.shop-category-list .new-shop-category')[0], shop_category, createCategoryUrl),
         $modal = $('#category-modal');
+
+    $('.shop-category-list .shop-category img').each(function(i, image) {
+      image.onerror = function () {
+        $this = $(this)
+        $this.height($this.parent().width())
+      };
+    });
 
     $('.shop-category-list .shop-category').each(function(i, e) {
       var $target = $(e),

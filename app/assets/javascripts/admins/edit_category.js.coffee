@@ -24,6 +24,7 @@ class @EditShopCategory extends @HuEvent
     @shopCategoryId = @$().data('shopCategoryId')
     @url = @$().find('.thumbnail').data('link')
     token = $('meta[name="csrf-token"]').attr('content')
+    @$progress = @$().find('.progress')
 
     unless @status
       @element.find('.toggle-button').addClass('closed')
@@ -42,7 +43,8 @@ class @EditShopCategory extends @HuEvent
           <ul class="qq-upload-list"></ul>
         </div>
       """,
-      onComplete: @onUploader.bind(@)
+      onComplete: @onUploader.bind(@),
+      onProgress: @onProgress.bind(@)
     })
 
     @hammer.on('press', @.onPress.bind(@))
@@ -108,11 +110,11 @@ class @EditShopCategory extends @HuEvent
             'height'  : screenheight + 'px'
           })
         , 10
-        
+
       else
         @$()
           .addClass('animate-shiver')
-          .one(ANIMATION_ENDS, () -> 
+          .one(ANIMATION_ENDS, () ->
             $(@).removeClass('animate-shiver')
           )
 
@@ -125,6 +127,14 @@ class @EditShopCategory extends @HuEvent
   onUploader: (id, filename, responseJSON) ->
     @setImage(responseJSON.url)
     $(@$uploader._listElement).empty()
+    @$progress.hide()
+
+  onProgress: (id, fileName, loaded, total) ->
+    percent = Math.round(loaded / total * 100, 0) + '%'
+    if loaded > 0
+      @$progress.show()
+
+    @$progress.find('.progress-bar').width(percent).text(percent)
 
   enterTitle: (e) ->
     if e.which == 13
@@ -193,7 +203,7 @@ class @EditShopCategory extends @HuEvent
 
 $(document).on('page:change', (event) =>
   mask = $('.animate-mask')
- 
+
   if mask[0]
     reference = $('.animated')
     reference.css({'transform' : 'scale(1)'})
@@ -216,6 +226,6 @@ $(document).on('page:change', (event) =>
         'visibility' : 'visible'
         'opacity'    : 1
       }).removeClass('animated')
-      
+
     )
 )

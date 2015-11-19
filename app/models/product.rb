@@ -3,11 +3,15 @@ require 'bigdecimal'
 
 class Product
   include Elasticsearch::Persistence::Model
-  # include ActiveModel::SerializerSupport
+  # include ESModel
 
   gateway.client = Elasticsearch::Client.new url: Settings.elasticsearch.url, log: true
 
-  index_name Settings.elasticsearch.index_name
+  ES_NAMESPACE = ENV['ES_NAMESPACE'] || Settings.elasticsearch.namespace
+
+  names = ["products", Settings.elasticsearch.environment || Rails.env]
+  names.unshift(ES_NAMESPACE) unless ES_NAMESPACE.blank?
+  index_name names.join('_')
 
   attribute :id, Fixnum
   attribute :name, String, mapping: { analyzer: 'ik' }
