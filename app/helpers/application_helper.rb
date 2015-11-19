@@ -7,9 +7,15 @@ module ApplicationHelper
   include WindowHelper
   include UploadHelper
   include Select2Helper
+  include SettingsHelper
+  include MinusPlusButtonHelper
 
   def avatar_url(user)
     user.image || identicon_url(user)
+  end
+
+  def default_image(type = :gray)
+    image_path("#{type}_blank.gif")
   end
 
   def identicon_url(user, s = 50)

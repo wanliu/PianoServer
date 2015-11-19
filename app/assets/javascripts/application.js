@@ -22,13 +22,18 @@
 //= require jquery-ui/position
 //= require jquery-ui/effect.all
 //= require select2
+//= *
 //= require bootstrap-sprockets
 //= require nprogress
 //= require turbolinks
 //= require nprogress-turbolinks
 //= require china_city/jquery.china_city
 //= require photoswipe
+//*
 //= require picturefill.all
+//= require best_in_place
+//*
+//= require lib/best_in_place_form
 //= require lib/socketcluster-client
 //= require lib/user-socket
 //= require lib/underscore
@@ -43,6 +48,7 @@
 //= require _common/hammer
 //= require _common/util
 //= require _common/image-scale
+//= require _common/adjust_container
 //= require_tree ./application
 //= require_tree ./chats
 //= require_tree ./orders

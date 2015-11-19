@@ -7,6 +7,8 @@ app:
   description:
 admin:
   title: 万流工作平台
+  register:
+    open: false
 system:
   agent:
     id: 0
@@ -63,3 +65,11 @@ mail:
   domain: http://m.wanliu.biz/
   url_host: http://m.wanliu.biz
   url_port: 80
+baidu:
+  ditu:
+    secret: gUvTx8taqFAAD8PIN9TGacNG
+after_registers:
+  shop:
+    validates: strict
+  total:
+    max_count: 15

@@ -7,13 +7,25 @@
 </h1>
 
 <%= nav layout: :justified do %>
-  <%= link_to '非标准化的商品', '#' %>
-  <%= link_to '标准商品', '#' %>
+  <%= link_to '非标准化的商品', '#items', data: { toggle: :tab },  role: "tab" %>
+  <%= link_to '标准商品', '#products', data: { toggle: :tab },  role: "tab" %>
 <% end %>
 
+<!-- Tab panes -->
+<div class="tab-content">
+  <div role="tabpanel" class="tab-pane active" id="items">
+    <%= simple_table_for Item.where(product_id: nil), with: ItemTable %>
+  </div>
 
+  <div role="tabpanel" class="tab-pane" id="products">
+    <%#= datagrid_form_for @grid, :method => :get, :url => products_path %>
 
-<%= simple_table_for Item.where(product_id: nil), with: ItemTable %>
+    <%#= paginate(@grid.assets) %>
+    <%#= datagrid_table @grid %>
+    <%#= paginate(@grid.assets) %>
+    <%= simple_table_for @products, with: ProductTable %>
+  </div>
+</div>
 
 
 <script type="text/javascript">

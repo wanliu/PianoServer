@@ -96,7 +96,7 @@ gem 'china_city'
 gem 'table_cloth'
 
 gem 'carrierwave', github: 'carrierwaveuploader/carrierwave', branch: 'mount-multiple'
-gem 'carrierwave-upyun'
+gem 'carrierwave-upyun', "0.2.1"
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 

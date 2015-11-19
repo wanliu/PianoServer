@@ -154,7 +154,7 @@ zh-CN:
         separator: .
         significant: false
         strip_insignificant_zeros: false
-        unit: CN¥
+        unit: ¥
     format:
       delimiter: ! ','
       precision: 3
@@ -228,6 +228,8 @@ zh-CN:
     image: 图像
     description: 描述
     information: 信息
+    phone: 电话
+    address: 街道
   controllers:
     shops: 商店
     items: 商品

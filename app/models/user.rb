@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
   include AnonymousUser
 
+  enum user_type: [ :consumer, :retail, :distributor, :wholesaler, :manufacturer ]
   # Include default devise modules. Others available are:
   before_save :ensure_authentication_token
 
@@ -12,8 +13,12 @@ class User < ActiveRecord::Base
   # has_many :memberings, :dependent => :destroy
   belongs_to :latest_location, class_name: 'Location'
   belongs_to :shop
+  belongs_to :industry
 
   has_one :owner_shop, class_name: 'Shop', foreign_key: 'owner_id'
+  has_one :status, as: :stateable, dependent: :destroy
+  has_one :cart
+
   has_many :chats, foreign_key: 'owner_id'
   has_many :locations
 
@@ -25,6 +30,8 @@ class User < ActiveRecord::Base
   after_commit :sync_to_pusher
 
   attr_accessor :login
+
+  delegate :state, to: :status, allow_nil: true
 
   # admin search configure
   scoped_search on: [:id, :username, :email, :mobile]
@@ -98,6 +105,10 @@ class User < ActiveRecord::Base
 
   def join_shop
     shop || owner_shop
+  end
+
+  def cart
+    super || Cart.new(user_id: id)
   end
 
   private

@@ -1,4 +1,29 @@
 Rails.application.routes.draw do
+
+  concern :messable do
+    resources :messages
+  end
+
+  concern :chatable do
+    resources :chats
+  end
+
+  concern :statuable do
+    member do
+      get :status
+    end
+  end
+
+  resources :industry, only: [ :show ]
+  scope :cart do
+    get "/", to: "carts#index", as: :mycart
+
+    post "/", to: "carts#add"
+    delete "/:id", to: "carts#remove"
+
+    post "commit", to: "carts#commit"
+  end
+
   mount Bootsy::Engine => '/bootsy', as: 'bootsy'
   resources :subjects, except: [:index, :new, :edit] do
     member do
@@ -6,7 +31,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :brands, only: [ :index, :update ]
+  resources :brands, only: [ :index, :update ] do
+    collection do
+      get :filter
+    end
+  end
 
   namespace :authorize do
     get :weixin
@@ -28,13 +57,8 @@ Rails.application.routes.draw do
 
   resources :feedbacks
 
-  concern :messable do
-    resources :messages
-  end
 
-  concern :chatable do
-    resources :chats
-  end
+  resources :after_registers, concerns: [:statuable]
 
   concern :templable do |options|
     resources :templates, options do
@@ -64,6 +88,7 @@ Rails.application.routes.draw do
   match "admins", to: "admins/dashboards#index", via: :get
 
   namespace :admins do
+    resources :settings, path: 'settings/key', only: [:show, :update], constraints: {id: /[\S]+/}
     resources :dashboards
     resources :accounts, except: [:new, :edit] do
       collection do
@@ -80,6 +105,8 @@ Rails.application.routes.draw do
     resources :feedbacks
     resources :attachments
     resources :industries do
+      concerns :templable, templable_type: 'Industry', parent_type: 'Industry'
+
       collection do
         post :sync_es_brands
         post :sync_es_categories
@@ -177,10 +204,14 @@ Rails.application.routes.draw do
 
   match ':shop_name', :to => 'shops#show_by_name', constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ }, via: [ :get ], as: :shop_site
 
+  match "create_shop", to: "shops#create", via: [:post], as: :create_shop
+  match "update_name", to: "shops#update_name", via: [:put], as: :update_shop
+
   resources :shops, path: '/', only: [], constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do
     member do
       get "/about", to: "shops#about"
     end
+
 
     resources :shop_categories, path: "categories"
     resources :items, key: :sid

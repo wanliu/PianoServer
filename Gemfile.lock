@@ -109,9 +109,9 @@ GEM
     builder (3.2.2)
     byebug (4.0.3)
       columnize (= 0.9.0)
-    carrierwave-upyun (0.1.8)
+    carrierwave-upyun (0.2.1)
       carrierwave (>= 0.5.7)
-      rest-client (>= 1.6.7)
+      faraday (>= 0.8.0)
     celluloid (0.16.0)
       timers (~> 4.0.0)
     china_city (0.0.4)
@@ -452,7 +452,7 @@ DEPENDENCIES
   bootsy
   byebug
   carrierwave!
-  carrierwave-upyun
+  carrierwave-upyun (= 0.2.1)
   china_city
   chinese_pinyin
   coffee-rails (~> 4.1.0)
