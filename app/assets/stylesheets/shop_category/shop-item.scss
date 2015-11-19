@@ -7,7 +7,9 @@
     margin: 15px auto;
     overflow: hidden;
     text-align: center;
-
+    @media (max-width: 484px){
+      width: 100% !important;
+    }
     img {
       max-width: 100%;
       height: auto;
