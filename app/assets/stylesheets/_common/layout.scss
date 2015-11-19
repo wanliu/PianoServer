@@ -96,6 +96,7 @@ body {
   left: -200px;
   right: 0;
   height: 100%;
+  overflow: hidden;
 
   .scroll-container {
     position: relative;
@@ -106,6 +107,10 @@ body {
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
+
+    > .container{
+      overflow: hidden;
+    }
 
     .menu-overlayer {
       position: absolute;
