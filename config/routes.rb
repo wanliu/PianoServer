@@ -6,6 +6,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :brands, only: [ :index, :update ]
+
   namespace :authorize do
     get :weixin
     get :weixin_redirect_url
@@ -18,7 +20,8 @@ Rails.application.routes.draw do
 
   devise_for :users, controllers: {
     sessions: 'users/sessions',
-    registrations: 'users/registrations'
+    registrations: 'users/registrations',
+    passwords: 'users/passwords'
   }
 
   mount ChinaCity::Engine => '/china_city'
@@ -109,6 +112,16 @@ Rails.application.routes.draw do
     resources :properties
 
     resources :units
+    # resources :shops
+    resources :brands do
+      member do
+        post "upload", as: :upload
+      end
+
+      collection  do
+        post "upload", as: :upload
+      end
+    end
   end
 
   namespace :api do

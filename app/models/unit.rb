@@ -1,4 +1,6 @@
 class Unit < ActiveRecord::Base
+  include PublicActivity::Model
+  tracked
 
   has_many :properties
 

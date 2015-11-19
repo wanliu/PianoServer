@@ -38,7 +38,13 @@ module MessageSystemService
   def send(channel, msg)
     url = File.join(pusher_url, channel)
     msg.merge! token: options.pusher_token
-    RestClient.post url, msg, token: options.pusher_token
+
+    # 在聊天服务器不可用时，保证其他功能继续工作
+    begin
+      RestClient.post url, msg, token: options.pusher_token
+    rescue Errno::ECONNREFUSED => e
+      # TODO when pusher is down
+    end
   end
 
   def send_read_message(author_id, target_id)

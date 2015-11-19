@@ -1,1 +1,11 @@
-# anything here
+<a href="{{ subject.link }}" class="header-wrapper">
+  <img class="hgeader-bg" src="{{ images['背景图片'] }}">
+  <img class="header-img-pc" src="{{ images['头部图片(电脑)'] }}">
+  <img class="header-img-mobile" src="{{ images['头部图片(手机)'] }}">
+</a>
+
+<div class="subject-promotions" >
+  {% comment %} 调用其它模板，目前通进设置 Liquid::Template.file_system 使其指向 .sites/system/subjects 下 {% endcomment %}
+  {% comment %} 注意 collection 必需是 Array 对象  {% endcomment %}
+  {% include 'promotion_2col' for 添加对象 %}
+</div>

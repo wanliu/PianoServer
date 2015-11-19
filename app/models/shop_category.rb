@@ -2,6 +2,8 @@ require 'chinese_pinyin'
 
 class ShopCategory < ActiveRecord::Base
   LIMITED_DEPTH = 3
+  include PublicActivity::Model
+  tracked
 
   html_fragment :description, :scrub => :prune  # scrubs `body` using the :prune scrubber
 

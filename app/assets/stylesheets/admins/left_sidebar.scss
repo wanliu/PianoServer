@@ -11,7 +11,10 @@
     padding-left: 30px;
     padding-top: 5px;
     padding-bottom: 5px;
+
   }
+
+
 
   .nav > li {
     position: relative;
@@ -22,6 +25,11 @@
     position: relative;
     display: block;
     padding: 10px 15px;
+  }
+
+  .nav>li.active>a{
+    color: #fff;
+    background-color: #428bca;
   }
 }
 

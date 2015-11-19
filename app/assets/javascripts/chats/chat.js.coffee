@@ -129,21 +129,23 @@ class @Chat
       'start': start,
       'step': @options.maxMessageGroup
     }, (err, messages) =>
-      return if err || messages.length == 0
+      return if err
 
-      messages.reverse()
+      if messages.length != 0
 
-      @_batchInsertMessages(messages, 'up')
+        messages.reverse()
+
+        @_batchInsertMessages(messages, 'up')
+        # for message in messages
+        #     @_insertMessage(message, 'up')
+
+        # if messages.length < @options.maxMessageGroup
+        #     @$messageList.find('.load-more').remove();
+        # else
+
+        @earlyTime = messages[messages.length - 1].time
+
       @firstLoad = false
-      # for message in messages
-      #     @_insertMessage(message, 'up')
-
-      # if messages.length < @options.maxMessageGroup
-      #     @$messageList.find('.load-more').remove();
-      # else
-
-      @earlyTime = messages[messages.length - 1].time
-
       callback.call(@, messages) if $.isFunction(callback)
 
   setTable: (@table) ->
@@ -170,12 +172,12 @@ class @Chat
   # private
   _sendMsg: () ->
     text = @getText()
+    text = text.replace(/\n/g, '<br>')
     @sendBtn.blur()
 
-    if text.length > 0
-
+    unless /^\s*$/.test(text)
       if window.metadata.debug
-        @_insertMessage(text);
+        @_insertMessage(text)
       else
         @userSocket.publish(@channelId, {
           'content': text,
@@ -280,13 +282,16 @@ class @Chat
   _buildTextMessage: (text = null, context = {}) ->
     {prefixSection, senderAvatar, senderName, toAddClass, id, senderId, content, senderLogin, type, time} = context
 
+    text ||= content
+    text = text.replace(/(<\/?(?!br)[^>\/]*)\/?>/gi,'').replace(/\s/g, '')
+
     """
       #{prefixSection}
       <div class="chat #{toAddClass}" data-message-id="#{id}">
         <img src="#{senderAvatar}" />
         #{senderName}
         <div class="bubble #{toAddClass}">
-          <p class="content">#{text || content}</p>
+          <p class="content">#{text}</p>
         </div>
       </div>
     """

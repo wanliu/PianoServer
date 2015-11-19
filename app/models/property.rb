@@ -1,5 +1,7 @@
 class Property < ActiveRecord::Base
   include ContentManagement::Model
+  include PublicActivity::Model
+  tracked
 
   DATA_KEY_MAP = "map"
   DATA_KEY_GROUP = "group"

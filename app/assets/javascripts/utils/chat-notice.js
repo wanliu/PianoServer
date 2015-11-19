@@ -28,28 +28,66 @@
   NoticeCenter.prototype.removeNotice = function(senderId, redirect) {
     var notice = this._findNotice(senderId);
 
-    if (notice) {
-      notice.destroy();
-
-      var index = this.notices.indexOf(notice),
-          chatId = notice.options.chatId;
-
-      if (index > -1) {
-        this.notices.splice(index, 1);
-      }
-
-      userSocket.emit('readChannel', {
-        channelId: 'p' + senderId
-      }, function(err) {
-        if (err) {
-          return console.error(err);
-        }
-      });
-
-      if (redirect) {
-        Turbolinks.visit('/chats/' + chatId);
-      }
+    if (!notice) {
+      return;
     }
+
+    var chatId = notice.options.chatId,
+        _this = this,
+        notices = this.notices;
+
+    userSocket.emit('readChannel', {
+      channelId: 'p' + senderId
+    }, function(err) {
+      if (redirect) {
+        _this._removeAllNotice();
+
+        Turbolinks.visit('/chats/' + chatId);
+      } else {
+        notice.destroy();
+
+        var index = notices.indexOf(notice);
+
+        if (index > -1) {
+          notices.splice(index, 1);
+        }
+      }
+
+      if (err) {
+        return console.error(err);
+      }
+    });
+  };
+
+  NoticeCenter.prototype._removeAllNotice = function() {
+    var notices = this.notices;
+
+    for (var i=0; i<notices.length; i++) {
+      var notice = notices[i];
+
+      notice.destroy()
+    }
+
+    this.notices = [];
+  };
+
+  NoticeCenter.prototype.reloadUnreadMessage = function() {
+    var _this = this;
+
+    win.userSocket.emit('unreadCount', {}, function(err, unreadCounts) {
+      if (err) {
+        return;
+      }
+
+      for(var channelId in unreadCounts) {
+        var unreadCount = unreadCounts[channelId],
+            count = unreadCount.count,
+            senderId = unreadCount.user_id,
+            username = unreadCount.realname;
+
+        _this.addNotice(senderId, username, count);
+      }
+    });
   };
 
   NoticeCenter.prototype._findNotice = function(senderId) {
@@ -141,10 +179,10 @@
   }
 
   Notice.prototype.destroy = function() {
-    this.element.remove();
-
-
+    if (this.element.length > 0) {
+      this.element.remove();
+    }
   }
 
-  window.noticeCenter = new NoticeCenter();
+  win.noticeCenter = new NoticeCenter();
 })(window, jQuery);

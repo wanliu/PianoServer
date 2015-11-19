@@ -1,0 +1,49 @@
+<!-- 电脑登陆页面 -->
+
+<div class="container sign-body">
+  <nav>
+    <%= link_to root_path, class: "navbar-brand", title: Settings.app.title do %>
+      <img src="<%= image_path('site-logo.png')%>">
+    <% end %>
+    <span class="welcome-title">欢迎登陆万流网</span>
+  </nav>
+
+
+  <img class="sign-logo" src="<%= image_path('sign-logo.png') %>">
+  <!-- 登陆 -->
+  <div class="sign-container login-container">
+    <h4>会员登陆</h4>
+    <%= render '/users/sessions/login_form' %>
+
+    <% if Settings.dev.feature.weixin %>
+    <h5>使用其他方式登陆</h5>
+
+    <div class="other-link">
+    <%= link_to '微信', authorize_weixin_path %>
+    </div>
+    <% end %>
+  </div>
+
+  <!-- 注册 -->
+  <div class="sign-container regist-container">
+    <h4>会员注册</h4>
+    <%= render '/users/registrations/regist_form' %>
+  </div>
+
+  <!-- 找回密码 -->
+  <div class="sign-container password-container">
+    <h4>找回密码</h4>
+    <%= render '/users/passwords/password_form' %>
+  </div>
+
+  <!-- 编辑密码 -->
+  <div class="sign-container password-edit-container">
+    <h4>设置新密码</h4>
+    <%= render '/users/passwords/edit_form' %>
+  </div>
+
+
+
+</div>
+
+<%= render "footer" %>

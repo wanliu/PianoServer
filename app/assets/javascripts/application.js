@@ -28,6 +28,7 @@
 //= require nprogress-turbolinks
 //= require china_city/jquery.china_city
 //= require photoswipe
+//= require picturefill.all
 //= require lib/socketcluster-client
 //= require lib/user-socket
 //= require lib/underscore
@@ -35,10 +36,15 @@
 //= require lib/date_iso8601_polyfill
 //= require lib/pastemedia
 //= require lib/ajax_status
+//= require utils/alert-dismiss
+//= require _common/fileuploader
 //= require _common/qrcode
 //= require _common/local-address
 //= require _common/hammer
 //= require _common/util
+//= require _common/image-scale
+//= require _common/side_menu
+//= require _common/side_menu_manager
 //= require_tree ./application
 //= require_tree ./chats
 //= require_tree ./orders

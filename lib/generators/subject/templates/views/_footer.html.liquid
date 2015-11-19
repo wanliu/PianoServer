@@ -1,5 +1,50 @@
-<footer>
-  <div class="container text-center">
-    <span class="page-loading">Wanliu.biz 2015  湘ICP备：13005289号-1</span>
+<div class="footer">
+  <div class="footertop text-center">
+    <ul class="clearfix">
+      <li><a href="/about">关于我们</a>&nbsp;|&nbsp;</li>
+      <li><a href="/contacts/new">商家入驻</a>&nbsp;|&nbsp;</li>
+      <li><a href="javascript:void(0)">联系客服</a>&nbsp;|&nbsp;</li>
+      <li><a href="/feedbacks">意见反馈</a></li>
+    </ul>
   </div>
-</footer>
+  <p class="text-center">© Wanliu.biz 2015  湘ICP备：13005289 号 - 1</p>
+</div>
+
+<style>
+/* 通用footer样式*/
+body{
+  margin-bottom: 60px;
+}
+.footer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  color: #888;
+}
+
+.footertop ul{
+  list-style: none;
+  padding:0 15px;
+}
+
+.footertop ul li {
+  display: inline-block;
+}
+
+.footertop ul li a {
+  color: #888;
+}
+
+/*特殊样式*/
+/*聊天界面下影藏*/
+body.chat .footer{
+  display: none!important;
+}
+
+/*底部有按钮,加高高度*/
+body.item .footer,
+body.detail .footer{
+  bottom: 60px;
+}
+</style>
