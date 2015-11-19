@@ -210,7 +210,7 @@ class @Chat
       @clearText() unless err?
     )
 
-  _insertItemMessage: (message, direction = 'down') ->
+  _insertItemMessage: (message, direction = 'down', insertPrefix = false) ->
     {id, senderId, content, senderAvatar, senderLogin, type, time} = message
 
     if type == 'command'
@@ -221,7 +221,7 @@ class @Chat
         $("div[data-message-id=#{id}] p.content").text(content)
         return
 
-      context = @_prepareTemplateContext(message)
+      context = @_prepareTemplateContext(message, direction, insertPrefix)
 
       if type == 'normal'
         if message.attachs
@@ -251,33 +251,83 @@ class @Chat
     catch e
       console.error(e.stack)
 
-  _prepareTemplateContext: (message)  ->
+  _prepareTemplateContext: (message, direction, insertPrefix)  ->
     {id, senderId, content, senderAvatar, senderLogin, type, time} = message
 
     toAddClass = if @_isOwnMessage(message) then 'you' else 'me'
 
     senderAvatar = @options.avatarDefault if senderAvatar == '' or senderAvatar?
     senderName = if @options.displayUserName then "<h2>#{senderLogin}</h2>" else ''
-    prefixSection = if @lastTime? and Math.abs(time - @lastTime) > @options.miniTimeGroupPeriod
-                      time = new Date(time)
-                      timeStr = if time.toDateString() != new Date(@lastTime).toDateString()
-                                  "#{time.getFullYear()}-#{time.getMonth()+1}-#{time.getDate()} #{@_formatDate(time.getHours())}:#{@_formatDate(time.getMinutes())}"
-                                else
-                                  "#{@_formatDate(time.getHours())}:#{@_formatDate(time.getMinutes())}"
-                      """
-                      <div class="time"><p class="text-center">#{timeStr}</p></div>
-                      """
-                    else
-                      ''
+    # prefixSection = if @lastTime? and Math.abs(time - @lastTime) > @options.miniTimeGroupPeriod
+    #                   time = new Date(time)
+    #                   timeStr = if time.toDateString() != new Date(@lastTime).toDateString()
+    #                               "#{time.getFullYear()}-#{time.getMonth()+1}-#{time.getDate()} #{@_formatDate(time.getHours())}:#{@_formatDate(time.getMinutes())}"
+    #                             else
+    #                               "#{@_formatDate(time.getHours())}:#{@_formatDate(time.getMinutes())}"
+    #                   """
+    #                   <div class="time"><p class="text-center">#{timeStr}</p></div>
+    #                   """
+    #                 else
+    #                   ''
+    prefixSection = @_getPrefixSection(time, direction, insertPrefix)
     {prefixSection, senderAvatar, senderName, toAddClass, id, senderId, content, senderLogin, type, time}
 
+
+  _getPrefixSection: (time, direction, insertPrefix) ->
+    date = new Date(time)
+    year = date.getFullYear()
+    month = date.getMonth() + 1
+    day = date.getDate()
+    hour = date.getHours()
+    minute = date.getMinutes()
+    formatHour = @_formatDate(date.getHours())
+    formatMinute = @_formatDate(date.getMinutes())
+    now = new Date()
+
+    prefixSection = ''
+    formatYearDate = [[year, month, day].join('-'), [formatHour, formatMinute].join(':')].join(' ')
+    formatMonthDate = [[month, day].join('-'), [formatHour, formatMinute].join(':')].join(' ')
+    formatDayDate = [formatHour, formatMinute].join(':')
+
+    compareDate = if @lastTime then new Date(@lastTime) else new Date()
+
+    if @lastTime
+      if insertPrefix
+        prefixSection = formatMonthDate
+      else if @_isTheSameDate(date, compareDate)
+        if Math.abs(time - @lastTime) > @options.miniTimeGroupPeriod
+          prefixSection = if direction == 'up' then formatMonthDate else formatDayDate
+      else if @_isTheSameYear(date, compareDate)
+        prefixSection = formatMonthDate
+      else
+        prefixSection = formatYearDate
+    else
+      if @_isTheSameMonth(date, now)
+        prefixSection = formatMonthDate
+      else
+        prefixSection = formatYearDate
+
+    if prefixSection.length > 0
+      """
+        <div class="time"><p class="text-center">#{prefixSection}</p></div>
+      """
+    else
+      ""
+
+  _isTheSameYear: (date1, date2) ->
+    return date1.getFullYear() == date2.getFullYear()
+
+  _isTheSameMonth: (date1, date2) ->
+    return @_isTheSameYear(date1, date2) && date1.getMonth() == date2.getMonth()
+
+  _isTheSameDate: (date1, date2) ->
+    return @_isTheSameMonth(date1, date2) && date1.getDate() == date2.getDate()
 
   _formatDate: (number) ->
     if number < 10
       '0' + number
     else
       number
-
 
   _buildTextMessage: (text = null, context = {}) ->
     {prefixSection, senderAvatar, senderName, toAddClass, id, senderId, content, senderLogin, type, time} = context
@@ -354,8 +404,8 @@ class @Chat
     gallery = new PhotoSwipe( pswpElement, PhotoSwipeUI_Default, items, options);
     gallery.init();
 
-  _insertMessage: (message, direction = 'down') ->
-    @_insertItemMessage(message, direction)
+  _insertMessage: (message, direction = 'down', insertPrefix) ->
+    @_insertItemMessage(message, direction, insertPrefix)
 
     isVisible = @_checkIsVisible(true)
 
@@ -379,8 +429,8 @@ class @Chat
       })
 
   _batchInsertMessages: (messages, direction = 'down') ->
-    for message in messages
-      @_insertItemMessage(message, 'up')
+    for message, index in messages
+      @_insertItemMessage(message, 'up', index == messages.length - 1)
 
     if @firstLoad
       @autoScroll('down') if @options.isMessageScroll
