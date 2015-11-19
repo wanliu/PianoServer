@@ -76,7 +76,7 @@ class ImageUploader < CarrierWave::Uploader::Base
 
   def filename
     if super.present?
-      @name ||="#{Digest::MD5.hexdigest(original_filename)}.#{file.extension.downcase}" if original_filename
+      @name ||="#{SecureRandom.hex}.#{file.extension.downcase}" if original_filename
       Rails.logger.debug("(BaseUploader.filename) #{@name}")
       @name
     end

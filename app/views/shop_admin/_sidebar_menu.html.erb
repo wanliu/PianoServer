@@ -1,0 +1,40 @@
+<script type="text/javascript">
+  var $containment = $('.menu-container');
+  var manager = new SideMenuManager($containment);
+  var menu = new SideMenu($containment, 'shop-admin');
+
+  var route = '<%= shop_admin_index_path(@shop.name) %>';
+  menu.insertGroup(route, '商店');
+
+  route = '<%= shop_admin_profile_path(@shop.name) %>';
+  menu.insertGroup(route, '档案');
+
+  var title = '<%= @shop.shop_category.title %>';
+
+  route = '<%= shop_admin_shop_category_path(@shop.name, @shop.shop_category.name) %>';
+  menu.insertGroup('shop_categories', '分类');
+  menu.insertSection('shop_categories', route, route, title)
+
+  route = '<%= shop_admin_items_path(@shop.name) %>';
+  menu.insertGroup(route, '商品');
+
+  route = '<%= about_shop_path(@shop.name) %>';
+  menu.insertGroup(route, '关于');
+
+  route = '<%= shop_admin_settings_path(@shop.name) %>';
+  menu.insertGroup(route, '设置');
+
+  menu.insertGroup('about', '关于我们');
+  menu.insertGroup('qrode', '二维码', { qrode: true });
+
+  menu.generateMenuDOMFragment();
+  manager.addMenu(menu);
+
+  $('.navbar-top .navbar-toggle').click(function() {
+    var menuName = $(this).data('menuName')
+
+    if (manager) {
+      manager.toggleMenu(menuName);
+    }
+  });
+</script>

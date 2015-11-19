@@ -25,12 +25,14 @@
  *= require _common/settings
  *= require _common/brand
  *= require _common/cart
+ *= require _common/layout
  *= require lib/range
  *= require_tree ./application
  *= require_tree ./chats
  *= require_tree ./locations
  *= require_tree ./contacts
  *= require_tree ./shop_category
+ *= require_tree ./sign
  *= require_self
  */
 html{
@@ -40,7 +42,6 @@ html{
 
 body {
   background-image: image-url('bj.jpg');
-  padding-top: 51px;
 }
 
 footer {
@@ -48,10 +49,6 @@ footer {
   bottom: 0;
   text-align: center;
   word-break: break-word;
-}
-
-.detail .navbar-fixed-top{
-  background: #FFFFFF;
 }
 
 .navbar-brand {
@@ -67,31 +64,8 @@ footer {
   float: left;
 }
 
-.chat-notices{
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 9999;
-  opacity: 0.6;
-
-  .chat-notice{
-    background: #666666;
-    height: 35px;
-    line-height: 35px;
-    text-align: center;
-    color: #FFFFFF;
-    cursor: pointer;
-    margin-bottom: 1px;
-
-    span{
-      text-decoration: underline;
-
-      &.ignore{
-        margin-left: 15px;
-      }
-    }
-  }
+.caret{
+  border-top: 4px solid;
 }
 
 .nav > li > a.navbar-title {
@@ -101,6 +75,11 @@ footer {
 @media (min-width: 768px) {
   .navbar-header {
     float: none;
+
+    .navbar-toggle {
+      margin-right: 0;
+      display: block;
+    }
   }
 }
 
@@ -133,7 +112,7 @@ footer {
       top: 50px;
       background-color: white;
       height: auto;
-      max-height: 400px;
+      max-height: 500px;
     }
   }
 
