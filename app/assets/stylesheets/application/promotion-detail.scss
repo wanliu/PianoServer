@@ -8,6 +8,10 @@ body.detail {
 
 .promotion-detail-container{
   margin-bottom: 2em;
+  @media (max-width: 484px){
+    padding-left: 0;
+    padding-right: 0;
+  }
 
   .promotion-detail-content {
     background: #FFFFFF;
