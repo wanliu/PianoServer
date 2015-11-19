@@ -22,9 +22,9 @@ module AfterRegistersHelper
 
     index = 0
     groups.each_with_index.map do |group, g_index|
-      group[:categories].each_with_index.map do |category, c_index|
-        category[:brands].each_with_index.map do |brand, b_index|
-          brand[:products].map do |product|
+      group["categories"].each_with_index.map do |category, c_index|
+        category["brands"].each_with_index.map do |brand, b_index|
+          brand["products"].map do |product|
             yield(
               mark_display.call(group, :groups, g_index, group),
               mark_display.call(category, :groups, g_index, :categories, c_index),

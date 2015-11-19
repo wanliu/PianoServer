@@ -1,5 +1,19 @@
 Rails.application.routes.draw do
 
+  concern :messable do
+    resources :messages
+  end
+
+  concern :chatable do
+    resources :chats
+  end
+
+  concern :statuable do
+    member do
+      get :status
+    end
+  end
+
   resources :industry, only: [ :show ]
   scope :cart do
     get "/", to: "carts#index", as: :mycart
@@ -43,15 +57,8 @@ Rails.application.routes.draw do
 
   resources :feedbacks
 
-  resources :after_registers
 
-  concern :messable do
-    resources :messages
-  end
-
-  concern :chatable do
-    resources :chats
-  end
+  resources :after_registers, concerns: [:statuable]
 
   concern :templable do |options|
     resources :templates, options do

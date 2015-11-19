@@ -4,8 +4,8 @@ class CreateJobs < ActiveRecord::Migration
       t.string :status
       t.references :jobable, polymorphic: true
       t.string :job_type
-      t.jsonb :input
-      t.jsonb :output
+      t.jsonb :input, default: {}
+      t.jsonb :output, default: {}
       t.datetime :end_at
       t.datetime :start_at
 

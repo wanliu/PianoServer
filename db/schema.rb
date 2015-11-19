@@ -215,12 +215,12 @@ ActiveRecord::Schema.define(version: 20151118071450) do
     t.integer  "jobable_id"
     t.string   "jobable_type"
     t.string   "job_type"
-    t.jsonb    "input"
-    t.jsonb    "output"
+    t.jsonb    "input",        default: {}
+    t.jsonb    "output",       default: {}
     t.datetime "end_at"
     t.datetime "start_at"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
   end
 
   create_table "likes", force: :cascade do |t|
