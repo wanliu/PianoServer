@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
   include Piano::PageInfo
   include Errors::RescueError
 
+
   # include TokenAuthenticatable
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.

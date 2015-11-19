@@ -12,7 +12,7 @@ class ChatsController < ApplicationController
       format.json do
         @chats = Chat.in(current_anonymous_or_user.id).reverse_order
         @other_sides = @chats.map{ |chat| chat.other_side(current_anonymous_or_user) }
-        render json: { chats: @chats, other_sides: @other_sides.as_json(methods: [:avatar_url, :nickname])}
+        render json: { chats: @chats, other_sides: @other_sides.as_json(include_methods: :avatar_url) }
       end
     end
   end
