@@ -11,6 +11,7 @@
   -moz-transition: left 0.25s ease-in-out;
   -webkit-transtion: left 0.25s ease-in-out;
   transition: left 0.25s ease-in-out;
+  -webkit-backface-visibility: hidden;
 
   .nav.menu-sections > li > a {
     padding-left: 35px;
@@ -73,6 +74,7 @@
   -moz-transition: left 0.25s ease-in-out;
   -webkit-transtion: left 0.25s ease-in-out;
   transition: left 0.25s ease-in-out;
+  -webkit-backface-visibility: hidden;
 
   .scroll-container {
     position: relative;
