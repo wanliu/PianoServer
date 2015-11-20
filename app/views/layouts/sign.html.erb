@@ -100,6 +100,7 @@
 
         $('.toggle-btn').click(function(e){
           e.preventDefault();
+          $('.error-block').html('');
           if ($body.hasClass('login')) {
             $body.removeClass('login').addClass('regist');
             window.history.replaceState({}, "", "/users/sign_up");

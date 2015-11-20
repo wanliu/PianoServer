@@ -1,16 +1,13 @@
-body.detail {
-  margin-bottom: 140px;
-
-  footer {
-    display: none;
-  }
-}
-
 .promotion-detail-container{
-  margin-bottom: 2em;
+  margin-bottom: 30px;
+  @media (max-width: 484px){
+    padding-left: 0;
+    padding-right: 0;
+  }
 
   .promotion-detail-content {
     background: #FFFFFF;
+    margin-bottom: 30px;
   }
 
   .promotion-poster-image{
@@ -187,7 +184,6 @@ body.detail {
       display: table;
       width: 100%;
       min-height: 50px;
-      font-size: 1.5rem;
     }
 
     .contact-button{
@@ -195,7 +191,6 @@ body.detail {
       width: 20%;
       text-align: center;
       cursor: pointer;
-      padding: 0.8em 0;
       vertical-align: middle;
       line-height: 100%;
 
