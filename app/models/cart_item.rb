@@ -11,6 +11,8 @@ class CartItem < ActiveRecord::Base
   validates :price, :quantity, numericality: { greater_than: 0 }
   validates :cartable_id, uniqueness: { scope: [:cart_id, :cartable_type] }
 
+  delegate :title, to: :cartable, allow_nil: true
+
   def cartable
     if cartable_type == 'Promotion'
       Promotion.find(cartable_id)

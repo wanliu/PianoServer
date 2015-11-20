@@ -30,7 +30,7 @@ $ ()->
             <a href=#{ item.url }>
               <div class="media">
                 <div class="media-left">
-                  <img src=#{ item.image } class='cart-item-image' />
+                  <img src="#{ item.avatar_url }" class='cart-item-image' />
                 </div>
                 <div class="media-body">
                   <h4 class="media-heading">#{ item.title || "" }</h4>
