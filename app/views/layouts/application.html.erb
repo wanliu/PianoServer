@@ -92,22 +92,27 @@
 
         <div class="scroll-container">
           <div class="menu-overlayer"></div>
-          <div class="container">
-            <div class="row">
-              <%= bootstrap_flash %>
-              <%= yield %>
-            </div><!--/row-->
-          </div> <!-- /container -->
-          
-          <% _module = content_for :module %>
-          <% case _module %>
-          <% when NilClass %>
-            <%= render "footer", with: @subject %>
-          <% when "shop" %>
-            <%= render "footer", with: @shop %>
-          <% else %>
-            <%= render "footer" %>
-          <% end %>
+
+          <div class="auto-height-container">
+            <div class="container">
+              <div class="row">
+                <%= bootstrap_flash %>
+                <%= yield %>
+              </div><!--/row-->
+            </div> <!-- /container -->
+
+            <!-- footer -->
+            <% _module = content_for :module %>
+            <% case _module %>
+            <% when NilClass %>
+              <%= render "footer", with: @subject %>
+            <% when "shop" %>
+              <%= render "footer", with: @shop %>
+            <% else %>
+              <%= render "footer" %>
+            <% end %>
+          </div>
+
         </div>
       </div>
     </div>

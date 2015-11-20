@@ -4,7 +4,7 @@ class @SideMenuManager
   constructor: (@element) ->
     @menus = []
     @$content = $('.content-container')
-    @$layout = @$content.find('.menu-overlayer')
+    @$layout = $('.menu-overlayer')
     @resizeHandler()
     $(window).bind 'resize', @resizeHandler.bind(@)
 

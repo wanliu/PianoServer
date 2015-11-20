@@ -1,6 +1,14 @@
 body {
   overflow: hidden;
+  
+  &.detail,
+  &.item{
+    .scroll-container {
+      padding-bottom: 60px;
+    }
+  }
 }
+
 
 .menu-container {
   position: absolute;
@@ -9,7 +17,7 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   width: 200px;
-  z-index: 11;
+  z-index: 1000;
   background: #E32929;
   left: 0;
 
@@ -49,6 +57,7 @@ body {
   position: relative;
   height: 100%;
   width: 100%;
+  padding-left: 200px;
   -moz-transition: margin-left 0.25s ease-in-out;
   -webkit-transtion: margin-left 0.25s ease-in-out;
   transition: margin-left 0.25s ease-in-out;
@@ -102,26 +111,28 @@ body {
     position: relative;
     width: 100%;
     height: 100%;
-    padding-left: 200px;
     padding-top: 60px;
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
 
-    > .container{
+    .auto-height-container{
+      position:relative;
+      min-height: 100%;
       overflow: hidden;
     }
+  }
 
-    .menu-overlayer {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background: #333333;
-      opacity: 0.5;
-      display: none;
-      z-index: 10;
-    }
+  .menu-overlayer {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    bottom: 0;
+    background: #333333;
+    opacity: 0.5;
+    display: none;
+    z-index: 999;
   }
 }
+
