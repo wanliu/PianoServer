@@ -97,9 +97,10 @@
             <div class="container">
               <div class="row">
                 <%= bootstrap_flash %>
-                <%= yield %>
               </div><!--/row-->
             </div> <!-- /container -->
+            
+            <%= yield %>
 
             <!-- footer -->
             <% _module = content_for :module %>
