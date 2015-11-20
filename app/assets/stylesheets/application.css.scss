@@ -104,6 +104,7 @@ footer {
   .navbar-responsive-collapse.collapse.in {
     overflow: visible;
     .navbar-right {
+      overflow: hidden;
       position: absolute;
       right: 20px;
       width: 150px;

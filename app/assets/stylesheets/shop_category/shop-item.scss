@@ -1,3 +1,10 @@
+.shop-item-wrapp{
+  @media (max-width: 768px){
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
 .shop-item {
   background: #FFFFFF;
   margin-bottom: 50px;
