@@ -1,55 +1,82 @@
+<% content_for :javascripts do %>
+  <%= javascript_include_tag "additional" %>
+<% end %>
+<% content_for :stylesheets  do %>
+  <%= stylesheet_link_tag "additional", :media => "all", 'data-turbolinks-track' => true %>
+<% end %>
+
+<% content_for :navbar_title do %>
+  选择你的商户类型
+<% end %>
+
 <div class="col-sm-12">
-<div class="page-header">
-  <h1>你的商户类型<small> 这将决定你的帐号类型与服务范畴</small></h1>
-</div>
-
-<div class="row">
-
-  <div class="col-sm-6 col-md-4">
-    <div class="thumbnail">
-      <%= settings_image "after_registers.consumer.cover_url", default: default_image(:gray), width: "100%", height: "300" %>
-      <div class="caption">
-        <h3><%= settings_text "after_registers.consumer.title", default: '消费者' %></h3>
-        <p><%= settings_textarea "after_registers.consumer.description", default: '普通消费者' %></p>
-        <p class="lead">费用：<%= settings_text "after_registers.consumer.price", default: '免费' %></p>
-        <p>
-          <%#= settings_button "after_registers.button.select", default: '选择', url: after_register_path(:consumer), context: 'primary' %>
-          <%= button_to '选择',  after_register_path(:consumer, step: :select, select: :consumer), context: 'primary', method: :put %>
-        </p>
+  <div class="page-header hidden-xs">
+    <h1>你的商户类型<small> 这将决定你的帐号类型与服务范畴</small></h1>
+  </div>
+  <div class="wrapper row" >
+    <div class="bussines-types">
+      <div class="coverflow-item col-sm-4">
+        <div class="thumbnail">
+          <%= settings_image "after_registers.consumer.cover_url", default: default_image(:gray), width: "100%", height: "300" %>
+          <div class="caption">
+            <h3><%= settings_text "after_registers.consumer.title", default: '消费者' %></h3>
+            <p class="hidden-xs"><%= settings_textarea "after_registers.consumer.description", default: '普通消费者' %></p>
+            <p class="lead">费用：<%= settings_text "after_registers.consumer.price", default: '免费' %></p>
+            <p>
+              <%#= settings_button "after_registers.button.select", default: '选择', url: after_register_path(:consumer), context: 'primary' %>
+              <%= button_to '选择',  after_register_path(:consumer, step: :select, select: :consumer), context: 'primary', method: :put %>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="coverflow-item col-sm-4">
+        <div class="thumbnail">
+          <%= settings_image "after_registers.retail.cover_url", default: default_image(:gray), width: "100%", height: "300" %>
+          <div class="caption">
+            <h3><%= settings_text "after_registers.retail.title", default: '零售商' %></h3>
+            <p class="hidden-xs"><%= settings_textarea "after_registers.retail.description", default: '零售商可以为普通消费提供服务' %></p>
+            <p class="lead">费用：<%= settings_text "after_registers.retail.price", default: '免费' %></p>
+            <p>
+              <%#= settings_button "after_registers.button.select", default: '选择', url: after_register_path(:consumer), context: 'primary' %>
+              <%= button_to '选择',  after_register_path(:retail, step: :select, select: :retail), context: 'primary', method: :put %>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="coverflow-item col-sm-4">
+        <div class="thumbnail">
+          <%= settings_image "after_registers.distributor.cover_url", default: default_image(:gray), width: "100%", height: "300" %>
+          <div class="caption">
+            <h3><%= settings_text "after_registers.distributor.title", default: '供货商' %></h3>
+            <p class="hidden-xs"><%= settings_textarea "after_registers.distributor.description", default: '供货商以为零售商提供服务' %></p>
+            <p class="lead">费用：<%= settings_text "after_registers.distributor.price", default: '免费' %></p>
+            <p>
+              <%#= settings_button "after_registers.button.select", default: '选择', url: after_register_path(:consumer), context: 'primary' %>
+              <%= button_to '选择',  after_register_path(:distributor, step: :select, select: :distributor), context: 'primary', method: :put %>
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-
-  <div class="col-sm-6 col-md-4">
-    <div class="thumbnail">
-      <%= settings_image "after_registers.retail.cover_url", default: default_image(:gray), width: "100%", height: "300" %>
-      <div class="caption">
-        <h3><%= settings_text "after_registers.retail.title", default: '零售商' %></h3>
-        <p><%= settings_textarea "after_registers.retail.description", default: '零售商可以为普通消费提供服务' %></p>
-        <p class="lead">费用：<%= settings_text "after_registers.retail.price", default: '免费' %></p>
-        <p>
-          <%#= settings_button "after_registers.button.select", default: '选择', url: after_register_path(:consumer), context: 'primary' %>
-          <%= button_to '选择',  after_register_path(:retail, step: :select, select: :retail), context: 'primary', method: :put %>
-        </p>      </div>
-    </div>
-  </div>
-
-  <div class="col-sm-6 col-md-4">
-    <div class="thumbnail">
-      <%= settings_image "after_registers.distributor.cover_url", default: default_image(:gray), width: "100%", height: "300" %>
-      <div class="caption">
-        <h3><%= settings_text "after_registers.distributor.title", default: '供货商' %></h3>
-        <p><%= settings_textarea "after_registers.distributor.description", default: '供货商以为零售商提供服务' %></p>
-        <p class="lead">费用：<%= settings_text "after_registers.distributor.price", default: '免费' %></p>
-        <p>
-          <%#= settings_button "after_registers.button.select", default: '选择', url: after_register_path(:consumer), context: 'primary' %>
-          <%= button_to '选择',  after_register_path(:distributor, step: :select, select: :distributor), context: 'primary', method: :put %>
-        </p>      </div>
-    </div>
-  </div>
-</div>
 </div>
 
 <script type="text/javascript">
   $(".best_in_place").best_in_place();
+
+  $(window).resize(function(){
+    flipster();
+  });
+
+  flipster();
+
+  function flipster() {
+    if ($(window).width() < 768 && !$('.wrapper').hasClass('.flipster--active')) {
+      $('.wrapper').flipster({
+        itemContainer: '.bussines-types',
+        itemSelector: '.coverflow-item',
+        style: 'flat'
+      });
+    }
+  }
 </script>

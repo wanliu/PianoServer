@@ -51,6 +51,7 @@
 //= require _common/adjust_container
 //= require _common/side_menu
 //= require _common/side_menu_manager
+//= require lib/jquery.hammer
 //= require_tree ./application
 //= require_tree ./chats
 //= require_tree ./orders

@@ -77,6 +77,10 @@ module ApplicationHelper
     Bh::Classes::Stack.class_variable_get(:@@stack).clear
   end
 
+  def set_module name
+    content_for :module, name
+  end
+
   private
 
   def user_profile_path(user)

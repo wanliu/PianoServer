@@ -3,9 +3,10 @@ class AfterRegistersController < ApplicationController
   before_action :authenticate_user!
   # before_action :expires_now, only: [:update]
   before_action :set_cache_headers, only: [:update]
+  before_action :set_content_for
 
   def index
-    redirect_to after_register_path(current_user.user_type) unless current_user.user_type.nil?
+    redirect_to after_register_path(current_user.user_type) unless current_user.state.nil?
   end
 
   def show
@@ -44,6 +45,33 @@ class AfterRegistersController < ApplicationController
       redirect_to after_register_path(@user_type)
     end
 
+  end
+
+  def consumer_steps
+    case @current_user.state
+    when "select", nil
+    when "industry"
+      # @shop = @current_user.owner_shop || Shop.new(owner_id: @current_user.id)
+    when "shop"
+      # @industry = @current_user.industry
+    # when "category"
+    #   # @shop = @current_user.owner_shop || Shop.new(owner_id: @current_user.id)
+
+    #   categories = Category.where(id: select_params.map {|id, brands| id }).to_a
+    #   brands = select_params.map {|id, brands| brands }.flatten
+
+    #   results = Product.with_category_brands(categories, brands)
+
+    #   @product_group = results.response.aggregations
+    # when "product"
+
+    #   # @brands = Brand.first(100)
+    when NilClass
+    else
+    end
+  end
+
+  def retail_steps
   end
 
   def distributor_steps
@@ -96,7 +124,6 @@ class AfterRegistersController < ApplicationController
     end
   end
 
-
   def go_category_step
     @select_params = select_params
     @shop = @current_user.owner_shop
@@ -143,5 +170,9 @@ class AfterRegistersController < ApplicationController
     response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
     response.headers["Pragma"] = "no-cache"
     response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
+  end
+
+  def set_content_for
+    content_for :module, :after_registers
   end
 end

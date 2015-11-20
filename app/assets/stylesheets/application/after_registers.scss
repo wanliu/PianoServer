@@ -1,3 +1,5 @@
+$transition-time:0.4s;
+
 #map {
   height: 300px;
 }
@@ -101,3 +103,37 @@
     width: 100%;
   }
 }
+
+.bussines-types {
+  // margin: auto;
+  .coverflow-item {
+    // display: inline-block;
+    // width: 33%;
+
+    .thumbnail {
+      // width: 200px;
+      // width: 33%;
+      // display: inline-block;
+    }
+  }
+
+}
+
+@media (max-width: 768px) {
+  .bussines-types {
+
+    .coverflow-item {
+      .thumbnail {
+        width: 200px;
+
+      }
+    }
+  }
+}
+
+.wrapper.ui-coverflow-wrapper {
+  height: 500px;
+  margin-bottom: 30px;
+}
+
+
