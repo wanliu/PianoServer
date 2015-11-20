@@ -13,9 +13,12 @@ class User < ActiveRecord::Base
   # has_many :memberings, :dependent => :destroy
   belongs_to :latest_location, class_name: 'Location'
   belongs_to :shop
+  belongs_to :industry
 
   has_one :owner_shop, class_name: 'Shop', foreign_key: 'owner_id'
+  has_one :status, as: :stateable, dependent: :destroy
   has_one :cart
+
   has_many :chats, foreign_key: 'owner_id'
   has_many :locations
 
@@ -25,10 +28,13 @@ class User < ActiveRecord::Base
   has_many :followables, as: :follower, class_name: 'Follow'
 
   validates :username, presence: true, uniqueness: true
+  validates :mobile, presence: true, uniqueness: true
 
   after_commit :sync_to_pusher
 
   attr_accessor :login
+
+  delegate :state, to: :status, allow_nil: true
 
   # admin search configure
   scoped_search on: [:id, :username, :email, :mobile]

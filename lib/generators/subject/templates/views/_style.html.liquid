@@ -1,0 +1,310 @@
+<style>
+/*专题下,footer的样式 start*/
+.footer {
+  color: #fff!important;
+  background-color:#c90933;
+}
+
+.footertop ul li a {
+  color: #fff!important;
+}
+
+.footertop{
+  margin-top:15px;
+}
+/*专题下,footer的样式 end */
+
+body{
+  background:#f10035;
+  margin-bottom: 0;
+}
+
+/*顶部图片样式 start*/
+.header-wrapper{
+  margin-bottom: 10px;
+  padding:0 15px;
+  display:block;
+  position: relative;
+  text-align:center;
+}
+
+.header-img-pc{
+  display: block;
+  width: 100%;
+}
+
+.header-img-mobile{
+  display: none;
+}
+
+
+.hgeader-bg{
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+@media (max-width: 768px) {
+  .header-img-pc{
+    display: none;
+  }
+  .header-img-mobile{
+    display: block;
+    width: 100%;
+  }
+}
+/*顶部图片样式 end*/
+
+.promotion-wrap{
+  overflow-x: visible;
+  margin-bottom: 10px;
+  border:none;
+  padding:0px 5px;
+  border-right:none;
+  overflow-x: visible;
+}
+
+.promotions-list {
+  margin: 0 -5px;
+}
+
+.promotion .promotion-image {
+  width: auto;
+  max-width: 100%;
+}
+
+.promotion .promotion-right{
+  display: table-cell;
+  padding-left:5px;
+  vertical-align: middle;
+}
+
+.promotion .promotion-title{
+  color:#666666;
+  margin: 0;
+}
+
+.promotion .action-detail{
+  margin-top: 40px;
+  font-size: 24px;
+}
+
+.promotion .finish-tip {
+  position: absolute;
+  right: 5px;
+  background: #333333;
+  color: #FFFFFF;
+  padding: 2px 5px;
+}
+
+.promotion .action-detail .snap-ready,
+.promotion .action-detail .snap-end,
+.promotion .action-detail .snap-up{
+  text-align: center;
+  background-color: #ff2b2b;
+  color: white;
+  border-radius: 3px;
+  display: inline-block;
+  font-weight: 700;
+  padding: 4px 8px;
+}
+
+.promotion .action-detail .snap-ready{
+  background-color: #f60;
+}
+.promotion .action-detail .snap-end{
+  background-color: #666;
+}
+
+.promotion .action-detail .sales-mount{
+  color: #999999;
+  margin-left:10px;
+}
+
+.promotions-list .promotion-wrap {
+  padding: 0 5px;
+  border: none;
+}
+
+.promotions-list .promotion .promotion-title {
+  height: 2.8em;
+}
+
+.promotions-list .promotion .promotion-image {
+  display: block;
+  margin: 0 auto;
+}
+
+.promotions-list .promotion .price-board .snap-ready,
+.promotions-list .promotion .price-board .snap-end,
+.promotions-list .promotion .price-board .snap-up{
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #F12A39;
+  padding: 0px 8px;
+  line-height: 34px;
+  color: white;
+}
+.promotions-list .promotion .price-board .snap-end{
+  background-color: #666;
+}
+.promotions-list .promotion .price-board .snap-ready{
+  background-color: #f60;
+}
+
+.promotions-list .promotion .price-board .prices {
+  text-overflow: clip;
+  font-size: 1em;
+}
+
+.promotions-list .promotion .provider-name >div {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.promotion .price-board .prices .disount-price{
+  font-weight: normal;
+}
+
+.promotion-wrap {
+  border-right:none;
+  overflow-x: visible;
+}
+
+.promotion >a{
+  text-decoration:none;
+  width: 100%;
+}
+
+.promotion .promotion-left{
+  width:40%;
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.promotion .prices .discount-price{
+  color: #ff2b2b;
+  font-size: 30px;
+  font-family: impact;
+}
+
+.promotions-list .promotion .price-board {
+  position: relative;
+  padding-right: 57px;
+}
+
+/*homepage_header 里大活动样式 start*/
+.subject-promotions{
+  padding:0 10px;
+}
+
+.subject-promotions .promotion{
+  display:block;
+  width:100%;
+  padding: 20px;
+  border: none;
+  overflow: visible;
+  height: 250px;
+}
+
+.subject-promotions .promotion .prices .origin-price {
+  color: #999999;
+  font-size: 18px;
+}
+
+.subject-promotions .promotion .promotion-title {
+  height: 2.8em;
+}
+
+.subject-promotions .promotion .promotion-image {
+  width: auto;
+  max-width: 180px;
+}
+.subject-promotions .promotion .prices .origin-price {
+  color: #999999;
+  font-size: 18px;
+}
+
+.subject-promotions .promotion{
+  display:block;
+  width:100%;
+  padding: 20px;
+  border: none;
+  overflow: visible;
+  height: 250px;
+}
+
+.subject-promotions{
+  padding:0 10px;
+}
+/*home_page 里大活动样式 end*/
+
+@media (min-width: 1200px) {
+  .subject-promotions .promotion .promotion-image {
+    max-height: 210px;
+  }
+  .subject-promotions .promotion .promotion-title {
+    font-size: 1.5em;
+  }
+}
+
+
+
+@media (min-width: 992px) and (max-width: 1200px) {
+  .subject-promotions .promotion {
+    height: 220px;
+  }
+  .subject-promotions .promotion .promotion-image {
+    max-height: 180px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 992px) {
+  .subject-promotions .promotion {
+    height: 165px;
+  }
+  .subject-promotions .promotion .promotion-image {
+    max-height: 125px;
+  }
+  .subject-promotions .promotion .promotion-right {
+    vertical-align: top;
+  }
+  .subject-promotions .promotion .action-detail {
+    font-size: 16px;
+    margin-top: 10px;
+  }
+}
+@media (min-width: 485px) and  (max-width: 768px) {
+  .subject-promotions .promotion .promotion-image {
+    max-height: 210px;
+  }
+}
+
+@media (max-width: 484px) {
+  .container{ /*手机上两端padding减少*/
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .subject-promotions .promotion {
+    height: 180px;
+  }
+  .subject-promotions .promotion-left{
+    width: 140px;
+    text-align: center;
+  }
+  .subject-promotions .promotion .promotion-image {
+    max-height: 140px;
+    max-width: 140px;
+    overflow: hidden;
+  }
+
+  .subject-promotions .promotion .action-detail{
+    margin-top: 10px;
+    font-size: 16px;
+  }
+}
+</style>

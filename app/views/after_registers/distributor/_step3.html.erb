@@ -1,0 +1,188 @@
+<div class="col-sm-12">
+<div class="page-header">
+  <h1>快速开店<small> 请选择你的经营品类</small></h1>
+</div>
+
+<h3><%= @industry.title %> </h3>
+<div class="category-list row" >
+  <% if @industry.category %>
+    <% @industry.category.children.order(:id).each do |category| %>
+      <%= link_to filter_brands_path(category_id: category.id ), data: {id: category.id}  do %>
+        <div class="col-sm-3">
+          <%= panel category.title %>
+        </div>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>
+
+<div class="adjust-container brand-container" adjust-step="170" adjust-padding="-20">
+  <div class="brand-list clearfix">
+
+  </div>
+</div>
+<hr />
+<div class="pull-right step-actions">
+  <%= button_to "以后再说", after_register_path(:distributor, step: :skip), class: 'btn btn-default btn-lg skip', method: :put %>
+  <%= button_to "下一步", after_register_path(:distributor, step: :category), class: 'btn btn-primary btn-lg next', method: :put %>
+</div>
+</div>
+
+<script type="text/javascript">
+  function template(temp, context) {
+    return temp.replace(/\$(\w+)/g, function(m, k) {
+      return context[k];
+    });
+  }
+
+  $(".category-list>a").click(function(e) {
+    e.preventDefault();
+    var _template = "<a href=\"/brands/$id\"  data-id=\"$id\" class=\"brand-link\" >" +
+                    "  <div class=\"brand\">" +
+                    "    $title" +
+                    "  </div>" +
+                    "</a>";
+
+    var category_id = $(this).data('id');
+    var url = $(this).attr('href');
+    var self = this;
+
+    $.ajax({
+      url: url
+    }).then(function(resp) {
+      var results = resp['results'];
+      if (results.length > 0) {
+        $('.brand-list').data('category_id', category_id).empty().hide();
+      } else {
+        $('.brand-list').data('category_id', category_id).empty().append("<div class=\"well text-center text-muted\"><h3>没有查找到下级数据</h3></div>")
+      }
+
+      for (var i in results) {
+        var result = results[i];
+        $('.brand-list').append(template(_template, result));
+      }
+
+      $brandList = $('.brand-list');
+
+      var brands = $(self).data('brands') || [];
+      for (var i in brands) {
+        var id = brands[i];
+        var $brand = $brandList.find("[data-id=\"" + id + "\"]");
+        showSelect($brand);
+      }
+
+      $('.brand-list').fadeIn();
+      window.adjustContainer();
+    });
+  });
+
+  $('.brand-list').on('click', 'a.brand-link', function(e) {
+    e.preventDefault();
+    var category_id = $('.brand-list').data('category_id');
+
+    var $categoryLink = $('.category-list >[data-id="' + category_id+ '"]');
+
+    var $panelBody = $categoryLink.find('.panel-body');
+    var $label = $panelBody.find('>.badge');
+    var count = parseInt($label.text()) || 0;
+
+    var brands = $categoryLink.data('brands') || [];
+    var currentBrandId = $(this).data('id');
+    var index = -1;
+
+    if ($label) {
+      $label.remove()
+    }
+
+    if (!!~(index = brands.indexOf(currentBrandId))) {
+      brands.splice(index, 1);
+      hideSelect(this);
+    } else {
+      brands.push(currentBrandId)
+      showSelect(this);
+    }
+
+    $categoryLink.data('brands', brands);
+
+    count = brands.length;
+
+    $label = $("<span class=\"badge pull-right\"></span>");
+    if (count > 0) {
+      $panelBody.append($label.text(count));
+    }
+
+  });
+
+  $form = $('.next').parents('form');
+
+  $form.submit(function(e) {
+    // e.preventDefault();
+
+    var selectCategories = {};
+    $(".category-list>a").each(function(i, elem) {
+      var category_id = $(elem).data('id');
+      var brands = $(elem).data('brands') || [];
+
+      selectCategories[category_id] = brands;
+      for (var i in brands) {
+        var brand = brands[i];
+        $(e.currentTarget).append("<input type=\"hidden\" name=\"select[" + category_id+ "][]\" value=\"" + brand + "\" />");
+      }
+    });
+
+    // var url = $(this).attr('action');
+    // $.ajax({
+    //   url: url,
+    //   type: 'PUT',
+    //   data: { select: selectCategories },
+    //   dataType: 'json'
+    // }).then(function() {
+
+    // });
+
+    // return false;
+  });
+
+  function toggleSelect() {
+
+  }
+
+  function showSelect(elem) {
+    var $icon = $("<span class=\"glyphicon glyphicon-ok\"></span>");
+    var $mark = $("<div class=\"mark\" />");
+
+    $mark.css({
+      position: 'absolute',
+      top: -24,
+      right: -15,
+      height: 60,
+      width: 30,
+      transform: 'rotate(-45deg)',
+      backgroundColor: '#329E06',
+      color: 'white'
+    });
+
+    $icon.css({
+      position: 'absolute',
+      right: 0,
+      color: 'white'
+    });
+
+    $(elem)
+      .find('.brand')
+      .append($mark)
+      .append($icon)
+      .css('position', 'relative')
+      .css('backgroundColor', '#99D8C1')
+      .css('borderColor', '#02480E')
+      .css('color', '#101010');
+  }
+
+  function hideSelect(elem) {
+    $(this).find('.brand>.mark').remove();
+    $(this).find('.brand>.glyphicon').remove();
+    $(this).find('.brand')
+      .css('backgroundColor', 'transparent')
+      .css('color', 'inherit');
+  }
+</script>

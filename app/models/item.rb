@@ -21,13 +21,14 @@ class Item < ActiveRecord::Base
 
   store_accessor :properties, :default_quantity
 
-
+  attr_accessor :skip_batch
   # dynamic_property prefix: 'property'
 
-  validates :shop_category_id, :category_id, :shop_id, :brand_id, :sid, presence: true
-  validates :title, presence: true
-  validates :public_price, :income_price, :price, numericality: true
-  validates :description, length: { minimum: 4 }
+  validates :title,:category_id, :shop_id, :brand_id, :sid, presence: true
+  validates :shop_category_id, presence: true, unless: :skip_batch
+  validates :public_price, numericality: true
+  validates :income_price, :price, numericality: true, unless: :skip_batch
+  validates :description, length: { minimum: 4 }, unless: :skip_batch
 
   if Settings.dev.feature.dynamic_property
     validates :properties, properties: {

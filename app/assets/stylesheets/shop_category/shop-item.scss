@@ -1,13 +1,16 @@
 .shop-item {
   background: #FFFFFF;
   margin-bottom: 50px;
+  overflow: hidden;
 
   .shop-item-image {
     width: 50%;
     margin: 15px auto;
     overflow: hidden;
     text-align: center;
-
+    @media (max-width: 484px){
+      width: 100% !important;
+    }
     img {
       max-width: 100%;
       height: auto;
@@ -21,26 +24,38 @@
     width: 100%;
   }
 
+  .price-period{
+    background-color:#F12A39;
+    color:#fff;
+    padding: 10px;
+
+    .promotion-price{
+      font-size: 2em;
+      font-weight: 700;
+    }
+  }
   .item-properties {
     padding: 15px;
-    background: #F12A39;
-    color: #FFFFFF;
-    font-weight: 700;
 
     .media-left {
       width: 60%;
-      border-right: 1px solid #FFFFFF;
     }
 
+    .media-body{
+      color: #666;
+      border-right: 1px solid #ddd;
+      border-left: 1px solid #ddd;
+    }
     .media-right {
       width: 20%;
-      border-left: 1px solid #FFFFFF;
+      color: #666;
     }
   }
 
   .item-shop-infos {
     padding: 15px;
-    border-bottom: 1px solid #DDDDDD;
+    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #ddd;
 
     .shop-avatar img {
       width: 75px;
@@ -49,8 +64,7 @@
   }
 
   .item-secodary-properties {
-    padding-top: 15px;
-    border-bottom: 1px solid #DDDDDD;
+    padding: 15px;
   }
 
   .item-descriptions {
@@ -75,16 +89,24 @@
 
   .link-table {
     display: table;
+    table-layout: fixed;
     width: 100%;
+    height:50px;
 
-    .into-shop, .fav-button, .chat {
+    .into-shop,
+    .fav-button,
+    .cart-button,
+    .buy-button,
+    .chat {
       display: table-cell;
       vertical-align: middle;
       text-align: center;
       padding: 5px 0;
     }
 
-    .into-shop, .fav-button {
+    .into-shop,
+    .fav-button,
+    .fav-button {
       border-right: 1px solid #DDDDDD;
     }
 
@@ -95,6 +117,11 @@
     .chat{
       color: #FFFFFF;
       background-color: #F42B2B;
+    }
+    .buy-button{
+      background:#f60;
+      color: #fff;
+      text-decoration: none;
     }
 
     .contact-button {
@@ -114,6 +141,7 @@
         top: 0;
         width: 100%;
         height: 100%;
+        min-height: 50px;
       }
     }
   }

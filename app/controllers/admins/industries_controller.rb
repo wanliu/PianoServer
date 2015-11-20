@@ -45,7 +45,7 @@ class Admins::IndustriesController < Admins::BaseController
   private
 
   def industry_params
-    params.require(:industry).permit(:name, :title, :description)
+    params.require(:industry).permit(:name, :title, :category_id, :description)
   end
 
   def get_industry

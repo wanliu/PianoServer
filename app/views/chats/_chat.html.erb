@@ -97,6 +97,10 @@
         chat.leave();
         $(window).off('resize.linkmen');
       });
+
+      $(document).off('page:load').on('page:load', function() {
+        window.noticeCenter.reloadUnreadMessage();
+      });
     }
 
     <% if Settings.dev.feature.linkmen %>

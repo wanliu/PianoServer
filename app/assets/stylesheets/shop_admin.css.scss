@@ -6,7 +6,9 @@
  *= require select2-bootstrap
  *= require _common/fileuploader
  *= require _common/checkbox
+ *= require _common/settings
  *= require _common/cart
+ *= require _common/layout
  *= require lib/tablesaw
  *= require lib/range
  *= require ./chats/chat-item
@@ -49,11 +51,7 @@ body[module="signup"] {
 }
 
 .shop-admin-container {
-  position: absolute;
-  top: 50px;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  padding-left: 250px;
   background: #FFFFFF;
 
   footer {
@@ -74,15 +72,8 @@ body[module="signup"] {
   right: 0;
 }
 
-.shop.left-sidebar {
-  position: absolute;
-  -webkit-transition: all 0.45s ease-in-out 0s;
-  transition: all 0.45s ease-in-out 0s;
-  top: 0px;
-  padding-top: 60px;
-}
-
 .left-sidebar {
+  float: left;
   width: 240px;
   left: 0;
   bottom: 0;
@@ -137,12 +128,7 @@ body[module="signup"] {
     }
   }
 
-  .shop.left-sidebar {
-    position: fixed;
-    left: -300px;
-  }
-
-  .content {
-    left: 0;
+  .shop-admin-container {
+    padding: 0;
   }
 }

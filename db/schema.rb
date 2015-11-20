@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151113092752) do
+ActiveRecord::Schema.define(version: 20151118071450) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -186,6 +186,7 @@ ActiveRecord::Schema.define(version: 20151113092752) do
     t.integer  "status",      default: 0
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
+    t.integer  "category_id"
   end
 
   create_table "intentions", force: :cascade do |t|
@@ -225,6 +226,19 @@ ActiveRecord::Schema.define(version: 20151113092752) do
     t.jsonb    "properties",                                default: {}
     t.text     "description"
     t.decimal  "current_stock",    precision: 10, scale: 2
+  end
+
+  create_table "jobs", force: :cascade do |t|
+    t.string   "status"
+    t.integer  "jobable_id"
+    t.string   "jobable_type"
+    t.string   "job_type"
+    t.jsonb    "input",        default: {}
+    t.jsonb    "output",       default: {}
+    t.datetime "end_at"
+    t.datetime "start_at"
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
   end
 
   create_table "likes", force: :cascade do |t|
@@ -398,7 +412,7 @@ ActiveRecord::Schema.define(version: 20151113092752) do
   create_table "statuses", force: :cascade do |t|
     t.integer  "stateable_id"
     t.string   "stateable_type"
-    t.integer  "state"
+    t.string   "state"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
   end
@@ -479,6 +493,7 @@ ActiveRecord::Schema.define(version: 20151113092752) do
     t.integer  "sex",                    default: 1
     t.integer  "shop_id"
     t.integer  "user_type",              default: 0
+    t.integer  "industry_id"
   end
 
   add_index "users", ["authentication_token"], name: "index_users_on_authentication_token", unique: true, using: :btree

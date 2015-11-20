@@ -1,0 +1,45 @@
+<script type="text/javascript">
+  var $containment = $('.menu-container');
+  var manager = new SideMenuManager($containment);
+  var menu = new SideMenu($containment, 'custom');
+
+  menu.insertGroup('about', '关于我们');
+  menu.insertGroup('qrode', '二维码', { qrode: true });
+
+  <% if Settings.dev.feature.favorites %>
+    menu.insertGroup('favorites', '我的收藏');
+  <% end %>
+
+  <% if Settings.dev.feature.linkmen %>
+    menu.insertGroup('chats', '最近联系人');
+  <% end %>
+
+  <% if Settings.dev.feature.user.sign_in %>
+    <% if current_anonymous_or_user.id < 0 %>
+      menu.insertGroup('users/sign_in', '登入');
+    <% else %>
+      var username = '<%= current_user.login %>';
+
+      menu.insertGroup('profile', username)
+      menu.insertSection('profile', '@' + username, 'face', '我的主页');
+
+      <% if current_user.join_shop %>
+        var shopName = '<%= current_user.join_shop.name %>';
+        menu.insertSection('profile', shopName, shopName, '我的店铺');
+        menu.insertSection('profile', shopName + '/admin', shopName + '-admin', '店铺管理');
+      <% end %>
+      menu.insertSection('profile', 'users/sign_out', 'signout', '退出', {'method': 'delete'});
+    <% end %>
+  <% end %>
+
+  menu.generateMenuDOMFragment();
+  manager.addMenu(menu);
+
+  $('.navbar-top .navbar-toggle').click(function() {
+    var menuName = $(this).data('menuName')
+
+    if (manager) {
+      manager.toggleMenu(menuName);
+    }
+  });
+</script>

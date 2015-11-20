@@ -1,5 +1,4 @@
-<div class="shop left-sidebar">
-
+<div class="shop left-sidebar hidden-xs">
   <ul class="nav nav-pills nav-stacked">
     <li><%= link_to '商店', shop_admin_index_path(@shop.name) %></li>
     <li><%= link_to '档案', shop_admin_profile_path(@shop.name) %></li>
@@ -20,7 +19,6 @@
 </div>
 
 <script type="text/javascript">
-
   var highlightSelected = function() {
     var currentUrl = window.location.pathname;
 

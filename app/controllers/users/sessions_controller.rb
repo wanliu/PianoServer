@@ -2,8 +2,9 @@ class Users::SessionsController < Devise::SessionsController
   include TokenAuthenticatable
   include ApplicationHelper
 
-  after_action :combine_anonymous_cart_items, only: [:create]
+  layout "sign"
 
+  after_action :combine_anonymous_cart_items, only: [:create]
   # skip_before_action :verify_signed_out_user, only: :destroy
 
   respond_to :json, :html
@@ -11,7 +12,7 @@ class Users::SessionsController < Devise::SessionsController
   TYPES = %w(mobile email name)
   helper ApplicationHelper
 
-  # include Mobylette::RespondToMobileRequests
+  include Mobylette::RespondToMobileRequests
   # skip_before_filter :verify_authenticity_token
   # before_filter :configure_sign_in_params, only: [:create]
 
@@ -34,6 +35,7 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def create
+    params[:format] = "html"
     super
     # render :show, formats: [:json]
   end

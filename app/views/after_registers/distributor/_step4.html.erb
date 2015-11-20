@@ -1,0 +1,27 @@
+<div class="col-sm-12">
+<div class="page-header">
+  <h1>快速开店<small> 选择你的商品</small></h1>
+</div>
+
+<%= form_for @shop, url: after_register_path(:distributor, step: :product), method: :put do |f| %>
+  <% @select_params.each do |k, values| %>
+    <% values.each do |value| %>
+      <%= hidden_field_tag "select[#{k}][]", value %>
+    <% end %>
+  <% end %>
+  <div class="table-detial">
+  <% if @job.status == "done" %>
+    <%= render partial: "after_registers/distributor/products_group", object: @products_group %>
+  <% else %>
+    <%= render "waiting" %>
+  <% end %>
+  </div>
+
+<div class="pull-right step-actions">
+  <%= button_to "以后再说", after_register_path(:distributor, step: :skip), class: 'btn btn-default btn-lg skip', method: :put %>
+  <%= f.submit "下一步", class: 'btn btn-primary btn-lg next' %>
+</div>
+<% end %>
+
+
+</div>
