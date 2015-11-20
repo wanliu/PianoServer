@@ -2,76 +2,76 @@
 <%= nav_back_button %>
 <%= content_for :module, :detail %>
 
-<div class="col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1 clearfix">
-  <div class="promotion-detail-container" data-promotion-id="<%= promotion.id %>" >
-    <div class="promotion-detail-content">
-      <div class="promotion-poster-image">
-        <%= image_tag(promotion.image_url, class: "promotion-poster") %>
-      </div>
 
-      <div class="price-period clearfix">
-        <div class="price-desc">
-          <div class="promotion-price">
-            ￥<%= promotion.discount_price %>
-          </div>
-          <div class="dicount-desc">
-            <p><s>￥<%= promotion.product_price %></s></p>
-            <span class="desc-text">
-              <% if promotion.type == 'promotions/discount' %>
-                <%= promotion.discount %>销售
-              <% elsif promotion.type == 'promotions/time_limited_sale' %>
-                限时抢购
-              <% end %>
-            </span>
-          </div>
+<div class="promotion-detail-container col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1 clearfix" data-promotion-id="<%= promotion.id %>" >
+  <div class="promotion-detail-content">
+    <div class="promotion-poster-image">
+      <%= image_tag(promotion.image_url, class: "promotion-poster") %>
+    </div>
+
+    <div class="price-period clearfix">
+      <div class="price-desc">
+        <div class="promotion-price">
+          ￥<%= promotion.discount_price %>
         </div>
-
-        <div class="period-desc">
-          <div class="desc-wrap">
-
-          </div>
+        <div class="dicount-desc">
+          <p><s>￥<%= promotion.product_price %></s></p>
+          <span class="desc-text">
+            <% if promotion.type == 'promotions/discount' %>
+              <%= promotion.discount %>销售
+            <% elsif promotion.type == 'promotions/time_limited_sale' %>
+              限时抢购
+            <% end %>
+          </span>
         </div>
       </div>
 
-      <div class="title-contact">
-        <div class="promotion-title"><%= promotion.title %></div>
-        <div class="promotion-favors">
-          <p>收藏</p>
-          <%= promotion.likers_count%>
-        </div>
-        <div class="promotion-likers">
-          <p>赞</p>
-          <%= promotion.favoriters_count %>
+      <div class="period-desc">
+        <div class="desc-wrap">
+
         </div>
       </div>
+    </div>
 
-      <div class="shop-brief clearfix">
-        <div class="shop-logo">
-          <a href="/<%= shop.name %>">
-            <%= image_tag shop.logo_url %>
-          </a>
-        </div>
+    <div class="title-contact">
+      <div class="promotion-title"><%= promotion.title %></div>
+      <div class="promotion-favors">
+        <p>收藏</p>
+        <%= promotion.likers_count%>
+      </div>
+      <div class="promotion-likers">
+        <p>赞</p>
+        <%= promotion.favoriters_count %>
+      </div>
+    </div>
 
-        <div class="shop-desc">
-          <p>供应商：<%= shop.title %></p>
-          <p>地&emsp;址：<%= shop.address %></p>
-          <p>关&emsp;注：100</p>
-        </div>
+    <div class="shop-brief clearfix">
+      <div class="shop-logo">
+        <a href="/<%= shop.name %>">
+          <%= image_tag shop.logo_url %>
+        </a>
       </div>
 
-      <div class="product-brief">
-        <div class="row">
-          <div class="col-xs-7 col-md-7">
-            <p>库&nbsp;&nbsp;存：<%= promotion.product_inventory %>件</p>
-          </div>
-          <div class="col-xs-5 col-md-5">
-            <p class="text-right">访问量：<%= promotion.hits %></p>
-          </div>
+      <div class="shop-desc">
+        <p>供应商：<%= shop.title %></p>
+        <p>地&emsp;址：<%= shop.address %></p>
+        <p>关&emsp;注：100</p>
+      </div>
+    </div>
+
+    <div class="product-brief">
+      <div class="row">
+        <div class="col-xs-7 col-md-7">
+          <p>库&nbsp;&nbsp;存：<%= promotion.product_inventory %>件</p>
+        </div>
+        <div class="col-xs-5 col-md-5">
+          <p class="text-right">访问量：<%= promotion.hits %></p>
         </div>
       </div>
     </div>
   </div>
 </div>
+
 
 <script type="text/javascript">
   //$(function() {
