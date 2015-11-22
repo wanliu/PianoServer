@@ -1,4 +1,6 @@
 class AfterRegistersController < ApplicationController
+  BUSSINES_TYPES = %w(consumer retail distributor)
+
   before_action :set_type, only: [:show, :update, :status]
   before_action :authenticate_user!
   # before_action :expires_now, only: [:update]
@@ -22,13 +24,20 @@ class AfterRegistersController < ApplicationController
 
   def update
     status, step =
-      case @current_user.user_type
-      when NilClass, "distributor"
+      case @current_user.user_type || params[:select]
+      when NilClass
+        if params[:step] == 'select' && BUSSINES_TYPES.include?(params[:select])
+          @current_user.user_type = params[:select]
+          send "go_#{params[:select]}_steps"
+        else
+          [:show, false]
+        end
+      when "distributor"
         go_distributor_steps
       when "consumer"
-        consumer_steps
+        go_consumer_steps
       when "retail"
-        retail_steps
+        go_retail_steps
       end
 
     if status == :save or status == true
@@ -47,31 +56,45 @@ class AfterRegistersController < ApplicationController
 
   end
 
+
+
   def consumer_steps
     case @current_user.state
     when "select", nil
-    when "industry"
-      # @shop = @current_user.owner_shop || Shop.new(owner_id: @current_user.id)
-    when "shop"
-      # @industry = @current_user.industry
-    # when "category"
-    #   # @shop = @current_user.owner_shop || Shop.new(owner_id: @current_user.id)
-
-    #   categories = Category.where(id: select_params.map {|id, brands| id }).to_a
-    #   brands = select_params.map {|id, brands| brands }.flatten
-
-    #   results = Product.with_category_brands(categories, brands)
-
-    #   @product_group = results.response.aggregations
-    # when "product"
-
-    #   # @brands = Brand.first(100)
-    when NilClass
     else
     end
   end
 
+  def go_consumer_steps
+    [ true, "index" ]
+  end
+
   def retail_steps
+    case @current_user.state
+    when "select", nil
+    when "industry"
+      @shop = @current_user.owner_shop || Shop.new(owner_id: @current_user.id)
+    when "shop"
+      @shop = @current_user.join_shop
+      @industry = @current_user.industry
+    else
+    end
+  end
+
+  def go_retail_steps
+    case params[:step]
+    when "select", NilClass
+      @current_user.user_type = params[:select]
+      [ true, "select" ]
+    when "industry"
+      @industry = Industry.find_by(name: params[:industry])
+      @current_user.industry = @industry
+
+      [ true, "industry" ]
+    when "shop"
+      go_shop_step
+    else
+    end
   end
 
   def distributor_steps
@@ -92,7 +115,7 @@ class AfterRegistersController < ApplicationController
       @product_group = results.response.aggregations
     when "product"
 
-      # @brands = Brand.first(100)
+        # @brands = Brand.first(100)
     when NilClass
     else
     end
@@ -104,15 +127,12 @@ class AfterRegistersController < ApplicationController
       @current_user.user_type = @user_type.to_sym
       [ true, "select" ]
     when "industry"
+      @industry = Industry.find_by(name: params[:industry])
+      @current_user.industry = @industry
+
       [ true, "industry" ]
     when "shop"
-      @shop = Shop.find_or_initialize_by shop_params
-      ShopService.build @shop.name
-      if @shop.save
-        [true, "shop"]
-      else
-        [:error, "industry"]
-      end
+      go_shop_step
     when "category"
 
       go_category_step
@@ -121,6 +141,27 @@ class AfterRegistersController < ApplicationController
       # [true, "final"]
     when NilClass
     else
+    end
+  end
+
+  def go_shop_step
+
+    @shop = @current_user.join_shop || Shop.new(shop_params)
+    @shop.shop_type = @current_user.user_type
+    @shop.build_location location_params.merge(skip_validation: true)
+    @industry = @current_user.industry
+
+    shop_params.delete(:name)
+
+    shop_params.map do |k, value|
+      @shop.send("#{k}=", value)
+    end
+
+    ShopService.build @shop.name
+    if @shop.save
+      [true, "shop"]
+    else
+      [:error, "shop"]
     end
   end
 
@@ -151,7 +192,11 @@ class AfterRegistersController < ApplicationController
   private
 
   def set_type
-    @user_type = params[:id]
+    if params[:step] != "select" && @current_user.user_type != params[:id]
+      return redirect_to(after_register_path(@current_user.user_type))
+    else
+      @user_type = @current_user.user_type || params[:id]
+    end
   end
 
   def shop_params
@@ -164,6 +209,10 @@ class AfterRegistersController < ApplicationController
 
   def products_params
     params[:products]
+  end
+
+  def location_params
+    params[:location].permit(:province_id, :city_id, :region_id)
   end
 
   def set_cache_headers

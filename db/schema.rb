@@ -11,11 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151118071450) do
+ActiveRecord::Schema.define(version: 20151122053031) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "hstore"
+  enable_extension "cube"
+  enable_extension "earthdistance"
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id"
@@ -407,6 +409,10 @@ ActiveRecord::Schema.define(version: 20151118071450) do
     t.string   "logo"
     t.string   "address"
     t.jsonb    "settings",    default: {}
+    t.integer  "shop_type",   default: 0
+    t.float    "lat"
+    t.float    "lon"
+    t.integer  "location_id"
   end
 
   create_table "statuses", force: :cascade do |t|

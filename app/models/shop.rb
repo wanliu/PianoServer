@@ -5,11 +5,13 @@ class Shop < ActiveRecord::Base
   include PublicActivity::Model
   tracked
 
+  enum shop_type: [:retail, :distributor, :wholesaler, :manufacturer ]
+
   html_fragment :description, :scrub => :prune  # scrubs `body` using the :prune scrubber
 
   acts_as_punchable
 
-  belongs_to :location
+  belongs_to :location, autosave: true
   belongs_to :owner, class_name: 'User'
 
   has_one :shop_category

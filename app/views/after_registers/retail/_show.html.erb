@@ -1,0 +1,8 @@
+<% step = params[:step] || current_user.state %>
+<% if step.nil? or step == "select" %>
+  <%= render "step1" %>
+<% elsif step == "industry" %>
+  <%= render "step2" %>
+<% elsif step == "shop" %>
+  <%= render "after_registers/retail/final" %>
+<% end %>

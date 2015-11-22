@@ -81,6 +81,10 @@ module ApplicationHelper
     content_for :module, name
   end
 
+  def disable_navbar?
+    content_for(:module) != "after_registers"
+  end
+
   private
 
   def user_profile_path(user)
