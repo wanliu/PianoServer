@@ -20,6 +20,10 @@ class Brand < ActiveRecord::Base
 
   def self.with_category(category_id)
     ids = Category.find(category_id).descendants.pluck :id
+    with_categories(ids)
+  end
+
+  def self.with_categories(categories_ids)
     query = {
       query: {
         filtered: {
@@ -27,7 +31,7 @@ class Brand < ActiveRecord::Base
             bool: {
               must: [{
                 terms: {
-                  category_id: ids,
+                  category_id: categories_ids,
                   execution: "bool",
                   _cache: true
                 },

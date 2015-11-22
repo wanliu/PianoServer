@@ -13,9 +13,19 @@ class BrandsController < ApplicationController
   end
 
   def filter
-    @brands = Brand.with_category(params[:category_id])
+    if params.has_key?(:category_id)
+      @categories = Category.find(params[:category_id]).children
+      @brands = Brand.with_category(params[:category_id])
+    elsif params.has_key?(:categories_ids)
+      categories_ids = params[:categories_ids].split(',')
+
+      @categories = Category.where(id: categories_ids)
+      @brands = Brand.with_categories(@categories.map {|cate| cate.descendants.pluck(:id) }.flatten)
+    end
+
     render json: {
-      results: @brands.as_json(methods: :title)
+      brands: @brands.as_json(methods: :title),
+      categories: @categories
     }
   end
 

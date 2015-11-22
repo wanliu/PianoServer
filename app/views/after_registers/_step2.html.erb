@@ -7,8 +7,12 @@
   <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 <% end %>
 
+<% content_for :navbar_title do %>
+  快速开店 完善商店资料(2/4)
+<% end %>
+
 <div class="col-md-offset-2 col-md-8">
-  <div class="page-header">
+  <div class="page-header hidden-xs">
     <h1>快速开店<small> 商店资料</small></h1>
   </div>
   <%= form_for @shop, url: after_register_path(@user_type, step: :shop), method: :put, layout: :basic do |f| %>

@@ -200,7 +200,7 @@ class AfterRegistersController < ApplicationController
   end
 
   def shop_params
-    params.require(:shop).permit(:title, :name, :phone, :description, :address, :owner_id)
+    params.require(:shop).permit(:title, :name, :phone, :description, :address, :owner_id, :lat, :lon)
   end
 
   def select_params
