@@ -14,7 +14,7 @@ class Shop < ActiveRecord::Base
   belongs_to :location, autosave: true
   belongs_to :owner, class_name: 'User'
 
-  has_one :shop_category
+  has_one :shop_category, dependent: :destroy
   has_many :items
   has_many :members, class_name: "User", foreign_key: 'shop_id'
 

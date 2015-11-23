@@ -38,31 +38,12 @@ module BootstrapHelper
   end
 
   def group_with_errors(object, name, helper, options = {}, &block)
-  #   error = object.errors[name]
-  #   error_name = t('attributes.' + name.to_s)
-  #   valid = error.present?
     layout = options.delete(:layout) || 'horizontal'
     if layout == 'horizontal'
       group_by_horizontal(object, name, helper, options, &block)
     else
       group_by_normal(object, name, helper, options, &block)
     end
-    # label_content = helper.label name, class: "col-sm-2 control-label" do
-    #   if valid
-    #     "#{error_name}<div class=\"error-tip\">#{error_name}#{error.join(' ')}</div>"
-    #   else
-    #     "#{error_name}"
-    #   end.html_safe
-    # end
-
-    # s "<div class=\"form-group#{" has-error has-feedback" if valid} #{options[:group_class]} \">"
-    #   s "#{label_content}"
-    #   s "<div class=\"col-sm-10\">"
-    #     s "#{yield}"
-    #     s "#{error_block if valid}"
-    #   s "</div>"
-    # s "</div>"
-    # nil
   end
 
   def group_by_horizontal(object, name, helper, options = {}, &block)
@@ -152,6 +133,7 @@ module BootstrapHelper
   end
 
   def error_message(object, name)
+    name = name.to_s
     keys = object.errors.keys.select {|msg| msg = msg.to_s; msg == name or msg.start_with? "#{name}." }
 
     keys.map do |key|
