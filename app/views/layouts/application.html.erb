@@ -89,16 +89,31 @@
       <div class="content-container">
         <div class="menu-container"></div>
         <%= render "shards/navbar" %>
-        <div class="menu-overlayer"></div>
 
         <div class="scroll-container">
-          <div class="container">
-            <div class="row">
-              <%= bootstrap_flash %>
-              <%= yield %>
-            </div><!--/row-->
-          </div> <!-- /container -->
-          <%= render "footer", with: @subject %>
+          <div class="menu-overlayer"></div>
+
+          <div class="auto-height-container">
+            <div class="container">
+              <div class="row">
+                <%= bootstrap_flash %>
+              </div><!--/row-->
+            </div> <!-- /container -->
+            
+            <%= yield %>
+
+            <!-- footer -->
+            <% _module = content_for :module %>
+            <% case _module %>
+            <% when NilClass %>
+              <%= render "footer", with: @subject %>
+            <% when "shop" %>
+              <%= render "footer", with: @shop %>
+            <% else %>
+              <%= render "footer" %>
+            <% end %>
+          </div>
+
         </div>
       </div>
     </div>

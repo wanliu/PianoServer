@@ -2,6 +2,10 @@
   background: #FFFFFF;
   margin-bottom: 50px;
   overflow: hidden;
+  @media (max-width: 484px){
+    margin-left: -15px;
+    margin-right: -15px;
+  }
 
   .shop-item-image {
     width: 50%;

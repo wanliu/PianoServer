@@ -1,6 +1,14 @@
 body {
   overflow: hidden;
+  
+  &.detail,
+  &.item{
+    .scroll-container {
+      padding-bottom: 60px;
+    }
+  }
 }
+
 
 .menu-container {
   position: absolute;
@@ -97,6 +105,7 @@ body {
   left: -200px;
   right: 0;
   height: 100%;
+  overflow: hidden;
 
   .scroll-container {
     position: relative;
@@ -106,6 +115,12 @@ body {
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
+
+    .auto-height-container{
+      position:relative;
+      min-height: 100%;
+      overflow: hidden;
+    }
   }
 
   .menu-overlayer {
@@ -120,3 +135,4 @@ body {
     z-index: 999;
   }
 }
+
