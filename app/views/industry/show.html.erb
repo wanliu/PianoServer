@@ -2,4 +2,12 @@
   <div class="page-header">
     <h1><%= @industry.title %></h1>
   </div>
+
+    <% if @regions.present? %>
+      <%= render partial: "region", collection: @regions %>
+
+      <% if @region %>
+        <%= render partial: "region", object: @region %>
+      <% end %>
+    <% end %>
 </div>

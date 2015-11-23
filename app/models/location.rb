@@ -17,6 +17,8 @@ class Location < ActiveRecord::Base
 
   validate :too_many_record, unless: :skip_validation
 
+  belongs_to :region, foreign_key: :region_id, primary_key: :city_id
+
   attr_accessor :chat_id, :intention_id
   attr_accessor :skip_validation
 

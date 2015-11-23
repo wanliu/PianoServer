@@ -27,6 +27,8 @@ class Shop < ActiveRecord::Base
     validates :address, presence: true
   end
 
+  delegate :region, to: :location, allow_nil: true
+
   before_validation :default_values
 
   store_accessor :settings, :greetings

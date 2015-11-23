@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   include ContentFor
   include Piano::PageInfo
   include Errors::RescueError
-
+  include Mobylette::RespondToMobileRequests
 
   # include TokenAuthenticatable
   # Prevent CSRF attacks by raising an exception.
@@ -23,6 +23,13 @@ class ApplicationController < ActionController::Base
   helper_method :current_anonymous_or_user, :anonymous?
   rescue_from ActionController::RoutingError, :with => :render_404
   rescue_from ActiveResource::ResourceNotFound, :with => :render_404
+
+  mobylette_config do |config|
+    # config[:fall_back] = :html
+    config[:devices] = { weixin: %r{micromessenger} }
+    # config[:skip_xhr_requests] = false
+    # config[:mobile_user_agents] = proc { /iphone/i }
+  end
 
   protected
 
@@ -100,5 +107,27 @@ class ApplicationController < ActionController::Base
 
   def wx_client
     WeixinClient.instance.client
+  end
+
+  def authenticate_region!
+    if cookies[:region_id].blank?
+      case current_anonymous_or_user.user_type
+      when "consumer"
+        return redirect_to new_user_session_path unless request_device?(:weixin)
+        @region_select = true
+      when "retail", "distributor"
+        @region = @current_user.join_shop.region
+        @regions = get_regions(@region)
+      when NilClass
+        return redirect_to new_user_session_path
+      end
+    else
+      @region = Region.where(city_id: cookies[:region_id]).first
+      @regions = get_regions(@region)
+    end
+  end
+
+  def get_regions(region)
+    @regions = (region && region.ancestors.where("name != ?", "China")) || []
   end
 end

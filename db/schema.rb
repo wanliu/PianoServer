@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151122053031) do
+ActiveRecord::Schema.define(version: 20151123104539) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -366,6 +366,24 @@ ActiveRecord::Schema.define(version: 20151122053031) do
 
   add_index "punches", ["average_time"], name: "index_punches_on_average_time", using: :btree
   add_index "punches", ["punchable_type", "punchable_id"], name: "punchable_index", using: :btree
+
+  create_table "regions", force: :cascade do |t|
+    t.string   "name"
+    t.string   "title"
+    t.string   "city_id"
+    t.jsonb    "data",           default: {}
+    t.integer  "parent_id"
+    t.integer  "lft",                         null: false
+    t.integer  "rgt",                         null: false
+    t.integer  "depth",          default: 0,  null: false
+    t.integer  "children_count", default: 0,  null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+  end
+
+  add_index "regions", ["lft"], name: "index_regions_on_lft", using: :btree
+  add_index "regions", ["parent_id"], name: "index_regions_on_parent_id", using: :btree
+  add_index "regions", ["rgt"], name: "index_regions_on_rgt", using: :btree
 
   create_table "shop_categories", force: :cascade do |t|
     t.string   "name"

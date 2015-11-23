@@ -2,6 +2,8 @@ class Users::SessionsController < Devise::SessionsController
   include TokenAuthenticatable
   include ApplicationHelper
 
+  after_action :after_login, :only => :create
+
   layout "sign"
   # skip_before_action :verify_signed_out_user, only: :destroy
 
@@ -49,6 +51,12 @@ class Users::SessionsController < Devise::SessionsController
     current_user && current_user.authentication_token = nil
     # current_user.save
     super
+  end
+
+  def after_login
+    if @current_user.join_shop && @current_user.join_shop.region
+      cookies.delete :region_id
+    end
   end
 
   private

@@ -15,6 +15,13 @@ Rails.application.routes.draw do
   end
 
   resources :industry, only: [ :show ]
+  resources :regions, only: [ :index, :update ] do
+    collection do
+      post :set, as: :set
+      post :retrive, as: :retrive
+    end
+  end
+
   scope :cart do
     get "/", to: "carts#index", as: :mycart
 
