@@ -42,7 +42,7 @@ class User < ActiveRecord::Base
     return found.nil? ? true : found.provider == 'import'
   }
 
-  mount_uploader :image, ImageUploader
+  mount_uploader :image, AvatarUploader
   enum sex: {'男' => 1, '女' => 0 }
   store_accessor :data,
                  :weixin_openid, :weixin_privilege, :language, :city, :province, :country

@@ -209,11 +209,11 @@ class AfterRegistersController < ApplicationController
   end
 
   def select_params
-    params[:select]
+    params[:select] || {}
   end
 
   def products_params
-    params[:products]
+    params[:products] || {}
   end
 
   def location_params
