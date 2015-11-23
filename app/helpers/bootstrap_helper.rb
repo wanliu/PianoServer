@@ -66,9 +66,12 @@ module BootstrapHelper
   end
 
   def group_by_horizontal(object, name, helper, options = {}, &block)
-    error = object.errors[name]
+    # error = object.errors[name]
+    # error_name = t('attributes.' + name.to_s)
+    # valid = error.present?
+    valid = has_errors(object, name)
+    error = error_message(object, name)
     error_name = t('attributes.' + name.to_s)
-    valid = error.present?
 
     label_content = helper.label name, options[:title], class: "col-sm-2 control-label" do
       if valid
@@ -89,9 +92,12 @@ module BootstrapHelper
   end
 
   def group_by_normal(object, name, helper, options = {}, &block)
-    error = object.errors[name]
+    # error = object.errors[name]
+    # error_name = t('attributes.' + name.to_s)
+    # valid = error.present?
+    valid = has_errors(object, name)
+    error = error_message(object, name)
     error_name = t('attributes.' + name.to_s)
-    valid = error.present?
 
     label_content = helper.label name, options[:title], class: "control-label"
     error_label = "<span class=\"help-block text-left\">#{error_name}#{error.join(' ')}</span>".html_safe
@@ -140,6 +146,22 @@ module BootstrapHelper
     nil
   end
 
+  def has_errors(object, name)
+    errors = error_message(object, name)
+    errors.length > 0
+  end
+
+  def error_message(object, name)
+    keys = object.errors.keys.select {|msg| msg = msg.to_s; msg == name or msg.start_with? "#{name}." }
+
+    keys.map do |key|
+      if key.to_s.split('.').length > 1
+        object.errors.full_messages_for key
+      else
+        object.errors[key]
+      end
+    end
+  end
   # def page_heading(title = nil, &block)
   #   r <<-HTML
   #     <div class="panel-heading">

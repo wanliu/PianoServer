@@ -36,33 +36,33 @@
         <%= group_with_errors @shop, :description, f, layout: :normal do %>
           <%= f.bootsy_area :description, class: "form-control", rows: 3 %>
         <% end %>
+        <%= group_with_errors @shop, :location, f, layout: :normal do %>
 
-        <%= fields_for :location, @shop.location, layout: :inline do |l| %>
-        <div class="form-group">
-          <%= f.label :location, "地址" %>
-          <%
-            province_id = @shop.location.try :province_id
-            city_id = @shop.location.try :city_id
-            region_id = @shop.location.try :region_id
+          <% fields_for :location, @shop.location, layout: :inline do |l| %>
 
-            province_list = ChinaCity.list
-            city_list = ChinaCity.list province_id.to_s
-            region_list = ChinaCity.list city_id.to_s
+            <%
+              province_id = @shop.location.try :province_id
+              city_id = @shop.location.try :city_id
+              region_id = @shop.location.try :region_id
 
-          %>
+              province_list = ChinaCity.list
+              city_list = ChinaCity.list province_id.to_s
+              region_list = ChinaCity.list city_id.to_s
 
-          <div class="city-group row" >
-            <div class="col-sm-4">
-              <%= select(:location, :province_id, options_for_select(province_list, province_id), {prompt: '--省份--'}, {class: "city-select form-control"}) %>
+            %>
+
+            <div class="city-group row" >
+              <div class="col-sm-4">
+                <%= l.select(:province_id, options_for_select(province_list, province_id), {prompt: '--省份--'}, {class: "city-select form-control"}) %>
+              </div>
+              <div class="col-sm-4">
+                <%= l.select(:city_id, options_for_select(city_list, city_id), {prompt: "--城市--"}, { class: "city-select form-control" } ) %>
+              </div>
+              <div class="col-sm-4">
+                <%= l.select(:region_id,  options_for_select(region_list, region_id), {prompt: "--地区--"}, { class: "city-select form-control" } ) %>
+              </div>
             </div>
-            <div class="col-sm-4">
-              <%= select(:location, :city_id, options_for_select(city_list, city_id), {prompt: "--城市--"}, { class: "city-select form-control" } ) %>
-            </div>
-            <div class="col-sm-4">
-              <%= select(:location, :region_id,  options_for_select(region_list, region_id), {prompt: "--地区--"}, { class: "city-select form-control" } ) %>
-            </div>
-          </div>
-        </div>
+          <% end %>
         <% end %>
         <%= f.text_field :address, label: false, help: "拖动地图中心图标定位你的位置" %>
         <%= f.hidden_field :lat %>

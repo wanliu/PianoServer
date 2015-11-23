@@ -230,6 +230,8 @@ zh-CN:
     information: 信息
     phone: 电话
     address: 街道
+    location: 地址
+    location_id: 地址
   controllers:
     shops: 商店
     items: 商品

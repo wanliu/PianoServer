@@ -41,7 +41,7 @@ class Location < ActiveRecord::Base
   end
 
   def too_many_record
-    locations = user.locations
+    locations = user.try(:locations) || []
 
     if locations.length >= 5
       errors.add(:amount, '已达到上限')
