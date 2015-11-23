@@ -488,6 +488,7 @@ class @Chat
 
   _insertLoadMore: () ->
     $more = $('<div class="load-more">查看更多消息</div>').prependTo(@$messageList)
+    @autoScroll()
 
     $more.click () =>
       @_removeLoadMore()
