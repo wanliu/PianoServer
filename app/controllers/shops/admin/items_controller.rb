@@ -16,6 +16,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     # per = params[:per].presence || 25
 
     @items = Item.with_shop(@shop.id)
+                 .where(abandom: false)
                  .with_category(query_params[:category_id])
                  .with_query(query_params[:q])
                  .page(query_params[:page])
@@ -216,6 +217,12 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     else
       render json: @item.errors, status: :unprocessable_entity
     end
+  end
+
+  def destroy
+    @item.update_attribute('abandom', true)
+
+    render :destroy, formats: [:js]
   end
 
   protected
