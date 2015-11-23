@@ -144,7 +144,6 @@ class AfterRegistersController < ApplicationController
 
   def go_shop_step
     @shop = @current_user.join_shop || Shop.new(shop_params)
-    pp @shop
     @shop.shop_type = @current_user.user_type
     @shop.build_location location_params.merge(skip_validation: true)
     @industry = @current_user.industry
