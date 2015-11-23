@@ -1,6 +1,9 @@
-.promotion-detail-container{
-  margin-bottom: 50px;
+body.detail footer{
+  margin-bottom: 60px;
+}
 
+.promotion-detail-container{
+  margin-bottom: 90px;
   @media (max-width: 484px){
     padding-left: 0;
     padding-right: 0;
@@ -186,7 +189,7 @@
   .link-table{
     display: table;
     width: 100%;
-    min-height: 50px;
+    height: 50px;
   }
 
   .contact-button{

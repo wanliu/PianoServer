@@ -1,11 +1,20 @@
+body.item footer{
+  margin-bottom: 60px;
+}
+
 .shop-item {
-  background: #FFFFFF;
   margin-bottom: 90px;
   overflow: hidden;
   
   @media (max-width: 484px){
     padding-left: 0;
     padding-right: 0;
+  }
+
+  .shop-content{
+    background: #FFFFFF;
+    margin-bottom: 30px;
+
   }
 
   .shop-item-image {
