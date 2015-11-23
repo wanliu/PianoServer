@@ -24,7 +24,7 @@
             <p class="lead">费用：<%= settings_text "after_registers.consumer.price", default: '免费' %></p>
             <p>
               <%#= settings_button "after_registers.button.select", default: '选择', url: after_register_path(:consumer), context: 'primary' %>
-              <%= button_to '选择',  after_register_path(:consumer, step: :select, select: :consumer), context: 'primary', method: :put, class: 'disabled' %>
+              <%= button_to '选择',  after_register_path(:consumer, step: :select, select: :consumer), context: 'primary', method: :put, disabled: true %>
             </p>
           </div>
         </div>

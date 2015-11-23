@@ -20,8 +20,6 @@ class Shop < ActiveRecord::Base
 
   validates :title, :phone, :name, presence: true
   validates :name, uniqueness: true
-  validates :location_id, presence: { message: '请选择有效城市' }
-
   validates :location, presence: { message: '请选择有效城市' }
 
   if Settings.after_registers.shop.validates == "strict"

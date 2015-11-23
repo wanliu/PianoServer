@@ -64,6 +64,7 @@ class AfterRegistersController < ApplicationController
   end
 
   def go_consumer_steps
+    logger.debug "Going consumer steps"
     [ true, "final" ]
   end
 
@@ -80,6 +81,7 @@ class AfterRegistersController < ApplicationController
   end
 
   def go_retail_steps
+    logger.debug "Going retail steps"
     case params[:step]
     when "select", NilClass
       @current_user.user_type = params[:select]
@@ -120,9 +122,10 @@ class AfterRegistersController < ApplicationController
   end
 
   def go_distributor_steps
+    logger.debug "Going distributor steps with step: #{params[:step]}"
     case params[:step]
     when "select", NilClass
-      @current_user.user_type = @user_type.to_sym
+      @current_user.user_type = params[:select]
       [ true, "select" ]
     when "industry"
       @industry = Industry.find_by(name: params[:industry])
