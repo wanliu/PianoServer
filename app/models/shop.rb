@@ -23,7 +23,7 @@ class Shop < ActiveRecord::Base
 
   if Settings.after_registers.shop.validates == "strict"
     validates :description, length: { minimum: 4 }
-    validate :address, presence: true
+    validates :address, presence: true
   end
 
   before_validation :default_values
