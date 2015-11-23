@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="<%= I18n.locale %>">
   <head>
     <meta charset="utf-8">
@@ -83,11 +83,16 @@
     <%= render "user_socket" %>
     <%= render "chat_notification" %>
   </head>
+
+  <% _module = content_for :module %>
+
   <body class="<%= yield :module %>">
     <div class="chat-notices"></div>
     <div class="fixed-height-container">
       <div class="content-container">
+
         <div class="menu-container"></div>
+
         <%= render "shards/navbar" %>
 
         <div class="scroll-container">
@@ -103,7 +108,6 @@
             <%= yield %>
 
             <!-- footer -->
-            <% _module = content_for :module %>
             <% case _module %>
             <% when NilClass %>
               <%= render "footer", with: @subject %>
@@ -113,8 +117,18 @@
               <%= render "footer" %>
             <% end %>
           </div>
-
         </div>
+
+        <!-- 底部按钮 -->
+        <% case _module %>
+          <% when "item" %>
+            <%= render "items/link_table" %>
+          <% when "detail" %>
+          
+          <%= render :partial => "promotions/promotion_link_table", locals: { promotion: @promotion, shop: @shop} %>
+
+            <%#= render "promotions/promotion_link_table" %>
+        <% end %>
       </div>
     </div>
 

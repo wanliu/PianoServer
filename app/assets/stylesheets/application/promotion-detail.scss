@@ -1,5 +1,9 @@
+body.detail footer{
+  margin-bottom: 60px;
+}
+
 .promotion-detail-container{
-  margin-bottom: 30px;
+  margin-bottom: 90px;
   @media (max-width: 484px){
     padding-left: 0;
     padding-right: 0;
@@ -172,52 +176,53 @@
     padding: 2px 2px 0;
     color: #FFFFFF;
   }
+}
 
-  .navbar-bottom{
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    background: #FFFFFF;
-    border-top: 1px solid #DDDDDD;
+.detail-link-table-container{
+  background-color:#f0f0f0;
+  position: absolute;
+  bottom: 0;
+  left: 200px;
+  right: 0;
+  border-top: 1px solid #DDDDDD;
 
-    .link-table{
-      display: table;
-      width: 100%;
-      min-height: 50px;
-    }
+  .link-table{
+    display: table;
+    width: 100%;
+    height: 50px;
+  }
 
-    .contact-button{
-      display: table-cell;
-      width: 20%;
+  .contact-button{
+    display: table-cell;
+    width: 20%;
+    text-align: center;
+    cursor: pointer;
+    vertical-align: middle;
+    line-height: 100%;
+
+    .button-text{
       text-align: center;
-      cursor: pointer;
-      vertical-align: middle;
-      line-height: 100%;
-
-      .button-text{
-        text-align: center;
-        margin-top: 3px;
-      }
+      margin-top: 3px;
     }
+  }
 
-    .into-shop, .fav-button{
-      border-right: 1px solid #DDDDDD;
-    }
+  .into-shop, .fav-button{
+    border-right: 1px solid #DDDDDD;
+  }
 
-    .into-shop{
-      color: #333333;
-    }
+  .into-shop{
+    color: #333333;
+  }
 
-    .buy-now, .chat{
-      color: #FFFFFF;
-    }
+  .buy-now, .chat{
+    color: #FFFFFF;
+  }
 
-    .buy-now{
-      background-color: #FF7C00;
-    }
+  .buy-now{
+    background-color: #FF7C00;
+  }
 
-    .chat {
-      background-color: #F42B2B;
-    }
+  .chat {
+    background-color: #F42B2B;
   }
 }
