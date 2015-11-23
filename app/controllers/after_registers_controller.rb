@@ -24,7 +24,7 @@ class AfterRegistersController < ApplicationController
 
   def update
     status, step =
-      case @current_user.user_type || params[:select]
+      case params[:select] || @current_user.user_type
       when NilClass
         if params[:step] == 'select' && BUSSINES_TYPES.include?(params[:select])
           @current_user.user_type = params[:select]
