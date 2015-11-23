@@ -12,18 +12,18 @@ class BatchImportProductsJob < ActiveJob::Base
       Product.search query: { terms: { id: ids}}, from: start, size: size
     end
 
-    job.output["created"] ||= []
+    job.output["created"] = []
 
     Item.skip_callback :save, :after, :store_attachment!
     index = Item.last_sid shop
     Item.transaction do
       enum.each do |product|
-        @item = Item.where(product_id: product.id).first_or_create(
+        @item = Item.where(product_id: product.id, shop_id: shop.id).first_or_create(
           shop_id: shop.id,
           title: product.name,
           product_id: product.id,
           public_price: product.price,
-          on_sale: false,
+          on_sale: Settings.shop.import.sale,
           brand_id: product.brand_id,
           category_id: product.category_id,
           skip_batch: true) do |item|

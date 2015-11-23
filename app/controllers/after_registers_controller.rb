@@ -47,7 +47,7 @@ class AfterRegistersController < ApplicationController
     elsif status == :redirect
       redirect_to after_register_path(@user_type, step: step)
     elsif status == :show
-      render :show, query: { step: step }
+      render :show, query: { step: step, status: :show }
     elsif status == :error or status == false
       render :show
     else
@@ -179,7 +179,7 @@ class AfterRegistersController < ApplicationController
 
     @job = JobService.start(:batch_import_products, @shop, @shop, products_params, select_params, type: "after_registers/product")
     @created = @job.output["created"]
-    [false, "shop"]
+    [true, "final"]
   end
 
   def status

@@ -32,6 +32,9 @@ elasticsearch:
   index_name: products_production
 assets:
   gray_image: "data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+shop:
+  import:
+    sale: true
 dev:
   feature:
     weixin: true

@@ -20,9 +20,9 @@ class BrandsController < ApplicationController
       categories_ids = params[:categories_ids].split(',')
 
       @categories = Category.where(id: categories_ids)
-      pp categories_ids
-      pp category_group = @categories.map {|cate| [cate.id, *cate.descendants.pluck(:id) ] }
-      pp ids = category_group.flatten
+      categories_ids
+      category_group = @categories.map {|cate| [cate.id, *cate.descendants.pluck(:id) ] }
+      ids = category_group.flatten
       @brands = Brand.with_categories(ids)
     end
 

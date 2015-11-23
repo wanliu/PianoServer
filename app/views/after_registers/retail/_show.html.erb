@@ -5,4 +5,6 @@
   <%= render "step2" %>
 <% elsif step == "shop" %>
   <%= render "after_registers/retail/final" %>
+<% else %>
+  <%= render "redirect_index" %>
 <% end %>
