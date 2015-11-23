@@ -107,10 +107,9 @@
           });
 
           function GetLocation(location) {
-            var point = new BMap.Point(location.coords.latitude, location.coords.longitude);
-            alert(location.coords.latitude);
-            alert(location.coords.longitude);
-            // map.centerAndZoom(point， 15)
+            var point = new BMap.Point(location.coords.longitude, location.coords.latitude);
+
+            setPosition(point, true)
           }
 
           function errorCallback(err) {

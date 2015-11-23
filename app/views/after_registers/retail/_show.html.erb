@@ -1,4 +1,4 @@
-<% step = params[:step] || current_user.state %>
+<% step = @step || current_user.state %>
 <% if step.nil? or step == "select" %>
   <%= render "step1" %>
 <% elsif step == "industry" %>

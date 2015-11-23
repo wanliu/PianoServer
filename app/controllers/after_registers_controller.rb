@@ -23,7 +23,7 @@ class AfterRegistersController < ApplicationController
   end
 
   def update
-    status, step =
+    status, @step =
       case params[:select] || @current_user.user_type
       when NilClass
         if params[:step] == 'select' && BUSSINES_TYPES.include?(params[:select])
@@ -41,13 +41,13 @@ class AfterRegistersController < ApplicationController
       end
 
     if status == :save or status == true
-      @current_user.build_status state: step
+      @current_user.build_status state: @step
       @current_user.save
       redirect_to after_register_path(@user_type)
     elsif status == :redirect
-      redirect_to after_register_path(@user_type, step: step)
+      redirect_to after_register_path(@user_type, step: @step)
     elsif status == :show
-      render :show, query: { step: step, status: :show }
+      render :show
     elsif status == :error or status == false
       render :show
     else
@@ -55,8 +55,6 @@ class AfterRegistersController < ApplicationController
     end
 
   end
-
-
 
   def consumer_steps
     case @current_user.state
@@ -66,7 +64,7 @@ class AfterRegistersController < ApplicationController
   end
 
   def go_consumer_steps
-    [ true, "index" ]
+    [ true, "final" ]
   end
 
   def retail_steps
@@ -145,8 +143,8 @@ class AfterRegistersController < ApplicationController
   end
 
   def go_shop_step
-
     @shop = @current_user.join_shop || Shop.new(shop_params)
+    pp @shop
     @shop.shop_type = @current_user.user_type
     @shop.build_location location_params.merge(skip_validation: true)
     @industry = @current_user.industry
@@ -157,11 +155,11 @@ class AfterRegistersController < ApplicationController
       @shop.send("#{k}=", value)
     end
 
-    ShopService.build @shop.name
     if @shop.save
+      ShopService.build @shop.name
       [true, "shop"]
     else
-      [:error, "shop"]
+      [:error, "industry"]
     end
   end
 
