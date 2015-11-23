@@ -23,8 +23,9 @@ class AfterRegistersController < ApplicationController
   end
 
   def update
+    logger.debug "User type: #{@user_type}"
     status, @step =
-      case params[:select] || @current_user.user_type
+      case @user_type
       when NilClass
         if params[:step] == 'select' && BUSSINES_TYPES.include?(params[:select])
           @current_user.user_type = params[:select]
@@ -114,7 +115,9 @@ class AfterRegistersController < ApplicationController
 
       @product_group = results.response.aggregations
     when "product"
-
+      @shop = @current_user.join_shop
+      @job = Job.where(jobable: @shop, job_type: "after_registers/product").first
+      @created = @job.output["created"] || []
         # @brands = Brand.first(100)
     when NilClass
     else
@@ -171,7 +174,7 @@ class AfterRegistersController < ApplicationController
 
     @job = JobService.start(:generate_products_group, @shop, @select_params, type: "after_registers/category")
     @products_group = @job.output["products_group"]
-    [:show, "product"]
+    [:show, "category"]
   end
 
   def go_product_step
@@ -179,7 +182,7 @@ class AfterRegistersController < ApplicationController
 
     @job = JobService.start(:batch_import_products, @shop, @shop, products_params, select_params, type: "after_registers/product")
     @created = @job.output["created"]
-    [true, "final"]
+    [true, "product"]
   end
 
   def status
@@ -194,6 +197,8 @@ class AfterRegistersController < ApplicationController
   def set_type
     if params[:step] != "select" && @current_user.user_type != params[:id]
       return redirect_to(after_register_path(@current_user.user_type))
+    elsif params[:step] == "select"
+      @user_type = params[:select]
     else
       @user_type = @current_user.user_type || params[:id]
     end

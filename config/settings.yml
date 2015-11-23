@@ -50,6 +50,7 @@ dev:
       chat: true
     user:
       sign_in: true
+    industry: true
 sites:
   root: .sites
   shops:

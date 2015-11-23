@@ -6,6 +6,9 @@
     <%= user_avatar(current_anonymous_or_user, 'data-toggle' => 'dropdown', 'role' => "button" ) %>
       <ul class="dropdown-menu">
         <li><%= link_to '我的主页', user_profile_path(current_user) %></li>
+        <% if Settings.dev.feature.favorites %>
+        <li><%= link_to "我的收藏", "/favorites" %></li>
+        <% end %>
 
         <% if current_user.join_shop %>
           <li><%= link_to '我的店铺', shop_site_path(current_user.join_shop.name) %></li>

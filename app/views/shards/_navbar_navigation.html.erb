@@ -6,9 +6,13 @@
         <% if Settings.dev.feature.qrcode %>
         <li><%= link_to "二维码", "#share-url-qrcode" , "data-toggle"=>"modal" %></li>
         <% end %>
-        <% if Settings.dev.feature.favorites %>
-        <li><%= link_to "我的收藏", "/favorites" %></li>
+
+        <% if Settings.dev.feature.industry %>
+          <% if @industry %>
+            <li><%= link_to "行业", industry_path(@industry.name) %></li>
+          <% end %>
         <% end %>
+
         <% if Settings.dev.feature.linkmen %>
         <li><%= link_to "最近联系人", "/chats" %></li>
         <% end %>
