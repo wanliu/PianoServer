@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :order_items, except: [:new, :edit]
   concern :messable do
     resources :messages
   end
@@ -15,14 +16,16 @@ Rails.application.routes.draw do
   end
 
   resources :industry, only: [ :show ]
-  scope :cart do
-    get "/", to: "carts#index", as: :mycart
+  # scope :cart do
+  #   get "/", to: "carts#index", as: :mycart
 
-    post "/", to: "carts#add"
-    delete "/:id", to: "carts#remove"
+  #   post "/", to: "carts#add"
+  #   delete "/:id", to: "carts#remove"
 
-    post "commit", to: "carts#commit"
-  end
+  #   post "commit", to: "carts#commit"
+  # end
+
+  resource :cart
 
   mount Bootsy::Engine => '/bootsy', as: 'bootsy'
   resources :subjects, except: [:index, :new, :edit] do
@@ -192,7 +195,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :orders
+  resources :orders, only: [:index, :show, :destroy]
 
   resources :locations do
     collection do

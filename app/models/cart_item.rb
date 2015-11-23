@@ -42,4 +42,12 @@ class CartItem < ActiveRecord::Base
       errors.add(:supplier_id, "不能购买自己店里的商品")
     end
   end
+
+  def avatar_url
+    if cartable_type == 'Promotion'
+      cartable.image_url
+    elsif cartable_type == 'Item'
+      cartable.avatar_url
+    end
+  end
 end

@@ -1,21 +1,11 @@
 <li class="list-group-item cart-item-<%= item.id %>">
   <div class="media">
     <div class="media-left">
-      <%= f.check_box "cart_item_ids", {multiple: true, checked: true}, item.id, nil %>
-    </div>
-    <div class="media-left">
-      <%= link_to shop_item_path(supplier.name, item.cartable) do %>
+      <%= link_to shop_item_path(supplier.name, item.orderable) do %>
         <%= image_tag item.avatar_url, class: 'media-object', alt: "商品图片" %>
       <% end %>
     </div>
     <div class="media-body">
-      <ul class="nav nav-pills nav-stacked pull-right item-line-actions">
-        <li role="presentation">
-          <%= link_to "cart/#{item.id}", remote: true, method: :delete do %>
-            <%= icon :trash %>
-          <% end %>
-        </li>
-      </ul>
       <h3 class="media-heading"><%= item.title %></h3>
       <h4 class="price"><span class="label label-default">价格</span> <%= number_to_currency item.price %></h4>
       <h4 class="quantity"><span class="label label-default">数量</span> <%= number_with_delimiter item.quantity %></h4>

@@ -1,5 +1,5 @@
 <div class="item-sale-options">
-  <%= form_for cartitem, url: mycart_path, html: { class: 'sale_form' } do |f| %>
+  <%= form_for cartitem, url: cart_path, html: { class: 'sale_form' } do |f| %>
     <%= row do %>
       <% unless current_anonymous_or_user.user_type == "consumer" %>
         <div class="form-group col-sm-12 ">

@@ -1,5 +1,5 @@
 <li class="dropdown">
-  <%= link_to mycart_path, class: 'dropdown-toggle', "data-toggle" => 'dropdown' do %>
+  <%= link_to cart_path, class: 'dropdown-toggle', "data-toggle" => 'dropdown' do %>
     <%= icon "shopping-cart" %>【<span id='cart-item-count'><%= current_cart.items.count %></span>】
   <% end %>
   <ul class="dropdown-menu cart-item-list" aria-labelledby="mycartList">
@@ -14,7 +14,7 @@
           <%= link_to cartable_url(item) do %>
             <div class="media">
               <div class="media-left">
-                <%= image_tag cart_item_avatar_url(item), class: 'cart-item-image' %>
+                <%= image_tag item.avatar_url, class: 'cart-item-image' %>
               </div>
               <div class="media-body">
                 <h4 class="media-heading"><%= item.title %></h4>
@@ -34,7 +34,7 @@
       <% end %>
       <li role="separator" class="divider"></li>
     <% end %>
-    <li><%= link_to '» 查看购物车...', mycart_path %></li>
+    <li><%= link_to '» 查看购物车...', cart_path %></li>
   </ul>
 
 </li>

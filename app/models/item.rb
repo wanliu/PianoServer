@@ -120,6 +120,14 @@ class Item < ActiveRecord::Base
     end
   end
 
+  # options: {
+  #   data: {size: 'l', color: 'red'},
+  #   quantity: 1
+  # }
+  def deduct_stocks!(operator, options)
+    stock_changes.create!(data: options[:data], operator: operator, quantity: - options[:quantity], kind: :sale)
+  end
+
   def stocks
     stock_changes.select("sum(quantity) as quantity, data").group("data")
   end

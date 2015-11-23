@@ -22,6 +22,7 @@ class ApplicationController < ActionController::Base
   helper_method :current_anonymous_or_user, :anonymous?, :current_cart
   rescue_from ActionController::RoutingError, :with => :render_404
   rescue_from ActiveResource::ResourceNotFound, :with => :render_404
+  rescue_from ActiveRecord::RecordNotFound, :with => :render_404
 
   protected
 

@@ -1,0 +1,49 @@
+<div class="page-header col-sm-12 ">
+  <h1>购物车 <small>清单</small></h1>
+</div>
+
+<div class="col-sm-12">
+  <% if current_cart.items.blank? %>
+    <h2>你的购物车是空的</h2>
+  <% else %>
+    <% groups = @items.group_by {|item| item.supplier } %>
+    <% groups.each do |supplier, items| %>
+      <%= form_for Order.new do |f| %>
+        <%= f.hidden_field :supplier_id, value: supplier.id %>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <div class="btn-group pull-right">
+              <%#= link_to '#', class: 'btn btn-link' do %>
+                <%= caret %>
+              <%# end %>
+            </div>
+            <span>
+              <input type='checkbox' class='select-all' data-supplier-id='<%= supplier.id %>' checked='checked' />全选
+            </span>
+            <%= link_to shop_site_path(supplier.name) do %>
+              <%= supplier.title %> ( <%= items.count %> 件商品)
+            <% end %>
+          </div>
+          <ul class="list-group cart-item-details">
+            <%= render partial: "item_line", collection: items, as: :item, locals: { supplier: supplier, f: f } %>
+          </ul>
+          <div class="panel-footer">
+            <%= f.submit '生成订单', class: 'btn btn-primary' %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%= button_to '全部生成订单', class: 'btn btn-primary' %>
+
+</div>
+
+<script type="text/javascript">
+  $(function() {
+    $('.select-all').change(function (event) {
+      var checked = $(this).prop('checked');
+      $(this).parents('form').find(':checkbox').prop('checked', checked);
+    });
+  });
+</script>

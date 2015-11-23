@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151118071450) do
+ActiveRecord::Schema.define(version: 20151123060526) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -331,6 +331,22 @@ ActiveRecord::Schema.define(version: 20151118071450) do
     t.datetime "updated_at",                    null: false
   end
 
+  create_table "order_items", force: :cascade do |t|
+    t.integer  "order_id"
+    t.integer  "orderable_id"
+    t.string   "orderable_type"
+    t.string   "title",                                   null: false
+    t.decimal  "price",          precision: 10, scale: 2
+    t.integer  "quantity",                                null: false
+    t.jsonb    "data"
+    t.jsonb    "properties"
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
+  end
+
+  add_index "order_items", ["order_id"], name: "index_order_items_on_order_id", using: :btree
+  add_index "order_items", ["orderable_type", "orderable_id"], name: "index_order_items_on_orderable_type_and_orderable_id", using: :btree
+
   create_table "orders", force: :cascade do |t|
     t.integer "buyer_id"
     t.integer "supplier_id"
@@ -516,6 +532,7 @@ ActiveRecord::Schema.define(version: 20151118071450) do
 
   add_index "variables", ["host_type", "host_id"], name: "index_variables_on_host_type_and_host_id", using: :btree
 
+  add_foreign_key "order_items", "orders"
   add_foreign_key "orders", "shops", column: "supplier_id"
   add_foreign_key "orders", "users", column: "buyer_id"
   add_foreign_key "shop_categories", "shops"

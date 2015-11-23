@@ -49,4 +49,8 @@ class Promotion < ActiveResource::Base
   def shop
     Shop.where(id: shop_id).first
   end
+
+  def deduct_stocks!(operator, options)
+    # TODO how to deduct stocks of a promotion?
+  end
 end
