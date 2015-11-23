@@ -95,6 +95,8 @@ gem 'sidekiq'
 gem 'china_city'
 gem 'table_cloth'
 
+gem 'oneapm_rpm'
+
 gem 'carrierwave', github: 'carrierwaveuploader/carrierwave', branch: 'mount-multiple'
 gem 'carrierwave-upyun'
 # Use ActiveModel has_secure_password
