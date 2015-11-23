@@ -1,36 +1,41 @@
 <div class="shop-items-container">
   <div class="btn-toolbar category-toolbar" role="toolbar" >
-    <div class="btn-group">
-      <button type="button" class="btn btn-default dropdown-toggle btn-category" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        分类
-        <span class="caret"></span>
-      </button>
-    </div>
+    <div style="1px solid #CCC;">
+      <div class="col-xs-12 col-md-6 item-filters">
+        <div class="btn-groups">
+          <button type="button" class="btn btn-default dropdown-toggle btn-category" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            分类
+            <span class="caret"></span>
+          </button>
 
-    <div class="btn-group">
-      <button type="button" class="btn btn-default dropdown-toggle btn-brand" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        品牌
-        <span class="caret"></span>
-      </button>
-    </div>
+          <button type="button" class="btn btn-default dropdown-toggle btn-brand" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            品牌
+            <span class="caret"></span>
+          </button>
+        </div>
 
-    <div class="btn-group col-md-3">
-      <div class="input-group">
-        <input type="text" class="form-control" placeholder="Search" aria-describedby="basic-addon2">
-        <span class="input-group-addon" id="basic-addon2">
-          <span class="glyphicon glyphicon-search"></span>
-        </span>
+        <div class="search-area">
+          <div class="input-group">
+          <input type="text" class="form-control" placeholder="Search" aria-describedby="basic-addon2">
+          <span class="input-group-addon" id="basic-addon2">
+            <span class="glyphicon glyphicon-search"></span>
+          </span>
+        </div>
+        </div>
       </div>
-    </div>
-    <div class="breadcrumb-container">
-      分类路径:
-      <ol class="breadcrumb"></ol>
-    </div>
-    <div class="btn-group pull-right">
-      <%= link_to new_shop_admin_item_path(@shop.name), class: "btn btn-success btn-add" do%>
-        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-        新增
-      <% end %>
+
+      <div class="col-xs-12 col-md-6 outer-container">
+        <div class="btn-group pull-right">
+          <%= link_to new_shop_admin_item_path(@shop.name), class: "btn btn-success btn-add" do%>
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            新增
+          <% end %>
+        </div>
+        <div class="breadcrumb-container">
+          分类路径:
+          <ol class="breadcrumb"></ol>
+        </div>
+      </div>
     </div>
   </div>
 
