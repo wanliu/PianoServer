@@ -9,12 +9,28 @@ class ShopCategoryDrop < Liquid::Rails::Drop
     object.image.blank_image?
   end
 
-  def cover_url
-    object.image.url(:cover)
+  def image_url
+    object.image.url
+  end
+
+  def icon_url
+    object.image.url(:icon)
+  end
+
+  def brand_url
+    object.image.url(:brand)
   end
 
   def avatar_url
     object.image.url(:avatar)
+  end
+
+  def cover_url
+    object.image.url(:cover)
+  end
+
+  def preview_url
+    object.image.url(:preview)
   end
 
   def parent
