@@ -195,7 +195,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :orders, only: [:index, :show, :destroy]
+  resources :orders, only: [:index, :show, :destroy, :create]
 
   resources :locations do
     collection do
@@ -263,6 +263,8 @@ Rails.application.routes.draw do
       end
 
       resources :settings
+
+      resources :orders, except: [:edit, :new, :create]
     end
   end
 

@@ -18,6 +18,9 @@
   route = '<%= shop_admin_items_path(@shop.name) %>';
   menu.insertGroup(route, '商品');
 
+  route = '<%= shop_admin_orders_path(@shop.name) %>';
+  menu.insertGroup(route, '订单');
+
   route = '<%= about_shop_path(@shop.name) %>';
   menu.insertGroup(route, '关于');
 

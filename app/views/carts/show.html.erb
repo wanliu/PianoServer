@@ -20,12 +20,14 @@
             <span>
               <input type='checkbox' class='select-all' data-supplier-id='<%= supplier.id %>' checked='checked' />全选
             </span>
+            店铺：
             <%= link_to shop_site_path(supplier.name) do %>
-              <%= supplier.title %> ( <%= items.count %> 件商品)
+              <%= supplier.title %> 
             <% end %>
+            ( <%= items.count %> 件商品)
           </div>
           <ul class="list-group cart-item-details">
-            <%= render partial: "item_line", collection: items, as: :item, locals: { supplier: supplier, f: f } %>
+            <%= render partial: "cart_item", collection: items.sort_by(&:id), as: :item, locals: { supplier: supplier, f: f } %>
           </ul>
           <div class="panel-footer">
             <%= f.submit '生成订单', class: 'btn btn-primary' %>
@@ -35,15 +37,49 @@
     <% end %>
   <% end %>
 
-  <%= button_to '全部生成订单', class: 'btn btn-primary' %>
+  <%#= button_to '全部生成订单', class: 'btn btn-primary' %>
 
 </div>
 
 <script type="text/javascript">
-  $(function() {
-    $('.select-all').change(function (event) {
-      var checked = $(this).prop('checked');
-      $(this).parents('form').find(':checkbox').prop('checked', checked);
-    });
+  $('.select-all').change(function (event) {
+    var checked = $(this).prop('checked');
+    $(this).parents('form').find(':checkbox').prop('checked', checked);
+  });
+
+  $('.cart-item input[name=quantity]').keyup(function (event) {
+    var _this = this;
+    var cartItemId = $(this).parents('.cart-item').data('cartItemId');
+    var quantity = $(this).val();
+
+    var $subTotal = $(this).parents('.quantity').siblings('.subtotal');
+    var $btnMinus = $(this).parents('.quantity').children('btn-minus span');
+
+    if ('' == quantity) return;
+
+    if (!/^\d+$/.test(quantity)) {
+      $(this).val(1);
+      quantity = 1;
+    }
+
+    quantity = 1 * quantity;
+
+    $.post('/cart_items/' + cartItemId, {
+      _method: 'PATCH',
+      cart_item: {
+        quantity: quantity,
+      }
+    }).done(function (data, xhr, status) {
+      $subTotal.text(data.sub_total);
+      debugger
+      if (quantity > 1) {
+        $btnMinus.addClass('glyphicon-minus');
+      } else {
+        $btnMinus.removeClass('glyphicon-minus');
+      }
+    }).fail(function (data, xhr, status) {
+      // TODO
+    })
   });
 </script>
+

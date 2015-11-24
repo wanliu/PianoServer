@@ -41,6 +41,6 @@ class Order < ActiveRecord::Base
   private
 
   def caculate_total
-    self.total = items.reduce(0) { |total, item| total += item.price * item.quantity }
+    self.origin_total = self.total = items.reduce(0) { |total, item| total += item.price * item.quantity }
   end
 end

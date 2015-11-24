@@ -9,7 +9,7 @@
       订单详情 <%= order.supplier.title %> ( <%= order.items.count %> 件商品) 订单号: <%= order.id %>
     <% end %>
   </div>
-  <ul class="list-group cart-item-details">
+  <ul class="list-group order-items">
     <%= render partial: "order_item", collection: order.items, as: :item, locals: { supplier: order.supplier } %>
   </ul>
   <div class="panel-footer">
