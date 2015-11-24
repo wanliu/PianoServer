@@ -24,16 +24,9 @@ config/email.yml
 
 /public/assets
 /public/uploads
+/public/deploy
 .gitver
 .powenv
 .git-hooks/post_checkout/.read
 
-/public
-!/public/403.html
-!/public/404.html
-!/public/422.html
-!/public/500.html
-!/public/analytics.js
-!/public/favicon.ico
-!/public/robots.txt
 
