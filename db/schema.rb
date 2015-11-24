@@ -11,7 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< Updated upstream
 ActiveRecord::Schema.define(version: 20151103021828) do
+=======
+ActiveRecord::Schema.define(version: 20151120034520) do
+>>>>>>> Stashed changes
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -83,28 +87,6 @@ ActiveRecord::Schema.define(version: 20151103021828) do
     t.jsonb    "data"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
-  end
-
-  create_table "cart_items", force: :cascade do |t|
-    t.integer  "cart_id"
-    t.integer  "cartable_id"
-    t.string   "cartable_type"
-    t.integer  "supplier_id"
-    t.string   "title"
-    t.string   "image"
-    t.integer  "sale_mode",                              default: 0
-    t.decimal  "price",         precision: 10, scale: 2
-    t.integer  "quantity"
-    t.jsonb    "properties"
-    t.jsonb    "condition"
-    t.datetime "created_at",                                         null: false
-    t.datetime "updated_at",                                         null: false
-  end
-
-  create_table "carts", force: :cascade do |t|
-    t.integer  "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "categories", force: :cascade do |t|
@@ -195,8 +177,13 @@ ActiveRecord::Schema.define(version: 20151103021828) do
     t.decimal  "price",            precision: 10, scale: 2
     t.integer  "inventory"
     t.boolean  "on_sale",                                   default: true
+<<<<<<< Updated upstream
     t.datetime "created_at",                                               null: false
     t.datetime "updated_at",                                               null: false
+=======
+    t.datetime "created_at",                                                null: false
+    t.datetime "updated_at",                                                null: false
+>>>>>>> Stashed changes
     t.integer  "sid"
     t.string   "title"
     t.integer  "category_id"
@@ -468,7 +455,6 @@ ActiveRecord::Schema.define(version: 20151103021828) do
     t.jsonb    "data",                   default: {}
     t.integer  "sex",                    default: 1
     t.integer  "shop_id"
-    t.integer  "user_type",              default: 0
   end
 
   add_index "users", ["authentication_token"], name: "index_users_on_authentication_token", unique: true, using: :btree
