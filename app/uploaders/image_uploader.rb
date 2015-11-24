@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-IMAGE_UPLOADER_ALLOW_IMAGE_VERSION_NAMES = %w(default icon avatar brand cover preivew)
+IMAGE_UPLOADER_ALLOW_IMAGE_VERSION_NAMES = %w(default icon avatar brand cover preview)
 class ImageUploader < CarrierWave::Uploader::Base
   HTTP_PREFIX = /\Ahttp[s]?:\/\//
   include ActionView::Helpers::AssetUrlHelper
