@@ -224,7 +224,11 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :settings
+      resources :settings do
+        collection do
+          put "/change_shop_theme", to: "settings#change_shop_theme"
+        end
+      end
     end
   end
 
