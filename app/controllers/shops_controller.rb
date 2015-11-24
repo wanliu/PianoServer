@@ -2,6 +2,7 @@ class ShopsController < ApplicationController
   before_action :prepare_shop_views_path
   before_action :set_shop, only: [ :show_by_name, :show, :about ]
   before_action :shop_page_info
+  caches_page :show, :show_by_name, :about
 
   def show_by_name
     set_page_title @shop.title
