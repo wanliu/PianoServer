@@ -85,6 +85,23 @@ module ApplicationHelper
     content_for(:module) != "after_registers"
   end
 
+  def url_for(options)
+
+    pp options
+    case options
+    when String
+      if options.blank? or options == "/"
+        "/"
+      else
+        options + ".html"
+      end
+    when Hash
+      super options.merge({format: 'html'})
+    else
+      super
+    end
+  end
+
   private
 
   def user_profile_path(user)

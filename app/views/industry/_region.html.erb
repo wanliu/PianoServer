@@ -1,1 +1,5 @@
-<h3><%= region.title %></h3>
+<%= panel heading: region.title  do %>
+<div class="panel-body">
+  <% render partial: "category_brands", collection: @categories %>
+</div>
+<% end %>

@@ -104,6 +104,7 @@ Rails.application.routes.draw do
         put 'import/:wanliu_user_id', to: 'accounts#import', as: :import
       end
     end
+    resources :regions
     resources :promotions
     resources :subjects do
       concerns :templable, templable_type: 'Subject', parent_type: 'Subject'

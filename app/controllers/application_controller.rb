@@ -117,17 +117,13 @@ class ApplicationController < ActionController::Base
         @region_select = true
       when "retail", "distributor"
         @region = @current_user.join_shop.region
-        @regions = get_regions(@region)
+        # @regions = get_regions(@region)
       when NilClass
         return redirect_to new_user_session_path
       end
     else
       @region = Region.where(city_id: cookies[:region_id]).first
-      @regions = get_regions(@region)
+      # @regions = get_regions(@region)
     end
-  end
-
-  def get_regions(region)
-    @regions = (region && region.ancestors.where("name != ?", "China")) || []
   end
 end
