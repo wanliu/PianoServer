@@ -81,7 +81,9 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
         item.send("#{prop_name}=", value)
       end
 
-      item.send(:write_attribute, :images, params[:item][:filenames].split(','))
+      if params[:item][:filenames] && params[:item][:filenames].respond_to?(:split)
+        item.send(:write_attribute, :images, params[:item][:filenames].split(','))
+      end
     end
 
     if Settings.dev.feature.inventory_combination and @inventory_properties.present?
@@ -128,7 +130,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
       pp params["inventories"]
     end
 
-    if params[:item][:filenames].present?
+    if params[:item][:filenames] && params[:item][:filenames].respond_to?(:split)
       @item.send(:write_attribute, :images, params[:item][:filenames].split(','))
     end
 

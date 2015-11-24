@@ -102,7 +102,7 @@
         $(window).off('resize.linkmen');
       });
 
-      $(document).on('page:load', function() {
+      $(document).off('page:load').on('page:load', function() {
         window.noticeCenter.reloadUnreadMessage();
       });
     }

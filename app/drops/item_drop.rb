@@ -1,13 +1,8 @@
 class ItemDrop < Liquid::Rails::Drop
-  attributes :id, :title, :public_price, :price, :created_at, :updated_at, :image_url, :description, :hits, :shop_id, :sid
+  attributes :id, :title, :public_price, :price, :created_at, :updated_at, :image_url, :image, :description, :hits, :shop_id, :sid
+  include ImageUrl
 
-  def image_url
-    object.image.url
-  end
-
-  def avatar_url
-    object.image.url(:avatar)
-  end
+  image_mount :image
 
   def link
     "/items/#{object.sid}"

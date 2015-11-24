@@ -19,10 +19,9 @@ class @EditItemPoster extends @HuEvent
     })
 
   onUploaded: (id, filename, responseJSON) ->
-    index = @$().index('.edit-item-poster')
-    @container.send('poster:replace', [ index, filename ])
+    @container.send('poster:replace', [ @filename, responseJSON.filename ])
     @$().find('.item-poster').attr('src', responseJSON.url)
-    @filename = filename
+    @filename = responseJSON.filename
 
   removeItemPoster: () ->
     dataConfirmModal.confirm({
@@ -32,7 +31,7 @@ class @EditItemPoster extends @HuEvent
       cancel: '取消',
       onConfirm: () =>
         index = @$().index('.edit-item-poster')
-        @container.send('poster:remove', [ index, @filename ])
+        @container.send('poster:remove', [ @filename ])
         @$().remove()
     })
 
