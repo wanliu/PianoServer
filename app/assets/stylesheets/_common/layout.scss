@@ -1,6 +1,6 @@
 body {
   overflow: hidden;
-  
+
   &.detail,
   &.item{
     .scroll-container {
@@ -16,10 +16,11 @@ body {
   bottom: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  width: 200px;
+  width: 195px;
   z-index: 1000;
   background: #E32929;
   left: 0;
+  box-shadow: 1px 0 4px #474747;
 
   a {
     color: #FFFFFF;
@@ -97,6 +98,7 @@ body {
   z-index: 10;
   left: 200px;
   right: 0;
+  border-width: 1px 0;
 }
 
 .fixed-height-container {

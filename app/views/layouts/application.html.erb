@@ -95,16 +95,15 @@
 
         <%= render "shards/navbar" %>
 
+        <div class="menu-overlayer"></div>
         <div class="scroll-container">
-          <div class="menu-overlayer"></div>
-
           <div class="auto-height-container">
             <div class="container">
               <div class="row">
                 <%= bootstrap_flash %>
               </div><!--/row-->
             </div> <!-- /container -->
-            
+
             <%= yield %>
 
             <!-- footer -->
@@ -124,7 +123,7 @@
           <% when "item" %>
             <%= render "items/link_table" %>
           <% when "detail" %>
-          
+
           <%= render :partial => "promotions/promotion_link_table", locals: { promotion: @promotion, shop: @shop} %>
 
             <%#= render "promotions/promotion_link_table" %>
