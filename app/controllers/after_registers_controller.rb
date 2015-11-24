@@ -1,8 +1,8 @@
 class AfterRegistersController < ApplicationController
   BUSSINES_TYPES = %w(consumer retail distributor)
 
-  before_action :set_type, only: [:show, :update, :status]
   before_action :authenticate_user!
+  before_action :set_type, only: [:show, :update, :status]
   # before_action :expires_now, only: [:update]
   before_action :set_cache_headers, only: [:update]
   before_action :set_content_for
