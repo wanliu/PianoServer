@@ -45,5 +45,8 @@ module PianoServer
     config.api_only = false
     config.autoload_paths += %w(builders services drops jobs validators models/variables models/templates models/properties)
       .map { |_p| Rails.root.join('app', _p) }
+
+    config.action_controller.page_cache_directory = "#{Rails.root.to_s}/public/deploy"
+
   end
 end
