@@ -53,4 +53,8 @@ class Promotion < ActiveResource::Base
   def deduct_stocks!(operator, options)
     # TODO how to deduct stocks of a promotion?
   end
+
+  def saleable?
+    'Active' == status
+  end
 end

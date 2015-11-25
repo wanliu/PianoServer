@@ -9,6 +9,8 @@ class OrderItem < ActiveRecord::Base
   validates :title, presence: true
   validates :price, numericality: { greater_than: 0 }
 
+  validate :orderable_saleable, on: :create
+
   def orderable
     if orderable_type == 'Promotion'
       Promotion.find(orderable_id)
@@ -26,6 +28,14 @@ class OrderItem < ActiveRecord::Base
       orderable.image_url
     elsif orderable_type == 'Item'
       orderable.avatar_url
+    end
+  end
+
+  private
+
+  def orderable_saleable
+    unless orderable.saleable?
+      errors.add(:orderable_id, "已经下架，或者活动已经结束")
     end
   end
 end

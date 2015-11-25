@@ -29,12 +29,16 @@ class Order < ActiveRecord::Base
   def save_with_cart_items(operator)
     self.transaction do 
       CartItem.destroy(cart_item_ids)
+      begin
+        items.each do |item|
+          item.deduct_stocks!(operator)
+        end
 
-      items.each do |item|
-        item.deduct_stocks!(operator)
+        save!
+      rescue ActiveRecord::RecordInvalid => e
+        raise ActiveRecord::Rollback
+        false
       end
-
-      save
     end
   end
 

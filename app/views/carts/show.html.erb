@@ -67,10 +67,12 @@
       }
     });
 
+    // 修改所购商品数量
     $('.cart-item input[name=quantity]').keyup(function (event) {
       changeQuantity(this)
     });
 
+    // 通过减少按钮，修改所购商品数量
     $('.cart-item').on('click', '.btn-minus', function (event) {
       var quantityInput = $(this).parents('.quantity').find('input');
       var quantity = 1 * $(quantityInput).val();
@@ -79,6 +81,7 @@
       changeQuantity(quantityInput); 
     });
 
+    // 通过增加按钮，修改所购商品数量
     $('.cart-item').on('click', '.btn-plus', function (event) {
       var quantityInput = $(this).parents('.quantity').find('input');
       var quantity = 1 * $(quantityInput).val();
@@ -94,8 +97,6 @@
       var $subTotal = $(quantityInput).parents('.quantity').siblings('.subtotal');
       var $btnMinus = $(quantityInput).parents('.quantity').find('.btn-minus span');
     
-      if ('' == quantity) return;
-
       if (!/^\d+$/.test(quantity)) {
         $(quantityInput).val(1);
         quantity = 1;

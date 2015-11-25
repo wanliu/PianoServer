@@ -1,7 +1,11 @@
-<li class="list-group-item cart-item" data-cart-item-id="<%= item.id %>">
+<li class="list-group-item cart-item <%= item.cartable.saleable? ? 'saleable' : 'unsaleable' %>" data-cart-item-id="<%= item.id %>">
   <div class="media">
     <div class="chose-item media-left">
-      <%= f.check_box "cart_item_ids", {multiple: true, checked: true}, item.id, nil %>
+      <%if item.cartable.saleable? %>
+        <%= f.check_box "cart_item_ids", {multiple: true, checked: true}, item.id, nil %>
+      <% else %>
+        <span class='unsaleable'>失效</span>
+      <% end %>
     </div>
     <div class="avatar media-left">
       <%= link_to shop_item_path(supplier.name, item.cartable) do %>
@@ -22,6 +26,7 @@
     </div>
 
     <div class="quantity media-left">
+      <% if item.cartable.saleable? %>
       <div class="input-group">
         <span class="input-group-btn">
           <button type="button" class="btn btn-minus">
@@ -39,6 +44,9 @@
           </button>
         </span>
       </div>
+      <% else %>
+        <span><%= number_with_delimiter item.quantity %></span>
+      <% end %>
     </div>
 
     <div class="subtotal media-left">

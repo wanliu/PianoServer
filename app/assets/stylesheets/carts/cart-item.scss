@@ -1,4 +1,17 @@
 .cart-item {
+  &.unsaleable {
+    color: #ccc;
+
+    .unsaleable {
+      background: #dadada;
+      color: #5f5f5f;
+    }
+
+    .subtotal {
+      color: #ccc;
+    }
+  }
+
   .chose-item {
     width: 45px;
   }

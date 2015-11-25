@@ -6,3 +6,10 @@ zh-CN:
       order:
         total: "总价"
         delivery_address: "收货地址"
+  attributes:
+    items:
+      price: "单价"
+      quantity: "数量"
+      sub_total: "商品项小计"
+      orderable_id: "商品"
+      orderable_type: "商品"

@@ -14,6 +14,7 @@ class CartItem < ActiveRecord::Base
   validates :cartable_id, uniqueness: { scope: [:cart_id, :cartable_type] }
 
   validate :avoid_from_shop_owner
+  validate :cartable_saleable
 
   delegate :title, to: :cartable, allow_nil: true
 
@@ -37,17 +38,25 @@ class CartItem < ActiveRecord::Base
     end
   end
 
+  def avatar_url
+    if cartable_type == 'Promotion'
+      cartable.image_url
+    elsif cartable_type == 'Item'
+      cartable.avatar_url
+    end
+  end
+
+  private
+
   def avoid_from_shop_owner
     if supplier.owner_id == cart.user_id
       errors.add(:supplier_id, "不能购买自己店里的商品")
     end
   end
 
-  def avatar_url
-    if cartable_type == 'Promotion'
-      cartable.image_url
-    elsif cartable_type == 'Item'
-      cartable.avatar_url
+  def cartable_saleable
+    unless cartable.saleable?
+      errors.add(:cartable_id, "已经下架，或者活动已经结束")
     end
   end
 end

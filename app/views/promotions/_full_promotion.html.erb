@@ -104,7 +104,7 @@
         <% if shop.owner.id === current_anonymous_or_user.id %>
           <div class="chat contact-button">您的店铺</div>
         <% else %>
-          <% if Settings.dev.feature.purchase %>
+          <% if Settings.dev.feature.purchase && promotion.saleable? %>
             <div class="buy-now contact-button add-to-cart" data-cartable-type="Promotion" data-cartable-id="<%= promotion.id %>">购买</div>
           <% end %>
 
