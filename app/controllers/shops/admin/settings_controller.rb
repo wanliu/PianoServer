@@ -17,9 +17,11 @@ class Shops::Admin::SettingsController < Shops::Admin::BaseController
   end
 
   def change_shop_theme
-    #接受ajax请求 生成指定风格商店
     begin
       ShopService.build(params[:shop_id], { theme: params[:theme] })
+      shop = Shop.find_by(name: params[:shop_id])
+      shop.theme = params[:theme]
+      shop.save!
       render json: { success: true }
     rescue Exception => e
       render json: { success: false, msg: e.message }

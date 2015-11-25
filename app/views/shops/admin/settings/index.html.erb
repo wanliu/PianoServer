@@ -34,12 +34,14 @@
    -->
 
    <!-- 选择模板 -->
-  <h3 class="page-header">选择商店风格</h3>
+  <h3 class="page-header">选择商店风格</small></h3>
   <div class="row">
-    <% for theme in @theme_list do %>
+    <% @theme_list.each do |theme| %>
       <div class="col-md-3 col-sm-4 col-xs-4">
-        <a class="thumbnail theme-btn" data-theme="<%= theme[:type] %>">
+        <% _active = @shop.theme == theme[:type] ? 'active' : '' %>
+        <a class="thumbnail theme-btn <%= _active %>" data-theme="<%= theme[:type] %>">
           <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMTcxIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDE3MSAxODAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzEwMCV4MTgwCkNyZWF0ZWQgd2l0aCBIb2xkZXIuanMgMi42LjAuCkxlYXJuIG1vcmUgYXQgaHR0cDovL2hvbGRlcmpzLmNvbQooYykgMjAxMi0yMDE1IEl2YW4gTWFsb3BpbnNreSAtIGh0dHA6Ly9pbXNreS5jbwotLT48ZGVmcz48c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwhW0NEQVRBWyNob2xkZXJfMTUxMzgzOWZlMmYgdGV4dCB7IGZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMHB0IH0gXV0+PC9zdHlsZT48L2RlZnM+PGcgaWQ9ImhvbGRlcl8xNTEzODM5ZmUyZiI+PHJlY3Qgd2lkdGg9IjE3MSIgaGVpZ2h0PSIxODAiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSI1OS41NjI1IiB5PSI5NC41Ij4xNzF4MTgwPC90ZXh0PjwvZz48L2c+PC9zdmc+" alt="" style="width: 100%; display: block;">
+          <%= icon(:ok) %>
         </a>
         <div class="text-center theme-name"><%= theme[:name] %></div>
       </div>
@@ -51,6 +53,21 @@
 /* 待整合进 sass */
   .theme-btn{
     cursor: pointer;
+    position: relative;
+  }
+  .theme-btn .glyphicon-ok{
+    position: absolute;
+    display: block;
+    top: inherit;
+    right: 0;
+    bottom: 0;
+    font-size: 3em;
+    color: #080;  
+    opacity: 0;
+    transition: all 1s;
+  }
+  .theme-btn.active .glyphicon-ok{
+    opacity: 1;
   }
   .thumbnail{
     margin-bottom: 5px;
@@ -80,7 +97,8 @@
         console.log(data);
         if (data.success) {
           console.log('更新成功')
-          target.addClass('active').siblings().remove('acitve');
+          $('.theme-btn').removeClass('active');
+          target.addClass('active');
         } else {
           console.log(data.msg)
         }

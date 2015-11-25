@@ -11,11 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< Updated upstream
-ActiveRecord::Schema.define(version: 20151103021828) do
-=======
-ActiveRecord::Schema.define(version: 20151120034520) do
->>>>>>> Stashed changes
+ActiveRecord::Schema.define(version: 20151125064057) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -177,13 +173,8 @@ ActiveRecord::Schema.define(version: 20151120034520) do
     t.decimal  "price",            precision: 10, scale: 2
     t.integer  "inventory"
     t.boolean  "on_sale",                                   default: true
-<<<<<<< Updated upstream
-    t.datetime "created_at",                                               null: false
-    t.datetime "updated_at",                                               null: false
-=======
     t.datetime "created_at",                                                null: false
     t.datetime "updated_at",                                                null: false
->>>>>>> Stashed changes
     t.integer  "sid"
     t.string   "title"
     t.integer  "category_id"
@@ -194,6 +185,7 @@ ActiveRecord::Schema.define(version: 20151120034520) do
     t.jsonb    "properties",                                default: {}
     t.text     "description"
     t.decimal  "current_stock",    precision: 10, scale: 2
+    t.boolean  "abandom",                                   default: false, null: false
   end
 
   create_table "likes", force: :cascade do |t|
@@ -365,11 +357,12 @@ ActiveRecord::Schema.define(version: 20151120034520) do
     t.integer  "industry_id"
     t.text     "description"
     t.string   "provider"
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
     t.string   "logo"
     t.string   "address"
     t.jsonb    "settings",    default: {}
+    t.string   "theme",       default: "theme1"
   end
 
   create_table "statuses", force: :cascade do |t|
