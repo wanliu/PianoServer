@@ -25,6 +25,7 @@ class @CategoryListWrap extends @HuEvent
     @box = new CategoryContainer(@element, @length)
     @on('category:change', @categoryChanged.bind(@))
     @on('category:empty', @categoryEmptyed.bind(@))
+    @on('q:changed', @qChanged.bind(@))
 
     @loadFirstLevelCategory()
 
@@ -43,6 +44,8 @@ class @CategoryListWrap extends @HuEvent
     new CategoryList(@, $element, [], level)
 
   categoryChanged: (e, category_id, level, is_leaf) ->
+    @category_id = category_id
+
     @loadCategoryData(category_id, (data) =>
       @categoryDataChanged(data, category_id, level, is_leaf)
     )
@@ -53,6 +56,8 @@ class @CategoryListWrap extends @HuEvent
     )
 
   categoryEmptyed: (e) ->
+    @category_id = null
+
     @loadFirstLevelCategory()
 
   loadCategoryData: (category_id, callback) ->
@@ -96,6 +101,25 @@ class @CategoryListWrap extends @HuEvent
     else
       @resetListsContent(data, level)
       @form.send('category:change', [ category_id, is_leaf ]) if @form?
+
+  qChanged: (e, q) ->
+    $.ajax({
+      type: 'GET',
+      dataType: 'json',
+      url: @url,
+      data: {
+        category_id: @category_id,
+        q: q
+      },
+      success: (data) ->
+        { items, brands, meta } = data
+        @items.send('items:change', [items]) if @items?
+
+        { page, per } = @params
+        @pagination.setup(page, per, meta.count)
+
+        @brands.send('brands:change', [brands]) if @brands
+    })
 
   resetListsContent: (data, level) ->
     if level == @length

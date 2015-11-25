@@ -31,6 +31,16 @@
       top: 0;
       width: 140px;
     }
+
+    .search-button {
+      padding: 0;
+
+      .btn-search {
+        display: block;
+        background: transparent;
+        border: none;
+      }
+    }
   }
 
   .outer-container, .item-filters {
@@ -42,6 +52,7 @@
     border: 1px solid #CCCCCC;
     border-radius: 5px;
     padding: 15px 0;
+    margin-bottom: 10px;
 
     .items-search {
       display: inline-block;
