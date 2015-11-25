@@ -81,6 +81,8 @@ class @Chat
         when "text"
           if TABLE_REGEXP.test(data)
             @_sendTableMsg(data)
+          else
+            @_pasteText(data)
         else
           @clearText()
 
@@ -141,24 +143,36 @@ class @Chat
 
   _refreshTimeline: () ->
     $times = @$messageList.find('.time-desc:not(.refreshed)')
-
-    now = new Date()
     _lastHandledTime = null
 
     for time in $times
       $time = $(time)
 
       time = parseInt($time.attr('time'))
-      date = new Date(time)
+      date1 = new Date(time)
 
       if _lastHandledTime
-        compareDate = new Date(_lastHandledTime)
+        date2 = new Date(_lastHandledTime)
       else
-        compareDate = if @earlyTime then new Date(@earlyTime) else new Date()
+        date2 = new Date(@earlyTime)
 
       _lastHandledTime = time
 
-      $time.remove() if @_isTheSameMinute(date, compareDate)
+      if @_isTheSameMinute(date1, date2)
+        $time.remove()
+      else
+        $time.addClass('refreshed')
+
+        if @_isTheSameDate(date1, date2)
+          desc = @_formatDayDate(date1)
+        else if @_isTheSameYear(date1, date2)
+          desc = @_formatMonthDate(date1)
+        else
+          desc = @_formatYearDate(date1)
+
+        console.log(desc)
+
+        $time.find('p').text(desc)
 
   setTable: (@table) ->
 
@@ -221,6 +235,11 @@ class @Chat
     }, (err) =>
       @clearText() unless err?
     )
+
+  _pasteText: (text) ->
+    @$textElement ||= $(@textElement)
+    val = @$textElement.val()
+    @$textElement.val([val, text].join(''))
 
   _insertItemMessage: (message, direction = 'down', isFirstRecord) ->
     {id, senderId, content, senderAvatar, senderLogin, type, time} = message
@@ -287,21 +306,15 @@ class @Chat
     if @lastTime
       date2 = new Date(@lastTime)
       diff = Math.abs(time - @lastTime)
-      theSameDayToLastTime = @_isTheSameDate(date, date2)
-      theSameDayToNow = @_isTheSameDate(date, now)
-      theSameYearToNow = @_isTheSameYear(date, now)
+
+      if isFirstRecord
+        date2 = now
+        diff = Math.abs(time - now.getTime())
 
       if diff > @options.miniTimeGroupPeriod
-        if theSameDayToNow
-          prefixSection = if theSameDayToLastTime then formatDayDate else formatMonthDate
-        else if theSameYearToNow
-          prefixSection = formatMonthDate
-        else
-          prefixSection = formatYearDate
-      else if isFirstRecord
-        if theSameDayToNow
-          prefixSection = if theSameDayToLastTime then formatDayDate else formatMonthDate
-        else if theSameYearToNow
+        if @_isTheSameDate(date, date2)
+          prefixSection = if direction == 'down' then '' else formatDayDate
+        else if @_isTheSameYear(date, date2)
           prefixSection = formatMonthDate
         else
           prefixSection = formatYearDate
@@ -321,9 +334,6 @@ class @Chat
       """
     else
       ""
-
-  _calculatePrefix: (date1, date2) ->
-
 
   _isTheSameYear: (date1, date2) ->
     date1.getFullYear() == date2.getFullYear()
@@ -555,5 +565,6 @@ class @Chat
     }, () =>
       senderId = @channelId.replace('p', '')
       window.noticeCenter.removeNotice(senderId)
+
 
 
