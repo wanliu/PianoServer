@@ -7,8 +7,6 @@ class Shop::BuildGenerator < Rails::Generators::NamedBase
 
   def initialize(*args)
     @theme = args[0][1]
-    pp args
-    pp "主题:#{@theme}"
     super
 
     unless shop
@@ -18,16 +16,15 @@ class Shop::BuildGenerator < Rails::Generators::NamedBase
 
   def copy_shop_files
     begin
-      copy_file "#{@theme}/_about.html.liquid", "#{shop_path}/views/_about.html.liquid"
-      copy_file "#{@theme}/_index.html.liquid", "#{shop_path}/views/_index.html.liquid"
-      copy_file "#{@theme}/_header.html.liquid", "#{shop_path}/views/_header.html.liquid"
-      copy_file "#{@theme}/_category.html.liquid", "#{shop_path}/views/_category.html.liquid"
-      copy_file "#{@theme}/_item.html.liquid", "#{shop_path}/views/_item.html.liquid"
-      copy_file "#{@theme}/_shop_category_list.html.liquid", "#{shop_path}/views/_shop_category_list.html.liquid"
-      copy_file "#{@theme}/items/_show.html.liquid", "#{shop_path}/views/items/_show.html.liquid"
+      copy_file "#{theme_path}/_about.html.liquid", "#{shop_path}/views/_about.html.liquid"
+      copy_file "#{theme_path}/_header.html.liquid", "#{shop_path}/views/_header.html.liquid"
+      copy_file "#{theme_path}/_category.html.liquid", "#{shop_path}/views/_category.html.liquid"
+      copy_file "#{theme_path}/_item.html.liquid", "#{shop_path}/views/_item.html.liquid"
+      copy_file "#{theme_path}/_shop_category_list.html.liquid", "#{shop_path}/views/_shop_category_list.html.liquid"
+      copy_file "#{theme_path}/items/_show.html.liquid", "#{shop_path}/views/items/_show.html.liquid"
+      copy_file "#{theme_path}/shops/show.html.liquid", "#{shop_path}/views/shops/show.html.liquid"
     rescue
-      @theme = 'theme1' #默认第一套模板
-      copy_shop_files
+      raise 'copy file error, maby theme thme name was wrong'
     end
 
     create_shop_category name: 'product_category', title: '商品分类', category_type: 'builtin'
@@ -55,5 +52,13 @@ class Shop::BuildGenerator < Rails::Generators::NamedBase
 
   def shop_path
     File.join(shop_root, file_name)
+  end
+
+  def theme_path
+    if @theme.nil?
+      'theme1'
+    else
+      @theme
+    end
   end
 end

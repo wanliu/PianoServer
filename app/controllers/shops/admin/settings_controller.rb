@@ -3,9 +3,9 @@ class Shops::Admin::SettingsController < Shops::Admin::BaseController
   def index
     @settings = OpenStruct.new @shop.settings
     @theme_list = [
-      { type:'custom', name:'自定义' },
-      { type:'theme1', name:'风冰雪域'},
-      { type:'theme2', name:'夏日阳光'}
+      {type:'theme1', name:'冰封雪域'},
+      {type:'theme2', name:'夏日阳光'},
+      {type:'theme3', name:'蔚蓝天空'}
     ]
   end
 
@@ -19,10 +19,10 @@ class Shops::Admin::SettingsController < Shops::Admin::BaseController
   def change_shop_theme
     #接受ajax请求 生成指定风格商店
     begin
-      ShopService.build(params[:shop_id], {theme: params[:theme]})
+      ShopService.build(params[:shop_id], { theme: params[:theme] })
       render json: { success: true }
-    rescue
-      render json: { success: false }
+    rescue Exception => e
+      render json: { success: false, msg: e.message }
     end
   end
 

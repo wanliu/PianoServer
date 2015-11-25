@@ -3,8 +3,7 @@ require 'rails/generators'
 module ShopService
   extend self
 
-  def build(name, options = {theme: 'theme1' })
-    options[:skip] ||= true
+  def build(name, options = { theme: 'theme1', skip: true })
     Rails::Generators.invoke 'shop:build', [ name, options[:theme], options[:skip] ? '--skip' : '--no-skip' ]
   end
 

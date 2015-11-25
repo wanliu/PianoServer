@@ -23,19 +23,12 @@
         </div>
       <% end %>
     <% end %>
-
-    <script type="text/javascript">
-      var SaveOnChange = window.SaveOnChange;
-      var saveForm = new SaveOnChange($('#admin-settings'))
-    </script>
   </div>
   <!-- <div class="panel panel-default">
     <div class="panel-heading">
       <h3 class="panel-title">问候语</h3>
     </div>
     <div class="panel-body">
-
-
     </div>
   </div>
    -->
@@ -44,21 +37,56 @@
   <h3 class="page-header">选择商店风格</h3>
   <div class="row">
     <% for theme in @theme_list do %>
-      <div class="col-md-3">
-        <a href="#" class="thumbnail">
+      <div class="col-md-3 col-sm-4 col-xs-4">
+        <a class="thumbnail theme-btn" data-theme="<%= theme[:type] %>">
           <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMTcxIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDE3MSAxODAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzEwMCV4MTgwCkNyZWF0ZWQgd2l0aCBIb2xkZXIuanMgMi42LjAuCkxlYXJuIG1vcmUgYXQgaHR0cDovL2hvbGRlcmpzLmNvbQooYykgMjAxMi0yMDE1IEl2YW4gTWFsb3BpbnNreSAtIGh0dHA6Ly9pbXNreS5jbwotLT48ZGVmcz48c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwhW0NEQVRBWyNob2xkZXJfMTUxMzgzOWZlMmYgdGV4dCB7IGZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMHB0IH0gXV0+PC9zdHlsZT48L2RlZnM+PGcgaWQ9ImhvbGRlcl8xNTEzODM5ZmUyZiI+PHJlY3Qgd2lkdGg9IjE3MSIgaGVpZ2h0PSIxODAiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSI1OS41NjI1IiB5PSI5NC41Ij4xNzF4MTgwPC90ZXh0PjwvZz48L2c+PC9zdmc+" alt="" style="width: 100%; display: block;">
         </a>
-        <div class="text-center template-name"><%= theme[:name] %></div>
+        <div class="text-center theme-name"><%= theme[:name] %></div>
       </div>
     <% end %>
   </div>
 </div>
 
 <style>
+/* 待整合进 sass */
+  .theme-btn{
+    cursor: pointer;
+  }
   .thumbnail{
     margin-bottom: 5px;
   }
-  .template-name{
+  .theme-name{
     margin-bottom: 20px;
   }
 </style>
+
+
+<script type="text/javascript">
+  var SaveOnChange = window.SaveOnChange;
+  var saveForm = new SaveOnChange($('#admin-settings'));
+
+
+  $('.theme-btn').click(function(){
+    var target = $(this);
+    if (target.hasClass('active') || !confirm("该操作将覆盖之前的风格")) return;
+
+    var url = window.location.pathname + '/change_shop_theme';
+    var theme = $(this).data('theme')
+    $.ajax({
+      url: url,
+      type:'PUT',
+      data:{theme:theme},
+      success:function(data){
+        console.log(data);
+        if (data.success) {
+          console.log('更新成功')
+          target.addClass('active').siblings().remove('acitve');
+        } else {
+          console.log(data.msg)
+        }
+      }
+    });
+  });
+
+
+</script>
