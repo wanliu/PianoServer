@@ -42,44 +42,65 @@
 </div>
 
 <script type="text/javascript">
-  $('.select-all').change(function (event) {
-    var checked = $(this).prop('checked');
-    $(this).parents('form').find(':checkbox').prop('checked', checked);
-  });
+  (function (argument) {
+    $('.select-all').change(function (event) {
+      var checked = $(this).prop('checked');
+      $(this).parents('form').find(':checkbox').prop('checked', checked);
+    });
 
-  $('.cart-item input[name=quantity]').keyup(function (event) {
-    var _this = this;
-    var cartItemId = $(this).parents('.cart-item').data('cartItemId');
-    var quantity = $(this).val();
+    $('.cart-item input[name=quantity]').keyup(function (event) {
+      changeQuantity(this)
+    });
 
-    var $subTotal = $(this).parents('.quantity').siblings('.subtotal');
-    var $btnMinus = $(this).parents('.quantity').children('btn-minus span');
+    $('.cart-item').on('click', '.btn-minus', function (event) {
+      var quantityInput = $(this).parents('.quantity').find('input');
+      var quantity = 1 * $(quantityInput).val();
+      $(quantityInput).val(quantity - 1);
 
-    if ('' == quantity) return;
+      changeQuantity(quantityInput); 
+    });
 
-    if (!/^\d+$/.test(quantity)) {
-      $(this).val(1);
-      quantity = 1;
-    }
+    $('.cart-item').on('click', '.btn-plus', function (event) {
+      var quantityInput = $(this).parents('.quantity').find('input');
+      var quantity = 1 * $(quantityInput).val();
+      $(quantityInput).val(quantity + 1);
+  
+      changeQuantity(quantityInput); 
+    });
 
-    quantity = 1 * quantity;
+    function changeQuantity(quantityInput) {
+      var cartItemId = $(quantityInput).parents('.cart-item').data('cartItemId');
+      var quantity = $(quantityInput).val();
 
-    $.post('/cart_items/' + cartItemId, {
-      _method: 'PATCH',
-      cart_item: {
-        quantity: quantity,
+      var $subTotal = $(quantityInput).parents('.quantity').siblings('.subtotal');
+      var $btnMinus = $(quantityInput).parents('.quantity').find('.btn-minus span');
+    
+      if ('' == quantity) return;
+
+      if (!/^\d+$/.test(quantity)) {
+        $(quantityInput).val(1);
+        quantity = 1;
       }
-    }).done(function (data, xhr, status) {
-      $subTotal.text(data.sub_total);
-      debugger
+
+      quantity = 1 * quantity;
+
       if (quantity > 1) {
         $btnMinus.addClass('glyphicon-minus');
       } else {
         $btnMinus.removeClass('glyphicon-minus');
       }
-    }).fail(function (data, xhr, status) {
-      // TODO
-    })
-  });
+
+      $.post('/cart_items/' + cartItemId, {
+        _method: 'PATCH',
+        cart_item: {
+          quantity: quantity,
+        }
+      }).done(function (data, xhr, status) {
+        $subTotal.text(data.sub_total);
+      }).fail(function (data, xhr, status) {
+        // TODO
+      })
+    }
+  })();
 </script>
 
