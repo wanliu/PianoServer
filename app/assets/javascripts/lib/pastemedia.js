@@ -80,7 +80,7 @@
     function checkInput() {
       // Store the pasted content in a variable
       if (foundImage == true) {
-        var child = pasteCatcher.children().last().get(0);
+        var child = pasteCatcher.childNodes[0];
         if (child) {
           // If the user pastes an image, the src attribute will represent the image as a base64 encoded string.
           if (child.tagName === "IMG" && child.src.substr(0, 5) == 'data:') {
