@@ -22,7 +22,7 @@ class Shops::Admin::SettingsController < Shops::Admin::BaseController
       shop = Shop.find_by(name: params[:shop_id])
       shop.theme = params[:theme]
       shop.save!
-      render json: { success: true }
+      render json: { success: true, msg: 'success' }
     rescue Exception => e
       render json: { success: false, msg: e.message }
     end
