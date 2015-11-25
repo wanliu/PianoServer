@@ -43,9 +43,28 @@
 
 <script type="text/javascript">
   (function (argument) {
+    // 点击全部选中时，将下属项全部选中
     $('.select-all').change(function (event) {
       var checked = $(this).prop('checked');
       $(this).parents('form').find(':checkbox').prop('checked', checked);
+    });
+
+    // 当有一个取消选中时，取消全部选中；当所属项全部选中时，勾选全部选中按钮
+    $('.chose-item input:checkbox').change(function (event) {
+      var checked = $(this).prop('checked');
+
+      if (!checked) {
+        $(this).parents('form').find('.select-all').prop('checked', false);
+      } else {
+        var allCheckbox = $(this).parents('form').find('.chose-item input:checkbox');
+        var allChecked = _.all(allCheckbox, function(item) {
+          return $(item).prop('checked');
+        });
+
+        if (allChecked) {
+          $(this).parents('form').find('.select-all').prop('checked', true);
+        }
+      }
     });
 
     $('.cart-item input[name=quantity]').keyup(function (event) {
