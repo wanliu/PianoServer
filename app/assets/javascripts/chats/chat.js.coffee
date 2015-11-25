@@ -141,36 +141,24 @@ class @Chat
 
   _refreshTimeline: () ->
     $times = @$messageList.find('.time-desc:not(.refreshed)')
+
+    now = new Date()
     _lastHandledTime = null
 
     for time in $times
       $time = $(time)
 
       time = parseInt($time.attr('time'))
-      date1 = new Date(time)
+      date = new Date(time)
 
       if _lastHandledTime
-        date2 = new Date(_lastHandledTime)
+        compareDate = new Date(_lastHandledTime)
       else
-        date2 = new Date(@earlyTime)
+        compareDate = if @earlyTime then new Date(@earlyTime) else new Date()
 
       _lastHandledTime = time
 
-      if @_isTheSameMinute(date1, date2)
-        $time.remove()
-      else
-        $time.addClass('refreshed')
-
-        if @_isTheSameDate(date1, date2)
-          desc = @_formatDayDate(date1)
-        else if @_isTheSameYear(date1, date2)
-          desc = @_formatMonthDate(date1)
-        else
-          desc = @_formatYearDate(date1)
-
-        console.log(desc)
-
-        $time.find('p').text(desc)
+      $time.remove() if @_isTheSameMinute(date, compareDate)
 
   setTable: (@table) ->
 
@@ -299,15 +287,21 @@ class @Chat
     if @lastTime
       date2 = new Date(@lastTime)
       diff = Math.abs(time - @lastTime)
-
-      if isFirstRecord
-        date2 = now
-        diff = Math.abs(time - now.getTime())
+      theSameDayToLastTime = @_isTheSameDate(date, date2)
+      theSameDayToNow = @_isTheSameDate(date, now)
+      theSameYearToNow = @_isTheSameYear(date, now)
 
       if diff > @options.miniTimeGroupPeriod
-        if @_isTheSameDate(date, date2)
-          prefixSection = if direction == 'down' then '' else formatDayDate
-        else if @_isTheSameYear(date, date2)
+        if theSameDayToNow
+          prefixSection = if theSameDayToLastTime then formatDayDate else formatMonthDate
+        else if theSameYearToNow
+          prefixSection = formatMonthDate
+        else
+          prefixSection = formatYearDate
+      else if isFirstRecord
+        if theSameDayToNow
+          prefixSection = if theSameDayToLastTime then formatDayDate else formatMonthDate
+        else if theSameYearToNow
           prefixSection = formatMonthDate
         else
           prefixSection = formatYearDate
@@ -327,6 +321,9 @@ class @Chat
       """
     else
       ""
+
+  _calculatePrefix: (date1, date2) ->
+
 
   _isTheSameYear: (date1, date2) ->
     date1.getFullYear() == date2.getFullYear()
@@ -558,6 +555,5 @@ class @Chat
     }, () =>
       senderId = @channelId.replace('p', '')
       window.noticeCenter.removeNotice(senderId)
-
 
 
