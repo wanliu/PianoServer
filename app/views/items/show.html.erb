@@ -94,7 +94,7 @@
         <div class="contact-button chat">您的店铺</div>
       <% else %>
         <% if Settings.dev.feature.purchase && @item.saleable? %>
-          <a class="buy-button add-to-cart" href="#" data-cartable-type="Item" data-cartable-id="<%= @item.id %>">
+          <a class="buy-button" href="#" data-cartable-type="Item" data-cartable-id="<%= @item.id %>">
             购买
           </a>
         <% end %>
