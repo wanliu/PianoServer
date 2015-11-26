@@ -14,7 +14,7 @@
           <%= link_to cartable_url(item) do %>
             <div class="media">
               <div class="media-left">
-                <%= image_tag item.avatar_url, class: 'cart-item-image' %>
+                <%= image_tag item.avatar_url, class: 'cart-item-image', alt: "商品图片" %>
               </div>
               <div class="media-body">
                 <h4 class="media-heading"><%= item.title %></h4>

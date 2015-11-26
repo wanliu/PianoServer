@@ -54,7 +54,7 @@ class Promotion < ActiveResource::Base
     # TODO how to deduct stocks of a promotion?
   end
 
-  def saleable?
+  def saleable?(amount=1, props={})
     'Active' == status
   end
 end

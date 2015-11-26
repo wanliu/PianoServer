@@ -38,7 +38,14 @@
     </div>
   </div>
 
-  <%= render partial: "sale_form", with: @item.category, locals: { item: @item, cartitem: @cartitem } %>
+  <%= render partial: "sale_form", with: @item.category, locals: { item: @item, cartitem: @cartitem, stocks_with_index: @stocks_with_index } %>
+
+  <div class='item-secodary-properties clearfix'>
+    <div class='brand-saled-count row'>
+      <p class='inventory col-xs-6 col-sm-6 col-md-6'>库 存：<span class='available-stock'><%= @item.current_stock.to_i %></span></p>
+      <p class='sale-count col-xs-6 col-sm-6 col-md-6 text-right'>总销量：0</p>
+    </div>
+  </div>
 
   <div class='item-shop-infos'>
     <div class="media ">
@@ -55,13 +62,6 @@
         </div>
       </div>
 
-    </div>
-  </div>
-
-  <div class='item-secodary-properties clearfix'>
-    <div class='brand-saled-count row'>
-      <p class='inventory col-xs-6 col-sm-6 col-md-6 '>库 存：<%= @item.current_stock.to_i %></p>
-      <p class='sale-count col-xs-6 col-sm-6 col-md-6 text-right'>总销量：0</p>
     </div>
   </div>
 

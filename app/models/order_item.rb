@@ -20,7 +20,7 @@ class OrderItem < ActiveRecord::Base
   end
 
   def deduct_stocks!(operator)
-    orderable.deduct_stocks!(operator, quantity: quantity, data: data)
+    orderable.deduct_stocks!(operator, quantity: quantity, data: properties)
   end
 
   def avatar_url
@@ -34,8 +34,8 @@ class OrderItem < ActiveRecord::Base
   private
 
   def orderable_saleable
-    unless orderable.saleable?
-      errors.add(:orderable_id, "已经下架，或者活动已经结束")
+    unless orderable.saleable?(quantity, properties)
+      errors.add(:orderable_id, "库存不足，或者已经下架")
     end
   end
 end

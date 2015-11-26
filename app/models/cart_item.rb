@@ -11,7 +11,7 @@ class CartItem < ActiveRecord::Base
   validates :price, :quantity, numericality: { greater_than: 0 }
   validates :supplier, presence: true
   validates :cart_id, presence: true
-  validates :cartable_id, uniqueness: { scope: [:cart_id, :cartable_type] }
+  validates :cartable_id, uniqueness: { scope: [:cart_id, :cartable_type, :properties] }
 
   validate :avoid_from_shop_owner
   validate :cartable_saleable
@@ -55,8 +55,8 @@ class CartItem < ActiveRecord::Base
   end
 
   def cartable_saleable
-    unless cartable.saleable?
-      errors.add(:cartable_id, "已经下架，或者活动已经结束")
+    unless cartable.saleable?(quantity, properties)
+      errors.add(:cartable_id, "库存不足，或者已经下架")
     end
   end
 end

@@ -136,6 +136,7 @@ class Item < ActiveRecord::Base
     stocks.to_a
       .map(&:attributes)
       .reduce({}) do |cache, stock|
+        stock["data"] ||= {}
         index = stock["data"].keys.sort.map {|k| "#{k}:#{stock['data'][k]}"}.join(';')
         cache[index] = { quantity: stock["quantity"], data: stock["data"] }
         cache
@@ -162,7 +163,15 @@ class Item < ActiveRecord::Base
     update_attributes current_stock: stock_changes(true).sum(:quantity)
   end
 
-  def saleable?
-    on_sale? && (current_stock > 0)
+
+  def saleable?(amount=1, props={})
+    return false unless (on_sale? && (current_stock > amount))
+
+    if props.present?
+      stock_now = stocks.find { |item| item.data == props }.try(:quantity).to_f
+      stock_now > amount
+    else
+      current_stock > amount
+    end
   end
 end

@@ -1,18 +1,95 @@
-<div class="form-group col-sm-12">
+<div class="form-group col-sm-12 properties-goup">
   <%= label_tag property.title %>
   <ul class="nav nav-pills swatch_select select-<%= property.name %>">
-
-    <% config.each do |key, cfg| %>
-      <% if cfg["check"] == "1" %>
-      <li role="presentation"><a href="#"><%= cfg["title"] %></a></li>
+    <% config.each do |key, values| %>
+      <% values.each do |value, cfg| %>
+        <% if cfg["check"] == "1" %>
+        <li role="presentation">
+          <a href="#" class='btn btn-default property-item' data-property-key="<%= key %>" data-property-value="<%= value %>"><%= cfg["title"] %></a>
+        </li>
+        <% end %>
       <% end %>
     <% end %>
   </ul>
 </div>
+
 <script type="text/javascript">
   $(".swatch_select.select-<%= property.name %>>li>a").click(function(e) {
     e.preventDefault();
+
+
     $(e.currentTarget).parents("ul").find(".active").removeClass("active");
     $(e.currentTarget).parent().addClass("active");
+
+    var $form = $(e.currentTarget).parents('form.item-chose-collection');
+    var $buttons = $form.find('.purchase-buttons button');
+    var properties = $buttons.data('properties') || {};
+    var key = $(e.currentTarget).data('propertyKey');
+    var value = $(e.currentTarget).data('propertyValue');
+    properties[key] = value;
+    $buttons.data('properties', properties);
+
+    if ($form.find('li.active').length == fullfilledKeys.length) {
+      $buttons.removeAttr('disabled');
+
+      var fullfillProps = _.reduce($form.find('li.active'), function(props, item) {
+        var k = $(item).children('a').data('propertyKey');
+        var v = $(item).children('a').data('propertyValue');
+        props[k] = v;
+        return props;
+      }, {});
+
+      var fullfillStock = _.find(stocksWithIndex, function (item) {
+        var cloneItem = _.clone(item);
+        delete cloneItem.quantity;
+        return _.isEqual(cloneItem, fullfillProps);
+      });
+
+      $('.available-stock').text(fullfillStock.quantity);
+      $('#cart_item_quantity').prop('max', fullfillStock.quantity);
+    }
+
+    disable_unsaleable_property($(e.currentTarget));
+
+    function disable_unsaleable_property($propertyItem) {
+      $propertyItem.parents('.properties-goup')
+        .siblings('.properties-goup')
+        .find('.property-item:not(.active)')
+        .addClass('disabled');
+
+      // E.g. stocksWithIndex: [
+      //   {color: "red", size: "X", quantity: 20},
+      //   {color: "red", size: "XL", quantity: 20},
+      //   {color: "red", size: "S", quantity: 0},
+      //   {color: "green", size: "X", quantity: 20},
+      //   {color: "yellow", size: "M", quantity: 20},
+      //   {color: "purple", size: "S", quantity: 20},
+      // ]
+      // A button with color:red clicked, and only size X, XL with red color stll saleable
+      // , then saleableProps = [
+      //   {color: "red", size: "X", quantity: 20},
+      //   {color: "red", size: "XL", quantity: 20},
+      // ]
+      var saleableProps = _.filter(stocksWithIndex, function(item) {
+        return item[key] == value && item["quantity"] > 0;
+      });
+
+      // fullfilledKeys = ["color", "size"]
+      // otherKeys = ["size"]
+      var otherKeys = _.without(fullfilledKeys, key);
+
+      _.each(saleableProps, function (item) {
+        // item = {color: "red", size: "X", quantity: 20}
+        _.each(otherKeys, function (key) {
+          //  key = "size"
+          if (_.has(item, key)) {
+            $propertyItem.parents('.properties-goup')
+            .siblings('.properties-goup')
+            .find("[data-property-key=" + key +"][data-property-value=" + item[key] + "]")
+            .removeClass('disabled');
+          }
+        })
+      });
+    }
   });
 </script>

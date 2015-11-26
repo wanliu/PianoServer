@@ -100,6 +100,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
       if params[:commit] == "新增并继续"
         @item = Item.new(category_id: @category.id, shop_id: @shop.id)
         flash.now[:notice] = t(:create, scope: "flash.notice.controllers.items")
+        @stocks_with_index = {}
         render :new_step2
       else
         redirect_to shop_admin_items_path(@shop.name), notice: t(:create, scope: "flash.notice.controllers.items")

@@ -12,7 +12,11 @@ class CartItemsController < ApplicationController
   end
 
   def create
-    exsited_item = current_cart.items.find_by(cartable_id: params[:cart_item][:cartable_id], cartable_type: params[:cart_item][:cartable_type])
+    exsited_item = current_cart.items.where("
+      cartable_id = :cartable_id AND cartable_type = :cartable_type AND properties @> :properties",
+      cartable_id: params[:cart_item][:cartable_id],
+      cartable_type:  params[:cart_item][:cartable_type],
+      properties: params[:cart_item][:properties].to_json).first
 
     if exsited_item.present?
       @item = exsited_item
@@ -80,8 +84,10 @@ class CartItemsController < ApplicationController
     # t.jsonb    "properties"
     # t.jsonb    "condition"
     params.require(:cart_item)
-      .permit(:supplier_id, :title, :sale_mode, :quantity, :properties,
-        :condition, :cartable_id, :cartable_type)
+      .permit(:supplier_id, :title, :sale_mode, :quantity,
+        :condition, :cartable_id, :cartable_type).tap do |white_list|
+        white_list[:properties] = params[:cart_item][:properties]
+      end
   end
 
   def update_params
