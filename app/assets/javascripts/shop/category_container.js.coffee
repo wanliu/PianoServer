@@ -12,7 +12,6 @@ class @CategoryContainer extends @HuEvent
     @bindNextBtnClickEvent()
 
     @getCols()
-    @maxLevelIndex = @lastCols = @cols
     @currentLevel = 1
 
     @on('level:change', @levelChanged.bind(@))
@@ -36,9 +35,6 @@ class @CategoryContainer extends @HuEvent
 
     return if diff == 0
 
-    if Math.abs(diff) > @currentLevel
-      diff = if diff < 0 then -1 * @currentLevel else @currentLevel
-
     @scrollContainer(diff)
 
   bindPrevBtnClickEvent: () ->
@@ -51,8 +47,7 @@ class @CategoryContainer extends @HuEvent
     return if @scroll
 
     @scroll = true
-
-    currentLeft = parseInt(@$().css('marginLeft'))
+    currentLeft = @currentLeft()
 
     if currentLeft < 0
       @scrollContainer(-1)
@@ -61,8 +56,8 @@ class @CategoryContainer extends @HuEvent
     return if @scroll
 
     @scroll = true
+    currentLeft = @currentLeft()
 
-    currentLeft = parseInt(@$().css('marginLeft'))
     if currentLeft > @getWrapperWidth() - @$().width()
       @scrollContainer(1)
 
@@ -88,7 +83,6 @@ class @CategoryContainer extends @HuEvent
     )
 
   changeMaxLevelIndex: () ->
-    console.log(@minLevel(), @maxLevel())
     if @minLevel() > 0
       @$leftBtn.addClass('btn-visible')
     else

@@ -16,6 +16,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     # per = params[:per].presence || 25
 
     @items = Item.with_shop(@shop.id)
+                 .where(abandom: false)
                  .with_category(query_params[:category_id])
                  .with_query(query_params[:q])
                  .page(query_params[:page])
@@ -97,6 +98,9 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     @item.build_stocks(current_user, stock_options)
 
     if @item.save
+      expire_page controller: 'items', action: 'show', id: @item.sid
+      expire_page controller: 'shop_categories', action: 'show', id: @item.shop_category.try(:id)
+
       if params[:commit] == "新增并继续"
         @item = Item.new(category_id: @category.id, shop_id: @shop.id)
         flash.now[:notice] = t(:create, scope: "flash.notice.controllers.items")
@@ -158,6 +162,9 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     end
 
     if @item.save
+      expire_page controller: 'items', action: 'show', id: @item.sid
+      expire_page controller: 'shop_categories', action: 'show', id: @item.shop_category.try(:id)
+
       redirect_to shop_admin_items_path(@shop.name), notice: t(:update, scope: "flash.notice.controllers.items")
     else
       flash.now[:error] = t(:update, scope: "flash.error.controllers.items")
@@ -218,6 +225,12 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     else
       render json: @item.errors, status: :unprocessable_entity
     end
+  end
+
+  def destroy
+    @item.update_attribute('abandom', true)
+
+    render :destroy, formats: [:js]
   end
 
   protected

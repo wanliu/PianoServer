@@ -1,6 +1,4 @@
-      <footer>
-        <div class="container">
-          <span class="page-loading pull-right"></span>
-          <p><%= raw Settings.app.footer %> <%= 'ver ' + PianoServer::VERSION unless Rails.env.production? %></p>
-        </div>
-      </footer>
+<footer class="bottom">
+  <span class="page-loading pull-right"></span>
+  <p><%= raw Settings.app.footer %> <%= 'ver ' + PianoServer::VERSION unless Rails.env.production? %></p>
+</footer>

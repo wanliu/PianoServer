@@ -24,6 +24,9 @@ config/email.yml
 
 /public/assets
 /public/uploads
+/public/deploy
 .gitver
 .powenv
 .git-hooks/post_checkout/.read
+
+
