@@ -1,0 +1,28 @@
+.category-body {
+  border-bottom: 1px solid #ddd;
+}
+
+.category-brand-container {
+  display: none;
+
+  .list-group-item.letter {
+    padding: 2px 15px;
+    background-color: #eee;
+    // font-size: 0.85em;
+  }
+
+  .list-group-item {
+    padding: 10px 15px;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .industry-category {
+    padding: 0px;
+  }
+}
+
+.letter-ruler {
+  // background-color: #ccc;
+}

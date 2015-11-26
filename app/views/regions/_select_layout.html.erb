@@ -1,5 +1,5 @@
 <% content_for :javascripts do %>
-  <script type="text/javascript" src="http://api.map.baidu.com/api?v=1.5&ak=<%= Settings.baidu.ditu.secret %>">
+  <script type="text/javascript" src="http://api.map.baidu.com/api?v=1.5&ak=<%= Settings.baidu.ditu.secret %>"  data-turbolinks-track>
   //v1.5版本的引用方式：src="http://api.map.baidu.com/api?v=1.5&ak=您的密钥"
   //v1.4版本及以前版本的引用方式：src="http://api.map.baidu.com/api?v=1.4&key=您的密钥&callback=initialize"
   </script>
@@ -15,7 +15,9 @@
     <%= button_to '确定', set_regions_path, context: :primary, size: 'lg', class: 'set-region btn-block', disabled: true, params: {region_id: nil} %>
   </div>
   <div class="col-xs-6">
-    <%= button '获取地址', context: :default, class: 'get-location btn-block', size: :lg, data: {"loading-text": '正在获取地址'} %>
+    <%= button context: :default, class: 'get-location btn-block', size: :lg, data: {"loading-text": '正在获取地址'} do %>
+      <%= icon 'map-marker' %>获取地址
+    <% end %>
   </div>
 </div>
 <br />
@@ -27,7 +29,7 @@
   $(".city-select-container").on('change', '.city-select', function(e) {
     var cities = $(".city-group option:selected").map(function(i, elem) {
       return { title: $(elem).text().trim(), id: $(elem).val() };
-    })
+    });
 
     cities = Array.prototype.filter.call(cities, function(city) {
       var title = city["title"];

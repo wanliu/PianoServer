@@ -1,0 +1,12 @@
+<div class="panel-body category-body">
+
+  <h4 style= "color: #999"><%= category.title %></h4>
+
+  <% category.children.order(:id).each do |category| %>
+    <%= link_to category.title, brands_industry_path(@industry, category_id: category.id), class: 'btn btn-link col-xs-4 col-sm-2', remote: true, data: { category: category.id } %>
+  <% end %>
+
+</div>
+
+<ul class="list-group category-brand-container">
+</ul>

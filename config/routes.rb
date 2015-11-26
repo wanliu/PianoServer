@@ -14,7 +14,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :industry, only: [ :show ]
+  resources :industry, only: [ :show ] do
+    member do
+      get :brands, as: :brands
+    end
+  end
   resources :regions, only: [ :index, :update ] do
     collection do
       post :set, as: :set

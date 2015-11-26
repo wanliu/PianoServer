@@ -1,9 +1,14 @@
 class RegionsController < ApplicationController
+  include RedirectCallback
+
+  before_action :set_callback, only: [:index]
+  after_action :clear_callback, only: [:set]
 
   def set
     cookies[:region_id] = {
       :value => params[:region_id],
-      :expires => 1.year.from_now
+      :expires => 1.year.from_now,
+      :httponly => true
     }
 
     redirect_to callback_url || root_path
@@ -36,11 +41,5 @@ class RegionsController < ApplicationController
     @status = 500
   ensure
     render json: @results, status: @status
-  end
-
-  private
-
-  def callback_url
-    params[:callback] || session[:callback]
   end
 end

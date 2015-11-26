@@ -47,6 +47,7 @@ dev:
     favorites: true
     qrcode: true
     linkmen: true
+    location: true
     order:
       chat: true
     user:

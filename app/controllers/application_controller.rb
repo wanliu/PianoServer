@@ -113,7 +113,7 @@ class ApplicationController < ActionController::Base
     if cookies[:region_id].blank?
       case current_anonymous_or_user.user_type
       when "consumer"
-        return redirect_to new_user_session_path unless request_device?(:weixin)
+        return redirect_to new_user_session_path # unless request_device?(:weixin)
         @region_select = true
       when "retail", "distributor"
         @region = @current_user.join_shop.region
