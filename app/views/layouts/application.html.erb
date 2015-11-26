@@ -87,48 +87,43 @@
   <% _module = content_for :module %>
 
   <body class="<%= yield :module %>">
+
     <div class="chat-notices"></div>
-    <div class="fixed-height-container">
-      <div class="content-container">
 
-        <div class="menu-container"></div>
+    <%= render "shards/navbar" %>  <!-- 头部 -->
+    <div class="menu-overlayer"></div> <!-- 遮罩层 -->
+    
+    <div class="menu-container"></div> <!-- left-bar -->
+    
 
-        <%= render "shards/navbar" %>
+    <%= bootstrap_flash %>
 
-        <div class="menu-overlayer"></div>
-        <div class="scroll-container">
-          <div class="auto-height-container">
-            <div class="container">
-              <div class="row">
-                <%= bootstrap_flash %>
-              </div><!--/row-->
-            </div> <!-- /container -->
+    <div class="main-container">
+      <%= yield %> <!-- 主内容 -->
+    </div>
 
-            <%= yield %>
+    <!-- footer -->
+    <% case _module %>
+    <% when NilClass %>
+      <%= render "footer", with: @subject %>
+    <% when "shop" %>
+      <%= render "footer", with: @shop %>
+    <% else %>
+      <%= render "footer" %>
+    <% end %>
 
-            <!-- footer -->
-            <% case _module %>
-            <% when NilClass %>
-              <%= render "footer", with: @subject %>
-            <% when "shop" %>
-              <%= render "footer", with: @shop %>
-            <% else %>
-              <%= render "footer" %>
-            <% end %>
-          </div>
-        </div>
+    <!-- 底部按钮 -->
+    <% case _module %>
+      <% when "item" %>
+        <%= render "items/link_table" %>
+      <% when "detail" %>
 
-        <!-- 底部按钮 -->
-        <% case _module %>
-          <% when "item" %>
-            <%= render "items/link_table" %>
-          <% when "detail" %>
+      <%= render :partial => "promotions/promotion_link_table", locals: { promotion: @promotion, shop: @shop} %>
+        <%#= render "promotions/promotion_link_table" %>
+    <% end %>
 
-          <%= render :partial => "promotions/promotion_link_table", locals: { promotion: @promotion, shop: @shop} %>
-
-            <%#= render "promotions/promotion_link_table" %>
-        <% end %>
-      </div>
+    </div>
+    <div class="content-container">
     </div>
 
     <%= render "qrcode" %>
@@ -147,6 +142,7 @@
       <% unless Rails.env.production? %>
         console.log('development version: <%= PianoServer::VERSION %>')
       <% end %>
+
     </script>
   </body>
 </html>
