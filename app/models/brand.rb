@@ -19,7 +19,7 @@ class Brand < ActiveRecord::Base
   attr_accessor :total
 
   def self.with_category(category_id, query = {})
-    ids = Category.find(category_id).descendants.pluck :id
+    ids = [ category_id, *Category.find(category_id).descendants.pluck(:id) ]
     with_categories(ids, query)
   end
 
