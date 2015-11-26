@@ -81,6 +81,8 @@ class @Chat
         when "text"
           if TABLE_REGEXP.test(data)
             @_sendTableMsg(data)
+          else
+            @_pasteText(data)
         else
           @clearText()
 
@@ -233,6 +235,11 @@ class @Chat
     }, (err) =>
       @clearText() unless err?
     )
+
+  _pasteText: (text) ->
+    @$textElement ||= $(@textElement)
+    val = @$textElement.val()
+    @$textElement.val([val, text].join(''))
 
   _insertItemMessage: (message, direction = 'down', isFirstRecord) ->
     {id, senderId, content, senderAvatar, senderLogin, type, time} = message
