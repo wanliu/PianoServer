@@ -112,6 +112,35 @@
       }
     }
   }
+
+  .brand-list {
+    .item-brand {
+      float: left;
+      width: 100px;
+      height: 50px;
+      position: relative;
+
+      img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        overflow: hidden;
+      }
+
+      .brand-name {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        margin-top: -12px;
+        font-size: 24px;
+        white-space: nowrap;
+        text-overflow: clip;
+        overflow: hidden;
+      }
+    }
+  }
 }
 
 @media (max-width: 768px) {

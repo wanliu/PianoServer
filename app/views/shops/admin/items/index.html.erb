@@ -52,7 +52,7 @@
     <div class="brand-wrap">
       <div class="btn-left"></div>
       <div class="brand-list clearfix">
-        <%= render partial: "brand", collection: @brands %>
+
       </div>
       <div class="btn-right"></div>
     </div>
@@ -97,4 +97,5 @@
   new CategoryBreadcrumb($('.breadcrumb-container .breadcrumb'), container);
   new CategoryItems($('.items-panel tbody'), container, { url: itemUrl });
   new CategoryToolbar($('.category-toolbar'));
+  new ItemBrands($('.brand-list'), container);
 </script>

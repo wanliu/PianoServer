@@ -1,6 +1,10 @@
-class @ItemBrands
+#= require _common/event
+
+class @ItemBrands extends @HuEvent
   constructor: (@element, @container) ->
     super(@element)
+    @on('brands:change', @changeBrands.bind(@))
+    @container.setBrands(@)
 
   generateBrands: (brands) ->
     return unless brands.length
@@ -12,11 +16,16 @@ class @ItemBrands
 
       template = """
         <div class="item-brand">
-          <img src="#{image}">
+          <img src="#{image.url}">
           <div class="brand-name">
             #{brand_name}
           </div>
         </div>
       """
 
-      $(template).appendTo(@element)
+      $(template).appendTo(@$())
+
+  changeBrands: (e, brands) ->
+    @$().html()
+
+    @generateBrands(brands)

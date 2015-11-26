@@ -92,12 +92,14 @@ class @CategoryListWrap extends @HuEvent
 
   categoryDataChanged: (data, category_id, level, is_leaf) ->
     if @url.indexOf('items') > -1
-      { categories, items, meta } = data
+      { categories, items, brands, meta } = data
       @resetListsContent(categories, level)
 
       @items.send('items:change', [ items ]) if @items?
       { page, per } = @params
       @pagination.setup(page, per, meta.count)
+
+      @brands.send('brands:change', [brands]) if @brands
     else
       @resetListsContent(data, level)
       @form.send('category:change', [ category_id, is_leaf ]) if @form?
@@ -171,6 +173,9 @@ class @CategoryListWrap extends @HuEvent
 
   setForm: (form) ->
     @form = form
+
+  setBrands: (brands) ->
+    @brands = brands
 
 
 
