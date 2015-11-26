@@ -16,7 +16,7 @@ class ShopCategoriesController < ShopsController
       @shop_categories = ShopCategory.where(parent_id: @shop_category, status: true).order(id: :asc)
       @items = []
     else
-      @items = Item.where(shop_category_id: params[:id], on_sale: true).order(id: :desc)
+      @items = Item.where(abandom: false, on_sale: true, shop_category_id: params[:id]).order(id: :desc)
       @shop_categories = []
     end
   end

@@ -1,107 +1,70 @@
 
 <%= content_for :module, :item %>
 
-<div class="col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1">
-  <div class="shop-item">
-  <div class="shop-item-image">
-    <%= image_tag @item.image.url %>
-  </div>
-
-  <div class="price-period clearfix">
-    <div class="price-desc">
-      <span class="promotion-price">
-        ￥ <%= @item.price %>
-      </span>
-      <span class="dicount-desc">
-        <s>￥ <%= @item.public_price %></s>
-      </span>
+<div class="shop-item col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1">
+  <div class="shop-content">
+    <div class="shop-item-image">
+      <%= image_tag @item.image.url %>
     </div>
 
-    <div class="period-desc finished">
-      <div class="desc-wrap"></div>
-    </div>
-  </div>
+    <div class="price-period clearfix">
+      <div class="price-desc">
+        <span class="promotion-price">
+          ￥ <%= @item.price %>
+        </span>
+        <span class="dicount-desc">
+          <s>￥ <%= @item.public_price %></s>
+        </span>
+      </div>
 
-  <div class="item-properties">
-    <div class="media">
-      <div class="media-left media-middle">
-        <%= @item.title %>
-      </div>
-      <div class="media-body media-middle">
-        <div class='favor-title text-center'>收藏</div>
-        <div class='favor-count text-center'>0</div>
-      </div>
-      <div class="media-right media-middle">
-        <div class='like-title text-center'>赞</div>
-        <div class='like-count text-center'>0</div>
+      <div class="period-desc finished">
+        <div class="desc-wrap"></div>
       </div>
     </div>
-  </div>
 
-  <%= render partial: "sale_options", with: @item.category %>
-
-  <div class='item-shop-infos'>
-    <div class="media ">
-      <div class="media-left media-middle">
-        <%= link_to shop_site_path(@shop.name), class: 'shop-avatar' do %>
-          <%= image_tag @shop.logo_url %>
-        <% end %>
-      </div>
-      <div class="media-body media-middle">
-        <div class='name'>供应商：<%= @shop.title %></div>
-        <div class='address'>地&emsp;址：<%= @shop.address %></div>
-        <div class='follow'>
-          <span>关&emsp;注：0</span>
+    <div class="item-properties">
+      <div class="media">
+        <div class="media-left media-middle">
+          <%= @item.title %>
+        </div>
+        <div class="media-body media-middle">
+          <div class='favor-title text-center'>收藏</div>
+          <div class='favor-count text-center'>0</div>
+        </div>
+        <div class="media-right media-middle">
+          <div class='like-title text-center'>赞</div>
+          <div class='like-count text-center'>0</div>
         </div>
       </div>
-
     </div>
-  </div>
 
-  <div class='item-secodary-properties clearfix'>
-    <div class='brand-saled-count row'>
-      <p class='inventory col-xs-6 col-sm-6 col-md-6 '>库 存：<%= @item.current_stock.to_i %></p>
-      <p class='sale-count col-xs-6 col-sm-6 col-md-6 text-right'>总销量：0</p>
-    </div>
-  </div>
+    <%#= render partial: "sale_options", with: @item.category %>
 
-  <!-- <div>商品属性位置</div> -->
-
-  <div class="navbar-bottom navbar navbar-default navbar-fixed-bottom">
-    <div class="link-table">
-      <% if Settings.dev.feature.shop.website %>
-        <%= link_to shop_site_path(@shop.name), class: "into-shop" do %>
-          <span class="button-icon glyphicon glyphicon-home"></span>
-          <div class="button-text">商家</div>
-        <% end %>
-      <% end %>
-
-      <% if Settings.dev.feature.favorites %>
-        <div class="fav-button">
-          <span class="button-icon glyphicon glyphicon-star-empty"></span>
-          <div class="button-text">收藏</div>
+    <div class='item-shop-infos'>
+      <div class="media ">
+        <div class="media-left media-middle">
+          <%= link_to shop_site_path(@shop.name), class: 'shop-avatar' do %>
+            <%= image_tag @shop.logo_url %>
+          <% end %>
         </div>
-      <% end %>
-
-      <% if Settings.dev.feature.cart %>
-        <div class="cart-button">
-          <span class="button-icon glyphicon glyphicon-shopping-cart"></span>
-          <div class="button-text">购物车</div>
+        <div class="media-body media-middle">
+          <div class='name'>供应商：<%= @shop.title %></div>
+          <div class='address'>地&emsp;址：<%= @shop.address %></div>
+          <div class='follow'>
+            <span>关&emsp;注：0</span>
+          </div>
         </div>
-      <% end %>
 
-      <% if Settings.dev.feature.purchase %>
-        <a class="buy-button">
-          购买
-        </a>
-      <% end %>
-
-      <% if @shop.owner_id == current_user.id %>
-        <div class="contact-button chat">您的店铺</div>
-      <% else %>
-        <%= button_to '洽谈', item_chats_path(@item.id, shop_id: @shop.id), form_class: 'contact-button chat' %>
-      <% end %>
+      </div>
     </div>
+
+    <div class='item-secodary-properties clearfix'>
+      <div class='brand-saled-count row'>
+        <p class='inventory col-xs-6 col-sm-6 col-md-6 '>库 存：<%= @item.current_stock.to_i %></p>
+        <p class='sale-count col-xs-6 col-sm-6 col-md-6 text-right'>总销量：0</p>
+      </div>
+    </div>
+    <!-- <div>商品属性位置</div> -->
   </div>
-</div>
+  
 </div>

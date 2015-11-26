@@ -42,8 +42,9 @@ body {
 }
 
 footer {
-  // position: fixed;
+  position: absolute;
   bottom: 0;
+  width: 100%;
   text-align: center;
   word-break: break-word;
 }
@@ -103,6 +104,7 @@ footer {
   .navbar-responsive-collapse.collapse.in {
     overflow: visible;
     .navbar-right {
+      overflow: hidden;
       position: absolute;
       right: 20px;
       width: 150px;
