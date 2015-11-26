@@ -8,6 +8,7 @@ class Order < ActiveRecord::Base
 
   validates :supplier, presence: true
   validates :buyer, presence: true
+  validates :delivery_address, presence: true
 
   before_create :caculate_total
 

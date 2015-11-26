@@ -195,7 +195,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :orders, only: [:index, :show, :destroy, :create]
+  resources :orders, only: [:index, :show, :destroy, :create] do
+    collection do
+      post "confirmation"
+    end
+  end
 
   resources :locations do
     collection do

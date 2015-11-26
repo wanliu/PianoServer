@@ -8,7 +8,7 @@
   <% else %>
     <% groups = @items.group_by {|item| item.supplier } %>
     <% groups.each do |supplier, items| %>
-      <%= form_for Order.new do |f| %>
+      <%= form_for Order.new, url: confirmation_orders_path do |f| %>
         <%= f.hidden_field :supplier_id, value: supplier.id %>
         <div class="panel panel-default">
           <div class="panel-heading">
@@ -30,7 +30,7 @@
             <%= render partial: "cart_item", collection: items.sort_by(&:id), as: :item, locals: { supplier: supplier, f: f } %>
           </ul>
           <div class="panel-footer">
-            <%= f.submit '生成订单', class: 'btn btn-primary' %>
+            <%= f.submit '结算', class: 'btn btn-primary' %>
           </div>
         </div>
       <% end %>

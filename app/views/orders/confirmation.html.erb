@@ -1,0 +1,65 @@
+<div class='delivery_addresses panel panel-default'>
+  <% if @delivery_addresses.present? %>
+    <div class="panel-heading">
+      选择收货地址
+    </div>
+    <% @delivery_addresses.each do |address| %>
+      <div>
+        <%= link_to address, 'javascript: void(0)', class: 'btn btn-default' %>
+      </div>
+    <% end %>
+    <%= link_to "<<添加一个新的收货地址", 'javascript: void(0)', class: 'add-another-location' %>
+  <% else %>
+    <div class="panel-heading">
+      你还没有收货地址，现在创建一个吧
+    </div>
+  <% end %>
+  <div class='add-new-location' style='display: <%= @delivery_addresses.present? ? "none" : "block" %>'>
+    <%= render 'locations/form', locals: { location: current_user.locations.build } %>
+  </div>
+</div>
+
+<%= form_for @order do |f| %>
+  <%= f.hidden_field :delivery_address %>
+  <%= f.hidden_field :supplier_id %>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      店铺：<%= link_to @supplier.title, shop_site_path(@supplier) %> ( <%= @order_items.count %> 件商品)
+    </div>
+    <ul class="list-group order-items">
+      <%= render partial: "confirmation_item", collection: @order_items, as: :item, locals: { supplier: @supplier } %>
+    </ul>
+    <div class="panel-footer">
+      <h4>总计：<span><%= @total %>元</span></h4>
+    </div>
+    <% @order_items.each do |item| %>
+      <%= f.hidden_field :cart_item_ids, { multiple: true, value: item.id } %>
+    <% end %>
+  </div>
+
+  <div>
+    <%= link_to "返回购物车", cart_path, class: 'btn btn-default btn-lg' %>
+    <%= f.submit "提交订单", class: 'btn btn-primary btn-lg'%>
+  </div>
+<% end %>
+
+<script type="text/javascript">
+  $('form.new_location').submit(function (event) {
+    event.preventDefault();
+    var data = $(this).serializeArray();
+
+    var q = $.post('/locations', data);
+    
+    q.done(function (data, status, xhr) {
+      debugger;
+    });
+
+    q.fail(function (data, status, xhr) {
+      debugger;
+    })
+  })
+
+  $('a.add-another-location').click(function (event) {
+    $('div.add-new-location').toggle();
+  })
+</script>

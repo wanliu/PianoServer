@@ -26,6 +26,18 @@ class OrdersController < ApplicationController
     end
   end
 
+  def confirmation
+    @order = current_user.orders.build(order_params)
+
+    @delivery_addresses = current_user.locations.order(id: :asc)
+
+    @order_items = current_user.cart.items.find(params[:order][:cart_item_ids])
+
+    @supplier = Shop.find(params[:order][:supplier_id])
+
+    @total = @order_items.reduce(0) { |total, item| total += item.price * item.quantity }
+  end
+
   # PATCH/PUT /orders/1
   # PATCH/PUT /orders/1.json
   # def update
