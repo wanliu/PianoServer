@@ -1,13 +1,13 @@
 <% if  @brands.length > 10 %>
-<% cache [ brands_group, "group" ] do %>
   <% brands_group.each do |group, brands| %>
     <li class="list-group-item letter"><%= group %></li>
-    <%= render partial: "brand", collection: brands %>
+    <% cache brands do %>
+    <%= render partial: "brand", collection: brands, locals: { category: @category } %>
+    <% end %>
   <% end %>
-<% end %>
 <% elsif @brands.length > 0 %>
   <% cache @brands do %>
-    <%= render partial: "brand", collection: @brands %>
+    <%= render partial: "brand", collection: @brands, locals: { category: @category } %>
   <% end %>
 <% else %>
   <li class="list-group-item disabled text-center no-data">没有数据</li>

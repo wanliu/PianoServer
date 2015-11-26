@@ -1,0 +1,9 @@
+<div class="page-header">
+  <h1>
+    <%= @industry.title %> <small>所在区域 <%= @region.title %> 商店</small>
+  </h1>
+</div>
+
+<div class="shop-list">
+  <%= render partial: "shop", collection: @shops %>
+</div>

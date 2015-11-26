@@ -27,7 +27,7 @@ class Shop < ActiveRecord::Base
     validates :address, presence: true
   end
 
-  delegate :region, to: :location, allow_nil: true
+  # delegate :region, to: :location, allow_nil: true
 
   before_validation :default_values
 
@@ -41,6 +41,14 @@ class Shop < ActiveRecord::Base
 
   def logo_url_cover
     logo.url(:cover)
+  end
+
+  def region
+    if region_id.blank?
+      location.try :region
+    else
+      Region.find_by(city_id: region_id)
+    end
   end
 
   protected
