@@ -16,7 +16,6 @@ class Admins::RegionsController < Admins::BaseController
     @region = Region.find(params[:id])
     params = region_params
     state = params.delete(:state)
-    pp state
     if state && AVALIABLE_STATUS.include?(state)
       @region.create_status(state: state)
     end

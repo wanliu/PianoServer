@@ -3,7 +3,6 @@ class IndustryController < ApplicationController
   before_action :set_industry
 
   def show
-    pp @region
     @regions = get_regions(@region)
     render :show, with: @industry
   end
