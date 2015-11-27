@@ -1,7 +1,10 @@
 class Users::SessionsController < Devise::SessionsController
   include TokenAuthenticatable
   include ApplicationHelper
+  include RedirectCallback
 
+  before_action :set_callback, only: :new
+  after_action :clear_callback, only: :create
   after_action :after_login, :only => :create
 
   layout "sign"
@@ -67,6 +70,10 @@ class Users::SessionsController < Devise::SessionsController
 
   def default_type
     is_mobile_request? ? 'mobile' : 'email'
+  end
+
+  def after_sign_in_path_for(resource)
+    callback_url ? callback_url : super(resource)
   end
 
   # GET /resource/sign_in

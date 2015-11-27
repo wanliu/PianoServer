@@ -277,3 +277,14 @@ zh-CN:
       notice: 成功
       alert: 警告
       error: 错误
+  shop_types:
+    retail: 零售商
+    distributor: 供应商
+    wholesaler: 代理商
+    manufacturer: 生产商
+  user_types:
+    consumer: 消费者
+    retail: 零售商
+    distributor: 供应商
+    wholesaler: 代理商
+    manufacturer: 生产商

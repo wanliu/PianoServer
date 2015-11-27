@@ -42,6 +42,8 @@ dev:
     camera: true
     shop:
       website: true
+    mobile:
+      mini: true
     purchase: true
     cart: true
     favorites: true

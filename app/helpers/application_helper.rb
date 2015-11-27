@@ -85,6 +85,27 @@ module ApplicationHelper
     content_for(:module) != "after_registers"
   end
 
+  def phone_link(phone, title = nil, options = {}, &block)
+    title, options = capture(&block), title if block_given?
+    title = phone if title.nil?
+    link_to title, 'tel:' + phone, options
+  end
+
+  def map_url(lat, lng, title, *args)
+    options = args.extract_options! || {}
+    content, src = args
+    query = {
+      location: "#{lat},#{lng}",
+      title: title,
+      content: content || title,
+      zoom: 15,
+      output: 'html'
+    }
+
+    provider_url = "http://api.map.baidu.com/marker"
+    url = [provider_url, "#{query.to_query}"].join('?')
+  end
+
   # def url_for(options)
 
   #   pp options
