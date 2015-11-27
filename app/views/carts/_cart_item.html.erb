@@ -1,14 +1,15 @@
-<li class="list-group-item cart-item <%= item.cartable.saleable? ? 'saleable' : 'unsaleable' %>" data-cart-item-id="<%= item.id %>">
+<% saleable = item.cartable.saleable?(item.quantity, item.properties) %>
+<li class="list-group-item cart-item <%= saleable ? 'saleable' : 'unsaleable' %>" data-cart-item-id="<%= item.id %>">
   <div class="media">
     <div class="chose-item media-left">
-      <%if item.cartable.saleable? %>
+      <% if saleable %>
         <%= f.check_box "cart_item_ids", {multiple: true, checked: true}, item.id, nil %>
       <% else %>
         <span class='unsaleable'>失效</span>
       <% end %>
     </div>
     <div class="avatar media-left">
-      <%= link_to shop_item_path(supplier.name, item.cartable) do %>
+      <%= link_to cartable_url(item) do %>
         <%= image_tag item.avatar_url, class: 'media-object', alt: "商品图片" %>
       <% end %>
     </div>
@@ -26,7 +27,7 @@
     </div>
 
     <div class="quantity media-left">
-      <% if item.cartable.saleable? %>
+      <% if saleable %>
       <div class="input-group">
         <span class="input-group-btn">
           <button type="button" class="btn btn-minus">

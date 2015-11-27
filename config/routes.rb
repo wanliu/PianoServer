@@ -198,6 +198,8 @@ Rails.application.routes.draw do
   resources :orders, only: [:index, :show, :destroy, :create] do
     collection do
       post "confirmation"
+      post "buy_now_create"
+      post "buy_now_confirm"
     end
   end
 

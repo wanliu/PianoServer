@@ -1,7 +1,7 @@
-<li class="list-group-item order-item"  id="order-item-<%= item.id %>">
+<li class="list-group-item cart-item">
   <div class="media">
     <div class="avatar media-left">
-      <%= link_to orderable_url(item) do %>
+      <%= link_to shop_item_path(supplier.name, item.orderable) do %>
         <%= image_tag item.avatar_url, class: 'media-object', alt: "商品图片" %>
       <% end %>
     </div>
@@ -18,7 +18,7 @@
     </div>
 
     <div class="quantity media-left">
-      <%= number_with_delimiter item.quantity %>
+      <%= minus_plus_button_field "order[items_attributes][0]", :quantity, value: item.quantity, placeholder: "数量", class: 'form-control cart_item_quantity' %>
     </div>
 
     <div class="subtotal media-left">

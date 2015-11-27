@@ -2,7 +2,7 @@ class OrderItem < ActiveRecord::Base
   belongs_to :order
   belongs_to :orderable, polymorphic: true
 
-  validates :order, presence: true
+  # validates :order, presence: true
   validates :orderable, presence: true
   validates :orderable_id, uniqueness: { scope: [:order_id, :orderable_type] }
   validates :quantity, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
@@ -10,6 +10,8 @@ class OrderItem < ActiveRecord::Base
   validates :price, numericality: { greater_than: 0 }
 
   validate :orderable_saleable, on: :create
+
+  # before_save :set_title, on: :create
 
   def orderable
     if orderable_type == 'Promotion'
@@ -38,4 +40,8 @@ class OrderItem < ActiveRecord::Base
       errors.add(:orderable_id, "库存不足，或者已经下架")
     end
   end
+
+  # def set_title
+  #   self.title = orderable.try(:title)
+  # end
 end

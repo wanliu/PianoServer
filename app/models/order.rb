@@ -5,6 +5,9 @@ class Order < ActiveRecord::Base
   has_many :items, class_name: 'OrderItem', autosave: true, dependent: :destroy
 
   attr_accessor :cart_item_ids
+  attr_accessor :address_id
+
+   accepts_nested_attributes_for :items
 
   validates :supplier, presence: true
   validates :buyer, presence: true
@@ -27,9 +30,14 @@ class Order < ActiveRecord::Base
     end
   end
 
-  def save_with_cart_items(operator)
+  def address_id=(id)
+    @address_id = id
+    self.delivery_address = Location.find(id).to_s
+  end
+
+  def save_with_items(operator)
     self.transaction do 
-      CartItem.destroy(cart_item_ids)
+      CartItem.destroy(cart_item_ids) if cart_item_ids.present?
       begin
         items.each do |item|
           item.deduct_stocks!(operator)

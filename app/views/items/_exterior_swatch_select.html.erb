@@ -22,7 +22,7 @@
     $(e.currentTarget).parent().addClass("active");
 
     var $form = $(e.currentTarget).parents('form.item-chose-collection');
-    var $buttons = $form.find('.purchase-buttons button');
+    var $buttons = $form.find('.purchase-buttons .btn');
     var properties = $buttons.data('properties') || {};
     var key = $(e.currentTarget).data('propertyKey');
     var value = $(e.currentTarget).data('propertyValue');

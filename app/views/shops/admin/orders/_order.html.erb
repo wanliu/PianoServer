@@ -1,13 +1,12 @@
 <div class="panel panel-default">
   <div class="panel-heading">
-    <div class="btn-group pull-right">
-      <%#= link_to '#', class: 'btn btn-link' do %>
-        <%= caret %>
-      <%# end %>
+    <div>
+      <%= link_to shop_admin_order_path(current_shop.name, order) do %>
+        订单号: <%= order.id %>
+      <% end %>
     </div>
-    <%= link_to shop_admin_order_path(current_shop.name, order) do %>
-      客户：<%= order.buyer.username %> ( <%= order.items.count %> 件商品) 订单号: <%= order.id %>
-    <% end %>
+    <div>客户：<%= order.buyer.username %> ( <%= order.items.count %> 件商品)</div>
+    <div>运送地址：<%= order.delivery_address %></div>
   </div>
   <ul class="list-group order-items">
     <%= render partial: "order_item", collection: order.items, as: :item, locals: { supplier: order.supplier } %>

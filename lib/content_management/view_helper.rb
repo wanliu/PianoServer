@@ -43,7 +43,6 @@ module ContentManagement
     end
 
     def render_collection(*args)
-      byebug
       super
     end
   end
