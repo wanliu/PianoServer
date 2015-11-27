@@ -43,7 +43,7 @@
     <div class='item-shop-infos'>
       <div class="media ">
         <div class="media-left media-middle">
-          <%= link_to shop_site_path(@shop.name), class: 'shop-avatar' do %>
+          <%= link_to shop_site_path(@shop.name, format: 'html'), class: 'shop-avatar' do %>
             <%= image_tag @shop.logo_url %>
           <% end %>
         </div>
