@@ -47,9 +47,9 @@
 
     <div class="shop-brief clearfix">
       <div class="shop-logo">
-        <a href="/<%= shop.name %>.html">
+        <%= link_to shop_site_path(shop.name, format: 'html') do %>
           <%= image_tag shop.logo_url %>
-        </a>
+        <% end %>
       </div>
 
       <div class="shop-desc">
