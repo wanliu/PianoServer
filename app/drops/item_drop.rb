@@ -7,4 +7,8 @@ class ItemDrop < Liquid::Rails::Drop
   def link
     "/items/#{object.sid}"
   end
+
+  def link_html
+    "/items/#{object.sid}.html"
+  end
 end

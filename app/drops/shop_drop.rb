@@ -9,6 +9,10 @@ class ShopDrop < Liquid::Rails::Drop
     "/#{object.name}"
   end
 
+  def link_html
+    link + '.html'
+  end
+
   def week_hits
     @object.hits(1.week.ago)
   end
