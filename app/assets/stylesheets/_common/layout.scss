@@ -28,6 +28,10 @@ body.detail footer{
   bottom:50px;
 }
 
+body.chat footer{
+  display: none;
+}
+
 .menu-container {
   position: fixed;
   top: 0;
@@ -168,7 +172,7 @@ body.detail footer{
 .main-container{
   background-color: #fff;
   position: relative;
-  padding-top: 60px;
+  padding-top: 50px;
   -webkit-transition: all $transition-time;
   transition: all $transition-time;
   overflow-x: hidden;
