@@ -58,13 +58,13 @@ class @SideMenuManager
 
   _hide: () ->
     #@element.css('left', -250)
-    @$container.removeClass('show-left-bar')
-    @$navbar.removeClass('show-left-bar')
     @$layout.hide()
-    @isVisible = false
+    @$container.removeClass('show-left-bar')
+    @$navbar.removeClass('show-left-bar').one 'transitionend', ()=>
+      @isVisible = false
 
   _open: () ->
-    @_show() if $(window).width() <= 768
+    @_show() if $(window).width() <= 768 and !@isVisible
 
   _close: () ->
     @_hide() if $(window).width() <= 768 and @isVisible
