@@ -3,7 +3,8 @@
 class @SideMenuManager
   constructor: (@element) ->
     @menus = []
-    @$content = $('.content-container')
+    @$container = $('.main-container')
+    @$navbar = $('.navbar')
     @$layout = $('.menu-overlayer')
     @resizeHandler()
     $(window).bind 'resize', @resizeHandler.bind(@)
@@ -24,6 +25,8 @@ class @SideMenuManager
       if $target.parents('.menu-container').length == 0
         @_hide()
     )
+
+    @$layout.on('click', @_layoutClick.bind(@))
 
   resizeHandler: () ->
     if $(window).width() > 768
@@ -48,13 +51,16 @@ class @SideMenuManager
 
   _show: () ->
     #@element.css('left', 0)
-    @$content.css('margin-left', 200)
-    @$layout.show()
+    @$container.addClass('show-left-bar')
+    @$navbar.addClass('show-left-bar').one('transitionend', ()=>
+      @$layout.fadeIn(500)
+    )
     @isVisible = true
 
   _hide: () ->
     #@element.css('left', -250)
-    @$content.css('margin-left': 0)
+    @$container.removeClass('show-left-bar')
+    @$navbar.removeClass('show-left-bar')
     @$layout.hide()
     @isVisible = false
 
@@ -87,6 +93,10 @@ class @SideMenuManager
       return menu if menu.name == name
 
     return null
+
+  _layoutClick: () ->
+    @_hide()
+
 
   # _recalculateZIndex: (menu) ->
   #   index = @menus.indexOf(menu)
