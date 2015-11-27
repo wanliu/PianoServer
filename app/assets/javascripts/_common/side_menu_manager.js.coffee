@@ -52,10 +52,9 @@ class @SideMenuManager
   _show: () ->
     #@element.css('left', 0)
     @$container.addClass('show-left-bar')
-    @$navbar.addClass('show-left-bar').one('transitionend', ()=>
+    @$navbar.addClass('show-left-bar').one 'transitionend', ()=>
+      @isVisible = true
       @$layout.fadeIn(500)
-    )
-    @isVisible = true
 
   _hide: () ->
     #@element.css('left', -250)
@@ -68,7 +67,7 @@ class @SideMenuManager
     @_show() if $(window).width() <= 768
 
   _close: () ->
-    @_hide() if $(window).width() <= 768
+    @_hide() if $(window).width() <= 768 and @isVisible
 
   toggleMenu: (menuName) ->
     menu = if menuName then @_lookupMenu(menuName) else @menus[@menus.length - 1]
