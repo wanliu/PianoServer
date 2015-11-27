@@ -1,5 +1,3 @@
-
-
 <%= form_for(@feedback) do |f| %>
   <div class="form-group">
     <%= label :feedback, :name do %>
@@ -11,7 +9,7 @@
 
   <div class="form-group">
     <%= label :feedback, :mobile do %>
-      手机<span class="required">*</span>
+      手机
     <% end %>
 
     <%= f.number_field :mobile, class: "form-control" %>
@@ -34,6 +32,4 @@
       <%= link_to '取消', feedbacks_path, class: "btn btn-danger" %>
     </div>
   </div>
-
-
 <% end %>

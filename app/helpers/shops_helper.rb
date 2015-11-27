@@ -35,7 +35,7 @@ module ShopsHelper
   def title_chain_render(shop, shop_category)
     html = shop_category.self_and_ancestors.map do |cate|
       <<-HTML
-        <a href="/#{shop.name}/categories/#{cate.id}">#{cate.title}</a>
+        <a href="/#{shop.name}/categories/#{cate.id}.html">#{cate.title}</a>
       HTML
     end.join("<span class='glyphicon glyphicon-menu-right' aria-hidden='true'></span>")
 

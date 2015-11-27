@@ -16,6 +16,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     # per = params[:per].presence || 25
 
     @items = Item.with_shop(@shop.id)
+                 .where(abandom: false)
                  .with_category(query_params[:category_id])
                  .with_query(query_params[:q])
                  .page(query_params[:page])
@@ -80,7 +81,9 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
         item.send("#{prop_name}=", value)
       end
 
-      item.send(:write_attribute, :images, params[:item][:filenames].split(','))
+      if params[:item][:filenames] && params[:item][:filenames].respond_to?(:split)
+        item.send(:write_attribute, :images, params[:item][:filenames].split(','))
+      end
     end
 
     if Settings.dev.feature.inventory_combination and @inventory_properties.present?
@@ -127,7 +130,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
       pp params["inventories"]
     end
 
-    if params[:item][:filenames].present?
+    if params[:item][:filenames] && params[:item][:filenames].respond_to?(:split)
       @item.send(:write_attribute, :images, params[:item][:filenames].split(','))
     end
 
@@ -216,6 +219,12 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     else
       render json: @item.errors, status: :unprocessable_entity
     end
+  end
+
+  def destroy
+    @item.update_attribute('abandom', true)
+
+    render :destroy, formats: [:js]
   end
 
   protected

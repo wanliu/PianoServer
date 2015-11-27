@@ -48,18 +48,20 @@ class @ItemPosters extends HuEvent
     filenames = if names.length > 0 then [filename, names].join(',') else [filename, names].join('')
     @$filenames.val(filenames)
 
-  removeItemPoster: (e, index, filename) ->
+  removeItemPoster: (e, filename) ->
     filenames = $.trim(@$filenames.val()).split(',')
+    index = filenames.indexOf(filename)
 
     if index > -1
       filenames.splice(index, 1)
       @$filenames.val(filenames.join(','))
 
-  replaceItemPoster: (e, index, filename) ->
+  replaceItemPoster: (e, oldFilename, newFilename) ->
     filenames = $.trim(@$filenames.val()).split(',')
+    index = filenames.indexOf(oldFilename)
 
     if index > -1
-      filenames[index] = filename
+      filenames[index] = newFilename
       @$filenames.val(filenames.join(','))
 
   handleSortable: () ->

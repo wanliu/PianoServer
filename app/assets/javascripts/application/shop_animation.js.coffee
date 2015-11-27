@@ -54,7 +54,7 @@ class ShopAnimationEnter
 
   linkTo: ->
     @target.addClass('animationed')
-    url = @$.children().attr('href')
+    url = @target.children().attr('href')
     @isAnimate = false
     Turbolinks.visit(url)
 

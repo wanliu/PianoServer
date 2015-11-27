@@ -2,43 +2,47 @@
 <%= nav_back_button %>
 <%= content_for :module, :chat %>
 
-<%= render "chat_order_header" %>
-<div class="container chat-order-body">
+<div class="container">
   <div class="row">
-    <div class="order-table-wrap col-xs-12 col-sm-6">
-      <div class="order-table">
-        <%= render "chat_order_table" %>
-      </div>
-      <div class="order-buttons clearfix">
-        <div class="buttons-execute">
-          <div class="col-sm-6 col-xs-6 btn-wrap left">
-            <button class="btn btn-confirm-order">确认订单</button>
+    <%= render "chat_order_header" %>
+    <div class="container chat-order-body">
+      <div class="row">
+        <div class="order-table-wrap col-xs-12 col-sm-6">
+          <div class="order-table">
+            <%= render "chat_order_table" %>
           </div>
-          <div class="col-sm-6 col-xs-6 btn-wrap right">
-            <button class="btn btn-help">帮助</button>
+          <div class="order-buttons clearfix">
+            <div class="buttons-execute">
+              <div class="col-sm-6 col-xs-6 btn-wrap left">
+                <button class="btn btn-confirm-order">确认订单</button>
+              </div>
+              <div class="col-sm-6 col-xs-6 btn-wrap right">
+                <button class="btn btn-help">帮助</button>
+              </div>
+            </div>
+            <div class="buttons-consult">
+              <div class="col-sm-6 col-xs-6 btn-wrap left">
+                <button class="btn btn-lg btn-agrees">按住3秒同意</button>
+              </div>
+              <div class="col-sm-6 col-xs-6 btn-wrap right">
+                <button class="btn btn-lg btn-disagrees">拒绝</button>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="buttons-consult">
-          <div class="col-sm-6 col-xs-6 btn-wrap left">
-            <button class="btn btn-lg btn-agrees">按住3秒同意</button>
+
+        <div class="chat-list col-xs-12 col-sm-6">
+          <div class="chat-inner" >
+            <div class="message-list clearfix">
+            </div>
           </div>
-          <div class="col-sm-6 col-xs-6 btn-wrap right">
-            <button class="btn btn-lg btn-disagrees">拒绝</button>
-          </div>
+
+          <%= render "chat_input" %>
         </div>
+
+        <%= render "chat_linkmen" %>
       </div>
     </div>
-
-    <div class="chat-list col-xs-12 col-sm-6">
-      <div class="chat-inner" >
-        <div class="message-list clearfix">
-        </div>
-      </div>
-
-      <%= render "chat_input" %>
-    </div>
-
-    <%= render "chat_linkmen" %>
   </div>
 </div>
 
@@ -98,7 +102,7 @@
         $(window).off('resize.linkmen');
       });
 
-      $(document).on('page:load', function() {
+      $(document).off('page:load').on('page:load', function() {
         window.noticeCenter.reloadUnreadMessage();
       });
     }

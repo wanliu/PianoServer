@@ -1,8 +1,16 @@
 class ShopDrop < Liquid::Rails::Drop
-  attributes :id, :name, :avatar_url, :logo_url, :title, :description, :address, :logo_url_cover, :link, :hits, :owner_id
+  include ImageUrl
+
+  attributes :id, :name, :title, :description, :address, :link, :hits, :owner_id
+  image_mount :logo
+
 
   def link
     "/#{object.name}"
+  end
+
+  def link_html
+    link + '.html'
   end
 
   def week_hits

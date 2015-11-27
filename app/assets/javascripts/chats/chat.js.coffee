@@ -45,7 +45,9 @@ class @Chat
     @setSendBtn(@sendBtn)
 
     @firstLoad = true
-    @getHistoryMessage(0, @_loadMoreProcess)
+    @getHistoryMessage(0, (messages) =>
+      @_loadMoreProcess(messages, 'down')
+    )
 
     @bindAllEvents()
     @enter()
@@ -79,6 +81,8 @@ class @Chat
         when "text"
           if TABLE_REGEXP.test(data)
             @_sendTableMsg(data)
+          else
+            @_pasteText(data)
         else
           @clearText()
 
@@ -117,7 +121,7 @@ class @Chat
     $inner = @$chatContainer.find('.chat-inner')
 
     if direction == 'down'
-      $inner.scrollTop(@$messageList.parent().innerHeight())
+      $inner.scrollTop(@$messageList.innerHeight())
     else
       $inner.scrollTop(0)
 
@@ -132,21 +136,43 @@ class @Chat
       return if err
 
       if messages.length != 0
-
-        messages.reverse()
-
         @_batchInsertMessages(messages, 'up')
-        # for message in messages
-        #     @_insertMessage(message, 'up')
-
-        # if messages.length < @options.maxMessageGroup
-        #     @$messageList.find('.load-more').remove();
-        # else
-
-        @earlyTime = messages[messages.length - 1].time
 
       @firstLoad = false
       callback.call(@, messages) if $.isFunction(callback)
+
+  _refreshTimeline: () ->
+    $times = @$messageList.find('.time-desc:not(.refreshed)')
+    _lastHandledTime = null
+
+    for time in $times
+      $time = $(time)
+
+      time = parseInt($time.attr('time'))
+      date1 = new Date(time)
+
+      if _lastHandledTime
+        date2 = new Date(_lastHandledTime)
+      else
+        date2 = new Date(@earlyTime)
+
+      _lastHandledTime = time
+
+      if @_isTheSameMinute(date1, date2)
+        $time.remove()
+      else
+        $time.addClass('refreshed')
+
+        if @_isTheSameDate(date1, date2)
+          desc = @_formatDayDate(date1)
+        else if @_isTheSameYear(date1, date2)
+          desc = @_formatMonthDate(date1)
+        else
+          desc = @_formatYearDate(date1)
+
+        console.log(desc)
+
+        $time.find('p').text(desc)
 
   setTable: (@table) ->
 
@@ -210,7 +236,12 @@ class @Chat
       @clearText() unless err?
     )
 
-  _insertItemMessage: (message, direction = 'down', insertPrefix = false) ->
+  _pasteText: (text) ->
+    @$textElement ||= $(@textElement)
+    val = @$textElement.val()
+    @$textElement.val([val, text].join(''))
+
+  _insertItemMessage: (message, direction = 'down', isFirstRecord) ->
     {id, senderId, content, senderAvatar, senderLogin, type, time} = message
 
     if type == 'command'
@@ -221,7 +252,7 @@ class @Chat
         $("div[data-message-id=#{id}] p.content").text(content)
         return
 
-      context = @_prepareTemplateContext(message, direction, insertPrefix)
+      context = @_prepareTemplateContext(message, direction, isFirstRecord)
 
       if type == 'normal'
         if message.attachs
@@ -243,7 +274,7 @@ class @Chat
         $elem = if direction == 'down'
                   $(template).appendTo(@$messageList)
                 else
-                  $(template).prependTo(@$messageList)
+                  $(template).appendTo(@$cacheDOM)
         if type == 'image'
           @_bindImageEvents($elem)
 
@@ -251,77 +282,89 @@ class @Chat
     catch e
       console.error(e.stack)
 
-  _prepareTemplateContext: (message, direction, insertPrefix)  ->
+  _prepareTemplateContext: (message, direction, isFirstRecord)  ->
     {id, senderId, content, senderAvatar, senderLogin, type, time} = message
 
     toAddClass = if @_isOwnMessage(message) then 'you' else 'me'
 
     senderAvatar = @options.avatarDefault if senderAvatar == '' or senderAvatar?
     senderName = if @options.displayUserName then "<h2>#{senderLogin}</h2>" else ''
-    # prefixSection = if @lastTime? and Math.abs(time - @lastTime) > @options.miniTimeGroupPeriod
-    #                   time = new Date(time)
-    #                   timeStr = if time.toDateString() != new Date(@lastTime).toDateString()
-    #                               "#{time.getFullYear()}-#{time.getMonth()+1}-#{time.getDate()} #{@_formatDate(time.getHours())}:#{@_formatDate(time.getMinutes())}"
-    #                             else
-    #                               "#{@_formatDate(time.getHours())}:#{@_formatDate(time.getMinutes())}"
-    #                   """
-    #                   <div class="time"><p class="text-center">#{timeStr}</p></div>
-    #                   """
-    #                 else
-    #                   ''
-    prefixSection = @_getPrefixSection(time, direction, insertPrefix)
+
+    prefixSection = @_getPrefixSection(time, direction, isFirstRecord)
     {prefixSection, senderAvatar, senderName, toAddClass, id, senderId, content, senderLogin, type, time}
 
 
-  _getPrefixSection: (time, direction, insertPrefix) ->
+  _getPrefixSection: (time, direction, isFirstRecord) ->
     date = new Date(time)
-    year = date.getFullYear()
-    month = date.getMonth() + 1
-    day = date.getDate()
-    hour = date.getHours()
-    minute = date.getMinutes()
-    formatHour = @_formatDate(date.getHours())
-    formatMinute = @_formatDate(date.getMinutes())
     now = new Date()
-
     prefixSection = ''
-    formatYearDate = [[year, month, day].join('-'), [formatHour, formatMinute].join(':')].join(' ')
-    formatMonthDate = [[month, day].join('-'), [formatHour, formatMinute].join(':')].join(' ')
-    formatDayDate = [formatHour, formatMinute].join(':')
 
-    compareDate = if @lastTime then new Date(@lastTime) else new Date()
+    formatYearDate = @_formatYearDate(date)
+    formatMonthDate = @_formatMonthDate(date)
+    formatDayDate = @_formatDayDate(date)
 
     if @lastTime
-      if insertPrefix
-        prefixSection = formatMonthDate
-      else if @_isTheSameDate(date, compareDate)
-        if Math.abs(time - @lastTime) > @options.miniTimeGroupPeriod
-          prefixSection = if direction == 'up' then formatMonthDate else formatDayDate
-      else if @_isTheSameYear(date, compareDate)
-        prefixSection = formatMonthDate
+      date2 = new Date(@lastTime)
+      diff = Math.abs(time - @lastTime)
+
+      if isFirstRecord
+        date2 = now
+        diff = Math.abs(time - now.getTime())
+
+      if diff > @options.miniTimeGroupPeriod
+        if @_isTheSameDate(date, date2)
+          prefixSection = if direction == 'down' then '' else formatDayDate
+        else if @_isTheSameYear(date, date2)
+          prefixSection = formatMonthDate
+        else
+          prefixSection = formatYearDate
       else
-        prefixSection = formatYearDate
+        prefixSection = ''
     else
-      if @_isTheSameMonth(date, now)
+      if @_isTheSameDate(date, now)
+        prefixSection = formatDayDate
+      else if @_isTheSameYear(date, now)
         prefixSection = formatMonthDate
       else
         prefixSection = formatYearDate
 
     if prefixSection.length > 0
       """
-        <div class="time"><p class="text-center">#{prefixSection}</p></div>
+        <div class="time-desc" time=#{time}><p class="text-center">#{prefixSection}</p></div>
       """
     else
       ""
 
   _isTheSameYear: (date1, date2) ->
-    return date1.getFullYear() == date2.getFullYear()
+    date1.getFullYear() == date2.getFullYear()
 
   _isTheSameMonth: (date1, date2) ->
-    return @_isTheSameYear(date1, date2) && date1.getMonth() == date2.getMonth()
+    @_isTheSameYear(date1, date2) && date1.getMonth() == date2.getMonth()
 
   _isTheSameDate: (date1, date2) ->
-    return @_isTheSameMonth(date1, date2) && date1.getDate() == date2.getDate()
+    @_isTheSameMonth(date1, date2) && date1.getDate() == date2.getDate()
+
+  _isTheSameMinute: (date1, date2) ->
+    @_isTheSameDate(date1, date2) && date1.getHours() == date2.getHours() && date1.getMinutes() == date2.getMinutes()
+
+  _formatDayDate: (date) ->
+    hour = date.getHours()
+    minute = date.getMinutes()
+    formatHour = @_formatDate(date.getHours())
+    formatMinute = @_formatDate(date.getMinutes())
+
+    [formatHour, formatMinute].join(':')
+
+  _formatMonthDate: (date) ->
+    month = date.getMonth() + 1
+    day = date.getDate()
+
+    [[month, day].join('-'), @_formatDayDate(date)].join(' ')
+
+  _formatYearDate: (date) ->
+    year = date.getFullYear()
+
+    [year, '-', @_formatMonthDate(date)].join('')
 
   _formatDate: (number) ->
     if number < 10
@@ -369,13 +412,9 @@ class @Chat
 
 
   _bindImageEvents: (elem) ->
-
     adjustImage = (elem) =>
       maxWidth = $(window).width()
       maxHeight = $(window).height()
-
-
-
       # h: $(ele).height() * ($(window).width() / $(ele).height())
 
     $(elem).find(".msg-images>img").click () =>
@@ -404,16 +443,13 @@ class @Chat
     gallery = new PhotoSwipe( pswpElement, PhotoSwipeUI_Default, items, options);
     gallery.init();
 
-  _insertMessage: (message, direction = 'down', insertPrefix) ->
-    @_insertItemMessage(message, direction, insertPrefix)
+  _insertMessage: (message, direction = 'down') ->
+    @_insertItemMessage(message, direction)
 
     isVisible = @_checkIsVisible(true)
 
     if !@_isOwnMessage(message) && (@_checkChatContentIsOverlayed() || !isVisible)
       @_insertBubbleTip(message)
-
-    # if @_checkChatContentIsOverlayed() || (isVisible && @options.isMessageScroll)
-    #   @autoScroll(direction)
 
     @autoScroll(direction) if @options.isMessageScroll
 
@@ -429,13 +465,23 @@ class @Chat
       })
 
   _batchInsertMessages: (messages, direction = 'down') ->
+    @$cacheDOM = $('<div>')
+
+    @lastTime = @earlyTime if direction = 'up'
+
     for message, index in messages
-      @_insertItemMessage(message, 'up', index == messages.length - 1)
+      @_insertItemMessage(message, direction, index == 0)
+
+    if direction = 'up'
+      @_refreshTimeline()
+      @$cacheDOM.children().prependTo(@$messageList)
 
     if @firstLoad
       @autoScroll('down') if @options.isMessageScroll
     else
       @autoScroll(direction) if @options.isMessageScroll
+
+    @earlyTime = messages[0].time
 
   _checkIsVisible: (isInsert) ->
     $inner = @$chatContainer.find('.chat-inner')
@@ -488,6 +534,7 @@ class @Chat
 
   _insertLoadMore: () ->
     $more = $('<div class="load-more">查看更多消息</div>').prependTo(@$messageList)
+    @autoScroll()
 
     $more.click () =>
       @_removeLoadMore()
@@ -502,12 +549,15 @@ class @Chat
   _clearEventListners: () ->
     @userSocket.offPersonMessage(@boundOnMessage)
 
-  _loadMoreProcess: (messages) ->
+  _loadMoreProcess: (messages, direction = 'up') ->
     @$messageList.find('.record-loading').remove()
+
     if messages.length < @options.maxMessageGroup
       @_removeLoadMore()
     else
       @_insertLoadMore()
+
+    @autoScroll(direction) if @options.isMessageScroll
 
   _emitReadEvent: () ->
     @userSocket.emit 'readChannel', {
