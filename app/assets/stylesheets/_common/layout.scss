@@ -1,6 +1,12 @@
-body {
-  overflow: hidden;
+$transition-time: 0.6s;
 
+html{
+  height: 100%;
+}
+
+body {
+  overflow-x: hidden;
+  height: 100%;
   &.detail,
   &.item{
     .scroll-container {
@@ -9,17 +15,28 @@ body {
   }
 }
 
-.menu-container {
+footer {
   position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  word-break: break-word;
+}
+
+body.item footer,
+body.detail footer{
+  bottom:50px;
+}
+
+.menu-container {
+  position: fixed;
   top: 0;
   bottom: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  width: 195px;
-  z-index: 1000;
+  width: 200px;
   background: #E32929;
   left: 0;
-  box-shadow: 1px 0 4px #474747;
 
   a {
     color: #FFFFFF;
@@ -92,12 +109,15 @@ body {
 }
 
 .navbar-top {
-  position: absolute;
+  position: fixed;
   top: 0;
   z-index: 10;
-  left: 200px;
+  left: 0;
   right: 0;
+  border-radius: 0;
   border-width: 1px 0;
+  -webkit-transition: all $transition-time;
+  transition: all $transition-time;
 }
 
 .fixed-height-container {
@@ -124,17 +144,7 @@ body {
     }
   }
 
-  .menu-overlayer {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    bottom: 0;
-    background: #333333;
-    opacity: 0.5;
-    display: none;
-    z-index: 999;
-  }
+
 }
 
 .min-height-100 {
@@ -150,3 +160,28 @@ body {
   }
 }
 
+.show-left-bar{
+  transform: translateX(200px);
+  -webkit-transform: translateX(200px);
+}
+
+.main-container{
+  background-color: #fff;
+  position: relative;
+  padding-top: 60px;
+  -webkit-transition: all $transition-time;
+  transition: all $transition-time;
+  overflow-x: hidden;
+  min-height: 100%;
+}
+.menu-overlayer {
+  position: fixed;
+  left: 200px;
+  top: 0;
+  width: 100%;
+  bottom: 0;
+  background: #333333;
+  opacity: 0.5;
+  display: none;
+  z-index: 999;
+}
