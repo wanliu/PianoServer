@@ -64,6 +64,7 @@ gem 'composite_primary_keys'
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'
 gem 'elasticsearch-persistence'
+gem 'actionpack-page_caching'
 # gem 'active_model_serializers', github: 'rails-api/active_model_serializers', tag: 'v0.10.0.rc2'
 
 # 中间件
