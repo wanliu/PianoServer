@@ -141,14 +141,14 @@ class OrdersController < ApplicationController
       .permit(:supplier_id, :address_id, items_attributes: [:orderable_type, :orderable_id, :quantity, :price, :title])
       .tap do |white_list|
         white_list[:items_attributes].each do |key, attributes|
-          attributes[:properties] = params[:order][:items_attributes][key][:properties]
+          attributes[:properties] = params[:order][:items_attributes][key][:properties] || {}
         end
       end
   end
 
   def order_item_params
     params.require(:cart_item).permit(:orderable_type, :orderable_id, :quantity, :price).tap do |white_list|
-      white_list[:properties] = params[:cart_item][:properties]
+      white_list[:properties] = params[:cart_item][:properties] || {}
     end
   end
 

@@ -16,7 +16,7 @@ class CartItemsController < ApplicationController
       cartable_id = :cartable_id AND cartable_type = :cartable_type AND properties @> :properties",
       cartable_id: params[:cart_item][:cartable_id],
       cartable_type:  params[:cart_item][:cartable_type],
-      properties: params[:cart_item][:properties].to_json).first
+      properties: (params[:cart_item][:properties] || {}).to_json).first
 
     if exsited_item.present?
       @item = exsited_item
@@ -86,7 +86,7 @@ class CartItemsController < ApplicationController
     params.require(:cart_item)
       .permit(:supplier_id, :title, :sale_mode, :quantity,
         :condition, :cartable_id, :cartable_type).tap do |white_list|
-        white_list[:properties] = params[:cart_item][:properties]
+        white_list[:properties] = params[:cart_item][:properties] || {}
       end
   end
 

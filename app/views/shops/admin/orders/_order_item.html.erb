@@ -1,7 +1,7 @@
 <li class="list-group-item order-item"  id="order-item-<%= item.id %>">
   <div class="media">
     <div class="avatar media-left">
-      <%= link_to shop_item_path(supplier.name, item.orderable) do %>
+      <%= link_to orderable_url(item) do %>
         <%= image_tag item.avatar_url, class: 'media-object', alt: "商品图片" %>
       <% end %>
     </div>

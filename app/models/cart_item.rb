@@ -11,10 +11,12 @@ class CartItem < ActiveRecord::Base
   validates :price, :quantity, numericality: { greater_than: 0 }
   validates :supplier, presence: true
   validates :cart_id, presence: true
+  # validates :properties, presence: true
   validates :cartable_id, uniqueness: { scope: [:cart_id, :cartable_type, :properties] }
 
   validate :avoid_from_shop_owner
   validate :cartable_saleable
+  before_save :set_properties
 
   delegate :title, to: :cartable, allow_nil: true
 
@@ -57,6 +59,12 @@ class CartItem < ActiveRecord::Base
   def cartable_saleable
     unless cartable.saleable?(quantity, properties)
       errors.add(:cartable_id, "库存不足，或者已经下架")
+    end
+  end
+
+  def set_properties
+    if properties.nil?
+      self.properties = {}
     end
   end
 end

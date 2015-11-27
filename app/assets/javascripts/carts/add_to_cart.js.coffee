@@ -4,8 +4,8 @@ $ ()->
     cartableId   = $(@).data('cartableId')
     properties   = $(@).data('properties') || {}
     $quantityInput = $(@).parents('form').find('input.cart_item_quantity')
-    quantity = if $quantityInput
-      $quantityInput.val()
+    quantity = if $quantityInput.length
+      $quantityInput.val() || 1
     else
       1
 

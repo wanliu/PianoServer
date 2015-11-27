@@ -12,6 +12,7 @@ class OrderItem < ActiveRecord::Base
   validate :orderable_saleable, on: :create
 
   # before_save :set_title, on: :create
+  before_save :set_properties
 
   def orderable
     if orderable_type == 'Promotion'
@@ -38,6 +39,12 @@ class OrderItem < ActiveRecord::Base
   def orderable_saleable
     unless orderable.saleable?(quantity, properties)
       errors.add(:orderable_id, "库存不足，或者已经下架")
+    end
+  end
+
+  def set_properties
+    if properties.nil?
+      self.properties = {}
     end
   end
 
