@@ -13,17 +13,3 @@
     visibility: hidden;
   }
 }
-
-
-#category-modal{
-  z-index: 10;
-
-  .modal-dialog {
-    margin-top: 60px;
-  }
-}
-
-.modal-backdrop {
-  position: absolute;
-  z-index: 0;
-}
