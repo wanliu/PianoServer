@@ -85,43 +85,35 @@
   </head>
 
   <% _module = content_for :module %>
-
+  
   <body class="<%= yield :module %>">
-
+    <%= render "shards/navbar" %>
     <div class="chat-notices"></div>
+    <div class="menu-overlayer"></div>
+    <div class="menu-container"></div>
 
-    <%= render "shards/navbar" %>  <!-- 头部 -->
-    <div class="menu-overlayer"></div> <!-- 遮罩层 -->
-    
-    <div class="menu-container"></div> <!-- left-bar -->
-
-    <%= bootstrap_flash %>
 
     <div class="main-container">
-      <%= yield %> <!-- 主内容 -->
-    </div>
-
-    <!-- footer -->
-    <%# case _module %>
-    <%# when NilClass %>
-      <%#= render "footer", with: @subject %>
-    <%# when "shop" %>
-      <%#= render "footer", with: @shop %>
-    <%# else %>
-      <%#= render "footer" %>
-    <%# end %>
-    
-    <%# case _module %> <!-- 底部按钮 -->
-      <%# when "item" %>
-        <%#= render "items/link_table" %>
-      <%# when "detail" %>
-
-      <%#= render :partial => "promotions/promotion_link_table", locals: { promotion: @promotion, shop: @shop} %>
-        <%##= render "promotions/promotion_link_table" %>
-    <%# end %>
+      <%= bootstrap_flash %>
+      <%= yield %>
+      <% case _module %>
+      <% when NilClass %>
+        <%= render "footer", with: @subject %>
+      <% when "shop" %>
+        <%= render "footer", with: @shop %>
+      <% else %>
+        <%= render "footer" %>
+      <% end %>
+      
+      <%# case _module %> <!-- 底部按钮 -->
+        <%# when "item" %>
+          <%#= render "items/link_table" %>
+        <%# when "detail" %>
+        <%#= render :partial => "promotions/promotion_link_table", locals: { promotion: @promotion, shop: @shop} %>
+          <%##= render "promotions/promotion_link_table" %>
+      <%# end %>
 
     </div>
-    <div class="content-container">
     </div>
 
     <%= render "qrcode" %>

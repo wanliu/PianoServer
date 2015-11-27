@@ -26,6 +26,8 @@ class @SideMenuManager
         @_hide()
     )
 
+    @$layout.on('click', @_layoutClick.bind(@))
+
   resizeHandler: () ->
     if $(window).width() > 768
       @_hide()
@@ -91,6 +93,10 @@ class @SideMenuManager
       return menu if menu.name == name
 
     return null
+
+  _layoutClick: () ->
+    @_hide()
+
 
   # _recalculateZIndex: (menu) ->
   #   index = @menus.indexOf(menu)
