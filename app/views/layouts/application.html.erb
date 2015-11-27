@@ -94,7 +94,6 @@
     <div class="menu-overlayer"></div> <!-- 遮罩层 -->
     
     <div class="menu-container"></div> <!-- left-bar -->
-    
 
     <%= bootstrap_flash %>
 
@@ -103,24 +102,23 @@
     </div>
 
     <!-- footer -->
-    <% case _module %>
-    <% when NilClass %>
-      <%= render "footer", with: @subject %>
-    <% when "shop" %>
-      <%= render "footer", with: @shop %>
-    <% else %>
-      <%= render "footer" %>
-    <% end %>
+    <%# case _module %>
+    <%# when NilClass %>
+      <%#= render "footer", with: @subject %>
+    <%# when "shop" %>
+      <%#= render "footer", with: @shop %>
+    <%# else %>
+      <%#= render "footer" %>
+    <%# end %>
+    
+    <%# case _module %> <!-- 底部按钮 -->
+      <%# when "item" %>
+        <%#= render "items/link_table" %>
+      <%# when "detail" %>
 
-    <!-- 底部按钮 -->
-    <% case _module %>
-      <% when "item" %>
-        <%= render "items/link_table" %>
-      <% when "detail" %>
-
-      <%= render :partial => "promotions/promotion_link_table", locals: { promotion: @promotion, shop: @shop} %>
-        <%#= render "promotions/promotion_link_table" %>
-    <% end %>
+      <%#= render :partial => "promotions/promotion_link_table", locals: { promotion: @promotion, shop: @shop} %>
+        <%##= render "promotions/promotion_link_table" %>
+    <%# end %>
 
     </div>
     <div class="content-container">

@@ -1,3 +1,5 @@
+$transition-time: 0.6s;
+
 body {
   overflow-x: hidden;
 
@@ -97,8 +99,8 @@ body {
   right: 0;
   border-radius: 0;
   border-width: 1px 0;
-  -webkit-transition: all 1s;
-  transition: all 1s;
+  -webkit-transition: all $transition-time;
+  transition: all $transition-time;
 }
 
 .fixed-height-container {
@@ -150,8 +152,8 @@ body {
   background-color: #F10035;
   position: relative;
   padding-top: 50px;
-  -webkit-transition: all 1s;
-  transition: all 1s;
+  -webkit-transition: all $transition-time;
+  transition: all $transition-time;
   overflow-x: hidden; 
 
 }
