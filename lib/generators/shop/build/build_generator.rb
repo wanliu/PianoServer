@@ -6,6 +6,7 @@ class Shop::BuildGenerator < Rails::Generators::NamedBase
   class_option :shop_root, type: :string
 
   def initialize(*args)
+    pp args
     @theme = args[0][1]
     super
 
@@ -16,13 +17,13 @@ class Shop::BuildGenerator < Rails::Generators::NamedBase
 
   def copy_shop_files
     begin
-      copy_file "#{theme_path}/_about.html.liquid", "#{shop_path}/views/_about.html.liquid"
-      copy_file "#{theme_path}/_header.html.liquid", "#{shop_path}/views/_header.html.liquid"
-      copy_file "#{theme_path}/_category.html.liquid", "#{shop_path}/views/_category.html.liquid"
-      copy_file "#{theme_path}/_item.html.liquid", "#{shop_path}/views/_item.html.liquid"
-      copy_file "#{theme_path}/_shop_category_list.html.liquid", "#{shop_path}/views/_shop_category_list.html.liquid"
-      copy_file "#{theme_path}/items/_show.html.liquid", "#{shop_path}/views/items/_show.html.liquid"
-      copy_file "#{theme_path}/shops/show.html.liquid", "#{shop_path}/views/shops/show.html.liquid"
+      copy_file "#{theme_path}/_style.html.liquid",       "#{shop_path}/theme_#{theme_path}/views/_style.html.liquid"
+      copy_file "#{theme_path}/_header.html.liquid",      "#{shop_path}/theme_#{theme_path}/views/_header.html.liquid"
+      copy_file "#{theme_path}/_category.html.liquid",    "#{shop_path}/theme_#{theme_path}/views/_category.html.liquid"
+      copy_file "#{theme_path}/_item.html.liquid",        "#{shop_path}/theme_#{theme_path}/views/_item.html.liquid"
+      copy_file "#{theme_path}/shops/_about.html.liquid", "#{shop_path}/theme_#{theme_path}/views/shops/_about.html.liquid"
+      copy_file "#{theme_path}/shops/show.html.liquid",   "#{shop_path}/theme_#{theme_path}/views/shops/show.html.liquid"
+      copy_file "#{theme_path}/shop_categories/_shop_category_list.html.liquid", "#{shop_path}/theme_#{theme_path}/views/shop_categories/_shop_category_list.html.liquid"
     rescue
       raise 'copy file error, maby theme thme name was wrong'
     end

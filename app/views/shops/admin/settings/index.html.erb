@@ -55,15 +55,16 @@
 
   $('.theme-btn').click(function(){
     var target = $(this);
-    if (target.hasClass('active') || !confirm("该操作将覆盖之前的风格")) return;
+    
+    if (target.hasClass('active'))  return;
 
-    var url = window.location.pathname + '/change_shop_theme';
     var theme = $(this).data('theme');
+    var url = location.pathname + '/change_shop_theme';
     $.ajax({
       url: url,
       type:'PUT',
-      data:{theme:theme},
-      success:function(data){
+      data:{ theme: theme },
+      success: function(data){
         console.log(data);
         if (data.success) {
           $('.theme-btn').removeClass('active');
@@ -72,6 +73,7 @@
           console.log(data.msg);
         }
       }
-    });
+    }); 
   });
+
 </script>

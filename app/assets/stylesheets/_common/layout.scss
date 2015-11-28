@@ -147,8 +147,6 @@ body.chat footer{
       overflow: hidden;
     }
   }
-
-
 }
 
 .min-height-100 {
@@ -170,14 +168,17 @@ body.chat footer{
 }
 
 .main-container{
-  background-color: #fff;
+  background-color: #eee;
   position: relative;
   padding-top: 50px;
   -webkit-transition: all $transition-time;
   transition: all $transition-time;
   overflow-x: hidden;
   min-height: 100%;
+  background-image: image_url('bj.jpg');
+  padding-bottom: 40px;
 }
+
 .menu-overlayer {
   position: fixed;
   left: 200px;

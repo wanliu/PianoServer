@@ -1,6 +1,7 @@
 class ShopsController < ApplicationController
-  before_action :prepare_shop_views_path
   before_action :set_shop, only: [ :show_by_name, :show, :about ]
+  before_action :set_theme
+  before_action :prepare_shop_views_path
   before_action :shop_page_info
 
   def show_by_name
@@ -12,8 +13,9 @@ class ShopsController < ApplicationController
 
     @root = @shop.shop_category(true)
     @shop_categories = @root.children.where(status: true)
-
-    render :show, with: @shop
+    @theme_path = @shop.theme.blank? ? "shops" : "themes/#{@shop.theme}"
+    
+    render "show", with: @theme
   end
 
   def show
@@ -34,6 +36,10 @@ class ShopsController < ApplicationController
   def set_shop
     @shop = Shop.find_by name: params[:shop_name] || params[:id]
     @shop.punch(request)
+  end
+
+  def set_theme
+    @theme = Theme.new(@shop) if @shop.present?
   end
 
   def shop_page_info

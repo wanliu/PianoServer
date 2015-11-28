@@ -9,16 +9,6 @@ class @SideMenuManager
     @resizeHandler()
     $(window).bind 'resize', @resizeHandler.bind(@)
 
-    @hammer = new Hammer.Manager(document.body)
-    @hammer.add(new Hammer.Swipe({
-      direction: Hammer.DIRECTION_HORIZONTAL,
-      velocity: 0.1,
-      threshold: 1,
-      pointers: 1
-    }))
-    @hammer.on("swiperight", @_open.bind(@))
-    @hammer.on("swipeleft", @_close.bind(@))
-
     @element.on('click', (e) =>
       $target = $(e.target)
 
@@ -31,6 +21,9 @@ class @SideMenuManager
   resizeHandler: () ->
     if $(window).width() > 768
       @_hide()
+      @_destroyHammer()
+    else
+      @_initHammer()
 
   addMenu: (menu) ->
     if menu instanceof SideMenu
@@ -95,6 +88,24 @@ class @SideMenuManager
 
   _layoutClick: () ->
     @_hide()
+
+  _initHammer: () ->
+    return if @hammer
+
+    @hammer = new Hammer.Manager(document.body)
+    @hammer.add(new Hammer.Swipe({
+      direction: Hammer.DIRECTION_HORIZONTAL,
+      velocity: 0.1,
+      threshold: 1,
+      pointers: 1
+    }))
+    @hammer.on("swiperight", @_open.bind(@))
+    @hammer.on("swipeleft", @_close.bind(@))
+
+  _destroyHammer: () ->
+    if @hammer && @hammer.destroy
+      @hammer.destroy()
+      @hammer = null
 
 
   # _recalculateZIndex: (menu) ->

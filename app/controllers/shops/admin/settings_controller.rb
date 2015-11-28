@@ -18,8 +18,14 @@ class Shops::Admin::SettingsController < Shops::Admin::BaseController
 
   def change_shop_theme
     begin
-      ShopService.build(params[:shop_id], { theme: params[:theme] })
       shop = Shop.find_by(name: params[:shop_id])
+      dir = File.join(Rails.root, Settings.sites.shops.root, shop.name, "theme_#{ params[:theme]}")
+
+      unless File.exists? dir
+        pp '新生成啦!!!!!'
+        ShopService.build(params[:shop_id], { theme: params[:theme] })
+      end
+        
       shop.theme = params[:theme]
       shop.save!
       render json: { success: true, msg: 'success' }
