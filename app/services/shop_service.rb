@@ -29,7 +29,6 @@ module ShopService
   end
 
   def set_file_system(shop)
-    pp 'ssssssssss'
     Liquid::Template.file_system = ShopService::FileSystem.new(views_path(shop), "_%s.html.liquid".freeze)
   end
 

@@ -22,7 +22,6 @@ class Shops::Admin::SettingsController < Shops::Admin::BaseController
       dir = File.join(Rails.root, Settings.sites.shops.root, shop.name, "theme_#{ params[:theme]}")
 
       unless File.exists? dir
-        pp '新生成啦!!!!!'
         ShopService.build(params[:shop_id], { theme: params[:theme] })
       end
         

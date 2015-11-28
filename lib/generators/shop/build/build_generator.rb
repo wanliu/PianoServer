@@ -6,7 +6,6 @@ class Shop::BuildGenerator < Rails::Generators::NamedBase
   class_option :shop_root, type: :string
 
   def initialize(*args)
-    pp args
     @theme = args[0][1]
     super
 
