@@ -1,0 +1,18 @@
+<div class="brand-board">
+  <img src="http://neil-img.b0.upaiyun.com/uploads/webpage.png" class="shop-bgi">
+  <div class='shop-info'>
+    <div class="media">
+      <div class="shop-logo-wrapper">
+        <img src="{{ shop.avatar_url }}" class="shop-logo" alt="{{ shop.name }}" />
+      </div>
+      <div class='name-address'>
+        <p class='name'>{{ shop.title }}</p>
+        <p class='address'>{{ shop.address }}</p>
+      </div>
+      <a class="attention media-right media-middle" href="#">
+        <div>访问量</div>
+        {{ shop.week_hits }}
+      </a>
+    </div>
+  </div>
+</div>
