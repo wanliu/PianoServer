@@ -1,5 +1,7 @@
 class ShopCategoriesController < ShopsController
+
   before_action :set_shop_category, only: [ :show ]
+  caches_page :index, :show
 
   def index
     @shop_categories = @shop.shop_category.children.where(status: true).page(params[:page]).per(params[:per])

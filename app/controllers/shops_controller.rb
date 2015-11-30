@@ -2,6 +2,7 @@ class ShopsController < ApplicationController
   before_action :prepare_shop_views_path
   before_action :set_shop, only: [ :show_by_name, :show, :about ]
   before_action :shop_page_info
+  caches_page :show, :show_by_name, :about
 
   def show_by_name
     set_page_title @shop.title
@@ -39,6 +40,6 @@ class ShopsController < ApplicationController
   def shop_page_info
     self.page_title += [ t("titles.shops", shop_name: @shop.title) ]
     self.page_navbar = @shop.title || @shop.name
-    self.page_navbar_link = shop_site_path(@shop.name)
+    self.page_navbar_link = shop_site_path(@shop.name, format: 'html')
   end
 end

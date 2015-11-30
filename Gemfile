@@ -64,6 +64,7 @@ gem 'composite_primary_keys'
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'
 gem 'elasticsearch-persistence'
+gem 'actionpack-page_caching'
 # gem 'active_model_serializers', github: 'rails-api/active_model_serializers', tag: 'v0.10.0.rc2'
 
 # 中间件
@@ -97,7 +98,7 @@ gem 'table_cloth'
 
 gem 'oneapm_rpm'
 
-gem 'carrierwave', github: 'carrierwaveuploader/carrierwave', branch: 'mount-multiple'
+gem 'carrierwave', github: 'hysios/carrierwave', branch: 'mount-multiple'
 gem 'carrierwave-upyun'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

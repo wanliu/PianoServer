@@ -1,11 +1,5 @@
-body.item footer{
-  margin-bottom: 60px;
-}
-
 .shop-item {
-  margin-bottom: 90px;
   overflow: hidden;
-  
   @media (max-width: 484px){
     padding-left: 0;
     padding-right: 0;
@@ -13,8 +7,7 @@ body.item footer{
 
   .shop-content{
     background: #FFFFFF;
-    margin-bottom: 30px;
-
+    padding-bottom: 90px;
   }
 
   .shop-item-image {
@@ -104,10 +97,11 @@ body.item footer{
 
 .item-link-table-container{
   background-color:#f0f0f0;
-  position: absolute;
+  position: fixed;
   bottom: 0;
-  left: 200px;
+  left: 0;
   right: 0;
+  z-index: 200;
   .link-table {
     display: table;
     table-layout: fixed;
