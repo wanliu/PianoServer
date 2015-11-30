@@ -1,4 +1,5 @@
 #= require ./side_menu
+TRANSITION_ENDS = 'webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend'
 
 class @SideMenuManager
   constructor: (@element) ->
@@ -45,19 +46,19 @@ class @SideMenuManager
   _show: () ->
     #@element.css('left', 0)
     @$container.addClass('show-left-bar')
-    @$navbar.addClass('show-left-bar').one 'transitionend', ()=>
+    @$navbar.addClass('show-left-bar').one TRANSITION_ENDS, ()=>
       @isVisible = true
-      @$layout.fadeIn(500)
+      @$layout.fadeIn(300)
 
   _hide: () ->
     #@element.css('left', -250)
-    @$container.removeClass('show-left-bar')
-    @$navbar.removeClass('show-left-bar')
     @$layout.hide()
-    @isVisible = false
+    @$container.removeClass('show-left-bar')
+    @$navbar.removeClass('show-left-bar').one TRANSITION_ENDS, ()=>
+      @isVisible = false
 
   _open: () ->
-    @_show() if $(window).width() <= 768
+    @_show() if $(window).width() <= 768 and !@isVisible
 
   _close: () ->
     @_hide() if $(window).width() <= 768 and @isVisible
