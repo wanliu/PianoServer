@@ -1,47 +1,79 @@
-<h1 class="page-header">设置</h1>
-
-<%= form_tag shop_admin_settings_path(@shop.name),
-  class: "form-horizontal",
-  id: "admin-settings" do |f| %>
-
-
-  <%= fields_for :setting, @settings do |f| %>
-    <!-- 标题 -->
-    <div class="form-group">
-      <label  class="col-sm-2 control-label" >问候语</label>
-      <div class="col-md-5 col-sm-10">
-        <%= f.text_area :greetings, class: 'form-control', rows: 5, save_on_change: true %>
-      </div>
-      <div class="col-md-5 hidden-sm">
-
-        <div class="well">
-          <div class= "chat-item">
-            <%= avatar_image_tag current_user.avatar_url, class: 'chat-item-avatar' %>
-            <h4>
-              <%= current_user.name %>
-              <div class="format-time"></div>
-            </h4>
-            <p><%= Shop::GREETINGS.sample %></p>
+<div class="col-md-12">
+  <h1 class="page-header">设置</h1>
+  <div class="row">
+    <%= form_tag shop_admin_settings_path(@shop.name),class: "form-horizontal",id: "admin-settings" do |f| %>
+      <%= fields_for :setting, @settings do |f| %>
+        <!-- 标题 -->
+        <label  class="col-sm-2 control-label" >问候语</label>
+        <div class="col-md-5 col-sm-10">
+          <%= f.text_area :greetings, class: 'form-control', rows: 5, save_on_change: true %>
+        </div>
+        <div class="col-md-5 hidden-sm">
+          <div class="well">
+            <div class= "chat-item">
+              <%= avatar_image_tag current_user.avatar_url, class: 'chat-item-avatar' %>
+              <h4>
+                <%= current_user.name %>
+                <div class="format-time"></div>
+              </h4>
+              <p><%= Shop::GREETINGS.sample %></p>
+            </div>
           </div>
         </div>
-      </div>
+      <% end %>
+    <% end %>
+  </div>
+  <!-- <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">问候语</h3>
     </div>
-  <% end %>
-<% end %>
+    <div class="panel-body">
+    </div>
+  </div>
+   -->
+
+   <!-- 选择主题 -->
+  <h3 class="page-header">选择商店风格</small></h3>
+  <div class="row choose-shop-theme">
+    <% @theme_list.each do |theme| %>
+      <div class="col-md-3 col-sm-4 col-xs-4">
+        <% _active = @shop.theme == theme[:type] ? 'active' : '' %>
+        <a class="thumbnail theme-btn <%= _active %>" data-theme="<%= theme[:type] %>">
+          <!-- 图片待替换 -->
+          <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMTcxIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDE3MSAxODAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzEwMCV4MTgwCkNyZWF0ZWQgd2l0aCBIb2xkZXIuanMgMi42LjAuCkxlYXJuIG1vcmUgYXQgaHR0cDovL2hvbGRlcmpzLmNvbQooYykgMjAxMi0yMDE1IEl2YW4gTWFsb3BpbnNreSAtIGh0dHA6Ly9pbXNreS5jbwotLT48ZGVmcz48c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwhW0NEQVRBWyNob2xkZXJfMTUxMzgzOWZlMmYgdGV4dCB7IGZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMHB0IH0gXV0+PC9zdHlsZT48L2RlZnM+PGcgaWQ9ImhvbGRlcl8xNTEzODM5ZmUyZiI+PHJlY3Qgd2lkdGg9IjE3MSIgaGVpZ2h0PSIxODAiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSI1OS41NjI1IiB5PSI5NC41Ij4xNzF4MTgwPC90ZXh0PjwvZz48L2c+PC9zdmc+" alt="" style="width: 100%; display: block;">
+          <%= icon(:ok) %>
+        </a>
+        <div class="text-center theme-name"><%= theme[:name] %></div>
+      </div>
+    <% end %>
+  </div>
+</div>
 
 <script type="text/javascript">
   var SaveOnChange = window.SaveOnChange;
-  var saveForm = new SaveOnChange($('#admin-settings'))
+  var saveForm = new SaveOnChange($('#admin-settings'));
+
+  $('.theme-btn').click(function(){
+    var target = $(this);
+    
+    if (target.hasClass('active'))  return;
+
+    var theme = $(this).data('theme');
+    var url = location.pathname + '/change_shop_theme';
+    $.ajax({
+      url: url,
+      type:'PUT',
+      data:{ theme: theme },
+      success: function(data){
+        console.log(data);
+        if (data.success) {
+          $('.theme-btn').removeClass('active');
+          target.addClass('active');
+        } else {
+          console.log(data.msg);
+        }
+      }
+    }); 
+  });
 
 </script>
-
-<!-- <div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title">问候语</h3>
-  </div>
-  <div class="panel-body">
-
-
-  </div>
-</div>
- -->

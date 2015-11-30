@@ -1,0 +1,36 @@
+.chat-item-avatar{
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  width: 50px;
+  height: 50px;
+}
+
+// 选择shop theme 样式
+.choose-shop-theme{
+  .theme-btn{
+    cursor: pointer;
+    position: relative;
+
+    &.active .glyphicon-ok{
+      opacity: 1;
+    }
+    .glyphicon-ok{
+      position: absolute;
+      display: block;
+      top: inherit;
+      right: 0;
+      bottom: 0;
+      font-size: 3em;
+      color: #080;  
+      opacity: 0;
+      transition: all 1s;
+    }
+  }
+  .thumbnail{
+    margin-bottom: 5px;
+  }
+  .theme-name{
+    margin-bottom: 20px;
+  }
+}

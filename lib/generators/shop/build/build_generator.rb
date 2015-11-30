@@ -6,6 +6,7 @@ class Shop::BuildGenerator < Rails::Generators::NamedBase
   class_option :shop_root, type: :string
 
   def initialize(*args)
+    @theme = args[0][1]
     super
 
     unless shop
@@ -14,13 +15,17 @@ class Shop::BuildGenerator < Rails::Generators::NamedBase
   end
 
   def copy_shop_files
-    copy_file 'views/_about.html.liquid', "#{shop_path}/views/_about.html.liquid"
-    copy_file 'views/_index.html.liquid', "#{shop_path}/views/_index.html.liquid"
-    copy_file "views/_header.html.liquid", "#{shop_path}/views/_header.html.liquid"
-    copy_file "views/_category.html.liquid", "#{shop_path}/views/_category.html.liquid"
-    copy_file "views/_item.html.liquid", "#{shop_path}/views/_item.html.liquid"
-    copy_file "views/_shop_category_list.html.liquid", "#{shop_path}/views/_shop_category_list.html.liquid"
-    copy_file "views/items/_show.html.liquid", "#{shop_path}/views/items/_show.html.liquid"
+    begin
+      copy_file "#{theme_path}/_style.html.liquid",       "#{shop_path}/theme_#{theme_path}/views/_style.html.liquid"
+      copy_file "#{theme_path}/_header.html.liquid",      "#{shop_path}/theme_#{theme_path}/views/_header.html.liquid"
+      copy_file "#{theme_path}/_category.html.liquid",    "#{shop_path}/theme_#{theme_path}/views/_category.html.liquid"
+      copy_file "#{theme_path}/_item.html.liquid",        "#{shop_path}/theme_#{theme_path}/views/_item.html.liquid"
+      copy_file "#{theme_path}/shops/_about.html.liquid", "#{shop_path}/theme_#{theme_path}/views/shops/_about.html.liquid"
+      copy_file "#{theme_path}/shops/show.html.liquid",   "#{shop_path}/theme_#{theme_path}/views/shops/show.html.liquid"
+      copy_file "#{theme_path}/shop_categories/_shop_category_list.html.liquid", "#{shop_path}/theme_#{theme_path}/views/shop_categories/_shop_category_list.html.liquid"
+    rescue
+      raise 'copy file error, maby theme thme name was wrong'
+    end
 
     create_shop_category name: 'product_category', title: '商品分类', category_type: 'builtin'
   end
@@ -47,5 +52,13 @@ class Shop::BuildGenerator < Rails::Generators::NamedBase
 
   def shop_path
     File.join(shop_root, file_name)
+  end
+
+  def theme_path
+    if @theme.nil?
+      'theme1'
+    else
+      @theme
+    end
   end
 end
