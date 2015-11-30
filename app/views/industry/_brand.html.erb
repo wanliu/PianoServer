@@ -1,3 +1,5 @@
-<%= link_to list_industry_path(@industry.name, category_id: @category.id, brand_id: brand.id), class: "list-group-item" do %>
+<% classes = ["list-group-item"] %>
+<% classes.push("active") if brands_ids.include?(brand.id.to_s) %>
+<%= link_to shops_industry_path(@industry.name, category_id: @category, brand_id: brand, region_id: region), class: classes, data: { brand_id: brand.id } do %>
   <%= image_tag brand.image.url, size: "64x32" %>&nbsp;&nbsp;<%= brand.title %>
 <% end %>

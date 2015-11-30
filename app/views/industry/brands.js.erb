@@ -13,7 +13,7 @@ if ($brandList.data('category') == id && $brandList.is(":visible")) {
   $(".category-brand-container").hide();
 
   $brandList
-    .html("<%=j render partial: "brands_group", locals: { brands_group: @brands_group, category: @category } %>")
+    .html("<%=j render partial: "brands_group", locals: { brands_group: @brands_group, category: @category, region: @current_region } %>")
     .data('category', id)
     .slideDown(function() {
 

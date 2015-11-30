@@ -3,7 +3,14 @@
   <h4 style= "color: #999"><%= category.title %></h4>
 
   <% category.children.order(:id).each do |category| %>
-    <%= link_to category.title, brands_industry_path(@industry.name, category_id: category.id), class: 'btn btn-link col-xs-4 col-sm-2', remote: true, data: { category: category.id } %>
+    <% classes = ["btn", params[:category_id].to_i == category.id ? "btn-primary" : "btn-link" ] %>
+    <% classes.push("col-xs-4 col-sm-2") %>
+
+    <% if defined? disable_brands %>
+      <%= link_to category.title, url_for(category_id: category.id, region_id: region, brand_id: brand), class: classes, data: { category: category.id } %>
+    <% else %>
+      <%= link_to category.title, brands_industry_path(@industry.name, category_id: category.id, region_id: region), class: classes, remote: true, data: { category: category.id } %>
+    <% end %>
   <% end %>
 
 </div>

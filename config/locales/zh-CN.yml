@@ -288,3 +288,6 @@ zh-CN:
     distributor: 供应商
     wholesaler: 代理商
     manufacturer: 生产商
+  dialogs:
+    close: '关闭'
+    select: '选择'

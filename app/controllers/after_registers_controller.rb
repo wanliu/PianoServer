@@ -153,6 +153,8 @@ class AfterRegistersController < ApplicationController
     @shop.shop_type = @current_user.user_type
     @shop.build_location location_params.merge(skip_validation: true)
     @industry = @current_user.industry
+    @shop.industry = @industry
+    @shop.region_id = location_params[:region_id]
 
     shop_params.delete(:name)
 

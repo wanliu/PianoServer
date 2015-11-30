@@ -1,31 +1,33 @@
-<%= panel class: "shop"  do %>
-  <div class="panel-heading <%= "hidden-xs" if Settings.dev.feature.mobile.mini %>" >
+<div class="col-sm-6 col-md-4 col-xs-12">
+  <%= panel class: "shop"  do %>
+    <div class="panel-heading <%= "hidden-xs" if Settings.dev.feature.mobile.mini %>" >
 
-  </div>
-  <div class="panel-body">
-    <div class="media">
-      <div class="media-left">
-        <%= image_tag shop.logo.url(:avatar), size: "50x50", class: "img-thumbnail" %>
-        <span class="label label-default"><%= t(shop.shop_type, scope: "shop_types") %></span>
-      </div>
-      <div class="media-body">
-        <h4 class="media-heading"><%= shop.title || shop.name %></h4>
-        <p class="address-group">
-          <span class="location"><%= shop.address %></span>
-          <%= link_to map_url(shop.lat, shop.lon, shop.title, shop.description), class: 'map text-muted', target: '_blank' do %>
-            <%= icon 'map-marker' %><span class="distance" lat="<%= shop.lat %>" lon="<%= shop.lon %>"></span>
+    </div>
+    <div class="panel-body">
+      <div class="media">
+        <div class="media-left">
+          <%= image_tag shop.logo.url(:avatar), size: "50x50", class: "img-thumbnail" %>
+          <span class="label label-default"><%= t(shop.shop_type, scope: "shop_types") %></span>
+        </div>
+        <div class="media-body">
+          <h4 class="media-heading"><%= shop.title || shop.name %></h4>
+          <p class="address-group">
+            <span class="location"><%= shop.address %></span>
+            <%= link_to map_url(shop.lat, shop.lon, shop.title, shop.description), class: 'map text-muted', target: '_blank' do %>
+              <%= icon 'map-marker' %><span class="distance" lat="<%= shop.lat %>" lon="<%= shop.lon %>"></span>
+            <% end %>
+          </p>
+          <%= phone_link shop.phone, class: 'button telephone' do %>
+            <%= icon 'phone-alt' %> <%= shop.phone %>
           <% end %>
-        </p>
-        <%= phone_link shop.phone, class: 'button telephone' do %>
-          <%= icon 'phone-alt' %> <%= shop.phone %>
-        <% end %>
-        <%= link_to '#', class: "button chat" do %>
-          <%= icon :comment %> 洽谈
-        <% end %>
-        <%= link_to shop_site_path(shop.name, format: 'html'), class: "button website" do %>
-          <%= icon :home %> 商店
-        <% end %>
+          <%= link_to '#', class: "button chat" do %>
+            <%= icon :comment %> 洽谈
+          <% end %>
+          <%= link_to shop_site_path(shop.name, format: 'html'), class: "button website" do %>
+            <%= icon :home %> 网店
+          <% end %>
+        </div>
       </div>
     </div>
-  </div>
-<% end %>
+  <% end %>
+</div>

@@ -6,15 +6,16 @@ class @LetterRuler extends @HuEvent
   @defaultOptions = {
     letter: '.letter',
     scrollContainer: '.scroll-container',
-    markTemplate: "<div class=\"letter-mark\"></div"
+    markTemplate: "<div class=\"letter-mark\"></div",
+    zIndex: 1032
   }
 
   constructor: (@element, @options = {}) ->
     super(@element)
 
     @options = $.extend({}, @options, LetterRuler.defaultOptions)
-    @options.top ||= 51
-    @options.bottom ||= 0
+    @options.top ?= 51
+    @options.bottom ?= 0
     @target = @options.target;
 
     # @$().hammer().on("pan", @onPanMove)
@@ -67,7 +68,7 @@ class @LetterRuler extends @HuEvent
       bottom: @options.bottom,
       top: @options.top,
       padding: 2,
-      zIndex: 101,
+      zIndex: @options.zIndex,
       width: '1.5em'
     });
   show: () ->
@@ -124,7 +125,7 @@ class @LetterRuler extends @HuEvent
               color: "white",
               textAlign: "center",
               backgroundColor: "#000",
-              zIndex: 102,
+              zIndex: @options.zIndex + 1,
               opacity: 0.3,
               borderRadius: 8
             })

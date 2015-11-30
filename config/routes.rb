@@ -17,7 +17,9 @@ Rails.application.routes.draw do
   resources :industry, only: [ :show ] do
     member do
       get :brands, as: :brands
-      get "list", to: "industry#list", as: :list
+      get "shops", to: "industry#shops", as: :shops
+      get "region/:region_id",  to: "industry#region", as: :region
+      get "categories", to: "industry#categories", as: :categories
     end
   end
   resources :regions, only: [ :index, :update ] do

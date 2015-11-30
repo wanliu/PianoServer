@@ -13,6 +13,7 @@ class Shop < ActiveRecord::Base
 
   belongs_to :location, autosave: true
   belongs_to :owner, class_name: 'User'
+  belongs_to :industry, autosave: true
 
   has_one :shop_category, dependent: :destroy
   has_many :items

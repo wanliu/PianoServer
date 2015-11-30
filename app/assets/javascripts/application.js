@@ -42,6 +42,7 @@
 //= require lib/pastemedia
 //= require lib/ajax_status
 //= require utils/alert-dismiss
+//= require utils/parseUrl
 //= require _common/fileuploader
 //= require _common/qrcode
 //= require _common/local-address
