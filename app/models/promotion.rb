@@ -51,7 +51,14 @@ class Promotion < ActiveResource::Base
   end
 
   def deduct_stocks!(operator, options)
-    # TODO how to deduct stocks of a promotion?
+    source = options[:source]
+
+    WanliuLineItem.create(
+      promotion_id: id,
+      line_item_type: source.class.to_s,
+      line_item_id: source.id,
+      quantity: options[:quantity],
+      status: 1)
   end
 
   def saleable?(amount=1, props={})

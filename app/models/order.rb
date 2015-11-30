@@ -39,11 +39,11 @@ class Order < ActiveRecord::Base
     self.transaction do 
       CartItem.destroy(cart_item_ids) if cart_item_ids.present?
       begin
+        save!
+
         items.each do |item|
           item.deduct_stocks!(operator)
         end
-
-        save!
       rescue ActiveRecord::RecordInvalid => e
         raise ActiveRecord::Rollback
         false

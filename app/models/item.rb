@@ -174,4 +174,24 @@ class Item < ActiveRecord::Base
       current_stock > amount
     end
   end
+
+  def properties_title(props)
+    if props.present?
+      return "" if category.blank?
+
+      inventory_properties = category
+        .with_upper_properties
+        .select { |prop| prop.prop_type == "stock_map" }
+
+      props.map do |key, value|
+        prop = inventory_properties.find do |item|
+          item.name == key
+        end
+
+        "#{prop.title}:#{prop.data["map"][value]}"
+      end.join("；")
+    else
+      ""
+    end
+  end
 end

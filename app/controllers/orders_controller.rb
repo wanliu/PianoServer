@@ -80,6 +80,8 @@ class OrdersController < ApplicationController
     @supplier = @order.supplier 
 
     @total = @order_item.price * @order_item.quantity
+
+    @props = params[:cart_item][:properties]
   end
 
   # 直接购买生成订单

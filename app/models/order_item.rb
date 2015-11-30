@@ -23,7 +23,7 @@ class OrderItem < ActiveRecord::Base
   end
 
   def deduct_stocks!(operator)
-    orderable.deduct_stocks!(operator, quantity: quantity, data: properties)
+    orderable.deduct_stocks!(operator, quantity: quantity, data: properties, source: self)
   end
 
   def avatar_url
@@ -31,6 +31,27 @@ class OrderItem < ActiveRecord::Base
       orderable.image_url
     elsif orderable_type == 'Item'
       orderable.avatar_url
+    end
+  end
+
+  def properties_title(props=properties)
+    if orderable.is_a?(Item) && props.present?
+      category = orderable.category
+      return "" if category.blank?
+
+      inventory_properties = category
+        .with_upper_properties
+        .select { |prop| prop.prop_type == "stock_map" }
+
+      props.map do |key, value|
+        prop = inventory_properties.find do |item|
+          item.name == key
+        end
+
+        "#{prop.title}:#{prop.data["map"][value]}"
+      end.join("；")
+    else
+      ""
     end
   end
 

@@ -10,7 +10,7 @@
     </div>
 
     <div class="properties media-left">
-      <%= item.properties && item.properties.to_a.map { |item| item.join(':') }.join(';') %>
+      <%= item.properties_title(@props) %>
     </div>
 
     <div class="price media-left">

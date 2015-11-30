@@ -43,7 +43,7 @@
         <%= item_form.hidden_field "properties[#{key}]", value: value %>
       <% end %>
       <ul class="list-group order-items">
-        <%= render partial: "buy_now_item", locals: { item: @order_item, supplier: @supplier, f: item_form } %>
+        <%= render partial: "buy_now_item", locals: { item: @order_item, supplier: @supplier, f: item_form, props: @props } %>
       </ul>
     <% end %>
     <div class="panel-footer">
