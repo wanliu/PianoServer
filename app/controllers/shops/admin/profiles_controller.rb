@@ -4,7 +4,7 @@ class Shops::Admin::ProfilesController < Shops::Admin::BaseController
 
   def update
     if @shop.update(shop_profile_params)
-      expire_page controller: 'shops', action: 'show', id: @shop.name
+      expire_page shop_site_path(@shop.name)
       redirect_to shop_admin_profile_path(@shop.name)
     else
       flash.now[:error] = @shop.errors.full_messages.join(', ')
@@ -14,7 +14,7 @@ class Shops::Admin::ProfilesController < Shops::Admin::BaseController
 
   def upload_shop_logo
     @shop.update_attribute("logo", params[:file] || params[:qqfile])
-    expire_page controller: 'shops', action: 'show', id: @shop.name
+    expire_page shop_site_path(@shop.name)
     render json: {success: true, url: @shop.logo.url(:cover)}, status: :ok, content_type: "text/html"
   end
 
