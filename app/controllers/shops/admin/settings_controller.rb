@@ -16,6 +16,17 @@ class Shops::Admin::SettingsController < Shops::Admin::BaseController
     render nothing: true
   end
 
+  def upload_shop_poster
+    uploader = ImageUploader.new(@shop, :poster)
+    uploader.store! params[:file]
+
+    if @shop.update_attribute('poster', uploader.url)
+      render json: { success: true, url: uploader.url, filename: uploader.filename }
+    else
+      render json: { success: false }
+    end
+  end
+
   def change_shop_theme
     begin
       shop = Shop.find_by(name: params[:shop_id])

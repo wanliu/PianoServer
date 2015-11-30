@@ -1,7 +1,7 @@
 class ShopDrop < Liquid::Rails::Drop
   include ImageUrl
 
-  attributes :id, :name, :title, :description, :address, :link, :hits, :owner_id
+  attributes :id, :name, :title, :description, :address, :link, :hits, :owner_id, :poster
   image_mount :logo
 
 
@@ -16,4 +16,5 @@ class ShopDrop < Liquid::Rails::Drop
   def week_hits
     @object.hits(1.week.ago)
   end
+
 end
