@@ -106,7 +106,7 @@
         <% else %>
           <% if Settings.dev.feature.purchase && promotion.saleable? %>
             <div class="contact-button add-to-cart" data-cartable-type="Promotion" data-cartable-id="<%= promotion.id %>">加入购物车</div>
-            <div class="buy-now contact-button" data-cartable-type="Promotion" data-cartable-id="<%= promotion.id %>">购买</div>
+            <div class="buy-now js-buy-now contact-button" data-cartable-type="Promotion" data-cartable-id="<%= promotion.id %>">购买</div>
           <% end %>
 
           <!-- <a class="chat contact-button" href="javascript:void(0);">洽谈</a> -->

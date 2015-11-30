@@ -76,9 +76,12 @@
     $('.cart-item').on('click', '.btn-minus', function (event) {
       var quantityInput = $(this).parents('.quantity').find('input');
       var quantity = 1 * $(quantityInput).val();
-      $(quantityInput).val(quantity - 1);
+      var newQuantity = quantity - 1;
 
-      changeQuantity(quantityInput); 
+      if (1 <= newQuantity) {
+        $(quantityInput).val(newQuantity);
+        changeQuantity(quantityInput);
+      }
     });
 
     // 通过增加按钮，修改所购商品数量

@@ -28,7 +28,7 @@
       <div class="form-group purchase-buttons col-sm-12" >
         <%= f.button "加入购物车", class: 'btn btn-info btn-lg add-to-cart', disabled: "disabled", 
           "data-cartable-type" => 'Item', "data-cartable-id" => @item.id, type: 'button' %>
-        <%= f.button "购买", class: 'btn btn-danger btn-lg buy-now', disabled: "disabled", 
+        <%= f.button "购买", class: 'btn btn-danger btn-lg buy-now js-buy-now', disabled: "disabled", 
           "data-cartable-type" => 'Item', "data-cartable-id" => @item.id, type: 'button' %>
       </div>
 
@@ -41,9 +41,6 @@
     <% end %>
   <% end %>
 </div>
-
-<%= form_tag "#", id: 'buy-now-form' do %>
-<% end %>
 
 <script type="text/javascript">
   // $(".sale_form").on('submit', function(e) {
@@ -66,25 +63,6 @@
   });
 
   var fullfilledKeys = <%= stocks_with_index.values[0][:data].try(:keys).to_json.html_safe %>;
-
-  $('.buy-now').click(function (event) {
-    var cartableType = $(this).data('cartableType');
-    var cartableId = $(this).data('cartableId');
-    var properties = ($(this).data('properties') || {});
-    var quantity = $('.cart_item_quantity').val() || 1;
-
-    var queryString = $.param({
-      cart_item: {
-        orderable_type: cartableType,
-        orderable_id: cartableId,
-        properties: properties,
-        quantity: quantity
-      }
-    });
-
-    $('#buy-now-form').attr('action', '/orders/buy_now_confirm?' + queryString)
-    $('#buy-now-form').submit();
-  });
 
   // $(".add-to-cart").click(function(e) {
   //   $form = $(e.target).parents("form")
