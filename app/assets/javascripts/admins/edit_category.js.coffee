@@ -63,9 +63,10 @@ class @EditShopCategory extends @HuEvent
       .select()
 
   onClick: (e) ->
-    @enterAnimation(e,()=>
-      Turbolinks.visit(@url)
-    )
+    # @enterAnimation(e,()=>
+    #   Turbolinks.visit(@url)
+    # )
+    Turbolinks.visit(@url)
 
   enterAnimation: (e,fn) ->
     if $(e.target).is('.thumbnail>img')
