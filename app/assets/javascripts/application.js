@@ -55,6 +55,7 @@
 //= require lib/jquery.hammer
 //= require_tree ./application
 //= require_tree ./chats
+//= require_tree ./carts
 //= require_tree ./orders
 //= require_tree ./promotions
 //= require_tree ./utils

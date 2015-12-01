@@ -190,6 +190,8 @@ Rails.application.routes.draw do
 
   resources :items, concerns: [ :chatable ]
 
+  resources :cart_items, only: [:index, :show, :create, :update, :destroy]
+
   resources :categories
   resources :units, only: [:index, :show]
 

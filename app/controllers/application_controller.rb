@@ -16,11 +16,11 @@ class ApplicationController < ActionController::Base
   before_action :set_meta_user_data
   before_action :current_subject
   before_action :current_industry
-  before_action :set_cart
+  before_action :set_current_cart
   before_action :prepare_system_view_path
   before_action :set_locale
 
-  helper_method :current_anonymous_or_user, :anonymous?
+  helper_method :current_anonymous_or_user, :anonymous?, :current_cart
   rescue_from ActionController::RoutingError, :with => :render_404
   rescue_from ActiveResource::ResourceNotFound, :with => :render_404
 
@@ -49,6 +49,10 @@ class ApplicationController < ActionController::Base
 
   def anonymous?
     current_anonymous_or_user.id < 0
+  end
+
+  def current_cart
+    @current_cart ||= current_anonymous_or_user.cart
   end
 
   def configure_permitted_parameters
@@ -96,8 +100,8 @@ class ApplicationController < ActionController::Base
     @industry ||= @current_user.try(:industry)
   end
 
-  def set_cart
-    @cart = current_anonymous_or_user.cart
+  def set_current_cart
+    @current_cart ||= current_anonymous_or_user.cart
   end
 
   def prepare_system_view_path

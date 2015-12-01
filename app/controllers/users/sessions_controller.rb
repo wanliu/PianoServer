@@ -8,6 +8,8 @@ class Users::SessionsController < Devise::SessionsController
   after_action :after_login, :only => :create
 
   layout "sign"
+
+  after_action :combine_anonymous_cart_items, only: [:create]
   # skip_before_action :verify_signed_out_user, only: :destroy
 
   respond_to :json, :html
@@ -90,4 +92,19 @@ class Users::SessionsController < Devise::SessionsController
   # def destroy
   #   super
   # end
+
+  private
+
+  def combine_anonymous_cart_items
+    return unless session[:anonymous].present?
+    
+    anonymous_id = session[:anonymous]
+    anonymous_cart = Cart.find_by(user_id: anonymous_id)
+
+    if anonymous_cart.present?
+      resource.cart.combine anonymous_cart
+      anonymous_cart.items(true)
+      anonymous_cart.destroy
+    end
+  end
 end

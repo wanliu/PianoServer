@@ -90,15 +90,15 @@
         </div>
       <% end %>
 
-      <% if Settings.dev.feature.purchase %>
-        <a class="buy-button">
-          购买
-        </a>
-      <% end %>
-
       <% if @shop.owner_id == current_user.id %>
         <div class="contact-button chat">您的店铺</div>
       <% else %>
+        <% if Settings.dev.feature.purchase %>
+          <a class="buy-button add-to-cart" href="#" data-cartable-type="Item" data-cartable-id="<%= @item.id %>">
+            购买
+          </a>
+        <% end %>
+
         <%= button_to '洽谈', item_chats_path(@item,  shop_id: @shop.id), form_class: 'contact-button chat' %>
       <% end %>
     </div>

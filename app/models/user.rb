@@ -22,6 +22,8 @@ class User < ActiveRecord::Base
   has_many :chats, foreign_key: 'owner_id'
   has_many :locations
 
+  has_one :cart
+
   has_many :followers, as: :followable, class_name: 'Follow'
   has_many :followables, as: :follower, class_name: 'Follow'
 
@@ -109,7 +111,15 @@ class User < ActiveRecord::Base
   end
 
   def cart
-    super || Cart.new(user_id: id)
+    Cart.find_by(user_id: id) || create_cart
+  end
+
+  def sale_mode
+    if [:distributor, :wholesaler, :manufacturer].include? user_type
+      "wholesale"
+    else
+      "retail"
+    end
   end
 
   private
