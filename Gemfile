@@ -65,6 +65,7 @@ gem 'elasticsearch-model'
 gem 'elasticsearch-rails'
 gem 'elasticsearch-persistence'
 gem 'actionpack-page_caching'
+gem 'redis-rails'
 # gem 'active_model_serializers', github: 'rails-api/active_model_serializers', tag: 'v0.10.0.rc2'
 
 # 中间件
@@ -96,7 +97,7 @@ gem 'sidekiq'
 gem 'china_city'
 gem 'table_cloth'
 
-gem 'oneapm_rpm'
+gem 'oneapm_rpm' if ENV['USE_RPM']
 
 gem 'carrierwave', github: 'hysios/carrierwave', branch: 'mount-multiple'
 gem 'carrierwave-upyun', "0.2.1"
@@ -104,8 +105,8 @@ gem 'carrierwave-upyun', "0.2.1"
 # gem 'bcrypt', '~> 3.1.7'
 
 # Use Unicorn as the app server
-# gem 'unicorn'
-
+gem 'unicorn'
+# gem 'puma'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 

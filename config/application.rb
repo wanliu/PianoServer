@@ -47,7 +47,7 @@ module PianoServer
       .map { |_p| Rails.root.join('app', _p) }
 
     # config.paths['public'].unshift "#{Rails.root.to_s}/public/deploy"
-    config.action_controller.page_cache_directory = "#{Rails.root.to_s}/public/deploy"
+    # config.action_controller.page_cache_directory = "#{Rails.root.to_s}/public/deploy"
 
   end
 end
