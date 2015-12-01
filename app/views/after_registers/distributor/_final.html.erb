@@ -1,7 +1,12 @@
+<% content_for :navbar_title do %>
+  完成
+<% end %>
+
+
 <div class="col-sm-12">
-<div class="page-header">
-  <h1>快速开店<small> 完成</small></h1>
-</div>
+  <div class="page-header hidden-xs">
+    <h1>快速开店<small> 完成</small></h1>
+  </div>
   <% if @job.status == "done" %>
     <div class="jumbotron">
       <h1>恭喜你商店已创建成功</h1>

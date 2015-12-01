@@ -1,5 +1,5 @@
 <%= panel do %>
-  <%= link_to after_register_path(:distributor, industry: industry.name, step: :industry), method: :put do %>
+  <%= link_to after_register_path(@user_type, industry: industry.name, step: :industry), method: :put do %>
     <div class="media">
       <div class="media-left media-middle">
         <%= image_tag industry.image.url, size: "100" %>

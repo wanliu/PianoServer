@@ -1,5 +1,9 @@
+<% content_for :navbar_title do %>
+  快速开店 选择经营品类(3/4)
+<% end %>
+
 <div class="col-sm-12">
-<div class="page-header">
+<div class="page-header hidden-xs">
   <h1>快速开店<small> 请选择你的经营品类</small></h1>
 </div>
 
@@ -8,8 +12,13 @@
   <% if @industry.category %>
     <% @industry.category.children.order(:id).each do |category| %>
       <%= link_to filter_brands_path(category_id: category.id ), data: {id: category.id}  do %>
-        <div class="col-sm-3">
-          <%= panel category.title %>
+        <div class="col-sm-3 col-xs-6">
+          <%= panel do %>
+            <div class="panel-body">
+              <%= category.title %>
+            </div>
+
+          <% end %>
         </div>
       <% end %>
     <% end %>
@@ -34,31 +43,115 @@
       return context[k];
     });
   }
+  var _template = "<a href=\"/brands/$id\"  data-id=\"$id\" class=\"brand-link\" >" +
+                  "  <div class=\"brand\">" +
+                  "    $title" +
+                  "  </div>" +
+                  "</a>";
+
+  var _cate_template = '<button type="button" class="btn btn-default" data-toggle="button" aria-pressed="false" autocomplete="off" data-id="$id">' +
+    '$title' +
+    '</button>';
+
 
   $(".category-list>a").click(function(e) {
     e.preventDefault();
-    var _template = "<a href=\"/brands/$id\"  data-id=\"$id\" class=\"brand-link\" >" +
-                    "  <div class=\"brand\">" +
-                    "    $title" +
-                    "  </div>" +
-                    "</a>";
 
     var category_id = $(this).data('id');
     var url = $(this).attr('href');
     var self = this;
 
+    activeSelect(this, '.panel', function() {
+      var top = $(self).find('.panel').offset().top;
+      var next = self, nextTop;
+      $('.categories').remove();
+
+      while($(next).next().length > 0) {
+        nextTop = $(next).next().find('.panel').offset().top;
+        if (top < nextTop) {
+          break;
+        }
+        next = $(next).next();
+      }
+
+      var children_template =
+        '<div class="col-xs-12 categories" >' +
+          '<div class="panel panel-default">' +
+            '<div class="panel-heading">二级分类</div>' +
+            '<div class="panel-body children-list"></div>' +
+          '</div>' +
+        '</div>';
+
+      $(next).after(children_template);
+    });
+
     $.ajax({
       url: url
     }).then(function(resp) {
-      var results = resp['results'];
-      if (results.length > 0) {
+      var brands = resp['brands'];
+      var categories = resp['categories'];
+
+      if (brands.length > 0) {
         $('.brand-list').data('category_id', category_id).empty().hide();
       } else {
         $('.brand-list').data('category_id', category_id).empty().append("<div class=\"well text-center text-muted\"><h3>没有查找到下级数据</h3></div>")
       }
 
-      for (var i in results) {
-        var result = results[i];
+      if (categories.length > 0) {
+        for (var i in categories) {
+          var category = categories[i];
+          $('.children-list').append(template(_cate_template, category));
+        }
+      }
+
+      for (var i in brands) {
+        var result = brands[i];
+        $('.brand-list').append(template(_template, result));
+      }
+
+      $brandList = $('.brand-list');
+
+      var brands = $(self).data('brands') || [];
+      for (var i in brands) {
+        var id = brands[i];
+        var $brand = $brandList.find("[data-id=\"" + id + "\"]");
+        showSelect($brand);
+      }
+
+      $('.brand-list').fadeIn();
+      window.adjustContainer();
+    });
+  });
+
+  $(".category-list").on('click', '.children-list button', function(e) {
+    e.preventDefault();
+
+    var category = $(this).data('id')
+    var url = "<%= filter_brands_path %>";
+    var child_ids = $(this).parent().find("button.active").map(function(i, elem) { return $(elem).data('id'); }).toArray();
+    if ($(this).hasClass('active')) { // remove
+      child_ids = child_ids.splice(child_ids.indexOf(category), 1);
+    } else {
+      child_ids.push(category);
+    }
+
+    $.ajax({
+      url: url + '?categories_ids=' + child_ids.join(',')
+    }).then(function(resp) {
+      var brands = resp['brands'];
+      var categories = resp['categories'];
+
+      // if (categories.length > 0) {
+      //   for (var i in categories) {
+      //     var category = categories[i];
+      //     $('.children-list').append(template(_cate_template, category));
+      //   }
+      // }
+
+      $('.brand-list').empty().hide();
+
+      for (var i in brands) {
+        var result = brands[i];
         $('.brand-list').append(template(_template, result));
       }
 
@@ -147,8 +240,7 @@
 
   }
 
-  function showSelect(elem) {
-    var $icon = $("<span class=\"glyphicon glyphicon-ok\"></span>");
+  function makeMark(){
     var $mark = $("<div class=\"mark\" />");
 
     $mark.css({
@@ -161,21 +253,72 @@
       backgroundColor: '#329E06',
       color: 'white'
     });
+    return $mark;
+  }
 
+  function makeIcon() {
+    var $icon = $("<span class=\"glyphicon glyphicon-ok\"></span>");
     $icon.css({
       position: 'absolute',
       right: 0,
       color: 'white'
     });
 
+    return $icon;
+  }
+
+  function activeSelect(elem, target, fn) {
+    var $mark = makeMark()
+    var $icon = makeIcon();
+
+    var other = $(elem).parent().find('>a').toArray();
+    deactiveSelect(other);
+
     $(elem)
-      .find('.brand')
+      .find(target || '.panel')
+      // .append($mark)
+      // .append($icon)
+      .css({
+        overflow: 'hidden',
+        position: 'relative',
+        // backgroundColor: '#99D8C1',
+        borderColor: '#337ab7',
+        color: '#101010'
+      });
+
+    if (typeof fn === 'function') {
+      fn();
+    }
+  }
+
+  function deactiveSelect(elems, target) {
+    target = target || '.panel';
+
+    Array.prototype.map.call(elems, function(elem) {
+      $(elem).find(target + '>.mark').remove();
+      $(elem).find(target + '>.glyphicon').remove();
+      $(elem).find(target)
+        .css('backgroundColor', '#fff')
+        .css('borderColor', '#ddd')
+        .css('color', 'inherit');
+    });
+  }
+
+  function showSelect(elem, target) {
+    var $mark = makeMark()
+    var $icon = makeIcon();
+
+    $(elem)
+      .find(target || '.brand')
       .append($mark)
       .append($icon)
-      .css('position', 'relative')
-      .css('backgroundColor', '#99D8C1')
-      .css('borderColor', '#02480E')
-      .css('color', '#101010');
+      .css({
+        overflow: 'hidden',
+        position: 'relative',
+        backgroundColor: '#99D8C1',
+        borderColor: '#02480E',
+        color: '#101010'
+      });
   }
 
   function hideSelect(elem) {
@@ -185,4 +328,14 @@
       .css('backgroundColor', 'transparent')
       .css('color', 'inherit');
   }
+
+  function resize() {
+    if ($(window).width() <= 768) {
+      $(".adjust-container").attr("adjust-step", 120);
+    } else {
+      $(".adjust-container").attr("adjust-step", 170);
+    }
+  }
+  resize();
+  $(window).resize(resize)
 </script>

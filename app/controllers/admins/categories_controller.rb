@@ -5,12 +5,12 @@ class Admins::CategoriesController < Admins::BaseController
 
   respond_to :js, only: [:new_property]
 
-  def index
+  # def index
 
-    render json: {
-      results: Category.search(params[:q].tr('/', '')).records.map {|category| {id: category.id, text: category.title }}
-    }
-  end
+  #   render json: {
+  #     results: Category.search(params[:q].tr('/', '')).records.map {|category| {id: category.id, text: category.title }}
+  #   }
+  # end
 
 
   def show

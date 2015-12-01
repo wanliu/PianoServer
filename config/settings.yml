@@ -32,21 +32,30 @@ elasticsearch:
   index_name: products_production
 assets:
   gray_image: "data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+  avatar_iamge: "http://wanliu-piano.b0.upaiyun.com/uploads/shop/logo/1/default_avatar.gif"
+shop:
+  import:
+    sale: true
 dev:
   feature:
     weixin: true
     camera: true
     shop:
       website: true
+    mobile:
+      mini: true
     purchase: true
     cart: true
     favorites: true
     qrcode: true
     linkmen: true
+    location: true
     order:
       chat: true
     user:
       sign_in: true
+    industry: true
+    weixin: true
 sites:
   root: .sites
   shops:

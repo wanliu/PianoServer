@@ -42,6 +42,7 @@
 //= require lib/pastemedia
 //= require lib/ajax_status
 //= require utils/alert-dismiss
+//= require utils/parseUrl
 //= require _common/fileuploader
 //= require _common/qrcode
 //= require _common/local-address
@@ -51,6 +52,7 @@
 //= require _common/adjust_container
 //= require _common/side_menu
 //= require _common/side_menu_manager
+//= require lib/jquery.hammer
 //= require_tree ./application
 //= require_tree ./chats
 //= require_tree ./carts

@@ -1,6 +1,10 @@
+<% content_for :navbar_title do %>
+  快速开店 导入商品清单(4/4)
+<% end %>
+
 <div class="col-sm-12">
-<div class="page-header">
-  <h1>快速开店<small> 选择你的商品</small></h1>
+<div class="page-header hidden-xs">
+  <h1>快速开店<small> 导入商品清单</small></h1>
 </div>
 
 <%= form_for @shop, url: after_register_path(:distributor, step: :product), method: :put do |f| %>

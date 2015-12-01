@@ -1,0 +1,18 @@
+<% content_for :navbar_title do %>
+  快速开店 行业选择(1/4)
+<% end %>
+
+<div class="col-sm-12">
+<div class="page-header hidden-xs">
+  <h1>快速开店<small> 行业选择</small></h1>
+</div>
+
+
+<%= panel_row column_class: 'col-sm', class: 'margin20' do %>
+  <%= render "industry", collection: Industry.all %>
+<% end %>
+<div class="pull-right">
+  <%= button "以后再说", after_register_path(@user_type), context: :default, class: 'btn-lg' %>
+  <%= button "下一步", after_register_path(@user_type), context: :primary, class: 'btn-lg' %>
+</div>
+</div>

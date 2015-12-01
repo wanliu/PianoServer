@@ -24,8 +24,18 @@
   route = '<%= shop_admin_settings_path(@shop.name) %>';
   menu.insertGroup(route, '设置');
 
+
   menu.insertGroup('about', '关于我们');
-  menu.insertGroup('qrode', '二维码', { qrode: true });
+  <% if Settings.dev.feature.industry %>
+    <% if @industry %>
+      route = '<%= industry_path(@industry.name) %>';
+      menu.insertGroup(route, '行业');
+    <% end %>
+  <% end %>
+
+  <% if Settings.dev.feature.qrcode %>
+    menu.insertGroup('qrode', '二维码', { qrode: true });
+  <% end %>
 
   menu.generateMenuDOMFragment();
   manager.addMenu(menu);

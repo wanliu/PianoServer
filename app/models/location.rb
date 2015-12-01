@@ -7,16 +7,20 @@ class Location < ActiveRecord::Base
   VALID_PHONE_REGEX = /\A((\d{3,4}-\d{7,8}(-\d+)?)|((\+?86)?1\d{10}))\z/
   VALID_CONTACT_REGEX = /([\u4e00-\u9fa5]|[a-zA-Z0-9_]|[\uFF10-\uFF19])+/
 
-  validates :contact, presence: true, length: { maximum: 30 }, format: { with: VALID_CONTACT_REGEX, :allow_blank => true }, on: :create
-  validates :road, presence: true, length: { maximum: 140 }, on: :create
-  validates :contact_phone, presence: true, format: { with: VALID_PHONE_REGEX, :allow_blank => true }, on: :create
+
+  validates :contact, presence: true, length: { maximum: 30 }, format: { with: VALID_CONTACT_REGEX, :allow_blank => true }, on: :create, unless: :skip_validation
+  validates :road, presence: true, length: { maximum: 140 }, on: :create, unless: :skip_validation
+  validates :contact_phone, presence: true, format: { with: VALID_PHONE_REGEX, :allow_blank => true }, on: :create, unless: :skip_validation
   validates :province_id, presence: true, on: :create
   validates :city_id, presence: true, on: :create
   validates :region_id, presence: true, on: :create
 
-  validate :too_many_record
+  validate :too_many_record, unless: :skip_validation
+
+  belongs_to :region, foreign_key: :region_id, primary_key: :city_id
 
   attr_accessor :chat_id, :intention_id
+  attr_accessor :skip_validation
 
   def to_s
     %(#{contact}, #{province_name}#{city_name}#{region_name}#{road}, #{contact_phone})
@@ -39,7 +43,7 @@ class Location < ActiveRecord::Base
   end
 
   def too_many_record
-    locations = user.locations
+    locations = user.try(:locations) || []
 
     if locations.length >= 5
       errors.add(:amount, '已达到上限')

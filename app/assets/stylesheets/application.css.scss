@@ -26,6 +26,7 @@
  *= require _common/brand
  *= require _common/cart
  *= require _common/layout
+ *= require common
  *= require lib/range
  *= require_tree ./application
  *= require_tree ./chats
@@ -63,6 +64,22 @@ body {
 
 .nav > li > a.navbar-title {
   padding-left: 0px;
+}
+
+@media (max-width: 484px) {
+  .container {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .no-padding {
+    margin-left: -10px;
+    margin-right: -11px;
+  }
+
+  .margin20 {
+    margin-top: 20px;
+  }
 }
 
 @media (min-width: 768px) {
@@ -129,19 +146,12 @@ body {
   }
 }
 
-
-
 .navbar-collapse .navbar-nav{
   max-height: 50px;
 }
 
-.nav-avatar {
-  padding-top: 10px!important;
-
-  img {
-    width: 30px;
-    height: 30px;
-  }
+.menu-margin {
+  margin-right: -15px;
 }
 
 .ie-warning {

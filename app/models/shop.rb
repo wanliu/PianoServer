@@ -5,24 +5,30 @@ class Shop < ActiveRecord::Base
   include PublicActivity::Model
   tracked
 
+  enum shop_type: [:retail, :distributor, :wholesaler, :manufacturer ]
+
   html_fragment :description, :scrub => :prune  # scrubs `body` using the :prune scrubber
 
   acts_as_punchable
 
-  belongs_to :location
+  belongs_to :location, autosave: true
   belongs_to :owner, class_name: 'User'
+  belongs_to :industry, autosave: true
 
-  has_one :shop_category
+  has_one :shop_category, dependent: :destroy
   has_many :items
   has_many :members, class_name: "User", foreign_key: 'shop_id'
 
   validates :title, :phone, :name, presence: true
   validates :name, uniqueness: true
+  validates :location, presence: { message: '请选择有效城市' }
 
   if Settings.after_registers.shop.validates == "strict"
     validates :description, length: { minimum: 4 }
     validates :address, presence: true
   end
+
+  # delegate :region, to: :location, allow_nil: true
 
   before_validation :default_values
 
@@ -36,6 +42,14 @@ class Shop < ActiveRecord::Base
 
   def logo_url_cover
     logo.url(:cover)
+  end
+
+  def region
+    if region_id.blank?
+      location.try :region
+    else
+      Region.find_by(city_id: region_id)
+    end
   end
 
   protected

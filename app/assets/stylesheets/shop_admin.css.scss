@@ -11,6 +11,7 @@
  *= require _common/layout
  *= require lib/tablesaw
  *= require lib/range
+ *= require common
  *= require ./chats/chat-item
  *= require_tree ./shop_admin
  *= require_self
@@ -21,6 +22,13 @@
 
 body[module="signup"] {
   background: #ddd;
+}
+
+
+body.shop_admin {
+  .main-container {
+    background: white;
+  }
 }
 
 .navbar-left > li {

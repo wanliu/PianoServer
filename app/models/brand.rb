@@ -18,16 +18,20 @@ class Brand < ActiveRecord::Base
   attr_reader :title
   attr_accessor :total
 
-  def self.with_category(category_id)
-    ids = Category.find(category_id).descendants.pluck :id
-    query = {
+  def self.with_category(category_id, query = {})
+    ids = [ category_id, *Category.find(category_id).descendants.pluck(:id) ]
+    with_categories(ids, query)
+  end
+
+  def self.with_categories(categories_ids, query = {})
+    query = query.reverse_merge({
       query: {
         filtered: {
           filter: {
             bool: {
               must: [{
                 terms: {
-                  category_id: ids,
+                  category_id: categories_ids,
                   execution: "bool",
                   _cache: true
                 },
@@ -43,7 +47,7 @@ class Brand < ActiveRecord::Base
         }
       },
       aggs: { all_brands: { terms: {field: "brand_id", size: 100}}}
-    }
+    })
 
     results = Product.search(query)
     buckets = results.response.aggregations.all_brands.buckets
