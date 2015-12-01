@@ -111,15 +111,22 @@ class ApplicationController < ActionController::Base
 
   def authenticate_region!
     if cookies[:region_id].blank?
-      case current_anonymous_or_user.user_type
-      when "consumer"
-        return redirect_to new_user_session_path # unless request_device?(:weixin)
-        @region_select = true
-      when "retail", "distributor"
-        @region = @current_user.join_shop.region
-        # @regions = get_regions(@region)
-      when NilClass
-        return redirect_to new_user_session_path
+      if anonymous?
+        if request_device?(:weixin)
+          return redirect_to authorize_weixin_path
+        else
+          return redirect_to new_user_session_path
+        end
+      else
+        case @current_user.user_type
+        when "consumer"
+          redirect_to root_path
+        when "retail", "distributor"
+          @region = @current_user.join_shop.region
+          # @regions = get_regions(@region)
+        when NilClass
+          redirect_to root_path
+        end
       end
     else
       @region = Region.where(city_id: cookies[:region_id]).first

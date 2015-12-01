@@ -1,7 +1,9 @@
 <% content_for :body do %>
   <div class="letter-ruler"></div>
 <% end %>
+
 <div class="col-sm-12 industry-category" >
+
 <div class="page-header">
   <div class="btn-group pull-right">
     <% @icon = capture do %>
@@ -23,10 +25,6 @@
   <%= panel do %>
   <div class="panel-heading">
     <div class="row">
-<!--       <div class="col-xs-6 col-sm-6">
-        <%#= select "current_region", "region", options_from_collection_for_select(@regions, 'id', 'title'), {},class: 'form-control' %>
-      </div>
- -->
       <div class="col-xs-12 col-sm-6">
         <div class="btn-group  btn-group-justified">
           <% if @next_region.present? %>
