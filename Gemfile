@@ -66,6 +66,8 @@ gem 'elasticsearch-rails'
 gem 'elasticsearch-persistence'
 gem 'actionpack-page_caching'
 gem 'redis-rails'
+gem 'oj'
+gem 'oj_mimic_json'
 # gem 'active_model_serializers', github: 'rails-api/active_model_serializers', tag: 'v0.10.0.rc2'
 
 # 中间件

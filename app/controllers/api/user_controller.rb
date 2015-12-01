@@ -1,3 +1,5 @@
+# require 'oj'
+
 class Api::UserController < Api::BaseController
   include AnonymousController
   # before_action :authenticate_user # only: [:index]
@@ -7,7 +9,33 @@ class Api::UserController < Api::BaseController
 
   def index
     @current_user ||= warden.authenticate(scope: :user)
-    # logger.info warden.inspect
-    render json: current_anonymous_or_user
+    json =
+      if @current_user
+        @current_user
+      elsif session[:anonymous]
+        anonymous(session[:anonymous])
+      else
+        id = (-Time.now.to_i + rand(10000))
+        session[:anonymous] = id
+        anonymous(id)
+      end
+
+    logger.info json[:id]
+    render json: json
+  end
+
+  def anonymous(id)
+    {
+      id: id,
+      email: '',
+      mobile: '',
+      # created_at: Time.now,
+      # updated_at: Time.now,
+      image: {
+        url: Settings.assets.avatar_image
+      },
+      nickname: "游客#{id.abs}",
+      user_type: "consumer"
+    }
   end
 end
