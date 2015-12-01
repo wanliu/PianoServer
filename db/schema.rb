@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151126080137) do
+ActiveRecord::Schema.define(version: 20151128073353) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -216,8 +216,8 @@ ActiveRecord::Schema.define(version: 20151126080137) do
     t.decimal  "price",            precision: 10, scale: 2
     t.integer  "inventory"
     t.boolean  "on_sale",                                   default: true
-    t.datetime "created_at",                                               null: false
-    t.datetime "updated_at",                                               null: false
+    t.datetime "created_at",                                                null: false
+    t.datetime "updated_at",                                                null: false
     t.integer  "sid"
     t.string   "title"
     t.integer  "category_id"
@@ -228,6 +228,7 @@ ActiveRecord::Schema.define(version: 20151126080137) do
     t.jsonb    "properties",                                default: {}
     t.text     "description"
     t.decimal  "current_stock",    precision: 10, scale: 2
+    t.boolean  "abandom",                                   default: false, null: false
   end
 
   create_table "jobs", force: :cascade do |t|

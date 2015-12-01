@@ -2,6 +2,4 @@
   <%= @shop.name %>
 <% end %>
 
-<% content_for :module, :shop %>
-
-<%= shop_render :shop_category_list %>
+<%= render partial: "shop_category_list", with: @theme %>

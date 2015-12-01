@@ -1,10 +1,22 @@
 
-<div class="cate-items-list clearfix">
+<div class="container">
+<div class="cate-items-list clearfix col-md-12">
   {% include "header" %}
   {% comment %}{{ shop.description }}{% endcomment %}
-  <div class="title ">
-    <span>本店经营系列</span>
+  <div class='title'>
+    {% title_chain shop shop_category %}
+    <div class="return-btn">
+      {{ '返回上级' | shop_link_to: shop, shop_category.parent.link }}
+    </div>
   </div>
+
+  {% if shop_category.is_leaf %}
+    <div class="shop-items">
+      <div class="row">
+        {% include "item" for items %}
+      </div>
+    </div>
+  {% endif %}
 
   {% paginate shop_categories by 12 %}
     <div class="shop-categories">
@@ -12,7 +24,6 @@
         {% include "category" for paginate.collection %}
       </div>
     </div>
-
     <nav class="text-center">
       <ul class="pagination">
         {% for part in paginate.parts %}
@@ -29,4 +40,5 @@
       </ul>
     </nav>
   {% endpaginate %}
+</div>
 </div>

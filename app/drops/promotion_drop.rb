@@ -10,4 +10,8 @@ class PromotionDrop < Liquid::Rails::Drop
   def shop_title
     object.shop.try(:title)
   end
+
+  def link_shop_html
+    shop_name + '.html'
+  end
 end

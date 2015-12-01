@@ -7,6 +7,7 @@ class Shops::Admin::BaseController < ApplicationController
 
   def set_shop
     @shop = Shop.find_by name: params[:shop_id]
+    content_for :module, :shop_admin
   end
 
   def moudle

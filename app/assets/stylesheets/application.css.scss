@@ -44,13 +44,6 @@ body {
   background-image: image-url('bj.jpg');
 }
 
-footer {
-  // position: fixed;
-  bottom: 0;
-  text-align: center;
-  word-break: break-word;
-}
-
 .navbar-brand {
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -106,6 +99,7 @@ footer {
   .navbar-responsive-collapse.collapse.in {
     overflow: visible;
     .navbar-right {
+      overflow: hidden;
       position: absolute;
       right: 20px;
       width: 150px;

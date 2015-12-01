@@ -30,7 +30,9 @@
           "overflow": "hidden",
           outline: 0
         });
+
         $(document.body).prepend(pasteCatcher);
+        pasteCatcher.get(0).focus();
       }
     }
     // Handle paste event
@@ -80,18 +82,19 @@
     function checkInput() {
       // Store the pasted content in a variable
       if (foundImage == true) {
-        var child = pasteCatcher.children().last().get(0);
+        var child = pasteCatcher.get(0).childNodes[0];
+
         if (child) {
           // If the user pastes an image, the src attribute will represent the image as a base64 encoded string.
           if (child.tagName === "IMG" && child.src.substr(0, 5) == 'data:') {
-            callback(child.src);
+            callback('image', child.src);
             foundImage = false;
-          } else {
-            alert("This is not an image!");
+          } else if (child.nodeType === 3){
+            callback('text', child.nodeValue);
+            foundImage = false;
           }
+
           pasteCatcher.html(""); // erase contents of pasteCatcher DIV
-        } else {
-          alert("No children found in pastecatcher DIV.");
         }
       } else {
         alert("No image found in the clipboard!");
