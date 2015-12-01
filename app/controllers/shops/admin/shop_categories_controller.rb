@@ -6,7 +6,7 @@ class Shops::Admin::ShopCategoriesController < Shops::Admin::BaseController
   def create
     @root = @shop.shop_category
     @shop_category = @root.children.create(shop_category_params)
-    expire_page shop_shop_categories(@shop.name)
+    expire_page shop_shop_categories_path(@shop.name)
 
     render :show, formats: [ :json ]
   end
@@ -15,7 +15,7 @@ class Shops::Admin::ShopCategoriesController < Shops::Admin::BaseController
     @root = @shop.shop_category
     @parent = ShopCategory.find(params[:parent_id])
     raise ActionController::RoutingError.new('Not Found') unless @parent.is_or_is_descendant_of?(@root)
-    expire_page shop_shop_categories(@shop.name)
+    expire_page shop_shop_categories_path(@shop.name)
 
     respond_to do |format|
       format.json do
@@ -91,7 +91,7 @@ class Shops::Admin::ShopCategoriesController < Shops::Admin::BaseController
 
   def destroy_by_child
     @shop_category.destroy
-    expire_page shop_shop_categories(@shop.name)
+    expire_page shop_shop_categories_path(@shop.name)
     render :destroy, formats: [:js]
   end
 
