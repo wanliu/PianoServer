@@ -63,61 +63,14 @@ class @EditShopCategory extends @HuEvent
       .select()
 
   onClick: (e) ->
-    # @enterAnimation(e,()=>
-    #   Turbolinks.visit(@url)
-    # )
-    Turbolinks.visit(@url)
-
-  enterAnimation: (e,fn) ->
     if $(e.target).is('.thumbnail>img')
-      if @thumbnailClickable(e) && !$('.animate-mask')[0]
-
-        reference       = @$().children('.box')
-        orginTop        = reference.offset().top
-        orginLeft       = reference.offset().left
-        referenceHeight = reference.height()
-        referenceWidth  = reference.width()
-        screenWith      = $(window).width()
-        screenheight    = $(window).height()
-        maskHeight      = referenceHeight - 100
-        maskWidth       = maskHeight
-        maskTop         = orginTop  + (referenceHeight - maskHeight) / 2 + 5
-        maskLeft        = orginLeft + (referenceWidth  - maskHeight) / 2 + 5
-
-        $('body').append('<div class="animate-mask"></div>')
-
-        mask = $('.animate-mask')
-        mask
-          .css({
-            'left'    : maskLeft   + 'px'
-            'top'     : maskTop    + 'px'
-            'width'   : maskWidth  + 'px'
-            'height'  : maskHeight + 'px'
-          })
-          .one(TRANSITION_ENDS, fn)
-
-        reference.css({
-          'opacity'   : 0
-          'visibility': 'hidden'
-          'transform' : 'scale(0.8)'
-        }).addClass('animated')
-
-        setTimeout () =>
-          mask.css({
-            'opacity' : 0.8
-            'left'    : 0
-            'top'     : 0
-            'width'   : screenWith   + 'px'
-            'height'  : screenheight + 'px'
-          })
-        , 10
-
+      if @thumbnailClickable(e)
+        Turbolinks.visit(@url)
       else
         @$()
           .addClass('animate-shiver')
-          .one(ANIMATION_ENDS, () ->
+          .one ANIMATION_ENDS, () ->
             $(@).removeClass('animate-shiver')
-          )
 
   onPress: () ->
     $('#category-modal').data({'url': @url, 'status': @status, related: @}).modal("show")
@@ -201,32 +154,3 @@ class @EditShopCategory extends @HuEvent
         @status = false
         $target.parent().addClass('closed')
     })
-
-# $(document).on('page:change', (event) =>
-#   mask = $('.animate-mask')
-
-#   if mask[0]
-#     reference = $('.animated')
-#     reference.css({'transform' : 'scale(1)'})
-
-#     maskWidth   = reference.width()  - 50
-#     maskHeight  = reference.height() - 50
-#     maskTop     = reference.offset().top  + 30
-#     maskLeft    = reference.offset().left + 30
-
-#     mask.css({
-#       'left'    : maskLeft   + 'px'
-#       'top'     : maskTop    + 'px'
-#       'width'   : maskWidth  + 'px'
-#       'height'  : maskHeight + 'px'
-#     })
-
-#     mask.one('transitionend', ()=>
-#       mask.remove()
-#       reference.css({
-#         'visibility' : 'visible'
-#         'opacity'    : 1
-#       }).removeClass('animated')
-
-#     )
-# )
