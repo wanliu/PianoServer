@@ -33,7 +33,7 @@
    -->
 
    <!-- 选择主题 -->
-  <h3 class="page-header">选择商店风格</small></h3>
+  <h3 class="page-header">选择商店风格</h3>
   <div class="row choose-shop-theme">
     <% @theme_list.each do |theme| %>
       <div class="col-md-3 col-sm-4 col-xs-4">
@@ -47,11 +47,36 @@
       </div>
     <% end %>
   </div>
+
+  <section class="shop-poster">
+    <h3 class="page-header">上传商店海报</h3>
+    <div id="poster-img-uploader-btn"></div> 
+    <img src="<%= @shop.poster %>" id="shop-poster-img" alt="商店海报">
+  </section>
 </div>
 
 <script type="text/javascript">
+
   var SaveOnChange = window.SaveOnChange;
   var saveForm = new SaveOnChange($('#admin-settings'));
+
+  (function () {
+    var $element = $("#poster-img-uploader-btn")[0];
+    var actionUrl = '<%= shop_admin_settings_path(@shop.name) %>' + '/upload_shop_poster';
+    var token = $('meta[name=csrf-token]').attr('content');
+
+    new qq.FileUploader({
+      element: $element,
+      customHeaders: { "X-CSRF-TOKEN": token },
+      action:  actionUrl + "?authenticity_token=" + encodeURIComponent(token),
+      uploadButtonText:'选择海报图片',
+      multiple: false,
+      onComplete: function (id, filename, responseJSON) {
+        var url = responseJSON.url;
+        $("#shop-poster-img").attr('src', url);
+      }
+    });
+  })();
 
   $('.theme-btn').click(function(){
     var target = $(this);

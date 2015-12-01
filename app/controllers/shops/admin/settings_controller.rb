@@ -16,6 +16,19 @@ class Shops::Admin::SettingsController < Shops::Admin::BaseController
     render nothing: true
   end
 
+  def upload_shop_poster
+    uploader = ImageUploader.new(@shop, :poster)
+    uploader.store! params[:file]
+
+    if @shop.update_attribute('poster', uploader.url)
+      expire_page shop_site_path(@shop.name)
+
+      render json: { success: true, url: uploader.url, filename: uploader.filename }
+    else
+      render json: { success: false }
+    end
+  end
+
   def change_shop_theme
     begin
       shop = Shop.find_by(name: params[:shop_id])
@@ -27,6 +40,9 @@ class Shops::Admin::SettingsController < Shops::Admin::BaseController
         
       shop.theme = params[:theme]
       shop.save!
+
+      expire_page shop_site_path(@shop.name)
+      
       render json: { success: true, msg: 'success' }
     rescue Exception => e
       render json: { success: false, msg: e.message }

@@ -47,8 +47,10 @@ class @SideMenuManager
     #@element.css('left', 0)
     @$container.addClass('show-left-bar')
     @$navbar.addClass('show-left-bar').one TRANSITION_ENDS, ()=>
-      @isVisible = true
-      @$layout.fadeIn(300)
+      @$layout.fadeIn(300, ()=>
+        @isVisible = true
+        console.log('123')
+      )
 
   _hide: () ->
     #@element.css('left', -250)
