@@ -202,31 +202,31 @@ class @EditShopCategory extends @HuEvent
         $target.parent().addClass('closed')
     })
 
-$(document).on('page:change', (event) =>
-  mask = $('.animate-mask')
+# $(document).on('page:change', (event) =>
+#   mask = $('.animate-mask')
 
-  if mask[0]
-    reference = $('.animated')
-    reference.css({'transform' : 'scale(1)'})
+#   if mask[0]
+#     reference = $('.animated')
+#     reference.css({'transform' : 'scale(1)'})
 
-    maskWidth   = reference.width()  - 50
-    maskHeight  = reference.height() - 50
-    maskTop     = reference.offset().top  + 30
-    maskLeft    = reference.offset().left + 30
+#     maskWidth   = reference.width()  - 50
+#     maskHeight  = reference.height() - 50
+#     maskTop     = reference.offset().top  + 30
+#     maskLeft    = reference.offset().left + 30
 
-    mask.css({
-      'left'    : maskLeft   + 'px'
-      'top'     : maskTop    + 'px'
-      'width'   : maskWidth  + 'px'
-      'height'  : maskHeight + 'px'
-    })
+#     mask.css({
+#       'left'    : maskLeft   + 'px'
+#       'top'     : maskTop    + 'px'
+#       'width'   : maskWidth  + 'px'
+#       'height'  : maskHeight + 'px'
+#     })
 
-    mask.one('transitionend', ()=>
-      mask.remove()
-      reference.css({
-        'visibility' : 'visible'
-        'opacity'    : 1
-      }).removeClass('animated')
+#     mask.one('transitionend', ()=>
+#       mask.remove()
+#       reference.css({
+#         'visibility' : 'visible'
+#         'opacity'    : 1
+#       }).removeClass('animated')
 
-    )
-)
+#     )
+# )
