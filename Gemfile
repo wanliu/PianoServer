@@ -71,6 +71,7 @@ gem 'redis-rails'
 # 中间件
 gem 'rack-cors', :require => 'rack/cors'
 gem 'rack-raw-upload', '~> 1.1.1'
+gem 'rack-attack', require: 'rack/attack'
 
 gem 'devise', '3.4.0'
 gem 'devise-async'

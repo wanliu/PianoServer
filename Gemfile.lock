@@ -281,6 +281,8 @@ GEM
       railties (>= 3.2, < 5)
       voight_kampff (~> 0.2)
     rack (1.6.4)
+    rack-attack (4.3.0)
+      rack
     rack-cors (0.4.0)
     rack-raw-upload (1.1.1)
       multi_json
@@ -514,6 +516,7 @@ DEPENDENCIES
   poseidon
   public_activity!
   punching_bag
+  rack-attack
   rack-cors
   rack-raw-upload (~> 1.1.1)
   rails (= 4.2.0)
