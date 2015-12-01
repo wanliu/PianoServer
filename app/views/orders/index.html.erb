@@ -1,3 +1,21 @@
-<%= render partial: "order", collection: @orders, as: :order %>
+<div class='orders'>
+  <ul class="nav nav-tabs orders-tab buyer-orders" role="tablist">
+    <li role="presentation" class="active">
+      <a href="#current-orders" aria-controls="current-orders" role="tab" data-toggle="tab">未完成的订单</a>
+    </li>
+    <li role="presentation">
+      <a href="/orders/history">历史订单</a>
+    </li>
+  </ul>
 
-<%= paginate @orders %>
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active current-orders" id="current-orders">
+      <% if @orders.present? %>
+        <%= render partial: "order", collection: @orders, as: :order %>
+        <%= paginate @orders %>
+      <% else %>
+        <div class='text-center'>没有正在处理的订单！</div>
+      <% end %>
+    </div>
+  </div>
+</div>

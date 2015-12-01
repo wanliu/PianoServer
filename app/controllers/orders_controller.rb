@@ -5,7 +5,22 @@ class OrdersController < ApplicationController
   # GET /orders
   # GET /orders.json
   def index
-    @orders = Order.all.order(id: :desc).page(params[:page]).per(params[:per])
+    @orders = current_user.orders
+      .initiated
+      .includes(:items, :supplier)
+      .order(id: :desc)
+      .page(params[:page])
+      .per(params[:per])
+
+  end
+
+  def history
+    @orders = current_user.orders
+      .finish
+      .includes(:items, :supplier)
+      .order(id: :desc)
+      .page(params[:page])
+      .per(params[:per])
   end
 
   # GET /orders/1

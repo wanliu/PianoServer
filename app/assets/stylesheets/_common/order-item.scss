@@ -1,37 +1,54 @@
-ul.order-items.list-group {
-  height: auto;
+.orders {
+  .orders-tab {
+    height: 41px;
+    margin-bottom: 20px;
 
-  .order-item {
-    cursor: auto;
+    &.buyer-orders li.active a {
+      background-color: rgba(0, 0, 0, 0);
+      background-image: url(/assets/bj-07815f971e74f700594621a45751c212cc2610e51c5045e9416a31e0875ae2a1.jpg)
+    }
+  }
 
-    .avatar {
-      img {
-        width: 80px;
-        height: 80px;
+  .empty-orders {
+    margin: 50px 0;
+    font-size: 20px;
+  }
+
+  ul.order-items.list-group {
+    height: auto;
+
+    .order-item {
+      cursor: auto;
+
+      .avatar {
+        img {
+          width: 80px;
+          height: 80px;
+        }
       }
-    }
 
-    .title {
-      width: 200px;
-    }
+      .title {
+        width: 200px;
+      }
 
-    .properties {
-      width: 172px;
-    }
+      .properties {
+        width: 172px;
+      }
 
-    .price {
-      width: 120px;
-      font-weight: 700;
-    }
+      .price {
+        width: 120px;
+        font-weight: 700;
+      }
 
-    .quantity {
-      width: 120px;
-    }
+      .quantity {
+        width: 120px;
+      }
 
-    .subtotal {
-      color: #f40;
-      width: 120px;
-      font-weight: 700;
+      .subtotal {
+        color: #f40;
+        width: 120px;
+        font-weight: 700;
+      }
     }
   }
 }

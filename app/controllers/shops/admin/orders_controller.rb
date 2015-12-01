@@ -4,7 +4,24 @@ class Shops::Admin::OrdersController < Shops::Admin::BaseController
   # GET /shops/admin/orders
   # GET /shops/admin/orders.json
   def index
-    @orders = current_shop.orders.order(id: :desc).page(params[:page]).per(params[:per])
+    # @orders = current_shop.orders.order(id: :desc).page(params[:page]).per(params[:per])
+    @orders = current_shop
+      .orders
+      .initiated
+      .includes(:items, :buyer)
+      .order(id: :desc)
+      .page(params[:page])
+      .per(params[:per])
+  end
+
+  def history
+    @orders = current_shop
+      .orders
+      .finish
+      .includes(:items, :buyer)
+      .order(id: :desc)
+      .page(params[:page])
+      .per(params[:per])
   end
 
   # GET /shops/admin/orders/1

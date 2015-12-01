@@ -200,6 +200,7 @@ Rails.application.routes.draw do
       post "confirmation"
       post "buy_now_create"
       post "buy_now_confirm"
+      get "history"
     end
   end
 
@@ -270,7 +271,11 @@ Rails.application.routes.draw do
 
       resources :settings
 
-      resources :orders, except: [:edit, :new, :create]
+      resources :orders, except: [:edit, :new, :create] do
+        collection do
+          get 'history'
+        end
+      end
     end
   end
 

@@ -3,11 +3,12 @@ class Order < ActiveRecord::Base
   belongs_to :supplier, class_name: 'Shop'
 
   has_many :items, class_name: 'OrderItem', autosave: true, dependent: :destroy
+  accepts_nested_attributes_for :items
 
   attr_accessor :cart_item_ids
   attr_accessor :address_id
 
-   accepts_nested_attributes_for :items
+  enum status: { initiated: 0, finish: 1 }
 
   validates :supplier, presence: true
   validates :buyer, presence: true
