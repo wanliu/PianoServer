@@ -34,7 +34,7 @@
     </div>
   <% end %>
 
-  <div style='clear: both;'>
+  <div style='clearfix'>
     <%= paginate(@children) %>
   </div>
 </div>
@@ -75,8 +75,7 @@
 
     $('.shop-category-list .shop-category img').each(function(i, image) {
       image.onerror = function () {
-        $this = $(this)
-        $this.height($this.parent().width())
+        $(this).attr('src',"<%= image_path('img_error.jpg') %>")
       };
     });
 

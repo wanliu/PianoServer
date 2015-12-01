@@ -50,6 +50,8 @@ GEM
       rack-test (~> 0.6.2)
       rails-dom-testing (~> 1.0, >= 1.0.5)
       rails-html-sanitizer (~> 1.0, >= 1.0.1)
+    actionpack-page_caching (1.0.2)
+      actionpack (>= 4.0.0, < 5)
     actionview (4.2.0)
       activesupport (= 4.2.0)
       builder (~> 3.1)
@@ -265,6 +267,7 @@ GEM
       nenv (~> 0.1)
       shellany (~> 0.0)
     nprogress-rails (0.1.6.7)
+    oneapm_rpm (1.2.9)
     orm_adapter (0.5.0)
     pg (0.18.1)
     photoswipe-rails (4.1.0)
@@ -442,6 +445,7 @@ PLATFORMS
 
 DEPENDENCIES
   ace-rails-ap
+  actionpack-page_caching
   activeresource
   ancestry
   awesome_nested_set
@@ -483,6 +487,7 @@ DEPENDENCIES
   mobylette
   momentjs-rails (>= 2.9.0)
   nprogress-rails
+  oneapm_rpm
   pg
   photoswipe-rails (~> 4.1.0)
   picturefill

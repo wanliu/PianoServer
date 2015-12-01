@@ -21,16 +21,16 @@
 <script type="text/javascript">
   var highlightSelected = function() {
     var currentUrl = window.location.pathname;
-
     var maxLength = 0;
     var activeElem = null;
+
     $('.left-sidebar .nav>li').each(function(i, elem) {
       var $href = $(elem).find('a');
 
       if ($href.length && currentUrl.startsWith($href.attr('href'))) {
         if (maxLength < $href.attr('href').length) {
           maxLength = $href.attr('href').length;
-          activeElem = elem
+          activeElem = elem;
         }
       }
 
@@ -42,19 +42,7 @@
 
   highlightSelected();
 
-  function main() {
-    var LeftSideBar = window.LeftSideBar;
-    var leftSidebar = new LeftSideBar($('.left-sidebar'), $('.navbar-fixed-top'), $('.content'));
-    $('.navbar-toggle').click(function() {
-      if ($(window).width() < 768) {
-        leftSidebar.toggleSlide()
-      }
-    });
-
-    highlightSelected();
-  }
-
-  $(main);
-  $(document).on('page:load', main)
+  $(highlightSelected);
+  $(document).on('page:load', highlightSelected)
   $(document).on('page:change', highlightSelected)
 </script>

@@ -1,0 +1,31 @@
+<script>
+
+$(window).one('load',function(){
+
+  (function fangyingbWelcome(){
+      var flag = false;
+      var mobile = /iPhone|Android/.test(navigator.userAgent);
+
+      if (mobile) { // iPhone Android
+
+        var template = '<div class="mask-warp">\
+                          <img class="mask-img" src="http://wanliu-piano.b0.upaiyun.com/uploads/shop/logo/1/mask.jpg">\
+                          <div class="skip">跳过</div>\
+                        </div>\
+                       '
+
+        $('body').append(template);
+        $('.scroll-container').fadeOut();
+        $(".mask-warp").click(animation);
+        setTimeout(animation, 1500);
+      }
+  
+      function animation(){
+        if (flag) return;
+        flag = true;
+        $(".mask-warp").css({transform: 'translateY(-100%)'});
+        $('.scroll-container').fadeIn(1000);
+      }
+    })()
+});
+</script>
