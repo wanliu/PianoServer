@@ -45,6 +45,7 @@ class @SideMenuManager
 
   _show: () ->
     #@element.css('left', 0)
+    $('body').css('overflow','hidden')
     @$container.addClass('show-left-bar')
     @$navbar.addClass('show-left-bar').one TRANSITION_ENDS, ()=>
       @$layout.fadeIn(300, ()=>
@@ -53,10 +54,10 @@ class @SideMenuManager
       )
 
   _hide: () ->
-    #@element.css('left', -250)
     @$layout.hide()
     @$container.removeClass('show-left-bar')
     @$navbar.removeClass('show-left-bar').one TRANSITION_ENDS, ()=>
+      $('body').css('overflow','auto')
       @isVisible = false
 
   _open: () ->
