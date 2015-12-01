@@ -162,8 +162,10 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     end
 
     if @item.save
-      expire_page controller: 'items', action: 'show', id: @item.sid
-      expire_page controller: 'shop_categories', action: 'show', id: @item.shop_category.try(:id)
+      expire_page shop_item_path(@shop.name, @item.sid)
+      # expire_page controller: 'items', action: 'show', id: @item.sid
+      expire_page shop_admin_shop_category_path(@shop.name, @item.shop_category.try(:id))
+      # expire_page controller: 'shop_categories', action: 'show', id: @item.shop_category.try(:id)
 
       redirect_to shop_admin_items_path(@shop.name), notice: t(:update, scope: "flash.notice.controllers.items")
     else
@@ -221,6 +223,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
 
   def change_sale_state
     if @item.update_attribute("on_sale", params[:item][:on_sale])
+      expire_page shop_admin_shop_category_path(@shop.name, @item.shop_category.try(:id))
       render json: { success: true }
     else
       render json: @item.errors, status: :unprocessable_entity

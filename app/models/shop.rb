@@ -15,7 +15,7 @@ class Shop < ActiveRecord::Base
 
   validates :title, presence: true
 
-  store_accessor :settings, :greetings
+  store_accessor :settings, :greetings, :theme, :poster
 
   mount_uploader :logo, ImageUploader
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151120040308) do
+ActiveRecord::Schema.define(version: 20151128073353) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -83,28 +83,6 @@ ActiveRecord::Schema.define(version: 20151120040308) do
     t.jsonb    "data"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
-  end
-
-  create_table "cart_items", force: :cascade do |t|
-    t.integer  "cart_id"
-    t.integer  "cartable_id"
-    t.string   "cartable_type"
-    t.integer  "supplier_id"
-    t.string   "title"
-    t.string   "image"
-    t.integer  "sale_mode",                              default: 0
-    t.decimal  "price",         precision: 10, scale: 2
-    t.integer  "quantity"
-    t.jsonb    "properties"
-    t.jsonb    "condition"
-    t.datetime "created_at",                                         null: false
-    t.datetime "updated_at",                                         null: false
-  end
-
-  create_table "carts", force: :cascade do |t|
-    t.integer  "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "categories", force: :cascade do |t|
@@ -194,7 +172,7 @@ ActiveRecord::Schema.define(version: 20151120040308) do
     t.integer  "product_id"
     t.decimal  "price",            precision: 10, scale: 2
     t.integer  "inventory"
-    t.boolean  "on_sale",                                   default: true,  null: false
+    t.boolean  "on_sale",                                   default: true
     t.datetime "created_at",                                                null: false
     t.datetime "updated_at",                                                null: false
     t.integer  "sid"
@@ -209,6 +187,17 @@ ActiveRecord::Schema.define(version: 20151120040308) do
     t.decimal  "current_stock",    precision: 10, scale: 2
     t.boolean  "abandom",                                   default: false, null: false
   end
+
+  create_table "likes", force: :cascade do |t|
+    t.string   "liker_type"
+    t.integer  "liker_id"
+    t.string   "likeable_type"
+    t.integer  "likeable_id"
+    t.datetime "created_at"
+  end
+
+  add_index "likes", ["likeable_id", "likeable_type"], name: "fk_likeables", using: :btree
+  add_index "likes", ["liker_id", "liker_type"], name: "fk_likes", using: :btree
 
   create_table "locations", force: :cascade do |t|
     t.integer  "user_id"
@@ -232,6 +221,17 @@ ActiveRecord::Schema.define(version: 20151120040308) do
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
   end
+
+  create_table "mentions", force: :cascade do |t|
+    t.string   "mentioner_type"
+    t.integer  "mentioner_id"
+    t.string   "mentionable_type"
+    t.integer  "mentionable_id"
+    t.datetime "created_at"
+  end
+
+  add_index "mentions", ["mentionable_id", "mentionable_type"], name: "fk_mentionables", using: :btree
+  add_index "mentions", ["mentioner_id", "mentioner_type"], name: "fk_mentions", using: :btree
 
   create_table "messages", force: :cascade do |t|
     t.integer  "messable_id"
@@ -447,7 +447,6 @@ ActiveRecord::Schema.define(version: 20151120040308) do
     t.jsonb    "data",                   default: {}
     t.integer  "sex",                    default: 1
     t.integer  "shop_id"
-    t.integer  "user_type",              default: 0
   end
 
   add_index "users", ["authentication_token"], name: "index_users_on_authentication_token", unique: true, using: :btree
