@@ -93,12 +93,14 @@
       changeQuantity(quantityInput); 
     });
 
-    function changeQuantity(quantityInput) {
+    function changeQuantity(quantityInput, reflect) {
       var cartItemId = $(quantityInput).parents('.cart-item').data('cartItemId');
       var quantity = $(quantityInput).val();
 
       var $subTotal = $(quantityInput).parents('.quantity').siblings('.subtotal');
       var $btnMinus = $(quantityInput).parents('.quantity').find('.btn-minus span');
+
+      var $alert = $(quantityInput).parents('.input-group').siblings('.alert');
     
       if (!/^\d+$/.test(quantity)) {
         $(quantityInput).val(1);
@@ -120,9 +122,22 @@
         }
       }).done(function (data, xhr, status) {
         $subTotal.text(data.sub_total);
+
+        if (!reflect) $alert.hide();
       }).fail(function (data, xhr, status) {
-        // TODO
-      })
+        // usually caused by the lack of inventory
+        var quanOpt = data.responseJSON && data.responseJSON.quantity;
+        if (quanOpt) {
+          var maxQuan = quanOpt[0];
+
+          $alert.find('.max-quantity').text(maxQuan);
+          $(quantityInput).val(maxQuan);
+
+          changeQuantity(quantityInput, true);
+
+          $alert.show();
+        }
+      });
     }
   })();
 </script>

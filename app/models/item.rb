@@ -165,13 +165,18 @@ class Item < ActiveRecord::Base
 
 
   def saleable?(amount=1, props={})
-    return false unless (on_sale? && (current_stock > amount))
+    unless on_sale?
+      yield false, 0 if block_given?
+      return false
+    end
 
     if props.present?
-      stock_now = stocks.find { |item| item.data == props }.try(:quantity).to_f
-      stock_now > amount
+      props_stock = stocks.find { |item| item.data == props }.try(:quantity).to_f
+      yield props_stock >= amount, props_stock if block_given?
+      props_stock >= amount
     else
-      current_stock > amount
+      yield current_stock >= amount, current_stock if block_given?
+      current_stock >= amount
     end
   end
 

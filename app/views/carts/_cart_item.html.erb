@@ -45,6 +45,9 @@
           </button>
         </span>
       </div>
+      <div class="alert alert-danger fade in" role="alert" style='display: none;'>
+        <p>最多只能购买<span class='max-quantity'></span>件</p>
+      </div>
       <% else %>
         <span><%= number_with_delimiter item.quantity %></span>
       <% end %>
