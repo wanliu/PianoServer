@@ -4,7 +4,7 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-sm-12 industry-category" >
+    <div class="col-sm-12" >
 
       <div class="page-header">
         <div class="btn-group pull-right">
@@ -24,7 +24,7 @@
 
     <% if @region.present? %>
       <% @regions.push(@region) %>
-      <%= panel do %>
+      <%= panel class: 'no-padding' do %>
       <div class="panel-heading">
         <div class="row">
           <div class="col-xs-12 col-sm-6">

@@ -55,6 +55,7 @@ dev:
     user:
       sign_in: true
     industry: true
+    weixin: true
 sites:
   root: .sites
   shops:

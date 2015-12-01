@@ -104,15 +104,6 @@
       <% else %>
         <%= render "footer" %>
       <% end %>
-
-      <%# case _module %> <!-- 底部按钮 -->
-        <%# when "item" %>
-          <%#= render "items/link_table" %>
-        <%# when "detail" %>
-        <%#= render :partial => "promotions/promotion_link_table", locals: { promotion: @promotion, shop: @shop} %>
-          <%##= render "promotions/promotion_link_table" %>
-      <%# end %>
-
     </div>
 
     <%= render "qrcode" %>
@@ -124,11 +115,6 @@
     <%= render "sidebar_menu" %>
     <% end %>
     <script type="text/javascript">
-      // var $fixedTop = $('.navbar-top');
-
-      // $(window).scroll(function(e) {
-      //   $fixedTop.css('top', $(this).scrollTop());
-      // })
 
       <% unless Rails.env.production? %>
         console.log('development version: <%= PianoServer::VERSION %>')

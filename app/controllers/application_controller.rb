@@ -116,7 +116,7 @@ class ApplicationController < ActionController::Base
   def authenticate_region!
     if cookies[:region_id].blank?
       if anonymous?
-        if request_device?(:weixin)
+        if request_device?(:weixin) && Settings.dev.feature.weixin
           return redirect_to authorize_weixin_path
         else
           return redirect_to new_user_session_path

@@ -43,7 +43,7 @@
   </head>
   <body class="<%= yield :module %>">
     <div class="chat-notices"></div>
-    
+
     <div class="menu-container"></div>
     <div class="navbar navbar-default navbar-top main-navbar">
       <div class="container">
@@ -67,12 +67,14 @@
               <% end %>
             </li>
           </ul>
-          <div class="navbar-collapse collapse navbar-responsive-collapse hidden-xs">
+          <%= render "shards/navbar_navigation" %>
+
+          <!-- <div class="navbar-collapse collapse navbar-responsive-collapse hidden-xs">
             <ul class="nav navbar-nav navbar-right">
-              <li><%= link_to "关于我们", about_path  %></li>
-              <li><%= link_to "二维码", "#share-url-qrcode" , "data-toggle"=>"modal" %></li>
+              <li><%#= link_to "关于我们", about_path  %></li>
+              <li><%#= link_to "二维码", "#share-url-qrcode" , "data-toggle"=>"modal" %></li>
             </ul>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
