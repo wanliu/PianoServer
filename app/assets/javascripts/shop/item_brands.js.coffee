@@ -10,15 +10,13 @@ class @ItemBrands extends @HuEvent
     return unless brands.length
 
     for brand in brands
-      { name, image, chinese_name } = brand
-
-      brand_name = if name.length then [name, chinese_name].join('/') else chinese_name
+      { name, image } = brand
 
       template = """
         <div class="item-brand">
           <img src="#{image.url}">
           <div class="brand-name">
-            #{brand_name}
+            #{name}
           </div>
         </div>
       """
@@ -26,6 +24,7 @@ class @ItemBrands extends @HuEvent
       $(template).appendTo(@$())
 
   changeBrands: (e, brands) ->
-    @$().html()
+    @$().html('')
 
     @generateBrands(brands)
+

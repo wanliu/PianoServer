@@ -1,6 +1,6 @@
 <div class="shop-items-container">
   <div class="btn-toolbar category-toolbar" role="toolbar" >
-    <div class="col-xs-12 col-md-6 item-filters">
+    <div class="item-filters clearfix">
       <div class="btn-groups">
         <button type="button" class="btn btn-default dropdown-toggle btn-category">
           分类
@@ -15,7 +15,7 @@
 
       <div class="search-area">
         <div class="input-group">
-        <input type="text" class="form-control" placeholder="Search" aria-describedby="basic-addon2">
+        <input type="text" class="form-control" placeholder="要搜索的商品名称..." aria-describedby="basic-addon2">
         <span class="input-group-addon search-button" id="basic-addon2">
           <button class="btn btn-search">
             <span class="glyphicon glyphicon-search"></span>
@@ -25,16 +25,22 @@
       </div>
     </div>
 
-    <div class="col-xs-12 col-md-6 outer-container">
+    <div class="outer-container">
       <div class="btn-group pull-right">
         <%= link_to new_shop_admin_item_path(@shop.name), class: "btn btn-success btn-add" do%>
           <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
           新增
         <% end %>
       </div>
-      <div class="breadcrumb-container">
-        分类路径:
-        <ol class="breadcrumb"></ol>
+      <div class="filter-descs clearfix">
+        <div class="col-xs-12 col-md-6 breadcrumb-container">
+          分类路径:
+          <ol class="breadcrumb"></ol>
+        </div>
+        <div class="col-xs-12 col-md-6 keyword-desc">
+          搜索关键字:
+          <div class="keyword"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -98,4 +104,7 @@
   new CategoryItems($('.items-panel tbody'), container, { url: itemUrl });
   new CategoryToolbar($('.category-toolbar'));
   new ItemBrands($('.brand-list'), container);
+
+  var search = new ItemSearch($('.search-area'), container);
+  new CategoryKeyword($('.keyword-desc .keyword'), search);
 </script>

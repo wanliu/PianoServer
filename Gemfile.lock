@@ -1,6 +1,6 @@
 GIT
-  remote: git://github.com/carrierwaveuploader/carrierwave.git
-  revision: 504d113920db984c3d262f5fdbf567cbfe409b8b
+  remote: git://github.com/hysios/carrierwave.git
+  revision: 21ded249df8447c094e987e9b46682fafa613aec
   branch: mount-multiple
   specs:
     carrierwave (0.10.0)
@@ -519,6 +519,3 @@ DEPENDENCIES
   uglifier (>= 1.3.0)
   web-console (~> 2.0)
   weixin_authorize
-
-BUNDLED WITH
-   1.10.6

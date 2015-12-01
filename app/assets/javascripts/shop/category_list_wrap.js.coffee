@@ -26,6 +26,7 @@ class @CategoryListWrap extends @HuEvent
     @on('category:change', @categoryChanged.bind(@))
     @on('category:empty', @categoryEmptyed.bind(@))
     @on('q:changed', @qChanged.bind(@))
+    @on('q:empty', @qEmpty.bind(@))
 
     @loadFirstLevelCategory()
 
@@ -104,16 +105,16 @@ class @CategoryListWrap extends @HuEvent
       @resetListsContent(data, level)
       @form.send('category:change', [ category_id, is_leaf ]) if @form?
 
-  qChanged: (e, q) ->
+  searchItem: (q) ->
+    data = { category_id: @category_id }
+    data['q'] = q if q?
+
     $.ajax({
       type: 'GET',
       dataType: 'json',
       url: @url,
-      data: {
-        category_id: @category_id,
-        q: q
-      },
-      success: (data) ->
+      data: data,
+      success: (data) =>
         { items, brands, meta } = data
         @items.send('items:change', [items]) if @items?
 
@@ -122,6 +123,12 @@ class @CategoryListWrap extends @HuEvent
 
         @brands.send('brands:change', [brands]) if @brands
     })
+
+  qChanged: (e, q) ->
+    @searchItem(q)
+
+  qEmpty: (e) ->
+    @searchItem(null)
 
   resetListsContent: (data, level) ->
     if level == @length
