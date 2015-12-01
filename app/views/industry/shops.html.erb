@@ -92,9 +92,9 @@
   <%= render partial: "shop", collection: @shops %>
 </div>
 <% else %>
-  <%= alert_box context: :warning, id: 'alert', class: :en, data: {js: 1} do %>
+  <p class="leading text-muted">
     对不起！此区域暂无有效的供应商! <%= link_to '#' do %> <%=icon :user %> 申请成为供应商 <% end %>
-  <% end %>
+  </p>
 <% end %>
 
 <%= render "register_distributor" %>
@@ -211,6 +211,10 @@
 
   $(".close-popup").click(function(e) {
     $(e.currentTarget).parents(".popup").removeClass("open");
+    var ruler = window.letterRuler;
+    if (ruler) {
+      ruler.hide();
+    }
   });
 
   $(function() {
