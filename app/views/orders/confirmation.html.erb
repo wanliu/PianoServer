@@ -17,8 +17,10 @@
     <%= link_to "添加一个新的收货地址", 'javascript: void(0)', class: 'add-another-location' %>
   <% else %>
     <div class="panel-heading">
-      你还没有收货地址，现在创建一个吧
+      <div class='empty-notify'>你还没有收货地址，现在创建一个吧</div>
     </div>
+    <div class='divider' style='clear: both; display: none;'></div>
+    <%= link_to "添加一个新的收货地址", 'javascript: void(0)', class: 'add-another-location', style: 'display: none;' %>
   <% end %>
   <div class='add-new-location' style='display: <%= @delivery_addresses.present? ? "none" : "block" %>'>
     <%= render 'locations/form', locals: { location: current_user.locations.build } %>
@@ -71,8 +73,20 @@
     
     q.done(function (data, status, xhr) {
       var html = addTemplate({ address: data });
+      $('div.empty-notify').parent().text('选择收货地址');
+      $('div.empty-notify').remove();
+
+      $('div.divider').show();
+      $('div.divider + a').show();
+
       $('div.divider').before(html);
       $('div.add-new-location').hide();
+
+      if (!$('.delivery-address.active').length) {
+        $($('.delivery-address')[0]).addClass('active');
+        $($('.delivery-address')[0]).click();
+      }
+
       $('div.add-new-location form')[0].reset();
     });
 

@@ -25,7 +25,10 @@ class Order < ActiveRecord::Base
     @cart_item_ids = ids
 
     ids.each do |cart_item_id|
-      item = CartItem.find(cart_item_id)
+      item = CartItem.find_by(id: cart_item_id)
+
+      next if item.blank?
+
       items.build(price: item.price, quantity: item.quantity, title: item.title, 
         orderable_type: item.cartable_type, orderable_id: item.cartable_id, properties: item.properties)
     end
