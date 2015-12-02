@@ -14,7 +14,7 @@
         <%= render partial: "order", collection: @orders, as: :order %>
         <%= paginate @orders %>
       <% else %>
-        <div class='text-center'>没有正在处理的订单！</div>
+        <div class='text-center empty-orders'>没有正在处理的订单！</div>
       <% end %>
     </div>
   </div>
