@@ -1,0 +1,12 @@
+<div class="panel-body category-body">
+
+  <h4 style= "color: #999"><%= category.title %></h4>
+
+  <% category.children.order(:id).each do |category| %>
+    <% classes = ["btn", params[:category_id].to_i == category.id ? "btn-primary" : "btn-link" ] %>
+    <% classes.push("col-xs-4 col-sm-2") %>
+
+    <%= link_to category.title, '#', class: classes, remote: true, data: { category: category.id } %>
+  <% end %>
+
+</div>
