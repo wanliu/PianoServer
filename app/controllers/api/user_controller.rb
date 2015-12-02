@@ -20,7 +20,6 @@ class Api::UserController < Api::BaseController
         anonymous(id)
       end
 
-    logger.info json[:id]
     render json: json
   end
 
