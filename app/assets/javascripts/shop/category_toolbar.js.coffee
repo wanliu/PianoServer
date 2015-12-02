@@ -7,7 +7,11 @@ class @CategoryToolbar extends @HuEvent
 
 
   onClickCategory: (e) ->
+    return if $(".category-panel").is(':animated')
+
     $(".category-panel").slideToggle()
 
   onClickBrand: (e) ->
+    return if $(".brand-panel").is(':animated')
+
     $(".brand-panel").slideToggle()
