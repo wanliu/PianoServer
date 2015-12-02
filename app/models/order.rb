@@ -33,7 +33,7 @@ class Order < ActiveRecord::Base
 
   def address_id=(id)
     @address_id = id
-    self.delivery_address = Location.find(id).to_s
+    self.delivery_address = Location.find_by(id: id).to_s
   end
 
   def save_with_items(operator)
