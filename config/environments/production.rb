@@ -1,4 +1,6 @@
 Rails.application.configure do
+  config.middleware.insert_after Rack::Cors, ActionDispatch::Static, File.join(Rails.root, 'public/deploy')
+
   # Settings specified here will take precedence over those in config/application.rb.
 
   # Code is not reloaded between requests.
