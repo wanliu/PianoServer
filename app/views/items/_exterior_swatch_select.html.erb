@@ -1,20 +1,18 @@
 <div class="form-group col-sm-12 properties-goup">
-  <%= label_tag property.title %>
-  <ul class="nav nav-pills swatch_select select-<%= property.name %>">
-    <% config.each do |key, values| %>
-      <% values.each do |value, cfg| %>
-        <% if cfg["check"] == "1" %>
-        <li role="presentation">
-          <a href="#" class='btn btn-default property-item' data-property-key="<%= key %>" data-property-value="<%= value %>"><%= cfg["title"] %></a>
-        </li>
-        <% end %>
+  <%= label_tag prop_value['title'] %>
+  <ul class="nav nav-pills swatch_select select-<%= property %>">
+    <% prop_value['value'].each do |value, cfg| %>
+      <% if cfg["check"] == "1" %>
+      <li role="presentation">
+        <a href="#" class='btn btn-default property-item' data-property-key="<%= property %>" data-property-value="<%= value %>"><%= cfg["title"] %></a>
+      </li>
       <% end %>
     <% end %>
   </ul>
 </div>
 
 <script type="text/javascript">
-  $(".swatch_select.select-<%= property.name %>>li>a").click(function(e) {
+  $(".swatch_select.select-<%= property %>>li>a").click(function(e) {
     e.preventDefault();
 
 

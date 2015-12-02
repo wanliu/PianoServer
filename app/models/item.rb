@@ -199,4 +199,10 @@ class Item < ActiveRecord::Base
       ""
     end
   end
+
+  def inventory_properties
+    properties.select do |property, prop_values|
+      "stock_map" == prop_values['prop_type']
+    end
+  end
 end

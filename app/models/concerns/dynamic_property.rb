@@ -16,10 +16,12 @@ module DynamicProperty
     end
   end
 
-  def write_property(name, value, title=nil)
+  def write_property(name, value, options={}) # title=nil, exterior=nil)
     property = property_config_with_properties(name)
     property.value = value
-    property.title = title if title.present?
+    property.title = options[:title] if options[:title].present?
+    property.exterior = options[:exterior] if options[:exterior].present?
+    property.prop_type = options[:prop_type] if options[:prop_type].present?
   end
 
   def read_property(name)

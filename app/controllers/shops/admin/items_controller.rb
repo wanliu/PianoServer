@@ -79,8 +79,11 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
 
       prop_params.each do |prop_name, value|
         property = @inventory_properties.find {|item| prop_name == "property_#{item.name}" }
+
         title = property.try(:title)
-        item.send("#{prop_name}=", value, title)
+        exterior = property.try(:exterior)
+        prop_type = property.try(:prop_type)
+        item.send("#{prop_name}=", value, title: title, exterior: exterior, prop_type: prop_type)
       end
 
       if params[:item][:filenames] && params[:item][:filenames].respond_to?(:split)

@@ -23,6 +23,16 @@ class PropertyBase
     field["title"] = title
   end
 
+  def exterior=(exterior)
+    field = target[@name] ||= {}
+    field["exterior"] = exterior
+  end
+
+  def prop_type=(prop_type)
+    field = target[@name] ||= {}
+    field["prop_type"] = prop_type
+  end
+
   def target
     @record.properties_target ||= {}
   end
