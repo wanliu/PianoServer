@@ -36,10 +36,13 @@
     </div>
   </div>
   <hr />
-  <div class="pull-right step-actions">
-    <%= button_to "以后再说", after_register_path(:distributor, step: :skip), class: 'btn btn-default btn-lg skip', method: :put %>
-    <%= button_to "下一步", after_register_path(:distributor, step: :category), class: 'btn btn-primary btn-lg next', method: :put %>
+<!--   <div class="pull-right step-actions">
+    <%#= button_to "以后再说", after_register_path(:distributor, step: :skip), class: 'btn btn-default btn-lg skip', method: :put %>
+    <%#= button_to "下一步", after_register_path(:distributor, step: :category), class: 'btn btn-primary btn-lg next', method: :put %>
   </div>
+ -->
+  <%= render partial: "action_buttons", locals: { disabled: false, next_url: after_register_path(:distributor, step: :category) }, cache: true %>
+
   <%= render "skip_form" %>
 
 </div>

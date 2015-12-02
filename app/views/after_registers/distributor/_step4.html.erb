@@ -24,10 +24,7 @@
       <% end %>
       </div>
 
-      <div class="pull-right step-actions">
-        <%= button_to "以后再说", after_register_path(:distributor, step: :skip), class: 'btn btn-default btn-lg skip', method: :put %>
-        <%= f.submit "下一步", class: 'btn btn-primary btn-lg next' %>
-      </div>
+      <%= render partial: "action_buttons", locals: { disabled: false }, cache: true %>
     <% end %>
     <%= render "skip_form" %>
   </div>

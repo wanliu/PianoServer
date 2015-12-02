@@ -16,11 +16,7 @@
       <%= render "industry", collection: Industry.all %>
     </div>
   </div>
-
-  <div class="pull-right">
-    <%= button "以后再说", context: :default, class: 'btn-lg skip' %>
-    <%= button "下一步", context: :primary, class: 'btn-lg next', disabled: true %>
-  </div>
+  <%= render partial: "action_buttons", locals: { prompt: '(选择行业)' }, cache: true %>
   <% end %>
 
   <%= render "skip_form" %>
