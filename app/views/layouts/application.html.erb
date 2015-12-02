@@ -101,7 +101,9 @@
     <div class="menu-overlayer"></div>
     <div class="menu-container"></div>
     <div class="main-container">
-      <%= bootstrap_flash %>
+      <div class="container">
+        <%= bootstrap_flash %>
+      </div>
       <%= yield %>
       <% case _module %>
       <% when NilClass %>

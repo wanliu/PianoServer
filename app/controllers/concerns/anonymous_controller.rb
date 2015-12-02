@@ -3,6 +3,7 @@ module AnonymousController
   protected
 
   def current_anonymous_or_user
+    @current_user ||= current_user
     @current_user || anonymous
   end
 
