@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151201070339) do
+ActiveRecord::Schema.define(version: 20151202075127) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -211,21 +211,22 @@ ActiveRecord::Schema.define(version: 20151201070339) do
     t.integer  "shop_category_id"
     t.integer  "shop_id"
     t.integer  "product_id"
-    t.decimal  "price",            precision: 10, scale: 2
+    t.decimal  "price",              precision: 10, scale: 2
     t.integer  "inventory"
-    t.boolean  "on_sale",                                   default: true
-    t.datetime "created_at",                                               null: false
-    t.datetime "updated_at",                                               null: false
+    t.boolean  "on_sale",                                     default: true
+    t.datetime "created_at",                                                 null: false
+    t.datetime "updated_at",                                                 null: false
     t.integer  "sid"
     t.string   "title"
     t.integer  "category_id"
-    t.decimal  "public_price",     precision: 10, scale: 2
-    t.decimal  "income_price",     precision: 10, scale: 2
-    t.jsonb    "images",                                    default: []
+    t.decimal  "public_price",       precision: 10, scale: 2
+    t.decimal  "income_price",       precision: 10, scale: 2
+    t.jsonb    "images",                                      default: []
     t.integer  "brand_id"
-    t.jsonb    "properties",                                default: {}
+    t.jsonb    "properties",                                  default: {}
     t.text     "description"
-    t.decimal  "current_stock",    precision: 10, scale: 2
+    t.decimal  "current_stock",      precision: 10, scale: 2
+    t.jsonb    "properties_setting",                          default: {}
   end
 
   create_table "jobs", force: :cascade do |t|

@@ -205,4 +205,11 @@ class Item < ActiveRecord::Base
       "stock_map" == prop_values['prop_type']
     end
   end
+
+  def properties_setting
+    super.map do |property|
+      keys = Property.attribute_names
+      Property.new property.slice(*keys)
+    end
+  end
 end
