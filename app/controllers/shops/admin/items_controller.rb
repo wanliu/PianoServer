@@ -70,14 +70,17 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
       .map {|group, items| [ group.self_and_ancestors.map{ |parent| parent.title }.join(' » '), items.map {|i| [i.title, i.id]}]}
 
 
-    prop_params = properties_params(@properties)
+    prop_params = properties_params(@properties + @inventory_properties)
+
     @item = Item.new item_basic_params.merge(shop_id: @shop.id) do |item|
       item.properties ||= {}
 
       item.sid = Item.last_sid(@shop) + 1
 
       prop_params.each do |prop_name, value|
-        item.send("#{prop_name}=", value)
+        property = @inventory_properties.find {|item| prop_name == "property_#{item.name}" }
+        title = property.try(:title)
+        item.send("#{prop_name}=", value, title)
       end
 
       if params[:item][:filenames] && params[:item][:filenames].respond_to?(:split)

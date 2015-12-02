@@ -24,12 +24,15 @@
         <%= label_tag "数量" %>
           <%= minus_plus_button_field :cart_item, :quantity, value: cartitem.quantity, placeholder: "数量", class: 'form-control cart_item_quantity' %>
       </div>
-
+  
       <div class="form-group purchase-buttons col-sm-12" >
-        <%= f.button "加入购物车", class: 'btn btn-info btn-lg add-to-cart', disabled: "disabled", 
-          "data-cartable-type" => 'Item', "data-cartable-id" => @item.id, type: 'button' %>
-        <%= f.button "购买", class: 'btn btn-danger btn-lg buy-now js-buy-now', disabled: "disabled", 
-          "data-cartable-type" => 'Item', "data-cartable-id" => @item.id, type: 'button' %>
+        <% if stocks_with_index.present? %>
+          <%= f.button "加入购物车", class: 'btn btn-info btn-lg add-to-cart', disabled: "disabled", "data-cartable-type" => 'Item', "data-cartable-id" => @item.id, type: 'button' %>
+          <%= f.button "购买", class: 'btn btn-danger btn-lg buy-now js-buy-now', disabled: "disabled", "data-cartable-type" => 'Item', "data-cartable-id" => @item.id, type: 'button' %>
+        <% else %>
+          <%= f.button "加入购物车", class: 'btn btn-info btn-lg add-to-cart', "data-cartable-type" => 'Item', "data-cartable-id" => @item.id, type: 'button' %>
+          <%= f.button "购买", class: 'btn btn-danger btn-lg buy-now js-buy-now', "data-cartable-type" => 'Item', "data-cartable-id" => @item.id, type: 'button' %>
+        <% end %>
       </div>
 
       <%#= f.hidden_field :sale_mode %>
@@ -55,14 +58,14 @@
   //   })
   // });
 
-  var stocksWithIndex = <%= stocks_with_index.values.to_json.html_safe %>;
+  var stocksWithIndex = <%= stocks_with_index.blank? ? '{}' : stocks_with_index.values.to_json.html_safe %>;
 
   _.each(stocksWithIndex, function(item) {
     _.extend(item, item.data)
     delete item.data;
   });
 
-  var fullfilledKeys = <%= stocks_with_index.values[0][:data].try(:keys).to_json.html_safe %>;
+  var fullfilledKeys = <%= stocks_with_index.blank? ? '[]' : stocks_with_index.values[0][:data].try(:keys).to_json.html_safe %>;
 
   // $(".add-to-cart").click(function(e) {
   //   $form = $(e.target).parents("form")

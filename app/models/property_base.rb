@@ -18,6 +18,11 @@ class PropertyBase
     field["value"] = typecast(value)
   end
 
+  def title=(title)
+    field = target[@name] ||= {}
+    field["title"] = title
+  end
+
   def target
     @record.properties_target ||= {}
   end

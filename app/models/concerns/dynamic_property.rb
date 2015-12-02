@@ -16,9 +16,10 @@ module DynamicProperty
     end
   end
 
-  def write_property(name, value)
+  def write_property(name, value, title=nil)
     property = property_config_with_properties(name)
     property.value = value
+    property.title = title if title.present?
   end
 
   def read_property(name)

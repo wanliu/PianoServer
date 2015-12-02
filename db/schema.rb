@@ -354,7 +354,7 @@ ActiveRecord::Schema.define(version: 20151201070339) do
     t.string  "delivery_address"
     t.boolean "total_modified",                            default: false, null: false
     t.decimal "origin_total",     precision: 10, scale: 2
-    t.integer "status"
+    t.integer "status",                                    default: 0
   end
 
   add_index "orders", ["buyer_id"], name: "index_orders_on_buyer_id", using: :btree
