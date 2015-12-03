@@ -26,15 +26,13 @@
   .promotion-image-wrap{
     display: block;
     text-align: center;
-    height: 230px;
     @media (max-width: 484px){
         height: 180px;
     }
   }
 
   .promotion-image-wrap img.promotion-image{
-    max-height: 100%;
-    max-width: 100%;
+    width: 100%;
     height: auto;
   }
 
