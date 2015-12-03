@@ -86,3 +86,5 @@ after_registers:
     validates: strict
   total:
     max_count: 15
+weixin:
+  scope: snsapi_login
