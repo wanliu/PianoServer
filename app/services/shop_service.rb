@@ -3,8 +3,9 @@ require 'rails/generators'
 module ShopService
   extend self
 
-  def build(name)
-    Rails::Generators.invoke 'shop:build', [ name, "--skip" ]
+  def build(name, options = { theme: 'theme1' })
+    options[:skip] = true if options[:skip].nil?
+    Rails::Generators.invoke 'shop:build', [ name, options[:theme], options[:skip] ? '--skip' : '--no-skip' ]
   end
 
   def valid?(shop)
@@ -20,11 +21,11 @@ module ShopService
   end
 
   def template_path(shop, filename)
-    File.join(shop_path(shop), "views", filename)
+    File.join(shop_path(shop), "views", shop.theme, filename)
   end
 
   def views_path(shop)
-    File.join(shop_path(shop), "views")
+    File.join(shop_path(shop), "views", shop.theme)
   end
 
   def set_file_system(shop)

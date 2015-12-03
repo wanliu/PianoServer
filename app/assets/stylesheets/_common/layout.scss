@@ -28,6 +28,10 @@ body.detail footer{
   bottom:50px;
 }
 
+body.chat footer{
+  display: none;
+}
+
 .menu-container {
   position: fixed;
   top: 0;
@@ -143,8 +147,6 @@ body.detail footer{
       overflow: hidden;
     }
   }
-
-
 }
 
 .min-height-100 {
@@ -166,14 +168,17 @@ body.detail footer{
 }
 
 .main-container{
-  background-color: #fff;
+  background-color: #eee;
   position: relative;
-  padding-top: 60px;
+  padding-top: 50px;
   -webkit-transition: all $transition-time;
   transition: all $transition-time;
-  overflow-x: hidden;
+  overflow: hidden;
   min-height: 100%;
+  background-image: image_url('bj.jpg');
+  padding-bottom: 100px;
 }
+
 .menu-overlayer {
   position: fixed;
   left: 200px;
