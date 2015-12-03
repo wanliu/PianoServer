@@ -13,6 +13,7 @@ class AuthorizeController < ApplicationController
 
       user = User.where('data @> ?', {weixin_openid: profile['openid']}.to_json)
              .first_or_initialize(
+               username: SecureRandom.urlsafe_base64.tr('-', '_'),
                weixin_openid: profile['openid'],
                nickname: profile['nickname'],
                sex: profile['sex'],
