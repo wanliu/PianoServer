@@ -3,7 +3,7 @@ class Shop < ActiveRecord::Base
 
   include Liquid::Rails::Droppable
   include PublicActivity::Model
-  tracked
+  tracked owner: Proc.new{ |controller, model| controller.current_user }
 
   enum shop_type: [:retail, :distributor, :wholesaler, :manufacturer ]
 
@@ -50,6 +50,10 @@ class Shop < ActiveRecord::Base
     else
       Region.find_by(city_id: region_id)
     end
+  end
+
+  def recent_update_location
+    activities.where(key: 'shop.update_location').first.try(:updated_at) or DateTime.new(1996)
   end
 
   protected

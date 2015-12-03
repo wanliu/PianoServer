@@ -1,9 +1,17 @@
+<% content_for :javascripts do %>
+  <script type="text/javascript" src="http://api.map.baidu.com/api?v=1.5&ak=<%= Settings.baidu.ditu.secret %>"  data-turbolinks-track>
+  //v1.5版本的引用方式：src="http://api.map.baidu.com/api?v=1.5&ak=您的密钥"
+  //v1.4版本及以前版本的引用方式：src="http://api.map.baidu.com/api?v=1.4&key=您的密钥&callback=initialize"
+  </script>
+
+<% end %>
+
 <div class="panel panel-default profile-panel">
   <div class="panel-heading">
     <h3 class="panel-title">商店档案</h3>
   </div>
   <div class="panel-body">
-    <%= form_for @shop, url: shop_admin_profile_path(@shop.name) do |f| %>
+    <%= form_for @shop, url: shop_admin_profile_path(@shop.name), layout: :basic do |f| %>
       <div class="form-group">
         <%= f.label :logo_url, "商店Logo" %>
         <div class="image-uploader">
@@ -13,31 +21,61 @@
         </div>
       </div>
 
-      <div class="form-group">
-        <%= f.label :name, "商店名称" %>
-        <%= f.text_field :name, class: 'form-control', readonly: "readonly" %>
-      </div>
-      <div class="form-group">
-        <%= f.label :title, " 标题" %>
-        <%= f.text_field :title, class: 'form-control' %>
-      </div>
+      <%= group_with_errors @shop, :name, f, title: '网址', layout: :normal, input_group: true do %>
+          <span class="input-group-addon" id="basic-addon3"><%= Settings.app.website + '/'%></span>
+          <%= text_field :shop, :name, class: 'form-control', readonly: true %>
+          <span class="input-group-btn">
+            <%= button class: 'toggle-edit', disabled: @shop.persisted? do %>
+              <b><%= icon :edit %></b>
+            <% end %>
+          </span>
+      <% end %>
+      <%#= f.text_field :name, readonly: "readonly" %>
 
-      <div class="form-group">
-        <%= f.label :phone, "联系电话" %>
-        <%= f.text_field :phone, class: 'form-control' %>
+      <%= f.text_field :title, label: '商店名' %>
+
+      <%= f.text_field :phone %>
+
+<!--       <div class="form-group">
+        <%#= f.label :website, "商店主页" %>
+        <%#s= f.text_field :website, class: 'form-control' %>
       </div>
+ -->
+      <% status = @shop.recent_update_location - (Settings.shop.location.change_period).days < Time.now  %>
 
-      <div class="form-group">
-        <%= f.label :address, "地址" %>
-        <%= f.text_field :address, class: 'form-control', placeholder: '商店地址' %>
+      <%= group_with_errors @shop, :location, f, layout: :normal do %>
+        <% fields_for :location, @shop.location, layout: :inline do |l| %>
+
+          <%
+            province_id = @shop.location.try :province_id
+            city_id = @shop.location.try :city_id
+            region_id = @shop.location.try :region_id
+
+            province_list = ChinaCity.list
+            city_list = ChinaCity.list province_id.to_s
+            region_list = ChinaCity.list city_id.to_s
+
+          %>
+
+          <div class="city-group row" >
+            <div class="col-sm-4">
+              <%= l.select(:province_id, options_for_select(province_list, province_id), {prompt: '--省份--'}, {class: "city-select form-control", disabled: status}) %>
+            </div>
+            <div class="col-sm-4">
+              <%= l.select(:city_id, options_for_select(city_list, city_id), {prompt: "--城市--"}, { class: "city-select form-control", disabled: status} ) %>
+            </div>
+            <div class="col-sm-4">
+              <%= l.select(:region_id,  options_for_select(region_list, region_id), {prompt: "--地区--"}, { class: "city-select form-control", disabled: status } ) %>
+            </div>
+          </div>
+          <span class="help-block text-left"><%= time_ago_in_words(Settings.shop.location.change_period.days.ago) %>只能改动一次地址</span>
+        <% end %>
+      <% end %>
+      <%= f.text_field :address, label: false, help: "拖动地图中心图标定位你的位置", disabled: status %>
+      <%= f.hidden_field :lat %>
+      <%= f.hidden_field :lon %>
+      <div id="map">
       </div>
-
-      <div class="form-group">
-        <%= f.label :website, "商店主页" %>
-        <%= f.text_field :website, class: 'form-control' %>
-      </div>
-
-
       <div class="form-group">
         <%= f.label :description, "描述" %>
         <%= f.bootsy_area :description, class: "form-control", rows: 12 %>
@@ -60,6 +98,88 @@
     <ul class='qq-upload-list' style='display: none;'></ul>
   </div>
 </div>
+
+<script type="text/javascript">
+  var map = new BMap.Map("map");
+  var point = new BMap.Point(<%= @shop.lon %>, <%= @shop.lat %>);
+  var level = 15;
+  var geo = new BMap.Geocoder();
+  var marker;
+  var opts = {type: BMAP_NAVIGATION_CONTROL_SMALL}
+  map.addControl(new BMap.NavigationControl(opts));
+
+  // getLocationPosition();
+
+  marker = setPosition(point, true);
+  map.addOverlay(marker);
+
+  // marker.enableDragging();
+
+  // if (navigator && navigator.geolocation) {
+  //   navigator.geolocation.getCurrentPosition(GetLocation, errorCallback);
+  // } else {
+  //   console.log('Geolocation is not supported');
+  // }
+
+  // map.addEventListener("click", function(e){
+  //   setPosition(e.point);
+  // });
+
+  // function GetLocation(location) {
+  //   var point = new BMap.Point(location.coords.longitude, location.coords.latitude);
+
+  //   setPosition(point, true)
+  // }
+
+  // function errorCallback(err) {
+  //   console.error(err);
+  // }
+
+  // function getCity() {
+  //   return $(".city-group option:selected" ).text();
+  // }
+
+  // function getFullAddress() {
+  //   return getCity() + $("#shop_address").val();
+  // }
+
+  // function getLastCityName() {
+  //   var cities = $(".city-group option:selected").map(function(i, elem) {
+  //     return $(elem).text().trim();
+  //   })
+
+  //   cities = Array.prototype.filter.call(cities, function(city) {
+  //     return !(city == "" || city[0] == "-");
+  //   })
+  //   return cities[cities.length - 1];
+  // }
+
+  function setPosition(point, reposition ) {
+    if (reposition) { map.centerAndZoom(point, level); }
+    if (marker) { map.removeOverlay(marker); }
+    marker = new BMap.Marker(point);
+    map.addOverlay(marker);
+    $('#shop_lat').val(point.lat);
+    $('#shop_lon').val(point.lng);
+    return marker;
+  }
+
+  // function getLocationPosition() {
+  //   var city = getLastCityName();
+  //   var address = getFullAddress();
+
+  //   geo.getPoint(address, function(point){
+  //     if (point) {
+  //       setPosition(point, true)
+  //     }
+  //   }, city);
+  // }
+
+
+  // $("#shop_address").blur(function(e) {
+  //   getLocationPosition();
+  // });
+</script>
 
 <script type="text/javascript">
   (function () {
