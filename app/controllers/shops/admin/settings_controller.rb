@@ -32,13 +32,14 @@ class Shops::Admin::SettingsController < Shops::Admin::BaseController
   def change_shop_theme
     begin
       shop = Shop.find_by(name: params[:shop_id])
-      dir = File.join(Rails.root, Settings.sites.shops.root, shop.name, "theme_#{ params[:theme]}")
+      theme = params[:theme]
+      dir = File.join(Rails.root, Settings.sites.shops.root, shop.name, "theme_#{ theme }")
 
       unless File.exists? dir
-        ShopService.build(params[:shop_id], { theme: params[:theme] })
+        ShopService.build(params[:shop_id], { theme: theme })
       end
         
-      shop.theme = params[:theme]
+      shop.update_attribute('theme', theme)
       shop.save!
 
       expire_page shop_site_path(@shop.name)
