@@ -27,10 +27,7 @@ class AuthorizeController < ApplicationController
       # sign_in(:user, user) 在登陆前，竟然强制保存了 user.
       sign_in(:user, user)
     end
-    if request.referer
-      redirect_to URI(request.referer).path, turbolinks: false
-    else
-      redirect_to root_path, turbolinks: false
-    end
+    url = request.referer ? URI(request.referer).path : root_path
+    redirect_to url, turbolinks: false, notice: '微信认证登陆成功'
   end
 end
