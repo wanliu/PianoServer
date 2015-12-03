@@ -71,7 +71,6 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
       .group_by {|category| category.parent }
       .map {|group, items| [ group.self_and_ancestors.map{ |parent| parent.title }.join(' » '), items.map {|i| [i.title, i.id]}]}
 
-
     prop_params = properties_params(@properties + @inventory_properties)
 
     @item = Item.new item_basic_params.merge(shop_id: @shop.id) do |item|

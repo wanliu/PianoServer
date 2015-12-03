@@ -1,44 +1,46 @@
-<div class="page-header col-sm-12 ">
-  <h1>购物车 <small>清单</small></h1>
-</div>
+<div class='cart col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1'>
+  <div class="page-header col-sm-12 ">
+    <h1>购物车 <small>清单</small></h1>
+  </div>
 
-<div class="col-sm-12">
-  <% if current_cart.items.blank? %>
-    <h2>你的购物车是空的</h2>
-  <% else %>
-    <% groups = @items.group_by {|item| item.supplier } %>
-    <% groups.each do |supplier, items| %>
-      <%= form_for Order.new, url: confirmation_orders_path do |f| %>
-        <%= f.hidden_field :supplier_id, value: supplier.id %>
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <div class="btn-group pull-right">
-              <%#= link_to '#', class: 'btn btn-link' do %>
-                <%= caret %>
-              <%# end %>
+  <div class="col-sm-12">
+    <% if current_cart.items.blank? %>
+      <h2>你的购物车是空的</h2>
+    <% else %>
+      <% groups = @items.group_by {|item| item.supplier } %>
+      <% groups.each do |supplier, items| %>
+        <%= form_for Order.new, url: confirmation_orders_path do |f| %>
+          <%= f.hidden_field :supplier_id, value: supplier.id %>
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <div class="btn-group pull-right">
+                <%#= link_to '#', class: 'btn btn-link' do %>
+                  <%= caret %>
+                <%# end %>
+              </div>
+              <span>
+                <input type='checkbox' class='select-all' data-supplier-id='<%= supplier.id %>' checked='checked' />全选
+              </span>
+              店铺：
+              <%= link_to shop_site_path(supplier.name) do %>
+                <%= supplier.title %> 
+              <% end %>
+              ( <%= items.count %> 件商品)
             </div>
-            <span>
-              <input type='checkbox' class='select-all' data-supplier-id='<%= supplier.id %>' checked='checked' />全选
-            </span>
-            店铺：
-            <%= link_to shop_site_path(supplier.name) do %>
-              <%= supplier.title %> 
-            <% end %>
-            ( <%= items.count %> 件商品)
+            <ul class="list-group cart-item-details">
+              <%= render partial: "cart_item", collection: items.sort_by(&:id), as: :item, locals: { supplier: supplier, f: f } %>
+            </ul>
+            <div class="panel-footer">
+              <%= f.submit '结算', class: 'btn btn-primary' %>
+            </div>
           </div>
-          <ul class="list-group cart-item-details">
-            <%= render partial: "cart_item", collection: items.sort_by(&:id), as: :item, locals: { supplier: supplier, f: f } %>
-          </ul>
-          <div class="panel-footer">
-            <%= f.submit '结算', class: 'btn btn-primary' %>
-          </div>
-        </div>
+        <% end %>
       <% end %>
     <% end %>
-  <% end %>
 
-  <%#= button_to '全部生成订单', class: 'btn btn-primary' %>
-
+    <%#= button_to '全部生成订单', class: 'btn btn-primary' %>
+    
+  </div>
 </div>
 
 <script type="text/javascript">

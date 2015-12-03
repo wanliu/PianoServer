@@ -210,7 +210,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :orders, only: [:index, :show, :destroy, :create] do
+  resources :orders, only: [:index, :show, :destroy, :create, :update] do
     collection do
       post "confirmation"
       post "buy_now_create"

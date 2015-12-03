@@ -14,6 +14,11 @@ class Order < ActiveRecord::Base
   validates :buyer, presence: true
   validates :delivery_address, presence: true
 
+  validate :avoid_from_shop_owner
+  validate :status_transfer, on: :update
+  validate :change_total_on_initiated, on: :update
+
+  before_save :set_modified, if: :total_changed?
   before_create :caculate_total
 
   paginates_per 5
@@ -59,5 +64,29 @@ class Order < ActiveRecord::Base
 
   def caculate_total
     self.origin_total = self.total = items.reduce(0) { |total, item| total += item.price * item.quantity }
+  end
+
+  def avoid_from_shop_owner
+    if supplier_id == buyer_id
+      errors.add(:supplier_id, "不能购买自己店里的商品")
+    end
+  end
+
+  # status could noly change from "initated" to "finish" right now
+  def status_transfer
+    if status_changed? && !status_changed?(form: "initated", to: "finish")
+      errors.add(:base, "错误的操作")
+    end
+  end
+
+  # 暂时的解决：订单完成后不能再修改总价
+  def change_total_on_initiated
+    if total_changed? && finish?
+      errors.add(:base, "不能修改已经完成的订单总价")
+    end
+  end
+
+  def set_modified
+    self.total_modified = true
   end
 end

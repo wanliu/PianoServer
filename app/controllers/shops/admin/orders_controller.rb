@@ -45,7 +45,7 @@ class Shops::Admin::OrdersController < Shops::Admin::BaseController
   # PATCH/PUT /shops/admin/orders/1.json
   def update
     respond_to do |format|
-      if @order.update(total: order_params[:total], total_modified: true)
+      if @order.update(total: order_params[:total])
         format.html { redirect_to shop_admin_order_path(current_shop.name, @order), notice: '订单修改成功' }
         format.json { render :show, status: :ok, location: @order }
       else

@@ -24,13 +24,25 @@
           <%= minus_plus_button_field :cart_item, :quantity, value: cartitem.quantity, placeholder: "数量", class: 'form-control cart_item_quantity' %>
       </div>
   
-      <div class="form-group purchase-buttons col-sm-12" >
+      <div class="form-group purchase-buttons col-sm-12 hidden-xs" >
         <% if item.inventory_properties.present? && stocks_with_index.present? %>
-          <%= f.button "加入购物车", class: 'btn btn-info btn-lg add-to-cart', disabled: "disabled", "data-cartable-type" => 'Item', "data-cartable-id" => @item.id, type: 'button' %>
-          <%= f.button "购买", class: 'btn btn-danger btn-lg buy-now js-buy-now', disabled: "disabled", "data-cartable-type" => 'Item', "data-cartable-id" => @item.id, type: 'button' %>
+          <% if Settings.dev.feature.cart %>
+            <%= f.button class: 'btn btn-info btn-lg add-to-cart', disabled: "disabled", "data-cartable-type" => 'Item', "data-cartable-id" => @item.id, type: 'button' do %>
+              <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>加入购物车
+            <% end %>
+          <% end %>
+          <% if Settings.dev.feature.purchase %>
+            <%= f.button "立即购买", class: 'btn btn-danger btn-lg buy-now js-buy-now', disabled: "disabled", "data-cartable-type" => 'Item', "data-cartable-id" => @item.id, type: 'button' %>
+          <% end %>
         <% else %>
-          <%= f.button "加入购物车", class: 'btn btn-info btn-lg add-to-cart', "data-cartable-type" => 'Item', "data-cartable-id" => @item.id, type: 'button' %>
-          <%= f.button "购买", class: 'btn btn-danger btn-lg buy-now js-buy-now', "data-cartable-type" => 'Item', "data-cartable-id" => @item.id, type: 'button' %>
+          <% if Settings.dev.feature.cart %>
+            <%= f.button class: 'btn btn-info btn-lg add-to-cart', "data-cartable-type" => 'Item', "data-cartable-id" => @item.id, type: 'button' do %>
+              <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>加入购物车
+            <% end %>
+          <% end %>
+          <% if Settings.dev.feature.purchase %>
+            <%= f.button "立即购买", class: 'btn btn-danger btn-lg buy-now js-buy-now', "data-cartable-type" => 'Item', "data-cartable-id" => @item.id, type: 'button' %>
+          <% end %>
         <% end %>
       </div>
 

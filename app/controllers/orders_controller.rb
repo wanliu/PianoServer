@@ -1,6 +1,6 @@
 class OrdersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_order, only: [:show, :destroy]
+  before_action :set_order, only: [:show, :destroy, :update]
 
   # GET /orders
   # GET /orders.json
@@ -125,15 +125,17 @@ class OrdersController < ApplicationController
 
   # PATCH/PUT /orders/1
   # PATCH/PUT /orders/1.json
-  # def update
-  #   @order = Order.find(params[:id])
-
-  #   if @order.update(order_params)
-  #     head :no_content
-  #   else
-  #     render json: @order.errors, status: :unprocessable_entity
-  #   end
-  # end
+  def update
+    respond_to do |format|
+      if @order.update(order_update_params)
+        format.json { head :no_content }
+        format.html { redirect_to history_orders_path }
+      else
+        format.json { render json: @order.errors, status: :unprocessable_entity }
+        format.html { render :show, flash[:now] = @order.errors.full_messages.join(', ') }
+      end
+    end
+  end
 
   # DELETE /orders/1
   # DELETE /orders/1.json
@@ -151,6 +153,10 @@ class OrdersController < ApplicationController
 
   def order_params
     params.require(:order).permit(:supplier_id, :address_id, cart_item_ids: [])
+  end
+
+  def order_update_params
+    params.require(:order).permit(:status)
   end
 
   def buy_now_order_params

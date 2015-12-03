@@ -1,4 +1,6 @@
 .orders {
+  margin-top: 10px;
+
   .orders-tab {
     height: 41px;
     margin-bottom: 20px;
@@ -51,4 +53,8 @@
       }
     }
   }
+}
+
+.add-to-cart, .buy-now, .add-to-cart-bottom {
+  cursor: pointer;
 }

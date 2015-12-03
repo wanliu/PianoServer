@@ -200,6 +200,10 @@ class Item < ActiveRecord::Base
     end
   end
 
+  def properties_name
+    properties.map { |key, value| value['title'] }
+  end
+
   def inventory_properties
     properties.select do |property, prop_values|
       "stock_map" == prop_values['prop_type']
@@ -208,7 +212,7 @@ class Item < ActiveRecord::Base
 
   def properties_setting
     super.map do |property|
-      keys = Property.attribute_names
+      keys = Property.attribute_names - ["id"]
       Property.new property.slice(*keys)
     end
   end
