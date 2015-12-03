@@ -56,9 +56,11 @@ class Shop::BuildGenerator < Rails::Generators::NamedBase
 
   def theme_path
     if @theme.nil?
-      'theme1'
-    else
-      @theme
+      @theme = 'theme1'
+      @shop.update_attribute('theme', @theme)
+      @shop.save
     end
+
+    @theme
   end
 end

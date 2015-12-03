@@ -21,6 +21,12 @@ body[module="signup"] {
   background: #ddd;
 }
 
+body.shop-admin{
+  .main-container{
+    background: #fff;
+  }
+}
+
 .navbar-left > li {
   float: left;
 }
