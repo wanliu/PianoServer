@@ -13,7 +13,7 @@ class @Chat
     isMessageScroll: true,
     maxMessageGroup: 10,
     earlyTime: 0,
-    avatarDefault: '/assets/ava1tar.gif',
+    avatarDefault: '/assets/avatar.gif',
     displayUserName: false,
     miniTimeGroupPeriod: 1000 * 180
     # autoEnter: true
