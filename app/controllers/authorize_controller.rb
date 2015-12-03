@@ -27,6 +27,10 @@ class AuthorizeController < ApplicationController
       # sign_in(:user, user) 在登陆前，竟然强制保存了 user.
       sign_in(:user, user)
     end
-    redirect_to :back
+    if request.referer
+      redirect_to :back
+    else
+      redirect_to root_path
+    end
   end
 end
