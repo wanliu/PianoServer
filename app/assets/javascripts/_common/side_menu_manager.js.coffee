@@ -1,22 +1,15 @@
 #= require ./side_menu
+TRANSITION_ENDS = 'webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend'
 
 class @SideMenuManager
   constructor: (@element) ->
     @menus = []
-    @$content = $('.content-container')
+    @$container = $('.main-container')
+    @$background = @$container.css('background')
+    @$navbar = $('.main-navbar')
     @$layout = $('.menu-overlayer')
     @resizeHandler()
     $(window).bind 'resize', @resizeHandler.bind(@)
-
-    @hammer = new Hammer.Manager(document.body)
-    @hammer.add(new Hammer.Swipe({
-      direction: Hammer.DIRECTION_HORIZONTAL,
-      velocity: 0.1,
-      threshold: 1,
-      pointers: 1
-    }))
-    @hammer.on("swiperight", @_open.bind(@))
-    @hammer.on("swipeleft", @_close.bind(@))
 
     @element.on('click', (e) =>
       $target = $(e.target)
@@ -25,9 +18,14 @@ class @SideMenuManager
         @_hide()
     )
 
+    @$layout.on('click', @_layoutClick.bind(@))
+
   resizeHandler: () ->
     if $(window).width() > 768
       @_hide()
+      @_destroyHammer()
+    else
+      @_initHammer()
 
   addMenu: (menu) ->
     if menu instanceof SideMenu
@@ -47,22 +45,30 @@ class @SideMenuManager
     menu.setVisible(false)
 
   _show: () ->
-    #@element.css('left', 0)
-    @$content.css('margin-left', 200)
-    @$layout.show()
-    @isVisible = true
+    $('body').css('overflow','hidden')
+    @$container.addClass('show-left-bar')
+    @$navbar.addClass('show-left-bar')
+
+    setTimeout () =>
+      @$layout.fadeIn(300)
+      @isVisible = true
+    , 300
 
   _hide: () ->
-    #@element.css('left', -250)
-    @$content.css('margin-left': 0)
     @$layout.hide()
-    @isVisible = false
+    @$container.removeClass('show-left-bar')
+    @$navbar.removeClass('show-left-bar')
+
+    setTimeout () =>
+      $('body').css('overflow','auto')
+      @isVisible = false
+    , 300
 
   _open: () ->
-    @_show() if $(window).width() <= 768
+    @_show() if $(window).width() <= 768 and !@isVisible
 
   _close: () ->
-    @_hide() if $(window).width() <= 768
+    @_hide() if $(window).width() <= 768 and @isVisible
 
   toggleMenu: (menuName) ->
     menu = if menuName then @_lookupMenu(menuName) else @menus[@menus.length - 1]
@@ -87,6 +93,27 @@ class @SideMenuManager
       return menu if menu.name == name
 
     return null
+
+  _layoutClick: () ->
+    @_hide()
+
+  _initHammer: () ->
+    return if @hammer
+
+    @hammer = new Hammer.Manager(document.body)
+    @hammer.add(new Hammer.Swipe({
+      direction: Hammer.DIRECTION_HORIZONTAL,
+      velocity: 0.1,
+      threshold: 1,
+      pointers: 1
+    }))
+    @hammer.on("swiperight", @_open.bind(@))
+    @hammer.on("swipeleft", @_close.bind(@))
+
+  _destroyHammer: () ->
+    if @hammer && @hammer.destroy
+      @hammer.destroy()
+      @hammer = null
 
   # _recalculateZIndex: (menu) ->
   #   index = @menus.indexOf(menu)

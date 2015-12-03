@@ -15,7 +15,7 @@
   <% end %>
 </ol>
 <% end %>
-<div class="shop-category-list">
+<div class="shop-category-list clearfix">
   <%= render partial: "shop_category", collection: @children %>
   <% unless @shop_category.depth >= 3 %>
     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-3 new-shop-category">
@@ -33,11 +33,8 @@
       <p class="text-center">新增一个分类</p>
     </div>
   <% end %>
-
-  <div style='clear: both;'>
-    <%= paginate(@children) %>
-  </div>
 </div>
+<%= paginate(@children) %>
 
 <div class="modal fade" id="category-modal">
   <div class="modal-dialog modal-sm">

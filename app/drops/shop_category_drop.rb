@@ -8,6 +8,10 @@ class ShopCategoryDrop < Liquid::Rails::Drop
     "/categories/#{object.id}"
   end
 
+  def link_html
+    "/categories/#{object.id}.html"
+  end
+
   def parent
     object.parent
   end

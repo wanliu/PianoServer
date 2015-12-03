@@ -17,14 +17,14 @@
 @import 'bootstrap-datetimepicker';
 @import "bootsy";
 
-body {
-  padding-top: 50px;
-  padding-bottom: 40px;
-  background: #fff;
-}
-
 body[module="signup"] {
   background: #ddd;
+}
+
+body.shop-admin{
+  .main-container{
+    background: #fff;
+  }
 }
 
 .navbar-left > li {
@@ -52,6 +52,7 @@ body[module="signup"] {
   padding-left: 250px;
   background: #FFFFFF;
   position: relative;
+  top: 10px;
 
   footer {
     display: none;

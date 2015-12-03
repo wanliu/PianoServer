@@ -96,10 +96,11 @@
 
 @media (max-width: 867px) {
   .chat-linkman-container{
+    display: none;
     position: fixed;
     z-index: 99999;
-    width: 80%;
-    left: -80%;
+    width: 60px;
+    left: -60px;
     top: 50px;
     background: #FFFFFF;
 

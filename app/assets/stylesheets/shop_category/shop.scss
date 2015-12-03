@@ -165,8 +165,12 @@ body.shop {
         padding: 10px;
 
         .cate-desc {
-          padding: 0 10px;
+          padding: 0 15px;
+          > div{
+            overflow: hidden;
+          }
         }
+
       }
     }
   }
