@@ -66,21 +66,6 @@ body {
   padding-left: 0px;
 }
 
-@media (max-width: 484px) {
-  .container {
-    padding-left: 10px;
-    padding-right: 10px;
-  }
-
-  .no-padding {
-    margin-left: -10px;
-    margin-right: -11px;
-  }
-
-  .margin20 {
-    margin-top: 20px;
-  }
-}
 
 @media (min-width: 768px) {
   .navbar-header {
