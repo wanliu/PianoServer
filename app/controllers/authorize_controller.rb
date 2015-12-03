@@ -28,7 +28,7 @@ class AuthorizeController < ApplicationController
       sign_in(:user, user)
     end
     if request.referer
-      redirect_to :back
+      redirect_to URI(request.referer).path
     else
       redirect_to root_path
     end
