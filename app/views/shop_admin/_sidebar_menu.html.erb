@@ -18,8 +18,11 @@
   route = '<%= shop_admin_items_path(@shop.name) %>';
   menu.insertGroup(route, '商品');
 
-  route = '<%= shop_admin_orders_path(@shop.name) %>';
-  menu.insertGroup(route, '订单');
+  var sale_orders = '<%= shop_admin_orders_path(@shop.name) %>';
+  var buy_orders = '<%= orders_path %>';
+  menu.insertGroup('all_orders', '订单');
+  menu.insertSection('sale_orders', sale_orders, sale_orders, '我卖的')
+  menu.insertSection('buy_orders', buy_orders, buy_orders, '我买的')
 
   route = '<%= about_shop_path(@shop.name) %>';
   menu.insertGroup(route, '关于');
