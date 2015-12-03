@@ -74,6 +74,7 @@ class AfterRegistersController < ApplicationController
   def retail_steps
     case @current_user.state
     when "select", nil
+      @industry = @current_user.industry || Industry.new
     when "industry"
       @shop = @current_user.owner_shop || Shop.new(owner_id: @current_user.id)
     when "shop"
