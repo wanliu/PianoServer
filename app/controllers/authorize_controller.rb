@@ -10,7 +10,7 @@ class AuthorizeController < ApplicationController
     if wx_client.is_valid?
       access_token = wx_client.get_oauth_access_token(code).result['access_token']
       profile = wx_client.get_oauth_userinfo(wx_client.app_id, access_token).result
-
+      logger.info "profile: #{profile.inspect}"
       user = User.where('data @> ?', {weixin_openid: profile['openid']}.to_json)
              .first_or_initialize(
                username: SecureRandom.urlsafe_base64.tr('-', '_'),
