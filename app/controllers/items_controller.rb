@@ -2,7 +2,7 @@ class ItemsController < ApplicationController
   before_filter :set_shop
   before_filter :set_item, only: [ :show ]
 
-  caches_page :index, :show
+  # caches_page :index, :show
 
   def index
     page = params[:page].presence || 1

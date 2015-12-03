@@ -22,6 +22,32 @@ $transition-time:0.4s;
 
 }
 
+.industry-select {
+  display: none;
+}
+
+.industry-select[type="radio"]:checked+label {
+  .media {
+    border: 1px solid #337ab7;
+    background-color: #c4e3f3;
+    color: #31708f;
+  }
+}
+
+.industry-item {
+  background-color: white;
+  border: 1px solid white;
+  height: 100px;
+
+  .media-body {
+    padding: 15px 0;
+  }
+}
+
+.industry-item {
+  margin-bottom: 20px;
+}
+
 .product-groups {
   .affix {
     // top: 51px;
@@ -148,5 +174,4 @@ $transition-time:0.4s;
   height: 500px;
   margin-bottom: 30px;
 }
-
 

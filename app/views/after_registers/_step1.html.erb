@@ -2,17 +2,31 @@
   快速开店 行业选择(1/4)
 <% end %>
 
-<div class="col-sm-12">
-<div class="page-header hidden-xs">
-  <h1>快速开店<small> 行业选择</small></h1>
-</div>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="page-header hidden-xs">
+        <h1>快速开店<small> 行业选择</small></h1>
+      </div>
+    </div>
+  </div>
+  <%= form_for @industry, url: after_register_path(@user_type, step: 'industry'), method: :put do %>
+  <div class="row">
+    <div class="industry-list media-list margin20">
+      <%= render "industry", collection: Industry.all %>
+    </div>
+  </div>
 
+  <div class="pull-right">
+    <%= button "以后再说", context: :default, class: 'btn-lg skip' %>
+    <%= button "下一步", context: :primary, class: 'btn-lg next', disabled: true %>
+  </div>
+  <% end %>
 
-<%= panel_row column_class: 'col-sm', class: 'margin20' do %>
-  <%= render "industry", collection: Industry.all %>
-<% end %>
-<div class="pull-right">
-  <%= button "以后再说", after_register_path(@user_type), context: :default, class: 'btn-lg' %>
-  <%= button "下一步", after_register_path(@user_type), context: :primary, class: 'btn-lg' %>
+  <%= render "skip_form" %>
 </div>
-</div>
+<script type="text/javascript">
+  $('input[name="industry"]').change(function(e){
+    $('.next').attr('disabled', false)
+  });
+</script>

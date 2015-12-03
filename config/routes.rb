@@ -170,7 +170,7 @@ Rails.application.routes.draw do
   end
 
   namespace :api do
-
+    resources :user, only: [:index]
     get "suggestion", :to => "suggestion#index"
 
     # resources :business, concerns: :roomable do

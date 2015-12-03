@@ -46,8 +46,8 @@ class User < ActiveRecord::Base
     return found.nil? ? true : found.provider == 'import'
   }
 
-  mount_uploader :image, AvatarUploader
-  enum sex: {'男' => 1, '女' => 0 }
+  mount_uploader :image, ImageUploader
+  enum sex: {'保密' => 0, '男' => 1, '女' => 2 }
   store_accessor :data,
                  :weixin_openid, :weixin_privilege, :language, :city, :province, :country
 
@@ -62,7 +62,9 @@ class User < ActiveRecord::Base
   end
 
   def chat_token
-    JWT.encode({id: id}, JWT_TOKEN)
+    Rails.cache.fetch [:users_jwt,  :id], expires_in: 12.hours do
+      JWT.encode({id: id}, JWT_TOKEN)
+    end
   end
 
   def self.find_for_database_authentication(warden_conditions)
@@ -140,7 +142,7 @@ class User < ActiveRecord::Base
     pusher_token = Settings.pusher.pusher_token.clone
     pusher_url << 'users'
 
-    options = {id: "#{id}", token: pusher_token, login: username, realname: username, avatar_url: avatar_url }
+    options = {id: "#{id}", token: pusher_token, login: username, realname: nickname, avatar_url: avatar_url }
 
     begin
       RestClient.post pusher_url, options

@@ -6,7 +6,8 @@ class Shops::Admin::ShopCategoriesController < Shops::Admin::BaseController
   def create
     @root = @shop.shop_category
     @shop_category = @root.children.create(shop_category_params)
-    expire_page shop_shop_categories(@shop.name)
+
+    expire_cached_page
 
     render :show, formats: [ :json ]
   end
@@ -15,11 +16,13 @@ class Shops::Admin::ShopCategoriesController < Shops::Admin::BaseController
     @root = @shop.shop_category
     @parent = ShopCategory.find(params[:parent_id])
     raise ActionController::RoutingError.new('Not Found') unless @parent.is_or_is_descendant_of?(@root)
-    expire_page shop_shop_categories(@shop.name)
+
+    expire_page shop_shop_categories_path(@shop.name)
 
     respond_to do |format|
       format.json do
         @shop_category = @parent.children.build(shop_category_params)
+        expire_cached_page
 
         if @shop_category.save
           render :show, formats: [ :json ]
@@ -74,14 +77,17 @@ class Shops::Admin::ShopCategoriesController < Shops::Admin::BaseController
   def update_category
     @parent = @shop_category.parent
     @shop_category.update shop_category_detail_params
-    expire_page shop_admin_shop_category_path(@shop.name, @shop_category.id)
+
+    expire_cached_page
 
     redirect_to child_shop_admin_shop_category_path(@shop.name, @root.name, @parent)
   end
 
   def update_by_child
     @shop_category.update shop_category_params
-    expire_page shop_admin_shop_category_path(@shop.name, @shop_category.id)
+
+    expire_cached_page
+
     render :show, formats: [ :json ]
   end
 
@@ -91,7 +97,9 @@ class Shops::Admin::ShopCategoriesController < Shops::Admin::BaseController
 
   def destroy_by_child
     @shop_category.destroy
-    expire_page shop_shop_categories(@shop.name)
+
+    expire_cached_page
+
     render :destroy, formats: [:js]
   end
 
@@ -105,14 +113,14 @@ class Shops::Admin::ShopCategoriesController < Shops::Admin::BaseController
   def upload_image
     @shop_category.image = params[:file]
     @shop_category.save
-    expire_page shop_admin_shop_category_path(@shop.name, @shop_category.id)
+
+    expire_cached_page
     render json: { success: true, url: @shop_category.image.url(:cover) }
   end
 
   def update_status
     if @shop_category.update_attribute("status", params[:shop_category][:status])
-      expire_page shop_site_path(@shop.name)
-      expire_page shop_admin_shop_category_path(@shop.name, @shop_category.id)
+      expire_cached_page
 
       render json: { success: true }
     else
@@ -138,5 +146,17 @@ class Shops::Admin::ShopCategoriesController < Shops::Admin::BaseController
 
   def set_paginating
     params[:per] ||= 11
+  end
+
+  def is_parent_is_root
+    @root == @shop_category.parent
+  end
+
+  def expire_cached_page
+    if is_parent_is_root
+      expire_page shop_site_path(@shop.name)
+    else
+      expire_page shop_shop_categories_path(@shop.name, @shop_category.parent_id)
+    end
   end
 end

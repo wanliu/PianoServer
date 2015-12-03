@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   include Piano::PageInfo
   include Errors::RescueError
   include Mobylette::RespondToMobileRequests
-
+  include AnonymousController
   # include TokenAuthenticatable
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
@@ -34,24 +34,6 @@ class ApplicationController < ActionController::Base
 
   protected
 
-  def current_anonymous_or_user
-    current_user || anonymous
-  end
-
-  def anonymous
-    if session[:anonymous]
-      @anonymous = User.anonymous(session[:anonymous])
-    else
-      @anonymous = User.anonymous
-      session[:anonymous] = @anonymous.id
-    end
-    @anonymous
-  end
-
-  def anonymous?
-    current_anonymous_or_user.id < 0
-  end
-
   def current_cart
     @current_cart ||= current_anonymous_or_user.cart
   end
@@ -70,7 +52,7 @@ class ApplicationController < ActionController::Base
     end
 
     set_meta_tags pusherHost: Settings.pusher.socket_host, pusherPort: Settings.pusher.socket_port,
-                  user: current_anonymous_or_user.as_json(include_methods: :avatar_url ),
+                  user: current_anonymous_or_user.as_json(include_methods: :avatar_url, except: [:created_at, :updated_at] ),
                   debug: Settings.debug,
                   keywords: Settings.app.keywords,
                   description: Settings.app.description

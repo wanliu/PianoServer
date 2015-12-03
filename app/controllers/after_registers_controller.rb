@@ -24,6 +24,8 @@ class AfterRegistersController < ApplicationController
 
   def update
     logger.debug "User type: #{@user_type}"
+    return redirect_to root_path, alert: { msg: '您跳过了注册步骤，您的信息将不完整，如果想要继续请点击', url: after_register_path(@current_user.user_type), prompt: '注册向导' } if params[:step] == "skip"
+
     status, @step =
       case @user_type
       when NilClass
@@ -101,6 +103,7 @@ class AfterRegistersController < ApplicationController
   def distributor_steps
     case @current_user.state
     when "select", nil
+      @industry = @current_user.industry || Industry.new
     when "industry"
       @shop = @current_user.owner_shop || Shop.new(owner_id: @current_user.id)
     when "shop"
@@ -198,6 +201,7 @@ class AfterRegistersController < ApplicationController
 
   def set_type
     if params[:step] != "select" && @current_user.user_type != params[:id]
+      pp @current_user
       return redirect_to(after_register_path(@current_user.user_type))
     elsif params[:step] == "select"
       @user_type = params[:select]
