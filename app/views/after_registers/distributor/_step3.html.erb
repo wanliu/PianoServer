@@ -24,3 +24,47 @@
 
   <%= render "skip_form" %>
 </div>
+
+<script type="text/javascript">
+  function template(temp, context) {
+    return temp.replace(/\$(\w+)/g, function(m, k) {
+      return context[k];
+    });
+  }
+
+  var BRAND_TEMPLATE = "<a href=\"/brands/$id\" data-brand-id=\"$id\" class=\"brand-link list-group-item\" >$title</a>";
+  var BRAND_GROUP_TEMPLATE = "<ul class=\"list-group\">\n  $list\n</ul>";
+
+  $(".category-body>a").click(function(e) {
+    e.preventDefault();
+    $(".category-body>a").removeClass('active');
+    $(e.target).addClass('active');
+  });
+
+  $(".category-body>a").click(function(e) {
+    var id = $(e.target).data('category');
+    var $container = $(e.target).parents('.category-body')
+    var $ul = $container.find('>.brand-category-' + id);
+    var html = ""
+    if ($ul.length === 0) {
+      $.getJSON($(e.target).attr('href'), function(resp) {
+        var brands = resp.brands;
+
+        for (var i = 0; i < brands.length; i++) {
+          var brand = brands[i];
+          html += template(BRAND_TEMPLATE, brand);
+        }
+
+        $container.after(template(BRAND_GROUP_TEMPLATE, { list: html }));
+      });
+    }
+  });
+
+  $(".category-body>a").click(function(e) {
+    $(e.target).closest('.category-brand-container').slideToggle();
+  });
+
+  // $(".category-body>a").click(function(e) {
+  //   $(e.target).closest('.category-brand-container')..slideToggle();
+  // });
+</script>
