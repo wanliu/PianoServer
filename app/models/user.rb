@@ -36,7 +36,7 @@ class User < ActiveRecord::Base
   }
 
   mount_uploader :image, ImageUploader
-  enum sex: {'男' => 1, '女' => 0 }
+  enum sex: {'保密' => 0, '男' => 1, '女' => 2 }
   store_accessor :data,
                  :weixin_openid, :weixin_privilege, :language, :city, :province, :country
 
