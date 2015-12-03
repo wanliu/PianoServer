@@ -9,8 +9,8 @@
       </div>
     </div>
   </div>
-
-  <%= panel class: "no-padding" do %>
+  <%= form_tag after_register_path(:distributor, step: :category) do %>
+  <%= panel class: "no-padding category-brand-selector" do %>
     <div class="panel-heading">
       <h4><%= @industry.title %></h4>
     </div>
@@ -21,9 +21,19 @@
   <% end %>
 
   <%= render partial: "action_buttons", locals: { disabled: true, next_url: after_register_path(:distributor, step: :category) }, cache: true %>
+  <% end %>
 
   <%= render "skip_form" %>
 </div>
+
+<script type="text/template" id="brand_template">
+  <input type="checkbox" name="select[{{category_id}}][]" value="{{id}}" id="category_{{category_id}}_brand_{{id}}" />
+  <label for="category_{{category_id}}_brand_{{id}}" class="brand-link list-group-item" data-brand-id="{{id}}" data-category-id="{{category_id}}">
+    <span class="glyphicon glyphicon-ok pull-right brand-mark" aria-hidden="true"></span>
+    <img src="{{image.url}}" width="64" height="32" alt="{{name}}" />
+    <span > {{ title }} </span>
+  </label>
+</script>
 
 <script type="text/javascript">
   function template(temp, context) {
@@ -32,8 +42,13 @@
     });
   }
 
-  var BRAND_TEMPLATE = "<a href=\"/brands/$id\" data-brand-id=\"$id\" class=\"brand-link list-group-item\" >$title</a>";
-  var BRAND_GROUP_TEMPLATE = "<ul class=\"list-group\">\n  $list\n</ul>";
+  _.templateSettings = {
+    interpolate: /\{\{(.+?)\}\}/g
+  };
+
+  // var BRAND_TEMPLATE = ["<a href=\"/brands/$id\" data-brand-id=\"$id\" class=\"brand-link list-group-item\" >"
+  //                       "</a>" ];
+  var BRAND_GROUP_TEMPLATE = "<ul class=\"list-group category-$category_id\" >\n  $list\n</ul>";
 
   $(".category-body>a").click(function(e) {
     e.preventDefault();
@@ -43,25 +58,53 @@
 
   $(".category-body>a").click(function(e) {
     var id = $(e.target).data('category');
-    var $container = $(e.target).parents('.category-body')
-    var $ul = $container.find('>.brand-category-' + id);
+    var $container = $(e.target).parents('.category-body').next();
+    var $ul = $container.find('>.category-' + id);
     var html = ""
     if ($ul.length === 0) {
       $.getJSON($(e.target).attr('href'), function(resp) {
         var brands = resp.brands;
+        var compiled = _.template($("#brand_template").text());
 
         for (var i = 0; i < brands.length; i++) {
           var brand = brands[i];
-          html += template(BRAND_TEMPLATE, brand);
+          html += compiled($.extend(brand, {category_id: id }));
         }
 
-        $container.after(template(BRAND_GROUP_TEMPLATE, { list: html }));
+        $container.append(template(BRAND_GROUP_TEMPLATE, { list: html, category_id: id }));
       });
     }
   });
 
+  $(".category-body>a").on("change:select_count", function(e) {
+    var id = $(e.target).data('category');
+    var $ul = $(e.target).parents('.category-body').next().find(">.category-" + id);
+    var count = $ul.find(':checked').length;
+    if (count > 0) {
+      $(e.target).find(".badge").text(count);
+    } else {
+      $(e.target).find(".badge").text('');
+    }
+    if ($(".category-brand-list :checked").length > 0) {
+      $('.next').attr('disabled', false);
+    } else {
+      $('.next').attr('disabled', true);
+    }
+  });
+
   $(".category-body>a").click(function(e) {
-    $(e.target).closest('.category-brand-container').slideToggle();
+    var id = $(e.target).data('category');
+    $(e.target).parents('.category-body').next().find(">:not(.category-" + id + ")").slideUp()
+    $(e.target).parents('.category-body').next().find(">.category-" + id).slideToggle();
+  });
+
+  $(".category-brand-list").on('click', '.brand-link', function(e) {
+    $(e.currentTarget).toggleClass('active');
+    var id = $(e.currentTarget).data("categoryId")
+    var $category = $(e.target).parents('.category-brand-list').prev()
+    setTimeout(function() {
+      $category.find('[data-category="'+ id + '"]').trigger('change:select_count');
+    }, 100);
   });
 
   // $(".category-body>a").click(function(e) {
