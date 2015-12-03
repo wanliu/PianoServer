@@ -36,7 +36,7 @@ class User < ActiveRecord::Base
   }
 
   mount_uploader :image, ImageUploader
-  enum sex: {'男' => 1, '女' => 0 }
+  enum sex: {'保密' => 0, '男' => 1, '女' => 2 }
   store_accessor :data,
                  :weixin_openid, :weixin_privilege, :language, :city, :province, :country
 
@@ -117,7 +117,7 @@ class User < ActiveRecord::Base
     pusher_token = Settings.pusher.pusher_token.clone
     pusher_url << 'users'
 
-    options = {id: "#{id}", token: pusher_token, login: username, realname: username, avatar_url: avatar_url }
+    options = {id: "#{id}", token: pusher_token, login: username, realname: nickname, avatar_url: avatar_url }
 
     begin
       RestClient.post pusher_url, options
