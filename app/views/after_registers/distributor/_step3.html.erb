@@ -2,39 +2,46 @@
   快速开店 选择经营品类(3/4)
 <% end %>
 
-<div class="col-sm-12">
-<div class="page-header hidden-xs">
-  <h1>快速开店<small> 请选择你的经营品类</small></h1>
-</div>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="page-header hidden-xs">
+        <h1>快速开店<small> 请选择你的经营品类</small></h1>
+      </div>
+    </div>
+  </div>
 
-<h3><%= @industry.title %> </h3>
-<div class="category-list row" >
-  <% if @industry.category %>
-    <% @industry.category.children.order(:id).each do |category| %>
-      <%= link_to filter_brands_path(category_id: category.id ), data: {id: category.id}  do %>
-        <div class="col-sm-3 col-xs-6">
-          <%= panel do %>
-            <div class="panel-body">
-              <%= category.title %>
-            </div>
+  <h3><%= @industry.title %> </h3>
 
-          <% end %>
-        </div>
+  <div class="category-list row" >
+    <% if @industry.category %>
+      <% @industry.category.children.order(:id).each do |category| %>
+        <%= link_to filter_brands_path(category_id: category.id ), data: {id: category.id}  do %>
+          <div class="col-sm-3 col-xs-6">
+            <%= panel do %>
+              <div class="panel-body">
+                <%= category.title %>
+              </div>
+
+            <% end %>
+          </div>
+        <% end %>
       <% end %>
     <% end %>
-  <% end %>
-</div>
-
-<div class="adjust-container brand-container" adjust-step="170" adjust-padding="-20">
-  <div class="brand-list clearfix">
-
   </div>
-</div>
-<hr />
-<div class="pull-right step-actions">
-  <%= button_to "以后再说", after_register_path(:distributor, step: :skip), class: 'btn btn-default btn-lg skip', method: :put %>
-  <%= button_to "下一步", after_register_path(:distributor, step: :category), class: 'btn btn-primary btn-lg next', method: :put %>
-</div>
+
+  <div class="adjust-container brand-container" adjust-step="170" adjust-padding="-20">
+    <div class="brand-list clearfix">
+
+    </div>
+  </div>
+  <hr />
+  <div class="pull-right step-actions">
+    <%= button_to "以后再说", after_register_path(:distributor, step: :skip), class: 'btn btn-default btn-lg skip', method: :put %>
+    <%= button_to "下一步", after_register_path(:distributor, step: :category), class: 'btn btn-primary btn-lg next', method: :put %>
+  </div>
+  <%= render "skip_form" %>
+
 </div>
 
 <script type="text/javascript">

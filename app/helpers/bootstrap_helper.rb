@@ -8,10 +8,17 @@ module BootstrapHelper
     }
 
     flash.map do |k, title|
+      if title.is_a? Hash
+        @title = title["msg"]
+        @url = title["url"]
+        @prompt = title["prompt"]
+      else
+        @title = title
+      end
       <<-HTML
         <div class="alert alert-#{flash_class[k]} alert-dismissible" role="alert">
           <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <strong>#{t(k, scope: 'flash.titles')}!</strong>&nbsp;#{title}</div>
+          <strong>#{t(k, scope: 'flash.titles')}!</strong>&nbsp;#{@title} #{link_to @prompt, @url if @url}</div>
       HTML
     end.join('').html_safe
   end
