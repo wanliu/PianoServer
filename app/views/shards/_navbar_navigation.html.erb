@@ -17,7 +17,7 @@
         <li><%= link_to "最近联系人", "/chats" %></li>
         <% end %>
         <%= render "shards/mycart" %>
-        <% if Settings.dev.feature.authorize %>
+        <% if Settings.dev.feature.weixin %>
         <li><%= link_to "微信登陆", authorize_weixin_path %></li>
         <% end %>
       <% end %>
