@@ -28,9 +28,9 @@ class AuthorizeController < ApplicationController
       sign_in(:user, user)
     end
     if request.referer
-      redirect_to URI(request.referer).path
+      redirect_to URI(request.referer).path, turbolinks: false
     else
-      redirect_to root_path
+      redirect_to root_path, turbolinks: false
     end
   end
 end
