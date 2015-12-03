@@ -1,4 +1,4 @@
-<script type="text/javascript">
+<script type="text/javascript" data-turbolinks-track>
   var $containment = $('.menu-container');
   var manager = new SideMenuManager($containment);
   var menu = new SideMenu($containment, 'custom');
@@ -22,7 +22,7 @@
     <% if current_anonymous_or_user.id < 0 %>
       menu.insertGroup('users/sign_in', '登入');
     <% else %>
-      var username = '<%= current_user.login %>';
+      var username = '<%= current_user.nickname %>';
 
       menu.insertGroup('profile', username)
       menu.insertSection('profile', '@' + username, 'face', '我的主页');

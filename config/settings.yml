@@ -72,3 +72,5 @@ baidu:
 after_registers:
   shop:
     validates: strict
+weixin:
+  scope: snsapi_login
