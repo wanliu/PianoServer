@@ -29,6 +29,9 @@
   }
   .thumbnail{
     margin-bottom: 5px;
+    > img{
+      width: 100%;
+    }
   }
   .theme-name{
     margin-bottom: 20px;
