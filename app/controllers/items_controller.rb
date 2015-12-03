@@ -2,6 +2,8 @@ class ItemsController < ApplicationController
   before_filter :set_shop
   before_filter :set_item, only: [ :show ]
 
+  caches_page :index, :show
+
   def index
     page = params[:page].presence || 1
     per = params[:per].presence || 8
@@ -22,7 +24,7 @@ class ItemsController < ApplicationController
     @current_user = current_anonymous_or_user
 
     @cartitem = CartItem.new(cartable: @item, supplier: @shop, title: @item.title, image: @item.image.url(:cover))
-
+  
     if Settings.dev.feature.inventory_combination and @item.properties.present?
       @stocks_with_index = @item.stocks_with_index
     end

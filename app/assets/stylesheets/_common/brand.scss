@@ -8,3 +8,11 @@
   text-align: center;
   overflow: hidden;
 }
+
+@media (max-width: 768px) {
+  .brand {
+    width: 100px;
+    height: 50px;
+    line-height: 50px;
+  }
+}

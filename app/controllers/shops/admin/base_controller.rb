@@ -6,6 +6,7 @@ class Shops::Admin::BaseController < ApplicationController
   before_action :shop_page_info
   # before_action :authenticate_shop_user!
 
+
   helper_method :current_shop
 
   def moudle
@@ -17,6 +18,7 @@ class Shops::Admin::BaseController < ApplicationController
   def set_shop
     @shop = Shop.find_by name: params[:shop_id], owner_id: current_user.id
     raise ActiveRecord::RecordNotFound if @shop.blank?
+    content_for :module, :shop_admin
   end
 
   def shop_page_info

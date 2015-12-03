@@ -23,8 +23,7 @@
         <% category_select_option =
             options_from_collection_for_select(@industry.category.nil? ? [ ] :[ @industry.category ] , 'id', 'title')
         %>
-      <% industry_url = @industry.persisted? ? admins_industry_categories_path(@industry) : '#' %>
-      <%= select2_url :industry, :category_id, industry_url, category_select_option , {}, class: 'form-control', style: 'width: 100%' %>
+      <%= select2_url :industry, :category_id, categories_admins_industries_path, category_select_option , {}, class: 'form-control', style: 'width: 100%' %>
       <%#= f.select :description, class: 'form-control', rows: 5 %>
     </div>
 

@@ -22,6 +22,8 @@ class @CategoryItems extends @HuEvent
 
   bindEditCategory: () ->
     @$().find('.edit').bind('click', @onEditCategory.bind(@))
+    @$().find('.remove-item').bind('click', @onRemoveCategory.bind(@))
+
 
   bindAllEvents: () ->
     @$().on('change', '.toggle-checkbox', @toggleItemState.bind(@))
@@ -46,6 +48,11 @@ class @CategoryItems extends @HuEvent
               <div class="handle"></div>
             </div>
           </label>
+          <div class="btn-group">
+            <button class="btn btn-link remove-item">
+              <span class='glyphicon glyphicon-remove-sign' arial-hidden="true"></span>
+            </button>
+          </div>
         </td>
       </tr>
     """
@@ -67,6 +74,35 @@ class @CategoryItems extends @HuEvent
     url = @options.url.replace(/\$(\w+)/, (match, m) => item[m]) + "edit"
 
     Turbolinks.visit(url)
+
+  onRemoveCategory: (e) ->
+    e.preventDefault()
+
+    $target = $(e.target)
+    $tr = $target.parents("tr:first")
+    item = $tr.data()
+    url = @options.url.replace(/\$(\w+)/, (match, m) => item[m])
+
+    dataConfirmModal.confirm({
+      title: '删除提示',
+      text: '确认删除此商品吗?',
+      commit: '删除',
+      cancel: '取消',
+      dataType: 'script',
+      onConfirm: () =>
+        $.ajax({
+          url: url,
+          type: 'DELETE',
+          success: () =>
+
+          error: (errors) =>
+            alert(errors)
+        })
+    })
+
+    # $.ajax({
+    #   url: url
+    # })
 
   toggleItemState: (e) ->
     e.stopPropagation()

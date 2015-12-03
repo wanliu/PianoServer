@@ -1,0 +1,11 @@
+<div class="col-xs-12 col-sm-4 col-md-4 cate" >
+  <a href="{{shop.link}}/{{category.link}}" class="text-center logo-wrap">
+    {% unless category.blank_image %}
+      {{ category.image_url | image_tag }}
+    {% else %}
+      {{ 'trans_blank.gif' | image_url | image_tag }}
+      <div class="cate-desc">{{ category.title }}</div>
+    {% endunless %}
+  </a>
+  <div class="bottom-shadows"></div>
+</div>

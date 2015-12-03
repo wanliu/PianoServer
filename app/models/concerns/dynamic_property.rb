@@ -7,7 +7,7 @@ module DynamicProperty
 
   def method_missing(method, *args)
     name = method.to_s
-    super unless name.start_with?('property_')
+    return super unless name.start_with?('property_')
     property_name = name[9..-1]
     if property_name.end_with?('=')
       write_property(property_name[0..-2], *args)

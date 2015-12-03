@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="<%= I18n.locale %>">
   <head>
     <meta charset="utf-8">
@@ -35,6 +35,8 @@
     <%= favicon_link_tag 'favicon.ico', :rel => 'shortcut icon' %>
 
     <%= javascript_include_tag "application" %>
+    <%= yield :stylesheets %>
+    <%= yield :javascripts %>
 
     <%= analytics_init if Rails.env.production? and Settings.GA.track %>
 
@@ -83,24 +85,25 @@
     <%= render "user_socket" %>
     <%= render "chat_notification" %>
   </head>
-  <body class="<%= yield :module %>">
-    <div class="chat-notices"></div>
-    <div class="fixed-height-container">
-      <div class="content-container">
-        <div class="menu-container"></div>
-        <%= render "shards/navbar" %>
-        <div class="menu-overlayer"></div>
 
-        <div class="scroll-container">
-          <div class="container">
-            <div class="row">
-              <%= bootstrap_flash %>
-              <%= yield %>
-            </div><!--/row-->
-          </div> <!-- /container -->
-          <%= render "footer", with: @subject %>
-        </div>
-      </div>
+  <% _module = content_for :module %>
+
+  <body class="<%= yield :module %>">
+    <%= render "shards/navbar" %>
+    <div class="chat-notices"></div>
+    <div class="menu-overlayer"></div>
+    <div class="menu-container"></div>
+    <div class="main-container">
+      <%= bootstrap_flash %>
+      <%= yield %>
+      <% case _module %>
+      <% when NilClass %>
+        <%= render "footer", with: @subject %>
+      <% when "shop" %>
+        <%= render "footer", with: @shop %>
+      <% else %>
+        <%= render "footer" %>
+      <% end %>
     </div>
 
     <%= render "qrcode" %>
@@ -108,17 +111,15 @@
     <%#= render "shards/ajax_error" %>
     <%= render "pswp" %>
 
+    <% if content_for(:module) != "after_registers" %>
     <%= render "sidebar_menu" %>
+    <% end %>
     <script type="text/javascript">
-      // var $fixedTop = $('.navbar-top');
-
-      // $(window).scroll(function(e) {
-      //   $fixedTop.css('top', $(this).scrollTop());
-      // })
 
       <% unless Rails.env.production? %>
         console.log('development version: <%= PianoServer::VERSION %>')
       <% end %>
+
     </script>
   </body>
 </html>

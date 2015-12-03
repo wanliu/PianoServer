@@ -1,12 +1,18 @@
     <div class="navbar-collapse collapse navbar-responsive-collapse">
       <ul class="nav navbar-nav navbar-right">
+
+      <% if disable_navbar? %>
         <li><%= link_to "关于我们", about_path  %></li>
         <% if Settings.dev.feature.qrcode %>
         <li><%= link_to "二维码", "#share-url-qrcode" , "data-toggle"=>"modal" %></li>
         <% end %>
-        <% if Settings.dev.feature.favorites %>
-        <li><%= link_to "我的收藏", "/favorites" %></li>
+
+        <% if Settings.dev.feature.industry %>
+          <% if @industry %>
+            <li><%= link_to "行业", industry_path(@industry.name) %></li>
+          <% end %>
         <% end %>
+
         <% if Settings.dev.feature.linkmen %>
         <li><%= link_to "最近联系人", "/chats" %></li>
         <% end %>
@@ -17,6 +23,9 @@
         <% if Settings.dev.feature.authorize %>
         <li><%= link_to "微信登陆", authorize_weixin_path %></li>
         <% end %>
+      <% end %>
+
         <%= render "shards/profile_menu" %>
+
       </ul>
     </div>

@@ -15,9 +15,20 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :industry, only: [ :show ]
-  # scope :cart do
-  #   get "/", to: "carts#index", as: :mycart
+  resources :industry, only: [ :show ] do
+    member do
+      get :brands, as: :brands
+      get "shops", to: "industry#shops", as: :shops
+      get "region/:region_id",  to: "industry#region", as: :region
+      get "categories", to: "industry#categories", as: :categories
+    end
+  end
+  resources :regions, only: [ :index, :update ] do
+    collection do
+      post :set, as: :set
+      post :retrive, as: :retrive
+    end
+  end
 
   #   post "/", to: "carts#add"
   #   delete "/:id", to: "carts#remove"
@@ -100,6 +111,7 @@ Rails.application.routes.draw do
         put 'import/:wanliu_user_id', to: 'accounts#import', as: :import
       end
     end
+    resources :regions
     resources :promotions
     resources :subjects do
       concerns :templable, templable_type: 'Subject', parent_type: 'Subject'
@@ -112,6 +124,9 @@ Rails.application.routes.draw do
       concerns :templable, templable_type: 'Industry', parent_type: 'Industry'
 
       collection do
+
+        get "categories", to: "industries#categories", as: :categories
+
         post :sync_es_brands
         post :sync_es_categories
       end
@@ -269,11 +284,16 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :settings
-
       resources :orders, except: [:edit, :new, :create] do
         collection do
           get 'history'
+        end
+      end
+
+      resources :settings do
+        collection do
+          put "/change_shop_theme", to: "settings#change_shop_theme"
+          post "/upload_shop_poster", to: "settings#upload_shop_poster"
         end
       end
     end

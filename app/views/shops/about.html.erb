@@ -1,3 +1,4 @@
 <% content_for :module, :shop %>
 
-<%= shop_render :about %>
+<%#= shop_render :about %>
+<%= render partial: "about", with: @theme %>

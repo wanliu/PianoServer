@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge, chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2, minimum-scale=1, user-scalable=no" >
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" >
     <%= csrf_meta_tags %>
 
     <%= display_meta_tags site: Settings.app.name, separator: '-', reverse: true %>
@@ -43,59 +43,60 @@
   </head>
   <body class="<%= yield :module %>">
     <div class="chat-notices"></div>
-    <div class="fixed-height-container">
-      <div class="content-container">
-        <div class="menu-container"></div>
-        <div class="navbar navbar-default navbar-top">
-          <div class="container">
-            <div class="navbar-header">
-              <button type="button" class="navbar-toggle visible-xs-block" data-menu-name="shop-admin">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
-              <ul class="nav navbar-left">
-                <%= yield :back %>
-                <li>
-                  <%= link_to root_path, class: "navbar-brand" do %>
-                    <%= image_tag 'logo.png' %>
-                    <%= content_for?(:navbar) ? yield(:nabvar) : @shop.title %>
-                  <% end %>
-                </li>
-                <li>
-                  <%= link_to content_for(:navbar_link), class: "navbar-brand navbar-title" do %>
-                    <%= content_for?(:navbar) ? yield(:navbar) : Settings.app.title %>
-                  <% end %>
-                </li>
-              </ul>
-              <div class="navbar-collapse collapse navbar-responsive-collapse hidden-xs">
-                <ul class="nav navbar-nav navbar-right">
-                  <li><%= link_to "关于我们", about_path  %></li>
-                  <li><%= link_to "二维码", "#share-url-qrcode" , "data-toggle"=>"modal" %></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="menu-overlayer"></div>
 
-        <div class="scroll-container">
-          <div class="container">
-            <%= render "left_sidebar" %>
+    <div class="menu-container"></div>
+    <div class="navbar navbar-default navbar-top main-navbar">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle visible-xs-block" data-menu-name="shop-admin">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <ul class="nav navbar-left">
+            <%= yield :back %>
+            <li>
+              <%= link_to root_path, class: "navbar-brand" do %>
+                <%= image_tag 'logo.png' %>
+                <%= content_for?(:navbar) ? yield(:nabvar) : @shop.title %>
+              <% end %>
+            </li>
+            <li>
+              <%= link_to content_for(:navbar_link), class: "navbar-brand navbar-title" do %>
+                <%= content_for?(:navbar) ? yield(:navbar) : Settings.app.title %>
+              <% end %>
+            </li>
+          </ul>
+          <%= render "shards/navbar_navigation" %>
 
-            <div class="shop-admin-container">
-              <div class="container-fluid ">
-                <div class="row">
-                  <%= bootstrap_flash %>
-                  <%= yield %>
-                </div><!--/row-->
-              </div>
-            </div>
-          </div> <!-- /container -->
-          <%= render "footer" %>
+          <!-- <div class="navbar-collapse collapse navbar-responsive-collapse hidden-xs">
+            <ul class="nav navbar-nav navbar-right">
+              <li><%#= link_to "关于我们", about_path  %></li>
+              <li><%#= link_to "二维码", "#share-url-qrcode" , "data-toggle"=>"modal" %></li>
+            </ul>
+          </div> -->
         </div>
       </div>
     </div>
+    <div class="menu-overlayer"></div>
+    <div class="main-container">
+      <div class="container">
+        <div class="shop-admin-container">
+          <%= render "left_sidebar" %>
+
+          <div class="shop-admin-content">
+            <div class="container-fluid ">
+              <div class="row">
+                <%= bootstrap_flash %>
+                <%= yield %>
+              </div><!--/row-->
+            </div>
+          </div>
+        </div>
+      </div>
+      <%= render "footer" %>
+    </div>
+
 
     <%= render "qrcode" %>
     <%#= render "shards/ajax_error" %>

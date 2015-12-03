@@ -31,7 +31,6 @@
   <%= f.hidden_field :address_id %>
   <%= f.hidden_field :supplier_id %>
 
-
   <div class="panel panel-default">
     <div class="panel-heading">
       店铺：<%= link_to @supplier.title, shop_site_path(@supplier) %>
@@ -49,7 +48,7 @@
       </ul>
     <% end %>
     <div class="panel-footer">
-      <h4>总计：<span><%= @total %>元</span></h4>
+      <h4>总计：<span class='js-buy-now-total'><%= @total %></span>元</h4>
     </div>
   </div>
 
@@ -100,7 +99,7 @@
     q.fail(function (data, status, xhr) {
       // debugger;
     })
-  })
+  });
 
   $('a.add-another-location').click(function (event) {
     $('div.add-new-location').toggle();
@@ -114,4 +113,33 @@
     var addressId = $(this).data('addressId');
     $('input#order_address_id').val(addressId);
   });
+
+  // TODO backed calculating
+  $('.cart_item_quantity').change(function(event, value) {
+    var quantity = value ? value : (1 * $(this).val());
+
+    changeQuantity(this, quantity);
+  });
+
+  $('.cart_item_quantity').keyup(function(event) {
+    var quantity = $(this).val();
+    if (!quantity) return;
+
+    changeQuantity(this, quantity);
+  });
+
+  function changeQuantity(quantityDom, quantity) {
+    var attrId = $(quantityDom).attr('id');
+    var priceAttrId = attrId.replace('quantity', 'price');
+    var $price = $('#' + priceAttrId);
+    var price = 1 * $price.val();
+    var $subtotal = $(quantityDom).parents('.quantity').siblings('.subtotal');
+    var $total = $('.js-buy-now-total');
+
+    quantity = 1 * quantity;
+
+    var subTotal = (price * quantity).toFixed(2);
+    $subtotal.text("¥ " + subTotal);
+    $total.text(subTotal);
+  }
 </script>

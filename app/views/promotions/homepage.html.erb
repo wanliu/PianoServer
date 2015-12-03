@@ -2,11 +2,15 @@
 
 <%= render partial: "homepage_header", with: @subject %>
 
-<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-  <div class="promotions-list">
-    <%= render partial: "promotion", collection: @promotions, with: @subject %>
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+      <div class="promotions-list">
+        <%= render partial: "promotion", collection: @promotions, with: @subject %>
+      </div>
+      <%#= render partial: "promotion", collection: @promotions %>
+    </div>
   </div>
-  <%#= render partial: "promotion", collection: @promotions %>
 </div>
 
 <script type="text/javascript">

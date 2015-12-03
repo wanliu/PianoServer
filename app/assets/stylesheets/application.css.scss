@@ -27,6 +27,7 @@
  *= require _common/cart
  *= require _common/order-item
  *= require _common/layout
+ *= require common
  *= require lib/range
  *= require_tree ./application
  *= require_tree ./chats
@@ -44,13 +45,6 @@ html{
 
 body {
   background-image: image-url('bj.jpg');
-}
-
-footer {
-  // position: fixed;
-  bottom: 0;
-  text-align: center;
-  word-break: break-word;
 }
 
 .navbar-brand {
@@ -72,6 +66,22 @@ footer {
 
 .nav > li > a.navbar-title {
   padding-left: 0px;
+}
+
+@media (max-width: 484px) {
+  .container {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .no-padding {
+    margin-left: -10px;
+    margin-right: -11px;
+  }
+
+  .margin20 {
+    margin-top: 20px;
+  }
 }
 
 @media (min-width: 768px) {
@@ -108,6 +118,7 @@ footer {
   .navbar-responsive-collapse.collapse.in {
     overflow: visible;
     .navbar-right {
+      overflow: hidden;
       position: absolute;
       right: 20px;
       width: 150px;
@@ -137,19 +148,12 @@ footer {
   }
 }
 
-
-
 .navbar-collapse .navbar-nav{
   max-height: 50px;
 }
 
-.nav-avatar {
-  padding-top: 10px!important;
-
-  img {
-    width: 30px;
-    height: 30px;
-  }
+.menu-margin {
+  margin-right: -15px;
 }
 
 .ie-warning {

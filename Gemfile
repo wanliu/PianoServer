@@ -64,6 +64,7 @@ gem 'composite_primary_keys'
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'
 gem 'elasticsearch-persistence'
+gem 'actionpack-page_caching'
 # gem 'active_model_serializers', github: 'rails-api/active_model_serializers', tag: 'v0.10.0.rc2'
 
 # 中间件
@@ -95,6 +96,8 @@ gem 'sidekiq'
 gem 'china_city'
 gem 'table_cloth'
 
+gem 'oneapm_rpm'
+
 gem 'carrierwave', github: 'hysios/carrierwave', branch: 'mount-multiple'
 gem 'carrierwave-upyun', "0.2.1"
 # Use ActiveModel has_secure_password
@@ -116,7 +119,6 @@ group :development, :test do
   gem 'guard-sidekiq'
   # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'web-console', '~> 2.0'
-
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
 

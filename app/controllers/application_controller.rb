@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   include ContentFor
   include Piano::PageInfo
   include Errors::RescueError
-
+  include Mobylette::RespondToMobileRequests
 
   # include TokenAuthenticatable
   # Prevent CSRF attacks by raising an exception.
@@ -15,6 +15,7 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_meta_user_data
   before_action :current_subject
+  before_action :current_industry
   before_action :set_current_cart
   before_action :prepare_system_view_path
   before_action :set_locale
@@ -23,6 +24,13 @@ class ApplicationController < ActionController::Base
   rescue_from ActionController::RoutingError, :with => :render_404
   rescue_from ActiveResource::ResourceNotFound, :with => :render_404
   rescue_from ActiveRecord::RecordNotFound, :with => :render_404
+
+  mobylette_config do |config|
+    # config[:fall_back] = :html
+    config[:devices] = { weixin: %r{micromessenger} }
+    # config[:skip_xhr_requests] = false
+    # config[:mobile_user_agents] = proc { /iphone/i }
+  end
 
   protected
 
@@ -89,6 +97,10 @@ class ApplicationController < ActionController::Base
     @subject ||= Subject.availables.first
   end
 
+  def current_industry
+    @industry ||= @current_user.try(:industry)
+  end
+
   def set_current_cart
     @current_cart ||= current_anonymous_or_user.cart
   end
@@ -100,5 +112,30 @@ class ApplicationController < ActionController::Base
 
   def wx_client
     WeixinClient.instance.client
+  end
+
+  def authenticate_region!
+    if cookies[:region_id].blank?
+      if anonymous?
+        if request_device?(:weixin) && Settings.dev.feature.weixin
+          return redirect_to authorize_weixin_path
+        else
+          return redirect_to new_user_session_path
+        end
+      else
+        case @current_user.user_type
+        when "consumer"
+          redirect_to root_path
+        when "retail", "distributor"
+          @region = @current_user.join_shop.region
+          # @regions = get_regions(@region)
+        when NilClass
+          redirect_to root_path
+        end
+      end
+    else
+      @region = Region.where(city_id: cookies[:region_id]).first
+      # @regions = get_regions(@region)
+    end
   end
 end

@@ -1,0 +1,192 @@
+.about-us{
+  .no-margin-title{
+    margin: 0;
+    font-weight: 900;
+  }
+  hr{
+    border-top: 1px solid #ccc;
+  }
+  p{
+    margin: 13px 0 20px 0;
+    text-indent: 2em;
+  }
+  span.gray{
+    color: #888;
+  }
+  h3.about-title{
+    position:relative;
+    font-weight: 900;
+  }
+
+  img.head,
+  img.run-man{
+    width: 100%;
+  }
+  .media{
+    display: table;
+  }
+  img.shake,
+  img.hunan,
+  img.app{
+    width: 380px;
+    padding: 0 20px;
+  }
+  img.shake{
+    margin: 30px 0;
+  }
+
+  div.shake{
+    float: right;
+  }
+
+  header{
+    width: 100%;
+    position: relative;
+  }
+  img.cube{
+    width: 25%;
+    position: absolute;
+    right: 15%;
+    bottom: -14%;
+  }
+  img.biz{
+    position: absolute;
+    left: 20%;
+    top: 30%;
+    width: 35%;
+  }
+
+  .block-text{
+    margin-top: 5px;
+    display: inline-block;
+    background-color: #FF2B2A;
+    color: #fff;
+    font-weight: 900;
+    padding: 5px 8px;
+    border-bottom: 1px solid #fff;
+    box-shadow: 0 5px 10px -5px #666;
+    &.green{
+      background-color: #060;
+    }
+  }
+
+  .run-wrapp{
+    position: relative;
+    padding-bottom: 70px;
+
+    .bottom-text{
+      color: #fff;
+      width: 100%;
+      background-color: #FF2B2A;
+      padding: 10px;
+      font-size: 16px;
+      font-weight: 900;
+    }
+  }
+  
+  img.letter{
+    height: 55px;
+    width: auto;
+  }
+  .letter-text{
+    .english{
+      font-size: 35px;
+      font-weight: 900;
+      color: #FF2B2B;
+    }
+    .chinese{
+      font-size: 18px;
+      font-weight: 900;
+      small{
+        color: #666;
+        padding-left: 5px;
+      }
+    }
+  }
+}
+
+
+@media (max-width: 768px) {
+  .about-us{
+    .media,
+    .media-left,
+    .media-body,
+    .media-right{
+      display: block;
+      width: 100%;
+      padding: 0;
+      margin: 0;
+    }
+    span.gray{
+      color: #fff;
+    }
+    header{
+      margin-bottom: -40px;
+    }
+
+    h3.about-title{
+      position:relative;
+      top: -10px;
+      color: #fff;
+    }
+
+    .run-wrapp{
+      display: none;
+    }
+    hr{
+      display: none;
+    }
+    img.shake,
+    img.hunan,
+    img.app{
+      width: 100%;
+      padding: 0;
+    }
+    section.red-border{
+      border: 2px solid #f00;
+      margin: 30px auto;
+      padding: 10px;
+      background-color: #fff;
+    }
+
+    div.shake{
+      float: right;
+    }
+    img.head{
+      height: 180px;
+    }
+    img.cube{
+      width: 35%;
+      bottom: -10%;
+      right: 10px;
+      max-width: 180px;
+    }
+    img.biz{
+      left: 10px;
+      top: 45%;
+      width: 55%;
+    }
+    img.letter{
+      height: 30px;
+    }
+    .no-margin-title{
+      font-size: 20px;
+    }
+    .letter-head{
+      .media-body,
+      .media-left{
+        display: inline-block;
+        width: auto;
+      }
+      .letter-text{
+        .english{
+          font-size: 20px;
+        }
+        .chinese{
+          font-size: 14px;
+        }
+      }
+    }
+
+  }
+}
