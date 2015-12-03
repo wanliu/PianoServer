@@ -120,12 +120,7 @@ class Shops::Admin::ShopCategoriesController < Shops::Admin::BaseController
 
   def update_status
     if @shop_category.update_attribute("status", params[:shop_category][:status])
-<<<<<<< HEAD
       expire_cached_page
-=======
-      expire_page controller: '/shops', action: 'show', id: @shop.name
-      expire_page controller: 'shop_categories', action: 'index'
->>>>>>> beta
 
       render json: { success: true }
     else
