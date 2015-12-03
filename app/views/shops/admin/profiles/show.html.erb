@@ -41,7 +41,7 @@
         <%#s= f.text_field :website, class: 'form-control' %>
       </div>
  -->
-      <% status = @shop.recent_update_location - (Settings.shop.location.change_period).days < Time.now  %>
+      <% status = @shop.recent_update_location + (Settings.shop.location.change_period).days > Time.now  %>
 
       <%= group_with_errors @shop, :location, f, layout: :normal do %>
         <% fields_for :location, @shop.location, layout: :inline do |l| %>
@@ -85,6 +85,14 @@
         <%= f.submit "确认", class: "btn btn-primary btn-lg" %>
       </div>
     <% end %>
+<!--
+    <hr />
+    <div class="bs-callout bs-callout-info">
+      <%= button_to '升级商店', '#', context: :success, class: 'col-sm-2' %>
+      <blockquote class="col-sm-10">
+        <p>升级商店将可以使用这个</p>
+      </blockquote>
+    </div> -->
   </div>
 </div>
 
