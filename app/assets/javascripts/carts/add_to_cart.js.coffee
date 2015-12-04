@@ -51,7 +51,7 @@ $ ()->
 
         $divider.before(html)
 
-      $('#cart-item-count').text(data.items_count)
+      $('.cart-item-count').text(data.items_count)
     )
 
     promoise.fail((data, status, xhr) ->

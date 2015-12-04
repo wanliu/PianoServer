@@ -34,7 +34,9 @@
   <% end %>
 
   <% if Settings.dev.feature.cart %>
-    menu.insertGroup('cart', '购物车');
+    var html = '<span class="glyphicon glyphicon-shopping-cart"></span>购物车\
+        【<span class="cart-item-count"><%= current_cart.items.count %></span>】'
+    menu.insertGroup('cart', html);
   <% end %>
 
   <% if Settings.dev.feature.weixin %>
