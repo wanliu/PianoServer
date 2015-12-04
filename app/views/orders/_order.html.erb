@@ -15,7 +15,7 @@
     <h4>总计：
       <span><%= order.total %>元</span>
       <% unless order.finish? %>
-        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#finish-order-<%= order.id %>">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#finish-order-<%= order.id %>">
           确认收货
         </button>
 
