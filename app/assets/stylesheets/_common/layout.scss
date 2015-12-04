@@ -1,18 +1,17 @@
 $transition-time: 0.3s;
 
-html{
+html,body{
   height: 100%;
-  overflow: hidden;
+  position: relative;
+}
+body{
+  overflow-x: hidden;
 }
 
-body {
-  overflow-x: hidden;
-  height: 100%;
-  &.detail,
-  &.item{
-    .scroll-container {
-      padding-bottom: 50px;
-    }
+body.detail,
+body.item{
+  .scroll-container {
+    padding-bottom: 50px;
   }
 }
 
@@ -142,23 +141,24 @@ body.chat footer{
 }
 
 .main-container{
-  background-color: #eee;
+  overflow: hidden;
   position: relative;
   padding-top: 50px;
-  -webkit-transition: all $transition-time;
-  transition: all $transition-time;
-  overflow: hidden;
   min-height: 100%;
+  background: none;
   background-image: image_url('bj.jpg');
   padding-bottom: 100px;
-}
+  transition: all $transition-time;
+  -webkit-transition: all $transition-time;
+ }
 
 .menu-overlayer {
-  position: fixed;
-  left: 200px;
+  position: absolute;
+  left: 0;
   top: 0;
   right: 0;
   bottom: 0;
+  margin: -1px 0;
   background: #333333;
   opacity: 0.5;
   display: none;

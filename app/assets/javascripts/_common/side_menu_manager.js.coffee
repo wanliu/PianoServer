@@ -3,13 +3,14 @@ TRANSITION_ENDS = 'webkitTransitionEnd otransitionend oTransitionEnd msTransitio
 
 class @SideMenuManager
   constructor: (@element) ->
+    @$window = $(window)
     @menus = []
     @$container = $('.main-container')
     @$background = @$container.css('background')
     @$navbar = $('.main-navbar')
     @$layout = $('.menu-overlayer')
     @resizeHandler()
-    $(window).bind 'resize', @resizeHandler.bind(@)
+    @$window.bind 'resize', @resizeHandler.bind(@)
 
     @element.on('click', (e) =>
       $target = $(e.target)
@@ -18,10 +19,20 @@ class @SideMenuManager
         @_hide()
     )
 
+    @$container.on(TRANSITION_ENDS, () =>
+      offsetLeft = @$container.position().left
+      
+      if offsetLeft == 200
+        @isVisible = true
+        @$layout.fadeIn(300)
+      else if offsetLeft == 0
+        @isVisible = false
+    )
+
     @$layout.on('click', @_layoutClick.bind(@))
 
   resizeHandler: () ->
-    if $(window).width() > 768
+    if @$window.width() > 768
       @_hide()
       @_destroyHammer()
     else
@@ -45,39 +56,38 @@ class @SideMenuManager
     menu.setVisible(false)
 
   _show: () ->
-    $('body').css('overflow','hidden')
     @$container.addClass('show-left-bar')
     @$navbar.addClass('show-left-bar')
+    @$layout.show()
+    @isVisible = true
 
-    setTimeout () =>
-      @$layout.fadeIn(300)
-      @isVisible = true
-    , 300
+    # $('body').width('auto')
 
   _hide: () ->
     @$layout.hide()
     @$container.removeClass('show-left-bar')
     @$navbar.removeClass('show-left-bar')
+    @isVisible = false
 
-    setTimeout () =>
-      $('body').css('overflow','auto')
-      @isVisible = false
-    , 300
+    # $('body').width(@$window.width()-1)
+    # $('body').width(@$window.width())
 
   _open: () ->
-    @_show() if $(window).width() <= 768 and !@isVisible
+    @_show() if @$window.width() <= 768 and !@isVisible
 
   _close: () ->
-    @_hide() if $(window).width() <= 768 and @isVisible
+    @_hide() if @$window.width() <= 768 and @isVisible
 
   toggleMenu: (menuName) ->
     menu = if menuName then @_lookupMenu(menuName) else @menus[@menus.length - 1]
 
     return if not menu
 
-    if @isVisible
+    left = @$container.position().left
+
+    if left == 200
       @hideMenu(menu)
-    else
+    else if left == 0
       @showMenu(menu)
 
   removeMenu: (menuName) ->

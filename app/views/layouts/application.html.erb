@@ -94,13 +94,14 @@
   <% _module = content_for :module %>
 
   <body class="<%= yield :module %>">
+    <div style="width:100%;overflow:hidden">
     <% cache ["navbar", current_anonymous_or_user ] do %>
       <%= render "shards/navbar" %>
     <% end %>
     <div class="chat-notices"></div>
     <div class="menu-container"></div>
-    <div class="menu-overlayer"></div>
     <div class="main-container">
+      <div class="menu-overlayer"></div>
       <div class="container">
         <%= bootstrap_flash %>
       </div>
@@ -142,5 +143,6 @@
       <% end %>
 
     </script>
+    </div>
   </body>
 </html>
