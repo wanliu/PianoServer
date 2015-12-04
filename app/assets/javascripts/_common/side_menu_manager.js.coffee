@@ -6,30 +6,17 @@ class @SideMenuManager
     @$window = $(window)
     @menus = []
     @$container = $('.main-container')
-    @$background = @$container.css('background')
     @$navbar = $('.main-navbar')
     @$layout = $('.menu-overlayer')
     @resizeHandler()
     @$window.bind 'resize', @resizeHandler.bind(@)
 
-    @element.on('click', (e) =>
+    @element.on 'click', (e) =>
       $target = $(e.target)
-
       if $target.parents('.menu-container').length == 0
         @_hide()
-    )
 
-    @$container.on(TRANSITION_ENDS, () =>
-      offsetLeft = @$container.position().left
-      
-      if offsetLeft == 200
-        @isVisible = true
-        @$layout.fadeIn(300)
-      else if offsetLeft == 0
-        @isVisible = false
-    )
-
-    @$layout.on('click', @_layoutClick.bind(@))
+    @$layout.on 'click', @_layoutClick.bind(@)
 
   resizeHandler: () ->
     if @$window.width() > 768
@@ -56,15 +43,15 @@ class @SideMenuManager
     menu.setVisible(false)
 
   _show: () ->
-    @$container.addClass('show-left-bar')
-    @$navbar.addClass('show-left-bar')
+    @$container.addClass 'show-left-bar'
+    @$navbar.addClass 'show-left-bar'
     @$layout.show()
     @isVisible = true
 
   _hide: () ->
     @$layout.hide()
-    @$container.removeClass('show-left-bar')
-    @$navbar.removeClass('show-left-bar')
+    @$container.removeClass 'show-left-bar'
+    @$navbar.removeClass 'show-left-bar'
     @isVisible = false
 
   _open: () ->
@@ -112,8 +99,8 @@ class @SideMenuManager
       threshold: 1,
       pointers: 1
     }))
-    @hammer.on("swiperight", @_open.bind(@))
-    @hammer.on("swipeleft", @_close.bind(@))
+    @hammer.on "swiperight", @_open.bind(@)
+    @hammer.on "swipeleft", @_close.bind(@)
 
   _destroyHammer: () ->
     if @hammer && @hammer.destroy
