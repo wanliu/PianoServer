@@ -11,6 +11,9 @@ class Admins::IndustriesController < Admins::BaseController
 
   def create
     @industry = Industry.create industry_params
+    @industry.write_attribute(:image, params[:industry][:image])
+    @industry.save
+
     redirect_to edit_admins_industry_path(@industry)
   end
 
@@ -34,7 +37,7 @@ class Admins::IndustriesController < Admins::BaseController
   def upload
     uploader =
       if params[:id].blank?
-        uploader = ImageUploader.new(Industry.new, :image)
+        uploader = ItemImageUploader.new(Industry.new, :image)
         uploader.store! params[:file]
         uploader
       else

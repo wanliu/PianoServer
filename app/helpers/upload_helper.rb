@@ -65,6 +65,7 @@ module UploadHelper
         <div class="qq-upload-button">
           #{image_tag object.send(field), image_options}
           #{disable_text ? '' : "<span>{uploadButtonText}</span>"}
+          #{hidden_field_tag "#{object_name}[#{field}]", object.read_attribute(field), data: {"input-id" => upload_object_id }}
         </div>
         <ul class="qq-upload-list"></ul>
       </div>
@@ -90,6 +91,7 @@ module UploadHelper
           onComplete: function (id, filename, responseJSON) {
             var url = responseJSON.url;
             $(".upload-image-#{upload_object_id}").attr('src', url);
+            $("[data-input-id=\\"#{upload_object_id}\\"]").val(responseJSON.filename);
           }
         });
       </script>
