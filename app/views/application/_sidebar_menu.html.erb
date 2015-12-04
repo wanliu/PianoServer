@@ -33,8 +33,14 @@
     menu.insertGroup('chats', '最近联系人');
   <% end %>
 
+  <% if Settings.dev.feature.cart %>
+    var html = '<span class="glyphicon glyphicon-shopping-cart"></span>购物车\
+        【<span class="cart-item-count"><%= current_cart.items.count %></span>】'
+    menu.insertGroup('cart', html);
+  <% end %>
+
   <% if Settings.dev.feature.weixin %>
-    menu.insertGroup('authorize/weixin', '微信登录');
+    menu.insertGroup('authorize/weixin', '微信登陆');
   <% end %>
 
   <% if Settings.dev.feature.user.sign_in %>
