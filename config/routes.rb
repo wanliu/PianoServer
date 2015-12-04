@@ -124,11 +124,16 @@ Rails.application.routes.draw do
       concerns :templable, templable_type: 'Industry', parent_type: 'Industry'
 
       collection do
+        post :upload, as: :upload
 
         get "categories", to: "industries#categories", as: :categories
 
         post :sync_es_brands
         post :sync_es_categories
+      end
+
+      member do
+        post :upload, as: :upload
       end
 
       resources :categories do

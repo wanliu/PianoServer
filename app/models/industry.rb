@@ -8,7 +8,7 @@ class Industry < ActiveRecord::Base
   class_attribute :default_templates
 
   enum status: [ :open, :close ]
-  mount_uploader :image, ImageUploader
+  mount_uploader :image, ItemImageUploader
 
 end
 
