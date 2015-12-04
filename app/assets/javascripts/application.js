@@ -41,6 +41,7 @@
 //= require lib/date_iso8601_polyfill
 //= require lib/pastemedia
 //= require lib/ajax_status
+//= require lib/jquery.path
 //= require utils/alert-dismiss
 //= require utils/parseUrl
 //= require _common/fileuploader
