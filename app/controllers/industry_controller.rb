@@ -70,7 +70,7 @@ class IndustryController < ApplicationController
     if region.blank?
       []
     else
-      region_ancestors(region)
+      regions = region_ancestors(region)
       regions.push(region)
       regions
     end
