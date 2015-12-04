@@ -4,7 +4,9 @@ html,body{
   height: 100%;
   position: relative;
 }
+
 body{
+  width: 100%;
   overflow-x: hidden;
 }
 
@@ -141,13 +143,12 @@ body.chat footer{
 }
 
 .main-container{
+  min-height: 100%;
   overflow: hidden;
   position: relative;
   padding-top: 50px;
-  min-height: 100%;
-  background: none;
-  background-image: image_url('bj.jpg');
   padding-bottom: 100px;
+  background-image: image_url('bj.jpg');
   transition: all $transition-time;
   -webkit-transition: all $transition-time;
  }

@@ -94,7 +94,6 @@
   <% _module = content_for :module %>
 
   <body class="<%= yield :module %>">
-    <div style="width:100%;overflow:hidden">
     <% cache ["navbar", current_anonymous_or_user ] do %>
       <%= render "shards/navbar" %>
     <% end %>
@@ -137,12 +136,9 @@
       <% end %>
     <% end %>
     <script type="text/javascript">
-
       <% unless Rails.env.production? %>
         console.log('development version: <%= PianoServer::VERSION %>')
       <% end %>
-
     </script>
-    </div>
   </body>
 </html>

@@ -18,12 +18,17 @@ class @SideMenuManager
 
     @$layout.on 'click', @_layoutClick.bind(@)
 
+    @$container.on 'touchstart', (e) =>
+      if @isVisible
+        e.preventDefault()
+
   resizeHandler: () ->
     if @$window.width() > 768
       @_hide()
       @_destroyHammer()
     else
       @_initHammer()
+      $('body').width(@$window.width())
 
   addMenu: (menu) ->
     if menu instanceof SideMenu
@@ -54,6 +59,9 @@ class @SideMenuManager
     @$navbar.removeClass 'show-left-bar'
     @isVisible = false
 
+    $('body').width(@$window.width() - 1)
+    $('body').width(@$window.width())
+
   _open: () ->
     @_show() if @$window.width() <= 768 and !@isVisible
 
@@ -61,15 +69,14 @@ class @SideMenuManager
     @_hide() if @$window.width() <= 768 and @isVisible
 
   toggleMenu: (menuName) ->
+    console.log(menuName)
     menu = if menuName then @_lookupMenu(menuName) else @menus[@menus.length - 1]
 
     return if not menu
 
-    left = @$container.position().left
-
-    if left == 200
+    if @isVisible
       @hideMenu(menu)
-    else if left == 0
+    else
       @showMenu(menu)
 
   removeMenu: (menuName) ->
