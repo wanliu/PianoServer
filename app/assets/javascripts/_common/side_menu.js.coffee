@@ -4,6 +4,9 @@ class @SideMenu
     @groups = []
     @isVisible = false
 
+  insertPlainHTML: (fragment) ->
+    @element.append(fragment)
+
   insertGroup: (name, title, dataOptions = {}) ->
     if name.substring(0, 1) == '/'
       name = name.slice(1)

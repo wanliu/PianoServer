@@ -56,4 +56,18 @@ module AfterRegistersHelper
   def blank_image_url
     asset_url("gray_blank.gif")
   end
+
+  def next_button(name, url, options = {})
+    classes = options.delete(:class)
+    default_options = {
+      context: :primary,
+      class: [ classes, 'next' ],
+      form: {
+        class: 'pull-right'
+      },
+      method: :put
+    }
+
+    button_to name, url, options.merge(default_options)
+  end
 end

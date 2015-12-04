@@ -45,10 +45,10 @@ class ImageUploader < CarrierWave::Uploader::Base
   end
 
   def url_with_absolute_path(*args)
-    image = self.send(:original_filename)
+    pure_image = self.path && self.path.is_a?(String) ? self.path.sub(/^#{self.store_path}/, '') : ''
 
-    if absolute_url?(image)
-      image
+    if absolute_url?(pure_image)
+      pure_image
     else
       url_without_absolute_path(*args)
     end

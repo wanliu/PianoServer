@@ -36,6 +36,8 @@ assets:
 shop:
   import:
     sale: true
+  location:
+    change_period: 7
 dev:
   feature:
     weixin: true
@@ -56,6 +58,7 @@ dev:
       sign_in: true
     industry: true
     weixin: true
+    person_page: true
 sites:
   root: .sites
   shops:

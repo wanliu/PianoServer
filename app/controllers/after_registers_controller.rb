@@ -1,5 +1,6 @@
 class AfterRegistersController < ApplicationController
   BUSSINES_TYPES = %w(consumer retail distributor)
+  # include PublicActivity::StoreController
 
   before_action :authenticate_user!
   before_action :set_type, only: [:show, :update, :status]
@@ -74,6 +75,7 @@ class AfterRegistersController < ApplicationController
   def retail_steps
     case @current_user.state
     when "select", nil
+      @industry = @current_user.industry || Industry.new
     when "industry"
       @shop = @current_user.owner_shop || Shop.new(owner_id: @current_user.id)
     when "shop"
@@ -155,6 +157,7 @@ class AfterRegistersController < ApplicationController
     @shop = @current_user.join_shop || Shop.new(shop_params)
     @shop.shop_type = @current_user.user_type
     @shop.build_location location_params.merge(skip_validation: true)
+    @shop.create_activity action: 'update_location', owner: current_user
     @industry = @current_user.industry
     @shop.industry = @industry
     @shop.region_id = location_params[:region_id]

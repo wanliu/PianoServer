@@ -5,7 +5,9 @@
     <li class="dropdown menu-margin">
     <%= user_avatar(current_anonymous_or_user, 'data-toggle' => 'dropdown', 'role' => "button" ) %>
       <ul class="dropdown-menu">
+        <% if Settings.dev.feature.person_page %>
         <li><%= link_to '我的主页', user_profile_path(current_user), target: '_blank' %></li>
+        <% end %>
         <% if Settings.dev.feature.favorites %>
         <li><%= link_to "我的收藏", "/favorites", target: '_blank' %></li>
         <% end %>

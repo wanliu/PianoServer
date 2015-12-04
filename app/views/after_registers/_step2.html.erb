@@ -170,11 +170,7 @@
           </div>
         </div>
 
-        <div class="pull-right step-actions">
-
-          <%= button_to "以后再说", after_register_path(@user_type), context: :default, class: 'btn-lg skip' %>
-          <%= f.submit "下一步", context: :primary, class: 'btn-lg' %>
-        </div>
+        <%= render partial: "action_buttons", locals: { disabled: false }, cache: true %>
       <% end %>
       <%= render "skip_form" %>
 
