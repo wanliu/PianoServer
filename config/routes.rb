@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :order_items, except: [:new, :edit]
   concern :messable do
     resources :messages
   end
@@ -29,14 +30,13 @@ Rails.application.routes.draw do
     end
   end
 
-  scope :cart do
-    get "/", to: "carts#index", as: :mycart
+  #   post "/", to: "carts#add"
+  #   delete "/:id", to: "carts#remove"
 
-    post "/", to: "carts#add"
-    delete "/:id", to: "carts#remove"
+  #   post "commit", to: "carts#commit"
+  # end
 
-    post "commit", to: "carts#commit"
-  end
+  resource :cart
 
   mount Bootsy::Engine => '/bootsy', as: 'bootsy'
   resources :subjects, except: [:index, :new, :edit] do
@@ -210,7 +210,14 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :orders
+  resources :orders, only: [:index, :show, :destroy, :create, :update] do
+    collection do
+      post "confirmation"
+      post "buy_now_create"
+      post "buy_now_confirm"
+      get "history"
+    end
+  end
 
   resources :locations do
     collection do
@@ -274,6 +281,12 @@ Rails.application.routes.draw do
           post "/upload_image", to: "items#upload_image_file"
           put "/change_sale_state", to: "items#change_sale_state"
           put "/inventory_config", to: "items#inventory_config"
+        end
+      end
+
+      resources :orders, except: [:edit, :new, :create] do
+        collection do
+          get 'history'
         end
       end
 

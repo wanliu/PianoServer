@@ -1,0 +1,11 @@
+zh-CN:
+  activerecord:
+    models:
+      cart_item: "商品"
+    attributes:
+      cart_item:
+        price: "单价"
+        quantity: "数量"
+        sub_total: "商品项小计"
+        cartable_id: "商品"
+        cartable_type: "商品"

@@ -120,6 +120,14 @@ class Item < ActiveRecord::Base
     end
   end
 
+  # options: {
+  #   data: {size: 'l', color: 'red'},
+  #   quantity: 1
+  # }
+  def deduct_stocks!(operator, options)
+    stock_changes.create!(data: options[:data], operator: operator, quantity: - options[:quantity], kind: :sale)
+  end
+
   def stocks
     stock_changes.select("sum(quantity) as quantity, data").group("data")
   end
@@ -128,6 +136,7 @@ class Item < ActiveRecord::Base
     stocks.to_a
       .map(&:attributes)
       .reduce({}) do |cache, stock|
+        stock["data"] ||= {}
         index = stock["data"].keys.sort.map {|k| "#{k}:#{stock['data'][k]}"}.join(';')
         cache[index] = { quantity: stock["quantity"], data: stock["data"] }
         cache
@@ -152,5 +161,59 @@ class Item < ActiveRecord::Base
 
   def update_current_stock!
     update_attributes current_stock: stock_changes(true).sum(:quantity)
+  end
+
+
+  def saleable?(amount=1, props={})
+    unless on_sale?
+      yield false, 0 if block_given?
+      return false
+    end
+
+    if props.present?
+      props_stock = stocks.find { |item| item.data == props }.try(:quantity).to_f
+      yield props_stock >= amount, props_stock if block_given?
+      props_stock >= amount
+    else
+      yield current_stock >= amount, current_stock if block_given?
+      current_stock >= amount
+    end
+  end
+
+  def properties_title(props)
+    if props.present?
+      props.map do |key, value|
+        prop = properties.find do |prop_name, v|
+          prop_name == key
+        end
+
+        prop = prop[1]
+
+        if prop.present?
+          "#{prop['title']}:#{prop['value'][value].try(:[], 'title')}"
+        else
+          ""
+        end
+      end.join("；")
+    else
+      ""
+    end
+  end
+
+  def properties_name
+    properties.map { |key, value| value['title'] }
+  end
+
+  def inventory_properties
+    properties.select do |property, prop_values|
+      "stock_map" == prop_values['prop_type']
+    end
+  end
+
+  def properties_setting
+    super.map do |property|
+      keys = Property.attribute_names - ["id"]
+      Property.new property.slice(*keys)
+    end
   end
 end

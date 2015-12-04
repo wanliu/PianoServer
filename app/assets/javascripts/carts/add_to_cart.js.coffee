@@ -2,12 +2,19 @@ $ ()->
   $('body').on 'click', '.add-to-cart', (event) ->
     cartableType = $(@).data('cartableType')
     cartableId   = $(@).data('cartableId')
+    properties   = $(@).data('properties') || {}
+    $quantityInput = $(@).parents('form').find('input.cart_item_quantity')
+    quantity = if $quantityInput.length
+      $quantityInput.val() || 1
+    else
+      1
 
     promoise = $.post('/cart_items', {
       cart_item: {
         cartable_type: cartableType,
         cartable_id: cartableId,
-        quantity: 1        
+        properties: properties,
+        quantity: quantity
       }
     })
 

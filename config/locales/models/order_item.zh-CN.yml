@@ -1,0 +1,11 @@
+zh-CN:
+  activerecord:
+    models:
+      order_item: "商品"
+    attributes:
+      order_item:
+        price: "单价"
+        quantity: "数量"
+        sub_total: "商品项小计"
+        orderable_id: "商品"
+        orderable_type: "商品"

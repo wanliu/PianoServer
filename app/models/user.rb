@@ -27,6 +27,8 @@ class User < ActiveRecord::Base
   has_many :followers, as: :followable, class_name: 'Follow'
   has_many :followables, as: :follower, class_name: 'Follow'
 
+  has_many :orders, foreign_key: 'buyer_id'
+
   validates :username, presence: true, uniqueness: true
   validates :mobile, presence: true, uniqueness: true
 

@@ -64,22 +64,30 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
 
   def create
     @title = "创建自己的商品"
-    @properties = normal_properties(@category.with_upper_properties)
-    @inventory_properties = inventory_properties(@category.with_upper_properties)
+    properties_setting = @category.with_upper_properties
+    @properties = normal_properties(properties_setting)
+    @inventory_properties = inventory_properties(properties_setting)
     @category_groups = @shop.shop_category.leaves
       .group_by {|category| category.parent }
       .map {|group, items| [ group.self_and_ancestors.map{ |parent| parent.title }.join(' » '), items.map {|i| [i.title, i.id]}]}
 
+    prop_params = properties_params(@properties + @inventory_properties)
 
-    prop_params = properties_params(@properties)
     @item = Item.new item_basic_params.merge(shop_id: @shop.id) do |item|
       item.properties ||= {}
 
       item.sid = Item.last_sid(@shop) + 1
 
       prop_params.each do |prop_name, value|
-        item.send("#{prop_name}=", value)
+        property = @inventory_properties.find {|item| prop_name == "property_#{item.name}" }
+
+        title = property.try(:title)
+        exterior = property.try(:exterior)
+        prop_type = property.try(:prop_type)
+        item.send("#{prop_name}=", value, title: title, exterior: exterior, prop_type: prop_type)
       end
+
+      item.properties_setting = properties_setting
 
       if params[:item][:filenames] && params[:item][:filenames].respond_to?(:split)
         item.send(:write_attribute, :images, params[:item][:filenames].split(','))
@@ -104,6 +112,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
       if params[:commit] == "新增并继续"
         @item = Item.new(category_id: @category.id, shop_id: @shop.id)
         flash.now[:notice] = t(:create, scope: "flash.notice.controllers.items")
+        @stocks_with_index = {}
         render :new_step2
       else
         redirect_to shop_admin_items_path(@shop.name), notice: t(:create, scope: "flash.notice.controllers.items")
@@ -119,8 +128,11 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
   def update
     @category = @item.category
     @breadcrumb = @category.ancestors
-    @properties = normal_properties(@category.with_upper_properties)
-    @inventory_properties = inventory_properties(@category.with_upper_properties)
+
+    properties_setting = @item.properties_setting
+    @properties = normal_properties(properties_setting)
+    @inventory_properties = inventory_properties(properties_setting)
+    
     @category_groups = @shop.shop_category.leaves
       .group_by {|category| category.parent }
       .map {|group, items| [ group.self_and_ancestors.map{ |parent| parent.title }.join(' » '), items.map {|i| [i.title, i.id]}]}
@@ -179,8 +191,11 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
   def edit
     @category = @item.category
     @breadcrumb = @category.ancestors
-    @properties = normal_properties(@category.with_upper_properties)
-    @inventory_properties = inventory_properties(@category.with_upper_properties)
+
+    properties_setting = @item.properties_setting
+    @properties = normal_properties(properties_setting)
+    @inventory_properties = inventory_properties(properties_setting)
+
     @category_groups = @shop.shop_category.leaves
       .group_by {|category| category.parent }
       .map {|group, items| [ group.self_and_ancestors.map{ |parent| parent.title }.join(' » '), items.map {|i| [i.title, i.id]}]}

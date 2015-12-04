@@ -95,10 +95,10 @@ ActiveRecord::Schema.define(version: 20151203034827) do
     t.integer  "sale_mode",                              default: 0
     t.decimal  "price",         precision: 10, scale: 2
     t.integer  "quantity"
-    t.jsonb    "properties"
+    t.jsonb    "properties",                             default: {}
     t.jsonb    "condition"
-    t.datetime "created_at",                                         null: false
-    t.datetime "updated_at",                                         null: false
+    t.datetime "created_at",                                          null: false
+    t.datetime "updated_at",                                          null: false
   end
 
   create_table "carts", force: :cascade do |t|
@@ -211,22 +211,23 @@ ActiveRecord::Schema.define(version: 20151203034827) do
     t.integer  "shop_category_id"
     t.integer  "shop_id"
     t.integer  "product_id"
-    t.decimal  "price",            precision: 10, scale: 2
+    t.decimal  "price",              precision: 10, scale: 2
     t.integer  "inventory"
-    t.boolean  "on_sale",                                   default: true
-    t.datetime "created_at",                                                null: false
-    t.datetime "updated_at",                                                null: false
+    t.boolean  "on_sale",                                     default: true
+    t.datetime "created_at",                                                  null: false
+    t.datetime "updated_at",                                                  null: false
     t.integer  "sid"
     t.string   "title"
     t.integer  "category_id"
-    t.decimal  "public_price",     precision: 10, scale: 2
-    t.decimal  "income_price",     precision: 10, scale: 2
-    t.jsonb    "images",                                    default: []
+    t.decimal  "public_price",       precision: 10, scale: 2
+    t.decimal  "income_price",       precision: 10, scale: 2
+    t.jsonb    "images",                                      default: []
     t.integer  "brand_id"
-    t.jsonb    "properties",                                default: {}
+    t.jsonb    "properties",                                  default: {}
     t.text     "description"
-    t.decimal  "current_stock",    precision: 10, scale: 2
-    t.boolean  "abandom",                                   default: false, null: false
+    t.decimal  "current_stock",      precision: 10, scale: 2
+    t.jsonb    "properties_setting",                          default: {}
+    t.boolean  "abandom",                                     default: false, null: false
   end
 
   create_table "jobs", force: :cascade do |t|
@@ -332,11 +333,30 @@ ActiveRecord::Schema.define(version: 20151203034827) do
     t.datetime "updated_at",                    null: false
   end
 
+  create_table "order_items", force: :cascade do |t|
+    t.integer  "order_id"
+    t.integer  "orderable_id"
+    t.string   "orderable_type"
+    t.string   "title",                                                null: false
+    t.decimal  "price",          precision: 10, scale: 2
+    t.integer  "quantity",                                             null: false
+    t.jsonb    "data"
+    t.jsonb    "properties",                              default: {}
+    t.datetime "created_at",                                           null: false
+    t.datetime "updated_at",                                           null: false
+  end
+
+  add_index "order_items", ["order_id"], name: "index_order_items_on_order_id", using: :btree
+  add_index "order_items", ["orderable_type", "orderable_id"], name: "index_order_items_on_orderable_type_and_orderable_id", using: :btree
+
   create_table "orders", force: :cascade do |t|
     t.integer "buyer_id"
     t.integer "supplier_id"
     t.decimal "total",            precision: 10, scale: 2
     t.string  "delivery_address"
+    t.boolean "total_modified",                            default: false, null: false
+    t.decimal "origin_total",     precision: 10, scale: 2
+    t.integer "status",                                    default: 0
   end
 
   add_index "orders", ["buyer_id"], name: "index_orders_on_buyer_id", using: :btree
@@ -517,6 +537,7 @@ ActiveRecord::Schema.define(version: 20151203034827) do
 
   add_index "variables", ["host_type", "host_id"], name: "index_variables_on_host_type_and_host_id", using: :btree
 
+  add_foreign_key "order_items", "orders"
   add_foreign_key "orders", "shops", column: "supplier_id"
   add_foreign_key "orders", "users", column: "buyer_id"
   add_foreign_key "shop_categories", "shops"

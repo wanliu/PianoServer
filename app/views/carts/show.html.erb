@@ -1,0 +1,146 @@
+<div class='cart col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1'>
+  <div class="page-header col-sm-12 ">
+    <h1>购物车 <small>清单</small></h1>
+  </div>
+
+  <div class="col-sm-12">
+    <% if current_cart.items.blank? %>
+      <h2>你的购物车是空的</h2>
+    <% else %>
+      <% groups = @items.group_by {|item| item.supplier } %>
+      <% groups.each do |supplier, items| %>
+        <%= form_for Order.new, url: confirmation_orders_path do |f| %>
+          <%= f.hidden_field :supplier_id, value: supplier.id %>
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <div class="btn-group pull-right">
+                <%#= link_to '#', class: 'btn btn-link' do %>
+                  <%= caret %>
+                <%# end %>
+              </div>
+              <span>
+                <input type='checkbox' class='select-all' data-supplier-id='<%= supplier.id %>' checked='checked' />全选
+              </span>
+              店铺：
+              <%= link_to shop_site_path(supplier.name) do %>
+                <%= supplier.title %> 
+              <% end %>
+              ( <%= items.count %> 件商品)
+            </div>
+            <ul class="list-group cart-item-details">
+              <%= render partial: "cart_item", collection: items.sort_by(&:id), as: :item, locals: { supplier: supplier, f: f } %>
+            </ul>
+            <div class="panel-footer">
+              <%= f.submit '结算', class: 'btn btn-primary' %>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <%#= button_to '全部生成订单', class: 'btn btn-primary' %>
+    
+  </div>
+</div>
+
+<script type="text/javascript">
+  (function (argument) {
+    // 点击全部选中时，将下属项全部选中
+    $('.select-all').change(function (event) {
+      var checked = $(this).prop('checked');
+      $(this).parents('form').find(':checkbox').prop('checked', checked);
+    });
+
+    // 当有一个取消选中时，取消全部选中；当所属项全部选中时，勾选全部选中按钮
+    $('.chose-item input:checkbox').change(function (event) {
+      var checked = $(this).prop('checked');
+
+      if (!checked) {
+        $(this).parents('form').find('.select-all').prop('checked', false);
+      } else {
+        var allCheckbox = $(this).parents('form').find('.chose-item input:checkbox');
+        var allChecked = _.all(allCheckbox, function(item) {
+          return $(item).prop('checked');
+        });
+
+        if (allChecked) {
+          $(this).parents('form').find('.select-all').prop('checked', true);
+        }
+      }
+    });
+
+    // 修改所购商品数量
+    $('.cart-item input[name=quantity]').keyup(function (event) {
+      changeQuantity(this)
+    });
+
+    // 通过减少按钮，修改所购商品数量
+    $('.cart-item').on('click', '.btn-minus', function (event) {
+      var quantityInput = $(this).parents('.quantity').find('input');
+      var quantity = 1 * $(quantityInput).val();
+      var newQuantity = quantity - 1;
+
+      if (1 <= newQuantity) {
+        $(quantityInput).val(newQuantity);
+        changeQuantity(quantityInput);
+      }
+    });
+
+    // 通过增加按钮，修改所购商品数量
+    $('.cart-item').on('click', '.btn-plus', function (event) {
+      var quantityInput = $(this).parents('.quantity').find('input');
+      var quantity = 1 * $(quantityInput).val();
+      $(quantityInput).val(quantity + 1);
+  
+      changeQuantity(quantityInput); 
+    });
+
+    function changeQuantity(quantityInput, reflect) {
+      var cartItemId = $(quantityInput).parents('.cart-item').data('cartItemId');
+      var quantity = $(quantityInput).val();
+
+      var $subTotal = $(quantityInput).parents('.quantity').siblings('.subtotal');
+      var $btnMinus = $(quantityInput).parents('.quantity').find('.btn-minus span');
+
+      var $alert = $(quantityInput).parents('.input-group').siblings('.alert');
+    
+      if (!/^\d+$/.test(quantity)) {
+        $(quantityInput).val(1);
+        quantity = 1;
+      }
+
+      quantity = 1 * quantity;
+
+      if (quantity > 1) {
+        $btnMinus.addClass('glyphicon-minus');
+      } else {
+        $btnMinus.removeClass('glyphicon-minus');
+      }
+
+      $.post('/cart_items/' + cartItemId, {
+        _method: 'PATCH',
+        cart_item: {
+          quantity: quantity,
+        }
+      }).done(function (data, xhr, status) {
+        $subTotal.text(data.sub_total);
+
+        if (!reflect) $alert.hide();
+      }).fail(function (data, xhr, status) {
+        // usually caused by the lack of inventory
+        var quanOpt = data.responseJSON && data.responseJSON.quantity;
+        if (quanOpt) {
+          var maxQuan = quanOpt[0];
+
+          $alert.find('.max-quantity').text(maxQuan);
+          $(quantityInput).val(maxQuan);
+
+          changeQuantity(quantityInput, true);
+
+          $alert.show();
+        }
+      });
+    }
+  })();
+</script>
+
