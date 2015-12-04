@@ -18,7 +18,7 @@
       <div class="contact-button chat">您的店铺</div>
     <% else %>
        <% if Settings.dev.feature.cart %>
-        <div class="cart-button add-to-cart-bottom" data-cartable-type='<%= @item.class.to_s %>' data-cartable-id='<%= @item.id %>' >
+        <div class="cart-button add-to-cart-bottom" data-cartable-type='<%= @item.class.to_s %>' data-cartable-id='<%= @item.id %>' data-moveable="<%= moveable_target %>">
           <span class="button-icon glyphicon glyphicon-shopping-cart"></span>
           <div class="button-text">加入购物车</div>
         </div>

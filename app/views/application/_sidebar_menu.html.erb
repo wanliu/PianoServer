@@ -23,6 +23,10 @@
     <% end %>
   <% end %>
 
+  <% if Settings.dev.feature.cart %>
+    menu.insertGroup('cart', '购物车');
+  <% end %>
+
   <% if Settings.dev.feature.qrcode %>
     menu.insertGroup('qrode', '二维码', { qrode: true, iconClass: 'glyphicon glyphicon-qrcode' });
   <% end %>
@@ -33,6 +37,12 @@
 
   <% if Settings.dev.feature.linkmen %>
     menu.insertGroup('chats', '最近联系人', { iconClass: 'glyphicon glyphicon-list' });
+  <% end %>
+
+  <% if Settings.dev.feature.cart %>
+    var html = '<span class="glyphicon glyphicon-shopping-cart"></span>购物车\
+        【<span class="cart-item-count"><%= current_cart.items_count %></span>】'
+    menu.insertGroup('cart', html);
   <% end %>
 
   <% if Settings.dev.feature.weixin %>

@@ -21,7 +21,9 @@
         <li><%= link_to "我的订单", "/orders" %></li>
         <% end %>
 
-        <%= render "shards/cart" %>
+        <% if Settings.dev.feature.cart %>
+          <%= render "shards/cart" %>
+        <% end %>
   
         <% if Settings.dev.feature.weixin %>
         <li><%= link_to "微信登陆", authorize_weixin_path %></li>

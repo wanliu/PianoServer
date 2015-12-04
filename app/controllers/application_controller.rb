@@ -19,6 +19,7 @@ class ApplicationController < ActionController::Base
   before_action :set_current_cart
   before_action :prepare_system_view_path
   before_action :set_locale
+  before_action :mobile_filter
 
   helper_method :current_anonymous_or_user, :anonymous?, :current_cart
   rescue_from ActionController::RoutingError, :with => :render_404
@@ -97,27 +98,70 @@ class ApplicationController < ActionController::Base
   end
 
   def authenticate_region!
-    if cookies[:region_id].blank?
-      if anonymous?
-        if request_device?(:weixin) && Settings.dev.feature.weixin
-          return redirect_to authorize_weixin_path
-        else
-          return redirect_to new_user_session_path
-        end
-      else
-        case @current_user.user_type
-        when "consumer"
-          redirect_to root_path
-        when "retail", "distributor"
-          @region = @current_user.join_shop.region
-          # @regions = get_regions(@region)
-        when NilClass
-          redirect_to root_path
-        end
+    @region = cookie_region :region_id do |region, path|
+      if region.blank?
+        redirect_to path
+        return false
       end
-    else
-      @region = Region.where(city_id: cookies[:region_id]).first
-      # @regions = get_regions(@region)
     end
+  end
+
+  def cookie_region(name, &block)
+    @region, path =
+      if cookies[name].blank?
+        anonymous_or_user_region
+      else
+        find_region(cookies[name])
+      end
+    yield @region, path if block_given?
+    @region
+  end
+
+  def find_region(region_id)
+    @region = Region.where(city_id: region_id).first
+    if @region.blank?
+      [ false, regions_path ]
+    else
+      [ @region, nil ]
+    end
+  end
+
+  def anonymous_or_user_region
+    if anonymous?
+      device_region
+    else
+      user_region
+    end
+  end
+
+  def user_region
+    case current_user.user_type
+    when "consumer"
+      [ false, root_path ]
+    when "retail", "distributor"
+      shop_region(current_user.join_shop)
+    else
+      [ false, root_path ]
+    end
+  end
+
+  def shop_region(shop)
+    if shop && shop.region
+      [ shop.region, nil]
+    else
+      [ false, regions_path ]
+    end
+  end
+
+  def device_region
+    if request_device?(:weixin) && Settings.dev.feature.weixin
+      [ false, authorize_weixin_path ]
+    else
+      [ false, new_user_session_path ]
+    end
+  end
+
+  def mobile_filter
+    @is_mobile = is_mobile_request?
   end
 end

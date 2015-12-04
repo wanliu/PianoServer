@@ -11,11 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151203034827) do
+ActiveRecord::Schema.define(version: 20151204071231) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "hstore"
+  enable_extension "cube"
+  enable_extension "earthdistance"
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id"
@@ -350,13 +352,15 @@ ActiveRecord::Schema.define(version: 20151203034827) do
   add_index "order_items", ["orderable_type", "orderable_id"], name: "index_order_items_on_orderable_type_and_orderable_id", using: :btree
 
   create_table "orders", force: :cascade do |t|
-    t.integer "buyer_id"
-    t.integer "supplier_id"
-    t.decimal "total",            precision: 10, scale: 2
-    t.string  "delivery_address"
-    t.boolean "total_modified",                            default: false, null: false
-    t.decimal "origin_total",     precision: 10, scale: 2
-    t.integer "status",                                    default: 0
+    t.integer  "buyer_id"
+    t.integer  "supplier_id"
+    t.decimal  "total",            precision: 10, scale: 2
+    t.string   "delivery_address"
+    t.boolean  "total_modified",                            default: false, null: false
+    t.decimal  "origin_total",     precision: 10, scale: 2
+    t.integer  "status",                                    default: 0
+    t.datetime "created_at",                                                null: false
+    t.datetime "updated_at",                                                null: false
   end
 
   add_index "orders", ["buyer_id"], name: "index_orders_on_buyer_id", using: :btree
@@ -385,6 +389,24 @@ ActiveRecord::Schema.define(version: 20151203034827) do
 
   add_index "punches", ["average_time"], name: "index_punches_on_average_time", using: :btree
   add_index "punches", ["punchable_type", "punchable_id"], name: "punchable_index", using: :btree
+
+  create_table "regions", force: :cascade do |t|
+    t.string   "name"
+    t.string   "title"
+    t.string   "city_id"
+    t.jsonb    "data",           default: {}
+    t.integer  "parent_id"
+    t.integer  "lft",                         null: false
+    t.integer  "rgt",                         null: false
+    t.integer  "depth",          default: 0,  null: false
+    t.integer  "children_count", default: 0,  null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+  end
+
+  add_index "regions", ["lft"], name: "index_regions_on_lft", using: :btree
+  add_index "regions", ["parent_id"], name: "index_regions_on_parent_id", using: :btree
+  add_index "regions", ["rgt"], name: "index_regions_on_rgt", using: :btree
 
   create_table "shop_categories", force: :cascade do |t|
     t.string   "name"
@@ -428,6 +450,11 @@ ActiveRecord::Schema.define(version: 20151203034827) do
     t.string   "logo"
     t.string   "address"
     t.jsonb    "settings",    default: {}
+    t.integer  "shop_type",   default: 0
+    t.float    "lat"
+    t.float    "lon"
+    t.integer  "location_id"
+    t.string   "region_id"
   end
 
   create_table "statuses", force: :cascade do |t|
