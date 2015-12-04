@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
   before_action :current_subject
   before_action :prepare_system_view_path
   before_action :set_locale
-  before_action :mobile_check
+  # before_action :mobile_check
 
   helper_method :current_anonymous_or_user, :anonymous?
   rescue_from ActionController::RoutingError, :with => :render_404
@@ -94,6 +94,6 @@ class ApplicationController < ActionController::Base
   end
 
   def mobile_check
-    @is_mobile = is_mobile_request?
+    # @is_mobile = is_mobile_request?
   end
 end
