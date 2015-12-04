@@ -157,7 +157,6 @@ class AfterRegistersController < ApplicationController
     @shop = @current_user.join_shop || Shop.new(shop_params)
     @shop.shop_type = @current_user.user_type
     @shop.build_location location_params.merge(skip_validation: true)
-    @shop.create_activity action: 'update_location', owner: current_user
     @industry = @current_user.industry
     @shop.industry = @industry
     @shop.region_id = location_params[:region_id]
@@ -169,6 +168,7 @@ class AfterRegistersController < ApplicationController
     end
 
     if @shop.save
+      @shop.create_activity action: 'update_location', owner: current_user
       ShopService.build @shop.name
       [true, "shop"]
     else
