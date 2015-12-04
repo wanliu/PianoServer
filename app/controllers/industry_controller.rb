@@ -63,8 +63,21 @@ class IndustryController < ApplicationController
   end
 
   def get_regions(region)
-    @regions = (region && region.ancestors.joins(:status).where("regions.name != ? and statuses.state = 'open'", "China")) || []
-    @regions.push region
+    region_self_and_ancestors(region)
+  end
+
+  def region_self_and_ancestors(region)
+    if region.blank?
+      []
+    else
+      region_ancestors(region)
+      regions.push(region)
+      regions
+    end
+  end
+
+  def region_ancestors(region)
+    region.ancestors.joins(:status).where("regions.name != ? and statuses.state = 'open'", "China").to_a
   end
 
   def region_updowns
