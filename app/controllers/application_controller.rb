@@ -19,6 +19,7 @@ class ApplicationController < ActionController::Base
   before_action :set_current_cart
   before_action :prepare_system_view_path
   before_action :set_locale
+  before_action :mobile_filter
 
   helper_method :current_anonymous_or_user, :anonymous?, :current_cart
   rescue_from ActionController::RoutingError, :with => :render_404
@@ -119,5 +120,9 @@ class ApplicationController < ActionController::Base
       @region = Region.where(city_id: cookies[:region_id]).first
       # @regions = get_regions(@region)
     end
+  end
+
+  def mobile_filter
+    @is_mobile = is_mobile_request?
   end
 end
