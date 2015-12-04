@@ -32,7 +32,11 @@ module MinusPlusButtonHelper
           e.preventDefault();
           number = parseInt($input_field.find(".minus_plus_input").val()) || 1
           if (number > 1) {
-            $input_field.find(".minus_plus_input").val(number - 1);
+            var $number_field = $input_field.find(".minus_plus_input");
+            var new_number = number - 1;
+
+            $number_field.val(new_number);
+            $number_field.trigger('change', new_number);
           }
         });
 
@@ -41,7 +45,11 @@ module MinusPlusButtonHelper
 
           number = parseInt($input_field.find(".minus_plus_input").val()) || 1
           if (number < max_number) {
-            $input_field.find(".minus_plus_input").val(number + 1);
+            var $number_field = $input_field.find(".minus_plus_input");
+            var new_number = number + 1;
+
+            $number_field.val(new_number);
+            $number_field.trigger('change', new_number);
           }
         });
       </script>

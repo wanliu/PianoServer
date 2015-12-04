@@ -42,6 +42,10 @@ class Location < ActiveRecord::Base
     to_s
   end
 
+  def delivery_address
+    %(#{province_name}#{city_name}#{region_name}#{road} #{contact_phone})
+  end
+
   def too_many_record
     locations = user.try(:locations) || []
 

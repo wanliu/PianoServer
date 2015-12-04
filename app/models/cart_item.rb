@@ -11,9 +11,12 @@ class CartItem < ActiveRecord::Base
   validates :price, :quantity, numericality: { greater_than: 0 }
   validates :supplier, presence: true
   validates :cart_id, presence: true
-  validates :cartable_id, uniqueness: { scope: [:cart_id, :cartable_type] }
+  # validates :properties, presence: true
+  validates :cartable_id, uniqueness: { scope: [:cart_id, :cartable_type, :properties] }
 
   validate :avoid_from_shop_owner
+  validate :cartable_saleable
+  before_save :set_properties
 
   delegate :title, to: :cartable, allow_nil: true
 
@@ -37,9 +40,43 @@ class CartItem < ActiveRecord::Base
     end
   end
 
+  def avatar_url
+    if cartable_type == 'Promotion'
+      cartable.image_url
+    elsif cartable_type == 'Item'
+      cartable.avatar_url
+    end
+  end
+
+  def properties_title(props=properties)
+    if cartable.is_a?(Item) && props.present?
+      cartable.properties_title(props)
+    else
+      ""
+    end
+  end
+
+  private
+
   def avoid_from_shop_owner
     if supplier.owner_id == cart.user_id
       errors.add(:supplier_id, "不能购买自己店里的商品")
+    end
+  end
+
+  def cartable_saleable
+    cartable.saleable?(quantity, properties) do |saleable, max|
+      if !saleable && 0 >= max
+        errors.add(:orderable_id, "已经下架")
+      elsif !saleable && max > 0
+        errors.add(:quantity, max.to_i.to_s)
+      end
+    end
+  end
+
+  def set_properties
+    if properties.nil?
+      self.properties = {}
     end
   end
 end

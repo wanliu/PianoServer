@@ -18,6 +18,7 @@ class Shop < ActiveRecord::Base
   has_one :shop_category, dependent: :destroy
   has_many :items
   has_many :members, class_name: "User", foreign_key: 'shop_id'
+  has_many :orders, foreign_key: 'supplier_id'
 
   validates :title, :phone, :name, presence: true
   validates :name, uniqueness: true

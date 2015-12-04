@@ -1,5 +1,5 @@
 <div class="item-sale-options">
-  <%= form_for cartitem, url: mycart_path, html: { class: 'sale_form' } do |f| %>
+  <%= form_for cartitem, url: cart_path, html: { class: 'sale_form item-chose-collection' } do |f| %>
     <%= row do %>
       <% unless current_anonymous_or_user.user_type == "consumer" %>
         <div class="form-group col-sm-12 ">
@@ -15,43 +15,68 @@
         </div>
       <% end %>
 
-      <% @inventory_properties.each do |property| %>
-        <% config = @item.send("property_#{property.name}") || {} %>
-        <%= render partial: "exterior_#{property.exterior}", with: @item.category, locals: { config: config, item: @item, property: property, shop: @shop } %>
+      <% item.inventory_properties.each do |property, prop_value| %>
+        <%= render partial: "exterior_#{prop_value['exterior'] || "swatch_select"}", with: @item.category, locals: { item: @item, property: property, prop_value: prop_value, shop: @shop } %>
       <% end %>
 
       <div class="form-group col-sm-6 col-md-3 col-lg-3" >
         <%= label_tag "数量" %>
-          <%= minus_plus_button_field :cart_item, :quantity, value: cartitem.quantity, placeholder: "数量", class: 'form-control' %>
+          <%= minus_plus_button_field :cart_item, :quantity, value: cartitem.quantity, placeholder: "数量", class: 'form-control cart_item_quantity' %>
+      </div>
+  
+      <div class="form-group purchase-buttons col-sm-12 hidden-xs" >
+        <% if item.inventory_properties.present? && stocks_with_index.present? %>
+          <% if Settings.dev.feature.cart %>
+            <%= f.button class: 'btn btn-info btn-lg add-to-cart', disabled: "disabled", "data-cartable-type" => 'Item', "data-cartable-id" => @item.id, type: 'button' do %>
+              <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>加入购物车
+            <% end %>
+          <% end %>
+          <% if Settings.dev.feature.purchase %>
+            <%= f.button "立即购买", class: 'btn btn-danger btn-lg buy-now js-buy-now', disabled: "disabled", "data-cartable-type" => 'Item', "data-cartable-id" => @item.id, type: 'button' %>
+          <% end %>
+        <% else %>
+          <% if Settings.dev.feature.cart %>
+            <%= f.button class: 'btn btn-info btn-lg add-to-cart', "data-cartable-type" => 'Item', "data-cartable-id" => @item.id, type: 'button' do %>
+              <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>加入购物车
+            <% end %>
+          <% end %>
+          <% if Settings.dev.feature.purchase %>
+            <%= f.button "立即购买", class: 'btn btn-danger btn-lg buy-now js-buy-now', "data-cartable-type" => 'Item', "data-cartable-id" => @item.id, type: 'button' %>
+          <% end %>
+        <% end %>
       </div>
 
-      <div class="form-group col-sm-12" >
-        <%= f.submit :add, class: 'btn btn-info btn-lg add-to-cart' %>
-        <%= f.button :purchase, class: 'btn btn-danger btn-lg purchase' %>
-      </div>
-
-      <%= f.hidden_field :sale_mode %>
-      <%= f.hidden_field :title %>
-      <%= f.hidden_field :image %>
-      <%= f.hidden_field :cartable_id %>
-      <%= f.hidden_field :cartable_type %>
-      <%= f.hidden_field :supplier_id %>
+      <%#= f.hidden_field :sale_mode %>
+      <%#= f.hidden_field :title %>
+      <%#= f.hidden_field :image %>
+      <%#= f.hidden_field :cartable_id %>
+      <%#= f.hidden_field :cartable_type %>
+      <%#= f.hidden_field :supplier_id %>
     <% end %>
   <% end %>
 </div>
+
 <script type="text/javascript">
-  $(".sale_form").on('submit', function(e) {
-    e.preventDefault();
-    $form = $(this);
-    url = $form.attr('action')
+  // $(".sale_form").on('submit', function(e) {
+  //   e.preventDefault();
+  //   $form = $(this);
+  //   url = $form.attr('action')
 
-    $.post(url, $form.serialize()).then(function(e) {
+  //   $.post(url, $form.serialize()).then(function(e) {
 
-    }).fail(function() {
+  //   }).fail(function() {
 
-    })
+  //   })
+  // });
 
+  var stocksWithIndex = <%= stocks_with_index.blank? ? '{}' : stocks_with_index.values.to_json.html_safe %>;
+
+  _.each(stocksWithIndex, function(item) {
+    _.extend(item, item.data)
+    delete item.data;
   });
+
+  var fullfilledKeys = <%= stocks_with_index.blank? ? '[]' : stocks_with_index.values[0][:data].try(:keys).to_json.html_safe %>;
 
   // $(".add-to-cart").click(function(e) {
   //   $form = $(e.target).parents("form")
