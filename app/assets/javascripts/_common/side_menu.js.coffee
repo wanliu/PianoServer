@@ -10,6 +10,7 @@ class @SideMenu
   insertGroup: (name, title, dataOptions = {}) ->
     if name.substring(0, 1) == '/'
       name = name.slice(1)
+    name = decodeURIComponent(name)
 
     @groups.push({
       title: title,
@@ -28,6 +29,7 @@ class @SideMenu
 
     if name.substring(0, 1) == '/'
       name = name.slice(1)
+    name = decodeURIComponent(name)
 
     if group
       group.sections.push({
@@ -101,6 +103,7 @@ class @SideMenu
   _highlightPath: () ->
     pathname = location.pathname
     name = pathname.slice(1)
+    name = decodeURIComponent(name)
     name = name.replace(/\//g, '-')
 
     if name.indexOf('@') > -1

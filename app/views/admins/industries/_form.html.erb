@@ -19,9 +19,22 @@
     </div>
 
     <div class="form-group">
+      <%= f.label :category, '分类节点' %>
+        <% category_select_option =
+            options_from_collection_for_select(@industry.category.nil? ? [ ] :[ @industry.category ] , 'id', 'title')
+        %>
+      <%= select2_url :industry, :category_id, categories_admins_industries_path, category_select_option , {}, class: 'form-control', style: 'width: 100%' %>
+      <%#= f.select :description, class: 'form-control', rows: 5 %>
+    </div>
+
+    <div class="form-group">
       <%= f.label :description %>
       <%= f.bootsy_area :description, class: 'form-control', rows: 5 %>
     </div>
+
+
+
+
 
   </div>
   <div class="panel-footer">

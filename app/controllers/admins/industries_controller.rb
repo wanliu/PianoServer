@@ -24,6 +24,12 @@ class Admins::IndustriesController < Admins::BaseController
     redirect_to edit_admins_industry_path(@industry)
   end
 
+  def categories
+    render json: {
+      results: Category.search(params[:q].tr('/', '')).records.map {|category| {id: category.id, text: category.title }}
+    }
+  end
+
   def sync_es_brands
     # EsBrandsSyncJob.perform_later 'overwrite'
     EsBrandsSync.sync 'overwrite'
@@ -45,7 +51,7 @@ class Admins::IndustriesController < Admins::BaseController
   private
 
   def industry_params
-    params.require(:industry).permit(:name, :title, :description)
+    params.require(:industry).permit(:name, :title, :category_id, :description)
   end
 
   def get_industry

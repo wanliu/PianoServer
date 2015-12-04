@@ -21,53 +21,52 @@
         <div class="desc-wrap"></div>
       </div>
     </div>
+  </div>
 
-    <div class="item-properties">
-      <div class="media">
-        <div class="media-left media-middle">
-          <%= @item.title %>
-        </div>
-        <div class="media-body media-middle">
-          <div class='favor-title text-center'>收藏</div>
-          <div class='favor-count text-center'>0</div>
-        </div>
-        <div class="media-right media-middle">
-          <div class='like-title text-center'>赞</div>
-          <div class='like-count text-center'>0</div>
+  <%= render partial: "sale_form", with: @item.category, locals: { item: @item, cartitem: @cartitem, stocks_with_index: @stocks_with_index } %>
+
+  <div class='item-secodary-properties clearfix'>
+    <div class='brand-saled-count row'>
+      <p class='inventory col-xs-6 col-sm-6 col-md-6'>库 存：<span class='available-stock'><%= @item.current_stock.to_i %></span></p>
+      <p class='sale-count col-xs-6 col-sm-6 col-md-6 text-right'>总销量：0</p>
+    </div>
+  </div>
+
+  <div class="item-properties">
+    <div class="media">
+      <div class="media-left media-middle">
+        <%= @item.title %>
+      </div>
+      <div class="media-body media-middle">
+        <div class='favor-title text-center'>收藏</div>
+        <div class='favor-count text-center'>0</div>
+      </div>
+      <div class="media-right media-middle">
+        <div class='like-title text-center'>赞</div>
+        <div class='like-count text-center'>0</div>
+      </div>
+    </div>
+  </div>
+
+
+  <%#= render partial: "sale_options", with: @item.category %>
+
+  <div class='item-shop-infos'>
+    <div class="media ">
+      <div class="media-left media-middle">
+        <%= link_to shop_site_path(@shop.name, format: 'html'), class: 'shop-avatar' do %>
+          <%= image_tag @shop.logo_url %>
+        <% end %>
+      </div>
+      <div class="media-body media-middle">
+        <div class='name'>供应商：<%= @shop.title %></div>
+        <div class='address'>地&emsp;址：<%= @shop.address %></div>
+        <div class='follow'>
+          <span>关&emsp;注：0</span>
         </div>
       </div>
     </div>
-
-    <%#= render partial: "sale_options", with: @item.category %>
-
-    <div class='item-shop-infos'>
-      <div class="media ">
-        <div class="media-left media-middle">
-          <%= link_to shop_site_path(@shop.name, format: 'html'), class: 'shop-avatar' do %>
-            <%= image_tag @shop.logo_url %>
-          <% end %>
-        </div>
-        <div class="media-body media-middle">
-          <div class='name'>供应商：<%= @shop.title %></div>
-          <div class='address'>地&emsp;址：<%= @shop.address %></div>
-          <div class='follow'>
-            <span>关&emsp;注：0</span>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <div class='item-secodary-properties clearfix'>
-      <div class='brand-saled-count row'>
-        <p class='inventory col-xs-6 col-sm-6 col-md-6 '>库 存：<%= @item.current_stock.to_i %></p>
-        <p class='sale-count col-xs-6 col-sm-6 col-md-6 text-right'>总销量：0</p>
-      </div>
-    </div>
-    <!-- <div>商品属性位置</div> -->
   </div>
 
   <%= render "items/link_table" %>
-
-  
 </div>

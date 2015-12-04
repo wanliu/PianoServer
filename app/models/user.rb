@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
   include AnonymousUser
 
+  enum user_type: [ :consumer, :retail, :distributor, :wholesaler, :manufacturer ]
   # Include default devise modules. Others available are:
   before_save :ensure_authentication_token
 
@@ -12,13 +13,21 @@ class User < ActiveRecord::Base
   # has_many :memberings, :dependent => :destroy
   belongs_to :latest_location, class_name: 'Location'
   belongs_to :shop
+  belongs_to :industry
 
   has_one :owner_shop, class_name: 'Shop', foreign_key: 'owner_id'
+  has_one :status, as: :stateable, dependent: :destroy
+  has_one :cart
+
   has_many :chats, foreign_key: 'owner_id'
   has_many :locations
 
+  has_one :cart
+
   has_many :followers, as: :followable, class_name: 'Follow'
   has_many :followables, as: :follower, class_name: 'Follow'
+
+  has_many :orders, foreign_key: 'buyer_id'
 
   validates :username, presence: true, uniqueness: true
   validates :mobile, presence: true, uniqueness: true
@@ -26,6 +35,8 @@ class User < ActiveRecord::Base
   after_commit :sync_to_pusher
 
   attr_accessor :login
+
+  delegate :state, to: :status, allow_nil: true
 
   # admin search configure
   scoped_search on: [:id, :username, :email, :mobile]
@@ -51,7 +62,9 @@ class User < ActiveRecord::Base
   end
 
   def chat_token
-    JWT.encode({id: id}, JWT_TOKEN)
+    Rails.cache.fetch [:users_jwt,  :id], expires_in: 12.hours do
+      JWT.encode({id: id}, JWT_TOKEN)
+    end
   end
 
   def self.find_for_database_authentication(warden_conditions)
@@ -99,6 +112,18 @@ class User < ActiveRecord::Base
 
   def join_shop
     shop || owner_shop
+  end
+
+  def cart
+    Cart.find_by(user_id: id) || create_cart
+  end
+
+  def sale_mode
+    if [:distributor, :wholesaler, :manufacturer].include? user_type
+      "wholesale"
+    else
+      "retail"
+    end
   end
 
   private

@@ -11,7 +11,7 @@ class Contact < ActiveRecord::Base
 
   default_scope do
   	joins('LEFT JOIN "statuses" ON "statuses"."stateable_id" = "contacts"."id" AND "statuses"."stateable_type" = \'Contact\'')
-  		.where("statuses.state = 0 or statuses.state is null")
+  		.where("statuses.state = 'pending' or statuses.state is null")
   end
 
 

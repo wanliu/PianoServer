@@ -1,0 +1,4 @@
+$(".category-list")
+  .hide()
+  .html("<%=j render partial: "category", collection: @industry.category.children.order(:id), locals: { region: @current_region } %>")
+  .slideDown();

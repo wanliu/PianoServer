@@ -1,0 +1,14 @@
+<h1>你将在<span class="time">5</span>秒后转到首页</h1>
+<script type="text/javascript">
+  var ticket =
+    setInterval(function() {
+      var time = parseInt($(".time").text());
+      time -= 1;
+      $(".time").text(time);
+      if (time <= 0) {
+        Turbolinks.visit("/");
+        clearInterval(ticket);
+      }
+    },1000);
+
+</script>

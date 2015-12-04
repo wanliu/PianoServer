@@ -1,0 +1,18 @@
+.brand {
+  width: 150px;
+  height: 75px;
+  float: left;
+  border: 2px solid #333;
+  margin: 10px;
+  line-height: 75px;
+  text-align: center;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .brand {
+    width: 100px;
+    height: 50px;
+    line-height: 50px;
+  }
+}

@@ -1,0 +1,11 @@
+$(".cart-item-<%= @cartitem.id %>").fadeOut(function() {
+
+  $container = $(this).parents(".panel");
+  $(this).remove();
+
+  console.log($container);
+  console.log($container.find('.list-group-item').length);
+  if ($container.find('.list-group-item').length == 0) {
+    $container.remove();
+  }
+})

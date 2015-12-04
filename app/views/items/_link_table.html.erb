@@ -14,23 +14,67 @@
       </div>
     <% end %>
 
-    <% if Settings.dev.feature.cart %>
-      <div class="cart-button">
-        <span class="button-icon glyphicon glyphicon-shopping-cart"></span>
-        <div class="button-text">购物车</div>
-      </div>
-    <% end %>
-
-    <% if Settings.dev.feature.purchase %>
-      <a class="buy-button">
-        购买
-      </a>
-    <% end %>
-
     <% if @shop.owner_id == current_user.id %>
       <div class="contact-button chat">您的店铺</div>
     <% else %>
+       <% if Settings.dev.feature.cart %>
+        <div class="cart-button add-to-cart-bottom" data-cartable-type='<%= @item.class.to_s %>' data-cartable-id='<%= @item.id %>' >
+          <span class="button-icon glyphicon glyphicon-shopping-cart"></span>
+          <div class="button-text">加入购物车</div>
+        </div>
+      <% end %>
+
+      <% if Settings.dev.feature.purchase %>
+        <a class="buy-button buy-now buy-now-bottom" data-cartable-type='<%= @item.class.to_s %>' data-cartable-id='<%= @item.id %>'>
+          立即购买
+        </a>
+      <% end %>
       <%= button_to '洽谈', item_chats_path(@item.id, shop_id: @shop.id), form_class: 'contact-button chat' %>
     <% end %>
   </div>
 </div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id='buy-and-cart-info'>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">请选择</h4>
+      </div>
+      <div class="modal-body">
+        <p>请选择<%= @item.properties_name.join('，') %>后再购买</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">知道了</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script type="text/javascript">
+  $('.add-to-cart-bottom').click(function(event) {
+    var cartableType = $(this).data('cartableType');
+    var cartableId = $(this).data('cartableId');
+
+    var $agentButton = $('button.add-to-cart[data-cartable-type=' + cartableType + '][data-cartable-id=' + cartableId + ']');
+
+    if ($agentButton.attr('disabled')) {
+      $('#buy-and-cart-info').modal('show');
+    } else {
+      $agentButton.trigger('click');
+    }
+  });
+
+  $('.buy-now-bottom').click(function(event) {
+    var cartableType = $(this).data('cartableType');
+    var cartableId = $(this).data('cartableId');
+
+    var $agentButton = $('button.js-buy-now[data-cartable-type=' + cartableType + '][data-cartable-id=' + cartableId + ']');
+
+    if ($agentButton.attr('disabled')) {
+      $('#buy-and-cart-info').modal('show');
+    } else {
+      $agentButton.trigger('click');
+    }
+  });
+</script>

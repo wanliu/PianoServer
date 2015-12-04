@@ -1,0 +1,28 @@
+<% content_for :navbar_title do %>
+  快速开店 行业选择(1/4)
+<% end %>
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="page-header hidden-xs">
+        <h1>快速开店<small> 行业选择</small></h1>
+      </div>
+    </div>
+  </div>
+  <%= form_for @industry, url: after_register_path(@user_type, step: 'industry'), method: :put do %>
+  <div class="row">
+    <div class="industry-list media-list margin20">
+      <%= render "industry", collection: Industry.all %>
+    </div>
+  </div>
+  <%= render partial: "action_buttons", locals: { prompt: '(选择行业)' }, cache: true %>
+  <% end %>
+
+  <%= render "skip_form" %>
+</div>
+<script type="text/javascript">
+  $('input[name="industry"]').change(function(e){
+    $('.next').attr('disabled', false)
+  });
+</script>

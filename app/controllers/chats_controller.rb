@@ -3,7 +3,7 @@ class ChatsController < ApplicationController
 
   set_parent_param :promotion_id, class_name: 'Promotion'
   before_action :chat_variables, only: [:owner, :target, :channel]
-  before_action :get_order, only: [:owner, :target, :channel, :shop_items]
+  before_action :get_intention, only: [:owner, :target, :channel, :shop_items]
   # before_action :set_page_info, only: [:show]
 
   def index
@@ -20,13 +20,13 @@ class ChatsController < ApplicationController
               create_chat_with_user
             end
 
-    @order = if params[:promotion_id]
-               create_order_with_promotion
+    @intention = if params[:promotion_id]
+               create_intention_with_promotion
              elsif params[:item_id]
-               create_order_with_item
+               create_intention_with_item
              end
 
-    @chat.order_id = @order.id if @order
+    @chat.intention_id = @intention.id if @intention
     @chat.save
 
     redirect_to @chat
@@ -44,40 +44,40 @@ class ChatsController < ApplicationController
     @chat = Chat.where(chatable_type: User.name, chatable_id: @user.id, owner_id: current_anonymous_or_user.id).first_or_create
   end
 
-  def create_order_with_promotion
+  def create_intention_with_promotion
     @promotion = Promotion.find(params[:promotion_id])
-    @order = Order
+    @intention = Intention
       .where(supplier_id: @shop.id, buyer_id: current_anonymous_or_user.id)
       .first_or_initialize({})
-    @order.update_attributes({
+    @intention.update_attributes({
       title: @promotion.title,
-      bid: Order.last_bid(current_anonymous_or_user.id) + 1
+      bid: Intention.last_bid(current_anonymous_or_user.id) + 1
     })
-    @order.items.add_promotion(@promotion)
-    @order
+    @intention.items.add_promotion(@promotion)
+    @intention
   end
 
-  def create_order_with_item
+  def create_intention_with_item
     @item = Item.find(params[:item_id])
-    @order = Order
+    @intention = Intention
       .where(supplier_id: @shop.id, buyer_id: current_anonymous_or_user.id)
       .first_or_initialize({})
 
-    @order.update_attributes({
+    @intention.update_attributes({
       title: @item.title,
-      bid: Order.last_bid(current_anonymous_or_user.id) + 1
+      bid: Intention.last_bid(current_anonymous_or_user.id) + 1
     })
-    @order.items.add_shop_product(@item)
-    @order
+    @intention.items.add_shop_product(@item)
+    @intention
   end
 
 	def show
 
 		@chat = Chat.find(params[:id])
-    if @chat.order_id
-		  @order = Order.find(@chat.order_id)
-      @buyer = @order.buyer
-      @supplier = @order.supplier
+    if @chat.intention_id
+		  @intention = Intention.find(@chat.intention_id)
+      @buyer = @intention.buyer
+      @supplier = @intention.supplier
     end
     #@target = @chat.chatable || @chat.target
     unless current_anonymous_or_user.id == @chat.owner.id or (@chat.target.is_a?(User) and current_anonymous_or_user.id == @chat.target.id)
@@ -95,7 +95,7 @@ class ChatsController < ApplicationController
       @greetings = @supplier.greetings
     end
 
-    MessageSystemService.send_read_message current_anonymous_or_user.id, other_side if @order
+    MessageSystemService.send_read_message current_anonymous_or_user.id, other_side if @intention
 	end
 
 	def chat_variables
@@ -108,11 +108,11 @@ class ChatsController < ApplicationController
 		end
 	end
 
-	def get_order
+	def get_intention
 		if @promotion
 			@shop = Shop.find(@promotion.shop_id)
-	    bid = Order.last_bid(current_anonymous_or_user.id) + 1
-	    @order = Order
+	    bid = Intention.last_bid(current_anonymous_or_user.id) + 1
+	    @intention = Intention
 	    	.available(@shop.id, current_anonymous_or_user.id)
 	      .first_or_create({
 	        title: @promotion.title,
@@ -121,7 +121,7 @@ class ChatsController < ApplicationController
 	        bid: bid
 	      })
 
-	    @order.items.add_promotion(@promotion)
+	    @intention.items.add_promotion(@promotion)
 	  end
 	end
 
@@ -132,10 +132,10 @@ class ChatsController < ApplicationController
 	end
 
   def other_side
-    if @order.buyer_id == current_anonymous_or_user.id
-      @order.seller_id || @order.supplier.owner_id
+    if @intention.buyer_id == current_anonymous_or_user.id
+      @intention.seller_id || @intention.supplier.owner_id
     else
-      @order.buyer_id
+      @intention.buyer_id
     end
   end
 end

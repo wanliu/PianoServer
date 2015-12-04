@@ -1,0 +1,9 @@
+zh-CN:
+  activerecord:
+    models:
+      line_item: "订单项"
+    attributes:
+      line_item:
+        price: "单价"
+        amount: "数量"
+        sub_total: "商品项小计"

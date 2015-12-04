@@ -1,0 +1,21 @@
+<div class='orders col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1'>
+  <ul class="nav nav-tabs orders-tab buyer-orders" role="tablist">
+    <li role="presentation">
+      <a href="/orders">未完成的订单</a>
+    </li>
+    <li role="presentation" class="active">
+      <a href="#history-orders" aria-controls="current-orders" role="tab" data-toggle="tab">历史订单</a>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active history-orders" id="history-orders">
+      <% if @orders.present? %>
+        <%= render partial: "order", collection: @orders, as: :order %>
+        <%= paginate @orders %>
+      <% else %>
+        <div class='text-center empty-orders'>没有历史订单！</div>
+      <% end %>
+    </div>
+  </div>
+</div>

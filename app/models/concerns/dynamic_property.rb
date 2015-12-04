@@ -7,7 +7,7 @@ module DynamicProperty
 
   def method_missing(method, *args)
     name = method.to_s
-    super unless name.start_with?('property_')
+    return super unless name.start_with?('property_')
     property_name = name[9..-1]
     if property_name.end_with?('=')
       write_property(property_name[0..-2], *args)
@@ -16,9 +16,12 @@ module DynamicProperty
     end
   end
 
-  def write_property(name, value)
+  def write_property(name, value, options={}) # title=nil, exterior=nil)
     property = property_config_with_properties(name)
     property.value = value
+    property.title = options[:title] if options[:title].present?
+    property.exterior = options[:exterior] if options[:exterior].present?
+    property.prop_type = options[:prop_type] if options[:prop_type].present?
   end
 
   def read_property(name)

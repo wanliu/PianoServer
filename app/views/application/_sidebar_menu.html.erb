@@ -14,7 +14,16 @@
   <% end %>
 
   menu.insertGroup('about', '关于我们');
-  menu.insertGroup('qrode', '二维码', { qrode: true });
+  <% if Settings.dev.feature.industry %>
+    <% if @industry %>
+      route = '<%= industry_path(@industry.name) %>';
+      menu.insertGroup(route, '行业');
+    <% end %>
+  <% end %>
+
+  <% if Settings.dev.feature.qrcode %>
+    menu.insertGroup('qrode', '二维码', { qrode: true });
+  <% end %>
 
   <% if Settings.dev.feature.favorites %>
     menu.insertGroup('favorites', '我的收藏');
@@ -32,7 +41,7 @@
     <% if current_anonymous_or_user.id < 0 %>
       menu.insertGroup('users/sign_in', '登入');
     <% else %>
-      var username = '<%= current_user.nickname %>';
+      var username = '<%= current_user.login %>';
 
       menu.insertGroup('profile', '个人菜单');
       menu.insertSection('profile', '@' + username, 'face', '我的主页');

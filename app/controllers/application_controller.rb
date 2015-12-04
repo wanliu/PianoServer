@@ -4,8 +4,8 @@ class ApplicationController < ActionController::Base
   include ContentFor
   include Piano::PageInfo
   include Errors::RescueError
-
-
+  include Mobylette::RespondToMobileRequests
+  include AnonymousController
   # include TokenAuthenticatable
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
@@ -15,31 +15,27 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_meta_user_data
   before_action :current_subject
+  before_action :current_industry
+  before_action :set_current_cart
   before_action :prepare_system_view_path
   before_action :set_locale
 
-  helper_method :current_anonymous_or_user, :anonymous?
+  helper_method :current_anonymous_or_user, :anonymous?, :current_cart
   rescue_from ActionController::RoutingError, :with => :render_404
   rescue_from ActiveResource::ResourceNotFound, :with => :render_404
+  rescue_from ActiveRecord::RecordNotFound, :with => :render_404
+
+  mobylette_config do |config|
+    # config[:fall_back] = :html
+    config[:devices] = { weixin: %r{micromessenger} }
+    # config[:skip_xhr_requests] = false
+    # config[:mobile_user_agents] = proc { /iphone/i }
+  end
 
   protected
 
-  def current_anonymous_or_user
-    current_user || anonymous
-  end
-
-  def anonymous
-    if session[:anonymous]
-      @anonymous = User.anonymous(session[:anonymous])
-    else
-      @anonymous = User.anonymous
-      session[:anonymous] = @anonymous.id
-    end
-    @anonymous
-  end
-
-  def anonymous?
-    current_anonymous_or_user.id < 0
+  def current_cart
+    @current_cart ||= current_anonymous_or_user.cart
   end
 
   def configure_permitted_parameters
@@ -56,7 +52,7 @@ class ApplicationController < ActionController::Base
     end
 
     set_meta_tags pusherHost: Settings.pusher.socket_host, pusherPort: Settings.pusher.socket_port,
-                  user: current_anonymous_or_user.as_json(include_methods: :avatar_url ),
+                  user: current_anonymous_or_user.as_json(include_methods: :avatar_url, except: [:created_at, :updated_at] ),
                   debug: Settings.debug,
                   keywords: Settings.app.keywords,
                   description: Settings.app.description
@@ -83,6 +79,14 @@ class ApplicationController < ActionController::Base
     @subject ||= Subject.availables.first
   end
 
+  def current_industry
+    @industry ||= @current_user.try(:industry)
+  end
+
+  def set_current_cart
+    @current_cart ||= current_anonymous_or_user.cart
+  end
+
   def prepare_system_view_path
     # prepend_view_path File.join(Rails.root, Settings.sites.system.root)
     Liquid::Template.file_system = ContentManagement::FileSystem.new("/", "_%s.html.liquid".freeze)
@@ -90,5 +94,30 @@ class ApplicationController < ActionController::Base
 
   def wx_client
     WeixinClient.instance.client
+  end
+
+  def authenticate_region!
+    if cookies[:region_id].blank?
+      if anonymous?
+        if request_device?(:weixin) && Settings.dev.feature.weixin
+          return redirect_to authorize_weixin_path
+        else
+          return redirect_to new_user_session_path
+        end
+      else
+        case @current_user.user_type
+        when "consumer"
+          redirect_to root_path
+        when "retail", "distributor"
+          @region = @current_user.join_shop.region
+          # @regions = get_regions(@region)
+        when NilClass
+          redirect_to root_path
+        end
+      end
+    else
+      @region = Region.where(city_id: cookies[:region_id]).first
+      # @regions = get_regions(@region)
+    end
   end
 end
