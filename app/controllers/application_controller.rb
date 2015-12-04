@@ -109,7 +109,8 @@ class ApplicationController < ActionController::Base
         when "consumer"
           redirect_to root_path
         when "retail", "distributor"
-          @region = @current_user.join_shop.region
+          @region = @current_user.join_shop.try(:region)
+          return redirect_to regions_path if @region.blank?
           # @regions = get_regions(@region)
         when NilClass
           redirect_to root_path
