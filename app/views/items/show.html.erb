@@ -23,7 +23,7 @@
     </div>
   </div>
 
-  <%= render partial: "sale_form", with: @item.category, locals: { item: @item, cartitem: @cartitem, stocks_with_index: @stocks_with_index } %>
+  <%= render partial: "sale_form", with: @item.category, locals: { item: @item, cartitem: @cartitem, stocks_with_index: @stocks_with_index, moveable_target: ".shop-item-image>img" } %>
 
   <div class='item-secodary-properties clearfix'>
     <div class='brand-saled-count row'>
@@ -68,5 +68,5 @@
     </div>
   </div>
 
-  <%= render "items/link_table" %>
+  <%= render partial: "items/link_table", locals: {moveable_target: ".shop-item-image>img"} %>
 </div>

@@ -23,11 +23,11 @@
         <%= label_tag "数量" %>
           <%= minus_plus_button_field :cart_item, :quantity, value: cartitem.quantity, placeholder: "数量", class: 'form-control cart_item_quantity' %>
       </div>
-  
+
       <div class="form-group purchase-buttons col-sm-12 hidden-xs" >
         <% if item.inventory_properties.present? && stocks_with_index.present? %>
           <% if Settings.dev.feature.cart %>
-            <%= f.button class: 'btn btn-info btn-lg add-to-cart', disabled: "disabled", "data-cartable-type" => 'Item', "data-cartable-id" => @item.id, type: 'button' do %>
+            <%= f.button class: 'btn btn-info btn-lg add-to-cart', disabled: "disabled", "data-cartable-type" => 'Item', "data-cartable-id" => @item.id, type: 'button', "data-moveable" => moveable_target do %>
               <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>加入购物车
             <% end %>
           <% end %>
@@ -36,7 +36,7 @@
           <% end %>
         <% else %>
           <% if Settings.dev.feature.cart %>
-            <%= f.button class: 'btn btn-info btn-lg add-to-cart', "data-cartable-type" => 'Item', "data-cartable-id" => @item.id, type: 'button' do %>
+            <%= f.button class: 'btn btn-info btn-lg add-to-cart', "data-cartable-type" => 'Item', "data-cartable-id" => @item.id, type: 'button', "data-moveable" => moveable_target do %>
               <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>加入购物车
             <% end %>
           <% end %>
