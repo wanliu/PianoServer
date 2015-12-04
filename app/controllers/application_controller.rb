@@ -138,14 +138,7 @@ class ApplicationController < ActionController::Base
     when "consumer"
       [ false, root_path ]
     when "retail", "distributor"
-      @region = current_user.join_shop.try(:region)
-
-      if @region.blank?
-        [ false, regions_path ]
-      else
-        [ @region, nil ]
-      end
-      # @regions = get_regions(@region)
+      shop_region(current_user.join_shop)
     else
       [ false, root_path ]
     end
