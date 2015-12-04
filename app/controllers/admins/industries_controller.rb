@@ -1,5 +1,6 @@
 class Admins::IndustriesController < Admins::BaseController
   before_action :get_industry, only: [:edit, :update, :show]
+
   def new
     @industry = Industry.new
   end
@@ -28,6 +29,22 @@ class Admins::IndustriesController < Admins::BaseController
     render json: {
       results: Category.search(params[:q].tr('/', '')).records.map {|category| {id: category.id, text: category.title }}
     }
+  end
+
+  def upload
+    uploader =
+      if params[:id].blank?
+        uploader = ImageUploader.new(Industry.new, :image)
+        uploader.store! params[:file]
+        uploader
+      else
+        @industry = Industry.find(params[:id])
+        @industry.image = params[:file]
+        @industry.save
+        @industry.image
+      end
+    # TODO img :brand
+    render json: { success: true, url: uploader.url(:cover)  , filename: uploader.filename }
   end
 
   def sync_es_brands

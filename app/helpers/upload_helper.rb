@@ -11,7 +11,7 @@ module UploadHelper
     options = args.extract_options!
     object = self.instance_variable_get("@#{object_name}")
     title = object.send(field)
-    url = options[:url] || File.join(@options[:url], "upload")
+    url = options[:url]
     upload_object_id = caller.object_id
     image_options = options.delete(:image) || {}
     image_options[:class] = [image_options[:class]] + ["upload-image-#{upload_object_id}"]
@@ -51,7 +51,7 @@ module UploadHelper
     options = args.extract_options!
     object = self.instance_variable_get("@#{object_name}")
     title = object.send(field)
-    url = options[:url] || File.join(@options[:url], "upload")
+    url = options[:url]
     upload_object_id = caller.object_id
 
     disable_text = options.delete(:disable_text)
