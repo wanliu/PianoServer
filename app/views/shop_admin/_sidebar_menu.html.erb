@@ -12,8 +12,9 @@
   var title = '<%= @shop.shop_category.title %>';
 
   route = '<%= shop_admin_shop_category_path(@shop.name, @shop.shop_category.name) %>';
-  menu.insertGroup('shop_categories', '分类');
-  menu.insertSection('shop_categories', route, route, title)
+  // menu.insertGroup('shop_categories', '分类');
+  // menu.insertSection('shop_categories', route, route, title)
+  menu.insertGroup(route, '商品分类');
 
   route = '<%= shop_admin_items_path(@shop.name) %>';
   menu.insertGroup(route, '商品');

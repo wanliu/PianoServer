@@ -21,6 +21,10 @@
     <% end %>
   <% end %>
 
+  <% if Settings.dev.feature.cart %>
+    menu.insertGroup('cart', '购物车');
+  <% end %>
+
   <% if Settings.dev.feature.qrcode %>
     menu.insertGroup('qrode', '二维码', { qrode: true });
   <% end %>
