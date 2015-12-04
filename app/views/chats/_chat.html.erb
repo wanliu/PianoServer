@@ -82,7 +82,8 @@
 
       var chat = new Chat($('.chat-order-header'), chatChannelId, {
         sendBtn: $('.btn-send'),
-        greetings: greetings
+        greetings: greetings,
+        userChannelId: chatChannelId
       });
 
       <% if Settings.dev.feature.order.chat and @intention %>
