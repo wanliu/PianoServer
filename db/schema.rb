@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151203034827) do
+ActiveRecord::Schema.define(version: 20151204071231) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -228,8 +228,8 @@ ActiveRecord::Schema.define(version: 20151203034827) do
     t.jsonb    "properties",                                  default: {}
     t.text     "description"
     t.decimal  "current_stock",      precision: 10, scale: 2
-    t.boolean  "abandom",                                     default: false, null: false
     t.jsonb    "properties_setting",                          default: {}
+    t.boolean  "abandom",                                     default: false, null: false
   end
 
   create_table "jobs", force: :cascade do |t|
@@ -352,13 +352,15 @@ ActiveRecord::Schema.define(version: 20151203034827) do
   add_index "order_items", ["orderable_type", "orderable_id"], name: "index_order_items_on_orderable_type_and_orderable_id", using: :btree
 
   create_table "orders", force: :cascade do |t|
-    t.integer "buyer_id"
-    t.integer "supplier_id"
-    t.decimal "total",            precision: 10, scale: 2
-    t.string  "delivery_address"
-    t.boolean "total_modified",                            default: false, null: false
-    t.decimal "origin_total",     precision: 10, scale: 2
-    t.integer "status",                                    default: 0
+    t.integer  "buyer_id"
+    t.integer  "supplier_id"
+    t.decimal  "total",            precision: 10, scale: 2
+    t.string   "delivery_address"
+    t.boolean  "total_modified",                            default: false, null: false
+    t.decimal  "origin_total",     precision: 10, scale: 2
+    t.integer  "status",                                    default: 0
+    t.datetime "created_at",                                                null: false
+    t.datetime "updated_at",                                                null: false
   end
 
   add_index "orders", ["buyer_id"], name: "index_orders_on_buyer_id", using: :btree
