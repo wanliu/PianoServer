@@ -101,11 +101,12 @@ class @Chat
   send: (msg) ->
 
   getChatChannelId: () ->
-    @chatChannelId ||= 'p:' + [@ownerChannelId[1..-1],@channelId[1..-1]].sort().join(':')
+    ownerChannelId = @options.userChannelId || @userSocket.getUserChannelId()
+    @chatChannelId ||= 'p:' + [ownerChannelId[1..-1], @channelId[1..-1]].sort().join(':')
 
   enter: () ->
-    $(document).trigger('inchats:enter', @getChatChannelId())
     @setActive(@)
+    $(document).trigger('inchats:enter', @getChatChannelId())
 
   leave: () ->
     $(document).trigger('inchats:leave', @getChatChannelId())
