@@ -3,47 +3,64 @@
   var manager = window.manager = new SideMenuManager($containment);
   var menu = new SideMenu($containment, 'shop-admin');
 
-  var avatar = '<%= current_user.avatar_url %>',
-      username = '<%= current_user.nickname %>',
-      fragment = ['<li class="group-item"><div class="user-info"><img src="', avatar,
-        '" class="user-avatar">', '<div class="username">',
-        username, '</div></span></li>'].join('');
+  <% if Settings.dev.feature.user.sign_in %>
+    <% if current_anonymous_or_user.id > 0 %>
+      var username = '<%= current_user.nickname %>';
+
+      menu.insertGroup('profile', '个人菜单', { iconClass: 'glyphicon glyphicon-file' });
+      menu.insertSection('profile', '@' + username, 'face', '我的主页', { iconClass: 'glyphicon glyphicon-book' });
+
+      <% if Settings.dev.feature.favorites %>
+        menu.insertSection('profile', 'favorites', 'favorites', '我的收藏', { iconClass: 'glyphicon glyphicon-heart' });
+      <% end %>
+
+      <% if current_user.join_shop %>
+        var shopName = '<%= current_user.join_shop.name %>',
+            shopRoute = '<%= shop_admin_index_path(current_user.join_shop.name) %>';
+
+        menu.insertSection('profile', shopName, shopName, '我的店铺', { iconClass: 'glyphicon glyphicon-home' });
+
+        menu.insertGroup('shop', '商店', { iconClass: 'glyphicon glyphicon-dashboard' });
+
+        route = '<%= shop_admin_profile_path(current_user.join_shop.name) %>';
+        menu.insertSection('shop', route, route, '档案', { iconClass: 'glyphicon glyphicon-briefcase' });
+
+        route = '<%= shop_admin_shop_category_path(current_user.join_shop.name, current_user.join_shop.shop_category.name) %>';
+        menu.insertSection('shop', route, route, '商品分类', { iconClass: 'glyphicon glyphicon-th-list' });
+
+        route = '<%= shop_admin_items_path(current_user.join_shop.name) %>';
+        menu.insertSection('shop', route, route, '商品', { iconClass: 'glyphicon glyphicon-list-alt'});
+
+        route = '<%= shop_admin_orders_path(current_user.join_shop.name) %>';
+        menu.insertSection('shop', route, route, '购买订单', { iconClass: 'glyphicon glyphicon-import'});
+
+        menu.insertSection('shop', 'orders', 'orders', '销售订单', { iconClass: 'glyphicon glyphicon-export'});
+
+        menu.insertGroup(shopRoute, '店铺管理', { iconClass: 'glyphicon glyphicon-wrench' });
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <% if Settings.dev.feature.cart %>
+    menu.insertGroup('cart', '购物车', { iconClass: 'glyphicon glyphicon-shopping-cart', has_quantity: true, quantity: 0 });
+  <% end %>
+
+  <% if Settings.dev.feature.linkmen %>
+    menu.insertGroup('chats', '最近联系人', { iconClass: 'glyphicon glyphicon-list' });
+  <% end %>
+
+  <% if Settings.dev.feature.user.sign_in && current_anonymous_or_user.id > 0 %>
+    var avatar = '<%= current_user.avatar_url %>',
+        username = '<%= current_user.nickname %>',
+        fragment = ['<li class="group-item"><div class="user-info"><img src="', avatar,
+          '" class="user-avatar">', '<div class="username">',
+          username, '</div></span></li>'].join('');
 
     menu.insertPlainHTML(fragment);
-
-  var shopname = '<%= @shop.name %>';
-  var route = '<%= shop_admin_index_path(@shop.name) %>';
-
-  // icon: the icon image url / iconClass: the glyphicon class name or other class name
-  menu.insertGroup(route, ['商店 ( ', shopname, ' )'].join(''), { iconClass: 'glyphicon glyphicon-home' });
-
-  route = '<%= shop_admin_profile_path(@shop.name) %>';
-  menu.insertGroup(route, '档案', { iconClass: 'glyphicon glyphicon-briefcase' });
-
-  var title = '<%= @shop.shop_category.title %>';
-
-  route = '<%= shop_admin_shop_category_path(@shop.name, @shop.shop_category.name) %>';
-
-  // menu.insertGroup('shop_categories', '分类');
-  // menu.insertSection('shop_categories', route, route, title)
-  menu.insertGroup(route, '商品分类', { iconClass: 'glyphicon glyphicon-th-list' });
-
-  route = '<%= shop_admin_items_path(@shop.name) %>';
-  menu.insertGroup(route, '商品', { iconClass: 'glyphicon glyphicon-list-alt'});
-
-  // route = '<%= about_shop_path(@shop.name) %>';
-  // menu.insertGroup(route, '关于');
-  var sale_orders = '<%= shop_admin_orders_path(@shop.name) %>';
-  var buy_orders = '<%= orders_path %>';
-  menu.insertGroup('all_orders', '订单', { iconClass: 'glyphicon glyphicon-shopping-cart' });
-  menu.insertSection('sale_orders', sale_orders, sale_orders, '我卖的')
-  menu.insertSection('buy_orders', buy_orders, buy_orders, '我买的')
-
-  route = '<%= shop_admin_settings_path(@shop.name) %>';
-  menu.insertGroup(route, '设置', {iconClass: 'glyphicon glyphicon-cog' });
-
+  <% end %>
 
   menu.insertGroup('about', '关于我们', {iconClass: 'glyphicon glyphicon-blackboard' });
+
   <% if Settings.dev.feature.industry %>
     <% if @industry %>
       route = '<%= industry_path(@industry.name) %>';
@@ -51,8 +68,24 @@
     <% end %>
   <% end %>
 
-  <% if Settings.dev.feature.qrcode %>
+  <% if Settings.dev.feature.qrcode && !request_device?(:weixin) %>
     menu.insertGroup('qrode', '二维码', { qrode: true, iconClass: 'glyphicon glyphicon-qrcode' });
+  <% end %>
+
+  <% if Settings.dev.feature.user.sign_in %>
+    <% if current_anonymous_or_user.id < 0 %>
+      menu.insertGroup('users/sign_in', '登入', { iconClass: 'glyphicon glyphicon-log-in'});
+
+      // <% if request_device?(:weixin) %>
+      //   <% if Settings.dev.feature.weixin %>
+      //     menu.insertGroup('authorize/weixin', '微信登录', { iconClass: 'glyphicon glyphicon-barcode' });
+      //   <% end %>
+      // <% else %>
+      //   menu.insertGroup('users/sign_in', '登入', { iconClass: 'glyphicon glyphicon-log-in'});
+      // <% end %>
+    <% else %>
+      menu.insertGroup('users/sign_out', '退出', { iconClass: 'glyphicon glyphicon-log-out' });
+    <% end %>
   <% end %>
 
   menu.generateMenuDOMFragment();
@@ -60,7 +93,6 @@
 
   $('.navbar-top .navbar-toggle').click(function() {
     var menuName = $(this).data('menuName')
-
     if (window.manager) {
       window.manager.toggleMenu(menuName);
     }

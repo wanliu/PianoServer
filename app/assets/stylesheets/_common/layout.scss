@@ -36,6 +36,7 @@ body.chat footer{
   width: 200px;
   background: #E32929;
   left: 0;
+  font-weight: 700;
 
   a {
     color: #FFFFFF;
@@ -74,7 +75,7 @@ body.chat footer{
   }
 
   .nav.menu-sections > li > a {
-    padding-left: 35px;
+    padding-left: 40px;
   }
 
   .nav > li:hover > a {
@@ -90,8 +91,18 @@ body.chat footer{
     }
   }
 
-  .menu-icon {
-    margin-right: 3px;
+  .icon-wrap {
+    display: inline-block;
+    width: 24px;
+    text-align: center;
+    margin-right: 5px;
+  }
+
+  .badge {
+    position: absolute;
+    top: 12px;
+    right: 10px;
+    background: #333333;
   }
 }
 

@@ -47,11 +47,13 @@ class @SideMenu
       { route, name, title, sections, routeAnchor, dataOptions } = group
 
       iconStr = @_generateIconElement(dataOptions)
+      badgeStr = @_generateBadgeElement(dataOptions)
 
       if sections.length > 0
         template = """
           <li id="#{routeAnchor}" class="group-item">
             <span href="javascript:void(0);" class="group-title">#{iconStr}#{title}</span>
+            #{badgeStr}
         """
 
         templates = [ template, '<ul class="nav menu-sections">' ]
@@ -59,22 +61,12 @@ class @SideMenu
         for section in sections
           { route, name, title, routeAnchor, dataOptions } = section
 
-          bindings = []
-          for key, value of dataOptions
-            continue if key == 'icon'
-
-            str = """
-              data-#{key}="#{value}"
-            """
-            bindings.push(str)
-
-          binding_str = if bindings.length > 0 then bindings.join(' ') else ''
-
           iconStr = @_generateIconElement(dataOptions)
+          badgeStr = @_generateBadgeElement(dataOptions)
 
           template = """
             <li id="#{routeAnchor}">
-              <a href="#{route}" #{binding_str}>#{iconStr}#{title}</a>
+              <a href="#{route}">#{iconStr}#{title}#{badgeStr}</a>
             </li>
           """
 
@@ -93,7 +85,7 @@ class @SideMenu
         else
           template = """
             <li id="#{routeAnchor}" class="group-item">
-              <a href="#{route}">#{iconStr}#{title}</a>
+              <a href="#{route}">#{iconStr}#{title}#{badgeStr}</a>
             </li>
           """
         $(template).appendTo(@element)
@@ -109,11 +101,16 @@ class @SideMenu
     else if iconClass
       iconClass = iconClass.join(' ') if Object.prototype.toString.call(iconClass) == '[object Array]'
       iconClass = [ 'menu-icon', iconClass ].join(' ')
-      iconStr = ['<span class="', iconClass, '" arial-hidden="true"></span>'].join('')
+      iconStr = ['<span class="icon-wrap"><span class="', iconClass,
+        '" arial-hidden="true"></span></span>'].join('')
     else
       iconStr = ''
 
     iconStr
+
+  _generateBadgeElement: (options) ->
+    { has_quantity, quantity } = options
+    badgeStr = if has_quantity then ['<span class="badge">', quantity, '</span>'].join('') else ''
 
   _bindEvents: () ->
     $('#group-qrode a').click(() ->
@@ -158,6 +155,20 @@ class @SideMenu
       return group if group.name == groupName
 
     return null
+
+  updateQuantity: (name, diff) ->
+    group = @_lookupGroup(name)
+
+    return if not group or not group.dataOptions.has_quantity
+
+    quantity = group.dataOptions.quantity + diff
+
+    quantity = 0 if quantity < 0
+
+    sel = [ 'li#group-', name, ' .badge'].join('')
+    @$containment.find(sel).text(quantity)
+
+    group.dataOptions.quantity = quantity
 
   refreshMenu: () ->
     @$containment.html('')
