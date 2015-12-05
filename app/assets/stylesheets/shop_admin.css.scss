@@ -6,9 +6,13 @@
  *= require select2-bootstrap
  *= require _common/fileuploader
  *= require _common/checkbox
-*= require _common/layout
+ *= require _common/settings
+ *= require _common/cart
+ *= require _common/order-item
+ *= require _common/layout
  *= require lib/tablesaw
  *= require lib/range
+ *= require common
  *= require ./chats/chat-item
  *= require_tree ./shop_admin
  *= require_self
@@ -19,6 +23,12 @@
 
 body[module="signup"] {
   background: #ddd;
+}
+
+body.shop-admin{
+  .main-container{
+    background: #fff;
+  }
 }
 
 .navbar-left > li {
@@ -125,4 +135,8 @@ body[module="signup"] {
   .shop-admin-container {
     padding: 0;
   }
+}
+
+#map {
+  height: 300px;
 }

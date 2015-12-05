@@ -1,17 +1,52 @@
-<script type="text/javascript">
+<script type="text/javascript" data-turbolinks-track>
   var $containment = $('.menu-container');
-  var manager = new SideMenuManager($containment);
+  var manager = window.manager = new SideMenuManager($containment);
   var menu = new SideMenu($containment, 'custom');
 
-  menu.insertGroup('about', '关于我们');
-  menu.insertGroup('qrode', '二维码', { qrode: true });
+  // icon: the icon image url / iconClass: the glyphicon class name or other class name
+
+  <% if Settings.dev.feature.user.sign_in && current_anonymous_or_user.id > 0 %>
+    var avatar = '<%= current_user.avatar_url %>',
+        username = '<%= current_user.nickname %>',
+        fragment = ['<li class="group-item"><div class="user-info"><img src="', avatar,
+          '" class="user-avatar">', '<div class="username">',
+          username, '</div></span></li>'].join('');
+
+    menu.insertPlainHTML(fragment);
+  <% end %>
+
+  menu.insertGroup('about', '关于我们', {iconClass: 'glyphicon glyphicon-blackboard' });
+  <% if Settings.dev.feature.industry %>
+    <% if @industry %>
+      route = '<%= industry_path(@industry.name) %>';
+      menu.insertGroup(route, '行业', { iconClass: 'glyphicon glyphicon-flag' });
+    <% end %>
+  <% end %>
+
+  <% if Settings.dev.feature.cart %>
+    menu.insertGroup('cart', '购物车');
+  <% end %>
+
+  <% if Settings.dev.feature.qrcode %>
+    menu.insertGroup('qrode', '二维码', { qrode: true, iconClass: 'glyphicon glyphicon-qrcode' });
+  <% end %>
 
   <% if Settings.dev.feature.favorites %>
-    menu.insertGroup('favorites', '我的收藏');
+    menu.insertGroup('favorites', '我的收藏', { iconClass: 'glyphicon glyphicon-heart' });
   <% end %>
 
   <% if Settings.dev.feature.linkmen %>
-    menu.insertGroup('chats', '最近联系人');
+    menu.insertGroup('chats', '最近联系人', { iconClass: 'glyphicon glyphicon-list' });
+  <% end %>
+
+  <% if Settings.dev.feature.cart %>
+    var html = '<span class="glyphicon glyphicon-shopping-cart"></span>购物车\
+        【<span class="cart-item-count"><%= current_cart.items_count %></span>】'
+    menu.insertGroup('cart', html);
+  <% end %>
+
+  <% if Settings.dev.feature.weixin %>
+    menu.insertGroup('authorize/weixin', '微信登录', { iconClass: 'glyphicon glyphicon-barcode' });
   <% end %>
 
   <% if Settings.dev.feature.user.sign_in %>
@@ -20,7 +55,7 @@
     <% else %>
       var username = '<%= current_user.login %>';
 
-      menu.insertGroup('profile', username)
+      menu.insertGroup('profile', '个人菜单', { iconClass: 'glyphicon glyphicon-file' });
       menu.insertSection('profile', '@' + username, 'face', '我的主页');
 
       <% if current_user.join_shop %>
@@ -37,9 +72,8 @@
 
   $('.navbar-top .navbar-toggle').click(function() {
     var menuName = $(this).data('menuName')
-
-    if (manager) {
-      manager.toggleMenu(menuName);
+    if (window.manager) {
+      window.manager.toggleMenu(menuName);
     }
   });
 </script>

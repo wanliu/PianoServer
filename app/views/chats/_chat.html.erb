@@ -68,8 +68,8 @@
     var $img = $('.chat-order-image')[0];
     var stateLoad = new StatusLoadUrl($img);
 
-    <% unless @order.nil? %>
-    var order = <%=raw @order.origin_hash.to_json %>;
+    <% unless @intention.nil? %>
+    var order = <%=raw @intention.origin_hash.to_json %>;
       <% if Settings.dev.feature.order.chat %>
       var miniTable = new MiniTable($('.chat-order-header'), $('.order-table-wrap'), order);
       <% end %>
@@ -79,13 +79,16 @@
       alert('无效的聊天对象！');
       $('.btn-send').attr('disabled', 'disabled');
     } else {
-
+      var ownerUserId = $('meta[name=chatId]').attr('content');
+      var userChannelId = 'p' + ownerUserId;
+  
       var chat = new Chat($('.chat-order-header'), chatChannelId, {
         sendBtn: $('.btn-send'),
-        greetings: greetings
+        greetings: greetings,
+        userChannelId: userChannelId
       });
 
-      <% if Settings.dev.feature.order.chat and @order %>
+      <% if Settings.dev.feature.order.chat and @intention %>
       chat.setTable(miniTable);
       <% end %>
 
@@ -93,9 +96,9 @@
         var chatId = '<%= @chat.id %>';
         socket.emit('set', { channelId: chatChannelId, key: 'chat_id', value: chatId });
 
-        <% unless @order.nil? %>
-        var orderId = '<%= @order.id %>';
-        socket.emit('set', { channelId: chatChannelId, key: 'order_id', value: orderId })
+        <% unless @intention.nil? %>
+        var intentionId = '<%= @intention.id %>';
+        socket.emit('set', { channelId: chatChannelId, key: 'intention_id', value: intentionId })
         <% end %>
       });
 

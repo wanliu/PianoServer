@@ -3,29 +3,29 @@ TRANSITION_ENDS = 'webkitTransitionEnd otransitionend oTransitionEnd msTransitio
 
 class @SideMenuManager
   constructor: (@element) ->
+    @$window = $(window)
     @menus = []
-    @$container = $('.main-container')
-    @$background = @$container.css('background')
-    @$navbar = $('.main-navbar')
-    @$layout = $('.menu-overlayer')
     @resizeHandler()
     $(window).bind 'resize', @resizeHandler.bind(@)
 
-    @element.on('click', (e) =>
+    @element.on 'click', (e) =>
       $target = $(e.target)
-
       if $target.parents('.menu-container').length == 0
         @_hide()
-    )
 
-    @$layout.on('click', @_layoutClick.bind(@))
+    $('.menu-overlayer').on 'click', @_layoutClick.bind(@)
+
+    $(window).on 'touchmove', (e) =>
+      if @isVisible
+        e.preventDefault()
 
   resizeHandler: () ->
-    if $(window).width() > 768
+    if @$window.width() > 768
       @_hide()
       @_destroyHammer()
     else
       @_initHammer()
+      $('body').width(@$window.width())
 
   addMenu: (menu) ->
     if menu instanceof SideMenu
@@ -45,30 +45,27 @@ class @SideMenuManager
     menu.setVisible(false)
 
   _show: () ->
-    $('body').css('overflow','hidden')
-    @$container.addClass('show-left-bar')
-    @$navbar.addClass('show-left-bar')
-
-    setTimeout () =>
-      @$layout.fadeIn(300)
-      @isVisible = true
-    , 300
+    @isVisible = true
+    $('.menu-overlayer').show()
+    $('.main-navbar').addClass('show-left-bar')
+    $('.main-container').addClass('show-left-bar')
+    $('.link-table-container').addClass('show-left-bar')
 
   _hide: () ->
-    @$layout.hide()
-    @$container.removeClass('show-left-bar')
-    @$navbar.removeClass('show-left-bar')
+    @isVisible = false
+    $('.menu-overlayer').hide()
+    $('.main-navbar').removeClass('show-left-bar')
+    $('.link-table-container').removeClass('show-left-bar')
+    $('.main-container').removeClass('show-left-bar')
 
-    setTimeout () =>
-      $('body').css('overflow','auto')
-      @isVisible = false
-    , 300
+    $('body').width(@$window.width() - 1)
+    $('body').width(@$window.width())
 
   _open: () ->
-    @_show() if $(window).width() <= 768 and !@isVisible
+    @_show() if @$window.width() <= 768 and !@isVisible
 
   _close: () ->
-    @_hide() if $(window).width() <= 768 and @isVisible
+    @_hide() if @$window.width() <= 768 and @isVisible
 
   toggleMenu: (menuName) ->
     menu = if menuName then @_lookupMenu(menuName) else @menus[@menus.length - 1]
@@ -107,8 +104,8 @@ class @SideMenuManager
       threshold: 1,
       pointers: 1
     }))
-    @hammer.on("swiperight", @_open.bind(@))
-    @hammer.on("swipeleft", @_close.bind(@))
+    @hammer.on "swiperight", @_open.bind(@)
+    @hammer.on "swipeleft", @_close.bind(@)
 
   _destroyHammer: () ->
     if @hammer && @hammer.destroy

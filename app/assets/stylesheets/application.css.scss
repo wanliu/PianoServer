@@ -22,10 +22,16 @@
  *= require _common/popup
  *= require _common/checkbox
  *= require _common/upload
+ *= require _common/settings
+ *= require _common/brand
+ *= require _common/cart
+ *= require _common/order-item
  *= require _common/layout
+ *= require common
  *= require lib/range
  *= require_tree ./application
  *= require_tree ./chats
+ *= require_tree ./carts
  *= require_tree ./locations
  *= require_tree ./contacts
  *= require_tree ./shop_category
@@ -61,6 +67,7 @@ body {
 .nav > li > a.navbar-title {
   padding-left: 0px;
 }
+
 
 @media (min-width: 768px) {
   .navbar-header {
@@ -126,19 +133,12 @@ body {
   }
 }
 
-
-
 .navbar-collapse .navbar-nav{
   max-height: 50px;
 }
 
-.nav-avatar {
-  padding-top: 10px!important;
-
-  img {
-    width: 30px;
-    height: 30px;
-  }
+.menu-margin {
+  margin-right: -15px;
 }
 
 .ie-warning {

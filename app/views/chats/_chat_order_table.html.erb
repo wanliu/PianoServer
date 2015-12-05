@@ -1,22 +1,22 @@
-<% unless @order.nil? %>
-<div class="chat-items" data-order-id="<%= @order.id%>" >
-  <ul class="list-group first" order-id="<%= @order.id%>">
-    <%= render "chats/orders/header_target" %>
-    <%= render "chats/orders/header_location" %>
-    <%= render "chats/orders/header_type" %>
+<% unless @intention.nil? %>
+<div class="chat-items" data-order-id="<%= @intention.id%>" >
+  <ul class="list-group first" order-id="<%= @intention.id%>">
+    <%= render "chats/intentions/header_target" %>
+    <%= render "chats/intentions/header_location" %>
+    <%= render "chats/intentions/header_type" %>
   </ul>
-  <%= render "chats/order_items" %>
+  <%= render "chats/line_items" %>
   <ul class="list-group last">
-    <%= render partial: "chats/orders/append_product", locals: { chat: @chat, order: @order, target: @target } %>
-    <%= render "chats/orders/footer" %>
+    <%= render partial: "chats/intentions/append_product", locals: { chat: @chat, intention: @intention, target: @target } %>
+    <%= render "chats/intentions/footer" %>
   </ul>
 </div>
 <% if params[:inline] %>
 <script type="text/javascript">
   $(function () {
     var OrderTable = window.OrderTable;
-    var order = <%=raw @order.origin_hash.to_json %>;
-    var table = new OrderTable($('.order-table-wrap'), order);
+    var intention = <%=raw @intention.origin_hash.to_json %>;
+    var table = new OrderTable($('.order-table-wrap'), intention);
     $(document).trigger('table:change', table);
   });
 

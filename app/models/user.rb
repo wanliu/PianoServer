@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
   include AnonymousUser
 
+  enum user_type: [ :consumer, :retail, :distributor, :wholesaler, :manufacturer ]
   # Include default devise modules. Others available are:
   before_save :ensure_authentication_token
 
@@ -12,13 +13,21 @@ class User < ActiveRecord::Base
   # has_many :memberings, :dependent => :destroy
   belongs_to :latest_location, class_name: 'Location'
   belongs_to :shop
+  belongs_to :industry
 
   has_one :owner_shop, class_name: 'Shop', foreign_key: 'owner_id'
+  has_one :status, as: :stateable, dependent: :destroy
+  has_one :cart
+
   has_many :chats, foreign_key: 'owner_id'
   has_many :locations
 
+  has_one :cart
+
   has_many :followers, as: :followable, class_name: 'Follow'
   has_many :followables, as: :follower, class_name: 'Follow'
+
+  has_many :orders, foreign_key: 'buyer_id'
 
   validates :username, presence: true, uniqueness: true
   validates :mobile, presence: true, uniqueness: true
@@ -26,6 +35,8 @@ class User < ActiveRecord::Base
   after_commit :sync_to_pusher
 
   attr_accessor :login
+
+  delegate :state, to: :status, allow_nil: true
 
   # admin search configure
   scoped_search on: [:id, :username, :email, :mobile]
@@ -36,7 +47,7 @@ class User < ActiveRecord::Base
   }
 
   mount_uploader :image, ImageUploader
-  enum sex: {'男' => 1, '女' => 0 }
+  enum sex: {'保密' => 0, '男' => 1, '女' => 2 }
   store_accessor :data,
                  :weixin_openid, :weixin_privilege, :language, :city, :province, :country
 
@@ -101,6 +112,18 @@ class User < ActiveRecord::Base
     shop || owner_shop
   end
 
+  def cart
+    Cart.find_by(user_id: id) || create_cart
+  end
+
+  def sale_mode
+    if [:distributor, :wholesaler, :manufacturer].include? user_type
+      "wholesale"
+    else
+      "retail"
+    end
+  end
+
   private
 
   def generate_authentication_token
@@ -117,7 +140,7 @@ class User < ActiveRecord::Base
     pusher_token = Settings.pusher.pusher_token.clone
     pusher_url << 'users'
 
-    options = {id: "#{id}", token: pusher_token, login: username, realname: username, avatar_url: avatar_url }
+    options = {id: "#{id}", token: pusher_token, login: username, realname: nickname, avatar_url: avatar_url }
 
     begin
       RestClient.post pusher_url, options

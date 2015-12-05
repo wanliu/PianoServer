@@ -8,6 +8,7 @@ Bundler.require(*Rails.groups)
 
 module PianoServer
   class Application < Rails::Application
+    # config.middleware.insert_after ActiveRecord::QueryCache, ActionDispatch::Cookies
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
@@ -43,11 +44,11 @@ module PianoServer
 
     config.active_job.queue_adapter = :sidekiq
     config.api_only = false
-    config.autoload_paths += %w(builders services drops jobs validators models/variables models/templates models/properties)
+    config.autoload_paths += %w(builders services grids drops jobs validators models/variables models/templates models/properties)
       .map { |_p| Rails.root.join('app', _p) }
 
     # config.paths['public'].unshift "#{Rails.root.to_s}/public/deploy"
-    config.action_controller.page_cache_directory = "#{Rails.root.to_s}/public/deploy"
+    # config.action_controller.page_cache_directory = "#{Rails.root.to_s}/public/deploy"
 
   end
 end

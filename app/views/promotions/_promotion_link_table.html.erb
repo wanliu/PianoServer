@@ -1,4 +1,5 @@
-<div class="detail-link-table-container">
+<div class="detail-link-table-container link-table-container">
+  <div class="menu-overlayer"></div>
   <div class="link-table">
     <% if Settings.dev.feature.shop.website %>
       <%= link_to shop_site_path(shop_name: promotion.shop_name), class: "contact-button into-shop" do %>
@@ -8,37 +9,38 @@
     <% end %>
 
     <% if Settings.dev.feature.favorites %>
-    <% if promotion.favorited %>
-      <div class="fav-button favorited contact-button">
-        <span class="button-icon glyphicon glyphicon-star" aria-hidden="true"></span>
-        <div class="button-text">已收藏</div>
-      </div>
-    <% else %>
-      <div class="fav-button contact-button">
-        <span class="button-icon glyphicon glyphicon-star-empty" aria-hidden="true"></span>
-        <div class="button-text">收藏</div>
-      </div>
-    <% end %>
-    <% end %>
-
-    <% if Settings.dev.feature.cart %>
-
-    <div class="into-cart contact-button">
-      <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>
-      <div class="button-text">购物车</div>
-    </div>
+      <% if promotion.favorited %>
+        <div class="fav-button favorited contact-button">
+          <span class="button-icon glyphicon glyphicon-star" aria-hidden="true"></span>
+          <div class="button-text">已收藏</div>
+        </div>
+      <% else %>
+        <div class="fav-button contact-button">
+          <span class="button-icon glyphicon glyphicon-star-empty" aria-hidden="true"></span>
+          <div class="button-text">收藏</div>
+        </div>
+      <% end %>
     <% end %>
 
-    <% if Settings.dev.feature.purchase %>
-      <div class="buy-now contact-button">购买</div>
-    <% end %>
 
     <% if shop.owner.id === current_anonymous_or_user.id %>
       <div class="chat contact-button">您的店铺</div>
     <% else %>
-      <!-- <a class="chat contact-button" href="javascript:void(0);">洽谈</a> -->
+      <% if promotion.saleable? %>
+        <% if Settings.dev.feature.cart %>
+          <div class="contact-button add-to-cart" data-cartable-type="Promotion" data-cartable-id="<%= promotion.id %>" data-moveable="<%= moveable_target %>">
+            <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>加入购物车
+          </div>
+        <% end %>
+        <% if Settings.dev.feature.purchase %>
+          <div class="buy-now js-buy-now contact-button" data-cartable-type="Promotion" data-cartable-id="<%= promotion.id %>">
+            立即购买
+          </div>
+        <% end %>
+      <% end %>
+
       <%= link_to '洽谈', promotion_chats_path(promotion, shop_id: @shop.id), class: "chat contact-button",
         method: 'POST' %>
-      <% end %>
+    <% end %>
   </div>
 </div>

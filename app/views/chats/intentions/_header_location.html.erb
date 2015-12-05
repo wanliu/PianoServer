@@ -1,0 +1,123 @@
+<li class="list-group-item">
+  <div class="chat-order-address clearfix">
+    <div class="col-xs-4 col-sm-2">收货地址</div>
+    <div class="col-xs-8 col-sm-10">
+      <div class="text-right">
+        <div class="dropdown">
+          <div class="toggle-button" data-toggle="dropdown" role="button">
+            <div class="button-text" id="address-text"></div>
+            <% if @intention.buyer_id == current_anonymous_or_user.id %>
+              <span class="caret"></span>
+            <% end %>
+          </div>
+          <% if @intention.buyer_id == current_anonymous_or_user.id %>
+            <ul class="dropdown-menu address-menu locations">
+              <% if current_anonymous_or_user.locations.last(5).length > 0 %>
+                <% current_anonymous_or_user.locations.last(5).reverse.each do |location| %>
+                  <li>
+                    <%= link_to location, 'javascript:void(0)', :"data-location-id" => location.id, :"data-order-id" => @intention.id , :"data-location" => location ,:class => "set-default-address" %>
+                  </li>
+                <% end %>
+                <li role="separator" class="divider"></li>
+              <% end %>
+
+              <li>
+                <%= link_to '新增收货地址', new_location_path(chat_id: @chat, intention_id: @intention) %>
+              </li>
+
+              <% if @intention.buyer_id > 0 %>
+                <li>
+                  <%= link_to '管理收货地址', location_path(user_id: current_anonymous_or_user.id) %>
+                </li>
+              <% end %>
+            </ul>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</li>
+
+<script type="text/javascript">
+  (function(){
+    var buyer_id = '<%= @intention.buyer_id %>',
+        user_id = '<%= current_anonymous_or_user.id %>',
+        address_title = '<%= @intention.delivery_address_title %>',
+        $locations = $(".locations"),
+        default_location_id = '<%= @intention.default_location_id %>';
+
+    if (address_title === '') {
+      address_title = '暂无收货地址';
+    }
+
+    $('#address-text').text(address_title);
+
+    //匿名用户获取地址选项
+    if (buyer_id === user_id && user_id < 0) {
+      var addresses = LocalAddress.getAll() || [],
+          html = '';
+
+      for (var i=0; i<addresses.length; i++){
+        var address = addresses[i],
+            full_address = [address.contact, [address.province_name, address.city_name, address.region_name, address.road].join(''), address.contact_phone].join('，'),
+            intentionId = <%= @intention.id %>;
+            html += '<li><a data-location-id="' + address.id + '" data-order-id="' + intentionId + '" data-location="' + full_address + '" class="set-default-address" href="javascript:void(0)">' + full_address + '</a></li>';
+      }
+
+      if (addresses.length > 0) {
+        html += '<li role="separator" class="divider"></li>';
+        $locations.prepend(html);
+      }
+    }
+
+    //设置默认地址
+    if (default_location_id != '') {
+      var $link = $locations.find('a[data-location-id=' + default_location_id +']');
+
+      if ($link.length > 0) {
+        var text = $link.text();
+
+        $link.parent().addClass('selected');
+      }
+    }
+
+    $('.set-default-address').click(function (e) {
+      var $parent = $(this).parent();
+
+      if ($parent.hasClass('selected')) {
+        return;
+      }
+
+      $parent.addClass('selected').siblings().removeClass('selected');
+
+      var address_title = $(this).text(),
+          location_id = $(this).data('locationId'),
+          intentionId = $(this).data('orderId'),
+          location = $(this).data("location"),
+          data = {};
+
+      $('#address-text').text(address_title);
+
+      data['delivery_address'] =  {
+        "location_id": location_id
+      };
+
+      if (location_id < 0) {
+        var address = LocalAddress.get(location_id);
+
+        data['delivery_address']['location'] = location;
+        data['delivery_address']['address'] = address;
+      }
+
+      $.ajax({
+        url: '/intentions/' + intentionId + '/set_address/',
+        type: 'PUT',
+        dataType: 'json',
+        data: data,
+        success: function() {
+          $('#address-text').html(location);
+        }
+      });
+    });
+  })();
+</script>

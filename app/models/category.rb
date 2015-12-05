@@ -189,6 +189,10 @@ class Category < ActiveRecord::Base
   def content_paths
     ancestors.map { |cate| cate.content_path } + [ content_path ]
   end
+
+  def self_and_descendants
+    [self, *descendants]
+  end
 end
 
 

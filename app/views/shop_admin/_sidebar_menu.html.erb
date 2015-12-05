@@ -1,31 +1,59 @@
-<script type="text/javascript">
+<script type="text/javascript" data-turbolinks-track>
   var $containment = $('.menu-container');
-  var manager = new SideMenuManager($containment);
+  var manager = window.manager = new SideMenuManager($containment);
   var menu = new SideMenu($containment, 'shop-admin');
 
+  var avatar = '<%= current_user.avatar_url %>',
+      username = '<%= current_user.nickname %>',
+      fragment = ['<li class="group-item"><div class="user-info"><img src="', avatar,
+        '" class="user-avatar">', '<div class="username">',
+        username, '</div></span></li>'].join('');
+
+    menu.insertPlainHTML(fragment);
+
+  var shopname = '<%= @shop.name %>';
   var route = '<%= shop_admin_index_path(@shop.name) %>';
-  menu.insertGroup(route, '商店');
+
+  // icon: the icon image url / iconClass: the glyphicon class name or other class name
+  menu.insertGroup(route, ['商店 ( ', shopname, ' )'].join(''), { iconClass: 'glyphicon glyphicon-home' });
 
   route = '<%= shop_admin_profile_path(@shop.name) %>';
-  menu.insertGroup(route, '档案');
+  menu.insertGroup(route, '档案', { iconClass: 'glyphicon glyphicon-briefcase' });
 
   var title = '<%= @shop.shop_category.title %>';
 
   route = '<%= shop_admin_shop_category_path(@shop.name, @shop.shop_category.name) %>';
-  menu.insertGroup('shop_categories', '分类');
-  menu.insertSection('shop_categories', route, route, title)
+
+  // menu.insertGroup('shop_categories', '分类');
+  // menu.insertSection('shop_categories', route, route, title)
+  menu.insertGroup(route, '商品分类', { iconClass: 'glyphicon glyphicon-th-list' });
 
   route = '<%= shop_admin_items_path(@shop.name) %>';
-  menu.insertGroup(route, '商品');
+  menu.insertGroup(route, '商品', { iconClass: 'glyphicon glyphicon-list-alt'});
 
-  route = '<%= about_shop_path(@shop.name) %>';
-  menu.insertGroup(route, '关于');
+  // route = '<%= about_shop_path(@shop.name) %>';
+  // menu.insertGroup(route, '关于');
+  var sale_orders = '<%= shop_admin_orders_path(@shop.name) %>';
+  var buy_orders = '<%= orders_path %>';
+  menu.insertGroup('all_orders', '订单', { iconClass: 'glyphicon glyphicon-shopping-cart' });
+  menu.insertSection('sale_orders', sale_orders, sale_orders, '我卖的')
+  menu.insertSection('buy_orders', buy_orders, buy_orders, '我买的')
 
   route = '<%= shop_admin_settings_path(@shop.name) %>';
-  menu.insertGroup(route, '设置');
+  menu.insertGroup(route, '设置', {iconClass: 'glyphicon glyphicon-cog' });
 
-  menu.insertGroup('about', '关于我们');
-  menu.insertGroup('qrode', '二维码', { qrode: true });
+
+  menu.insertGroup('about', '关于我们', {iconClass: 'glyphicon glyphicon-blackboard' });
+  <% if Settings.dev.feature.industry %>
+    <% if @industry %>
+      route = '<%= industry_path(@industry.name) %>';
+      menu.insertGroup(route, '行业', { iconClass: 'glyphicon glyphicon-flag' });
+    <% end %>
+  <% end %>
+
+  <% if Settings.dev.feature.qrcode %>
+    menu.insertGroup('qrode', '二维码', { qrode: true, iconClass: 'glyphicon glyphicon-qrcode' });
+  <% end %>
 
   menu.generateMenuDOMFragment();
   manager.addMenu(menu);
@@ -33,8 +61,8 @@
   $('.navbar-top .navbar-toggle').click(function() {
     var menuName = $(this).data('menuName')
 
-    if (manager) {
-      manager.toggleMenu(menuName);
+    if (window.manager) {
+      window.manager.toggleMenu(menuName);
     }
   });
 </script>

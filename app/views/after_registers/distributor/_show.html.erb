@@ -1,0 +1,14 @@
+<% step = @step || current_user.state %>
+<% if step.nil? or step == "select" %>
+  <%= render "step1" %>
+<% elsif step == "industry" %>
+  <%= render "step2" %>
+<% elsif step == "shop" %>
+  <%= render "after_registers/distributor/step3" %>
+<% elsif step == "category" %>
+  <%= render "after_registers/distributor/step4" %>
+<% elsif step == "product" %>
+  <%= render "after_registers/distributor/final" %>
+<% else %>
+  <%= render "redirect_index" %>
+<% end %>

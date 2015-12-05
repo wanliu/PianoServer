@@ -1,10 +1,10 @@
-<% unless @order.nil? %>
-  <div class="chat-order-header" data-order-id="<%= @order.id %>">
+<% unless @intention.nil? %>
+  <div class="chat-order-header" data-order-id="<%= @intention.id %>">
     <div class="chat-image-wrap">
-      <%= image_tag @order.avatar_url, class: "chat-order-image", "state-load-url" => status_of_order_path(@order) %>
+      <%= image_tag @intention.avatar_url, class: "chat-order-image", "state-load-url" => status_of_intention_path(@intention) %>
     </div>
     <div class="chat-order-title">
-      <%= @order.title %>
+      <%= @intention.title %>
     </div>
     <div class="order-toggle-button">
       <span class="glyphicon glyphicon-menu-down toggle-icon" aria-hidden="true"></span>

@@ -1,0 +1,9 @@
+<%= panel do %>
+<div class="panel-heading">
+  <%= select "current_region", "region", options_from_collection_for_select(@regions, 'id', 'title'), class: 'form-control' %>
+</div>
+
+<div class="panel-body">
+  <%#= render partial: "category", collection: @industry.category.children.order(:id) %>
+</div>
+<% end %>

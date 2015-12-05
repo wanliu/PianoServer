@@ -1,19 +1,13 @@
 $transition-time: 0.3s;
 
-html{
+html,body {
   height: 100%;
-  overflow: hidden;
+  position: relative;
 }
 
 body {
+  width: 100%;
   overflow-x: hidden;
-  height: 100%;
-  &.detail,
-  &.item{
-    .scroll-container {
-      padding-bottom: 50px;
-    }
-  }
 }
 
 footer {
@@ -57,6 +51,28 @@ body.chat footer{
     color: #FFFFFF;
   }
 
+  .user-info {
+    position: relative;
+    padding: 10px 15px 10px 75px;
+    line-height: 50px;
+    color: #FFFFFF;
+
+    .user-avatar {
+      position: absolute;
+      left: 15px;
+      top: 10px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+    }
+
+    .username, .shopname {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
   .nav.menu-sections > li > a {
     padding-left: 35px;
   }
@@ -73,9 +89,13 @@ body.chat footer{
       background: #FFD143;
     }
   }
+
+  .menu-icon {
+    margin-right: 3px;
+  }
 }
 
-.chat-notices{
+.chat-notices {
   position: fixed;
   top: 0;
   left: 0;
@@ -83,7 +103,7 @@ body.chat footer{
   z-index: 9999;
   opacity: 0.6;
 
-  .chat-notice{
+  .chat-notice {
     background: #666666;
     height: 35px;
     line-height: 35px;
@@ -114,29 +134,34 @@ body.chat footer{
   transition: all $transition-time;
 }
 
-.show-left-bar{
+.show-left-bar {
   transform: translateX(200px);
   -webkit-transform: translateX(200px);
 }
 
-.main-container{
-  background-color: #eee;
+
+.link-table-container{
+  transition: all $transition-time;
+}
+.main-container {
+  min-height: 100%;
+  overflow: hidden;
   position: relative;
   padding-top: 50px;
-  -webkit-transition: transform $transition-time;
-  transition: transform $transition-time;
-  overflow: hidden;
-  min-height: 100%;
+  padding-bottom: 120px;
+  background-color: #eee;
   background-image: image_url('bj.jpg');
-  padding-bottom: 100px;
+  transition: all $transition-time;
+  -webkit-transition: all $transition-time;
 }
 
 .menu-overlayer {
-  position: fixed;
-  left: 200px;
+  position: absolute;
+  left: 0;
   top: 0;
   right: 0;
   bottom: 0;
+  margin: -1px 0;
   background: #333333;
   opacity: 0.5;
   display: none;

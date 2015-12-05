@@ -1,0 +1,31 @@
+<%= panel heading: "后台任务执行中，请等待几秒到十几秒中，数据正在生成中。。。" do %>
+  <div class="panel-body">
+    <div class="message" ></div>
+    <%= row do %>
+      <div class="col-sm-offset-4 col-sm-4">
+        <%= progress_bar percentage: 100, animated: true, label: '正在载入数据' %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<script type="text/javascript">
+  var url = "<%= status_after_register_path(@user_type, step: @step) %>";
+  var tickId = setInterval(checkStatus, 2000);
+  var tickCount = 0;
+
+  function checkStatus() {
+    $.getJSON(url).then(function(resp) {
+      if (resp.status == "done") {
+        $('.table-detial').hide().html(resp.html).fadeIn();
+        clearInterval(tickId);
+      } else if (tickCount++ >= 100) {
+        clearInterval(tickId);
+      }
+    }).fail(function(e) {
+      var dialog = "<%=j alert_box '服务器发生错误，请联系网管 master@wanliu.biz，可能是 sidekiq 错误', context: :danger %>"
+      $(".message").html(dialog)
+      clearInterval(tickId);
+    });
+  }
+</script>

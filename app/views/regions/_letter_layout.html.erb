@@ -1,0 +1,26 @@
+<%= search_form regions_path, input: { class: "live-search-region", placeholder: "输入城市" }, group: { class: "input-group-lg col-sm-12" }%>
+
+<br />
+<!-- <h3>热门城市</h3> -->
+<div class="panel panel-default">
+  <div class="panel-heading">按字母排序</div>
+  <div class="panel-body">
+    <% ignore_letters = %w(I O U V) %>
+    <% letters = ("A".."Z").to_a - ignore_letters %>
+    <% letters.each do |letter| %>
+      <%= link_to letter, regions_path(letter: letter), class: 'btn btn-link col-xs-2' %>
+    <% end %>
+  </div>
+</div>
+
+<% letters.each do |letter| %>
+<div class="panel panel-default">
+  <div class="panel-heading"><%= letter %> <small>（以 <%= letter %> 为开头的城市名）</small></div>
+  <div class="panel-body">
+    <% letter_regions = Region.where("lower(substring(name from 1 for 1)) = ?", letter.downcase) %>
+    <% letter_regions.each do |region| %>
+      <%= link_to region.title, set_region_path(region), class: 'btn btn-link col-xs-4' %>
+    <% end %>
+  </div>
+</div>
+<% end %>

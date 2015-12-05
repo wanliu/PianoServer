@@ -1,0 +1,7 @@
+
+class AvatarUploader < ImageUploader
+  def default_url
+    Settings.assets.avatar_iamge
+  end
+
+end

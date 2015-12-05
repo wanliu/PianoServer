@@ -1,0 +1,72 @@
+<ul class="error-messages clearfix">
+  <% if location.errors.any? %>
+    <% location.errors.full_messages.each do |msg| %>
+      <li class="error-message"><%= msg %></li>
+    <% end %>
+  <% end %>
+</ul>
+
+<%= form_for location do |f| %>
+  <%= f.hidden_field :user_id %>
+  <%= f.hidden_field :chat_id %>
+  <%= f.hidden_field :intention_id %>
+
+  <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+    <%= label :location, :contact do %>
+      姓名<span class="required">*</span>
+    <% end %>
+
+    <%= f.text_field :contact, class: "form-control", maxlength: 30 %>
+  </div>
+
+  <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+    <%= label :location, :id do %>
+      城市<span class="required">*</span>
+    <% end %>
+
+    <div class="city-group">
+      <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding0">
+        <%= select(:location, :province_id, options_for_select(ChinaCity.list), {prompt: '--省份--'}, {class: "city-select form-control"}) %>
+      </div>
+      <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding0">
+        <%= select(:location, :city_id, [], {prompt: "--城市--"}, { class: "city-select form-control" } ) %>
+      </div>
+      <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding0">
+        <%= select(:location, :region_id, [], {prompt: "--地区--"}, { class: "city-select form-control" } ) %>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    $(document).on('page:load', function() {
+      return $('.city-group').china_city();
+    });
+  </script>
+
+  <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+    <%= label :location, :road do %>
+      地址<span class="required">*</span>
+    <% end %>
+
+    <%= f.text_field :road, class: "form-control", maxlength: 140 %>
+  </div>
+
+  <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+    <%= f.label :zipcode, "邮编"%>
+      <%= f.text_field :zipcode, class: "form-control" %>
+  </div>
+
+  <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+    <%= label :location, :contact_phone do %>
+      手机/座机号<span class="required">*</span>
+    <% end %>
+
+    <%= f.text_field :contact_phone, class: "form-control" %>
+  </div>
+
+  <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <%= f.submit "新建收件人信息", class: "btn btn-danger " %>
+  </div>
+
+  <div style='clear: both;'></div>
+<% end %>

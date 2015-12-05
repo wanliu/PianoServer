@@ -1,0 +1,15 @@
+<div class="city-group row" >
+  <% province_list = province_id ? options_for_select(ChinaCity.list, province_id) : ChinaCity.list %>
+  <% city_list = city_id ? options_for_select(ChinaCity.list(province_id), city_id) : [] %>
+  <% region_list = region_id ? options_for_select(ChinaCity.list(city_id), region_id) : [] %>
+
+  <div class="col-xs-4">
+    <%= select(:location, :province_id, province_list, {prompt: '--省份--'}, {class: "city-select form-control"}) %>
+  </div>
+  <div class="col-xs-4">
+    <%= select(:location, :city_id, city_list, {prompt: "--城市--"}, { class: "city-select form-control" } ) %>
+  </div>
+  <div class="col-xs-4">
+    <%= select(:location, :region_id, region_list, {prompt: "--地区--"}, { class: "city-select form-control" } ) %>
+  </div>
+</div>

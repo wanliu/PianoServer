@@ -24,7 +24,7 @@ class Shop::BuildGenerator < Rails::Generators::NamedBase
       copy_file "#{theme_path}/shops/show.html.liquid",   "#{shop_path}/theme_#{theme_path}/views/shops/show.html.liquid"
       copy_file "#{theme_path}/shop_categories/_shop_category_list.html.liquid", "#{shop_path}/theme_#{theme_path}/views/shop_categories/_shop_category_list.html.liquid"
     rescue
-      raise 'copy file error, maby theme thme name was wrong'
+      raise '复制文件错误'
     end
 
     create_shop_category name: 'product_category', title: '商品分类', category_type: 'builtin'
@@ -56,9 +56,11 @@ class Shop::BuildGenerator < Rails::Generators::NamedBase
 
   def theme_path
     if @theme.nil?
-      'theme1'
-    else
-      @theme
+      @theme = 'theme1'
+      @shop.update_attribute('theme', @theme)
+      @shop.save
     end
+
+    @theme
   end
 end

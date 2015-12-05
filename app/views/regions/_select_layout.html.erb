@@ -1,0 +1,118 @@
+<% content_for :javascripts do %>
+  <script type="text/javascript" src="http://api.map.baidu.com/api?v=1.5&ak=<%= Settings.baidu.ditu.secret %>"  data-turbolinks-track>
+  //v1.5版本的引用方式：src="http://api.map.baidu.com/api?v=1.5&ak=您的密钥"
+  //v1.4版本及以前版本的引用方式：src="http://api.map.baidu.com/api?v=1.4&key=您的密钥&callback=initialize"
+  </script>
+
+<% end %>
+<div class="city-select-container">
+  <%= render partial: "city_select", locals: { province_id: @province, city_id: @city, region_id: @region} %>
+</div>
+<br />
+
+<div class="row">
+  <div class="col-xs-6">
+    <%= button_to '确定', set_regions_path, context: :primary, size: 'lg', class: 'set-region btn-block', disabled: true, params: {region_id: nil} %>
+  </div>
+  <div class="col-xs-6">
+    <%= button context: :default, class: 'get-location btn-block', size: :lg, data: {"loading-text": '正在获取地址'} do %>
+      <%= icon 'map-marker' %>获取地址
+    <% end %>
+  </div>
+</div>
+<br />
+<br />
+<br />
+<h4 class="geo-id"></h4>
+
+<script type="text/javascript">
+  $(".city-select-container").on('change', '.city-select', function(e) {
+    var cities = $(".city-group option:selected").map(function(i, elem) {
+      return { title: $(elem).text().trim(), id: $(elem).val() };
+    });
+
+    cities = Array.prototype.filter.call(cities, function(city) {
+      var title = city["title"];
+      return !(title == "" || title[0] == "-");
+    });
+
+    if (cities.length == 3) {
+      var last_city = cities[cities.length -1];
+      var city_id = last_city["id"];
+      $('.city-select-container').trigger('done.city-group', city_id);
+    } else {
+      $('.city-select-container').trigger('cancel.city-group');
+    }
+  }).on('done.city-group', function(e, city) {
+    $('.set-region').attr('disabled', false);
+    $('form.button_to input[name="region_id"]').val(city)
+  }).on('cancel.city-group', function(e) {
+    $('.set-region').attr('disabled', true);
+  })
+
+
+</script>
+
+<script type="text/javascript">
+  var geo = new BMap.Geocoder();
+
+  doGetLocation();
+
+  function doGetLocation() {
+    if (navigator && navigator.geolocation) {
+      $("button.get-location").button('loading');
+
+      navigator.geolocation.getCurrentPosition(GetLocation, errorCallback);
+    } else {
+      console.log('Geolocation is not supported');
+    }
+  }
+
+  $(".get-location").click(function(e) {
+    e.preventDefault();
+
+    doGetLocation();
+  });
+
+  function GetLocation(location) {
+    var point = new BMap.Point(location.coords.longitude, location.coords.latitude);
+
+    geo.getLocation(point, function(result){
+      if (result){
+        var region = result.addressComponents.district;
+        var city = result.addressComponents.city;
+        var province = result.addressComponents.province;
+        $("button.get-location").button('reset');
+
+        $('.geo-id').text('你所在的城市 ' + province + city + region );
+        // console.log(result);
+        retriveCity(province, city, region, function(resp) {
+          $(".city-select-container").html(resp.html);
+          $(".city-group").china_city();
+          $(".city-select-container").trigger('done.city-group', resp.region_id);
+        });
+      }
+    });
+  }
+
+  function errorCallback(err) {
+    $(".geo-id").text('获取地理位置失败');
+  }
+
+  function retriveCity(province, city, region, cb) {
+    var url = "<%= retrive_regions_path %>";
+    $.ajax({
+      url: url,
+      type: 'POST',
+      data: {
+        province: province,
+        city: city,
+        region: region
+      }
+    }).then(function(resp) {
+      if ('function' === typeof cb) {
+        cb(resp);
+      }
+    })
+  }
+</script>
