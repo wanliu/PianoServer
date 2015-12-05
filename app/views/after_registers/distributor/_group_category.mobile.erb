@@ -1,4 +1,6 @@
 <div class="group_category no-padding">
+  <%= hidden_field_tag "categories[][children][][id]", group_category["id"] %>
+  <%= hidden_field_tag "categories[][children][][title]", group_category["title"] %>
   <div class="list-group-item disabled" data-toggle="collapse" data-target="#group-category-<%= group_category["id"] %>">
     <span class="category-mark pull-right"><span class="glyphicon glyphicon-ok"></span></span>
     <span><%= group_category["title"] %> (<span class="selected"><%= group_category["total"] %></span>/<%= group_category["total"] %>)</span>

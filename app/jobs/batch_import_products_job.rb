@@ -1,7 +1,7 @@
 class BatchImportProductsJob < ActiveJob::Base
   queue_as :default
 
-  def perform(job, shop, products, select_params)
+  def perform(job, shop, products, categories)
     # pp products
 
 
@@ -14,7 +14,27 @@ class BatchImportProductsJob < ActiveJob::Base
 
     job.output["created"] = []
 
-    Item.skip_callback :save, :after, :store_attachment!
+    Item.skip_callback :save, :after, :store_images!
+    ShopCategory.skip_callback :save, :after, :store_image!
+    categories_map = {}
+    categories.each do |category_attrs|
+      category_attrs = ActionController::Parameters.new(category_attrs.merge(status: true, category: category_attrs["id"]))
+      category = shop.shop_category.children
+        .where("data @> :data", data: {cateogry: category_attrs["id"]}.to_json)
+        .first_or_create(category_attrs.permit("title", "image", "description", :status, :category))
+
+      categories_map[category_attrs["id"]] = category.id
+      (category_attrs["children"]||[]).each do |child_attrs|
+        child_attrs = ActionController::Parameters.new(child_attrs.merge(status: true, category: child_attrs["id"]))
+
+        child = category.children
+          .where("data @> :data", data: {cateogry: child_attrs["id"]}.to_json)
+          .first_or_create(child_attrs.permit("title", "image", "description", :status, :category))
+
+        categories_map[child_attrs["id"]] = child.id
+      end
+    end
+
     index = Item.last_sid shop
     Item.transaction do
       enum.each do |product|
@@ -26,6 +46,7 @@ class BatchImportProductsJob < ActiveJob::Base
           on_sale: Settings.shop.import.sale,
           brand_id: product.brand_id,
           category_id: product.category_id,
+          shop_category_id: categories_map[product.category_id.to_s],
           skip_batch: true) do |item|
           item.sid = index+=1
           item.write_attribute(:images, product.image_urls)
@@ -33,7 +54,14 @@ class BatchImportProductsJob < ActiveJob::Base
         end
       end
     end
-    Item.set_callback :save, :after, :store_attachment!
+
+    if shop.shop_category.nil?
+      shop.create_shop_category name: 'product_category', title: '商品分类', category_type: 'builtin'
+    end
+
+
+    Item.set_callback :save, :after, :store_images!
+    ShopCategory.set_callback :save, :after, :store_image!
 
     # job.output[:products_group] = @products_group
     job.status = "done"

@@ -13,7 +13,9 @@
   <% products_group.each do |top| %>
     <div class="group-row">
       <!-- <span class="top-name" ><%= top["title"] %></span> -->
-      <%= render partial: "after_registers/distributor/group_category", collection: top["categories"] %>
+      <%= hidden_field_tag "categories[][id]", top["id"] %>
+      <%= hidden_field_tag "categories[][title]", top["title"] %>
+      <%= render partial: "after_registers/distributor/group_category", collection: top["categories"], locals: {top: top } %>
     </div>
   <% end %>
 
