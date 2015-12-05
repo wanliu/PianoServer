@@ -56,7 +56,7 @@ class @SideMenuManager
     $('.menu-overlayer').hide()
     $('.main-navbar').removeClass('show-left-bar')
     $('.link-table-container').removeClass('show-left-bar')
-    $('.main-container').removeClass('show-left-bar').css('height','auto')
+    $('.main-container').removeClass('show-left-bar')
 
     $('body').width(@$window.width() - 1)
     $('body').width(@$window.width())
