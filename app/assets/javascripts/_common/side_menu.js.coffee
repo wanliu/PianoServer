@@ -46,10 +46,12 @@ class @SideMenu
     for group in @groups
       { route, name, title, sections, routeAnchor, dataOptions } = group
 
+      iconStr = @_generateIconElement(dataOptions)
+
       if sections.length > 0
         template = """
           <li id="#{routeAnchor}" class="group-item">
-            <span href="javascript:void(0);" class="group-title">#{title}</span>
+            <span href="javascript:void(0);" class="group-title">#{iconStr}#{title}</span>
         """
 
         templates = [ template, '<ul class="nav menu-sections">' ]
@@ -59,6 +61,8 @@ class @SideMenu
 
           bindings = []
           for key, value of dataOptions
+            continue if key == 'icon'
+
             str = """
               data-#{key}="#{value}"
             """
@@ -66,9 +70,11 @@ class @SideMenu
 
           binding_str = if bindings.length > 0 then bindings.join(' ') else ''
 
+          iconStr = @_generateIconElement(dataOptions)
+
           template = """
             <li id="#{routeAnchor}">
-              <a href="#{route}" #{binding_str}>#{title}</a>
+              <a href="#{route}" #{binding_str}>#{iconStr}#{title}</a>
             </li>
           """
 
@@ -81,19 +87,33 @@ class @SideMenu
         if dataOptions['qrode']
           template = """
             <li id="group-qrode" class="group-item">
-              <a href="javascript:void(0);">#{title}</a>
+              <a href="javascript:void(0);">#{iconStr}#{title}</a>
             </li>
           """
         else
           template = """
             <li id="#{routeAnchor}" class="group-item">
-              <a href="#{route}">#{title}</a>
+              <a href="#{route}">#{iconStr}#{title}</a>
             </li>
           """
         $(template).appendTo(@element)
 
     @_bindEvents()
     @_highlightPath()
+
+  _generateIconElement: (options) ->
+    {icon, iconClass } = options
+
+    if icon?
+      iconStr = ['<img src="', icon, '" class="group-icon">'].join('')
+    else if iconClass
+      iconClass = iconClass.join(' ') if Object.prototype.toString.call(iconClass) == '[object Array]'
+      iconClass = [ 'menu-icon', iconClass ].join(' ')
+      iconStr = ['<span class="', iconClass, '" arial-hidden="true"></span>'].join('')
+    else
+      iconStr = ''
+
+    iconStr
 
   _bindEvents: () ->
     $('#group-qrode a').click(() ->
