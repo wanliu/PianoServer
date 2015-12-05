@@ -62,9 +62,7 @@ class User < ActiveRecord::Base
   end
 
   def chat_token
-    Rails.cache.fetch [:users_jwt,  :id], expires_in: 12.hours do
-      JWT.encode({id: id}, JWT_TOKEN)
-    end
+    JWT.encode({id: id}, JWT_TOKEN)
   end
 
   def self.find_for_database_authentication(warden_conditions)

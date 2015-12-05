@@ -99,8 +99,8 @@
     <% end %>
     <div class="chat-notices"></div>
     <div class="menu-container"></div>
-    <div class="menu-overlayer"></div>
     <div class="main-container">
+      <div class="menu-overlayer"></div>
       <div class="container">
         <%= bootstrap_flash %>
       </div>
@@ -136,11 +136,9 @@
       <% end %>
     <% end %>
     <script type="text/javascript">
-
       <% unless Rails.env.production? %>
         console.log('development version: <%= PianoServer::VERSION %>')
       <% end %>
-
     </script>
   </body>
 </html>

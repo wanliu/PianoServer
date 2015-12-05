@@ -24,4 +24,5 @@ $ () ->
       </form>
     """)
 
+    $('body').append($buyNowForm);
     $buyNowForm.submit()
