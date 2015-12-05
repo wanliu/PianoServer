@@ -1,20 +1,13 @@
 $transition-time: 0.3s;
 
-html,body{
+html,body {
   height: 100%;
   position: relative;
 }
 
-body{
+body {
   width: 100%;
   overflow-x: hidden;
-}
-
-body.detail,
-body.item{
-  .scroll-container {
-    padding-bottom: 50px;
-  }
 }
 
 footer {
@@ -98,7 +91,7 @@ body.chat footer{
   }
 }
 
-.chat-notices{
+.chat-notices {
   position: fixed;
   top: 0;
   left: 0;
@@ -106,7 +99,7 @@ body.chat footer{
   z-index: 9999;
   opacity: 0.6;
 
-  .chat-notice{
+  .chat-notice {
     background: #666666;
     height: 35px;
     line-height: 35px;
@@ -137,12 +130,12 @@ body.chat footer{
   transition: all $transition-time;
 }
 
-.show-left-bar{
+.show-left-bar {
   transform: translateX(200px);
   -webkit-transform: translateX(200px);
 }
 
-.main-container{
+.main-container {
   min-height: 100%;
   overflow: hidden;
   position: relative;
@@ -151,7 +144,7 @@ body.chat footer{
   background-image: image_url('bj.jpg');
   transition: all $transition-time;
   -webkit-transition: all $transition-time;
- }
+}
 
 .menu-overlayer {
   position: absolute;
