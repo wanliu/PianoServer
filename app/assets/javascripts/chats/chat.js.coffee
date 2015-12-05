@@ -373,7 +373,7 @@ class @Chat
     {prefixSection, senderAvatar, senderName, toAddClass, id, senderId, content, senderLogin, type, time} = context
 
     text ||= content
-    text = text.replace(/(<\/?(?!br)[^>\/]*)\/?>/gi,'').replace(/\s/g, '')
+    text = text.replace(/(<\/?(?!br)[^>\/]*)\/?>/gi,'')
 
     """
       #{prefixSection}
