@@ -35,7 +35,9 @@ body.chat footer{
   overflow-x: hidden;
   width: 200px;
   background: #E32929;
-  left: 0;
+  left: -200px;
+  transition: all $transition-time;
+  -webkit-transition: all $transition-time;
 
   a {
     color: #FFFFFF;
