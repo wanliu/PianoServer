@@ -36,6 +36,7 @@ class OrdersController < ApplicationController
     respond_to do |format|
       if @order.save_with_items(current_user)
         format.html { redirect_to @order }
+        format.mobile { redirect_to @order }
         format.json { render json: @order, status: :created }
       else
         format.html do

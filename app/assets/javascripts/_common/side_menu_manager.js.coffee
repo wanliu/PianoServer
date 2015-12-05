@@ -15,7 +15,7 @@ class @SideMenuManager
 
     $('.menu-overlayer').on 'click', @_layoutClick.bind(@)
 
-    $('.main-container').on 'touchstart', (e) =>
+    $('.main-container').on 'touchmove', (e) =>
       if @isVisible
         e.preventDefault()
 
@@ -45,16 +45,20 @@ class @SideMenuManager
     menu.setVisible(false)
 
   _show: () ->
-    $('.main-container').addClass 'show-left-bar'
-    $('.main-navbar').addClass 'show-left-bar'
-    $('.menu-overlayer').show()
     @isVisible = true
+    $('.menu-overlayer').show()
+    $('.menu-container').addClass('show-left-bar')
+    $('.main-navbar').addClass('show-left-bar')
+    $('.main-container').addClass('show-left-bar')
+    $('.link-table-container').addClass('show-left-bar')
 
   _hide: () ->
-    $('.menu-overlayer').hide()
-    $('.main-navbar').removeClass 'show-left-bar'
-    $('.main-container').removeClass 'show-left-bar'
     @isVisible = false
+    $('.menu-overlayer').hide()
+    $('.menu-container').removeClass('show-left-bar')
+    $('.main-navbar').removeClass('show-left-bar')
+    $('.link-table-container').removeClass('show-left-bar')
+    $('.main-container').removeClass('show-left-bar')
 
     $('body').width(@$window.width() - 1)
     $('body').width(@$window.width())
