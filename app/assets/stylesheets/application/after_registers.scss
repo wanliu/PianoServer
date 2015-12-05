@@ -32,6 +32,29 @@ $transition-time:0.4s;
   }
 }
 
+
+.product-link {
+  .product-mark {
+    display: none;
+  }
+}
+
+.table-detial {
+  &>ul>input[type="checkbox"]:checked+
+    .list-group-item {
+      border-color: #337ab7;
+
+      &>.product-mark {
+        display: inline-block;
+        padding: 5px 8px;
+        background-color: #337ab7;
+        border-radius: 50%;
+        color: white;
+        margin-left: 10px;
+      }
+    }
+}
+
 .category-brand-selector {
   input[type="checkbox"] {
     display: none;

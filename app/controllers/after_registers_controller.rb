@@ -1,5 +1,7 @@
 class AfterRegistersController < ApplicationController
   BUSSINES_TYPES = %w(consumer retail distributor)
+  include Mobylette::RespondToMobileRequests
+
   # include PublicActivity::StoreController
 
   before_action :authenticate_user!

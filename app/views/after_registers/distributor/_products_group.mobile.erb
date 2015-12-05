@@ -1,0 +1,29 @@
+<ul class="list-group no-padding">
+  <% render_table products_group do |group, category, brand, product, index| %>
+    <%= hidden_field_tag "products[#{product['id']}][id]", product["id"] %>
+    <%= check_box_tag "products[#{product['id']}][check]", "1", { checked: true }, {class: "product-check hide"} %>
+    <%= label_tag "products_#{product['id']}_check", class: 'list-group-item product-link truncate' do %>
+      <span class="product-mark pull-right" ><%=icon :ok %></span>
+      <%= image_tag icon_url(product["avatar"]), class: "image-thumbnail", size: "32x32" %>
+      <span class="product-title ">
+        <%= product["name"] %>
+      </span>
+    <% end %>
+  <% end %>
+</ul>
+
+<script type="text/javascript">
+  if ($(".table-detail .product-check:checked").length > 0 ) {
+    $('.next').attr('disabled', false)
+  } else {
+    $('.next').attr('disabled', true)
+  }
+
+  $(".table-detail .product-check:checked").on('change', function() {
+    if ($(".table-detail .product-check:checked").length > 0 ) {
+      $('.next').attr('disabled', false)
+    } else {
+      $('.next').attr('disabled', true)
+    }
+  })
+</script>
