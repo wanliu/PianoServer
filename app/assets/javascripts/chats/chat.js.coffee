@@ -32,7 +32,6 @@ class @Chat
     @boundOnMessage = @onMessage.bind(@)
     @userSocket.onPersonMessage(@boundOnMessage)
     @onwerId = @userSocket.userId
-    @ownerChannelId = @options.userChannelId || @userSocket.getUserChannelId()
     @table = @options.table
     @greetings = @options.greetings
 
@@ -65,6 +64,9 @@ class @Chat
 
   on: (event_name, callback) ->
     @$().on('chat:' + event_name, callback)
+
+  ownerChannelId: () ->
+    @options.userChannelId || @userSocket.getUserChannelId()
 
   bindAllEvents: () ->
     $(@textElement).on 'keyup', (e) =>
@@ -101,7 +103,7 @@ class @Chat
   send: (msg) ->
 
   getChatChannelId: () ->
-    ownerChannelId = @options.userChannelId || @userSocket.getUserChannelId()
+    ownerChannelId = @ownerChannelId()
     @chatChannelId ||= 'p:' + [ownerChannelId[1..-1], @channelId[1..-1]].sort().join(':')
 
   enter: () ->
