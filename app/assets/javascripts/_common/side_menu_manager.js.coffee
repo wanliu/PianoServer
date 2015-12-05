@@ -15,7 +15,7 @@ class @SideMenuManager
 
     $('.menu-overlayer').on 'click', @_layoutClick.bind(@)
 
-    $(window).on 'touchmove', (e) =>
+    $('.main-container').on 'touchmove', (e) =>
       if @isVisible
         e.preventDefault()
 
