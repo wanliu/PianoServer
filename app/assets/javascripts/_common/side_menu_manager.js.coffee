@@ -5,20 +5,17 @@ class @SideMenuManager
   constructor: (@element) ->
     @$window = $(window)
     @menus = []
-    @$container = $('.main-container')
-    @$navbar = $('.main-navbar')
-    @$layout = $('.menu-overlayer')
     @resizeHandler()
-    @$window.bind 'resize', @resizeHandler.bind(@)
+    $(window).bind 'resize', @resizeHandler.bind(@)
 
     @element.on 'click', (e) =>
       $target = $(e.target)
       if $target.parents('.menu-container').length == 0
         @_hide()
 
-    @$layout.on 'click', @_layoutClick.bind(@)
+    $('.menu-overlayer').on 'click', @_layoutClick.bind(@)
 
-    @$container.on 'touchstart', (e) =>
+    $('.main-container').on 'touchstart', (e) =>
       if @isVisible
         e.preventDefault()
 
@@ -48,15 +45,15 @@ class @SideMenuManager
     menu.setVisible(false)
 
   _show: () ->
-    @$container.addClass 'show-left-bar'
-    @$navbar.addClass 'show-left-bar'
-    @$layout.show()
+    $('.main-container').addClass 'show-left-bar'
+    $('.main-navbar').addClass 'show-left-bar'
+    $('.menu-overlayer').show()
     @isVisible = true
 
   _hide: () ->
-    @$layout.hide()
-    @$container.removeClass 'show-left-bar'
-    @$navbar.removeClass 'show-left-bar'
+    $('.menu-overlayer').hide()
+    $('.main-navbar').removeClass 'show-left-bar'
+    $('.main-container').removeClass 'show-left-bar'
     @isVisible = false
 
     $('body').width(@$window.width() - 1)
@@ -69,7 +66,6 @@ class @SideMenuManager
     @_hide() if @$window.width() <= 768 and @isVisible
 
   toggleMenu: (menuName) ->
-    console.log(menuName)
     menu = if menuName then @_lookupMenu(menuName) else @menus[@menus.length - 1]
 
     return if not menu

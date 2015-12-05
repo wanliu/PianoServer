@@ -1,6 +1,6 @@
 <script type="text/javascript" data-turbolinks-track>
   var $containment = $('.menu-container');
-  var manager = new SideMenuManager($containment);
+  var manager = window.manager = new SideMenuManager($containment);
   var menu = new SideMenu($containment, 'custom');
 
   <% if Settings.dev.feature.user.sign_in && current_anonymous_or_user.id > 0 %>
@@ -60,8 +60,8 @@
 
   $('.navbar-top .navbar-toggle').click(function() {
     var menuName = $(this).data('menuName')
-    if (manager) {
-      manager.toggleMenu(menuName);
+    if (window.manager) {
+      window.manager.toggleMenu(menuName);
     }
   });
 </script>
