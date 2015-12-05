@@ -1,19 +1,13 @@
 $transition-time: 0.3s;
 
-html{
+html,body {
   height: 100%;
-  // overflow: hidden;
+  position: relative;
 }
 
 body {
+  width: 100%;
   overflow-x: hidden;
-  height: 100%;
-  &.detail,
-  &.item{
-    .scroll-container {
-      padding-bottom: 50px;
-    }
-  }
 }
 
 footer {
@@ -101,7 +95,7 @@ body.chat footer{
   }
 }
 
-.chat-notices{
+.chat-notices {
   position: fixed;
   top: 0;
   left: 0;
@@ -109,7 +103,7 @@ body.chat footer{
   z-index: 9999;
   opacity: 0.6;
 
-  .chat-notice{
+  .chat-notice {
     background: #666666;
     height: 35px;
     line-height: 35px;
@@ -140,29 +134,29 @@ body.chat footer{
   transition: all $transition-time;
 }
 
-.show-left-bar{
+.show-left-bar {
   transform: translateX(200px);
   -webkit-transform: translateX(200px);
 }
 
-.main-container{
-  background-color: #eee;
+.main-container {
+  min-height: 100%;
+  overflow: hidden;
   position: relative;
   padding-top: 50px;
-  -webkit-transition: all $transition-time;
-  transition: all $transition-time;
-  overflow: hidden;
-  min-height: 100%;
-  background-image: image_url('bj.jpg');
   padding-bottom: 100px;
+  background-image: image_url('bj.jpg');
+  transition: all $transition-time;
+  -webkit-transition: all $transition-time;
 }
 
 .menu-overlayer {
-  position: fixed;
-  left: 200px;
+  position: absolute;
+  left: 0;
   top: 0;
   right: 0;
   bottom: 0;
+  margin: -1px 0;
   background: #333333;
   opacity: 0.5;
   display: none;

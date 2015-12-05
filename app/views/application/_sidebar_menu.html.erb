@@ -1,6 +1,6 @@
 <script type="text/javascript" data-turbolinks-track>
   var $containment = $('.menu-container');
-  var manager = new SideMenuManager($containment);
+  var manager = window.manager = new SideMenuManager($containment);
   var menu = new SideMenu($containment, 'custom');
 
   // icon: the icon image url / iconClass: the glyphicon class name or other class name
@@ -72,9 +72,8 @@
 
   $('.navbar-top .navbar-toggle').click(function() {
     var menuName = $(this).data('menuName')
-
-    if (manager) {
-      manager.toggleMenu(menuName);
+    if (window.manager) {
+      window.manager.toggleMenu(menuName);
     }
   });
 </script>
