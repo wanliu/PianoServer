@@ -47,7 +47,7 @@ class Shop::BuildGenerator < Rails::Generators::NamedBase
   end
 
   def shop_root
-    options[:shop_root] || Settings.sites.shops.root
+    options[:shop_root] || File.join(Rails.root, Settings.sites.shops.root)
   end
 
   def shop_path
