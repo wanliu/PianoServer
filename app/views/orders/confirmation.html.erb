@@ -93,7 +93,8 @@
     });
 
     q.fail(function (data, status, xhr) {
-      $('.add-new-location .error-messages').text(data.responseJSON.error.join(' '));
+      debugger
+      $('.add-new-location').html(data.responseText);
     })
   })
 

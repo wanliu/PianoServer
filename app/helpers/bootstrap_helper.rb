@@ -60,10 +60,17 @@ module BootstrapHelper
     valid = has_errors(object, name)
     error = error_message(object, name)
     error_name = t('attributes.' + name.to_s)
+    title = options[:title]
 
-    label_content = helper.label name, options[:title], class: "col-sm-2 control-label" do
+    if true == options[:required]
+      title << "<span class='required'>*</span>".html_safe
+    end
+
+    label_content = helper.label name, title, class: "col-sm-2 control-label" do
       if valid
         "#{error_name}<div class=\"error-tip\">#{error_name}#{error.join(' ')}</div>"
+      elsif true == options[:required]
+        "#{error_name}<span class='required'>*</span>".html_safe
       else
         "#{error_name}"
       end.html_safe
@@ -86,8 +93,17 @@ module BootstrapHelper
     valid = has_errors(object, name)
     error = error_message(object, name)
     error_name = t('attributes.' + name.to_s)
+    title = options[:title]
 
-    label_content = helper.label name, options[:title], class: "control-label"
+
+    label_content = helper.label name, class: "control-label" do
+      if true == options[:required]
+        "#{title}<span class='required'>*</span>".html_safe
+      else
+        "#{title}"
+      end
+    end
+
     error_label = "<span class=\"help-block text-left\">#{error_name}#{error.join(' ')}</span>".html_safe
 
     s "<div class=\"form-group#{" has-error has-feedback" if valid} #{options[:group_class]} \">"
