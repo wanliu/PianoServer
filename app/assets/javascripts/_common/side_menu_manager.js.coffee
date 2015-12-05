@@ -45,16 +45,18 @@ class @SideMenuManager
     menu.setVisible(false)
 
   _show: () ->
-    $('.main-container').addClass 'show-left-bar'
-    $('.main-navbar').addClass 'show-left-bar'
-    $('.menu-overlayer').show()
     @isVisible = true
+    $('.menu-overlayer').show()
+    $('.main-navbar').addClass('show-left-bar')
+    $('.main-container').addClass('show-left-bar')
+    $('.link-table-container').addClass('show-left-bar')
 
   _hide: () ->
-    $('.menu-overlayer').hide()
-    $('.main-navbar').removeClass 'show-left-bar'
-    $('.main-container').removeClass 'show-left-bar'
     @isVisible = false
+    $('.menu-overlayer').hide()
+    $('.main-navbar').removeClass('show-left-bar')
+    $('.link-table-container').removeClass('show-left-bar')
+    $('.main-container').removeClass('show-left-bar').css('height','auto')
 
     $('body').width(@$window.width() - 1)
     $('body').width(@$window.width())
