@@ -97,6 +97,8 @@
     <% cache ["navbar", current_anonymous_or_user ] do %>
       <%= render "shards/navbar" %>
     <% end %>
+
+    <%= yield :fixed_bottom %>
     <div class="chat-notices"></div>
     <div class="menu-container"></div>
     <div class="main-container">

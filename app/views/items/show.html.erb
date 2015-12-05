@@ -1,5 +1,8 @@
-
 <%= content_for :module, :item %>
+
+<%= content_for :fixed_bottom do %>
+  <%= render partial: "items/link_table", locals: {moveable_target: ".shop-item-image>img"} %>
+<% end %>
 
 <div class="shop-item col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1">
   <div class="shop-content">
@@ -67,6 +70,7 @@
       </div>
     </div>
   </div>
-
-  <%= render partial: "items/link_table", locals: {moveable_target: ".shop-item-image>img"} %>
 </div>
+
+
+
