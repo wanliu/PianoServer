@@ -1,0 +1,10 @@
+  <%= hidden_field_tag "products[][id]", group_product["id"] %>
+  <%= check_box_tag "products[][check]", "1", { checked: true }, {id: "products_#{group_product['id']}_check", class: "product-check hide"} %>
+  <%= label_tag "products_#{group_product['id']}_check", class: 'list-group-item product-link truncate' do %>
+    <span class="product-mark pull-right" ><%=icon :ok %></span>
+    <%= image_tag icon_url(group_product["avatar"]), class: "image-thumbnail", size: "32x32" %>
+    <span class="product-title ">
+      <%= group_product["name"] %>
+    </span>
+  <% end %>
+  <%= number_field_tag "products[][stack_changes]", 1, class: 'form-control input-sm hide' %>

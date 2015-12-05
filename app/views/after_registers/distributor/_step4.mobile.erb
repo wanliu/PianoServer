@@ -17,7 +17,7 @@
           <%= hidden_field_tag "select[#{k}][]", value %>
         <% end %>
       <% end %>
-      <div class="table-detial">
+      <div class="table-detail">
       <% if @job.status == "done" %>
         <%= render partial: "after_registers/distributor/products_group", object: @products_group %>
       <% else %>
