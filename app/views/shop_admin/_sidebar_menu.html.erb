@@ -3,8 +3,17 @@
   var manager = window.manager = new SideMenuManager($containment);
   var menu = new SideMenu($containment, 'shop-admin');
 
+  var avatar = '<%= current_user.avatar_url %>',
+      username = '<%= current_user.nickname %>',
+      fragment = ['<li class="group-item"><div class="user-info"><img src="', avatar,
+        '" class="user-avatar">', '<div class="username">',
+        username, '</div></span></li>'].join('');
+
+    menu.insertPlainHTML(fragment);
+
+  var shopname = '<%= @shop.name %>';
   var route = '<%= shop_admin_index_path(@shop.name) %>';
-  menu.insertGroup(route, '商店');
+  menu.insertGroup(route, ['商店 ( ', shopname, ' )'].join(''));
 
   route = '<%= shop_admin_profile_path(@shop.name) %>';
   menu.insertGroup(route, '档案');
@@ -12,8 +21,9 @@
   var title = '<%= @shop.shop_category.title %>';
 
   route = '<%= shop_admin_shop_category_path(@shop.name, @shop.shop_category.name) %>';
-  menu.insertGroup('shop_categories', '分类');
-  menu.insertSection('shop_categories', route, route, title)
+  // menu.insertGroup('shop_categories', '分类');
+  // menu.insertSection('shop_categories', route, route, title)
+  menu.insertGroup(route, '商品分类');
 
   route = '<%= shop_admin_items_path(@shop.name) %>';
   menu.insertGroup(route, '商品');

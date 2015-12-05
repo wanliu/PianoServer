@@ -1,13 +1,61 @@
+#= require lib/jquery.path
 $ ()->
   $('body').on 'click', '.add-to-cart', (event) ->
     cartableType = $(@).data('cartableType')
     cartableId   = $(@).data('cartableId')
+    moveable     = $(@).data('moveable')
     properties   = $(@).data('properties') || {}
+    target       = if $(window).width() < 768 then $('.navbar-toggle') else $('.mycart')
     $quantityInput = $(@).parents('form').find('input.cart_item_quantity')
     quantity = if $quantityInput.length
       $quantityInput.val() || 1
     else
       1
+
+    p1 = $(moveable).offset()
+    p2 = $(target).offset()
+
+
+    path = {
+      start: {
+        x: p1.left,
+        y: p1.top,
+        # length: 0.707
+      },
+      end: {
+        x: p2.left + 20,
+        y: p2.top + 20,
+        angle: 315.012,
+        # length: 0.707
+      }
+    };
+
+    $(moveable).clone().appendTo('body').css({
+      position: 'absolute',
+      left: p1.left,
+      top: p1.top,
+      width: $(moveable).width(),
+      height: $(moveable).height(),
+      zIndex: 1040,
+      opacity: 1
+    }).animate({
+      path : new $.path.bezier(path),
+      width: 10,
+      height: 10
+      opacity: 0,
+    }, () ->
+      $(target)
+        .stop(true, true)
+        .animate({ top: -15 }, 50)
+        .animate({ top: 15 }, 30)
+        .animate({ top: -15 }, 60)
+        .animate({ top: 15 }, 40)
+        .animate({ top: -15 }, 60)
+        .animate({ top: 15 }, 30)
+        .animate({ top: 0 }, { duration: 70, easing: 'easeOutBounce'})
+      # $(target).effect("bounce", { left: 15 })
+      @remove()
+    )
 
     promoise = $.post('/cart_items', {
       cart_item: {
@@ -51,7 +99,7 @@ $ ()->
 
         $divider.before(html)
 
-      $('#cart-item-count').text(data.items_count)
+      $('.cart-item-count').text(data.items_count)
     )
 
     promoise.fail((data, status, xhr) ->

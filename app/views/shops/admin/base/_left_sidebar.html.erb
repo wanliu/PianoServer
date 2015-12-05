@@ -2,15 +2,18 @@
   <ul class="nav nav-pills nav-stacked">
     <li><%= link_to '商店', shop_admin_index_path(@shop.name) %></li>
     <li><%= link_to '档案', shop_admin_profile_path(@shop.name) %></li>
-    <li>
-      <%= link_to '分类', shop_admin_shop_categories_path(@shop.name) %>
-      <% if @shop.shop_category.present? %>
+<!--     <li>
+      <%#= link_to '分类', shop_admin_shop_categories_path(@shop.name) %>
+      <%# if @shop.shop_category.present? %>
         <ul class="nav">
-          <li><%= link_to @shop.shop_category.title, shop_admin_shop_category_path(@shop.name, @shop.shop_category.name) %>
-          </li>
+
         </ul>
-      <% end %>
+      <%# end %>
     </li>
+ -->    <% if @shop.shop_category.present? %>
+      <li><%= link_to @shop.shop_category.title, shop_admin_shop_category_path(@shop.name, @shop.shop_category.name) %></li>
+    <% end %>
+
     <li><%= link_to '商品', shop_admin_items_path(@shop.name) %></li>
 <!--     <li><%= link_to '关于', about_shop_path(@shop.name) %></li>-->
     <li>
