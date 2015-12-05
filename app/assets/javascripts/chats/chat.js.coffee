@@ -31,7 +31,6 @@ class @Chat
 
     @boundOnMessage = @onMessage.bind(@)
     @userSocket.onPersonMessage(@boundOnMessage)
-    @onwerId = @userSocket.userId
     @table = @options.table
     @greetings = @options.greetings
 
@@ -67,6 +66,9 @@ class @Chat
 
   ownerChannelId: () ->
     @options.userChannelId || @userSocket.getUserChannelId()
+
+  onwerId: () ->
+    @userSocket.userId
 
   bindAllEvents: () ->
     $(@textElement).on 'keyup', (e) =>
@@ -525,7 +527,8 @@ class @Chat
     @$chatContainer.find('.bubble-tip').remove()
 
   _isOwnMessage: (message) ->
-    @onwerId == message.senderId.toString();
+    onwerId = @onwerId()
+    onwerId == message.senderId.toString();
 
   _insertLoadMore: () ->
     $more = $('<div class="load-more">查看更多消息</div>').prependTo(@$messageList)
