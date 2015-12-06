@@ -5,7 +5,7 @@
     <span class="category-mark pull-right"><span class="glyphicon glyphicon-ok"></span></span>
     <span><%= group_category["title"] %> (<span class="selected"><%= group_category["total"] %></span>/<%= group_category["total"] %>)</span>
   </div>
-  <div id="group-category-<%= group_category["id"] %>" class="collapse in">
+  <div id="group-category-<%= group_category["id"] %>" class="collapse in group-brands">
     <%= render partial: "after_registers/distributor/group_brand", collection: group_category["brands"], locals: {
       group_category: group_category
       } %>
