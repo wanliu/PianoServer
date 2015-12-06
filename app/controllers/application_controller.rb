@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   include ContentFor
   include Piano::PageInfo
   include Errors::RescueError
-  include Mobylette::RespondToMobileRequests
+  # include Mobylette::RespondToMobileRequests
   include AnonymousController
   # include TokenAuthenticatable
   # Prevent CSRF attacks by raising an exception.
@@ -19,19 +19,24 @@ class ApplicationController < ActionController::Base
   before_action :set_current_cart
   before_action :prepare_system_view_path
   before_action :set_locale
-  before_action :mobile_filter
+  # before_action :mobile_filter
 
-  helper_method :current_anonymous_or_user, :anonymous?, :current_cart
+  helper_method :current_anonymous_or_user, :anonymous?, :current_cart, :mobile?, :weixin_device?
   rescue_from ActionController::RoutingError, :with => :render_404
   rescue_from ActiveResource::ResourceNotFound, :with => :render_404
   rescue_from ActiveRecord::RecordNotFound, :with => :render_404
 
-  mobylette_config do |config|
-    # config[:fall_back] = :html
-    config[:devices] = { weixin: %r{micromessenger} }
-    # config[:skip_xhr_requests] = false
-    # config[:mobile_user_agents] = proc { /iphone/i }
-  end
+  # mobylette_config do |config|
+  #   # config[:fall_back] = :html
+  #   config[:devices] = { weixin: %r{micromessenger} }
+  #   config[:fallback_chains] = {
+  #     mobile: [:mobile, :html],
+  #   }
+  #   # config[:fall_back] = :html
+  #   # config[:skip_xhr_requests] = false
+  #   # config[:skip_xhr_requests] = false
+  #   # config[:mobile_user_agents] = proc { /iphone/i }
+  # end
 
   protected
 
@@ -154,14 +159,26 @@ class ApplicationController < ActionController::Base
   end
 
   def device_region
-    if request_device?(:weixin) && Settings.dev.feature.weixin
+    if weixin_device? && Settings.dev.feature.weixin
       [ false, authorize_weixin_path ]
     else
       [ false, new_user_session_path ]
     end
   end
 
-  def mobile_filter
-    @is_mobile = is_mobile_request?
+  MOBILE_USER_AGENTS = 'palm|blackberry|nokia|phone|midp|mobi|symbian|chtml|ericsson|minimo|' \
+                       'audiovox|motorola|samsung|telit|upg1|windows ce|ucweb|astel|plucker|' \
+                       'x320|x240|j2me|sgh|portable|sprint|docomo|kddi|softbank|android|mmp|' \
+                       'pdxgw|netfront|xiino|vodafone|portalmmm|sagem|mot-|sie-|ipod|up\\.b|' \
+                       'webos|amoi|novarra|cdm|alcatel|pocket|iphone|mobileexplorer|mobile'
+  def mobile?
+    agent_str = request.user_agent.to_s.downcase
+    return false if agent_str =~ /ipad/
+    agent_str =~ Regexp.new(MOBILE_USER_AGENTS)
+  end
+
+  def weixin_device?
+    agent_str = request.user_agent.to_s.downcase
+    return agent_str =~ /micromessenger/
   end
 end

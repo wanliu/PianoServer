@@ -1,186 +1,101 @@
-
-    <table class="product-groups table table table-striped table-bordered table-hover table-condensed">
-      <thead>
-        <tr>
-          <th>大类</th>
-          <th>小类</th>
-          <th>品牌</th>
-          <th>商品</th>
-          <th>参考价</th>
-          <th>库存</th>
-        </tr>
-      </thead>
-
-      <% start = 0 %>
-      <%= render_table products_group do |group, category, brand, product, index| %>
-        <tr>
-
-          <% if group %>
-            <td class="group-group" rowspan="<%= group["total"] %>">
-              <span spy="affix">
-                <%= group["title"] %>
-              </span>
-              <div class="box">
-                <div  class="box-container">
-                  <div class="btn-group-vertical item-toolbar" role="group" aria-label="toolbar">
-                    <%= button context: :primary, class: 'btn-sm' do %>
-                    <%= icon :trash %>
-                    <% end %>
-                  </div>
-                </div>
-              </div>
-            </td>
-          <% end %>
-
-          <% if category %>
-            <td class="group-category" rowspan="<%= category["total"] %>" data-id="<%= category["id"] %>" >
-              <span spy="affix">
-                <%= category["title"] %>
-              </span>
-              <div class="box">
-                <div class="box-container">
-                  <div class="btn-group-vertical item-toolbar" role="group" aria-label="toolbar">
-                    <%= button context: :primary, class: 'btn-sm' do %>
-                    <%= icon :trash %>
-                    <% end %>
-                  </div>
-                </div>
-              </div>
-            </td>
-          <% end %>
-
-          <% if brand %>
-            <td class="group-brand" rowspan="<%= brand["total"] %>">
-              <div class="brand" spy="affix-brand">
-                <%= brand["title"] %>
-              </div>
-              <div class="box">
-                <div class="box-container">
-
-                  <div class="btn-group-vertical item-toolbar" role="group" aria-label="toolbar">
-                    <%= button brand["total"], context: :primary, class: 'btn-sm' %>
-                    <%= button 3, context: :info, class: 'btn-sm' %>
-                    <%= button context: :primary, class: 'btn-sm' do %>
-                      <%= icon :ok %>
-                    <% end %>
-                    <%= button context: :primary, class: 'btn-sm' do %>
-                      <%= icon :trash %>
-                    <% end %>
-                  </div>
-                </div>
-              </div>
-            </td>
-          <% end %>
-
-          <td class="group-product" data-status="<%= product["status"] %>" >
-
-            <%#= link_to product_path(product[:id]) do %>
-            <%= hidden_field_tag "products[][id]", product["id"] %>
-            <%= check_box_tag "products[][check]", "1", checked: true %>
-
-            <%= label "product[id]", product["id"] do %>
-              <%= image_tag icon_url(product["avatar"]), class: "image-thumbnail", size: "16x16" %>
-              <%= product["name"] %>
-            <% end %>
-            <div class="box">
-              <div class="box-container">
-                <div class="btn-group-vertical item-toolbar" role="group" aria-label="toolbar">
-                  <%= button context: :primary, class: 'btn-sm' do %>
-                    <%= icon :trash %>
-                  <% end %>
-                </div>
-              </div>
-            </div>
-          </td>
-          <td class="group-price text-right">
-            <%= number_to_currency product["price"] %>
-          </td>
-          <td>
-            <%= number_field_tag "products[][stack_changes]", 1, class: 'form-control input-sm' %>
-          </td>
-        </tr>
-      <% end %>
-    </table>
-
+<!--   <%# render_table products_group do |group, category, brand, product, index| %>
+    <%#= hidden_field_tag "products[#{product['id']}][id]", product["id"] %>
+    <%#= check_box_tag "products[#{product['id']}][check]", "1", { checked: true }, {class: "product-check hide"} %>
+    <%#= label_tag "products_#{product['id']}_check", class: 'list-group-item product-link truncate' do %>
+      <span class="product-mark pull-right" ><%#= icon :ok %></span>
+      <%#= image_tag icon_url(product["avatar"]), class: "image-thumbnail", size: "32x32" %>
+      <span class="product-title ">
+        <%#= product["name"] %>
+      </span>
+    <%# end %>
+  <%# end %> -->
+  <%# pp products_group %>
+  <% products_group.each do |top| %>
+    <div class="group-row">
+      <!-- <span class="top-name" ><%= top["title"] %></span> -->
+      <%= hidden_field_tag "categories[][id]", top["id"] %>
+      <%= hidden_field_tag "categories[][title]", top["title"] %>
+      <%= render partial: "after_registers/distributor/group_category", collection: top["categories"], locals: {top: top } %>
+    </div>
+  <% end %>
 
 <script type="text/javascript">
-  // $("[spy=\"affix\"]").each(function(i, elem) {
-  //   var top = $(elem).position().top;
-  //   var bottom = $(document).height() - top + $(elem).outerHeight(true);
-  //   $(elem).affix({
-  //     offset: {
-  //       top: top,
-  //       bottom: function (span) {
-  //         var bottom = $(document).outerHeight(true) - this.top - $(span).parents('td').outerHeight(true) + 39 + $(span).outerHeight(true);
-  //         return (this.bottom = bottom);
-  //       }
-  //     }
-  //   }).on('affixed.bs.affix', function(e) {
-  //     $(e.target)
-  //       .attr('style', '')
-  //       .css({
-  //         width: $(e.target).parents('td').outerWidth(true),
-  //         backgroundColor: 'white',
-  //         top: 51,
-  //         padding: 10,
-  //         margin: -5
-  //       });
-  //   }).on('affix-bottom.bs.affix, affix-top.bs.affix, affixed-bottom.bs.affix, affixed-top.bs.affix', function(e) {
-  //     $(e.target).attr('style', '');
-  //   })
-  // });
+  if ($(".table-detail .product-check:checked").length > 0 ) {
+    $('.next').attr('disabled', false)
+  } else {
+    $('.next').attr('disabled', true)
+  }
 
-  // $("[spy=\"affix-brand\"]").each(function(i, elem) {
-  //   var top = $(elem).position().top;
-  //   var bottom = $(document).height() - top + $(elem).outerHeight(true);
-  //   $(elem).affix({
-  //     offset: {
-  //       top: top,
-  //       bottom: function (span) {
-  //         var bottom = $(document).outerHeight(true) - this.top - $(span).parents('td').outerHeight(true) + 41;
-  //         return (this.bottom = bottom);
-  //       }
-  //     }
-  //   }).on('affixed.bs.affix', function(e) {
-  //     var $parent = $(e.target).parents('td');
-  //     var pos = $parent.position();
-  //     $(e.target)
-  //       .attr('style', '')
-  //       .removeClass('brand')
-  //       .css({
-  //         width: $(e.target).parents('td').outerWidth(true),
-  //         backgroundColor: 'white',
-  //         top: 51,
-  //         padding: 10,
-  //         margin: -5
-  //       });
-  //     }).on('affix-bottom.bs.affix, affix-top.bs.affix, affixed-bottom.bs.affix, affixed-top.bs.affix', function(e) {
-  //       $(e.target)
-  //         .attr('style', '')
-  //         .addClass('brand');
-  //     });
-  // });
+  $(".table-detail .product-check:checked").on('change', function(e) {
 
-  $(".group-product").click(function(e){
-    // e.preventDefault();
-    // e.stopPropagation();
 
-    var $checkbox = $(this).find(":checkbox");
+    $target = $(e.target);
 
-    $checkbox.prop("checked", !$checkbox.prop("checked"));
-    $checkbox.trigger("change");
+    $target.parents(".group_brand").find(".selected").text($target.parents(".list-group").find(":checked").length);
+    $target.parents(".group_category").find(".selected").text($target.parents(".group_category").find(":checked").length);
+    $(".table-detail").trigger('change:selected');
   });
 
-  $(".group-product :checkbox").change(function() {
-    var parent = $(this).parents("td");
-    parent
-      .toggleClass("info")
-      .next()
-      .toggleClass("info")
-      .next()
-      .toggleClass("info");
+  $(".table-detail").on('change:selected', function(e) {
+    if ($(".table-detail .product-check:checked").length > 0 ) {
+      $('.next').attr('disabled', false)
+    } else {
+      $('.next').attr('disabled', true)
+    }
   });
-  // $("[spy=\"affix\"]").
 
-  // $("[spy=\"affix-brand\"]")
+
+  $(".table-detail .category-mark").click(function(e) {
+    var open = $(e.currentTarget).data("open") == undefined ? false : $(e.currentTarget).data("open");
+    var $brands =  $(e.target).parents(".list-group-item").next();
+    e.preventDefault();
+    e.stopPropagation();
+
+    $brands.find("[type=\"checkbox\"]").each(function(i, elem) {
+      $(elem).prop('checked', open);
+    });
+
+    $brands.find(".brand-mark").each(function(i, elem) {
+      $(elem).css({
+        backgroundColor: open ? '#337ab7' : 'white',
+        color: open ? 'white' : '#337ab7'
+      });
+
+      $(elem).data('open', open)
+    });
+
+
+    $(e.currentTarget).css({
+      backgroundColor: open ? '#337ab7' : 'white',
+      color: open ? 'white' : '#337ab7'
+    });
+
+    $(e.currentTarget).data("open", !open);
+    $target = $(e.target);
+    $(".table-detail").trigger('change:selected');
+    $target.parents(".group_brand").find(".selected").text($target.parents(".list-group").find(":checked").length);
+    $target.parents(".group_category").find(".selected").text($target.parents(".group_category").find(":checked").length);
+  });
+
+  $(".table-detail .brand-mark").click(function(e) {
+    var open = $(e.currentTarget).data("open") == undefined ? false : $(e.currentTarget).data("open");
+    var $brands =  $(e.target).parents(".list-group-item").next();
+    e.preventDefault();
+    e.stopPropagation();
+
+    $brands.find("[type=\"checkbox\"]").each(function(i, elem) {
+      $(elem).prop('checked', open);
+    });
+
+    $(e.currentTarget).css({
+      backgroundColor: open ? '#337ab7' : 'white',
+      color: open ? 'white' : '#337ab7'
+    });
+
+    $(e.currentTarget).data("open", !open);
+    $target = $(e.target);
+    $(".table-detail").trigger('change:selected');
+    $target.parents(".group_brand").find(".selected").text($target.parents(".list-group").find(":checked").length);
+    $target.parents(".group_category").find(".selected").text($target.parents(".group_category").find(":checked").length);
+  });
 </script>

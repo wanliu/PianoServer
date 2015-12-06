@@ -162,6 +162,7 @@ class AfterRegistersController < ApplicationController
     @industry = @current_user.industry
     @shop.industry = @industry
     @shop.region_id = location_params[:region_id]
+    @shop.theme = Settings.shop.default_theme
 
     shop_params.delete(:name)
 
