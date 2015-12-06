@@ -70,7 +70,7 @@
     <% if current_anonymous_or_user.id < 0 %>
       menu.insertGroup('users/sign_in', '登入', { iconClass: 'glyphicon glyphicon-log-in'});
 
-      // <% if weixin_device?(:weixin) %>
+      // <% if weixin_device? %>
       //   <% if Settings.dev.feature.weixin %>
       //     menu.insertGroup('authorize/weixin', '微信登录', { iconClass: 'glyphicon glyphicon-barcode' });
       //   <% end %>
