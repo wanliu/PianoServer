@@ -15,7 +15,10 @@
         </div>
       <% end %>
       <div class='divider' style='clear: both'></div>
-      <%= link_to "添加一个新的收货地址", 'javascript: void(0)', class: 'add-another-location' %>
+      <% if current_user.reach_location_limit? %>
+        <%= link_to "添加一个新的收货地址", 'javascript: void(0)', class: 'add-another-location' %>
+      <% else %>
+      <% end %>
     <% else %>
       <div class="panel-heading">
         <div class='empty-notify'>你还没有收货地址，现在创建一个吧</div>

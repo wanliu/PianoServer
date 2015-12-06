@@ -15,13 +15,16 @@
         </div>
       <% end %>
       <div class='divider' style='clear: both'></div>
-      <%= link_to "添加一个新的收货地址", 'javascript: void(0)', class: 'add-another-location' %>
+      <%= link_to_unless current_user.reach_location_limit?, "添加一个新的收货地址", 'javascript: void(0)', class: 'add-another-location' %>
     <% else %>
       <div class="panel-heading">
         <div class='empty-notify'>你还没有收货地址，现在创建一个吧</div>
       </div>
       <div class='divider' style='clear: both; display: none;'></div>
-      <%= link_to "添加一个新的收货地址", 'javascript: void(0)', class: 'add-another-location', style: 'display: none;' %>
+      <div>
+        <%= current_user.reach_location_limit? %>
+      </div>
+      <%= link_to"添加一个新的收货地址#{!!current_user.reach_location_limit?}" %>", 'javascript: void(0)', class: 'add-another-location', style: 'display: none;' %>
     <% end %>
     <div class='add-new-location' style='display: <%= @delivery_addresses.present? ? "none" : "block" %>'>
       <%= render 'locations/form', locals: { location: current_user.locations.build } %>
