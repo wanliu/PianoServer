@@ -47,11 +47,13 @@ class @SideMenu
       { route, name, title, sections, routeAnchor, dataOptions } = group
 
       iconStr = @_generateIconElement(dataOptions)
+      badgeStr = @_generateBadgeElement(dataOptions)
 
       if sections.length > 0
         template = """
           <li id="#{routeAnchor}" class="group-item">
             <span href="javascript:void(0);" class="group-title">#{iconStr}#{title}</span>
+            #{badgeStr}
         """
 
         templates = [ template, '<ul class="nav menu-sections">' ]
@@ -59,22 +61,12 @@ class @SideMenu
         for section in sections
           { route, name, title, routeAnchor, dataOptions } = section
 
-          bindings = []
-          for key, value of dataOptions
-            continue if key == 'icon'
-
-            str = """
-              data-#{key}="#{value}"
-            """
-            bindings.push(str)
-
-          binding_str = if bindings.length > 0 then bindings.join(' ') else ''
-
           iconStr = @_generateIconElement(dataOptions)
+          badgeStr = @_generateBadgeElement(dataOptions)
 
           template = """
             <li id="#{routeAnchor}">
-              <a href="#{route}" #{binding_str}>#{iconStr}#{title}</a>
+              <a href="#{route}" class="ellipsis-text">#{iconStr}#{title}#{badgeStr}</a>
             </li>
           """
 
@@ -93,7 +85,7 @@ class @SideMenu
         else
           template = """
             <li id="#{routeAnchor}" class="group-item">
-              <a href="#{route}">#{iconStr}#{title}</a>
+              <a href="#{route}" class="ellipsis-text">#{iconStr}#{title}#{badgeStr}</a>
             </li>
           """
         $(template).appendTo(@element)
@@ -109,11 +101,16 @@ class @SideMenu
     else if iconClass
       iconClass = iconClass.join(' ') if Object.prototype.toString.call(iconClass) == '[object Array]'
       iconClass = [ 'menu-icon', iconClass ].join(' ')
-      iconStr = ['<span class="', iconClass, '" arial-hidden="true"></span>'].join('')
+      iconStr = ['<span class="icon-wrap"><span class="', iconClass,
+        '" arial-hidden="true"></span></span>'].join('')
     else
       iconStr = ''
 
     iconStr
+
+  _generateBadgeElement: (options) ->
+    { has_quantity, quantity } = options
+    badgeStr = if has_quantity then ['<span class="badge">', quantity, '</span>'].join('') else ''
 
   _bindEvents: () ->
     $('#group-qrode a').click(() ->
@@ -122,24 +119,12 @@ class @SideMenu
 
   _highlightPath: () ->
     pathname = location.pathname
-    name = pathname.slice(1)
-    name = decodeURIComponent(name)
-    name = name.replace(/\//g, '-')
+    name = decodeURIComponent(pathname)
+    name = name.split('?')[0]
 
-    if name.indexOf('@') > -1
-      name = 'face'
-
-    @$containment.find('li').removeClass('active')
-    selector = ['#group-', name].join('')
-    $selectedGroup = @$containment.find(selector)
-    selector = ['#section-', name].join('')
-    $selectedSection = @$containment.find(selector)
-
-    if $selectedGroup.length > 0
-      $selectedGroup.addClass('active')
-
-    if $selectedSection.length > 0
-       $selectedSection.addClass('active')
+    sel = ['a[href="', name, '"]'].join('')
+    @$containment.find('a').removeClass('active')
+    @$containment.find(sel).addClass('active')
 
   removeGroup: (groupName) ->
     group = @_lookupGroup(groupName)
@@ -158,6 +143,72 @@ class @SideMenu
       return group if group.name == groupName
 
     return null
+
+  _lookupSectionByGroupName: (groupName, sectionName) ->
+    group = @_lookupGroup(groupName)
+
+    @_lookupSectionByGroup(group, sectionName)
+
+  _lookupSectionByGroup: (group, sectionName) ->
+    return null unless group
+
+    for section in group.sections
+      return section if section.name == sectionName
+
+    return null
+
+  _lookupSection: (sectionName) ->
+    for group in @groups
+      for section in group.sections
+        return if section.name == sectionName
+
+    return null
+
+  updateSectionQuantity: () ->
+    return if arguments.length < 2
+
+    if arguments.length = 2
+      sectionName = arguments[0]
+      diff = arguments[1]
+      section = @_lookupSection(sectionName)
+    else if arguments.length >= 3
+      groupName = arguments[0]
+      sectionName = arguments[1]
+      diff = arguments[2]
+      section = @_lookupSectionByGroupName(groupName, sectionName)
+
+    return unless section
+
+    @_updateSectionQuantityBadge(section, diff)
+
+  _updateSectionQuantityBadge: (section, diff) ->
+    { has_quantity, quantity } = section.dataOptions
+    return unless has_quantity || isNaN(diff)
+
+    quantity += +diff
+    quantity = 0 if quantity < 0
+
+    section.dataOptions.quantity = quantity
+    sel = ['li#section-', section.name, ' .badge'].join('')
+    $sel = @$containment.find(sel)
+
+    $sel.text(quantity) if $sel.length
+
+  updateGroupQuantity: (name, diff) ->
+    group = @_lookupGroup(name)
+    return unless group || isNaN(diff)
+
+    { has_quantity, quantity } = group.dataOptions
+    return unless has_quantity
+
+    quantity += +diff
+
+    quantity = 0 if quantity < 0
+
+    sel = [ 'li#group-', name, ' .badge'].join('')
+    @$containment.find(sel).text(quantity)
+
+    group.dataOptions.quantity = quantity
 
   refreshMenu: () ->
     @$containment.html('')

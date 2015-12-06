@@ -94,9 +94,11 @@
   <% _module = content_for :module %>
 
   <body class="<%= yield :module %>">
-    <% cache ["navbar", current_anonymous_or_user ] do %>
+    <%# cache ["navbar", current_anonymous_or_user ] do %>
       <%= render "shards/navbar" %>
-    <% end %>
+    <%# end %>
+
+    <%= yield :fixed_bottom %>
     <div class="chat-notices"></div>
     <div class="menu-container"></div>
     <div class="main-container">

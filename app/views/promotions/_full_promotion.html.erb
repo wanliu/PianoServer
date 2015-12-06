@@ -1,7 +1,9 @@
 <%= content_for :title, @shop.name %>
 <%= nav_back_button %>
 <%= content_for :module, :detail %>
-
+<%= content_for :fixed_bottom do %>
+  <%= render "promotion_link_table", locals: { promotion: @promotion, shop: @shop, moveable_target: '.promotion-poster'} %>
+<% end %>
 
 <div class="promotion-detail-container col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1 clearfix" data-promotion-id="<%= promotion.id %>" >
   <div class="promotion-detail-content">
@@ -72,7 +74,6 @@
   </div>
 </div>
 
-<%= render "promotion_link_table", locals: { promotion: @promotion, shop: @shop, moveable_target: '.promotion-poster'} %>
 
 
 <script type="text/javascript">

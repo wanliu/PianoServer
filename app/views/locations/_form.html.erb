@@ -1,67 +1,72 @@
-<ul class="error-messages clearfix">
-  <% if location.errors.any? %>
-    <% location.errors.full_messages.each do |msg| %>
-      <li class="error-message"><%= msg %></li>
-    <% end %>
-  <% end %>
-</ul>
-
 <%= form_for location do |f| %>
   <%= f.hidden_field :user_id %>
   <%= f.hidden_field :chat_id %>
   <%= f.hidden_field :intention_id %>
 
   <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
-    <%= label :location, :contact do %>
-      姓名<span class="required">*</span>
+    <%= group_with_errors location, :contact, f, title: '姓名', layout: :normal, required: true do %>
+      <%= text_field :location, :contact, class: 'form-control required', maxlength: 30 %>
     <% end %>
-
-    <%= f.text_field :contact, class: "form-control", maxlength: 30 %>
   </div>
 
   <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
-    <%= label :location, :id do %>
-      城市<span class="required">*</span>
-    <% end %>
+    <% province_has_error = location.errors[:province_id].present? ? 'has-error' : nil %>
+    <% city_has_error = location.errors[:city_id].present? ? 'has-error' : nil %>
+    <% region_has_error = location.errors[:region_id].present? ? 'has-error' : nil %>
+    <% any_has_error = province_has_error || city_has_error || region_has_error %>
+
+    <div class="field_with_errors <%= any_has_error %>">
+      <%= label :location, :id, class: 'control-label' do %>
+        城市<span class="required">*</span>
+      <% end %>
+    </div>
+
+    <%
+      province_id = location.try :province_id
+      city_id = location.try :city_id
+      region_id = location.try :region_id
+
+      province_list = ChinaCity.list
+      city_list = ChinaCity.list province_id.to_s
+      region_list = ChinaCity.list city_id.to_s
+
+    %>
 
     <div class="city-group">
-      <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding0">
-        <%= select(:location, :province_id, options_for_select(ChinaCity.list), {prompt: '--省份--'}, {class: "city-select form-control"}) %>
+      <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding0 <%= "#{province_has_error}" %>">
+        <%= f.select(:province_id, options_for_select(province_list, province_id), {prompt: '--省份--'}, {class: "city-select form-control"}) %>
       </div>
-      <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding0">
-        <%= select(:location, :city_id, [], {prompt: "--城市--"}, { class: "city-select form-control" } ) %>
+      <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding0 <%= "#{city_has_error}" %>">
+        <%= f.select(:city_id, options_for_select(city_list, city_id), {prompt: "--城市--"}, { class: "city-select form-control" } ) %>
       </div>
-      <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding0">
-        <%= select(:location, :region_id, [], {prompt: "--地区--"}, { class: "city-select form-control" } ) %>
+      <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding0 <%= "#{region_has_error}" %>">
+        <%= f.select(:region_id, options_for_select(region_list, region_id), {prompt: "--地区--"}, { class: "city-select form-control" } ) %>
       </div>
     </div>
   </div>
 
   <script type="text/javascript">
-    $(document).on('page:load', function() {
+    $(function() {
       return $('.city-group').china_city();
     });
   </script>
 
   <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
-    <%= label :location, :road do %>
-      地址<span class="required">*</span>
+    <%= group_with_errors location, :road, f, title: '地址', layout: :normal, required: true do %>
+      <%= text_field :location, :road, class: 'form-control required' %>
     <% end %>
-
-    <%= f.text_field :road, class: "form-control", maxlength: 140 %>
   </div>
 
   <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
-    <%= f.label :zipcode, "邮编"%>
-      <%= f.text_field :zipcode, class: "form-control" %>
+    <%= group_with_errors location, :zipcode, f, title: '邮编', layout: :normal do %>
+      <%= text_field :location, :zipcode, class: 'form-control' %>
+    <% end %>
   </div>
 
   <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
-    <%= label :location, :contact_phone do %>
-      手机/座机号<span class="required">*</span>
+    <%= group_with_errors location, :contact_phone, f, title: '手机/座机号', layout: :normal, required: true do %>
+      <%= text_field :location, :contact_phone, class: 'form-control required' %>
     <% end %>
-
-    <%= f.text_field :contact_phone, class: "form-control" %>
   </div>
 
   <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
