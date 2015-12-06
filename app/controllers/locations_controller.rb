@@ -24,7 +24,7 @@ class LocationsController < ApplicationController
         format.json { render :show }
         format.html { redirect_to @location.chat_id ? chat_path(@location.chat_id) : location_path(@location) }
       else
-        format.json { render json: { error: @location.errors.full_messages }, status: :unprocessable_entity }
+        format.json { render :new, formats: :html, layout: false, status: :unprocessable_entity }
         format.html { render :new }
       end
     end
