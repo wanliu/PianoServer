@@ -22,8 +22,6 @@ class User < ActiveRecord::Base
   has_many :chats, foreign_key: 'owner_id'
   has_many :locations
 
-  has_one :cart
-
   has_many :followers, as: :followable, class_name: 'Follow'
   has_many :followables, as: :follower, class_name: 'Follow'
 
