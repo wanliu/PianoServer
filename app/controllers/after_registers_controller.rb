@@ -1,5 +1,7 @@
 class AfterRegistersController < ApplicationController
   BUSSINES_TYPES = %w(consumer retail distributor)
+  include Mobylette::RespondToMobileRequests
+
   # include PublicActivity::StoreController
 
   before_action :authenticate_user!
@@ -188,7 +190,7 @@ class AfterRegistersController < ApplicationController
   def go_product_step
     @shop = @current_user.owner_shop
 
-    @job = JobService.start(:batch_import_products, @shop, @shop, products_params, select_params, type: "after_registers/product")
+    @job = JobService.start(:batch_import_products, @shop, @shop, products_params, categories_params, type: "after_registers/product")
     @created = @job.output["created"]
     [true, "product"]
   end
@@ -223,6 +225,10 @@ class AfterRegistersController < ApplicationController
 
   def products_params
     params[:products] || {}
+  end
+
+  def categories_params
+    params[:categories] || []
   end
 
   def location_params

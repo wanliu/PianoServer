@@ -17,7 +17,7 @@
   function checkStatus() {
     $.getJSON(url).then(function(resp) {
       if (resp.status == "done") {
-        $('.table-detial').hide().html(resp.html).fadeIn();
+        $('.table-detail').hide().html(resp.html).fadeIn();
         clearInterval(tickId);
       } else if (tickCount++ >= 100) {
         clearInterval(tickId);
