@@ -5,6 +5,47 @@
 
   // icon: the icon image url / iconClass: the glyphicon class name or other class name
 
+  <% if Settings.dev.feature.user.sign_in %>
+    <% if current_anonymous_or_user.id > 0 %>
+      var username = '<%= current_user.nickname %>';
+
+      menu.insertGroup('profile', '个人菜单', { iconClass: 'glyphicon glyphicon-file' });
+      menu.insertSection('profile', '@' + username, 'face', '我的主页', { iconClass: 'glyphicon glyphicon-book' });
+
+      <% if Settings.dev.feature.favorites %>
+        menu.insertSection('profile', 'favorites', 'favorites', '我的收藏', { iconClass: 'glyphicon glyphicon-heart' });
+      <% end %>
+
+      <% if current_user.join_shop %>
+        var shopName = '<%= current_user.join_shop.name %>',
+            shopRoute = '<%= shop_admin_index_path(current_user.join_shop.name) %>';
+
+        menu.insertSection('profile', shopName, shopName, '我的店铺', { iconClass: 'glyphicon glyphicon-home' });
+
+        menu.insertGroup('group', '商店', { iconClass: 'glyphicon glyphicon-dashboard' });
+
+        route = '<%= shop_admin_profile_path(current_user.join_shop.name) %>';
+        menu.insertSection('group', route, route, '档案', { iconClass: 'glyphicon glyphicon-briefcase' });
+
+        route = '<%= shop_admin_shop_category_path(current_user.join_shop.name, current_user.join_shop.shop_category.name) %>';
+        menu.insertSection('group', route, route, '商品分类', { iconClass: 'glyphicon glyphicon-th-list' });
+
+        route = '<%= shop_admin_items_path(current_user.join_shop.name) %>';
+        menu.insertSection('group', route, route, '商品', { iconClass: 'glyphicon glyphicon-list-alt'});
+
+        menu.insertGroup(shopRoute, '店铺管理', { iconClass: 'glyphicon glyphicon-wrench' });
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <% if Settings.dev.feature.cart %>
+    menu.insertGroup('cart', '购物车', { iconClass: 'glyphicon glyphicon-shopping-cart', has_quantity: true, quantity: 0 });
+  <% end %>
+
+  <% if Settings.dev.feature.linkmen %>
+    menu.insertGroup('chats', '最近联系人', { iconClass: 'glyphicon glyphicon-list' });
+  <% end %>
+
   <% if Settings.dev.feature.user.sign_in && current_anonymous_or_user.id > 0 %>
     var avatar = '<%= current_user.avatar_url %>',
         username = '<%= current_user.nickname %>',
@@ -23,47 +64,23 @@
     <% end %>
   <% end %>
 
-  <% if Settings.dev.feature.cart %>
-    menu.insertGroup('cart', '购物车');
-  <% end %>
-
-  <% if Settings.dev.feature.qrcode %>
+  <% if Settings.dev.feature.qrcode && !request_device?(:weixin) %>
     menu.insertGroup('qrode', '二维码', { qrode: true, iconClass: 'glyphicon glyphicon-qrcode' });
-  <% end %>
-
-  <% if Settings.dev.feature.favorites %>
-    menu.insertGroup('favorites', '我的收藏', { iconClass: 'glyphicon glyphicon-heart' });
-  <% end %>
-
-  <% if Settings.dev.feature.linkmen %>
-    menu.insertGroup('chats', '最近联系人', { iconClass: 'glyphicon glyphicon-list' });
-  <% end %>
-
-  <% if Settings.dev.feature.cart %>
-    var html = '<span class="glyphicon glyphicon-shopping-cart"></span>购物车\
-        【<span class="cart-item-count"><%= current_cart.items_count %></span>】'
-    menu.insertGroup('cart', html);
-  <% end %>
-
-  <% if Settings.dev.feature.weixin %>
-    menu.insertGroup('authorize/weixin', '微信登录', { iconClass: 'glyphicon glyphicon-barcode' });
   <% end %>
 
   <% if Settings.dev.feature.user.sign_in %>
     <% if current_anonymous_or_user.id < 0 %>
-      menu.insertGroup('users/sign_in', '登入');
+      menu.insertGroup('users/sign_in', '登入', { iconClass: 'glyphicon glyphicon-log-in'});
+
+      // <% if request_device?(:weixin) %>
+      //   <% if Settings.dev.feature.weixin %>
+      //     menu.insertGroup('authorize/weixin', '微信登录', { iconClass: 'glyphicon glyphicon-barcode' });
+      //   <% end %>
+      // <% else %>
+      //   menu.insertGroup('users/sign_in', '登入', { iconClass: 'glyphicon glyphicon-log-in'});
+      // <% end %>
     <% else %>
-      var username = '<%= current_user.login %>';
-
-      menu.insertGroup('profile', '个人菜单', { iconClass: 'glyphicon glyphicon-file' });
-      menu.insertSection('profile', '@' + username, 'face', '我的主页');
-
-      <% if current_user.join_shop %>
-        var shopName = '<%= current_user.join_shop.name %>';
-        menu.insertSection('profile', shopName, shopName, '我的店铺');
-        menu.insertSection('profile', shopName + '/admin', shopName + '-admin', '店铺管理');
-      <% end %>
-      menu.insertSection('profile', 'users/sign_out', 'signout', '退出', {'method': 'delete'});
+      menu.insertGroup('users/sign_out', '退出', { iconClass: 'glyphicon glyphicon-log-out' });
     <% end %>
   <% end %>
 

@@ -39,17 +39,13 @@ class OrdersController < ApplicationController
         format.mobile { redirect_to @order }
         format.json { render json: @order, status: :created }
       else
-        format.html do
-          # if "提交订单" == params[:commit] # 购物车购买
-          # elsif "立即购买" # 立即购买
-          #   render :buy_now
-          # end
-
+        format.any(:html, :mobile) do
           set_feed_back
           flash.now[:error] = @order.errors.full_messages.join(', ')
 
           render :confirmation, status: :unprocessable_entity
         end
+
         format.json { render json: @order.errors, status: :unprocessable_entity }
       end
     end
@@ -107,9 +103,10 @@ class OrdersController < ApplicationController
     respond_to do |format|
       if @order.save_with_items(current_user)
         format.html { redirect_to @order }
+        format.mobile { redirect_to @order }
         format.json { render json: @order, status: :created }
       else
-        format.html do
+        format.any(:html, :mobile) do
           @order_item = @order.items.first
           @delivery_addresses = current_user.locations.order(id: :asc)
           @supplier = @order.supplier
@@ -119,6 +116,7 @@ class OrdersController < ApplicationController
 
           render :buy_now_confirm, status: :unprocessable_entity
         end
+
         format.json { render json: @order.errors, status: :unprocessable_entity }
       end
     end

@@ -1,0 +1,10 @@
+<div class="group_brand">
+  <div class="list-group-item list-group-item-info no-radius" data-toggle="collapse" data-target="#group-category-<%= group_category["id"]%>-brand-<%= group_brand["id"] %>">
+    <span class="brand-mark pull-right"><span class="glyphicon glyphicon-ok"></span></span>
+    <%= image_tag icon_url(group_brand["icon_url"]), size: "64x32" %>
+    <%= group_brand["title"] %> (<span class="selected"><%= group_brand["total"] %></span>/<%= group_brand["total"] %>)
+  </div>
+  <ul class="list-group collapse in" id="group-category-<%= group_category["id"]%>-brand-<%= group_brand["id"] %>">
+    <%= render partial: "after_registers/distributor/group_product", collection: group_brand["products"] %>
+  </ul>
+</div>

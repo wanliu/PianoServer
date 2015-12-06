@@ -32,6 +32,7 @@ elasticsearch:
   url: http://192.168.0.131:9200
   index_name: products_production
 assets:
+  host: http://wanliu-piano.b0.upaiyun.com
   gray_image: "data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
   avatar_iamge: "http://wanliu-piano.b0.upaiyun.com/uploads/shop/logo/1/default_avatar.gif"
 shop:

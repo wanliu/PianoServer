@@ -2,67 +2,34 @@
 <html>
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>404 - 这个页面已经不存在 - 万流网 </title>
 <style>
-
-@import url(http://fonts.useso.com/css?family=Bree+Serif|Source+Sans+Pro:300,400);
-
 *{
-  maring: 0;
+  margin: 0;
   padding: 0;
+}
+a{
+  color:#666;
+  text-decoration:none;
 }
 body{
   font-family: 'Source Sans Pro', sans-serif;
-  background: #3f6eb3;
+  background: #eaeaea;
   color: #1f3759;
 }
-a:link{
-  color: #1f3759;
-  text-decoration: none;
-}
-a:active{
-  color: #1f3759;
-  text-decoration: none;
-}
-a:hover{
-  color: #9fb7d9;
-  text-decoration: none;
-}
-a:visited{
-  color: #1f3759;
-  text-decoration: none;
-}
-
-a.underline, .underline{
-  text-decoration: underline;
-}
-
 .bree-font{
   font-family: 'Bree Serif', serif;
 }
-
 #content{
   margin: 0 auto;
-  width: 960px;
+  width: 75%;
+  margin-bottom:100px;
 }
-
-.clearfix:after {
-  content: ".";
-  display: block;
-  clear: both;
-  visibility: hidden;
-  line-height: 0;
-  height: 0;
-}
-
-.clearfix {
-  display: block;
-}
-
 #logo {
   margin: 1em;
   float: left;
-  display: bloack;
+  display: block;
 }
 nav{
   float: right;
@@ -71,36 +38,65 @@ nav{
 nav ul > li{
   list-style: none;
   float: left;
-  margin: 0 2em;
+  margin: 1em 2em;
   display: block;
 }
-
 #main-body{
   text-align: center;
 }
-
-.enormous-font{
-  font-size: 10em;
-  margin-bottom: 0em;
+#main-body img{
+  width:100%;
+  margin-bottom:2em;
 }
 .big-font{
-  font-size: 2em;
+  text-align:center;
+  border:2px solid #2fb8ff;
+  padding:10px 40px; 
+  background:#fff;
+  border-radius:25px;
+  -moz-border-radius:25px;
+  color:#2fb8ff;
 }
-hr{
-  width: 25%;
-  height: 1px;
-  background: #1f3759;
-  border: 0px;
+.logowan{
+  height:20px;
+  width:20px;
+  vertical-align:text-bottom;
 }
-
-
-
+.logo a{
+  vertical-align:sub;
+}
+@media (max-width: 484px){
+    .big-font{
+    text-align:center;
+    border:2px solid #2fb8ff;
+    padding:3px 8px; 
+    background:#fff;
+    border-radius:25px;
+    -moz-border-radius:25px;
+    color:#2fb8ff;
+  }
+  nav ul > li{
+  list-style: none;
+  float: left;
+  margin: 1em 1em;
+  display: block;
+}
+  #content{
+    width:auto;
+  }
+  .logowan{
+  height:20px;
+  width:20px;
+  vertical-align:text-bottom;
+}
+}
 </style>
 </head>
 <body>
   <div id="content">
     <header>
       <div id="logo">
+      <img class="logowan" src="images/apple-touch-icon-precomposed.png">
         <a href="#">万流网</a>
       </div>
       <nav>
@@ -110,12 +106,11 @@ hr{
         </ul>
       </nav>
     </header>
-    <div class="clearfix"></div>
+
     <div id="main-body">
-      <p class="enormous-font bree-font"> 404 </p>
-      <p class="big-font"> 我们非常抱歉, 这个页面并没有找到... </p>
-      <hr>
-      <p class="big-font"> 你可以点击这里返回 <a href="/" class="underline">首页</a></p>
+      <img src="images/404.png">
+      <a href="/" class="big-font">返回上一页</a>
+      <a href="/users/sign_in" class="big-font">返回登录</a>
     </div>
   </div>
 </body>
