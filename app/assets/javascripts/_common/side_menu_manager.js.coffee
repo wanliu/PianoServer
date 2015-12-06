@@ -114,11 +114,6 @@ class @SideMenuManager
       @hammer.destroy()
       @hammer = null
 
-  # _recalculateZIndex: (menu) ->
-  #   index = @menus.indexOf(menu)
-
-  #   for _menu, i in @menus
-  #     if i < index
-  #       _menu.setZIndex(_menu.zIndex + 1)
-  #     else if i == index
-  #       _menu.setZIndex(1)
+  updateCartQuantity: (diff) ->
+    for menu in @menus
+      menu.updateCartQuantity(diff)

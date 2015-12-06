@@ -1,5 +1,6 @@
 <script type="text/javascript" data-turbolinks-track>
   var $containment = $('.menu-container');
+  window.manager = null;
   var manager = window.manager = new SideMenuManager($containment);
   var menu = new SideMenu($containment, 'custom');
 
@@ -90,6 +91,12 @@
 
     if (window.manager) {
       window.manager.toggleMenu(menuName);
+    }
+  });
+
+  $(document).on('cart_quantity_changed', function (e, diff) {
+    if (window.manager) {
+      window.managerupdateCartQuantity(diff);
     }
   });
 </script>
