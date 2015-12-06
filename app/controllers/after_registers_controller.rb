@@ -1,5 +1,7 @@
 class AfterRegistersController < ApplicationController
   BUSSINES_TYPES = %w(consumer retail distributor)
+  include Mobylette::RespondToMobileRequests
+
   # include PublicActivity::StoreController
 
   before_action :authenticate_user!
@@ -157,7 +159,6 @@ class AfterRegistersController < ApplicationController
     @shop = @current_user.join_shop || Shop.new(shop_params)
     @shop.shop_type = @current_user.user_type
     @shop.build_location location_params.merge(skip_validation: true)
-    @shop.create_activity action: 'update_location', owner: current_user
     @industry = @current_user.industry
     @shop.industry = @industry
     @shop.region_id = location_params[:region_id]
@@ -169,6 +170,7 @@ class AfterRegistersController < ApplicationController
     end
 
     if @shop.save
+      @shop.create_activity action: 'update_location', owner: current_user
       ShopService.build @shop.name
       [true, "shop"]
     else
@@ -188,7 +190,7 @@ class AfterRegistersController < ApplicationController
   def go_product_step
     @shop = @current_user.owner_shop
 
-    @job = JobService.start(:batch_import_products, @shop, @shop, products_params, select_params, type: "after_registers/product")
+    @job = JobService.start(:batch_import_products, @shop, @shop, products_params, categories_params, type: "after_registers/product")
     @created = @job.output["created"]
     [true, "product"]
   end
@@ -223,6 +225,10 @@ class AfterRegistersController < ApplicationController
 
   def products_params
     params[:products] || {}
+  end
+
+  def categories_params
+    params[:categories] || []
   end
 
   def location_params

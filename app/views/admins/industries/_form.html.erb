@@ -1,12 +1,15 @@
 <div class="panel panel-default edit-industry-base">
   <% url = @industry.persisted? ? admins_industry_path(@industry) : admins_industries_path %>
+  <%# upload_url = @industry.persisted? ? upload_admins_industry_path(@industry) : upload_admins_industries_path %>
+
   <%= form_for @industry, url: url do |f| %>
+
 
   <div class="panel-body">
 
     <div class="form-group">
       <%= f.label :image_url, "行业 Logo" %>
-      <%= f.upload_field :image %>
+      <%= image_upload_button(:industry, :image, url: File.join(url, 'upload'), image: {size: "200x100"}) %>
     </div>
     <div class="form-group">
       <%= f.label :name %>

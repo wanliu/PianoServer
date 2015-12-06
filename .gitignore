@@ -27,6 +27,7 @@ config/email.yml
 /public/deploy
 .gitver
 .powenv
+.ruby-version
 .git-hooks/post_checkout/.read
 
 

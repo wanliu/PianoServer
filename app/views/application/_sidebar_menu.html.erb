@@ -1,7 +1,9 @@
 <script type="text/javascript" data-turbolinks-track>
   var $containment = $('.menu-container');
-  var manager = new SideMenuManager($containment);
+  var manager = window.manager = new SideMenuManager($containment);
   var menu = new SideMenu($containment, 'custom');
+
+  // icon: the icon image url / iconClass: the glyphicon class name or other class name
 
   <% if Settings.dev.feature.user.sign_in && current_anonymous_or_user.id > 0 %>
     var avatar = '<%= current_user.avatar_url %>',
@@ -13,11 +15,11 @@
     menu.insertPlainHTML(fragment);
   <% end %>
 
-  menu.insertGroup('about', '关于我们');
+  menu.insertGroup('about', '关于我们', {iconClass: 'glyphicon glyphicon-blackboard' });
   <% if Settings.dev.feature.industry %>
     <% if @industry %>
       route = '<%= industry_path(@industry.name) %>';
-      menu.insertGroup(route, '行业');
+      menu.insertGroup(route, '行业', { iconClass: 'glyphicon glyphicon-flag' });
     <% end %>
   <% end %>
 
@@ -26,15 +28,15 @@
   <% end %>
 
   <% if Settings.dev.feature.qrcode %>
-    menu.insertGroup('qrode', '二维码', { qrode: true });
+    menu.insertGroup('qrode', '二维码', { qrode: true, iconClass: 'glyphicon glyphicon-qrcode' });
   <% end %>
 
   <% if Settings.dev.feature.favorites %>
-    menu.insertGroup('favorites', '我的收藏');
+    menu.insertGroup('favorites', '我的收藏', { iconClass: 'glyphicon glyphicon-heart' });
   <% end %>
 
   <% if Settings.dev.feature.linkmen %>
-    menu.insertGroup('chats', '最近联系人');
+    menu.insertGroup('chats', '最近联系人', { iconClass: 'glyphicon glyphicon-list' });
   <% end %>
 
   <% if Settings.dev.feature.cart %>
@@ -44,7 +46,7 @@
   <% end %>
 
   <% if Settings.dev.feature.weixin %>
-    menu.insertGroup('authorize/weixin', '微信登陆');
+    menu.insertGroup('authorize/weixin', '微信登录', { iconClass: 'glyphicon glyphicon-barcode' });
   <% end %>
 
   <% if Settings.dev.feature.user.sign_in %>
@@ -53,7 +55,7 @@
     <% else %>
       var username = '<%= current_user.login %>';
 
-      menu.insertGroup('profile', '个人菜单');
+      menu.insertGroup('profile', '个人菜单', { iconClass: 'glyphicon glyphicon-file' });
       menu.insertSection('profile', '@' + username, 'face', '我的主页');
 
       <% if current_user.join_shop %>
@@ -70,9 +72,8 @@
 
   $('.navbar-top .navbar-toggle').click(function() {
     var menuName = $(this).data('menuName')
-
-    if (manager) {
-      manager.toggleMenu(menuName);
+    if (window.manager) {
+      window.manager.toggleMenu(menuName);
     }
   });
 </script>

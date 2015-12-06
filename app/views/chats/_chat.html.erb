@@ -79,10 +79,13 @@
       alert('无效的聊天对象！');
       $('.btn-send').attr('disabled', 'disabled');
     } else {
-
+      var ownerUserId = $('meta[name=chatId]').attr('content');
+      var userChannelId = 'p' + ownerUserId;
+  
       var chat = new Chat($('.chat-order-header'), chatChannelId, {
         sendBtn: $('.btn-send'),
-        greetings: greetings
+        greetings: greetings,
+        userChannelId: userChannelId
       });
 
       <% if Settings.dev.feature.order.chat and @intention %>

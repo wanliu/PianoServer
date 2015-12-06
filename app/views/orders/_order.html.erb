@@ -5,6 +5,9 @@
         订单号: <%= order.id %>
       <% end %>
     </div>
+    <div class='create-time'>
+      创建时间：<%= order.created_at.strftime("%Y年%m月%d日 %H:%M:%S") %>
+    </div>
     <div>店铺：<%= link_to order.supplier.title, shop_site_path(order.supplier.name) %> ( <%= order.items.count %> 件商品)</div>
     <div>运送地址：<%= order.delivery_address %></div>
   </div>
