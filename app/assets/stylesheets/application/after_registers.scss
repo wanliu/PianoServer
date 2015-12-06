@@ -40,6 +40,9 @@ $transition-time:0.4s;
   }
 
   &>.list-group-item {
+    background-color: #eeeeee;
+    color: #777777;
+    cursor: pointer;
     padding: 10px 15px;
     // margin-bottom: 20px;
   }
@@ -83,6 +86,10 @@ $transition-time:0.4s;
 }
 
 .group_brand {
+  &>.list-group-item {
+    cursor: pointer;
+  }
+
   &>.collapsed:after {
     content: "...";
   }
