@@ -1,6 +1,6 @@
 <% disabled_button = defined?(disabled) ? disabled : true %>
 <% url = defined?(next_url) ? next_url : nil %>
-<% if is_mobile_request? %>
+<% if mobile? %>
   <%= navbar position: :bottom, inverted: true do %>
     <%= button "以后再说", context: :default, class: 'navbar-btn skip' %>
     <%= next_button "下一步", url, disabled: disabled_button, class: 'navbar-btn pull-right' %>
