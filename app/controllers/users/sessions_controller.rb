@@ -71,7 +71,7 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def default_type
-    is_mobile_request? ? 'mobile' : 'email'
+    mobile? ? 'mobile' : 'email'
   end
 
   def after_sign_in_path_for(resource)
@@ -97,7 +97,7 @@ class Users::SessionsController < Devise::SessionsController
 
   def combine_anonymous_cart_items
     return unless session[:anonymous].present?
-    
+
     anonymous_id = session[:anonymous]
     anonymous_cart = Cart.find_by(user_id: anonymous_id)
 
