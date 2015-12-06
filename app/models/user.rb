@@ -124,6 +124,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def reach_location_limit?
+    locations.count >= Location::AMOUNT_LIMIT
+  end
+
   private
 
   def generate_authentication_token

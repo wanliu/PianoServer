@@ -1,32 +1,5 @@
 <div class='buy-now-confirm col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1'>
-  <div class='delivery-addresses panel panel-default'>
-    <% if @delivery_addresses.present? %>
-      <div class="panel-heading">
-        选择收货地址
-      </div>
-      <% @delivery_addresses.each_with_index do |address, index| %>
-        <div class='delivery-address <%= "active" if 0 == index %>' data-address-id=<%= address.id %>>
-          <div class='title'>
-            <%= address.contact %>
-          </div>
-          <div class='detail'>
-            <%= address.delivery_address %>
-          </div>
-        </div>
-      <% end %>
-      <div class='divider' style='clear: both'></div>
-      <%= link_to "添加一个新的收货地址", 'javascript: void(0)', class: 'add-another-location' %>
-    <% else %>
-      <div class="panel-heading">
-        <div class='empty-notify'>你还没有收货地址，现在创建一个吧</div>
-      </div>
-      <div class='divider' style='clear: both; display: none;'></div>
-      <%= link_to "添加一个新的收货地址", 'javascript: void(0)', class: 'add-another-location', style: 'display: none;' %>
-    <% end %>
-    <div class='add-new-location' style='display: <%= @delivery_addresses.present? ? "none" : "block" %>'>
-      <%= render 'locations/form', locals: { location: current_user.locations.build } %>
-    </div>
-  </div>
+  <%= render "order_address", locals: { delivery_addresses: @delivery_addresses } %>
 
   <%= form_for @order, url: "/orders/buy_now_create" do |f| %>
     <%= f.hidden_field :address_id %>
@@ -59,64 +32,7 @@
   <% end %>
 </div>
 
-<script type="text/template" id='delivery-address'>
-  <div class='delivery-address' data-address-id={{= address.id }}>
-    <div class='title'>
-      {{= address.contact }}
-    </div>
-    <div class='detail'>
-      {{= address.delivery_address }}
-    </div>
-  </div>
-</script>
-
 <script type="text/javascript">
-  var addTemplate = _.template($('#delivery-address').html());
-
-  $('.add-new-location').on('submit', 'form.new_location', function (event) {
-    event.preventDefault();
-    var data = $(this).serializeArray();
-
-    var q = $.post('/locations', data);
-    
-    q.done(function (data, status, xhr) {
-      var html = addTemplate({ address: data });
-      $('div.empty-notify').parent().text('选择收货地址');
-      $('div.empty-notify').remove();
-
-      $('div.divider').show();
-      $('div.divider + a').show();
-
-      $('div.divider').before(html);
-      $('div.add-new-location').hide();
-
-      if (!$('.delivery-address.active').length) {
-        $($('.delivery-address')[0]).addClass('active');
-        $($('.delivery-address')[0]).click();
-      }
-
-      $('div.add-new-location form')[0].reset();
-    });
-
-    q.fail(function (data, status, xhr) {
-      // debugger;
-      $('.add-new-location').html(data.responseText);
-    })
-  });
-
-  $('a.add-another-location').click(function (event) {
-    $('div.add-new-location').toggle();
-  });
-
-  $('.delivery-addresses').on('click', '.delivery-address', function(event) {
-    var $address = $(this).is('.delivery-address') ? $(this) : $(this).parents.find('.delivery-address');
-    $('.delivery-addresses .delivery-address').removeClass('active');
-    $address.addClass('active');
-
-    var addressId = $(this).data('addressId');
-    $('input#order_address_id').val(addressId);
-  });
-
   // TODO backed calculating
   $('.cart_item_quantity').change(function(event, value) {
     var quantity = value ? value : (1 * $(this).val());
