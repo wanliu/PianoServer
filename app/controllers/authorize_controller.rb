@@ -23,6 +23,8 @@ class AuthorizeController < ApplicationController
   private
 
   def lookup_user(profile)
+    logger.info "profile: #{profile.inspect}"
+
     user = User.where('data @> ?', {weixin_openid: profile['openid']}.to_json)
            .first_or_initialize(
              username: SecureRandom.urlsafe_base64.tr('-', '_'),
