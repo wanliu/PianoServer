@@ -1,6 +1,14 @@
-<%= content_for :module, :location %>
+<div class="locations col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1">
+  <%= content_for :module, :location %>
 
-<%= render "form", locals: { location: @location } %>
+  <%= render "form", locals: { location: @location } %>
+</div>
+
+<script type="text/javascript">
+  $(document).on('page:load', function() {
+    $('.locations .city-group').china_city();
+  });
+</script>
 
 <% if anonymous? %>
   <script type="text/javascript">

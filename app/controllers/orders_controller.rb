@@ -41,6 +41,7 @@ class OrdersController < ApplicationController
       else
         format.any(:html, :mobile) do
           set_feed_back
+          set_addresses
           flash.now[:error] = @order.errors.full_messages.join(', ')
 
           render :confirmation, status: :unprocessable_entity
@@ -57,7 +58,7 @@ class OrdersController < ApplicationController
 
     set_feed_back
 
-    @order.address_id = @delivery_addresses.first.id if @delivery_addresses.present?
+    set_addresses
   end
 
   # 直接购买
@@ -86,8 +87,7 @@ class OrdersController < ApplicationController
         0
       end
 
-    @delivery_addresses = current_user.locations.order(id: :asc)
-    @order.address_id = @delivery_addresses.first.id if @delivery_addresses.present?
+    set_addresses
 
     @supplier = @order.supplier 
 
@@ -175,12 +175,20 @@ class OrdersController < ApplicationController
   end
 
   def set_feed_back
-    @delivery_addresses = current_user.locations.order(id: :asc)
-
     @order_items = current_user.cart.items.find(params[:order][:cart_item_ids])
 
     @supplier = Shop.find(params[:order][:supplier_id])
 
     @total = @order_items.reduce(0) { |total, item| total += item.price * item.quantity }
+  end
+
+  def set_addresses
+    @delivery_addresses = current_user.locations.order(id: :asc)
+    @order.address_id =
+      if current_user.latest_location_id.present?
+        current_user.latest_location_id
+      else
+        @delivery_addresses.first.id if @delivery_addresses.present?
+      end
   end
 end

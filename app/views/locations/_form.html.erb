@@ -45,12 +45,6 @@
     </div>
   </div>
 
-  <script type="text/javascript">
-    $(function() {
-      return $('.city-group').china_city();
-    });
-  </script>
-
   <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
     <%= group_with_errors location, :road, f, title: '地址', layout: :normal, required: true do %>
       <%= text_field :location, :road, class: 'form-control required' %>
@@ -70,7 +64,7 @@
   </div>
 
   <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
-    <%= f.submit "新建收件人信息", class: "btn btn-danger " %>
+    <%= f.submit "保存收件人信息", class: "btn btn-danger " %>
   </div>
 
   <div style='clear: both;'></div>

@@ -1,5 +1,5 @@
 <div class='order-confirm col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1'>
-  <%= render "order_address", locals: { delivery_addresses: @delivery_addresses } %>
+  <%= render "order_address", locals: { delivery_addresses: @delivery_addresses, order: @order } %>
 
   <%= form_for @order do |f| %>
     <%= f.hidden_field :address_id %>
