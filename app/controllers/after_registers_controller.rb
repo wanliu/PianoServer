@@ -207,7 +207,6 @@ class AfterRegistersController < ApplicationController
 
   def set_type
     if params[:step] != "select" && @current_user.user_type != params[:id]
-      pp @current_user
       return redirect_to(after_register_path(@current_user.user_type))
     elsif params[:step] == "select"
       @user_type = params[:select]
