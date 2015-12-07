@@ -4,7 +4,7 @@
       选择收货地址
     </div>
     <% delivery_addresses.each_with_index do |address, index| %>
-      <div class='delivery-address <%= "active" if 0 == index %>' data-address-id=<%= address.id %>>
+      <div class='delivery-address <%= "active" if order.address_id == address.id %>' data-address-id=<%= address.id %>>
         <div class='title'>
           <%= address.contact %>
         </div>

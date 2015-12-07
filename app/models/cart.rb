@@ -15,6 +15,6 @@ class Cart < ActiveRecord::Base
   end
 
   def items_count
-    items.pluck(:quantity).reduce(:+)
+    items.pluck(:quantity).reduce(:+) || 0
   end
 end
