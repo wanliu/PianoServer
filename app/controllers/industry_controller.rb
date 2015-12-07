@@ -37,7 +37,6 @@ class IndustryController < ApplicationController
       .group("shops.id")
 
     @brands_ids = brands_ids
-    pp @brands_ids
     @brands = Brand.with_category(params[:category_id])
     @brands_group = @brands.group_by { |brand| Pinyin.t(brand.title, splitter: '')[0].upcase }.sort {|a,b| a[0]<=>b[0]}
   end
