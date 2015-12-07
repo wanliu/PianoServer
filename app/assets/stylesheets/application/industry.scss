@@ -1,0 +1,159 @@
+.category-body {
+  border-bottom: 1px solid #ddd;
+}
+
+.category-brand-container {
+  display: none;
+
+  .list-group-item.letter {
+    padding: 2px 15px;
+    background-color: #eee;
+    // font-size: 0.85em;
+  }
+
+  .list-group-item {
+    padding: 10px 15px;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .industry-category {
+    padding: 0px;
+  }
+
+  .shop {
+    margin-bottom: 0px;
+  }
+}
+
+@media (max-width: 484px) {
+  .shop-list {
+    margin-top: -21px;
+    margin-bottom: 20px;
+  }
+}
+
+.brand-selectors {
+
+  .brand-link {
+    .brand-mark {
+      display: none;
+    }
+  }
+
+  input[type="checkbox"]:checked+
+    .list-group-item {
+      background-color: #337ab7;
+      border-color: #337ab7;
+      color: white;
+      cursor: pointer;
+
+      &>.brand-mark {
+        display: inline-block;
+        padding: 5px 8px;
+        background-color: white;
+        border-radius: 50%;
+        color: #337ab7;
+        margin-left: 10px;
+      }
+    }
+}
+
+.letter-ruler {
+  // background-color: #ccc;
+}
+
+.shop {
+
+  .panel-heading {
+
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#000000+0,000000+100&amp;0+0,0.65+100 */
+    background: url(http://www.linkshop.com.cn/upload/article/2014/fck_201411694241_86.jpg);
+    background: -moz-linear-gradient(top,  rgba(0,0,0,0) 0%, rgba(0,0,0,0.65) 100%), /* FF3.6-15 */url(http://www.linkshop.com.cn/upload/article/2014/fck_201411694241_86.jpg);
+    background: -webkit-linear-gradient(top,  rgba(0,0,0,0) 0%,rgba(0,0,0,0.65) 100%) Chrome10-25,Safari5.1-6, url(http://www.linkshop.com.cn/upload/article/2014/fck_201411694241_86.jpg);
+    background: asset-url('light.png') 50%, linear-gradient(to bottom,  rgba(0,0,0,0) 0%,rgba(0,0,0,0.65) 100%), url(http://www.linkshop.com.cn/upload/article/2014/fck_201411694241_86.jpg);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#a6000000',GradientType=0 ); /* IE6-9 */
+
+    // background-image: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%), url(http://www.linkshop.com.cn/upload/article/2014/fck_201411694241_86.jpg); /* FF3.6-15 */
+    // background-image: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%), url(http://www.linkshop.com.cn/upload/article/2014/fck_201411694241_86.jpg);Chrome10-25,Safari5.1-6
+    // background-image: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%), url(http://www.linkshop.com.cn/upload/article/2014/fck_201411694241_86.jpg); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    // filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#00ffffff',GradientType=0 ); /* IE6-9 */
+    height: 100px;
+    background-size: 100%
+  }
+
+  .panel-body {
+    // .media {
+    //   overflow
+    // }
+    .media-left {
+      text-align: center;
+      img {
+        border-radius: 5px;
+        margin-bottom: 5px;
+      }
+    }
+
+    .media-body {
+      .address-group {
+        display: table-row;
+
+        .location {
+          width: 100%;
+          display: table-cell;
+        }
+        .map {
+          display: table-cell;
+          white-space: nowrap;
+        }
+      }
+      .button {
+        margin-right: 10px;
+      }
+    }
+  }
+}
+
+.popup {
+  -o-transition: all 0.5s;
+  -moz-transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  position: fixed;
+  // opacity: 0;
+  top: 0px;
+  bottom: 0px;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  z-index: 1030;
+  overflow-y: auto;
+
+  &.popup-left {
+    left: -100%;
+    &.open {
+      left: 0px;
+      // opacity: 1;
+    }
+  }
+
+  &.popup-right {
+    right: -100%;
+    &.open {
+      right: 0px;
+      // opacity: 1;
+    }
+
+  }
+
+  &.open {
+    .navbar.navbar-fixed-bottom {
+      display: block;
+    }
+  }
+
+  .navbar.navbar-fixed-bottom {
+    display: none;
+  }
+}

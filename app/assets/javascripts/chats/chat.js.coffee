@@ -31,8 +31,6 @@ class @Chat
 
     @boundOnMessage = @onMessage.bind(@)
     @userSocket.onPersonMessage(@boundOnMessage)
-    @onwerId = @userSocket.userId
-    @ownerChannelId = @options.userChannelId || @userSocket.getUserChannelId()
     @table = @options.table
     @greetings = @options.greetings
 
@@ -65,6 +63,12 @@ class @Chat
 
   on: (event_name, callback) ->
     @$().on('chat:' + event_name, callback)
+
+  ownerChannelId: () ->
+    @options.userChannelId || @userSocket.getUserChannelId()
+
+  onwerId: () ->
+    @userSocket.userId
 
   bindAllEvents: () ->
     $(@textElement).on 'keyup', (e) =>
@@ -101,11 +105,12 @@ class @Chat
   send: (msg) ->
 
   getChatChannelId: () ->
-    @chatChannelId ||= 'p:' + [@ownerChannelId[1..-1],@channelId[1..-1]].sort().join(':')
+    ownerChannelId = @ownerChannelId()
+    @chatChannelId ||= 'p:' + [ownerChannelId[1..-1], @channelId[1..-1]].sort().join(':')
 
   enter: () ->
-    $(document).trigger('inchats:enter', @getChatChannelId())
     @setActive(@)
+    $(document).trigger('inchats:enter', @getChatChannelId())
 
   leave: () ->
     $(document).trigger('inchats:leave', @getChatChannelId())
@@ -368,7 +373,7 @@ class @Chat
     {prefixSection, senderAvatar, senderName, toAddClass, id, senderId, content, senderLogin, type, time} = context
 
     text ||= content
-    text = text.replace(/(<\/?(?!br)[^>\/]*)\/?>/gi,'').replace(/\s/g, '')
+    text = text.replace(/(<\/?(?!br)[^>\/]*)\/?>/gi,'').replace(/\s/g, '<span>&nbsp;</span>')
 
     """
       #{prefixSection}
@@ -522,7 +527,8 @@ class @Chat
     @$chatContainer.find('.bubble-tip').remove()
 
   _isOwnMessage: (message) ->
-    @onwerId == message.senderId.toString();
+    onwerId = @onwerId()
+    onwerId == message.senderId.toString();
 
   _insertLoadMore: () ->
     $more = $('<div class="load-more">查看更多消息</div>').prependTo(@$messageList)

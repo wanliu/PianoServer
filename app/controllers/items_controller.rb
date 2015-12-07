@@ -2,7 +2,7 @@ class ItemsController < ApplicationController
   before_filter :set_shop
   before_filter :set_item, only: [ :show ]
 
-  caches_page :index, :show
+  # caches_page :index, :show
 
   def index
     page = params[:page].presence || 1
@@ -22,13 +22,12 @@ class ItemsController < ApplicationController
     @item.punch(request)
     @category = @item.category
     @current_user = current_anonymous_or_user
-    @properties = normal_properties(@category.with_upper_properties)
-    @inventory_properties = inventory_properties(@category.with_upper_properties)
 
-    # if Settings.dev.feature.inventory_combination and @inventory_properties.present?
-    #   @inventory_combination = combination_properties(@item, @inventory_properties)
-    #   @stocks_with_index = {}
-    # end
+    @cartitem = CartItem.new(cartable: @item, supplier: @shop, title: @item.title, image: @item.image.url(:cover))
+  
+    if Settings.dev.feature.inventory_combination and @item.properties.present?
+      @stocks_with_index = @item.stocks_with_index
+    end
 
     render :show, with: @item.category
   end

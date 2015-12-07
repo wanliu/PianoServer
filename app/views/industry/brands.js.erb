@@ -1,0 +1,30 @@
+var $element = $("[data-category=<%= @category.id %>]");
+var id = $element.data('category');
+var ruler = window.letterRuler;
+
+$brandList = $element
+  .parents(".panel-body")
+  .next(".category-brand-container")
+
+if ($brandList.data('category') == id && $brandList.is(":visible")) {
+  $brandList.slideUp();
+  if (ruler) { ruler.hide(); }
+} else {
+  $(".category-brand-container").hide();
+
+  $brandList
+    .html("<%=j render partial: "brand_group_links", locals: { single: true, brands_group: @brands_group, category: @category, region: @current_region } %>")
+    .data('category', id)
+    .slideDown(function() {
+
+      if (ruler && $.isFunction(ruler.build)) {
+        ruler.build($brandList)
+        ruler.show();
+      }
+    });
+
+  if ($brandList.find('.no-data').length) {
+    $brandList.slideUp();
+    if (ruler) { ruler.hide(); }
+  }
+}

@@ -8,14 +8,21 @@
 
   var hostname = $('meta[name=pusherHost]').attr('content');
   var hostport = $('meta[name=pusherPort]').attr('content');
-  var socket = socketCluster.connect({
-    hostname: hostname,
-    port: hostport
-  });
+  $(function() {
+    setTimeout(function() {
+      var socket = socketCluster.connect({
+        hostname: hostname,
+        port: hostport
+      });
 
-  window.userSocket = new UserSocket();
-  window.userSocket.config({
-    user: user,
-    socket: socket
+      // window.userSocket = new UserSocket();
+      window.userSocket.config({
+        user: user,
+        socket: socket
+      });
+
+      $(document).trigger('init:user_socket', userSocket);
+    }, 200)
+
   });
 </script>

@@ -36,6 +36,8 @@
     <%= favicon_link_tag 'favicon.ico', :rel => 'shortcut icon' %>
 
     <%= javascript_include_tag "admins" %>
+    <%= yield :stylesheets %>
+    <%= yield :javascripts %>
 
     <%= analytics_init if Rails.env.production? and Settings.GA.track %>
     <%= render "user_socket" %>
@@ -43,9 +45,10 @@
   </head>
   <body class="shop-admin">
     <div class="chat-notices"></div>
-    
+
     <div class="menu-container"></div>
     <div class="navbar navbar-default navbar-top main-navbar">
+      <div class="menu-overlayer"></div>
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle visible-xs-block" data-menu-name="shop-admin">
@@ -67,17 +70,19 @@
               <% end %>
             </li>
           </ul>
-          <div class="navbar-collapse collapse navbar-responsive-collapse hidden-xs">
+          <%= render "shards/navbar_navigation" %>
+
+          <!-- <div class="navbar-collapse collapse navbar-responsive-collapse hidden-xs">
             <ul class="nav navbar-nav navbar-right">
-              <li><%= link_to "关于我们", about_path  %></li>
-              <li><%= link_to "二维码", "#share-url-qrcode" , "data-toggle"=>"modal" %></li>
+              <li><%#= link_to "关于我们", about_path  %></li>
+              <li><%#= link_to "二维码", "#share-url-qrcode" , "data-toggle"=>"modal" %></li>
             </ul>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
-    <div class="menu-overlayer"></div>
     <div class="main-container">
+      <div class="menu-overlayer"></div>
       <div class="container">
         <div class="shop-admin-container">
           <%= render "left_sidebar" %>

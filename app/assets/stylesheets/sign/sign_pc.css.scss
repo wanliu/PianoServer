@@ -21,11 +21,10 @@ body.password-edit .password-edit-container{
   visibility: visible !important;
 }
 
-body.sign-pc{
+body.sign-pc .main-container{
   font-family: '微软雅黑', Arial,Verdana, Sans-serif;
   padding: 0;
   background: #fff;
-  margin-bottom: 60px;
   background-position: 0 50px;
   background-repeat: no-repeat;
   background-size: auto 600px;
@@ -39,7 +38,6 @@ body.sign-pc{
     bottom: 0;
     width: 100%;
     left: 0;
-    height: 50px;
   }
   .sign-body{
     position: relative;
@@ -71,7 +69,6 @@ body.sign-pc{
   }
   .alert{
     padding: 5px 35px 5px 15px;
-    margin-bottom: 10px;
   }
   .sign-logo{
     position: absolute;

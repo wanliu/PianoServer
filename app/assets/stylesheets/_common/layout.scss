@@ -1,19 +1,13 @@
 $transition-time: 0.3s;
 
-html{
+html,body {
   height: 100%;
-  overflow: hidden;
+  position: relative;
 }
 
 body {
+  width: 100%;
   overflow-x: hidden;
-  height: 100%;
-  &.detail,
-  &.item{
-    .scroll-container {
-      padding-bottom: 50px;
-    }
-  }
 }
 
 footer {
@@ -39,9 +33,12 @@ body.chat footer{
   bottom: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  width: 200px;
+  width: 240px;
   background: #E32929;
-  left: 0;
+  font-weight: 700;
+  left: -240px;
+  transition: all $transition-time;
+  -webkit-transition: all $transition-time;
 
   a {
     color: #FFFFFF;
@@ -57,22 +54,35 @@ body.chat footer{
     color: #FFFFFF;
   }
 
+  .ellipsis-text {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
   .user-info {
     position: relative;
-    padding: 10px 15px 10px 75px;
-    line-height: 50px;
+    padding: 0px 15px 0px 60px;
+    line-height: 35px;
     color: #FFFFFF;
+    margin-left: -15px;
 
-    .user-avatar {
+    .avatar-box {
       position: absolute;
-      left: 15px;
-      top: 10px;
-      width: 50px;
-      height: 50px;
+      width: 35px;
+      height: 35px;
       border-radius: 50%;
+      left: 15px;
+      top: 0px;
+      overflow: hidden;
     }
 
-    .username {
+    .user-avatar {
+      width: 100%;
+      height: 100%;
+    }
+
+    .username, .shopname {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -80,24 +90,36 @@ body.chat footer{
   }
 
   .nav.menu-sections > li > a {
-    padding-left: 35px;
+    padding-left: 40px;
   }
 
-  .nav > li:hover > a {
+  .nav > li > a:hover {
     background: #BF0D0D;
   }
 
-  .nav > li.active > a {
-    background: #FFD143;
-    color: #E32929;
-
-    &:hover {
+  .nav > li > a.active {
+    &, &:hover {
       background: #FFD143;
+      color: #E32929;
     }
+  }
+
+  .icon-wrap {
+    display: inline-block;
+    width: 24px;
+    text-align: center;
+    margin-right: 5px;
+  }
+
+  .badge {
+    position: absolute;
+    top: 12px;
+    right: 10px;
+    background: #333333;
   }
 }
 
-.chat-notices{
+.chat-notices {
   position: fixed;
   top: 0;
   left: 0;
@@ -105,7 +127,7 @@ body.chat footer{
   z-index: 9999;
   opacity: 0.6;
 
-  .chat-notice{
+  .chat-notice {
     background: #666666;
     height: 35px;
     line-height: 35px;
@@ -127,7 +149,7 @@ body.chat footer{
 .navbar-top {
   position: fixed;
   top: 0;
-  z-index: 10;
+  z-index: 11;
   left: 0;
   right: 0;
   border-radius: 0;
@@ -136,29 +158,34 @@ body.chat footer{
   transition: all $transition-time;
 }
 
-.show-left-bar{
-  transform: translateX(200px);
-  -webkit-transform: translateX(200px);
+.show-left-bar {
+  transform: translateX(240px);
+  -webkit-transform: translateX(240px);
 }
 
-.main-container{
-  background-color: #eee;
+
+.link-table-container{
+  transition: all $transition-time;
+}
+.main-container {
+  min-height: 100%;
+  overflow: hidden;
   position: relative;
   padding-top: 50px;
-  -webkit-transition: transform $transition-time;
-  transition: transform $transition-time;
-  overflow: hidden;
-  min-height: 100%;
+  padding-bottom: 120px;
+  background-color: #eee;
   background-image: image_url('bj.jpg');
-  padding-bottom: 100px;
+  transition: all $transition-time;
+  -webkit-transition: all $transition-time;
 }
 
 .menu-overlayer {
-  position: fixed;
-  left: 200px;
+  position: absolute;
+  left: 0;
   top: 0;
   right: 0;
   bottom: 0;
+  margin: -1px 0;
   background: #333333;
   opacity: 0.5;
   display: none;

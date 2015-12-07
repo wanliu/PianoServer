@@ -31,10 +31,10 @@ class @MiniTable
       return
 
     if @isVisible
-      @_hideOrderItems(true)
+      @_hideLineItems(true)
       $fixedBottom.slideDown()
     else
-      @_showOrderItems(true)
+      @_showLineItems(true)
       @_hideChatScroll()
       $fixedBottom.slideUp()
 
@@ -49,7 +49,7 @@ class @MiniTable
 
     if (width >= MiniTable.defaultOptions.mdscreenWidth)
       @_showChatScroll()
-      @_showOrderItems(false)
+      @_showLineItems(false)
       @$().removeClass('show-toggle-button')
     else
       @$().addClass('show-toggle-button')
@@ -61,11 +61,11 @@ class @MiniTable
     width = $(window).width()
 
     if (width >= MiniTable.defaultOptions.mdscreenWidth)
-      @_showOrderItems(false)
+      @_showLineItems(false)
     else
       @$().addClass('show-toggle-button')
 
-  _showOrderItems: (shouldAnimate) ->
+  _showLineItems: (shouldAnimate) ->
     $mainContent = $('.chat-order-body').addClass('show-order-items')
     $tableWrap = $mainContent.find('.order-table-wrap')
 
@@ -76,7 +76,7 @@ class @MiniTable
     else
       $tableWrap.show()
 
-  _hideOrderItems: (shouldAnimate) ->
+  _hideLineItems: (shouldAnimate) ->
     $mainContent = $('.chat-order-body')
     $tableWrap = $mainContent.find('.order-table-wrap')
 

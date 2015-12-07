@@ -5,6 +5,7 @@ app:
   footer: "&copy; Wanliu.biz 2015  湘ICP备：13005289号-1"
   keywords: "万流 电商 社区 O2O O2O2C B2C2C 母婴 奶粉"
   description:
+  telephone: 0731-83991940
 admin:
   title: 万流工作平台
   register:
@@ -31,22 +32,37 @@ elasticsearch:
   url: http://192.168.0.131:9200
   index_name: products_production
 assets:
+  host: http://wanliu-piano.b0.upaiyun.com
   gray_image: "data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+  avatar_iamge: "http://wanliu-piano.b0.upaiyun.com/uploads/shop/logo/1/default_avatar.gif"
+shop:
+  import:
+    sale: true
+  location:
+    change_period: 7
+  default_theme: theme1
+  default_head_url: http://wanliu-piano.b0.upaiyun.com/uploads/shop/logo/1/20151207.jpg
 dev:
   feature:
     weixin: true
     camera: true
     shop:
       website: true
+    mobile:
+      mini: true
     purchase: true
     cart: true
     favorites: true
     qrcode: true
     linkmen: true
+    location: true
     order:
       chat: true
     user:
       sign_in: true
+    industry: true
+    weixin: true
+    person_page: true
 sites:
   root: .sites
   shops:
@@ -72,5 +88,7 @@ baidu:
 after_registers:
   shop:
     validates: strict
+  total:
+    max_count: 15
 weixin:
   scope: snsapi_login

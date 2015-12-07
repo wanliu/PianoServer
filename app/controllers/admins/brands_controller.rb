@@ -2,12 +2,13 @@ class Admins::BrandsController < Admins::BaseController
   before_action :set_brand,  only: [ :show ]
 
   def index
+
     @brands =
       (if params[:q].present?
-        Brand.search(params[:q]).records
+        Brand.search(params[:q]).records.page(params[:page]).per(100)
       else
-        Brand
-      end).page(params[:page]).per(100)
+        Brand.top
+      end)
 
     respond_to do |format|
       format.html { render :index }

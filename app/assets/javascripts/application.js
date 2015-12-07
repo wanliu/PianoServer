@@ -22,13 +22,18 @@
 //= require jquery-ui/position
 //= require jquery-ui/effect.all
 //= require select2
+//= *
 //= require bootstrap-sprockets
 //= require nprogress
 //= require turbolinks
 //= require nprogress-turbolinks
 //= require china_city/jquery.china_city
 //= require photoswipe
+//*
 //= require picturefill.all
+//= require best_in_place
+//*
+//= require lib/best_in_place_form
 //= require lib/socketcluster-client
 //= require lib/user-socket
 //= require lib/underscore
@@ -36,17 +41,22 @@
 //= require lib/date_iso8601_polyfill
 //= require lib/pastemedia
 //= require lib/ajax_status
+//= require lib/jquery.path
 //= require utils/alert-dismiss
+//= require utils/parseUrl
 //= require _common/fileuploader
 //= require _common/qrcode
 //= require _common/local-address
 //= require _common/hammer
 //= require _common/util
 //= require _common/image-scale
+//= require _common/adjust_container
 //= require _common/side_menu
 //= require _common/side_menu_manager
+//= require lib/jquery.hammer
 //= require_tree ./application
 //= require_tree ./chats
+//= require_tree ./carts
 //= require_tree ./orders
 //= require_tree ./promotions
 //= require_tree ./utils
@@ -55,6 +65,6 @@
 
 dataConfirmModal.setDefaults({
   title: '确认执行此操作？',
-  commit: '删除',
+  commit: '确定',
   cancel: '取消'
 });

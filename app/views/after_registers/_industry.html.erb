@@ -1,0 +1,12 @@
+<%= radio_button_tag "industry", industry.id, false, value: industry.name, class: 'industry-select' %>
+<%= label_tag "industry_#{industry.id}", class: "col-sm-6 col-xs-12" do %>
+  <div class="media industry-item">
+    <div class="media-left">
+      <%= image_tag industry.image.url, size: "100" %>
+    </div>
+    <div class="media-body">
+      <h4 class="media-heading"><%= industry.title %> </h4>
+      <p><%= industry.description %></p>
+    </div>
+  </div>
+<% end %>

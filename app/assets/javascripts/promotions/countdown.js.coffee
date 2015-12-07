@@ -33,7 +33,7 @@ class @CountDown
     toAddClass = switch @status
                   when 'Published' then 'not-started'
                   when 'Active' then 'started'
-                  when 'Finished' then 'finished'
+                  when 'Finish' then 'finished'
 
     @_applyClass(toAddClass)
 
@@ -77,7 +77,7 @@ class @CountDown
       @_changeClass()
 
     if isEnd
-      @status = 'Finished'
+      @status = 'Finish'
       @_showFinishText()
       return @_removeCountdownHander()
 

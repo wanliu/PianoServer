@@ -1,0 +1,89 @@
+<% content_for :body do %>
+  <div class="letter-ruler"></div>
+<% end %>
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12" >
+
+      <div class="page-header">
+        <div class="btn-group pull-right">
+          <% @icon = capture do %>
+            <% if Settings.dev.feature.location %>
+              <%= link_to regions_path, class: "btn btn-link" do %>
+                <%= icon :globe %>
+              <% end %>
+            <% end %>
+          <% end %>
+        </div>
+        <h1>
+          <%= @industry.title %> <small>所在区域 <%= @current_region.title %> <%= @icon %> </small>
+        </h1>
+
+      </div>
+
+    <% if @region.present? %>
+      <% @regions.push(@region) %>
+      <%= panel class: 'no-padding' do %>
+      <div class="panel-heading">
+        <div class="row">
+          <div class="col-xs-12 col-sm-6">
+            <div class="btn-group  btn-group-justified">
+              <% if @next_region.present? %>
+                  <%= link_to region_industry_path(@industry.name, region_id: @next_region), class: 'btn btn-default' do %>
+                    <%=icon :'arrow-down' %> 下级区域<%= @next_region.title %>
+                  <% end %>
+              <% else %>
+                <%= link_to 'javascript:void(0)', class: 'btn btn-default', disabled: true do %>
+                  <%#=icon :'arrow-down' %> 本地区域<%= @current_region.title %>
+                <% end %>
+              <% end %>
+
+
+              <% if @previous_region.present? %>
+                  <%= link_to region_industry_path(@industry.name, region_id: @previous_region), class: 'btn btn-default'  do %>
+                    <%=icon :'arrow-up' %> 上级区域<%= @previous_region.title %>
+                  <% end %>
+              <% else %>
+                <%= link_to 'javascript:void(0)', class: 'btn btn-default', disabled: true do %>
+                  <%#=icon :'arrow-down' %> 顶级区域<%= @current_region.title %>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+        <%#= render partial: "category", locals: { category: @industry.category} %>
+      <%= render partial: "category", collection: @industry.category.children.order(:id), locals: { region: @current_region } %>
+      <% end %>
+    <% else %>
+      <div class="well">
+        <p class="leading text-muted">
+          对不起！此区域暂无有效的供应商
+        </p>
+      </div>
+    <% end %>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  // $(window).on('resize', function(e) {
+  //   $(".brand-container").adjustContainer({step: $(window).width() < 768 ? 120 : 170 });
+  // });
+  $(function() {
+    var LetterRuler = window.LetterRuler;
+    window.letterRuler = new LetterRuler($('.letter-ruler'));
+    letterRuler.on('scroll.letter_ruler', function(e, letter) {
+      // var $(letterRuler.target).offset()
+      $(letterRuler.target).find('.list-group-item.letter').each(function(i, elem) {
+        var position = $(elem).position();
+        if ($(elem).text().trim() == letter) {
+          $(".scroll-container").scrollTop(position.top + 50);
+        }
+      });
+    });
+  });
+</script>
+

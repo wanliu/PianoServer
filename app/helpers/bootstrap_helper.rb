@@ -8,10 +8,17 @@ module BootstrapHelper
     }
 
     flash.map do |k, title|
+      if title.is_a? Hash
+        @title = title["msg"]
+        @url = title["url"]
+        @prompt = title["prompt"]
+      else
+        @title = title
+      end
       <<-HTML
         <div class="alert alert-#{flash_class[k]} alert-dismissible" role="alert">
           <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <strong>#{t(k, scope: 'flash.titles')}!</strong>&nbsp;#{title}</div>
+          <strong>#{t(k, scope: 'flash.titles')}!</strong>&nbsp;#{@title} #{link_to @prompt, @url if @url}</div>
       HTML
     end.join('').html_safe
   end
@@ -20,19 +27,50 @@ module BootstrapHelper
   #   r "<span class=\"button-icon glyphicon glyphicon-#{name}\"></span>"
   # end
 
+  def close
+    html = <<-HTML
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    HTML
+    html.html_safe
+  end
+
   def caret
     r "<span class=\"caret\"></span>"
   end
 
-  def group_with_errors(object, name, helper, options = {})
-    error = object.errors[name]
-    error_name = t('attributes.' + name.to_s)
-    valid = error.present?
+  def badge(value)
+    r "<span class=\"badge\">#{value}</span>"
+  end
 
-    options[:group_class]
-    label_content = helper.label name, class: "col-sm-2 control-label" do
+  def group_with_errors(object, name, helper, options = {}, &block)
+    layout = options.delete(:layout) || 'horizontal'
+    if layout == 'horizontal'
+      group_by_horizontal(object, name, helper, options, &block)
+    else
+      group_by_normal(object, name, helper, options, &block)
+    end
+  end
+
+  def group_by_horizontal(object, name, helper, options = {}, &block)
+    # error = object.errors[name]
+    # error_name = t('attributes.' + name.to_s)
+    # valid = error.present?
+    valid = has_errors(object, name)
+    error = error_message(object, name)
+    error_name = t('attributes.' + name.to_s)
+    title = options[:title] || t(name, scope: "attributes")
+
+    if true == options[:required]
+      title << "<span class='required'>*</span>".html_safe
+    end
+
+    label_content = helper.label name, title, class: "col-sm-2 control-label" do
       if valid
         "#{error_name}<div class=\"error-tip\">#{error_name}#{error.join(' ')}</div>"
+      elsif true == options[:required]
+        "#{error_name}<span class='required'>*</span>".html_safe
       else
         "#{error_name}"
       end.html_safe
@@ -46,6 +84,46 @@ module BootstrapHelper
       s "</div>"
     s "</div>"
     nil
+  end
+
+  def group_by_normal(object, name, helper, options = {}, &block)
+    # error = object.errors[name]
+    # error_name = t('attributes.' + name.to_s)
+    # valid = error.present?
+    valid = has_errors(object, name)
+    error = error_message(object, name)
+    error_name = t('attributes.' + name.to_s)
+    title = options[:title] || t(name, scope: "attributes")
+
+
+    label_content = helper.label name, class: "control-label" do
+      if true == options[:required]
+        "#{title}<span class='required'>*</span>".html_safe
+      else
+        "#{title}"
+      end
+    end
+
+    error_label = "<span class=\"help-block text-left\">#{error_name}#{error.join(' ')}</span>".html_safe
+
+    s "<div class=\"form-group#{" has-error has-feedback" if valid} #{options[:group_class]} \">"
+      s "#{label_content}"
+      group_with_input_group options do
+        s "#{yield}"
+      end
+      s "#{error_label if valid}"
+    s "</div>"
+    nil
+  end
+
+  def group_with_input_group(options = {}, &block)
+    if options[:input_group]
+      s  "<div class=\"input-group\">"
+        yield
+      s  "</div>"
+    else
+      yield
+    end
   end
 
   def group_with_property_errors(object, property, helper, options = {})
@@ -72,6 +150,23 @@ module BootstrapHelper
     nil
   end
 
+  def has_errors(object, name)
+    errors = error_message(object, name)
+    errors.length > 0
+  end
+
+  def error_message(object, name)
+    name = name.to_s
+    keys = object.errors.keys.select {|msg| msg = msg.to_s; msg == name or msg.start_with? "#{name}." }
+
+    keys.map do |key|
+      if key.to_s.split('.').length > 1
+        object.errors.full_messages_for key
+      else
+        object.errors[key]
+      end
+    end
+  end
   # def page_heading(title = nil, &block)
   #   r <<-HTML
   #     <div class="panel-heading">

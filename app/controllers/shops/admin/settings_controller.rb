@@ -16,6 +16,12 @@ class Shops::Admin::SettingsController < Shops::Admin::BaseController
     render nothing: true
   end
 
+  def reset_shop_poster
+    @shop.update_attribute('poster', nil)
+
+    render json: { success: true, msg:'重置海报成功' }
+  end
+
   def upload_shop_poster
     uploader = ImageUploader.new(@shop, :poster)
     uploader.store! params[:file]
@@ -32,14 +38,14 @@ class Shops::Admin::SettingsController < Shops::Admin::BaseController
   def change_shop_theme
     begin
       shop = Shop.find_by(name: params[:shop_id])
-      dir = File.join(Rails.root, Settings.sites.shops.root, shop.name, "theme_#{ params[:theme]}")
+      theme = params[:theme]
+      dir = File.join(Rails.root, Settings.sites.shops.root, shop.name, "theme_#{ theme }")
 
       unless File.exists? dir
-        ShopService.build(params[:shop_id], { theme: params[:theme] })
+        ShopService.build(params[:shop_id], { theme: theme })
       end
         
-      shop.theme = params[:theme]
-      shop.save!
+      shop.update_attribute('theme', theme)
 
       expire_page shop_site_path(@shop.name)
       

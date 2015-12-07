@@ -1,4 +1,6 @@
 Rails.application.configure do
+  config.middleware.insert_after Rack::Cors, ActionDispatch::Static, File.join(Rails.root, 'public/deploy')
+
   # Settings specified here will take precedence over those in config/application.rb.
 
   # Code is not reloaded between requests.
@@ -14,7 +16,7 @@ Rails.application.configure do
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
   # TODO: 简单修复这个缓存问题，未来，我们将深入缓存机制解决问题
-  config.action_view.cache_template_loading = false
+  # config.action_view.cache_template_loading = true
   # Enable Rack::Cache to put a simple HTTP cache in front of your application
   # Add `rack-cache` to your Gemfile before enabling this.
   # For large-scale production use, consider using a caching reverse proxy like
@@ -35,7 +37,6 @@ Rails.application.configure do
   # Asset digests allow you to set far-future HTTP expiration dates on all assets,
   # yet still be able to expire them through the digest params.
   config.assets.digest = true
-
   # `config.assets.precompile` and `config.assets.version` have moved to config/initializers/assets.rb
 
   # Specifies the header that your server uses for sending files.
@@ -56,7 +57,16 @@ Rails.application.configure do
   # config.logger = ActiveSupport::TaggedLogging.new(SyslogLogger.new)
 
   # Use a different cache store in production.
-  # config.cache_store = :mem_cache_store
+  config.cache_store = :memory_store, { size: 128.megabytes }
+
+  # redis_config = YAML.load(ERB.new(File.read("#{Rails.root}/config/redis.yml")).result)[Rails.env]
+
+  # config.cache_store = :redis_store, { :host => redis_config["host"],
+  #                                      :port => redis_config["port"],
+  #                                      :db => redis_config["db"] || 0 ,
+  #                                      :password => redis_config["password"],
+  #                                      :namespace => "cache",
+  #                                      :expires_in => 90.minutes }
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.action_controller.asset_host = 'http://assets.example.com'
@@ -78,5 +88,6 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
+  config.middleware.use Rack::Attack if ENV['ANTI_ATTACK']
   GA.tracker = "UA-64856774-1"
 end

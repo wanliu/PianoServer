@@ -86,8 +86,9 @@
   </head>
 
   <body class="<%= yield :module %>">
-
-    <%= yield %>
+    <div class="main-container">
+      <%= yield %>
+    </div>
 
     <script type="text/javascript">
       <% unless Rails.env.production? %>

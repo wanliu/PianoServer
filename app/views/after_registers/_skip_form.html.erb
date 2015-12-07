@@ -1,0 +1,9 @@
+<%= form_tag after_register_path(@user_type, step: 'skip'), method: :put, class: 'skip-form' do %>
+<% end %>
+<script type="text/javascript">
+  $(".skip").click(function(e){
+  e.preventDefault();
+
+  $('.skip-form').submit();
+});
+</script>

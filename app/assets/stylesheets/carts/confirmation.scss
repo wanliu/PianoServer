@@ -1,0 +1,30 @@
+.delivery-addresses {
+  padding-bottom: 10px;
+
+  .delivery-address {
+    border: 1px solid #ddd;
+    margin: 5px;
+    padding: 5px;
+    float: left;
+    // width: 23%;
+    // height: 73px;
+    cursor: pointer;
+
+    &.active {
+      border: 1px solid #c00;
+    }
+
+    .title {
+      border-bottom: 1px solid #ddd;
+      font-size: 16px;
+    }
+  }
+
+  a.add-another-location, a.manage-locations {
+    margin: 0 10px;
+  }
+
+  .add-new-location {
+    margin: 20px 0;
+  }
+}

@@ -1,0 +1,60 @@
+.orders, .order {
+  margin-top: 10px;
+
+  .orders-tab {
+    height: 41px;
+    margin-bottom: 20px;
+
+    &.buyer-orders li.active a {
+      background-color: rgba(0, 0, 0, 0);
+      background-image: asset-url('bj.jpg');
+    }
+  }
+
+  .empty-orders {
+    margin: 50px 0;
+    font-size: 20px;
+  }
+
+  ul.order-items.list-group {
+    height: auto;
+
+    .order-item {
+      cursor: auto;
+
+      .avatar {
+        img {
+          width: 80px;
+          height: 80px;
+        }
+      }
+
+      .title {
+        width: 200px;
+      }
+
+      .properties {
+        width: 172px;
+      }
+
+      .price {
+        width: 120px;
+        font-weight: 700;
+      }
+
+      .quantity {
+        width: 120px;
+      }
+
+      .subtotal {
+        color: #f40;
+        width: 120px;
+        font-weight: 700;
+      }
+    }
+  }
+}
+
+.add-to-cart, .buy-now, .add-to-cart-bottom {
+  cursor: pointer;
+}

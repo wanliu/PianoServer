@@ -32,6 +32,7 @@ module Select2Helper
 
         $('[select2-id="#{obj_id}"]').select2({
             theme: "bootstrap",
+            placeholder: '选择',
             ajax: {
               url: "#{url}"
             }

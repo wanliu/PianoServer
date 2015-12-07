@@ -1,0 +1,24 @@
+<% content_for :navbar_title do %>
+  完成
+<% end %>
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="page-header hidden-xs">
+        <h1>快速开店<small> 完成</small></h1>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <% if @job.status == "done" %>
+      <div class="jumbotron col-sm-12">
+        <h1>恭喜你商店已创建成功</h1>
+        <p>已经成功导入 <%= badge @created.count %> 件商品</p>
+        <p><%= link_to "进入商店", shop_site_path(@shop.name), class: "btn btn-primary btn-lg" %> <%= link_to "首页",  root_path, class: "btn btn-default btn-lg" %></p>
+      </div>
+    <% else %>
+      <%= render "waiting" %>
+    <% end %>
+  </div>
+</div>
