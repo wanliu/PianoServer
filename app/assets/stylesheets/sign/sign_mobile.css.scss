@@ -4,6 +4,9 @@ input:-webkit-autofill {
 }
 
 body.sign-mobile{
+  min-height: 558px;
+}
+body.sign-mobile .main-container{
   padding: 0;
   background: #fff;
   &.login .back-btn{
