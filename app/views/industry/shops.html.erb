@@ -23,90 +23,89 @@
           <small>所在区域 <%= @current_region.title %> 商店</small>
         </h1>
       </div>
-
-      <div class="panel no-padding">
-        <div class="panel-heading">
-          <div class="row">
-      <!--       <div class="col-xs-6 col-sm-6">
-              <%#= select "current_region", "region", options_from_collection_for_select(@regions, 'id', 'title'), {},class: 'form-control' %>
-            </div>
-       -->
-            <div class="col-xs-12 col-sm-6">
-              <div class="btn-group btn-group-justified">
-                <% if @next_region.present? %>
-                    <%= link_to shops_industry_path(@industry.name, brand_id: @brand, category_id: @category, region_id: @next_region), class: 'btn btn-default' do %>
-                      <%=icon :'arrow-down' %> 下级区域<%= @next_region.title %>
+      <%= form_tag shops_industry_path(@industry.name), class: 'shops_form' do %>
+        <%= hidden_field_tag "category_id", @category.id, class: 'category_id' %>
+        <%= hidden_field_tag "region_id", @region.id, class: 'region_id' %>
+        <div class="panel no-padding">
+          <div class="panel-heading">
+            <div class="row">
+              <div class="col-xs-12 col-sm-6">
+                <div class="btn-group btn-group-justified">
+                  <% if @next_region.present? %>
+                      <%= link_to shops_industry_path(@industry.name, brand_id: @brand, category_id: @category, region_id: @next_region), class: 'btn btn-default' do %>
+                        <%=icon :'arrow-down' %> 下级区域<%= @next_region.title %>
+                      <% end %>
+                  <% else %>
+                    <%= link_to_void class: 'btn btn-default', disabled: true do %>
+                      <%#=icon :'arrow-down' %> 本地区域<%= @current_region.title %>
                     <% end %>
-                <% else %>
-                  <%= link_to_void class: 'btn btn-default', disabled: true do %>
-                    <%#=icon :'arrow-down' %> 本地区域<%= @current_region.title %>
                   <% end %>
-                <% end %>
 
 
-                <% if @previous_region.present? %>
-                    <%= link_to shops_industry_path(@industry.name, brand_id: @brand, category_id: @category, region_id: @previous_region), class: 'btn btn-default'  do %>
-                      <%=icon :'arrow-up' %> 上级区域<%= @previous_region.title %>
+                  <% if @previous_region.present? %>
+                      <%= link_to shops_industry_path(@industry.name, brand_id: @brand, category_id: @category, region_id: @previous_region), class: 'btn btn-default'  do %>
+                        <%=icon :'arrow-up' %> 上级区域<%= @previous_region.title %>
+                      <% end %>
+                  <% else %>
+                    <%= link_to_void class: 'btn btn-default', disabled: true do %>
+                      <%#=icon :'arrow-down' %> 顶级区域<%= @current_region.title %>
                     <% end %>
-                <% else %>
-                  <%= link_to_void class: 'btn btn-default', disabled: true do %>
-                    <%#=icon :'arrow-down' %> 顶级区域<%= @current_region.title %>
                   <% end %>
-                <% end %>
+                </div>
+              </div>
+
+              <div class="col-xs-12 col-sm-6">
+                <div class="btn-group  btn-group-justified">
+                  <%= link_to categories_industry_path(@industry.name), class: 'btn btn-default category-button' do %>
+                    <%= icon :gift %> 分类(<%= @category.title %>)
+                  <% end %>
+                  <%= link_to_void class: 'btn btn-default brand-button' do %>
+                    品牌 <span class="badge"><%= @brands_ids.count %></span>
+                  <% end %>
+                </div>
               </div>
             </div>
+          </div>
+        </div>
 
-            <div class="col-xs-12 col-sm-6">
-              <div class="btn-group  btn-group-justified">
-                <%= link_to categories_industry_path(@industry.name), class: 'btn btn-default category-button' do %>
-                  <%= icon :gift %> 分类
-                <% end %>
-                <%= link_to_void class: 'btn btn-default brand-button' do %>
-                  品牌 <span class="badge"><%= brands_ids.count %></span>
-                <% end %>
-              </div>
+        <div class="popup popup-left category-list">
+          <div class="panel-heading">
+            <h3><%=image_tag @industry.image.url(:avatar), size: "30x30" %> <%= @region.title %>区域的分类</h3>
+          </div>
+          <%= render partial: "category", collection: @industry.category.children.order(:id), locals: { region: @current_region, disable_brands: true, brand: @brand } %>
+          <nav class="navbar navbar-inverse navbar-fixed-bottom" role="navigation">
+            <div class="container-fluid">
+              <%= link_to_void t(:close, scope: "dialogs"), class: 'btn btn-default navbar-btn close-popup' %>
+              <%#= link_to :select, 'javascript:void', class: 'btn btn-default navbar-btn pull-right' %>
             </div>
-          </div>
+          </nav>
         </div>
-      </div>
 
-      <div class="popup popup-left category-list">
-        <div class="panel-heading">
-          <h3><%=image_tag @industry.image.url(:avatar), size: "30x30" %> <%= @region.title %>区域的分类</h3>
-        </div>
-        <%= render partial: "category", collection: @industry.category.children.order(:id), locals: { region: @current_region, disable_brands: true, brand: @brand } %>
-        <nav class="navbar navbar-inverse navbar-fixed-bottom" role="navigation">
-          <div class="container-fluid">
-            <%= link_to_void t(:close, scope: "dialogs"), class: 'btn btn-default navbar-btn close-popup' %>
-            <%#= link_to :select, 'javascript:void', class: 'btn btn-default navbar-btn pull-right' %>
+        <div class="popup popup-right brand-selectors">
+          <div class="panel-heading">
+            <h3><%=image_tag @industry.image.url(:avatar), size: "30x30" %> <%= @region.title %>区域的品牌</h3>
           </div>
-        </nav>
-      </div>
-
-      <div class="popup popup-right brand-selectors">
-        <div class="panel-heading">
-          <h3><%=image_tag @industry.image.url(:avatar), size: "30x30" %> <%= @region.title %>区域的品牌</h3>
+          <%= render partial: "brands_group", locals: { brands_group: @brands_group, category: @category, region: @current_region, brand_ids: @brands_ids } %>
+          <nav class="navbar navbar-inverse navbar-fixed-bottom" role="navigation">
+            <div class="container-fluid">
+              <%= link_to_void t(:close, scope: "dialogs"), class: 'btn btn-default navbar-btn close-popup' %>
+              <%= link_to_void t(:select, scope: "dialogs"), class: 'btn btn-primary navbar-btn pull-right select-brands' %>
+            </div>
+          </nav>
         </div>
-        <%= render partial: "brands_group", locals: { brands_group: @brands_group, category: @category, region: @current_region } %>
-        <nav class="navbar navbar-inverse navbar-fixed-bottom" role="navigation">
-          <div class="container-fluid">
-            <%= link_to_void t(:close, scope: "dialogs"), class: 'btn btn-default navbar-btn close-popup' %>
-            <%= link_to_void t(:select, scope: "dialogs"), class: 'btn btn-primary navbar-btn pull-right select-brands' %>
-          </div>
-        </nav>
-      </div>
 
-      <% if @shops.present? %>
-      <div class="row shop-list" >
-        <%= render partial: "shop", collection: @shops %>
-      </div>
-      <% else %>
-        <p class="leading text-muted">
-          对不起！此区域暂无有效的供应商! <%= link_to '#' do %> <%=icon :user %> 申请成为供应商 <% end %>
-        </p>
+        <% if @shops.present? %>
+        <div class="row shop-list" >
+          <%= render partial: "shop", collection: @shops %>
+        </div>
+        <% else %>
+          <p class="leading text-muted">
+            对不起！此区域暂无有效的供应商! <%= link_to '#' do %> <%=icon :user %> 申请成为供应商 <% end %>
+          </p>
+        <% end %>
+
+        <%= render "register_distributor" %>
       <% end %>
-
-      <%= render "register_distributor" %>
     </div>
   </div>
 </div>
@@ -216,7 +215,8 @@
       new_url += "#" + location.hash;
     }
 
-    Turbolinks.visit(new_url);
+    $('.shops_form').submit();
+    // Turbolinks.visit(new_url);
   });
 
 
