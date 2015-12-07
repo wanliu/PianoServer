@@ -298,6 +298,7 @@ Rails.application.routes.draw do
       resources :settings do
         collection do
           put "/change_shop_theme", to: "settings#change_shop_theme"
+          put "/reset_shop_poster", to: "settings#reset_shop_poster"
           post "/upload_shop_poster", to: "settings#upload_shop_poster"
         end
       end
