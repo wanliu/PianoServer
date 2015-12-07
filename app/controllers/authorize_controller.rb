@@ -17,7 +17,7 @@ class AuthorizeController < ApplicationController
       sign_in(:user, user)
     end
 
-    redirect_to to_path, turbolinks: false, notice: '微信认证登陆成功'
+    redirect_to to_path(status), turbolinks: false, notice: '微信认证登陆成功'
   end
 
   private
@@ -42,7 +42,7 @@ class AuthorizeController < ApplicationController
     [user, !user.persisted?]
   end
 
-  def to_path(user, status)
+  def to_path(status)
     if status
       after_registers_path
     else
