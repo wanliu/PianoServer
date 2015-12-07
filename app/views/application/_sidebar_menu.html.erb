@@ -23,7 +23,7 @@
 
       menu.insertSection('profile', path, 'completion', '完善店铺信息', {iconClass: 'glyphicon glyphicon-edit' })
     <% elsif current_user.user_type == 'consumer' %>
-      var path = '<%= after_register_path %>';
+      var path = '<%= after_registers_path %>';
       menu.insertSection('profile', path, 'completion', '升级企业用户', {iconClass: 'glyphicon glyphicon-edit' })
     <% end %>
 
