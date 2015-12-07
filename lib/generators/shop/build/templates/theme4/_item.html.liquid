@@ -4,15 +4,14 @@
       <div class="promotion-image-wrap">
         {{ item.cover_url | image_tag: class: 'promotion-image' }}
       </div>
-      <p class="promotion-title">
-        {{ item.title }}
-      </p>
-
-      <div class="price-board  clearfix" >
-        <a class="snap-up" href="javascript:void(0);"></a>
-        <div class="prices">
-          <span class="disount-price">￥{{ item.price }}</span>
-          <span class="origin-price"><s>￥{{ item.public_price }}</s></span>
+      <div class="primotion-title-wrap">
+        <p class="promotion-title">
+          {{ item.title }}
+        </p>
+        <div class="price-board  clearfix" >
+          <div class="prices text-center">
+            <span class="disount-price">RMB : {{ item.price }}</span>
+          </div>
         </div>
       </div>
     </a>

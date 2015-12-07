@@ -5,32 +5,34 @@
   <div class="row">
     <div class="cate-items-list clearfix col-xs-12 col-sm-12 col-md-12 col-lg-12">
       {% include "header" %}
-      <div class="title ">
-        <span>本店经营系列</span>
-      </div>
+
 
       {% paginate shop_categories by 12 %}
+
         <div class="shop-categories">
+          <div class="">占位符</div>
+          
           <div class="row">
             {% include "category" for paginate.collection %}
           </div>
-        </div>
 
-        <nav class="text-center">
-          <ul class="pagination">
-            {% for part in paginate.parts %}
-              {% if part.is_link %}
-                <li >
-                  {{ part.title | link_to:  part.url }}
-                </li>
-              {% else %}
-                <li class="active">
-                  <span>{{ part.title }}<span class="sr-only">(current)</span></span>
-                </li>
-              {% endif %}
-            {% endfor %}
-          </ul>
-        </nav>
+          <nav class="text-center">
+            <ul class="pagination">
+              {% for part in paginate.parts %}
+                {% if part.is_link %}
+                  <li >
+                    {{ part.title | link_to:  part.url }}
+                  </li>
+                {% else %}
+                  <li class="active">
+                    <span>{{ part.title }}<span class="sr-only">(current)</span></span>
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </nav>
+
+        </div>
       {% endpaginate %}
     </div>
   </div>
