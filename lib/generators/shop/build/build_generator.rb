@@ -58,7 +58,6 @@ class Shop::BuildGenerator < Rails::Generators::NamedBase
     if @theme.nil?
       @theme = 'theme1'
       @shop.update_attribute('theme', @theme)
-      @shop.save
     end
 
     @theme

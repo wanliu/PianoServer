@@ -18,7 +18,7 @@ class Shops::Admin::SettingsController < Shops::Admin::BaseController
 
   def reset_shop_poster
     @shop.update_attribute('poster', nil)
-    @shop.save
+
     render json: { success: true, msg:'重置海报成功' }
   end
 
@@ -46,7 +46,6 @@ class Shops::Admin::SettingsController < Shops::Admin::BaseController
       end
         
       shop.update_attribute('theme', theme)
-      shop.save
 
       expire_page shop_site_path(@shop.name)
       
