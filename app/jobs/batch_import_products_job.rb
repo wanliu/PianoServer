@@ -19,6 +19,9 @@ class BatchImportProductsJob < ActiveJob::Base
     categories_map = {}
     categories.each do |category_attrs|
       category_attrs = ActionController::Parameters.new(category_attrs.merge(status: true, category: category_attrs["id"]))
+      logger.info "#{shop.inspect}"
+      logger.info "#{shop.shop_category}"
+
       category = shop.shop_category.children
         .where("data @> :data", data: {cateogry: category_attrs["id"]}.to_json)
         .first_or_create(category_attrs.permit("title", "image", "description", :status, :category))
