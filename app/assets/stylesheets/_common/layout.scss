@@ -33,9 +33,10 @@ body.chat footer{
   bottom: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  width: 200px;
+  width: 240px;
   background: #E32929;
-  left: -200px;
+  font-weight: 700;
+  left: -240px;
   transition: all $transition-time;
   -webkit-transition: all $transition-time;
 
@@ -53,19 +54,31 @@ body.chat footer{
     color: #FFFFFF;
   }
 
+  .ellipsis-text {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
   .user-info {
     position: relative;
     padding: 10px 15px 10px 75px;
     line-height: 50px;
     color: #FFFFFF;
 
-    .user-avatar {
+    .avatar-box {
       position: absolute;
-      left: 15px;
-      top: 10px;
       width: 50px;
       height: 50px;
       border-radius: 50%;
+      left: 15px;
+      top: 10px;
+      overflow: hidden;
+    }
+
+    .user-avatar {
+      width: 100%;
+      height: 100%;
     }
 
     .username, .shopname {
@@ -76,20 +89,32 @@ body.chat footer{
   }
 
   .nav.menu-sections > li > a {
-    padding-left: 35px;
+    padding-left: 40px;
   }
 
-  .nav > li:hover > a {
+  .nav > li > a:hover {
     background: #BF0D0D;
   }
 
-  .nav > li.active > a {
-    background: #FFD143;
-    color: #E32929;
-
-    &:hover {
+  .nav > li > a.active {
+    &, &:hover {
       background: #FFD143;
+      color: #E32929;
     }
+  }
+
+  .icon-wrap {
+    display: inline-block;
+    width: 24px;
+    text-align: center;
+    margin-right: 5px;
+  }
+
+  .badge {
+    position: absolute;
+    top: 12px;
+    right: 10px;
+    background: #333333;
   }
 }
 
@@ -133,8 +158,8 @@ body.chat footer{
 }
 
 .show-left-bar {
-  transform: translateX(200px);
-  -webkit-transform: translateX(200px);
+  transform: translateX(240px);
+  -webkit-transform: translateX(240px);
 }
 
 

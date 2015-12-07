@@ -119,23 +119,6 @@ module ApplicationHelper
     url = [provider_url, "#{to_query_without_sort(query)}"].join('?')
   end
 
-  # def url_for(options)
-
-  #   pp options
-  #   case options
-  #   when String
-  #     if options.blank? or options == "/"
-  #       "/"
-  #     else
-  #       options + ".html"
-  #     end
-  #   when Hash
-  #     super options.merge({format: 'html'})
-  #   else
-  #     super
-  #   end
-  # end
-
   private
 
   def to_query_without_sort(obj, namespace = nil)

@@ -153,5 +153,5 @@
     });
   }
 
-  window.UserSocket = UserSocket;
+  window.userSocket = new UserSocket();
 })();

@@ -16,7 +16,7 @@
       <%= render "industry", collection: Industry.all %>
     </div>
   </div>
-  <%= render partial: "action_buttons", locals: { prompt: '(选择行业)' }, cache: true %>
+  <%= render partial: "action_buttons", locals: { prompt: '(选择行业)', next_url: after_register_path(@user_type, step: 'industry') }, cache: true %>
   <% end %>
 
   <%= render "skip_form" %>

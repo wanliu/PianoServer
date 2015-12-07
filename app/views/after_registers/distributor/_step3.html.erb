@@ -9,7 +9,7 @@
       </div>
     </div>
   </div>
-  <%= form_tag after_register_path(:distributor, step: :category) do %>
+  <%= form_tag after_register_path(:distributor, step: :category), class: 'category_brand_form', method: :put do %>
   <%= panel class: "no-padding category-brand-selector" do %>
     <div class="panel-heading">
       <h4><%= @industry.title %></h4>
@@ -20,7 +20,7 @@
     <% end %>
   <% end %>
 
-  <%= render partial: "action_buttons", locals: { disabled: true, next_url: after_register_path(:distributor, step: :category) }, cache: true %>
+  <%= render partial: "action_buttons", locals: { disabled: true, form: '.category_brand_form' }, cache: true %>
   <% end %>
 
   <%= render "skip_form" %>

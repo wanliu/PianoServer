@@ -11,7 +11,8 @@
   </div>
   <div class="row">
     <div class="col-sm-12">
-    <%= form_for @shop, url: after_register_path(:distributor, step: :product), method: :put, html: { class: 'products_form' } do |f| %>
+
+    <%= form_for @shop, url: after_register_path(:distributor, step: :product), method: :put do |f| %>
       <% @select_params.each do |k, values| %>
         <% values.each do |value| %>
           <%= hidden_field_tag "select[#{k}][]", value %>
@@ -19,13 +20,13 @@
       <% end %>
       <div class="table-detail">
       <% if @job.status == "done" %>
-        <%= render partial: "after_registers/distributor/products_group", object: @products_group %>
+        <%= render partial: "after_registers/distributor/products_group", object: @products_group, formats: [ "mobile" ] %>
       <% else %>
         <%= render "waiting" %>
       <% end %>
       </div>
 
-      <%= render partial: "action_buttons", locals: { disabled: false, form: '.products_form' }, cache: true %>
+      <%= render partial: "action_buttons", locals: { disabled: false }, cache: true %>
     <% end %>
     <%= render "skip_form" %>
     </div>

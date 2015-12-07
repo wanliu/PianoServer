@@ -124,6 +124,7 @@
         }
       }).done(function (data, xhr, status) {
         $subTotal.text(data.sub_total);
+        $('.cart-item-count').text(data.ccount);
 
         if (!reflect) $alert.hide();
       }).fail(function (data, xhr, status) {
