@@ -1,9 +1,9 @@
 <div class='cart col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1'>
-  <div class="page-header col-sm-12 ">
+  <div class="page-header">
     <h1>购物车 <small>清单</small></h1>
   </div>
 
-  <div class="col-sm-12">
+  <div class='no-padding'>
     <% if current_cart.items.blank? %>
       <h2>你的购物车是空的</h2>
     <% else %>
@@ -13,11 +13,6 @@
           <%= f.hidden_field :supplier_id, value: supplier.id %>
           <div class="panel panel-default">
             <div class="panel-heading">
-              <div class="btn-group pull-right">
-                <%#= link_to '#', class: 'btn btn-link' do %>
-                  <%= caret %>
-                <%# end %>
-              </div>
               <span>
                 <input type='checkbox' class='select-all' data-supplier-id='<%= supplier.id %>' checked='checked' />全选
               </span>
@@ -25,7 +20,7 @@
               <%= link_to shop_site_path(supplier.name) do %>
                 <%= supplier.title %> 
               <% end %>
-              ( <%= items.count %> 件商品)
+              ( <%= items.count %> 种商品)
             </div>
             <ul class="list-group cart-item-details">
               <%= render partial: "cart_item", collection: items.sort_by(&:id), as: :item, locals: { supplier: supplier, f: f } %>
@@ -99,7 +94,7 @@
       var cartItemId = $(quantityInput).parents('.cart-item').data('cartItemId');
       var quantity = $(quantityInput).val();
 
-      var $subTotal = $(quantityInput).parents('.quantity').siblings('.subtotal');
+      var $subTotal = $(quantityInput).parents('.cart-item').find('.subtotal');
       var $btnMinus = $(quantityInput).parents('.quantity').find('.btn-minus span');
 
       var $alert = $(quantityInput).parents('.input-group').siblings('.alert');
