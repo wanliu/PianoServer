@@ -100,6 +100,7 @@ $ ()->
         $divider.before(html)
 
       $('.cart-item-count').text(data.items_count)
+      $(document).trigger('cart_quantity_changed', [ quantity ])
     )
 
     promoise.fail((data, status, xhr) ->

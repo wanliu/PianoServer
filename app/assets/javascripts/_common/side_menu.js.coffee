@@ -222,6 +222,9 @@ class @SideMenu
       @isVisible = false
       @element.hide()
 
+  updateCartQuantity: (diff) ->
+    @updateGroupQuantity('cart', diff)
+
   destroy: () ->
     @element.remove()
 
