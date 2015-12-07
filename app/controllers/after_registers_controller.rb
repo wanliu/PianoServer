@@ -63,7 +63,7 @@ class AfterRegistersController < ApplicationController
   end
 
   def reset
-    current_user.status.destroy
+    current_user.status.try(:destroy)
     redirect_to after_registers_path
   end
 
