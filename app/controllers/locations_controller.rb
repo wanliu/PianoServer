@@ -25,10 +25,6 @@ class LocationsController < ApplicationController
 
     respond_to do |format|
       if @location.save
-        # render json: @location, status: :created
-        #@intention = Intention.find(@location.intention_id)
-        # @intention.delivery_location_id = @location.id
-        #@intention.save
         format.json { render :show }
         format.html do
           flash[:notice] = "收货地址创建成功"
@@ -36,7 +32,13 @@ class LocationsController < ApplicationController
           redirect_to direction
         end
       else
-        format.json { render :new, formats: :html, layout: false, status: :unprocessable_entity }
+        format.json { 
+          render partial: 'locations/form', 
+                 locals: { location: @location },
+                 formats: :html,
+                 layout: false,
+                 status: :unprocessable_entity }
+
         format.html { render :new }
       end
     end

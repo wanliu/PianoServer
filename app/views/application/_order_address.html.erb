@@ -84,7 +84,8 @@
     });
 
     q.fail(function (data, status, xhr) {
-      // debugger;
+      $('.add-new-location').html(data.responseText);
+      $('.add-new-location .city-group').china_city();
     })
   });
 
