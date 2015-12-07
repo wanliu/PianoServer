@@ -41,9 +41,11 @@
         menu.insertSection('shop', route, 'shop-category', title, { iconClass: 'glyphicon glyphicon-th-list' });
       <% end %>
 
-
       route = '<%= shop_admin_items_path(current_user.join_shop.name) %>';
       menu.insertSection('shop', route, 'goods', '商品', { iconClass: 'glyphicon glyphicon-list-alt'});
+
+      route = '<%= shop_admin_settings_path(current_user.join_shop.name) %>';
+      menu.insertSection('shop', route, 'settings', '设置', { iconClass: 'glyphicon glyphicon-cog' });
     <% end %>
   <% end %>
 

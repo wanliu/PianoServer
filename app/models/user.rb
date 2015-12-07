@@ -22,8 +22,6 @@ class User < ActiveRecord::Base
   has_many :chats, foreign_key: 'owner_id'
   has_many :locations
 
-  has_one :cart
-
   has_many :followers, as: :followable, class_name: 'Follow'
   has_many :followables, as: :follower, class_name: 'Follow'
 
@@ -46,7 +44,7 @@ class User < ActiveRecord::Base
     return found.nil? ? true : found.provider == 'import'
   }
 
-  mount_uploader :image, ImageUploader
+  mount_uploader :image, AvatarUploader
   enum sex: {'保密' => 0, '男' => 1, '女' => 2 }
   store_accessor :data,
                  :weixin_openid, :weixin_privilege, :language, :city, :province, :country

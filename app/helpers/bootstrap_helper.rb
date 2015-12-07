@@ -60,7 +60,7 @@ module BootstrapHelper
     valid = has_errors(object, name)
     error = error_message(object, name)
     error_name = t('attributes.' + name.to_s)
-    title = options[:title]
+    title = options[:title] || t(name, scope: "attributes")
 
     if true == options[:required]
       title << "<span class='required'>*</span>".html_safe
@@ -93,7 +93,7 @@ module BootstrapHelper
     valid = has_errors(object, name)
     error = error_message(object, name)
     error_name = t('attributes.' + name.to_s)
-    title = options[:title]
+    title = options[:title] || t(name, scope: "attributes")
 
 
     label_content = helper.label name, class: "control-label" do

@@ -16,7 +16,7 @@
       <div class="page-header hidden-xs">
         <h1>快速开店<small> 商店资料</small></h1>
       </div>
-      <%= form_for @shop, url: after_register_path(@user_type, step: :shop), method: :put, layout: :basic do |f| %>
+      <%= form_for @shop, url: after_register_path(@user_type, step: :shop), method: :put, layout: :basic, html: {class: 'shop_form' } do |f| %>
         <div class="panel panel-default no-padding">
           <div class="panel-heading">
             <div class="panel-title ">店铺信息</div>
@@ -170,7 +170,7 @@
           </div>
         </div>
 
-        <%= render partial: "action_buttons", locals: { disabled: false }, cache: true %>
+        <%= render partial: "action_buttons", locals: { disabled: false, form: '.shop_form' }, cache: true %>
       <% end %>
       <%= render "skip_form" %>
 
