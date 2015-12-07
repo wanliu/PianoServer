@@ -4,18 +4,18 @@ class @SideMenu
     @groups = []
     @isVisible = false
 
-  insertPlainHTML: (fragment) ->
-    @element.append(fragment)
-
-  insertGroup: (name, title, dataOptions = {}) ->
+  insertGroup: (route, name, title, dataOptions = {}) ->
     if name.substring(0, 1) == '/'
       name = name.slice(1)
     name = decodeURIComponent(name)
 
+    if route.substring(0, 1) != '/'
+      route = '/' + route
+
     @groups.push({
       title: title,
       name: name,
-      route: '/' + name,
+      route: route
       routeAnchor: 'group-' + name.replace(/\//g, '-'),
       sections: [],
       dataOptions: dataOptions
@@ -49,10 +49,15 @@ class @SideMenu
       iconStr = @_generateIconElement(dataOptions)
       badgeStr = @_generateBadgeElement(dataOptions)
 
+      if dataOptions.custom_template
+        groupText = """#{dataOptions.custom_template}"""
+      else
+        groupText = """#{iconStr}#{title}"""
+
       if sections.length > 0
         template = """
           <li id="#{routeAnchor}" class="group-item">
-            <span href="javascript:void(0);" class="group-title">#{iconStr}#{title}</span>
+            <a href="#{route}">#{groupText}</a>
             #{badgeStr}
         """
 
@@ -79,13 +84,13 @@ class @SideMenu
         if dataOptions['qrode']
           template = """
             <li id="group-qrode" class="group-item">
-              <a href="javascript:void(0);">#{iconStr}#{title}</a>
+              <a href="javascript:void(0);">#{groupText}</a>
             </li>
           """
         else
           template = """
             <li id="#{routeAnchor}" class="group-item">
-              <a href="#{route}" class="ellipsis-text">#{iconStr}#{title}#{badgeStr}</a>
+              <a href="#{route}" class="ellipsis-text">#{groupText}#{badgeStr}</a>
             </li>
           """
         $(template).appendTo(@element)

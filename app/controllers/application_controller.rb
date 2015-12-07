@@ -58,7 +58,7 @@ class ApplicationController < ActionController::Base
     end
 
     set_meta_tags pusherHost: Settings.pusher.socket_host, pusherPort: Settings.pusher.socket_port,
-                  user: current_anonymous_or_user.as_json(include_methods: :avatar_url, except: [:created_at, :updated_at] ),
+                  user: current_anonymous_or_user.as_json(include_methods: [:avatar_url, :is_done], except: [:created_at, :updated_at] ),
                   debug: Settings.debug,
                   keywords: Settings.app.keywords,
                   description: Settings.app.description
