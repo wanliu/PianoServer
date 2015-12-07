@@ -36,6 +36,8 @@ class IndustryController < ApplicationController
       .where("shops.region_id = ?", @current_region.city_id)
       .group("shops.id")
 
+    @brands_ids = brands_ids
+    pp @brands_ids
     @brands = Brand.with_category(params[:category_id])
     @brands_group = @brands.group_by { |brand| Pinyin.t(brand.title, splitter: '')[0].upcase }.sort {|a,b| a[0]<=>b[0]}
   end
@@ -53,7 +55,7 @@ class IndustryController < ApplicationController
   end
 
   def brands_ids
-    params[:brand_ids].present? ? params[:brand_ids]: [params[:brand_id]]
+    params[:brands_ids].present? ? params[:brands_ids]: [params[:brand_id]]
   end
 
   private
