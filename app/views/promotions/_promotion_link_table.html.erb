@@ -29,7 +29,7 @@
       <% if promotion.saleable? %>
         <% if Settings.dev.feature.cart %>
           <div class="contact-button add-to-cart" data-cartable-type="Promotion" data-cartable-id="<%= promotion.id %>" data-moveable="<%= moveable_target %>">
-            <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>加入购物车
+            <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span><div class="button-text">加入购物车</div>
           </div>
         <% end %>
         <% if Settings.dev.feature.purchase %>
