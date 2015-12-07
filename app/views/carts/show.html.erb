@@ -20,7 +20,7 @@
               <%= link_to shop_site_path(supplier.name) do %>
                 <%= supplier.title %> 
               <% end %>
-              ( <%= items.count %> 种商品)
+              (<%= items.map(&:quantity).reduce(:+) %>件商品)
             </div>
             <ul class="list-group cart-item-details">
               <%= render partial: "cart_item", collection: items.sort_by(&:id), as: :item, locals: { supplier: supplier, f: f } %>
