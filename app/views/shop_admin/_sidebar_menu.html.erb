@@ -25,7 +25,10 @@
     <% if current_user.join_shop %>
       var shopName = '<%= current_user.join_shop.name %>';
 
-      var route = '<%= shop_admin_index_path(current_user.join_shop.name) %>';
+      var route = '<%= shop_site_path(current_user.join_shop.name) %>'
+      menu.insertSection('profile', route, 'own_shop', '我的店铺', { iconClass: 'glyphicon glyphicon-home' });
+
+      route = '<%= shop_admin_index_path(current_user.join_shop.name) %>';
       menu.insertGroup(route, 'shop', '商店', { iconClass: 'glyphicon glyphicon-dashboard' });
 
       route = '<%= shop_admin_profile_path(current_user.join_shop.name) %>';
