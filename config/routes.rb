@@ -74,7 +74,11 @@ Rails.application.routes.draw do
   resources :feedbacks
 
 
-  resources :after_registers, concerns: [:statuable]
+  resources :after_registers, concerns: [:statuable] do
+    collection do
+      get :reset, as: :reset
+    end
+  end
 
   concern :templable do |options|
     resources :templates, options do
