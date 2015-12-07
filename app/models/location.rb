@@ -4,7 +4,7 @@
 class Location < ActiveRecord::Base
   belongs_to :user
 
-  AMOUNT_LIMIT = 5
+  AMOUNT_LIMIT = 4
 
   VALID_PHONE_REGEX = /\A((\d{3,4}-\d{7,8}(-\d+)?)|((\+?86)?1\d{10}))\z/
   VALID_CONTACT_REGEX = /([\u4e00-\u9fa5]|[a-zA-Z0-9_]|[\uFF10-\uFF19])+/
@@ -60,7 +60,7 @@ class Location < ActiveRecord::Base
   def too_many_record
     locations = user.try(:locations) || []
 
-    if locations.length >= AMOUNT_LIMIT
+    if locations.length > AMOUNT_LIMIT
       errors.add(:amount, '已达到上限')
     end
   end
