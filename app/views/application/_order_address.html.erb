@@ -16,11 +16,11 @@
     <div class='divider' style='clear: both'></div>
     <% if current_user.reach_location_limit? %>
       <span class='reach-limit'>地址数量已达上限，请选择地址</span>
-      <%= link_to "管理收货地址", locations_path, class: 'pull-right manage-locations' %>
+      <%= link_to "管理收货地址", locations_path, class: 'pull-right manage-locations', target: "_blank" %>
     <% else %>
       <span class='reach-limit' style='display: none;'>地址数量已达上限，请选择地址</span>
       <%= link_to "添加一个新的收货地址", 'javascript: void(0)', class: 'add-another-location' %>
-      <%= link_to "管理收货地址", locations_path, class: 'pull-right manage-locations' %>
+      <%= link_to "管理收货地址", locations_path, class: 'pull-right manage-locations', target: "_blank" %>
     <% end %>
   <% else %>
     <div class="panel-heading">
@@ -29,7 +29,7 @@
     <div class='divider' style='clear: both; display: none;'></div>
     <span class='reach-limit' style='display: none;'>地址数量已达上限，请选择地址</span>
     <%= link_to "添加一个新的收货地址", 'javascript: void(0)', class: 'add-another-location', style: 'display: none;' %>
-    <%= link_to "管理收货地址", locations_path, class: 'pull-right manage-locations' %>
+    <%= link_to "管理收货地址", locations_path, class: 'pull-right manage-locations', target: "_blank" %>
   <% end %>
   <div class='add-new-location' style='display: <%= delivery_addresses.present? ? "none" : "block" %>'>
     <%= render 'locations/form', locals: { location: current_user.locations.build } %>
