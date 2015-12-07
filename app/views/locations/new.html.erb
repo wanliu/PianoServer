@@ -4,6 +4,12 @@
   <%= render "form", locals: { location: @location } %>
 </div>
 
+<script type="text/javascript">
+  $(document).on('page:load', function() {
+    $('.locations .city-group').china_city();
+  });
+</script>
+
 <% if anonymous? %>
   <script type="text/javascript">
     $('form').on('submit', function(e) {
