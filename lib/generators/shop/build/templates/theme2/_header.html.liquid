@@ -1,11 +1,15 @@
 <div class="brand-board bottom-shadows">
-  <img src="{{ shop.poster }}" class="shop-bgi">
+  {% if shop.poster %}
+    <img src="{{ shop.poster }}" class="shop-bgi">
+  {% else %}
+    <img src="http://wanliu-piano.b0.upaiyun.com/uploads/shop/poster/100159/7578f48e4ffe07c2813a5a89ad9df3f8.png" class="shop-bgi">
+  {% endif %}
   <div class='shop-info'>
     <div class="media">
       <div class="shop-logo-wrapper">
         <img src="{{ shop.avatar_url }}" class="shop-logo" alt="{{ shop.name }}" />
       </div>
-      <div class='name-address'>
+      <div class='name-address media-middle'>
         <p class='name'>{{ shop.title }}</p>
         <p class='address'>{{ shop.address }}</p>
       </div>

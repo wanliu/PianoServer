@@ -154,7 +154,7 @@ zh-CN:
         separator: .
         significant: false
         strip_insignificant_zeros: false
-        unit: CN¥
+        unit: ¥
     format:
       delimiter: ! ','
       precision: 3
@@ -207,6 +207,7 @@ zh-CN:
   activerecord:
     models:
       item: 商品
+      region: 区域
     attributes:
       user:
         login: "帐户"
@@ -228,6 +229,10 @@ zh-CN:
     image: 图像
     description: 描述
     information: 信息
+    phone: 电话
+    address: 街道
+    location: 地址
+    location_id: 地址
   controllers:
     shops: 商店
     items: 商品
@@ -236,6 +241,7 @@ zh-CN:
     categories: 分类
     profiles: 档案
     dashboard: 面板
+    regions: 城市区域
   actions:
     new: 新增
     new_step2: 创建
@@ -271,3 +277,17 @@ zh-CN:
       notice: 成功
       alert: 警告
       error: 错误
+  shop_types:
+    retail: 零售商
+    distributor: 供应商
+    wholesaler: 代理商
+    manufacturer: 生产商
+  user_types:
+    consumer: 消费者
+    retail: 零售商
+    distributor: 供应商
+    wholesaler: 代理商
+    manufacturer: 生产商
+  dialogs:
+    close: '关闭'
+    select: '选择'

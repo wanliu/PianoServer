@@ -16,6 +16,12 @@ class Shops::Admin::SettingsController < Shops::Admin::BaseController
     render nothing: true
   end
 
+  def reset_shop_poster
+    @shop.update_attribute('poster', nil)
+
+    render json: { success: true, msg:'重置海报成功' }
+  end
+
   def upload_shop_poster
     uploader = ImageUploader.new(@shop, :poster)
     uploader.store! params[:file]
@@ -40,7 +46,6 @@ class Shops::Admin::SettingsController < Shops::Admin::BaseController
       end
         
       shop.update_attribute('theme', theme)
-      shop.save!
 
       expire_page shop_site_path(@shop.name)
       

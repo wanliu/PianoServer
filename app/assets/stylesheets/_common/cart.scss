@@ -1,0 +1,43 @@
+.cart-item-list {
+  .cart-item-image {
+
+    width: 60px;
+  }
+
+  .more {
+    color: #ccc;
+  }
+
+  .media-body {
+    min-width: 200px;
+
+    .media-heading {
+      text-overflow: ellipsis;
+    }
+
+    p {
+      margin: 0px
+    }
+  }
+}
+
+
+.cart-item-details {
+  .media-object {
+    max-width: 200px;
+    height: auto;
+  }
+
+  .list-group-item:hover {
+    background: lighten(cyan, 46%);
+
+    .item-line-actions {
+      display: block;
+    }
+  }
+
+
+  .item-line-actions {
+    display: none;
+  }
+}

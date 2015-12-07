@@ -49,4 +49,25 @@ class Promotion < ActiveResource::Base
   def shop
     Shop.where(id: shop_id).first
   end
+
+  def deduct_stocks!(operator, options)
+    source = options[:source]
+
+    WanliuLineItem.create(
+      promotion_id: id,
+      line_item_type: source.class.to_s,
+      line_item_id: source.id,
+      quantity: options[:quantity],
+      status: 1)
+  end
+
+  def saleable?(amount=1, props={})
+    unless 'Active' == status
+      yield false, 0 if block_given?
+      return false
+    end
+
+    yield product_inventory >= amount, product_inventory if block_given?
+    product_inventory >= amount
+  end
 end

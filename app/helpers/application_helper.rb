@@ -7,9 +7,15 @@ module ApplicationHelper
   include WindowHelper
   include UploadHelper
   include Select2Helper
+  include SettingsHelper
+  include MinusPlusButtonHelper
 
   def avatar_url(user)
     user.image || identicon_url(user)
+  end
+
+  def default_image(type = :gray)
+    image_path("#{type}_blank.gif")
   end
 
   def identicon_url(user, s = 50)
@@ -32,6 +38,17 @@ module ApplicationHelper
       raw '<li>' + link_to(link) {
             icon :'chevron-left'
           } + '</li>'
+    end
+  end
+
+  def link_to_void(name = nil, html_options = nil, &block)
+    html_options = name if block_given?
+    options = 'javascript:void(0)'
+
+    if block_given?
+      link_to options, html_options, &block
+    else
+      link_to name, options, html_options
     end
   end
 
@@ -71,7 +88,46 @@ module ApplicationHelper
     Bh::Classes::Stack.class_variable_get(:@@stack).clear
   end
 
+  def set_module name
+    content_for :module, name
+  end
+
+  def disable_navbar?
+    content_for(:module) != "after_registers"
+  end
+
+  def phone_link(phone, title = nil, options = {}, &block)
+    title, options = capture(&block), title if block_given?
+    title = phone if title.nil?
+    link_to title, 'tel:' + phone, options
+  end
+
+  def map_url(lat, lng, title, *args)
+    options = args.extract_options! || {}
+    content, src = args
+    query = ::ActiveSupport::OrderedHash.new
+    query = {
+      location:  "#{lat},#{lng}",
+      title: title,
+      content: content || title,
+      output: 'html',
+      src: Settings.app.title,
+      zoom: 15
+    }
+
+    provider_url = "http://api.map.baidu.com/marker"
+    url = [provider_url, "#{to_query_without_sort(query)}"].join('?')
+  end
+
   private
+
+  def to_query_without_sort(obj, namespace = nil)
+    obj.collect do |key, value|
+      unless (value.is_a?(Hash) || value.is_a?(Array)) && value.empty?
+        value.to_query(namespace ? "#{namespace}[#{key}]" : key)
+      end
+    end.compact * '&'
+  end
 
   def user_profile_path(user)
     if user.id < 0

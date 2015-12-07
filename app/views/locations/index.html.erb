@@ -1,0 +1,31 @@
+<div class="locations col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1">
+  <% unless current_user.reach_location_limit? %>
+    <div class='text-danger'>新增收货地址</div>
+    <div class="new-location">
+      <%= render "form", locals: { location: Location.new } %>
+    </div>
+  <% end %>
+
+  <div class="limit-desc">
+    <div class='text-danger'>
+      <% if current_user.reach_location_limit? %>
+        地址数量已达到上限（<%= Location::AMOUNT_LIMIT %> 条），可选择某条进行修改， 或适当删除一些后再添加
+      <% else %>
+          已保存<%= @locations.size %>条，还可以再创建<%= Location::AMOUNT_LIMIT - @locations.size %>条
+      <% end %>
+    </div>
+  </div>
+  <ul class="location-list list-group">
+    <li class='list-head row list-group-item hidden-xs hidde-sm'>
+      <div class='contact col-xs-6 col-sm-6 col-md-2'>联系人</div>
+      <div class='area col-xs-6 col-sm-6 col-md-2'>所在地区</div>
+      <div class='street col-xs-6 col-sm-6 col-md-2'>详细地址</div>
+      <div class='zipcode col-xs-6 col-sm-6 col-md-2'>邮编</div>
+      <div class='phone col-xs-6 col-sm-6 col-md-2'>联系电话</div>
+      <div class='operations col-xs-6 col-sm-6 col-md-2'>操作</div>
+    </li>
+    <% @locations.each do |location| %>
+      <%= render location %>
+    <% end %>
+  </ul>
+</div>

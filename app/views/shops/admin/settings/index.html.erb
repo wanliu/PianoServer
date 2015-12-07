@@ -49,10 +49,39 @@
 
   <section class="shop-poster">
     <h3 class="page-header">上传商店海报</h3>
-    <div id="poster-img-uploader-btn"></div> 
-    <img src="<%= @shop.poster %>" id="shop-poster-img" alt="商店海报">
+    <div class="theme-clear-btn">恢复默认海报</div>
+    <div id="poster-img-uploader-btn"></div>
+    <div class="poster-wrap">
+      <img src="<%= @shop.poster %>" id="shop-poster-img" alt="商店海报">
+    </div>
   </section>
+
+  <h3 class="page-header">商店名片</h3>
+  <div class="row">
+    <%= render partial: "shards/shop_card", object: @shop %>
+  </div>
+
 </div>
+
+<style>
+  #poster-img-uploader-btn{
+    display: inline-block;
+  }
+  .theme-clear-btn{
+    line-height: 34px;
+    width: 105px;
+    text-align: center;
+    background: #080;
+    color: #fff;
+    border-bottom: 1px solid #DDD;
+    margin-right: 5px;
+    display: inline-block;
+    vertical-align: top;
+  }
+  .theme-clear-btn:hover{
+    background-color: #060;
+  }
+</style>
 
 <script type="text/javascript">
 
@@ -79,7 +108,7 @@
 
   $('.theme-btn').click(function(){
     var target = $(this);
-    
+
     if (target.hasClass('active'))  return;
 
     var theme = $(this).data('theme');
@@ -89,15 +118,31 @@
       type:'PUT',
       data:{ theme: theme },
       success: function(data){
-        console.log(data);
         if (data.success) {
           $('.theme-btn').removeClass('active');
           target.addClass('active');
         } else {
           console.log(data.msg);
+          alert('操作失败')
         }
       }
-    }); 
+    });
   });
+
+  $('.theme-clear-btn').click(function(){
+    var url = location.pathname + '/reset_shop_poster';
+    $.ajax({
+      url: url,
+      type:'PUT',
+      success: function(data){
+        if (data.success) {
+          $('#shop-poster-img').attr('src','')
+        } else {
+          console.log(data.msg);
+          alert('操作失败')
+        }
+      }
+    });
+  })
 
 </script>

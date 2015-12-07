@@ -1,0 +1,46 @@
+<div class="panel panel-default orders">
+  <div class="panel-heading">
+    <div>
+      <%= link_to order_path(order) do %>
+        订单号: <%= order.id %>
+      <% end %>
+    </div>
+    <div class='create-time'>
+      创建时间：<%= order.created_at.strftime("%Y年%m月%d日 %H:%M:%S") %>
+    </div>
+    <div>店铺：<%= link_to order.supplier.title, shop_site_path(order.supplier.name) %> (<%= order.items.map(&:quantity).reduce(:+) %>件商品)</div>
+    <div>运送地址：<%= order.delivery_address %></div>
+  </div>
+  <ul class="list-group order-items">
+    <%= render partial: "order_item", collection: order.items, as: :item, locals: { supplier: order.supplier } %>
+  </ul>
+  <div class="panel-footer">
+    <h4>总计：
+      <span><%= order.total %>元</span>
+      <% unless order.finish? %>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#finish-order-<%= order.id %>">
+          确认收货
+        </button>
+
+        <div class="modal fade" id="finish-order-<%= order.id %>" tabindex="-1" role="dialog" aria-labelledby="myOrderLable<%= order.id %>">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myOrderLable<%= order.id %>">确认收货</h4>
+              </div>
+              <div class="modal-body">
+                订单号: <%= order.id %> 确认收货?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <%= link_to "确认收货", order_path(order, "order[status]" => "finish"), method: :patch, class: 'btn btn-primary' %>
+                <!-- <button type="button" class="btn btn-primary"></button> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </h4>
+  </div>
+</div>

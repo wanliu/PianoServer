@@ -1,0 +1,34 @@
+<% content_for :navbar_title do %>
+  快速开店 导入商品清单(4/4)
+<% end %>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="page-header hidden-xs">
+        <h1>快速开店<small> 导入商品清单</small></h1>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+
+    <%= form_for @shop, url: after_register_path(:distributor, step: :product), method: :put do |f| %>
+      <% @select_params.each do |k, values| %>
+        <% values.each do |value| %>
+          <%= hidden_field_tag "select[#{k}][]", value %>
+        <% end %>
+      <% end %>
+      <div class="table-detail">
+      <% if @job.status == "done" %>
+        <%= render partial: "after_registers/distributor/products_group", object: @products_group, formats: [ "mobile" ] %>
+      <% else %>
+        <%= render "waiting" %>
+      <% end %>
+      </div>
+
+      <%= render partial: "action_buttons", locals: { disabled: false }, cache: true %>
+    <% end %>
+    <%= render "skip_form" %>
+    </div>
+  </div>
+</div>

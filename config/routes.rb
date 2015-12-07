@@ -1,4 +1,44 @@
 Rails.application.routes.draw do
+
+  resources :order_items, except: [:new, :edit]
+  concern :messable do
+    resources :messages
+  end
+
+  concern :chatable do
+    resources :chats
+  end
+
+  concern :statuable do
+    member do
+      get :status
+    end
+  end
+
+  resources :industry, only: [ :show ] do
+    member do
+      get :brands, as: :brands
+      get "shops", to: "industry#shops", as: :shops
+      post "shops", to: "industry#shops"
+      get "region/:region_id",  to: "industry#region", as: :region
+      get "categories", to: "industry#categories", as: :categories
+    end
+  end
+  resources :regions, only: [ :index, :update ] do
+    collection do
+      post :set, as: :set
+      post :retrive, as: :retrive
+    end
+  end
+
+  #   post "/", to: "carts#add"
+  #   delete "/:id", to: "carts#remove"
+
+  #   post "commit", to: "carts#commit"
+  # end
+
+  resource :cart
+
   mount Bootsy::Engine => '/bootsy', as: 'bootsy'
   resources :subjects, except: [:index, :new, :edit] do
     member do
@@ -6,7 +46,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :brands, only: [ :index, :update ]
+  resources :brands, only: [ :index, :update ] do
+    collection do
+      get :filter
+    end
+  end
 
   namespace :authorize do
     get :weixin
@@ -29,13 +73,8 @@ Rails.application.routes.draw do
 
   resources :feedbacks
 
-  concern :messable do
-    resources :messages
-  end
 
-  concern :chatable do
-    resources :chats
-  end
+  resources :after_registers, concerns: [:statuable]
 
   concern :templable do |options|
     resources :templates, options do
@@ -65,6 +104,7 @@ Rails.application.routes.draw do
   match "admins", to: "admins/dashboards#index", via: :get
 
   namespace :admins do
+    resources :settings, path: 'settings/key', only: [:show, :update], constraints: {id: /[\S]+/}
     resources :dashboards
     resources :accounts, except: [:new, :edit] do
       collection do
@@ -72,6 +112,7 @@ Rails.application.routes.draw do
         put 'import/:wanliu_user_id', to: 'accounts#import', as: :import
       end
     end
+    resources :regions
     resources :promotions
     resources :subjects do
       concerns :templable, templable_type: 'Subject', parent_type: 'Subject'
@@ -81,9 +122,19 @@ Rails.application.routes.draw do
     resources :feedbacks
     resources :attachments
     resources :industries do
+      concerns :templable, templable_type: 'Industry', parent_type: 'Industry'
+
       collection do
+        post :upload, as: :upload
+
+        get "categories", to: "industries#categories", as: :categories
+
         post :sync_es_brands
         post :sync_es_categories
+      end
+
+      member do
+        post :upload, as: :upload
       end
 
       resources :categories do
@@ -125,7 +176,7 @@ Rails.application.routes.draw do
   end
 
   namespace :api do
-
+    resources :user, only: [:index]
     get "suggestion", :to => "suggestion#index"
 
     # resources :business, concerns: :roomable do
@@ -145,21 +196,32 @@ Rails.application.routes.draw do
 
   resources :items, concerns: [ :chatable ]
 
+  resources :cart_items, only: [:index, :show, :create, :update, :destroy]
+
   resources :categories
   resources :units, only: [:index, :show]
 
   resources :chats
-  resources :orders do
+  resources :intentions do
     member do
-      get 'status', to: "orders#status", as: :status_of
-      get 'diff', to: "orders#diff", as: :diff
-      post 'accept', to: "orders#accept", as: :accept
-      post 'ensure', to: "orders#ensure", as: :ensure
-      post 'cancel', to: "orders#cancel", as: :cancel
-      post 'reject', to: "orders#reject", as: :reject
-      put 'set_address', to: "orders#set_address"
-      get 'items', to: 'orders#items'
-      put 'add_item', to: 'orders#add_item'
+      get 'status', to: "intentions#status", as: :status_of
+      get 'diff', to: "intentions#diff", as: :diff
+      post 'accept', to: "intentions#accept", as: :accept
+      post 'ensure', to: "intentions#ensure", as: :ensure
+      post 'cancel', to: "intentions#cancel", as: :cancel
+      post 'reject', to: "intentions#reject", as: :reject
+      put 'set_address', to: "intentions#set_address"
+      get 'items', to: 'intentions#items'
+      put 'add_item', to: 'intentions#add_item'
+    end
+  end
+
+  resources :orders, only: [:index, :show, :destroy, :create, :update] do
+    collection do
+      post "confirmation"
+      post "buy_now_create"
+      post "buy_now_confirm"
+      get "history"
     end
   end
 
@@ -176,10 +238,14 @@ Rails.application.routes.draw do
 
   match ':shop_name', :to => 'shops#show_by_name', constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ }, via: [ :get ], as: :shop_site
 
+  match "create_shop", to: "shops#create", via: [:post], as: :create_shop
+  match "update_name", to: "shops#update_name", via: [:put], as: :update_shop
+
   resources :shops, path: '/', only: [], constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do
     member do
       get "/about", to: "shops#about"
     end
+
 
     resources :shop_categories, path: "categories"
     resources :items, key: :sid
@@ -224,9 +290,22 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :orders, except: [:edit, :new, :create] do
+        collection do
+          get 'history'
+        end
+      end
+
+      resources :purchase_orders, only: [:index, :show, :destroy, :update] do
+        collection do
+          get "history"
+        end
+      end
+
       resources :settings do
         collection do
           put "/change_shop_theme", to: "settings#change_shop_theme"
+          put "/reset_shop_poster", to: "settings#reset_shop_poster"
           post "/upload_shop_poster", to: "settings#upload_shop_poster"
         end
       end

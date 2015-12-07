@@ -1,0 +1,105 @@
+<!--   <%# render_table products_group do |group, category, brand, product, index| %>
+    <%#= hidden_field_tag "products[#{product['id']}][id]", product["id"] %>
+    <%#= check_box_tag "products[#{product['id']}][check]", "1", { checked: true }, {class: "product-check hide"} %>
+    <%#= label_tag "products_#{product['id']}_check", class: 'list-group-item product-link truncate' do %>
+      <span class="product-mark pull-right" ><%#= icon :ok %></span>
+      <%#= image_tag icon_url(product["avatar"]), class: "image-thumbnail", size: "32x32" %>
+      <span class="product-title ">
+        <%#= product["name"] %>
+      </span>
+    <%# end %>
+  <%# end %> -->
+  <%# pp products_group %>
+  <% products_group.each do |top| %>
+    <div class="group-row">
+      <!-- <span class="top-name" ><%= top["title"] %></span> -->
+      <%= hidden_field_tag "categories[][id]", top["id"] %>
+      <%= hidden_field_tag "categories[][title]", top["title"] %>
+      <%= render partial: "after_registers/distributor/group_category", collection: top["categories"], locals: {top: top } %>
+    </div>
+  <% end %>
+
+<script type="text/javascript">
+  if ($(".table-detail .product-check:checked").length > 0 ) {
+    $('.next').attr('disabled', false)
+  } else {
+    $('.next').attr('disabled', true)
+  }
+
+  $(".table-detail .product-check:checked").on('change', function(e) {
+
+
+    $target = $(e.target);
+
+    $target.parents(".group_brand").find(".selected").text($target.parents(".list-group").find(":checked").length);
+    $target.parents(".group_category").find(">.list-group-item .selected").text($target.parents(".group_category").find(":checked").length);
+    $(".table-detail").trigger('change:selected');
+  });
+
+  $(".table-detail").on('change:selected', function(e) {
+    if ($(".table-detail .product-check:checked").length > 0 ) {
+      $('.next').attr('disabled', false)
+    } else {
+      $('.next').attr('disabled', true)
+    }
+  });
+
+
+  $(".table-detail .category-mark").click(function(e) {
+    var open = $(e.currentTarget).data("open") == undefined ? false : $(e.currentTarget).data("open");
+    var $brands =  $(e.target).parents(".list-group-item").next();
+    e.preventDefault();
+    e.stopPropagation();
+
+    $brands.find("[type=\"checkbox\"]").each(function(i, elem) {
+      $(elem).prop('checked', open);
+    });
+
+    $brands.find(".brand-mark").each(function(i, elem) {
+      $(elem).css({
+        backgroundColor: open ? '#337ab7' : 'white',
+        color: open ? 'white' : '#337ab7'
+      });
+
+      $(elem).data('open', open)
+    });
+
+
+    $(e.currentTarget).css({
+      backgroundColor: open ? '#337ab7' : 'white',
+      color: open ? 'white' : '#337ab7'
+    });
+
+    $(e.currentTarget).data("open", !open);
+    $target = $(e.target);
+    $(".table-detail").trigger('change:selected');
+    // $target.parents(".group_brand").find(".selected").text($target.parents(".list-group").find(":checked").length);
+    $target.parents(".group_category").find(">.list-group-item .selected").text($target.parents(".group_category").find(":checked").length);
+
+    $target.parents(".group_category").find(".group_brand").each(function(i, elem) {
+      $(elem).find(">.list-group-item .selected").text($(elem).find('.list-group :checked').length);
+    });
+  });
+
+  $(".table-detail .brand-mark").click(function(e) {
+    var open = $(e.currentTarget).data("open") == undefined ? false : $(e.currentTarget).data("open");
+    var $brands =  $(e.target).parents(".list-group-item").next();
+    e.preventDefault();
+    e.stopPropagation();
+
+    $brands.find("[type=\"checkbox\"]").each(function(i, elem) {
+      $(elem).prop('checked', open);
+    });
+
+    $(e.currentTarget).css({
+      backgroundColor: open ? '#337ab7' : 'white',
+      color: open ? 'white' : '#337ab7'
+    });
+
+    $(e.currentTarget).data("open", !open);
+    $target = $(e.target);
+    $(".table-detail").trigger('change:selected');
+    $(e.currentTarget).parent().find(".selected").text($target.parents(".list-group-item").next().find(":checked").length);
+    $target.parents(".group_category").find(">.list-group-item .selected").text($target.parents(".group_category").find(":checked").length);
+  });
+</script>

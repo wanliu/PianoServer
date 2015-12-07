@@ -1,0 +1,3 @@
+$region = $("[data-region=\"<%= @region.id %>\"]")
+$region.find('.glyphicon').toggleClass('glyphicon-eye-close glyphicon-eye-open').effect('highlight');
+$region.parents("form").find("[name=\"region[state]\"]").val("<%= @region.state %>");
