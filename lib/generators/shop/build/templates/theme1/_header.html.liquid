@@ -1,9 +1,9 @@
 <div class="brand-board">
-  {% unless shop.poster %}
+  {% if shop.poster %}
     <img src="{{ shop.poster }}" class="shop-bgi">
   {% else %}
     <img src="http://wanliu-piano.b0.upaiyun.com/uploads/shop/poster/100159/c252149e4b74529fba08a250eb8836bc.jpg" class="shop-bgi">
-  {% endunless %}
+  {% endif %}
   <div class='shop-info'>
     <div class="media">
       <div class="shop-logo-wrapper">

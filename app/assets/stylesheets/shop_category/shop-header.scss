@@ -1,81 +1,82 @@
 
-body.shop .brand-board{
-  padding: 0;
-  height: initial;
-  position: relative;
-  overflow: hidden;
-
-  .shop-bgi{
-    width: 100%;
-    min-height: 100px;
-    @media (max-width: 768px){
-      width: 135%;
-    }
+body.shop{
+  .main-container{
+    padding-bottom: 50px;
   }
+  .brand-board{
+    padding: 0;
+    height: initial;
+    position: relative;
+    overflow: hidden;
 
-  .shop-info{
-    background-color: rgba(0,0,0,.5);
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-
-    .shop-logo-wrapper{
-      display: table-cell;
-      width: 70px;
-      padding: 10px;
-      vertical-align: top;
-      @media (max-width: 484px){
-        padding:0;
-        width: 60px;
+    .shop-bgi{
+      width: 100%;
+      min-height: 100px;
+      @media (max-width: 768px){
+        width: 135%;
       }
     }
 
-    .shop-logo {
-      width: 50px;
-      height: 50px;
-    }
+    .shop-info{
+      background-color: rgba(0,0,0,.5);
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
 
-    .name-address {
-      padding: 10px 0;
-      color: #FFFFFF;
-      max-width: 0;
-      display: table-cell;
-      white-space: nowrap;
-      overflow: hidden;
-
-      @media (max-width: 484px){
-        padding:0;
+      .shop-logo-wrapper{
+        display: table-cell;
+        width: 70px;
+        padding: 10px;
+        vertical-align: top;
+        @media (max-width: 484px){
+          padding:0;
+          width: 60px;
+        }
       }
-      .name,
-      .address{
-        line-height: 24px;
-        margin: 0;
-        overflow: hidden;
-        text-overflow: ellipsis;
+
+      .shop-logo {
+        width: 50px;
+        height: 50px;
+      }
+
+      .name-address {
+        padding: 10px 0;
+        color: #FFFFFF;
+        max-width: 0;
+        display: table-cell;
         white-space: nowrap;
-      }
-    }
-    .attention{
-      background-color: #f60;
-      text-align: center;
-      color: #fff;
-      text-decoration: none;
-      min-width: 50px;
-      padding: 0;
-      width: 1%;
+        overflow: hidden;
 
-      @media (min-width: 484px){
+        @media (max-width: 484px){
+          padding:0;
+        }
+        .name,
+        .address{
+          line-height: 24px;
+          margin: 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+      .attention{
+        background-color: #f60;
+        text-align: center;
+        color: #fff;
+        text-decoration: none;
         min-width: 70px;
-      }
+        padding: 0;
+        width: 1%;
 
-      &:hover {
-        background-color: #f00;
+        @media (min-width: 484px){
+          min-width: 70px;
+        }
+
+        &:hover {
+          background-color: #f00;
+        }
       }
     }
   }
-
-
-
 }
-

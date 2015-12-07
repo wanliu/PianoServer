@@ -1,10 +1,18 @@
 <div class="brand-board">
   <div class="mobile1">
-    <img src="{{ shop.poster }}" class="shop-bgi">
+    {% if shop.poster %}
+      <img src="{{ shop.poster }}" class="shop-bgi">
+    {% else %}
+      <img src="http://wanliu-piano.b0.upaiyun.com/uploads/shop/poster/100159/7578f48e4ffe07c2813a5a89ad9df3f8.png" class="shop-bgi">
+    {% endif %}
   </div>
 
   <div class="mobile">
-    <img src="{{ shop.poster }}" class="shop-bgi">
+    {% if shop.poster %}
+      <img src="{{ shop.poster }}" class="shop-bgi">
+    {% else %}
+      <img src="http://wanliu-piano.b0.upaiyun.com/uploads/shop/poster/100159/7578f48e4ffe07c2813a5a89ad9df3f8.png" class="shop-bgi">
+    {% endif %}
   </div>
 
   <div class='shop-info'>
