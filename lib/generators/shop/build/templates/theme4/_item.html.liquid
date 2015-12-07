@@ -1,0 +1,20 @@
+<div class="col-lg-3 col-md-3 col-sm-4 col-xs-6 cate-item">
+  <div class="promotion" >
+    <a href="{{ item.link_html | shop_link: shop }}" class="item-link-a">
+      <div class="promotion-image-wrap">
+        {{ item.cover_url | image_tag: class: 'promotion-image' }}
+      </div>
+      <p class="promotion-title">
+        {{ item.title }}
+      </p>
+
+      <div class="price-board  clearfix" >
+        <a class="snap-up" href="javascript:void(0);"></a>
+        <div class="prices">
+          <span class="disount-price">￥{{ item.price }}</span>
+          <span class="origin-price"><s>￥{{ item.public_price }}</s></span>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>
