@@ -62,6 +62,11 @@ class AfterRegistersController < ApplicationController
 
   end
 
+  def reset
+    current_user.status.destroy
+    redirect_to after_registers_path
+  end
+
   def consumer_steps
     case @current_user.state
     when "select", nil
