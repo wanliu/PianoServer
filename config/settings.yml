@@ -41,6 +41,7 @@ shop:
   location:
     change_period: 7
   default_theme: theme1
+  default_head_url: http://wanliu-piano.b0.upaiyun.com/uploads/shop/logo/1/20151207.jpg
 dev:
   feature:
     weixin: true

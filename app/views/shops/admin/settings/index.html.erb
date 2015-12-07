@@ -55,6 +55,12 @@
       <img src="<%= @shop.poster %>" id="shop-poster-img" alt="商店海报">
     </div>
   </section>
+
+  <h3 class="page-header">商店名片</h3>
+  <div class="row">
+    <%= render partial: "shards/shop_card", object: @shop %>
+  </div>
+
 </div>
 
 <style>
@@ -102,7 +108,7 @@
 
   $('.theme-btn').click(function(){
     var target = $(this);
-    
+
     if (target.hasClass('active'))  return;
 
     var theme = $(this).data('theme');
@@ -120,7 +126,7 @@
           alert('操作失败')
         }
       }
-    }); 
+    });
   });
 
   $('.theme-clear-btn').click(function(){

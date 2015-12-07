@@ -41,4 +41,20 @@ module ShopsHelper
 
     html.html_safe
   end
+
+  def shop_header_style(shop)
+    background_url = shop.settings["head_url"] || asset_url(Settings.shop.default_head_url)
+    light_png = asset_url("light.png")
+    css = <<-CSS
+      background: url(#{background_url});
+      background: url(#{light_png}) 50%, -moz-linear-gradient(top,  rgba(0,0,0,0) 0%, rgba(0,0,0,0.65) 100%), /* FF3.6-15 */ url(#{background_url});
+      background: url(#{light_png}) 50%,-webkit-linear-gradient(top,  rgba(0,0,0,0) 0%,rgba(0,0,0,0.65) 100%), /* Chrome10-25,Safari5.1-6 */ url(#{background_url});
+      background: url(#{light_png}) 50%, linear-gradient(to bottom,  rgba(0,0,0,0) 0%,rgba(0,0,0,0.65) 100%), url(#{background_url});
+      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#a6000000',GradientType=0 ); /* IE6-9 */
+
+      height: 100px;
+      background-size: 100%;
+      background-position: 50%;
+    CSS
+  end
 end
