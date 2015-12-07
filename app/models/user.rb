@@ -126,6 +126,19 @@ class User < ActiveRecord::Base
     locations.count >= Location::AMOUNT_LIMIT
   end
 
+  def is_done?
+    case user_type
+    when NilClass
+      false
+    when "retail"
+      state == "shop"
+    when "distributor"
+      state == "product"
+    else
+      false
+    end
+  end
+
   private
 
   def generate_authentication_token
