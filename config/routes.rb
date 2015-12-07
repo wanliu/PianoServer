@@ -19,6 +19,7 @@ Rails.application.routes.draw do
     member do
       get :brands, as: :brands
       get "shops", to: "industry#shops", as: :shops
+      post "shops", to: "industry#shops"
       get "region/:region_id",  to: "industry#region", as: :region
       get "categories", to: "industry#categories", as: :categories
     end

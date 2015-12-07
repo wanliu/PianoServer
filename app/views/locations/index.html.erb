@@ -9,7 +9,7 @@
   <div class="limit-desc">
     <div class='text-danger'>
       <% if current_user.reach_location_limit? %>
-        地址数量已达到上限（<%= Location::AMOUNT_LIMIT %> 条），可选择某条进行修改， 或这适当删除一些后再添加
+        地址数量已达到上限（<%= Location::AMOUNT_LIMIT %> 条），可选择某条进行修改， 或适当删除一些后再添加
       <% else %>
           已保存<%= @locations.size %>条，还可以再创建<%= Location::AMOUNT_LIMIT - @locations.size %>条
       <% end %>

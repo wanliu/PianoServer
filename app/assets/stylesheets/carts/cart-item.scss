@@ -84,4 +84,11 @@
   .operations {
     width: 100px;
   }
+
+  .visible-xs-block, .visible-sm-block {
+    .quantity, .operations {
+      padding-left: 24px;
+      margin: 5px 0;
+    }
+  }
 }
