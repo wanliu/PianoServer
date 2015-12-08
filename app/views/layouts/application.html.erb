@@ -107,12 +107,17 @@
       <%= yield %>
       <% case _module %>
       <% when NilClass %>
-        <% cache ["footer", @subject ] do %>
-          <%= render "footer", with: @subject %>
+        <% cache "footer" do %>
+          <%= render "application/footer" %>
         <% end %>
       <% when "shop" %>
         <% cache ["footer", @shop ] do %>
           <%= render "footer", with: @shop %>
+        <% end %>
+      <% else %>
+      <% when "subject" %>
+        <% cache ["footer", @subject ] do %>
+          <%= render "footer", with: @subject %>
         <% end %>
       <% else %>
         <% cache "footer" do %>
