@@ -18,7 +18,7 @@ class AuthorizeController < ApplicationController
 
         # sign_in(:user, user) 在登陆前，竟然强制保存了 user.
         sign_in(:user, user)
-
+        logger.info "redirect_to: #{to_path(status)}, #{status}"
         return redirect_to(to_path(status), turbolinks: false, notice: '微信认证登陆成功')
       rescue RestClient::RequestTimeout => e
         tries -= 1
