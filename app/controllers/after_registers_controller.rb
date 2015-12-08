@@ -48,7 +48,7 @@ class AfterRegistersController < ApplicationController
 
     if status == :save or status == true
       @current_user.build_status state: @step
-      @current_user.save
+      @current_user.save(:validate => false)
       redirect_to after_register_path(@user_type)
     elsif status == :redirect
       redirect_to after_register_path(@user_type, step: @step)
