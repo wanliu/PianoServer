@@ -48,7 +48,7 @@ class AfterRegistersController < ApplicationController
 
     if status == :save or status == true
       @current_user.build_status state: @step
-      @current_user.save
+      @current_user.save(:validate => false)
       redirect_to after_register_path(@user_type)
     elsif status == :redirect
       redirect_to after_register_path(@user_type, step: @step)
@@ -60,6 +60,11 @@ class AfterRegistersController < ApplicationController
       redirect_to after_register_path(@user_type)
     end
 
+  end
+
+  def reset
+    current_user.status.try(:destroy)
+    redirect_to after_registers_path
   end
 
   def consumer_steps
@@ -207,7 +212,6 @@ class AfterRegistersController < ApplicationController
 
   def set_type
     if params[:step] != "select" && @current_user.user_type != params[:id]
-      pp @current_user
       return redirect_to(after_register_path(@current_user.user_type))
     elsif params[:step] == "select"
       @user_type = params[:select]

@@ -24,7 +24,7 @@ class Shop::BuildGenerator < Rails::Generators::NamedBase
       copy_file "#{theme_path}/shops/show.html.liquid",   "#{shop_path}/theme_#{theme_path}/views/shops/show.html.liquid"
       copy_file "#{theme_path}/shop_categories/_shop_category_list.html.liquid", "#{shop_path}/theme_#{theme_path}/views/shop_categories/_shop_category_list.html.liquid"
     rescue
-      raise '复制文件错误'
+      raise
     end
 
     create_shop_category name: 'product_category', title: '商品分类', category_type: 'builtin'
@@ -47,7 +47,7 @@ class Shop::BuildGenerator < Rails::Generators::NamedBase
   end
 
   def shop_root
-    options[:shop_root] || Settings.sites.shops.root
+    options[:shop_root] || File.join(Rails.root, Settings.sites.shops.root)
   end
 
   def shop_path
