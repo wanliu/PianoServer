@@ -57,10 +57,6 @@ class BatchImportProductsJob < ActiveJob::Base
       end
     end
 
-    if shop.shop_category.nil?
-      shop.create_shop_category name: 'product_category', title: '商品分类', category_type: 'builtin'
-    end
-
     Item.set_callback :save, :after, :store_images!
     ShopCategory.set_callback :save, :after, :store_image!
 
@@ -68,7 +64,7 @@ class BatchImportProductsJob < ActiveJob::Base
     job.status = "done"
     job.end_at = Time.now
     job.save
-  rescue
+  rescue => e
     job.status = "fail"
     job.end_at = Time.now
     job.output[:errors] = "#{e}"
