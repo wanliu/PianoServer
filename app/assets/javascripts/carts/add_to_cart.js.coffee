@@ -55,7 +55,7 @@ $ ()->
         $divider.before(html)
 
       $('.cart-item-count').text(data.items_count)
-      $(document).trigger('cart_quantity_changed', [ quantity ])
+      $(document).trigger('cart_quantity_changed', [ data.items_count ])
 
       animate()
 
