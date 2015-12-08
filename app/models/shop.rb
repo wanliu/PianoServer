@@ -22,12 +22,14 @@ class Shop < ActiveRecord::Base
 
   validates :title, :phone, :name, presence: true
   validates :name, uniqueness: true
-  validates :location, presence: { message: '请选择有效城市' }
+  validates :location, presence: { message: '请选择有效城市' }, unless: :skip_location
 
   if Settings.after_registers.shop.validates == "strict"
     validates :description, length: { minimum: 4 }
     validates :address, presence: true
   end
+
+  attr_accessor :skip_location
 
   # delegate :region, to: :location, allow_nil: true
 
@@ -54,7 +56,16 @@ class Shop < ActiveRecord::Base
   end
 
   def recent_update_location
-    activities.where(key: 'shop.update_location').first.try(:updated_at) or DateTime.new(1996)
+    activities.where(key: 'shop.update_location').last.try(:updated_at) or DateTime.new(1996)
+  end
+
+  def can_change_location?
+    recent_update_location + (Settings.shop.location.change_period).days < Time.now
+  end
+
+  def change_location?(region_id)
+    region_id = region_id.to_i
+    region_id > 0 && location && location.region_id != region_id
   end
 
   protected
