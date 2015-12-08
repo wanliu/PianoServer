@@ -175,16 +175,6 @@
       <%= render "skip_form" %>
 
       <script type="text/javascript">
-        $(".city-group").on("change", ".city-select", function(e) {
-          setTimeout(function () {
-            var next = $(e.target).parent().next();
-            if (next) {
-              $(next).find(".city-select").focus();
-            }
-          }, 300);
-        })
-      </script>
-      <script type="text/javascript">
         $("[name=\"shop[title]\"]").blur(function() {
           var url = "<%= update_shop_path %>";
           $.ajax({
