@@ -230,6 +230,12 @@ class @SideMenu
   updateCartQuantity: (diff) ->
     @updateGroupQuantity('cart', diff)
 
+  updatePurchaseOrderQuantity: (diff) ->
+    @updateSectionQuantity('purchase-orders', diff)
+
+  updateSaleOrderQuantity: (diff) ->
+    @updateSectionQuantity('sale-orders', diff)
+
   destroy: () ->
     @element.remove()
 

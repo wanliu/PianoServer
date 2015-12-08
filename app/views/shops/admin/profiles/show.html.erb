@@ -41,7 +41,7 @@
         <%#s= f.text_field :website, class: 'form-control' %>
       </div>
  -->
-      <% status = @shop.recent_update_location + (Settings.shop.location.change_period).days > Time.now  %>
+      <% status = !@shop.can_change_location?  %>
 
       <%= group_with_errors @shop, :location, f, layout: :normal do %>
         <% fields_for :location, @shop.location, layout: :inline do |l| %>
