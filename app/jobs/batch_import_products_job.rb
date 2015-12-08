@@ -71,7 +71,7 @@ class BatchImportProductsJob < ActiveJob::Base
   rescue
     job.status = "fail"
     job.end_at = Time.now
-    job.output[:errors] ＝ "#{e}"
+    job.output[:errors] = "#{e}"
     job.save
   end
 end
