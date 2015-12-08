@@ -4,7 +4,9 @@
       {{ category.image_url | image_tag }}
     {% else %}
       {{ 'trans_blank.gif' | image_url | image_tag }}
-      <div class="cate-desc">{{ category.title }}</div>
+      <div class="cate-desc">
+        <div>{{ category.title }}</div>
+      </div>
     {% endunless %}
   </a>
   <div class="bottom-shadows"></div>
