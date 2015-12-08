@@ -45,10 +45,10 @@ class OrderItem < ActiveRecord::Base
   private
 
   def orderable_saleable
-    orderable.saleable?(quantity, properties) do |saleable, max|
-      if !saleable && 0 >= max
+    orderable.saleable?(quantity, properties) do |on_sale, saleable, max|
+      if !on_sale
         errors.add(:orderable_id, "已经下架")
-      elsif !saleable && max > 0
+      elsif !saleable
         errors.add(:orderable_id, "库存不足")
       end
     end

@@ -132,7 +132,8 @@
 
         if (quanOpt) {
           var maxQuan = quanOpt[0];
-          $alert.find('.max-quantity').text(maxQuan).show();
+          $alert.find('.max-quantity').text(maxQuan)
+          $alert.show();
 
           changeQuantity(quantityInput, maxQuan, true);
         }
