@@ -12,6 +12,9 @@
 
     menu.insertGroup('@' + username, 'profile', '个人菜单', { custom_template: fragment })
 
+    var purchase_amount = <%= current_user.orders.count %>;
+    menu.insertSection('profile', 'orders', 'purchase-orders', '购买订单', { iconClass: 'glyphicon glyphicon-import', has_quantity: true, quantity: purchase_amount });
+
     <% if Settings.dev.feature.favorites %>
       menu.insertSection('profile', 'favorites', 'favorites', '我的收藏', { iconClass: 'glyphicon glyphicon-heart' });
     <% end %>
@@ -46,9 +49,6 @@
 
       route = '<%= shop_admin_settings_path(current_user.join_shop.name) %>';
       menu.insertSection('shop', route, 'settings', '设置', { iconClass: 'glyphicon glyphicon-cog' });
-
-      var purchase_amount = <%= current_user.orders.count %>;
-      menu.insertSection('shop', 'orders', 'purchase-orders', '购买订单', { iconClass: 'glyphicon glyphicon-import', has_quantity: true, quantity: purchase_amount });
 
       route = '<%= shop_admin_orders_path(current_user.join_shop.name) %>';
       var sale_amount = <%= current_user.join_shop.orders.count %>;
