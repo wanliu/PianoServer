@@ -41,7 +41,7 @@
     <%= yield :stylesheets %>
     <%= yield :javascripts %>
 
-    <%= analytics_init if Rails.env.production? and Settings.GA.track %>
+    <%#= analytics_init if Rails.env.production? and Settings.GA.track %>
 
     <!--[if lt IE 9]>
       <style type="text/css">
@@ -134,6 +134,9 @@
       <% cache [ "sidebar_menu", current_anonymous_or_user ] do %>
         <%= render "application/sidebar_menu" %>
       <% end %>
+    <% end %>
+    <% if Settings.dev.feature.ccnz %>
+      <%= render "ccnz" %>
     <% end %>
     <script type="text/javascript">
       <% unless Rails.env.production? %>

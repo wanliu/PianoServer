@@ -18,10 +18,13 @@
       menu.insertSection('profile', 'favorites', 'favorites', '我的收藏', { iconClass: 'glyphicon glyphicon-heart' });
     <% end %>
 
-    <% if current_user.user_type != 'consumer' && current_user.is_done? %>
+    <% if current_user.user_type != 'consumer' && !current_user.is_done? %>
       var path = '<%= after_register_path(current_user.user_type) %>';
 
       menu.insertSection('profile', path, 'completion', '完善店铺信息', {iconClass: 'glyphicon glyphicon-edit' })
+    <% elsif current_user.user_type == 'consumer' %>
+      var path = '<%= reset_after_registers_path %>';
+      menu.insertSection('profile', path, 'completion', '升级企业用户', {iconClass: 'glyphicon glyphicon-edit' })
     <% end %>
 
     <% if current_user.join_shop %>

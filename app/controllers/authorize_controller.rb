@@ -17,12 +17,14 @@ class AuthorizeController < ApplicationController
       sign_in(:user, user)
     end
 
-    redirect_to to_path, turbolinks: false, notice: '微信认证登陆成功'
+    redirect_to to_path(status), turbolinks: false, notice: '微信认证登陆成功'
   end
 
   private
 
   def lookup_user(profile)
+    logger.info "profile: #{profile.inspect}"
+
     user = User.where('data @> ?', {weixin_openid: profile['openid']}.to_json)
            .first_or_initialize(
              username: SecureRandom.urlsafe_base64.tr('-', '_'),
@@ -40,7 +42,7 @@ class AuthorizeController < ApplicationController
     [user, !user.persisted?]
   end
 
-  def to_path(user, status)
+  def to_path(status)
     if status
       after_registers_path
     else
