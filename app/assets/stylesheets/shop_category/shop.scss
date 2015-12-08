@@ -97,6 +97,9 @@ body.shop {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: clip;
+        > div{
+          overflow: hidden;
+        }
       }
 
       img {
@@ -163,14 +166,6 @@ body.shop {
       a {
         margin-bottom: 0;
         padding: 10px;
-
-        .cate-desc {
-          padding: 0 15px;
-          > div{
-            overflow: hidden;
-          }
-        }
-
       }
     }
   }
