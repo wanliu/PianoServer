@@ -54,6 +54,11 @@ class @SideMenu
       else
         groupText = """#{iconStr}#{title}"""
 
+      turbolinks = if dataOptions.turbolinks? and !dataOptions.turbolinks
+          "data-no-turbolink"
+        else
+          ""
+
       if sections.length > 0
         template = """
           <li id="#{routeAnchor}" class="group-item">
@@ -90,7 +95,7 @@ class @SideMenu
         else
           template = """
             <li id="#{routeAnchor}" class="group-item">
-              <a href="#{route}" class="ellipsis-text">#{groupText}#{badgeStr}</a>
+              <a href="#{route}" class="ellipsis-text" #{turbolinks} >#{groupText}#{badgeStr}</a>
             </li>
           """
         $(template).appendTo(@element)
