@@ -6,7 +6,7 @@ class AuthorizeController < ApplicationController
 
   def weixin_redirect_url
     code = params[:code]
-    status = false
+    # status = false
     tries = 3
 
     if wx_client.is_valid?
@@ -19,6 +19,7 @@ class AuthorizeController < ApplicationController
         # sign_in(:user, user) 在登陆前，竟然强制保存了 user.
         sign_in(:user, user)
 
+        return redirect_to(to_path(status), turbolinks: false, notice: '微信认证登陆成功')
       rescue RestClient::RequestTimeout => e
         tries -= 1
         if tries > 0
@@ -30,7 +31,7 @@ class AuthorizeController < ApplicationController
       end
     end
 
-    redirect_to(to_path(status), turbolinks: false, notice: '微信认证登陆成功')
+    redirect_to root_path
   end
 
   private
