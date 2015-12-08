@@ -10,27 +10,37 @@
       </div>
 
       {% paginate shop_categories by 12 %}
-        <div class="shop-categories">
-          <div class="row">
-            {% include "category" for paginate.collection %}
-          </div>
-        </div>
 
-        <nav class="text-center">
-          <ul class="pagination">
-            {% for part in paginate.parts %}
-              {% if part.is_link %}
-                <li >
-                  {{ part.title | link_to:  part.url }}
-                </li>
-              {% else %}
-                <li class="active">
-                  <span>{{ part.title }}<span class="sr-only">(current)</span></span>
-                </li>
-              {% endif %}
-            {% endfor %}
-          </ul>
-        </nav>
+        {% if paginate.items == 0 %}
+          {% if shop.owner_id == current_user.id %}
+            <h3 class="text-center">您的商店还未添加任何分类/商品.请前往 {{ '店铺管理' | link_to: shop.shop_admin_link }}添加分类/商品</h3>
+          {% else %}
+            <h3 class="text-center">对不起,此商店暂未添加分类/商品</h3>
+          {% endif %}
+        {% else %}
+
+          <div class="shop-categories">
+            <div class="row">
+              {% include "category" for paginate.collection %}
+            </div>
+          </div>
+
+          <nav class="text-center">
+            <ul class="pagination">
+              {% for part in paginate.parts %}
+                {% if part.is_link %}
+                  <li >
+                    {{ part.title | link_to:  part.url }}
+                  </li>
+                {% else %}
+                  <li class="active">
+                    <span>{{ part.title }}<span class="sr-only">(current)</span></span>
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </nav>
+        {% endif %}
       {% endpaginate %}
     </div>
   </div>

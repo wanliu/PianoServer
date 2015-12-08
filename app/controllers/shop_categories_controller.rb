@@ -12,6 +12,8 @@ class ShopCategoriesController < ShopsController
 
     @shop_category.punch(request)
 
+    @current_user = current_anonymous_or_user
+
     if @shop_category.has_children
       @shop_categories = ShopCategory.where(parent_id: @shop_category, status: true).order(id: :asc)
       @items = []
