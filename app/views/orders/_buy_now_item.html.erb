@@ -56,9 +56,17 @@
       </div>
     </div>
 
-    <div class="quantity no-padding">
+    <div class="quantity">
       <%= minus_plus_button_field "order[items_attributes][0]", :quantity, value: item.quantity, placeholder: "数量", class: 'form-control cart_item_quantity' %>
     </div>
   </div>
 
 </li>
+
+<script type="text/javascript">
+  // 同步两个输入框的值
+  $('input[name="order[items_attributes][0][quantity]"]').change(function (e) {
+    var value = $(this).val();
+    $('input[name="order[items_attributes][0][quantity]"]').val(value);
+  })
+</script>
