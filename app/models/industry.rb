@@ -7,6 +7,8 @@ class Industry < ActiveRecord::Base
 
   class_attribute :default_templates
 
+  html_fragment :description, :scrub => :prune  # scrubs `body` using the :prune scrubber
+
   enum status: [ :open, :close ]
   mount_uploader :image, ItemImageUploader
 
