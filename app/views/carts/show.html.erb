@@ -18,7 +18,7 @@
               </span>
               店铺：
               <%= link_to shop_site_path(supplier.name) do %>
-                <%= supplier.title %> 
+                <%= supplier.title %>
               <% end %>
               (<%= items.map(&:quantity).reduce(:+) %>件商品)
             </div>
@@ -34,7 +34,7 @@
     <% end %>
 
     <%#= button_to '全部生成订单', class: 'btn btn-primary' %>
-    
+
   </div>
 </div>
 
@@ -66,18 +66,25 @@
 
     // 修改所购商品数量
     $('.cart-item input[name=quantity]').keyup(function (event) {
-      changeQuantity(this)
+      var quantity = $(this).val()
+
+      if (!/^[1-9]\d*$/.test(quantity)) {
+        quantity = 1;
+      }
+
+      var newQuantity = 1 * quantity;
+
+      changeQuantity(this, newQuantity);
     });
 
     // 通过减少按钮，修改所购商品数量
     $('.cart-item').on('click', '.btn-minus', function (event) {
       var quantityInput = $(this).parents('.quantity').find('input');
       var quantity = 1 * $(quantityInput).val();
-      var newQuantity = quantity - 1;
 
-      if (1 <= newQuantity) {
-        $(quantityInput).val(newQuantity);
-        changeQuantity(quantityInput);
+      if (quantity > 1) {
+        var newQuantity = quantity - 1;
+        changeQuantity(quantityInput, newQuantity);
       }
     });
 
@@ -85,28 +92,23 @@
     $('.cart-item').on('click', '.btn-plus', function (event) {
       var quantityInput = $(this).parents('.quantity').find('input');
       var quantity = 1 * $(quantityInput).val();
-      $(quantityInput).val(quantity + 1);
-  
-      changeQuantity(quantityInput); 
+      var newQuantity = quantity + 1;
+
+      changeQuantity(quantityInput, newQuantity);
     });
 
-    function changeQuantity(quantityInput, reflect) {
-      var cartItemId = $(quantityInput).parents('.cart-item').data('cartItemId');
-      var quantity = $(quantityInput).val();
+    function changeQuantity(quantityInput, quantity, reflect) {
+      var $cartItem = $(quantityInput).parents('.cart-item:first'),
+          cartItemId = $cartItem.data('cartItemId'),
+          $quantity = $cartItem.find('input[name=quantity]'),
+          $subTotal = $cartItem.find('.subtotal');
+          $group = $(quantityInput).parent('.input-group'),
+          $btnMinus = $group.find('.btn-minus span'),
+          $alert = $group.siblings('.alert');
 
-      var $subTotal = $(quantityInput).parents('.cart-item').find('.subtotal');
-      var $btnMinus = $(quantityInput).parents('.quantity').find('.btn-minus span');
+      $quantity.val(quantity);
 
-      var $alert = $(quantityInput).parents('.input-group').siblings('.alert');
-    
-      if (!/^\d+$/.test(quantity)) {
-        $(quantityInput).val(1);
-        quantity = 1;
-      }
-
-      quantity = 1 * quantity;
-
-      if (quantity > 1) {
+      if (+quantity > 1) {
         $btnMinus.addClass('glyphicon-minus');
       } else {
         $btnMinus.removeClass('glyphicon-minus');
@@ -121,19 +123,19 @@
         $subTotal.text(data.sub_total);
         $('.cart-item-count').text(data.ccount);
 
+        $(document).trigger('cart_quantity_changed', [ data.ccount ])
+
         if (!reflect) $alert.hide();
       }).fail(function (data, xhr, status) {
         // usually caused by the lack of inventory
         var quanOpt = data.responseJSON && data.responseJSON.quantity;
+
         if (quanOpt) {
           var maxQuan = quanOpt[0];
-
-          $alert.find('.max-quantity').text(maxQuan);
-          $(quantityInput).val(maxQuan);
-
-          changeQuantity(quantityInput, true);
-
+          $alert.find('.max-quantity').text(maxQuan)
           $alert.show();
+
+          changeQuantity(quantityInput, maxQuan, true);
         }
       });
     }

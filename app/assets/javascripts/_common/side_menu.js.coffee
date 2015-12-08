@@ -174,46 +174,40 @@ class @SideMenu
 
     if arguments.length = 2
       sectionName = arguments[0]
-      diff = arguments[1]
+      newQuantity = arguments[1]
       section = @_lookupSection(sectionName)
     else if arguments.length >= 3
       groupName = arguments[0]
       sectionName = arguments[1]
-      diff = arguments[2]
+      newQuantity = arguments[2]
       section = @_lookupSectionByGroupName(groupName, sectionName)
 
     return unless section
 
-    @_updateSectionQuantityBadge(section, diff)
+    @_updateSectionQuantityBadge(section, newQuantity)
 
-  _updateSectionQuantityBadge: (section, diff) ->
+  _updateSectionQuantityBadge: (section, newQuantity) ->
     { has_quantity, quantity } = section.dataOptions
-    return unless has_quantity || isNaN(diff)
+    return unless has_quantity || isNaN(newQuantity) || section.dataOptions.has_quantity
 
-    quantity += +diff
-    quantity = 0 if quantity < 0
+    newQuantity = 0 if +newQuantity < 0
 
-    section.dataOptions.quantity = quantity
+    section.dataOptions.quantity = newQuantity
     sel = ['li#section-', section.name, ' .badge'].join('')
     $sel = @$containment.find(sel)
 
-    $sel.text(quantity) if $sel.length
+    $sel.text(newQuantity) if $sel.length
 
-  updateGroupQuantity: (name, diff) ->
+  updateGroupQuantity: (name, newQuantity) ->
     group = @_lookupGroup(name)
-    return unless group || isNaN(diff)
+    return unless group || isNaN(newQuantity) || group.dataOptions.has_quantity
 
-    { has_quantity, quantity } = group.dataOptions
-    return unless has_quantity
-
-    quantity += +diff
-
-    quantity = 0 if quantity < 0
+    newQuantity = 0 if +newQuantity < 0
 
     sel = [ 'li#group-', name, ' .badge'].join('')
-    @$containment.find(sel).text(quantity)
+    @$containment.find(sel).text(newQuantity)
 
-    group.dataOptions.quantity = quantity
+    group.dataOptions.quantity = newQuantity
 
   refreshMenu: () ->
     @$containment.html('')
@@ -227,14 +221,14 @@ class @SideMenu
       @isVisible = false
       @element.hide()
 
-  updateCartQuantity: (diff) ->
-    @updateGroupQuantity('cart', diff)
+  updateCartQuantity: (quantity) ->
+    @updateGroupQuantity('cart', quantity)
 
-  updatePurchaseOrderQuantity: (diff) ->
-    @updateSectionQuantity('purchase-orders', diff)
+  updatePurchaseOrderQuantity: (quantity) ->
+    @updateSectionQuantity('purchase-orders', quantity)
 
-  updateSaleOrderQuantity: (diff) ->
-    @updateSectionQuantity('sale-orders', diff)
+  updateSaleOrderQuantity: (quantity) ->
+    @updateSectionQuantity('sale-orders', quantity)
 
   destroy: () ->
     @element.remove()

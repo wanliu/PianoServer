@@ -114,14 +114,14 @@ class @SideMenuManager
       @hammer.destroy()
       @hammer = null
 
-  updateCartQuantity: (diff) ->
+  updateCartQuantity: (quantity) ->
     for menu in @menus
-      menu.updateCartQuantity(diff)
+      menu.updateCartQuantity(quantity)
 
-  updatePurchaseOrderQuantity: (diff) ->
+  updatePurchaseOrderQuantity: (quantity) ->
     for menu in @menus
-      menu.updatePurchaseOrderQuantity(diff)
+      menu.updatePurchaseOrderQuantity(quantity)
 
-  updateSaleOrderQuantity: (diff) ->
+  updateSaleOrderQuantity: (quantity) ->
     for menu in @menus
-      menu.updateSaleOrderQuantity(diff)
+      menu.updateSaleOrderQuantity(quantity)
