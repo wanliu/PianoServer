@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151207084208) do
+ActiveRecord::Schema.define(version: 20151207114128) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -228,8 +228,8 @@ ActiveRecord::Schema.define(version: 20151207084208) do
     t.jsonb    "properties",                                  default: {}
     t.text     "description"
     t.decimal  "current_stock",      precision: 10, scale: 2
-    t.jsonb    "properties_setting",                          default: {}
     t.boolean  "abandom",                                     default: false, null: false
+    t.jsonb    "properties_setting",                          default: {}
   end
 
   create_table "jobs", force: :cascade do |t|
@@ -533,7 +533,7 @@ ActiveRecord::Schema.define(version: 20151207084208) do
     t.string   "mobile"
     t.string   "username"
     t.string   "authentication_token"
-    t.string   "image",                  default: "", null: false
+    t.string   "image",                  default: ""
     t.string   "nickname"
     t.string   "provider"
     t.integer  "latest_location_id"
