@@ -49,8 +49,10 @@ class Shops::Admin::OrdersController < Shops::Admin::BaseController
         format.html { redirect_to shop_admin_order_path(current_shop.name, @order), notice: '订单修改成功' }
         format.json { render :show, status: :ok, location: @order }
       else
-        format.html { redirect_to shop_admin_order_path(current_shop.name, @order), 
-          alert: "订单修改失败, #{@order.errors.full_messages.join(', ')}" }
+        format.html do
+          redirect_to shop_admin_order_path(current_shop.name, @order), 
+            flash: { error: "订单修改失败, #{@order.errors.full_messages.join(', ')}" }
+        end
 
         format.json { render json: @bank.errors, status: :unprocessable_entity }
       end
