@@ -117,3 +117,11 @@ class @SideMenuManager
   updateCartQuantity: (diff) ->
     for menu in @menus
       menu.updateCartQuantity(diff)
+
+  updatePurchaseOrderQuantity: (diff) ->
+    for menu in @menus
+      menu.updatePurchaseOrderQuantity(diff)
+
+  updateSaleOrderQuantity: (diff) ->
+    for menu in @menus
+      menu.updateSaleOrderQuantity(diff)

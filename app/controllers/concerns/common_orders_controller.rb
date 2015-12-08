@@ -86,7 +86,7 @@ module CommonOrdersController
 
     set_addresses
 
-    @supplier = @order.supplier 
+    @supplier = @order.supplier
 
     @total = @order_item.price * @order_item.quantity
 
@@ -96,7 +96,7 @@ module CommonOrdersController
   # 直接购买生成订单
   def buy_now_create
     @order = current_user.orders.build(buy_now_order_params)
-    
+
     respond_to do |format|
       if @order.save_with_items(current_user)
         format.html { redirect_to @order }
