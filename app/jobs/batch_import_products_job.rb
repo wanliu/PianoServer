@@ -4,9 +4,7 @@ class BatchImportProductsJob < ActiveJob::Base
   def perform(job, shop, products, categories)
     # pp products
 
-
-    results =
-    ids = products.select {|p| p["check"] && p["check"] == "1" }.map {|p| p["id"] }
+    results = ids = products.select {|p| p["check"] && p["check"] == "1" }.map {|p| p["id"] }
 
     enum = EnumProducts.new do |start, size|
       Product.search query: { terms: { id: ids}}, from: start, size: size
@@ -14,6 +12,7 @@ class BatchImportProductsJob < ActiveJob::Base
 
     job.output["created"] = []
 
+    shop.create_shop_category name: 'product_category', title: '商品分类', category_type: 'builtin'  if shop.shop_category.nil?
     Item.skip_callback :save, :after, :store_images!
     ShopCategory.skip_callback :save, :after, :store_image!
     categories_map = {}
@@ -62,7 +61,6 @@ class BatchImportProductsJob < ActiveJob::Base
       shop.create_shop_category name: 'product_category', title: '商品分类', category_type: 'builtin'
     end
 
-
     Item.set_callback :save, :after, :store_images!
     ShopCategory.set_callback :save, :after, :store_image!
 
@@ -70,7 +68,9 @@ class BatchImportProductsJob < ActiveJob::Base
     job.status = "done"
     job.end_at = Time.now
     job.save
-    # Do something later
+  rescue
+    job.status = "fail"
+    job.end_at = Time.now
   end
 end
 

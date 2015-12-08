@@ -5,6 +5,7 @@
       <div class="col-sm-offset-4 col-sm-4">
         <%= progress_bar percentage: 100, animated: true, label: '正在载入数据' %>
       </div>
+      <%= link_to "跳过等待进入首页", root_path %>
     <% end %>
   </div>
 <% end %>
@@ -21,6 +22,8 @@
         clearInterval(tickId);
       } else if (tickCount++ >= 100) {
         clearInterval(tickId);
+      } else if (resp.status = "fail") {
+        throw new Error("任务失败.")
       }
     }).fail(function(e) {
       var dialog = "<%=j alert_box '服务器发生错误，请联系网管 master@wanliu.biz，可能是 sidekiq 错误', context: :danger %>"
