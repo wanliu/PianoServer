@@ -19,7 +19,7 @@
     <% if current_user.user_type != 'consumer' && current_user.is_done? %>
       var path = '<%= after_register_path(current_user.user_type) %>';
 
-      menu.insertSection('profile', path, 'completion', '完善店铺信息', {iconClass: 'glyphicon glyphicon-edit' })
+      menu.insertSection('profile', path, 'completion', '完善店铺信息', {iconClass: 'glyphicon glyphicon-edit' });
     <% end %>
 
     <% if current_user.join_shop %>
@@ -47,10 +47,12 @@
       route = '<%= shop_admin_settings_path(current_user.join_shop.name) %>';
       menu.insertSection('shop', route, 'settings', '设置', { iconClass: 'glyphicon glyphicon-cog' });
 
-      menu.insertSection('shop', 'orders', 'purchase-orders', '购买订单', { iconClass: 'glyphicon glyphicon-import', has_quantity: true, quantity: 0 });
+      var purchase_amount = <%= current_user.orders.count %>;
+      menu.insertSection('shop', 'orders', 'purchase-orders', '购买订单', { iconClass: 'glyphicon glyphicon-import', has_quantity: true, quantity: purchase_amount });
 
       route = '<%= shop_admin_orders_path(current_user.join_shop.name) %>';
-      menu.insertSection('shop', route, 'sale-orders', '销售订单', { iconClass: 'glyphicon glyphicon-export', has_quantity: true, quantity: 0 });
+      var sale_amount = <%= current_user.join_shop.orders.count %>;
+      menu.insertSection('shop', route, 'sale-orders', '销售订单', { iconClass: 'glyphicon glyphicon-export', has_quantity: true, quantity: sale_amount });
     <% end %>
   <% end %>
 
@@ -107,6 +109,18 @@
   $(document).on('cart_quantity_changed', function (e, diff) {
     if (window.manager) {
       window.manager.updateCartQuantity(diff);
+    }
+  });
+
+  $(document).on('purchase_orders_quantity_changed', function (e, diff) {
+    if (window.manager) {
+      window.manager.updatePurchaseOrderQuantity(diff);
+    }
+  });
+
+  $(document).on('sale_orders_quantity_changed', function (e, diff) {
+    if (window.manager) {
+      window.manager.updateSaleOrderQuantity(diff);
     }
   });
 </script>
