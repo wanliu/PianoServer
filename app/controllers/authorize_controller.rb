@@ -19,14 +19,14 @@ class AuthorizeController < ApplicationController
         # sign_in(:user, user) 在登陆前，竟然强制保存了 user.
         sign_in(:user, user)
         logger.info "redirect_to: #{to_path(status)}, #{status}"
-        return redirect_to(to_path(status), turbolinks: false, notice: '微信认证登陆成功')
+        return redirect_to(to_path(status), notice: '微信认证登陆成功')
       rescue RestClient::RequestTimeout => e
         tries -= 1
         if tries > 0
           retry
         else
           logger.debug "Weixin Login Timeout!"
-          return redirect_to(new_user_session, alert: "微信认证服务器超时")
+          return redirect_to(new_user_session_path, alert: "微信认证服务器超时")
         end
       end
     end
