@@ -6,18 +6,34 @@ class AuthorizeController < ApplicationController
 
   def weixin_redirect_url
     code = params[:code]
-    status = false
+    # status = false
+    tries = 3
 
     if wx_client.is_valid?
-      access_token = wx_client.get_oauth_access_token(code).result['access_token']
-      profile = wx_client.get_oauth_userinfo(wx_client.app_id, access_token).result
+      begin
+        access_token = wx_client.get_oauth_access_token(code).result['access_token']
+        profile = wx_client.get_oauth_userinfo(wx_client.app_id, access_token).result
 
-      user, status = lookup_user(profile)
-      # sign_in(:user, user) 在登陆前，竟然强制保存了 user.
-      sign_in(:user, user)
+        user, status = lookup_user(profile)
+
+        # sign_in(:user, user) 在登陆前，竟然强制保存了 user.
+        sign_in(:user, user)
+        @to_url =  to_path(status)
+        @notice = '微信认证登陆成功'
+      rescue RestClient::RequestTimeout => e
+        tries -= 1
+        if tries > 0
+          retry
+        else
+          @to_url =  new_user_session_path
+          @notice = '微信认证服务器超时'
+          logger.debug "Weixin Login Timeout!"
+        end
+      end
     end
 
-    redirect_to to_path(status), turbolinks: false, notice: '微信认证登陆成功'
+    render :weixin
+    # redirect_to root_path
   end
 
   private

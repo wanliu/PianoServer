@@ -1,7 +1,8 @@
 #= require ./side_menu
-TRANSITION_ENDS = 'webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend'
 
 class @SideMenuManager
+  @CONTAINER_WIDTH: 240
+
   constructor: (@element) ->
     @$window = $(window)
     @menus = []
@@ -16,7 +17,7 @@ class @SideMenuManager
     $('.menu-overlayer').on 'click', @_layoutClick.bind(@)
 
     $('.main-container').on 'touchmove', (e) =>
-      if @isVisible
+      if @isVisible()
         e.preventDefault()
 
   resizeHandler: () ->
@@ -45,7 +46,6 @@ class @SideMenuManager
     menu.setVisible(false)
 
   _show: () ->
-    @isVisible = true
     $('.menu-overlayer').show()
     $('.menu-container').addClass('show-left-bar')
     $('.main-navbar').addClass('show-left-bar')
@@ -53,7 +53,6 @@ class @SideMenuManager
     $('.link-table-container').addClass('show-left-bar')
 
   _hide: () ->
-    @isVisible = false
     $('.menu-overlayer').hide()
     $('.menu-container').removeClass('show-left-bar')
     $('.main-navbar').removeClass('show-left-bar')
@@ -64,17 +63,17 @@ class @SideMenuManager
     $('body').width(@$window.width())
 
   _open: () ->
-    @_show() if @$window.width() <= 768 and !@isVisible
+    @_show() if @$window.width() <= 768 and !@isVisible()
 
   _close: () ->
-    @_hide() if @$window.width() <= 768 and @isVisible
+    @_hide() if @$window.width() <= 768 and @isVisible()
 
   toggleMenu: (menuName) ->
     menu = if menuName then @_lookupMenu(menuName) else @menus[@menus.length - 1]
 
     return if not menu
 
-    if @isVisible
+    if @isVisible()
       @hideMenu(menu)
     else
       @showMenu(menu)
@@ -113,6 +112,9 @@ class @SideMenuManager
     if @hammer && @hammer.destroy
       @hammer.destroy()
       @hammer = null
+
+  isVisible: () ->
+    $('.main-container').position().left == SideMenuManager.CONTAINER_WIDTH
 
   updateCartQuantity: (quantity) ->
     for menu in @menus

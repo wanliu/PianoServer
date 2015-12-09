@@ -24,10 +24,9 @@ class UserTable < TableCloth::Base
   # You can add as many actions as you want.
   # Make sure you include the actions extension.
   #
-  # actions do
-  #   action {|object| link_to "Edit", edit_object_path(object) }
-  #   action(if: :valid?) {|object| link_to "Invalidate", invalidate_object_path(object) }
-  # end
+  actions do
+    action {|object| link_to "重置", reset_admins_account_path(object), remote: true, method: :put }
+  end
   #
   # If action provides an "if:" option, it will call that method on the object. It can also take a block with an arity of 1.
 end

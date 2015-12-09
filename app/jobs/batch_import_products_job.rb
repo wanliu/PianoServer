@@ -4,9 +4,7 @@ class BatchImportProductsJob < ActiveJob::Base
   def perform(job, shop, products, categories)
     # pp products
 
-
-    results =
-    ids = products.select {|p| p["check"] && p["check"] == "1" }.map {|p| p["id"] }
+    results = ids = products.select {|p| p["check"] && p["check"] == "1" }.map {|p| p["id"] }
 
     enum = EnumProducts.new do |start, size|
       Product.search query: { terms: { id: ids}}, from: start, size: size
@@ -14,13 +12,14 @@ class BatchImportProductsJob < ActiveJob::Base
 
     job.output["created"] = []
 
+    shop.create_shop_category name: 'product_category', title: '商品分类', category_type: 'builtin'  if shop.shop_category.nil?
     Item.skip_callback :save, :after, :store_images!
     ShopCategory.skip_callback :save, :after, :store_image!
     categories_map = {}
     categories.each do |category_attrs|
       category_attrs = ActionController::Parameters.new(category_attrs.merge(status: true, category: category_attrs["id"]))
-      logger.info "#{shop.inspect}"
-      logger.info "#{shop.shop_category}"
+      Rails.logger.info "#{shop.inspect}"
+      Rails.logger.info "#{shop.shop_category}"
 
       category = shop.shop_category.children
         .where("data @> :data", data: {cateogry: category_attrs["id"]}.to_json)
@@ -58,11 +57,6 @@ class BatchImportProductsJob < ActiveJob::Base
       end
     end
 
-    if shop.shop_category.nil?
-      shop.create_shop_category name: 'product_category', title: '商品分类', category_type: 'builtin'
-    end
-
-
     Item.set_callback :save, :after, :store_images!
     ShopCategory.set_callback :save, :after, :store_image!
 
@@ -70,7 +64,11 @@ class BatchImportProductsJob < ActiveJob::Base
     job.status = "done"
     job.end_at = Time.now
     job.save
-    # Do something later
+  rescue => e
+    job.status = "fail"
+    job.end_at = Time.now
+    job.output[:errors] = "#{e}"
+    job.save
   end
 end
 
