@@ -30,6 +30,8 @@ class Location < ActiveRecord::Base
 
   belongs_to :region, foreign_key: :region_id, primary_key: :city_id
 
+  after_commit :reset_user_default_address, on: :destroy
+
   attr_accessor :chat_id, :intention_id
   attr_accessor :skip_validation
 
@@ -67,5 +69,14 @@ class Location < ActiveRecord::Base
 
   def is_default?
     id == user.latest_location_id
+  end
+
+  # 默认收货地址被删除后，重置用户的默认地址字段
+  def reset_user_default_address
+    return if persisted?
+
+    if user.latest_location_id == id
+      user.update_attribute('latest_location_id', nil)
+    end
   end
 end
