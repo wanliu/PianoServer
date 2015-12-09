@@ -57,6 +57,8 @@ Rails.application.routes.draw do
     get :weixin_redirect_url
   end
 
+  # get '/auth/:provider/callback', to: 'users/sessions#create'
+
   devise_for :admins, controllers: {
     sessions: 'admins/sessions',
     registrations: 'admins/registrations'
@@ -115,6 +117,10 @@ Rails.application.routes.draw do
         get 'search_wanliu_user', to: 'accounts#search_wanliu_user'
         put 'import/:wanliu_user_id', to: 'accounts#import', as: :import
         post 'upload_user_avatar'
+      end
+
+      member do
+        put 'reset', to: 'accounts#reset', as: :reset
       end
     end
     resources :regions

@@ -53,7 +53,8 @@ class UserTable < TableCloth::Base
   # Make sure you include the actions extension.
   #
   actions do
-    action { |user| UPLOAD_HELPER.call(user).html_safe }
+    action {|user| UPLOAD_HELPER.call(user).html_safe }
+    action {|object| link_to "重置账户", reset_admins_account_path(object), remote: true, method: :put, class: 'btn btn-primary' }
   end
   #
   # If action provides an "if:" option, it will call that method on the object. It can also take a block with an arity of 1.
