@@ -1,5 +1,19 @@
 <script type="text/javascript">
   var inChats = {};
+
+  function addNotice(message) {
+    var channelId = message.channelId,
+        senderId = message.senderId,
+        type = message.type,
+        senderLogin = message.senderLogin,
+        ownChannelId = window.userSocket.getUserChannelId(),
+        chatChannelId = 'p' + senderId;
+
+    if ((chatChannelId !== ownChannelId) && type !== 'command' && !inChats[channelId]) {
+      window.noticeCenter.addNotice(senderId, senderLogin, 1);
+    }
+  }
+
   $(document).unbind('inchats:enter').bind('inchats:enter', function(e, channelId) {
     inChats[channelId] = true;
   });
@@ -27,18 +41,7 @@
       }
     });
 
-    userSocket.clearAllPersonMessagess();
-    userSocket.onPersonMessage(function(message) {
-      var channelId = message.channelId,
-          senderId = message.senderId,
-          type = message.type,
-          senderLogin = message.senderLogin,
-          ownChannelId = window.userSocket.getUserChannelId(),
-          chatChannelId = 'p' + senderId;
-
-      if ((chatChannelId !== ownChannelId) && type !== 'command' && !inChats[channelId]) {
-        window.noticeCenter.addNotice(senderId, senderLogin, 1);
-      }
-    });
+    userSocket.offPersonMessage(addNotice);
+    userSocket.onPersonMessage(addNotice);
   });
 </script>
