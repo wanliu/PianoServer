@@ -8,7 +8,10 @@
     delete inChats[channelId];
   });
 
-  $(document).on('init:user_socket', function(e, userSocket) {
+  $(document).unbind('init:user_socket').bind('init:user_socket', function(e, userSocket) {
+    window.noticeCenter = null;
+    window.noticeCenter = new window.NoticeCenter();
+
     userSocket.emit('unreadCount', {}, function(err, unreadCounts) {
       if (err) {
         return;
@@ -24,6 +27,7 @@
       }
     });
 
+    userSocket.clearAllPersonMessagess();
     userSocket.onPersonMessage(function(message) {
       var channelId = message.channelId,
           senderId = message.senderId,
