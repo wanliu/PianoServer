@@ -57,6 +57,8 @@ Rails.application.routes.draw do
     get :weixin_redirect_url
   end
 
+  get '/auth/:provider/callback', to: 'users/sessions#create'
+
   devise_for :admins, controllers: {
     sessions: 'admins/sessions',
     registrations: 'admins/registrations'

@@ -41,6 +41,10 @@ class Users::SessionsController < Devise::SessionsController
 
   def create
     params[:format] = "html"
+    if auth_hash
+      logger.info auth_hash
+    end
+
     super
     # render :show, formats: [:json]
   end
@@ -106,5 +110,11 @@ class Users::SessionsController < Devise::SessionsController
       anonymous_cart.items(true)
       anonymous_cart.destroy
     end
+  end
+
+  protected
+
+  def auth_hash
+    request.env['omniauth.auth']
   end
 end
