@@ -131,9 +131,9 @@
     <% end %>
 
     <% if content_for(:module) != "after_registers" %>
-      <% cache [ "sidebar_menu", current_anonymous_or_user ] do %>
+      <%# cache [ "sidebar_menu", current_anonymous_or_user ] do %>
         <%= render "application/sidebar_menu" %>
-      <% end %>
+      <%# end %>
     <% end %>
     <% if Settings.dev.feature.ccnz %>
       <%= render "ccnz" %>
