@@ -21,7 +21,7 @@
       <% if @job.status == "done" %>
         <%= render partial: "after_registers/distributor/products_group", object: @products_group %>
       <% else %>
-        <%= render "waiting" %>
+        <%= render "waiting", locals: { step: 'category' } %>
       <% end %>
       </div>
 
