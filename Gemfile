@@ -113,7 +113,8 @@ gem 'unicorn'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
-gem 'weixin_authorize'
+# gem 'weixin_authorize'
+gem 'omniauth'
 gem "omniauth-wechat-oauth2"
 
 group :development, :test do
