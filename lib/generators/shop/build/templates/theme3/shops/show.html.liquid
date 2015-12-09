@@ -13,9 +13,12 @@
 
         {% if paginate.items == 0 %}
           {% if shop.owner_id == current_user.id %}
-            <h3 class="text-center">您的商店还未添加任何分类/商品.请前往 {{ '店铺管理' | link_to: shop.shop_admin_link }}添加分类/商品</h3>
+            <h4 class="text-center">
+              您的商店还未添加任何分类/商品<br>
+              请前往 {{ '店铺管理' | link_to: shop.shop_admin_link }}添加分类/商品
+            </h4>
           {% else %}
-            <h3 class="text-center">对不起,此商店暂未添加分类/商品</h3>
+            <h4 class="text-center">对不起,本店暂未添加分类/商品</h4>
           {% endif %}
         {% else %}
 
