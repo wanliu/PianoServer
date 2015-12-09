@@ -30,6 +30,10 @@
     }
   }
 
+  UserSocket.prototype.clearAllPersonMessagess = function() {
+    this.personCallbacks.length = 0;
+  }
+
   UserSocket.prototype.config = function(options) {
     var _this = this;
 

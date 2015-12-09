@@ -81,7 +81,7 @@
     } else {
       var ownerUserId = $('meta[name=chatId]').attr('content');
       var userChannelId = 'p' + ownerUserId;
-  
+
       var chat = new Chat($('.chat-order-header'), chatChannelId, {
         sendBtn: $('.btn-send'),
         greetings: greetings,
@@ -107,9 +107,9 @@
         $(window).off('resize.linkmen');
       });
 
-      $(document).off('page:load').on('page:load', function() {
-        window.noticeCenter.reloadUnreadMessage();
-      });
+      // $(document).off('page:load').on('page:load', function() {
+      //   window.noticeCenter.reloadUnreadMessage();
+      // });
     }
 
     <% if Settings.dev.feature.linkmen %>
