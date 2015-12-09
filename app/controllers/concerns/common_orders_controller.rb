@@ -172,7 +172,7 @@ module CommonOrdersController
   end
 
   def set_feed_back
-    @order_items = current_user.cart.items.find(params[:order][:cart_item_ids])
+    @order_items = current_user.cart.items.find(params[:order][:cart_item_ids] || [])
 
     @supplier = Shop.find(params[:order][:supplier_id])
 

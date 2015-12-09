@@ -18,7 +18,7 @@ class AuthorizeController < ApplicationController
 
         # sign_in(:user, user) 在登陆前，竟然强制保存了 user.
         sign_in(:user, user)
-        @to_url =  to_path(status)
+        @to_url =  after_sign_in_path(user)
         @notice = '微信认证登陆成功'
       rescue RestClient::RequestTimeout => e
         tries -= 1
@@ -32,7 +32,7 @@ class AuthorizeController < ApplicationController
       end
     end
 
-    render :weixin
+    redirect_to @to_url, notice: @notice
     # redirect_to root_path
   end
 
@@ -63,6 +63,14 @@ class AuthorizeController < ApplicationController
       after_registers_path
     else
       request.referer ? URI(request.referer).path : root_path
+    end
+  end
+
+  def after_sign_in_path(user)
+    if user.is_done?
+      request.referer ? URI(request.referer).path : root_path
+    else
+      after_registers_path
     end
   end
 end

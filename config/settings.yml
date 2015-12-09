@@ -63,6 +63,8 @@ dev:
     industry: true
     weixin: true
     person_page: true
+job:
+  async: open
 sites:
   root: .sites
   shops:

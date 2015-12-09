@@ -26,7 +26,7 @@
               <%= render partial: "cart_item", collection: items.sort_by(&:id), as: :item, locals: { supplier: supplier, f: f } %>
             </ul>
             <div class="panel-footer">
-              <%= f.submit '结算', class: 'btn btn-primary' %>
+              <%= f.submit '结算', class: 'btn btn-primary confirm-order' %>
             </div>
           </div>
         <% end %>
@@ -40,20 +40,44 @@
 
 <script type="text/javascript">
   (function (argument) {
+    // HOT FIX 紧急修复，待进一步完善
+    // 删除不可见的数量输入框，以解决两个相同名称输入框的冲突
+    _.each($('.cart-item>.media'), function(item) {
+      if ('none' == $(item).css('display')) {
+        $(item).remove();
+      }
+    })
+
     // 点击全部选中时，将下属项全部选中
     $('.select-all').change(function (event) {
       var checked = $(this).prop('checked');
       $(this).parents('form').find(':checkbox').prop('checked', checked);
+
+      if (checked) {
+        $(this).parents('.cart').find('.confirm-order').removeAttr('disabled');
+      } else {
+        $(this).parents('.cart').find('.confirm-order').attr('disabled', 'disabled');
+      }
     });
 
     // 当有一个取消选中时，取消全部选中；当所属项全部选中时，勾选全部选中按钮
     $('.chose-item input:checkbox').change(function (event) {
       var checked = $(this).prop('checked');
+      var allCheckbox = $(this).parents('form').find('.chose-item input:checkbox');
 
       if (!checked) {
         $(this).parents('form').find('.select-all').prop('checked', false);
+
+        var allUnChecked = _.all(allCheckbox, function(item) {
+          return !$(item).prop('checked');
+        });
+
+        if (allUnChecked) {
+          $(this).parents('.cart').find('.confirm-order').attr('disabled', 'disabled');
+        }
       } else {
-        var allCheckbox = $(this).parents('form').find('.chose-item input:checkbox');
+        $(this).parents('.cart').find('.confirm-order').removeAttr('disabled');
+
         var allChecked = _.all(allCheckbox, function(item) {
           return $(item).prop('checked');
         });
