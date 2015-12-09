@@ -17,7 +17,7 @@ class @SideMenuManager
     $('.menu-overlayer').on 'click', @_layoutClick.bind(@)
 
     $('.main-container').on 'touchmove', (e) =>
-      if @isVisible
+      if @isVisible()
         e.preventDefault()
 
   resizeHandler: () ->
