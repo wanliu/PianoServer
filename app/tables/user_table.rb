@@ -30,23 +30,25 @@ class UserTable < TableCloth::Base
         <img src='#{user.image}' height='50' width='50' class='upload-image' data-user-id='#{user.id}'>
         <div type="button" class="uploader-btn" data-user-id='#{user.id}'>upload</div>
         <script type="text/javascript">
-          var token = $("meta[name=csrf-token]").attr('content');
-          var action = "/admins/accounts/upload_user_avatar?user_id=#{user.id}";
-          var $button = $(".uploader-btn[data-user-id=#{user.id}]");
-          var $img = $("img[data-user-id=#{user.id}]");
+          (function() {
+            var token = $("meta[name=csrf-token]").attr('content');
+            var action = "/admins/accounts/upload_user_avatar?user_id=#{user.id}";
+            var $button = $(".uploader-btn[data-user-id=#{user.id}]");
+            var $img = $("img[data-user-id=#{user.id}]");
 
-          function uploadSucc(data, status, xhr) {
-            var url = xhr.url;
-            $img.attr('src', url);
-          }
-          
-          $uploader = new qq.FileUploader({
-            element: $button[0],
-            action: action,
-            customHeaders: { "X-CSRF-Token": token },
-            multiple: false,
-            onComplete: uploadSucc
-          })
+            function uploadSucc(data, status, xhr) {
+              var url = xhr.url;
+              $img.attr('src', url);
+            }
+            
+            $uploader = new qq.FileUploader({
+              element: $button[0],
+              action: action,
+              customHeaders: { "X-CSRF-Token": token },
+              multiple: false,
+              onComplete: uploadSucc
+            });
+          })();
         </script>
       HTML
     end
