@@ -81,7 +81,7 @@
     <% if current_anonymous_or_user.id < 0 %>
       <% if weixin_device? %>
         <% if Settings.dev.feature.weixin %>
-          menu.insertGroup('/auth/wechat', 'weixin', '微信登录', { iconClass: 'glyphicon glyphicon-barcode', turbolinks: false });
+          menu.insertGroup(authorize_weixin_path, 'weixin', '微信登录', { iconClass: 'glyphicon glyphicon-barcode', turbolinks: false });
         <% end %>
 
         <% unless Rails.env.production? %>
