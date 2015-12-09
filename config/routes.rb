@@ -116,6 +116,7 @@ Rails.application.routes.draw do
       collection do
         get 'search_wanliu_user', to: 'accounts#search_wanliu_user'
         put 'import/:wanliu_user_id', to: 'accounts#import', as: :import
+        post 'upload_user_avatar'
       end
 
       member do
