@@ -117,6 +117,10 @@ Rails.application.routes.draw do
         get 'search_wanliu_user', to: 'accounts#search_wanliu_user'
         put 'import/:wanliu_user_id', to: 'accounts#import', as: :import
       end
+
+      member do
+        put 'reset', to: 'accounts#reset', as: :reset
+      end
     end
     resources :regions
     resources :promotions

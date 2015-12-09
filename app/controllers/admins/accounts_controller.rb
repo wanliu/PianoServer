@@ -26,6 +26,12 @@ class Admins::AccountsController < Admins::BaseController
     end
   end
 
+  def reset
+    @user = User.find(params[:id])
+    @user.status.try(:destroy)
+    render nothing: true
+  end
+
   def import
     url = "/api/v1/users/#{params[:wanliu_user_id]}/pry.json"
     @remote_user = WanliuUser.find(:one, from: url)
