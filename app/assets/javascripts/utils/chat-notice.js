@@ -4,8 +4,7 @@
   }
 
   NoticeCenter.prototype.addNotice = function(senderId, senderLogin, unreadCount) {
-    var noticeContainer = $('.chat-notices'),
-        senderId = senderId.toString(),
+    var senderId = senderId.toString(),
         notice = this._findNotice(senderId);
 
     if (typeof unreadCount === 'undefined') {
@@ -19,7 +18,6 @@
         'container': this,
         'senderId': senderId,
         'unreadCount': unreadCount,
-        'containment': noticeContainer,
         'senderLogin': senderLogin
       });
     }
@@ -68,7 +66,7 @@
       notice.destroy()
     }
 
-    this.notices = [];
+    this.notices.length = 0;
   };
 
   NoticeCenter.prototype.reloadUnreadMessage = function() {
@@ -111,7 +109,7 @@
   function Notice(opts) {
     opts = opts || {};
 
-    if (!opts.senderId || !opts.containment || !opts.container || !opts.senderLogin) {
+    if (!opts.senderId || !opts.container || !opts.senderLogin) {
       return null;
     }
 
@@ -142,8 +140,8 @@
         senderId = options.senderId,
         container = options.container,
         senderLogin = options.senderLogin,
-        containment = options.containment,
         unreadCount = options.unreadCount;
+        containment = $('.chat-notices');
 
     if (+senderId < 0) {
       senderLogin += Math.abs(senderId);
@@ -184,5 +182,5 @@
     }
   }
 
-  win.noticeCenter = new NoticeCenter();
+  win.NoticeCenter = NoticeCenter;
 })(window, jQuery);

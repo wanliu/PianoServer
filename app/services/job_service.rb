@@ -14,7 +14,7 @@ module JobService
     klass = "::#{_name.to_s.camelize}Job".safe_constantize
 
 
-    sync = options[:sync].nil? ? !sidekiq_is_running? : options[:sync]
+    sync = config_or_sync_options(options)
     perform_method = sync ? :perform_now : :perform_later
 
     klass.send(perform_method, job, *args)
@@ -24,5 +24,17 @@ module JobService
   def sidekiq_is_running?
     worker_api = Sidekiq::Workers.new
     worker_api.each.map.size > 0
+  end
+
+  def config_or_sync_options(options)
+    force_sync ? true : options_sync(options)
+  end
+
+  def options_sync(options)
+    options[:sync].nil? ? !sidekiq_is_running? : options[:sync]
+  end
+
+  def force_sync
+    Settings.job.respond_to?(:force_sync) && Settings.job.send(:force_sync)
   end
 end

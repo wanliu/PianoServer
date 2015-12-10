@@ -63,11 +63,11 @@ class Promotion < ActiveResource::Base
 
   def saleable?(amount=1, props={})
     unless 'Active' == status
-      yield false, 0 if block_given?
+      yield false, false, 0 if block_given?
       return false
     end
 
-    yield product_inventory >= amount, product_inventory if block_given?
+    yield true, product_inventory >= amount, product_inventory if block_given?
     product_inventory >= amount
   end
 end

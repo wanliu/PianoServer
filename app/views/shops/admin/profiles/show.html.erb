@@ -108,8 +108,12 @@
 </div>
 
 <script type="text/javascript">
-  var map = new BMap.Map("map");
-  var point = new BMap.Point(<%= @shop.lon %>, <%= @shop.lat %>);
+  var map = new BMap.Map("map"), point;
+  <% if @shop.lon && @shop.lat %>
+    point = new BMap.Point(<%= @shop.lon %>, <%= @shop.lat %>);
+  <% else %>
+    point = new BMap.Point(116.404, 39.915);
+  <% end %>
   var level = 15;
   var geo = new BMap.Geocoder();
   var marker;

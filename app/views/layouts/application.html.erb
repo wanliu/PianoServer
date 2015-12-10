@@ -107,12 +107,16 @@
       <%= yield %>
       <% case _module %>
       <% when NilClass %>
-        <% cache ["footer", @subject ] do %>
-          <%= render "footer", with: @subject %>
+        <% cache "footer" do %>
+          <%= render "application/footer" %>
         <% end %>
       <% when "shop" %>
         <% cache ["footer", @shop ] do %>
           <%= render "footer", with: @shop %>
+        <% end %>
+      <% when "subject" %>
+        <% cache ["footer", @subject ] do %>
+          <%= render "footer", with: @subject %>
         <% end %>
       <% else %>
         <% cache "footer" do %>
@@ -130,11 +134,8 @@
       <%= render "application/pswp" %>
     <% end %>
 
-    <% if content_for(:module) != "after_registers" %>
-      <%# cache [ "sidebar_menu", current_anonymous_or_user ] do %>
-        <%= render "application/sidebar_menu" %>
-      <%# end %>
-    <% end %>
+    <%= render "application/sidebar_menu" %>
+
     <% if Settings.dev.feature.ccnz %>
       <%= render "ccnz" %>
     <% end %>

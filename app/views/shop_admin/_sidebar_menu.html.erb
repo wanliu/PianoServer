@@ -19,11 +19,15 @@
       menu.insertSection('profile', 'favorites', 'favorites', '我的收藏', { iconClass: 'glyphicon glyphicon-heart' });
     <% end %>
 
-    <% if current_user.user_type != 'consumer' && current_user.is_done? %>
+    <% if current_user.user_type != 'consumer' && !current_user.is_done? %>
       var path = '<%= after_register_path(current_user.user_type) %>';
 
-      menu.insertSection('profile', path, 'completion', '完善店铺信息', {iconClass: 'glyphicon glyphicon-edit' });
+      menu.insertSection('profile', path, 'completion', '完善店铺信息', {iconClass: 'glyphicon glyphicon-edit' })
+    <% elsif current_user.user_type == 'consumer' %>
+      var path = '<%= reset_after_registers_path %>';
+      menu.insertSection('profile', path, 'completion', '升级企业用户', {iconClass: 'glyphicon glyphicon-edit' })
     <% end %>
+
 
     <% if current_user.join_shop %>
       var shopName = '<%= current_user.join_shop.name %>';
@@ -106,21 +110,27 @@
     }
   });
 
-  $(document).on('cart_quantity_changed', function (e, diff) {
-    if (window.manager) {
-      window.manager.updateCartQuantity(diff);
-    }
-  });
+  $(document)
+    .off('cart_quantity_changed')
+    .on('cart_quantity_changed', function (e, quantity) {
+      if (window.manager) {
+        window.manager.updateCartQuantity(quantity);
+      }
+    });
 
-  $(document).on('purchase_orders_quantity_changed', function (e, diff) {
-    if (window.manager) {
-      window.manager.updatePurchaseOrderQuantity(diff);
-    }
-  });
+  $(document)
+    .off('purchase_orders_quantity_changed')
+    .on('purchase_orders_quantity_changed', function (e, quantity) {
+      if (window.manager) {
+        window.manager.updatePurchaseOrderQuantity(quantity);
+      }
+    });
 
-  $(document).on('sale_orders_quantity_changed', function (e, diff) {
-    if (window.manager) {
-      window.manager.updateSaleOrderQuantity(diff);
-    }
-  });
+  $(document)
+    .off('sale_orders_quantity_changed')
+    .on('sale_orders_quantity_changed', function (e, quantity) {
+      if (window.manager) {
+        window.manager.updateSaleOrderQuantity(quantity);
+      }
+    });
 </script>

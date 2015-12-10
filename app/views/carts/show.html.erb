@@ -18,7 +18,7 @@
               </span>
               店铺：
               <%= link_to shop_site_path(supplier.name) do %>
-                <%= supplier.title %> 
+                <%= supplier.title %>
               <% end %>
               (<%= items.map(&:quantity).reduce(:+) %>件商品)
             </div>
@@ -26,7 +26,7 @@
               <%= render partial: "cart_item", collection: items.sort_by(&:id), as: :item, locals: { supplier: supplier, f: f } %>
             </ul>
             <div class="panel-footer">
-              <%= f.submit '结算', class: 'btn btn-primary' %>
+              <%= f.submit '结算', class: 'btn btn-primary confirm-order' %>
             </div>
           </div>
         <% end %>
@@ -34,26 +34,50 @@
     <% end %>
 
     <%#= button_to '全部生成订单', class: 'btn btn-primary' %>
-    
+
   </div>
 </div>
 
 <script type="text/javascript">
   (function (argument) {
+    // HOT FIX 紧急修复，待进一步完善
+    // 删除不可见的数量输入框，以解决两个相同名称输入框的冲突
+    _.each($('.cart-item>.media'), function(item) {
+      if ('none' == $(item).css('display')) {
+        $(item).remove();
+      }
+    })
+
     // 点击全部选中时，将下属项全部选中
     $('.select-all').change(function (event) {
       var checked = $(this).prop('checked');
       $(this).parents('form').find(':checkbox').prop('checked', checked);
+
+      if (checked) {
+        $(this).parents('.cart').find('.confirm-order').removeAttr('disabled');
+      } else {
+        $(this).parents('.cart').find('.confirm-order').attr('disabled', 'disabled');
+      }
     });
 
     // 当有一个取消选中时，取消全部选中；当所属项全部选中时，勾选全部选中按钮
     $('.chose-item input:checkbox').change(function (event) {
       var checked = $(this).prop('checked');
+      var allCheckbox = $(this).parents('form').find('.chose-item input:checkbox');
 
       if (!checked) {
         $(this).parents('form').find('.select-all').prop('checked', false);
+
+        var allUnChecked = _.all(allCheckbox, function(item) {
+          return !$(item).prop('checked');
+        });
+
+        if (allUnChecked) {
+          $(this).parents('.cart').find('.confirm-order').attr('disabled', 'disabled');
+        }
       } else {
-        var allCheckbox = $(this).parents('form').find('.chose-item input:checkbox');
+        $(this).parents('.cart').find('.confirm-order').removeAttr('disabled');
+
         var allChecked = _.all(allCheckbox, function(item) {
           return $(item).prop('checked');
         });
@@ -66,18 +90,25 @@
 
     // 修改所购商品数量
     $('.cart-item input[name=quantity]').keyup(function (event) {
-      changeQuantity(this)
+      var quantity = $(this).val()
+
+      if (!/^[1-9]\d*$/.test(quantity)) {
+        quantity = 1;
+      }
+
+      var newQuantity = 1 * quantity;
+
+      changeQuantity(this, newQuantity);
     });
 
     // 通过减少按钮，修改所购商品数量
     $('.cart-item').on('click', '.btn-minus', function (event) {
       var quantityInput = $(this).parents('.quantity').find('input');
       var quantity = 1 * $(quantityInput).val();
-      var newQuantity = quantity - 1;
 
-      if (1 <= newQuantity) {
-        $(quantityInput).val(newQuantity);
-        changeQuantity(quantityInput);
+      if (quantity > 1) {
+        var newQuantity = quantity - 1;
+        changeQuantity(quantityInput, newQuantity);
       }
     });
 
@@ -85,28 +116,23 @@
     $('.cart-item').on('click', '.btn-plus', function (event) {
       var quantityInput = $(this).parents('.quantity').find('input');
       var quantity = 1 * $(quantityInput).val();
-      $(quantityInput).val(quantity + 1);
-  
-      changeQuantity(quantityInput); 
+      var newQuantity = quantity + 1;
+
+      changeQuantity(quantityInput, newQuantity);
     });
 
-    function changeQuantity(quantityInput, reflect) {
-      var cartItemId = $(quantityInput).parents('.cart-item').data('cartItemId');
-      var quantity = $(quantityInput).val();
+    function changeQuantity(quantityInput, quantity, reflect) {
+      var $cartItem = $(quantityInput).parents('.cart-item:first'),
+          cartItemId = $cartItem.data('cartItemId'),
+          $quantity = $cartItem.find('input[name=quantity]'),
+          $subTotal = $cartItem.find('.subtotal');
+          $group = $(quantityInput).parent('.input-group'),
+          $btnMinus = $group.find('.btn-minus span'),
+          $alert = $group.siblings('.alert');
 
-      var $subTotal = $(quantityInput).parents('.cart-item').find('.subtotal');
-      var $btnMinus = $(quantityInput).parents('.quantity').find('.btn-minus span');
+      $quantity.val(quantity);
 
-      var $alert = $(quantityInput).parents('.input-group').siblings('.alert');
-    
-      if (!/^\d+$/.test(quantity)) {
-        $(quantityInput).val(1);
-        quantity = 1;
-      }
-
-      quantity = 1 * quantity;
-
-      if (quantity > 1) {
+      if (+quantity > 1) {
         $btnMinus.addClass('glyphicon-minus');
       } else {
         $btnMinus.removeClass('glyphicon-minus');
@@ -121,19 +147,19 @@
         $subTotal.text(data.sub_total);
         $('.cart-item-count').text(data.ccount);
 
+        $(document).trigger('cart_quantity_changed', [ data.ccount ])
+
         if (!reflect) $alert.hide();
       }).fail(function (data, xhr, status) {
         // usually caused by the lack of inventory
         var quanOpt = data.responseJSON && data.responseJSON.quantity;
+
         if (quanOpt) {
           var maxQuan = quanOpt[0];
-
-          $alert.find('.max-quantity').text(maxQuan);
-          $(quantityInput).val(maxQuan);
-
-          changeQuantity(quantityInput, true);
-
+          $alert.find('.max-quantity').text(maxQuan)
           $alert.show();
+
+          changeQuantity(quantityInput, maxQuan, true);
         }
       });
     }

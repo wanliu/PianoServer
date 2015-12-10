@@ -17,6 +17,7 @@ class Order < ActiveRecord::Base
   validate :avoid_from_shop_owner
   validate :status_transfer, on: :update
   validate :change_total_on_initiated, on: :update
+  validate :items_should_exist, on: :create
 
   before_save :set_modified, if: :total_changed?
   before_create :caculate_total
@@ -88,5 +89,11 @@ class Order < ActiveRecord::Base
 
   def set_modified
     self.total_modified = true
+  end
+
+  def items_should_exist
+    if items.blank?
+      errors.add(:base, "订单中没有商品，无法创建订单")
+    end
   end
 end

@@ -205,7 +205,7 @@ class AfterRegistersController < ApplicationController
     @step = params[:step]
     @shop = @current_user.owner_shop
     @job = Job.find_or_initialize_by jobable: @shop, job_type: "after_registers/#{@step}"
-    render "after_registers/#{@user_type}/status", formats: [:json]
+    render "after_registers/#{@user_type}/#{@step}_status", formats: [:json]
   end
 
   private
