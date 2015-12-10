@@ -1,7 +1,19 @@
 <style>
 
   body.shop .main-container{
-    background: #02050E;
+    background-color: #02050E;
+    background-image: url(http://wanliu-piano.b0.upaiyun.com/uploads/shop/poster/100159/6cefecc6f0cea76c7aaf2ce76d1f0d15.jpg);
+    background-size: 100%;
+    background-repeat: no-repeat;
+  }
+  
+  body.shop .brand-board {
+  }
+
+  body.shop .brand-board .shop-bgi-default {
+    margin-top: 50px;
+    margin-bottom: -50px;
+    width: 60%;
   }
 
   body.shop .return-btn {
@@ -18,19 +30,19 @@
   body.shop footer *{
     color: #fff;
   }
-  body.shop .brand-board .shop-info{
+  body.shop .brand-board .shop-info {
     position: relative;
     border-bottom: 2px dashed #5D99E9;
   }
-  body.shop .brand-board .shop-info .name-address .name{
+  body.shop .brand-board .shop-info .name-address .name {
     font-size: 26px;
   }
-  body.shop .brand-board .shop-info{
+  body.shop .brand-board .shop-info {
     padding: 21px;
     background: #152E4E;
   }
 
-  body.shop .brand-board .shop-info .shop-logo-wrapper{
+  body.shop .brand-board .shop-info .shop-logo-wrapper {
     padding: 0;
     width: 90px;
   }
@@ -40,12 +52,23 @@
     height: auto;
   }
 
-  body.shop .brand-board .shop-info .attention{
+  body.shop .category-title {
+    padding: 25px 0;
+  }
+
+  body.shop .category-title-img {
+    width: 50%;
+  }
+
+  body.shop .brand-board .shop-info .attention {
     border: 2px solid #000;
-    /*background-color: #0D1D3C;*/
-    background: -webkit-radial-gradient(#183669, #1B3465, #0D1D3C);
+    background-image: url(http://wanliu-piano.b0.upaiyun.com/uploads/shop/poster/100159/25deb4aa99fbe93adf142d53b6126598.jpg);
+    background-size: 100% 100%;
+    background-color: -webkit-radial-gradient(#183669, #1B3465, #0D1D3C);
 
   }
+
+
 
   body.shop .brand-board .shop-info .name-address{
     padding-left: 20px;
@@ -162,6 +185,14 @@
     font-size: 16px;
   }
 
+  body.shop .promotion-image-wrap{
+    padding: 5px;
+  }
+
+  body.shop .primotion-title-wrap {
+    padding: 0 5px 5px 5px;
+  }
+
   .pagination > li a,
   .pagination > li span{
     border-radius: 0!important;
@@ -175,9 +206,33 @@
     background: #F58A44;
   }
 
-  @media (max-width: 484px){
+  @media (max-width: 767px){
+    .xs-no-padding{
+      padding: 0;
+    }
+
+    body.shop .brand-board .shop-bgi-default {
+      margin-top: 10px;
+      margin-bottom: 0;
+      width: 90%;
+    }
+
+    body.shop .cate-items-list{
+      padding: 0;
+    }
+    body.shop .brand-board .shop-bgi {
+      width: 90%;
+    }
+    body.shop .brand-board .shop-info {
+      padding: 10px;
+    }
+
     body.shop .brand-board .shop-info .shop-logo-wrapper{
-      width: 60px;
+      width: 70px;
+    }
+
+    body.shop .cate a {
+      border: 1px dashed #5D99E9;
     }
   }
 </style>

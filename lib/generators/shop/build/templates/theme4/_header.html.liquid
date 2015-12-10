@@ -2,20 +2,24 @@
   {% if shop.poster %}
     <img src="{{ shop.poster }}" class="shop-bgi">
   {% else %}
-    <img src="http://wanliu-piano.b0.upaiyun.com/uploads/shop/poster/100159/c252149e4b74529fba08a250eb8836bc.jpg" class="shop-bgi">
+    <div class="text-right">
+      <img src="http://wanliu-piano.b0.upaiyun.com/uploads/shop/poster/100159/27b79e864f0cff9dd36ef2ff06a87d13.png" class="shop-bgi-default">
+    </div>
   {% endif %}
-  <div class='shop-info'>
-    <div class="media">
-      <div class="shop-logo-wrapper">
-        <img src="{{ shop.avatar_url }}" class="shop-logo" alt="{{ shop.name }}" />
-      </div>
-      <div class='name-address media-middle'>
-        <p class='name'>{{ shop.title }}</p>
-        <p class='address'>{{ shop.address }}</p>
-      </div>
-      <div class="attention media-right media-middle" href="#">
-        <div>周访问量</div>
-        {{ shop.week_hits }}
+  <div class="container xs-no-padding">
+    <div class='shop-info'>
+      <div class="media">
+        <div class="shop-logo-wrapper">
+          <img src="{{ shop.avatar_url }}" class="shop-logo" alt="{{ shop.name }}" />
+        </div>
+        <div class='name-address media-middle'>
+          <p class='name'>{{ shop.title }}</p>
+          <p class='address'>{{ shop.address }}</p>
+        </div>
+        <div class="attention media-right media-middle" href="#">
+          <div>周访问量</div>
+          {{ shop.week_hits }}
+        </div>
       </div>
     </div>
   </div>
