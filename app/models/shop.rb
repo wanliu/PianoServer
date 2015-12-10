@@ -35,7 +35,7 @@ class Shop < ActiveRecord::Base
 
   before_validation :default_values
 
-  store_accessor :settings, :greetings, :theme, :poster
+  store_accessor :settings, :greetings, :theme, :poster, :head_url
 
   mount_uploader :logo, ImageUploader
 

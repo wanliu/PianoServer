@@ -22,7 +22,7 @@
       right: 0;
       bottom: 0;
       font-size: 3em;
-      color: #080;  
+      color: #080;
       opacity: 0;
       transition: all 1s;
     }
@@ -45,6 +45,35 @@
   #shop-poster-img{
     max-width: 90%;
     margin: 30px 0;
+  }
+}
+
+.shop-signage-container {
+  padding-bottom: 30px;
+  position: relative;
+
+  .signage-upload-btn {
+    float: left;
+  }
+
+  .upload-notice {
+    padding-left: 120px;
+    line-height: 34px;
+  }
+
+  .qq-upload-list {
+    display: none;
+  }
+
+  .progress {
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    width: 100%;
+    min-width: 200px;
+    max-width: 300px;
+    display: none;
+    margin: 0;
   }
 }
 

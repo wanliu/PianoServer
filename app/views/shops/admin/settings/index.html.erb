@@ -6,12 +6,12 @@
         <!-- 标题 -->
         <label  class="col-sm-2 control-label" >问候语</label>
         <div class="col-md-5 col-sm-10">
-          <%= f.text_area :greetings, class: 'form-control', rows: 5, save_on_change: true %>
+          <%= f.text_area :greetings, class: "form-control", rows: 5, save_on_change: true %>
         </div>
         <div class="col-md-5 hidden-sm">
           <div class="well">
             <div class= "chat-item">
-              <%= avatar_image_tag current_user.avatar_url, class: 'chat-item-avatar' %>
+              <%= avatar_image_tag current_user.avatar_url, class: "chat-item-avatar" %>
               <h4>
                 <%= current_user.name %>
                 <div class="format-time"></div>
@@ -37,7 +37,7 @@
   <div class="row choose-shop-theme">
     <% @theme_list.each do |theme| %>
       <div class="col-md-3 col-sm-4 col-xs-4">
-        <% _active = @shop.theme == theme[:type] ? 'active' : '' %>
+        <% _active = @shop.theme == theme[:type] ? "active" : "" %>
         <a class="thumbnail theme-btn <%= _active %>" data-theme="<%= theme[:type] %>">
           <%= image_tag image_path("#{theme[:type]}.jpg") %>
           <%= icon(:ok) %>
@@ -58,6 +58,17 @@
 
   <h3 class="page-header">商店名片</h3>
   <div class="row">
+    <div class="col-xs-12">
+      <div class="shop-signage-container clearfix">
+        <div class="signage-upload-btn"></div>
+        <div class="upload-notice">
+          请上传后缀名为.png,.jpg的图片,最佳长宽比为2:1。
+        </div>
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+        </div>
+      </div>
+    </div>
     <%= render partial: "shards/shop_card", object: @shop %>
   </div>
 
@@ -86,60 +97,110 @@
 <script type="text/javascript">
 
   var SaveOnChange = window.SaveOnChange;
-  var saveForm = new SaveOnChange($('#admin-settings'));
+  var saveForm = new SaveOnChange($("#admin-settings"));
+  var light_path = "<%= asset_url("light.png") %>",
+      light_url = ["url(", light_path, ")"].join("");
+
+  function genrateBackgroundStr(signage_url, prefix) {
+    return ["background: ", light_url, " 50%, ", prefix, "linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,0.65) 100%), ", signage_url, ";"].join("");
+  }
+
+  function generateNormalStr(signage_url) {
+    return ["background: ", light_url, " 50%, ", "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.65) 100%), ", signage_url, ";"].join("");
+  }
+
+  function changeBackgroundImage(url) {
+    var image_url = ["url(", url, ")"].join(""),
+        base_url = ["background:", image_url, ";"].join(""),
+        moz_url = genrateBackgroundStr(image_url, "-moz-"),
+        webkit_url = genrateBackgroundStr(image_url, "-webkit-"),
+        normal_url = generateNormalStr(image_url),
+        filter = "filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000', endColorstr='#a6000000',GradientType=0);"
+        addition = "height: 100px; background-size: 100%; background-position: 50%",
+        style = [base_url, moz_url, webkit_url, normal_url,  addition].join("");
+
+    $(".shop-signage").attr("style", style);
+  }
 
   (function () {
     var $element = $("#poster-img-uploader-btn")[0];
-    var actionUrl = '<%= shop_admin_settings_path(@shop.name) %>' + '/upload_shop_poster';
-    var token = $('meta[name=csrf-token]').attr('content');
+    var actionUrl = "<%= shop_admin_settings_path(@shop.name) %>" + "/upload_shop_poster";
+    var token = $("meta[name=csrf-token]").attr("content");
 
     new qq.FileUploader({
       element: $element,
       customHeaders: { "X-CSRF-TOKEN": token },
       action:  actionUrl + "?authenticity_token=" + encodeURIComponent(token),
-      uploadButtonText:'选择海报图片',
+      uploadButtonText:"选择海报图片",
       multiple: false,
       onComplete: function (id, filename, responseJSON) {
         var url = responseJSON.url;
-        $("#shop-poster-img").attr('src', url);
+        $("#shop-poster-img").attr("src", url);
+      }
+    });
+
+    $element = $(".signage-upload-btn")[0];
+    actionUrl = "<%= shop_admin_settings_path(@shop.name) %>" + "/upload_shop_signage";
+    var $progress = $('.shop-signage-container .progress');
+
+    new qq.FileUploader({
+      element: $element,
+      customHeaders: { "X-CSRF-TOKEN": token },
+      action:  actionUrl + "?authenticity_token=" + encodeURIComponent(token),
+      uploadButtonText:"选择海报图片",
+      multiple: false,
+      onComplete: function (id, filename, responseJSON) {
+        var url = responseJSON.url;
+        changeBackgroundImage(url);
+
+        $progress.hide()
+      },
+      onProgress: function(id, fileName, loaded, total) {
+        percent = Math.round(loaded / total * 100, 0) + '%'
+
+        if (loaded > 0) {
+          $progress.show()
+        }
+
+        $progress.find('.progress-bar').width(percent).text(percent)
       }
     });
   })();
 
-  $('.theme-btn').click(function(){
+  $(".theme-btn").click(function(){
     var target = $(this);
 
-    if (target.hasClass('active'))  return;
+    if (target.hasClass("active"))  return;
 
-    var theme = $(this).data('theme');
-    var url = location.pathname + '/change_shop_theme';
+    var theme = $(this).data("theme");
+    var url = location.pathname + "/change_shop_theme";
     $.ajax({
       url: url,
-      type:'PUT',
+      type:"PUT",
       data:{ theme: theme },
       success: function(data){
         if (data.success) {
-          $('.theme-btn').removeClass('active');
-          target.addClass('active');
+          $(".theme-btn").removeClass("active");
+          target.addClass("active");
         } else {
           console.log(data.msg);
-          alert('操作失败')
+          alert("操作失败")
         }
       }
     });
   });
 
-  $('.theme-clear-btn').click(function(){
-    var url = location.pathname + '/reset_shop_poster';
+  $(".theme-clear-btn").click(function(){
+    var url = location.pathname + "/reset_shop_poster";
     $.ajax({
       url: url,
-      type:'PUT',
+      type:"PUT",
       success: function(data){
         if (data.success) {
-          $('#shop-poster-img').attr('src','')
+          $("#shop-poster-img").attr("src","")
         } else {
           console.log(data.msg);
-          alert('操作失败')
+          alert("操作失败")
         }
       }
     });
