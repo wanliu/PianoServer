@@ -3,6 +3,8 @@
 ####################
 class Location < ActiveRecord::Base
   belongs_to :user
+  belongs_to :region, foreign_key: :region_id, primary_key: :city_id
+  has_one :shop
 
   AMOUNT_LIMIT = 4
 
@@ -28,8 +30,6 @@ class Location < ActiveRecord::Base
 
   validate :too_many_record, unless: :skip_validation
 
-  belongs_to :region, foreign_key: :region_id, primary_key: :city_id
-
   after_commit :reset_user_default_address, on: :destroy
 
   attr_accessor :chat_id, :intention_id
@@ -49,6 +49,18 @@ class Location < ActiveRecord::Base
 
   def region_name
     ChinaCity.get(region_id.to_s)
+  end
+
+  def contact
+    super || shop.try(:owner).try(:nickname) || shop.try(:owner).try(:name)
+  end
+
+  def road
+    super || shop.try(:address)
+  end
+
+  def contact_phone
+    super || shop.try(:phone)
   end
 
   def full_address
