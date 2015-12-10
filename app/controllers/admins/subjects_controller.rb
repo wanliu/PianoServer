@@ -2,7 +2,7 @@ class Admins::SubjectsController < Admins::BaseController
 
   before_action :set_subject, only: [:edit, :show, :update, :destroy, :upload]
   def index
-    @subjects = Subject.page
+    @subjects = Subject.order(id: :desc).page(params[:page]).per(params[:per])
   end
 
   def new

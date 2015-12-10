@@ -24,6 +24,8 @@ class Subject < ActiveRecord::Base
   before_validation :default_values
   after_create :create_subject_files
 
+  paginates_per 10
+
   scope :availables, -> do
     where("start_at <= ? and end_at >= ? and status = ?", Time.now, Time.now, 0)
   end
