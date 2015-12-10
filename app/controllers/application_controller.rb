@@ -19,9 +19,9 @@ class ApplicationController < ActionController::Base
   before_action :set_current_cart
   before_action :prepare_system_view_path
   before_action :set_locale
-  # before_action :mobile_filter
 
   helper_method :current_anonymous_or_user, :anonymous?, :current_cart, :mobile?, :weixin_device?
+
   rescue_from ActionController::RoutingError, :with => :render_404
   rescue_from ActiveResource::ResourceNotFound, :with => :render_404
   rescue_from ActiveRecord::RecordNotFound, :with => :render_404
@@ -58,7 +58,7 @@ class ApplicationController < ActionController::Base
     end
 
     set_meta_tags pusherHost: Settings.pusher.socket_host, pusherPort: Settings.pusher.socket_port,
-                  user: current_anonymous_or_user.as_json(include_methods: :avatar_url, except: [:created_at, :updated_at] ),
+                  user: current_anonymous_or_user.as_json(include_methods: [:avatar_url, :is_done], except: [:created_at, :updated_at] ),
                   debug: Settings.debug,
                   keywords: Settings.app.keywords,
                   description: Settings.app.description

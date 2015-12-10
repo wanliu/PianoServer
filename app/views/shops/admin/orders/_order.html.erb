@@ -1,4 +1,4 @@
-<div class="panel panel-default">
+<div class="panel panel-default order">
   <div class="panel-heading">
     <div>
       <%= link_to shop_admin_order_path(current_shop.name, order) do %>
@@ -20,9 +20,12 @@
       <% if order.total_modified? %>
         <sub><del><%= number_to_currency order.origin_total %></del></sub>
       <% end %>
-      <button type="button" class="btn btn-primary"  data-toggle="modal" data-target="#change-total-<%= order.id %>">
-        修改总价
-      </button>
+
+      <% unless order.finish? %>
+        <button type="button" class="btn btn-primary"  data-toggle="modal" data-target="#change-total-<%= order.id %>">
+          修改总价
+        </button>
+      <% end %>
     </h4>
   </div>
 </div>

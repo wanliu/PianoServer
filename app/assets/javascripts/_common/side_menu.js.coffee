@@ -4,18 +4,18 @@ class @SideMenu
     @groups = []
     @isVisible = false
 
-  insertPlainHTML: (fragment) ->
-    @element.append(fragment)
-
-  insertGroup: (name, title, dataOptions = {}) ->
+  insertGroup: (route, name, title, dataOptions = {}) ->
     if name.substring(0, 1) == '/'
       name = name.slice(1)
     name = decodeURIComponent(name)
 
+    if route.substring(0, 1) != '/'
+      route = '/' + route
+
     @groups.push({
       title: title,
       name: name,
-      route: '/' + name,
+      route: route
       routeAnchor: 'group-' + name.replace(/\//g, '-'),
       sections: [],
       dataOptions: dataOptions
@@ -49,10 +49,20 @@ class @SideMenu
       iconStr = @_generateIconElement(dataOptions)
       badgeStr = @_generateBadgeElement(dataOptions)
 
+      if dataOptions.custom_template
+        groupText = """#{dataOptions.custom_template}"""
+      else
+        groupText = """#{iconStr}#{title}"""
+
+      turbolinks = if dataOptions.turbolinks? and !dataOptions.turbolinks
+          "data-no-turbolink"
+        else
+          ""
+
       if sections.length > 0
         template = """
           <li id="#{routeAnchor}" class="group-item">
-            <span href="javascript:void(0);" class="group-title">#{iconStr}#{title}</span>
+            <a href="#{route}">#{groupText}</a>
             #{badgeStr}
         """
 
@@ -79,13 +89,13 @@ class @SideMenu
         if dataOptions['qrode']
           template = """
             <li id="group-qrode" class="group-item">
-              <a href="javascript:void(0);">#{iconStr}#{title}</a>
+              <a href="javascript:void(0);">#{groupText}</a>
             </li>
           """
         else
           template = """
             <li id="#{routeAnchor}" class="group-item">
-              <a href="#{route}" class="ellipsis-text">#{iconStr}#{title}#{badgeStr}</a>
+              <a href="#{route}" class="ellipsis-text" #{turbolinks} >#{groupText}#{badgeStr}</a>
             </li>
           """
         $(template).appendTo(@element)
@@ -169,46 +179,40 @@ class @SideMenu
 
     if arguments.length = 2
       sectionName = arguments[0]
-      diff = arguments[1]
+      newQuantity = arguments[1]
       section = @_lookupSection(sectionName)
     else if arguments.length >= 3
       groupName = arguments[0]
       sectionName = arguments[1]
-      diff = arguments[2]
+      newQuantity = arguments[2]
       section = @_lookupSectionByGroupName(groupName, sectionName)
 
     return unless section
 
-    @_updateSectionQuantityBadge(section, diff)
+    @_updateSectionQuantityBadge(section, newQuantity)
 
-  _updateSectionQuantityBadge: (section, diff) ->
+  _updateSectionQuantityBadge: (section, newQuantity) ->
     { has_quantity, quantity } = section.dataOptions
-    return unless has_quantity || isNaN(diff)
+    return unless has_quantity || isNaN(newQuantity) || section.dataOptions.has_quantity
 
-    quantity += +diff
-    quantity = 0 if quantity < 0
+    newQuantity = 0 if +newQuantity < 0
 
-    section.dataOptions.quantity = quantity
+    section.dataOptions.quantity = newQuantity
     sel = ['li#section-', section.name, ' .badge'].join('')
     $sel = @$containment.find(sel)
 
-    $sel.text(quantity) if $sel.length
+    $sel.text(newQuantity) if $sel.length
 
-  updateGroupQuantity: (name, diff) ->
+  updateGroupQuantity: (name, newQuantity) ->
     group = @_lookupGroup(name)
-    return unless group || isNaN(diff)
+    return unless group || isNaN(newQuantity) || group.dataOptions.has_quantity
 
-    { has_quantity, quantity } = group.dataOptions
-    return unless has_quantity
-
-    quantity += +diff
-
-    quantity = 0 if quantity < 0
+    newQuantity = 0 if +newQuantity < 0
 
     sel = [ 'li#group-', name, ' .badge'].join('')
-    @$containment.find(sel).text(quantity)
+    @$containment.find(sel).text(newQuantity)
 
-    group.dataOptions.quantity = quantity
+    group.dataOptions.quantity = newQuantity
 
   refreshMenu: () ->
     @$containment.html('')
@@ -222,8 +226,14 @@ class @SideMenu
       @isVisible = false
       @element.hide()
 
-  updateCartQuantity: (diff) ->
-    @updateGroupQuantity('cart', diff)
+  updateCartQuantity: (quantity) ->
+    @updateGroupQuantity('cart', quantity)
+
+  updatePurchaseOrderQuantity: (quantity) ->
+    @updateSectionQuantity('purchase-orders', quantity)
+
+  updateSaleOrderQuantity: (quantity) ->
+    @updateSectionQuantity('sale-orders', quantity)
 
   destroy: () ->
     @element.remove()

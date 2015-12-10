@@ -6,7 +6,7 @@
     </div>
     <div class="media-body">
       <h4 class="media-heading"><%= industry.title %> </h4>
-      <p><%= industry.description %></p>
+      <p><%=sanitize industry.description %></p>
     </div>
   </div>
 <% end %>

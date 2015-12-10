@@ -17,13 +17,13 @@
     <li><%= link_to '商品', shop_admin_items_path(@shop.name) %></li>
 <!--     <li><%= link_to '关于', about_shop_path(@shop.name) %></li>-->
     <li>
-      <%= link_to '订单', shop_admin_orders_path(@shop.name) %>
+      <%= link_to '订单', 'javascript: void(0)' %>
       <ul class="nav">
         <li>
           <%= link_to '我卖的', shop_admin_orders_path(@shop.name) %>
         </li>
         <li>
-          <%= link_to '我买的', orders_path %>
+          <%= link_to '我买的', shop_admin_purchase_orders_path(@shop.name) %>
         </li>
       </ul>
     </li>

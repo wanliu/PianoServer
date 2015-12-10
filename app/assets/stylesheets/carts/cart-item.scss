@@ -92,3 +92,13 @@
     }
   }
 }
+
+
+.cart-item.buy-now-item {
+  .visible-xs-block, .visible-sm-block {
+    .quantity, .operations {
+      padding: 0;
+      margin: 5px 0;
+    }
+  }
+}

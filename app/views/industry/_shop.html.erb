@@ -1,6 +1,7 @@
 <div class="col-sm-6 col-md-4 col-xs-12">
   <%= panel class: "shop no-padding"  do %>
-    <div class="panel-heading <%= "hidden-xs" if Settings.dev.feature.mobile.mini %>" >
+
+    <div class="panel-heading <%= "hidden-xs" if Settings.dev.feature.mobile.mini %>" style="<%= shop_header_style(shop)%>" >
 
     </div>
     <div class="panel-body">

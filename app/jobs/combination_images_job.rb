@@ -39,15 +39,21 @@ class CombinationImagesJob < ActiveJob::Base
                  end
 
     image_urls.map do |url|
-      puts "downloading #{url}"
-      image = RestClient.get url, :accept => 'image/jpg; image/png; image/gif'
-      tmp = Tempfile.new(['download' , get_extname(url, image.headers[:content_type])], dest_path)
-      ObjectSpace.undefine_finalizer(tmp)
-      puts "to #{tmp.path}"
-      tmp.binmode
-      tmp.write image
-      # tmp.close
-      tmp.path
+      path = nil
+
+      begin
+        puts "downloading #{url}"
+        image = RestClient.get url, :accept => 'image/jpg; image/png; image/gif'
+        tmp = Tempfile.new(['download' , get_extname(url, image.headers[:content_type])], dest_path)
+        ObjectSpace.undefine_finalizer(tmp)
+        puts "to #{tmp.path}"
+        tmp.binmode
+        tmp.write image
+        # tmp.close
+        path = tmp.path
+      rescue Exception => ex
+        path = nil
+      end
     end
   end
 
@@ -80,13 +86,13 @@ class CombinationImagesJob < ActiveJob::Base
 
   #   width = options["size"]["width"]
   #   height = options["size"]["height"]
-    
+
   #   space = 1
   #   sub_width = (width + space) / rows
   #   sub_height = (height + space) / cols
 
-  #   images = urls[1..(rows*cols)].map do |url| 
-  #     MiniMagick::Image.new(url) do |b| 
+  #   images = urls[1..(rows*cols)].map do |url|
+  #     MiniMagick::Image.new(url) do |b|
   #       b.resize "#{sub_width}x#{sub_height}"
   #     end
   #   end
@@ -98,7 +104,7 @@ class CombinationImagesJob < ActiveJob::Base
   #     x = (i / rows) * sub_width + space
   #     y = (i % cols) * sub_height + space
   #     c.compose "Over"    # OverCompositeOp
-  #     c.geometry "+#{x}+#{y}" # copy second_image onto first_image from (20, 20)      
+  #     c.geometry "+#{x}+#{y}" # copy second_image onto first_image from (20, 20)
 
   #     puts "x = #{x}, y = #{y}, resize = #{sub_width}x#{sub_height}, geometry = +#{x}+#{y}"
   #     i += 1

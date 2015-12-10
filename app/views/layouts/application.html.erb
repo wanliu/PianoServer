@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge, chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" >
-    <% cache do %>
+    <% cache [ :meta_tags, current_anonymous_or_user.id ] do %>
       <%= display_meta_tags site: Settings.app.name, separator: '-', reverse: true %>
     <% end %>
 
@@ -41,7 +41,7 @@
     <%= yield :stylesheets %>
     <%= yield :javascripts %>
 
-    <%= analytics_init if Rails.env.production? and Settings.GA.track %>
+    <%#= analytics_init if Rails.env.production? and Settings.GA.track %>
 
     <!--[if lt IE 9]>
       <style type="text/css">
@@ -99,26 +99,37 @@
     <%# end %>
 
     <%= yield :fixed_bottom %>
+
     <div class="chat-notices"></div>
     <div class="menu-container"></div>
     <div class="main-container">
       <div class="menu-overlayer"></div>
-      <%= bootstrap_flash %>
-      <%= yield %>
-      <% case _module %>
-      <% when NilClass %>
-        <% cache ["footer", @subject ] do %>
-          <%= render "footer", with: @subject %>
+
+        <% if _module == 'subject' %>
+          <%= bootstrap_flash %>
+        <% else %>
+          <div class="container"><%= bootstrap_flash %></div>
         <% end %>
-      <% when "shop" %>
-        <% cache ["footer", @shop ] do %>
-          <%= render "footer", with: @shop %>
+
+        <%= yield %>
+        <% case _module %>
+        <% when NilClass %>
+          <% cache "footer" do %>
+            <%= render "application/footer" %>
+          <% end %>
+        <% when "shop" %>
+          <% cache ["footer", @shop ] do %>
+            <%= render "footer", with: @shop %>
+          <% end %>
+        <% when "subject" %>
+          <% cache ["footer", @subject ] do %>
+            <%= render "footer", with: @subject %>
+          <% end %>
+        <% else %>
+          <% cache "footer" do %>
+            <%= render "application/footer" %>
+          <% end %>
         <% end %>
-      <% else %>
-        <% cache "footer" do %>
-          <%= render "application/footer" %>
-        <% end %>
-      <% end %>
     </div>
 
     <% cache ['qrcode', request.url] do %>
@@ -130,10 +141,10 @@
       <%= render "application/pswp" %>
     <% end %>
 
-    <% if content_for(:module) != "after_registers" %>
-      <% cache [ "sidebar_menu", current_anonymous_or_user ] do %>
-        <%= render "application/sidebar_menu" %>
-      <% end %>
+    <%= render "application/sidebar_menu" %>
+
+    <% if Settings.dev.feature.ccnz %>
+      <%= render "ccnz" %>
     <% end %>
     <script type="text/javascript">
       <% unless Rails.env.production? %>

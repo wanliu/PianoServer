@@ -1,0 +1,33 @@
+<div class="col-sm-6 col-md-6 col-xs-12">
+  <%= panel class: "shop no-padding"  do %>
+    <div class="panel-heading <%= "hidden-xs" if Settings.dev.feature.mobile.mini %>" style="<%= shop_header_style(shop_card)%>" >
+
+    </div>
+    <div class="panel-body">
+      <div class="media">
+        <div class="media-left">
+          <%= image_tag shop_card.logo.url(:avatar), size: "50x50", class: "img-thumbnail" %>
+          <span class="label label-default"><%= t(shop_card.shop_type, scope: "shop_types") %></span>
+        </div>
+        <div class="media-body">
+          <h4 class="media-heading"><%= shop_card.title || shop_card.name %></h4>
+          <p class="address-group">
+            <span class="location"><%= shop_card.address %></span>
+            <%= link_to map_url(shop_card.lat, shop_card.lon, shop_card.title, shop_card.description), class: 'map text-muted', target: '_blank' do %>
+              <%= icon 'map-marker' %><span class="distance" lat="<%= shop_card.lat %>" lon="<%= shop_card.lon %>"></span>
+            <% end %>
+          </p>
+          <%= phone_link shop_card.phone, class: 'button telephone' do %>
+            <%= icon 'phone-alt' %> <%= shop_card.phone %>
+          <% end %>
+          <%= link_to '#', class: "button chat" do %>
+            <%= icon :comment %> 洽谈
+          <% end %>
+          <%= link_to shop_site_path(shop_card.name, format: 'html'), class: "button website" do %>
+            <%= icon :home %> 网店
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

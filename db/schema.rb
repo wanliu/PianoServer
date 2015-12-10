@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151204071231) do
+ActiveRecord::Schema.define(version: 20151207114128) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -413,19 +413,19 @@ ActiveRecord::Schema.define(version: 20151204071231) do
     t.string   "category_type"
     t.integer  "iid"
     t.integer  "parent_id"
-    t.integer  "lft",                        null: false
-    t.integer  "rgt",                        null: false
-    t.integer  "depth",          default: 0, null: false
-    t.integer  "children_count", default: 0, null: false
+    t.integer  "lft",                           null: false
+    t.integer  "rgt",                           null: false
+    t.integer  "depth",          default: 0,    null: false
+    t.integer  "children_count", default: 0,    null: false
     t.integer  "position"
     t.jsonb    "data"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
     t.string   "image"
     t.string   "title"
     t.integer  "shop_id"
     t.text     "description"
-    t.boolean  "status"
+    t.boolean  "status",         default: true
   end
 
   add_index "shop_categories", ["iid"], name: "index_shop_categories_on_iid", using: :btree
@@ -533,7 +533,7 @@ ActiveRecord::Schema.define(version: 20151204071231) do
     t.string   "mobile"
     t.string   "username"
     t.string   "authentication_token"
-    t.string   "image",                  default: "", null: false
+    t.string   "image",                  default: ""
     t.string   "nickname"
     t.string   "provider"
     t.integer  "latest_location_id"

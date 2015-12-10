@@ -1,25 +1,38 @@
+
 <%= panel heading: "后台任务执行中，请等待几秒到十几秒中，数据正在生成中。。。" do %>
   <div class="panel-body">
-    <div class="message" ></div>
+    <div class="message" >
+      <%= row do %>
+        <div class="col-sm-offset-4 col-sm-4">
+          <%= progress_bar percentage: 100, animated: true, label: '正在载入数据' %>
+        </div>
+      <% end %>
+    </div>
     <%= row do %>
-      <div class="col-sm-offset-4 col-sm-4">
-        <%= progress_bar percentage: 100, animated: true, label: '正在载入数据' %>
+      <div class="col-sm-offset-4 col-sm-4 col-xs-12">
+        <%= link_to "跳过等待进入首页", root_path, class: "btn btn-default btn-block" %>
       </div>
     <% end %>
   </div>
 <% end %>
 
 <script type="text/javascript">
-  var url = "<%= status_after_register_path(@user_type, step: @step) %>";
+  var url = "<%= status_after_register_path(@user_type, step: step) %>";
   var tickId = setInterval(checkStatus, 2000);
   var tickCount = 0;
+  var target = "<%= defined?(replace_target) ? replace_target : '.table-detail' %>";
 
   function checkStatus() {
     $.getJSON(url).then(function(resp) {
       if (resp.status == "done") {
-        $('.table-detail').hide().html(resp.html).fadeIn();
+        $(target).hide().html(resp.html).fadeIn();
         clearInterval(tickId);
       } else if (tickCount++ >= 100) {
+        clearInterval(tickId);
+      } else if (resp.status == "fail") {
+        // throw new Error("任务失败.")
+        var dialog = "<%=j alert_box '任务失败，请联系网管 master@wanliu.biz', context: :danger %>"
+        $(".message").html(dialog)
         clearInterval(tickId);
       }
     }).fail(function(e) {

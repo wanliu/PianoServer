@@ -12,7 +12,17 @@
 	      <% end %>
 	    </p>
       <div class="price-board clearfix">
-        <a class="snap-up" href="javascript:void(0);">马上抢购</a>
+        <% if promotion.product_inventory == 0 %>
+          <span class="snap-end">已售罄</span>
+        <% else %>
+          <% if  promotion.status == 'Published' %>
+            <span class="snap-ready">未开始</span>
+          <% elsif promotion.status == 'Active' %>
+            <span class="snap-up">抢购中</span>
+          <% else %>
+            <span class="snap-end">已结束</span>
+          <% end %>
+        <% end %>
         <div class="prices">
           <span class="disount-price">￥<%= promotion.discount_price %></span>
           <span class="origin-price"><s>￥<%= promotion.product_price %></s></span>

@@ -26,6 +26,12 @@ class Admins::AccountsController < Admins::BaseController
     end
   end
 
+  def reset
+    @user = User.find(params[:id])
+    @user.status.try(:destroy)
+    render nothing: true
+  end
+
   def import
     url = "/api/v1/users/#{params[:wanliu_user_id]}/pry.json"
     @remote_user = WanliuUser.find(:one, from: url)
@@ -86,6 +92,16 @@ class Admins::AccountsController < Admins::BaseController
     @admins_account.destroy
 
     head :no_content
+  end
+
+  def upload_user_avatar
+    user = User.find(params[:user_id])
+
+    user.update_attribute('image', params[:file])
+    render json: { success: true, url: user.image.url(:cover), filename: user.image.filename }, stauts: :created
+    # else
+    #   render json: { success: false, errors: user.errors }, status: :unprocessable_entity
+    # end
   end
 
   private
