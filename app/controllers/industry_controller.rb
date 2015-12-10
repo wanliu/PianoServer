@@ -82,7 +82,7 @@ class IndustryController < ApplicationController
   end
 
   def region_updowns
-    index = @regions.index @current_region
+    index = @regions.index(@current_region) || 0
     previous = index - 1
     _next = index + 1
     @previous_region = previous >= 0 ? @regions[previous] : nil
