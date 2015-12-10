@@ -2,7 +2,7 @@
   <div class="menu-overlayer"></div>
   <div class="link-table">
     <% if Settings.dev.feature.shop.website %>
-      <%= link_to shop_site_path(shop_name: promotion.shop_name), class: "contact-button into-shop" do %>
+      <%= link_to shop_site_path(shop_name: promotion.shop.name), class: "contact-button into-shop" do %>
         <span class="button-icon glyphicon glyphicon-home" aria-hidden="true"></span>
         <div class="button-text">商家</div>
       <% end %>
