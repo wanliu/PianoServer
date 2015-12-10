@@ -71,7 +71,7 @@
   menu.insertGroup('about', 'about', '关于我们', {iconClass: 'glyphicon glyphicon-blackboard' });
 
   <% if Settings.dev.feature.industry %>
-    <% if @industry %>
+    <% if @industry && @industry.id %>
       route = '<%= industry_path(@industry.name) %>';
       menu.insertGroup(route, 'industry', '行业', { iconClass: 'glyphicon glyphicon-flag' });
     <% end %>
