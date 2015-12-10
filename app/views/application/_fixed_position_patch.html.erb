@@ -1,0 +1,11 @@
+<script type="text/javascript">
+  $('input[type="text"], input[type="password"], textarea').on('focus', function() {
+    if ($(window).width < 768) {
+      $('body').addClass('fixed-position-patch');
+    }
+  }).on('blur', function() {
+    if ($(window).width < 768) {
+      $('body').removeClass('fixed-position-patch');
+    }
+  });
+</script>

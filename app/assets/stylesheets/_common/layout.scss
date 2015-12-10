@@ -27,6 +27,12 @@ body.chat footer{
   display: none;
 }
 
+body.fixed-position-patch {
+  .navbar-top, .navbar-fixed-bottom {
+    position: absolute;
+  }
+}
+
 .menu-container {
   z-index: 1050;
   position: fixed;
