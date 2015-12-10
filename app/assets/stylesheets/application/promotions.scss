@@ -98,19 +98,27 @@ $border-color: #CCCCCC;
     background: #F12A39;
     padding: 5px;
     margin-bottom: 10px;
+    position: relative;
 
-    .snap-up{
-      float: right;
+    .snap-up, .snap-end, .snap-ready{
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: 0 8px;
       color: #FFFFFF;
-      vertical-align: top;
+      line-height: 34px;
+    }
 
-      &:visited{
-        color: #FFFFFF;
-      }
+    .snap-up {
+      background: #FF2B2B;
+    }
 
-      &:hover{
-        background: transparent;
-      }
+    .snap-end {
+      background: #666666;
+    }
+
+    .snap-ready {
+      background: #FF6600;
     }
 
     .prices{
@@ -118,7 +126,7 @@ $border-color: #CCCCCC;
       text-overflow: ellipsis;
       white-space: nowrap;
       color: #FFFFFF;
-      font-size: 0.8em;
+      font-size: 1em;
       font-family: Impact, Charcoal, sans-serif;
 
       .disount-price {
