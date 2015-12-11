@@ -1,4 +1,5 @@
 class Category < ActiveRecord::Base
+  STATUS_TAGS = %w(打开 关闭 优先 推荐)
   HashEx = ActiveSupport::HashWithIndifferentAccess
 
   include Elasticsearch::Model
@@ -9,6 +10,7 @@ class Category < ActiveRecord::Base
   class_attribute :default_templates
 
   acts_as_tree :cache_depth => true
+  acts_as_taggable_on :states
 
   belongs_to :upper, class_name: "Category", foreign_key: 'upper_properties_id'
   belongs_to :brand

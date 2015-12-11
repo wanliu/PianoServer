@@ -143,13 +143,14 @@
 
     <%= render "application/sidebar_menu" %>
 
-    <% if Settings.dev.feature.ccnz %>
-      <%= render "ccnz" %>
-    <% end %>
+
     <script type="text/javascript">
       <% unless Rails.env.production? %>
         console.log('development version: <%= PianoServer::VERSION %>')
       <% end %>
     </script>
+    <% if Settings.dev.feature.ccnz %>
+      <%= render "cnzz" %>
+    <% end %>
   </body>
 </html>
