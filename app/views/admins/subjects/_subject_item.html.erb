@@ -2,11 +2,14 @@
   <div class="subject-info">
     <%= link_to edit_admins_subject_path(subject_item) do %>
       <h3>
-        <% if current_subject == subject_item %>
-          <%= icon :ok %>
-        <% end %>
         <%= subject_item.title %>
       </h3>
+    <% end %>
+  </div>
+
+  <div class="subject-current">
+    <% if current_subject == subject_item %>
+      <%= icon :ok %>当前主题
     <% end %>
   </div>
 
