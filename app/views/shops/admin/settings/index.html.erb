@@ -101,16 +101,30 @@
       multiple: false,
       onComplete: function (id, filename, responseJSON) {
         var url = responseJSON.url;
-        $("#shop-poster-img").attr('src', url);
+        $('.poster-wrap').html('<img src='+url+' id="shop-poster-img" alt="商店海报">');
       }
     });
   })();
 
+  $('.theme-clear-btn').click(function(){
+    var url = location.pathname + '/reset_shop_poster';
+    $.ajax({
+      url: url,
+      type:'PUT',
+      success: function(data){
+        if (data.success) {
+          $('.poster-wrap').html('<span>使用默认海报</span>');
+        } else {
+          console.log(data.msg);
+          alert('操作失败')
+        }
+      }
+    });
+  });
+
   $('.theme-btn').click(function(){
     var target = $(this);
-
     if (target.hasClass('active'))  return;
-
     var theme = $(this).data('theme');
     var url = location.pathname + '/change_shop_theme';
     $.ajax({
@@ -128,21 +142,5 @@
       }
     });
   });
-
-  $('.theme-clear-btn').click(function(){
-    var url = location.pathname + '/reset_shop_poster';
-    $.ajax({
-      url: url,
-      type:'PUT',
-      success: function(data){
-        if (data.success) {
-          $('#shop-poster-img').attr('src','')
-        } else {
-          console.log(data.msg);
-          alert('操作失败')
-        }
-      }
-    });
-  })
 
 </script>
