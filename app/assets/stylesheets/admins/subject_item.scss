@@ -3,13 +3,22 @@
   width: 100%;
 
   .subject-info{
+    width: 34%;
     display: table-cell;
   }
 
   .subject-toggle{
+    width: 33%;
     display: table-cell;
-    width: 55px;
+    // width: 55px;
     line-height: 100%;
     vertical-align: middle;
+    text-align: right;
+  }
+
+  .subject-delete {
+    width: 33%;
+    display: table-cell;
+    text-align: right;
   }
 }
