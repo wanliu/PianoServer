@@ -28,6 +28,9 @@ body.chat footer{
 }
 
 body.fixed-position-patch {
+  position: relative;
+  height: auto;
+
   .navbar-top, .navbar-fixed-bottom {
     position: absolute;
   }
