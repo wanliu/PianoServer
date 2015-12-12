@@ -42,6 +42,7 @@
 //= require lib/pastemedia
 //= require lib/ajax_status
 //= require lib/jquery.path
+//= require lib/fastclick
 //= require utils/alert-dismiss
 //= require utils/parseUrl
 //= require _common/fileuploader
@@ -67,4 +68,8 @@ dataConfirmModal.setDefaults({
   title: '确认执行此操作？',
   commit: '确定',
   cancel: '取消'
+});
+
+$(function() {
+    FastClick.attach(document.body);
 });
