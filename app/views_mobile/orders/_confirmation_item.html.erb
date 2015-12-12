@@ -1,0 +1,35 @@
+<li class="list-group-item order-item"  id="order-item-<%= item.id %>">
+  <div class="media">
+    <div class='media-left'>
+      <div class="avatar">
+        <%= link_to cartable_url(item) do %>
+          <%= image_tag item.avatar_url, class: 'media-object', alt: "商品图片" %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class='media-left'>
+      <div class="title">
+        <%= item.title %>
+      </div>
+
+      <div class="properties">
+        <%= item.properties_title %>
+      </div>
+
+      <div>
+        <div class="price media-left">
+          <%= number_to_currency item.price %>
+        </div>
+
+        <div class="quantity media-left">
+          × <%= number_with_delimiter item.quantity %>
+        </div>
+      </div>
+
+      <div class="subtotal">
+        <%= number_to_currency item.price * item.quantity %>
+      </div>
+    </div>
+  </div>
+</li>

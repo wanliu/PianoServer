@@ -2,6 +2,8 @@ class CartsController < ApplicationController
   # before_action :set_cart
   class DisallowSaleMode < ActiveModel::ForbiddenAttributesError; end
 
+  before_action :check_for_mobile, only: [:show]
+
   def show
     @items = current_cart.items
   end

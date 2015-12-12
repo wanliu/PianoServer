@@ -40,14 +40,6 @@
 
 <script type="text/javascript">
   (function (argument) {
-    // HOT FIX 紧急修复，待进一步完善
-    // 删除不可见的数量输入框，以解决两个相同名称输入框的冲突
-    _.each($('.cart-item>.media'), function(item) {
-      if ('none' == $(item).css('display')) {
-        $(item).remove();
-      }
-    })
-
     // 点击全部选中时，将下属项全部选中
     $('.select-all').change(function (event) {
       var checked = $(this).prop('checked');

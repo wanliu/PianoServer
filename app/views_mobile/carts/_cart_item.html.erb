@@ -1,32 +1,40 @@
 <% saleable = item.cartable.saleable?(item.quantity, item.properties) %>
 <li class="list-group-item cart-item <%= saleable ? 'saleable' : 'unsaleable' %>" data-cart-item-id="<%= item.id %>">
   <div class="media">
-    <div class="chose-item media-left">
-      <% if saleable %>
-        <%= f.check_box "cart_item_ids", {multiple: true, checked: true}, item.id, nil %>
-      <% else %>
-        <span class='unsaleable'>失效</span>
-      <% end %>
-    </div>
-    <div class="avatar media-left">
-      <%= link_to cartable_url(item) do %>
-        <%= image_tag item.avatar_url, class: 'media-object', alt: "商品图片" %>
-      <% end %>
-    </div>
-
-    <div class="title media-left">
-      <%= item.title %>
+    <div class='media-left'>
+      <div class="chose-item media-left">
+        <% if saleable %>
+          <%= f.check_box "cart_item_ids", {multiple: true, checked: true}, item.id, nil %>
+        <% else %>
+          <span class='unsaleable'>失效</span>
+        <% end %>
+      </div>
+      <div class="avatar media-left">
+        <%= link_to cartable_url(item) do %>
+          <%= image_tag item.avatar_url, class: 'media-object', alt: "商品图片" %>
+        <% end %>
+      </div>
     </div>
 
-    <div class="properties media-left">
-      <%= item.properties_title %>
+    <div class='media-left'>
+      <div class="title">
+        <%= item.title %>
+      </div>
+
+      <div class="properties">
+        <%= item.properties_title %>
+      </div>
+
+      <div class="price">
+        <%= number_to_currency item.price %>
+      </div>
+
+      <div class="subtotal media-left">
+        <%= number_to_currency item.price * item.quantity %>
+      </div>
     </div>
 
-    <div class="price media-left">
-      <%= number_to_currency item.price %>
-    </div>
-
-    <div class="quantity media-left">
+    <div class="quantity">
       <% if saleable %>
       <div class="input-group">
         <span class="input-group-btn">
@@ -53,11 +61,7 @@
       <% end %>
     </div>
 
-    <div class="subtotal media-left">
-      <%= number_to_currency item.price * item.quantity %>
-    </div>
-
-    <div class="operations media-left">
+    <div class="operations">
       <%= link_to "移出购物车", item, method: :delete, data: { confirm: '确定删除这个商品么？' } %>
     </div>
   </div>
