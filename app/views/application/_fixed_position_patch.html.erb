@@ -1,0 +1,26 @@
+<script type="text/javascript" data-turbolinks-track>
+  $('body')
+    .off('focus.keyboard', 'input[type="text"], input[type="password"], textarea')
+    .on('focus.keyboard', 'input[type="text"], input[type="password"], textarea', function() {
+      if ($(window).width() < 768) {
+        $('body').addClass('fixed-position-patch');
+      }
+    })
+    .off('blur.keyboard', 'input[type="text"], input[type="password"], textarea')
+    .on('blur.keyboard', 'input[type="text"], input[type="password"], textarea', function() {
+      if ($(window).width() < 768) {
+        $('body').removeClass('fixed-position-patch');
+      }
+    });
+
+  // $('input[type="text"], input[type="password"], textarea').on('focus', function() {
+  //   if ($(window).width < 768) {
+  //     alert('aaaaaaaaa')
+  //     $('body').addClass('fixed-position-patch');
+  //   }
+  // }).on('blur', function() {
+  //   if ($(window).width < 768) {
+  //     $('body').removeClass('fixed-position-patch');
+  //   }
+  // });
+</script>

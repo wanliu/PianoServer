@@ -47,6 +47,7 @@
 //= require jquery-ui/effect.all
 //= require_tree ./locales
 //= require_tree ./admins
+//= require_tree ./utils
 //= require_tree ./shop
 //= require_self
 

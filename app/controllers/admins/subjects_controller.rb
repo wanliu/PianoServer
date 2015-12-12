@@ -36,6 +36,14 @@ class Admins::SubjectsController < Admins::BaseController
 
   end
 
+  def destroy
+    if @subject.destroy 
+      redirect_to admins_subjects_path, notice: "主题'#{@subject.title}'已经成功删除！"
+    else
+      redirect_to admins_subjects_path, flash: { error: @subject.errors.full_messages.join('，') }
+    end
+  end
+
   private
 
   def set_subject
