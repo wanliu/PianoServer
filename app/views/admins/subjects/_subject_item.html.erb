@@ -1,8 +1,15 @@
 <li class="list-group-item subject-item" data-subject-id="<%= subject_item.id %>">
   <div class="subject-info">
     <%= link_to edit_admins_subject_path(subject_item) do %>
-      <%= icon :ok %>
-      <h3><%= subject_item.title %></h3>
+      <h3>
+        <%= subject_item.title %>
+      </h3>
+    <% end %>
+  </div>
+
+  <div class="subject-current">
+    <% if current_subject == subject_item %>
+      <%= icon :ok %>当前主题
     <% end %>
   </div>
 
@@ -13,5 +20,9 @@
         <div class="handle"></div>
       </div>
     </label>
+  </div>
+
+  <div class='subject-delete'>
+    <%= link_to "Delete", admins_subject_path(subject_item), class: 'btn btn-danger', method: :delete,  data: { confirm: "确定删除该主题，以及该主题对应的所有模板文件么？" } %>
   </div>
 </li>
