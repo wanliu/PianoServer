@@ -1,10 +1,11 @@
 {% module shop %}
 {% include "style" %}
+
+{% include "header" %}
+
 <div class="container">
   <div class="row">
     <div class="cate-items-list clearfix col-md-12">
-      {% include "header" %}
-      {% comment %}{{ shop.description }}{% endcomment %}
       <div class='title'>
         {% title_chain shop shop_category %}
         <div class="return-btn">
@@ -25,22 +26,24 @@
           <div class="row">
             {% include "category" for paginate.collection %}
           </div>
+
+          <nav class="text-center">
+            <ul class="pagination">
+              {% for part in paginate.parts %}
+                {% if part.is_link %}
+                  <li >
+                    {{ part.title | link_to:  part.url }}
+                  </li>
+                {% else %}
+                  <li class="active">
+                    <span>{{ part.title }}<span class="sr-only">(current)</span></span>
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </nav>
+
         </div>
-        <nav class="text-center">
-          <ul class="pagination">
-            {% for part in paginate.parts %}
-              {% if part.is_link %}
-                <li >
-                  {{ part.title | link_to:  part.url }}
-                </li>
-              {% else %}
-                <li class="active">
-                  <span>{{ part.title }}<span class="sr-only">(current)</span></span>
-                </li>
-              {% endif %}
-            {% endfor %}
-          </ul>
-        </nav>
       {% endpaginate %}
     </div>
   </div>

@@ -4,7 +4,8 @@ class Shops::Admin::SettingsController < Shops::Admin::BaseController
     @theme_list = [
       {type:'theme1', name:'冰封雪域'},
       {type:'theme2', name:'夏日阳光'},
-      {type:'theme3', name:'蔚蓝天空'}
+      {type:'theme3', name:'蔚蓝天空'},
+      {type:'theme4', name:'星际探险'}
     ]
   end
 

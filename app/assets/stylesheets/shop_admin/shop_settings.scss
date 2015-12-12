@@ -39,12 +39,24 @@
 }
 
 .shop-poster{
+  position: relative;
   .qq-upload-list{
     display: none;
   }
   #shop-poster-img{
     max-width: 90%;
     margin: 30px 0;
+  }
+  .progress {
+    position: absolute;
+    bottom: 5px;
+    top: 100px;
+    display: none;
+    left: 0;
+    width: 100%;
+    min-width: 200px;
+    max-width: 300px;
+    margin: 0;
   }
 }
 
