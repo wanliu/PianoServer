@@ -115,7 +115,7 @@
       element: $element,
       customHeaders: { "X-CSRF-TOKEN": token },
       action:  actionUrl + "?authenticity_token=" + encodeURIComponent(token),
-      uploadButtonText:"选择海报图片",
+      uploadButtonText: "选择图片",
       multiple: false,
       onComplete: function (id, filename, responseJSON) {
         var url = responseJSON.url;
@@ -123,7 +123,6 @@
         $progress.hide().find('.progress-bar').width(0);
       },
       onProgress: function(id, fileName, loaded, total) {
-        console.log('海报:', loaded);
         var percent = Math.round(loaded / total * 100, 0) + '%'
         if (loaded > 0) {
           $progress.show();
@@ -144,7 +143,7 @@
       element: $element,
       customHeaders: { "X-CSRF-TOKEN": token },
       action:  actionUrl + "?authenticity_token=" + encodeURIComponent(token),
-      uploadButtonText:"选择海报图片",
+      uploadButtonText:"选择店招图片",
       multiple: false,
       onComplete: function (id, filename, responseJSON) {
         var url = responseJSON.url;
@@ -152,7 +151,6 @@
         $progress.hide().find('.progress-bar').width(0);
       },
       onProgress: function(id, fileName, loaded, total) {
-        console.log('店招:', loaded);
         var percent = Math.round(loaded / total * 100, 0) + '%';
         if (loaded > 0) {
           $progress.show();
