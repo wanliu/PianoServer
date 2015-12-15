@@ -61,6 +61,10 @@ class Order < ActiveRecord::Base
     end
   end
 
+  def items_count
+    items.pluck(:quantity).reduce(:+) || 0
+  end
+
   private
 
   def caculate_total

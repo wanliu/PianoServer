@@ -1,21 +1,25 @@
-<tr>
-  <td>
+<tr class='item'>
+  <td class='avatar'>
     <%= link_to orderable_url(item) do %>
       <%= image_tag item.avatar_url, class: 'media-object', alt: "商品图片" %>
+      <span class='title'>
+        <%= item.title %>
+      </span>
     <% end %>
-    <%= item.title %>
   </td>
   <td> <%= item.properties_title %> </td>
-  <td> <%= number_to_currency item.price %> </td
-  <td> <%= number_with_delimiter item.quantity %> </td>
-  <td> <%= number_to_currency item.price * item.quantity %> </td>
+  <td> 单价：<%= number_to_currency item.price %> </td>
+  <td> 数量：<%= number_with_delimiter item.quantity %> </td>
+  <td> 小计：<%= number_to_currency item.price * item.quantity %> </td>
 
   <% if item == order.items.first %>
-    <td rowspan='<%= order.items.count %>'>
+    <td rowspan='<%= order.items.count %>' class='operation'>
       <% unless order.finish? %>
-        <button type="button" class="order-finish btn btn-danger" data-toggle="modal" data-target="#finish-order-<%= order.id %>">
-          确认收货
-        </button>
+        <div class='finish-order text-center'>
+          <button type="button" class="order-finish btn btn-danger" data-toggle="modal" data-target="#finish-order-<%= order.id %>">
+            确认收货
+          </button>
+        </div>
 
         <div class="modal fade" id="finish-order-<%= order.id %>" tabindex="-1" role="dialog" aria-labelledby="myOrderLable<%= order.id %>">
           <div class="modal-dialog" role="document">
@@ -36,8 +40,10 @@
           </div>
         </div>
       <% end %>
-
-      <span><%= link_to "订单详情", order_path(order) %></span>
+      
+      <div class='detail text-center'>
+        <span><%= link_to "订单详情", order_path(order) %></span>
+      </div>
     </td>
   <% end %>
 </tr>

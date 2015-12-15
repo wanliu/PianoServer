@@ -1,7 +1,7 @@
 .orders {
   margin-top: 10px;
 
-  .orders-tab {
+  .current-history {
     height: 41px;
     margin-bottom: 20px;
 
@@ -37,58 +37,110 @@
   }
 
   .order {
-    .panel-heading {
+    td {
+      vertical-align: middle;
+    }
+
+    .item td {
+      text-align: center;
+    }
+
+    .head {
+      font-size: 16px;
+
       .shop {
         display: inline-block;
         float: right;
+        margin-right: 10px;
 
         img {
           width: 25px;
           height: 25px;
         }
-      } 
+      }
     }
 
-    .panel-body {
-      ul.order-items {
-        height: auto;
+    .avatar {
+      img {
+        width: 80px;
+        height: 80px;
+        float: left;
+        margin-right: 10px;
+      }
 
-        li.order-item {
-          list-style-type: none;
-          border-bottom: 1px solid #ddd;
-          padding: 10px 0;
+      .title {
+        font-size: 16px;
+        color: black;
+        display: inline-block;
+        float: left;
+      }
+    }
+    
+    .operation {
+      vertical-align: top;
 
-          .avatar {
-            img {
-              width: 80px;
-              height: 80px;
-            }
-          }
+      .finish-order {
+        margin-top: 15px;
+        margin-bottom: 10px;
+      }
 
-          .title {
-            width: 200px;
-          }
+      .detail a {
+        color: #d9534f;
+      }
+    }
+  }
+}
 
-          .properties {
-            width: 172px;
-          }
+.mobile-orders {
+  .current-history {
+    &.buyer-orders {
+      background-color: white;
+      margin-bottom: 15px;
+      border-bottom: 1px solid #ddd;
 
-          .price {
-            width: 120px;
-            font-weight: 700;
-          }
+      li {
+        margin: 0;
 
-          .quantity {
-            width: 120px;
-          }
-
-          .subtotal {
-            color: #f40;
-            width: 120px;
-            font-weight: 700;
-          }
+        a {
+        font-size: 15px;
+        padding: 5px 15px;
+        color: black;
+        text-align: center;
         }
       }
+
+      li.active {
+        border-bottom: 1px solid #d9534f;
+
+        a {
+          background-color: white;
+          border-radius: 0;
+          color: #d9534f;
+        }
+      }
+    }
+  }
+
+  .order {
+    .shop {
+      img {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    .avatar {
+      img {
+        width: 70px;
+        height: 70px;
+      }
+
+      float: left;
+      margin-right: 10px;
+    }
+
+    .total {
+      color: #d9534f;
     }
   }
 }
