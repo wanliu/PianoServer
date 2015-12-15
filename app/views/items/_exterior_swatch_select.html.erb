@@ -1,14 +1,20 @@
-<div class="form-group col-sm-12 properties-goup">
-  <%= label_tag prop_value['title'] %>
-  <ul class="nav nav-pills swatch_select select-<%= property %>">
-    <% prop_value['value'].each do |value, cfg| %>
-      <% if cfg["check"] == "1" %>
-      <li role="presentation">
-        <a href="#" class='btn btn-default property-item' data-property-key="<%= property %>" data-property-value="<%= value %>"><%= cfg["title"] %></a>
-      </li>
-      <% end %>
-    <% end %>
-  </ul>
+<div class="form-group properties-goup">
+  <div class="media">
+    <div class="media-left media-middle">
+      <%= prop_value['title'] %>：
+    </div>
+    <div class="media-body">
+      <ul class="nav nav-pills swatch_select select-<%= property %>">
+        <% prop_value['value'].each do |value, cfg| %>
+          <% if cfg["check"] == "1" %>
+          <li role="presentation">
+            <a href="#" class='btn btn-default property-item' data-property-key="<%= property %>" data-property-value="<%= value %>"><%= cfg["title"] %></a>
+          </li>
+          <% end %>
+        <% end %>
+      </ul>
+    </div>
+  </div>
 </div>
 
 <script type="text/javascript">

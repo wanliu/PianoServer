@@ -11,18 +11,26 @@ module MinusPlusButtonHelper
     }
 
     html = <<-HTML
-      <div class="input-group" minus-plus-button-id="#{obj_id}" >
-        <span class="input-group-btn">
-          #{link_to '#minus', class: 'btn btn-default btn-minus' do
-            s('<b>') + s(icon(:minus)) + s('</b>')
-          end}
-        </span>
-          #{number_field object_name, method_name, options.merge(default_options)}
-        <span class="input-group-btn">
-          #{link_to '#plus', class: 'btn btn-default btn-plus' do
-            s('<b>') + s(icon(:plus)) + s('</b>')
-          end}
-        </span>
+      <div class="form-group" >
+        <div class="media sale-options-media">
+          <div class="media-left media-middle">数量：</div>
+          <div class="media-body">
+            <div class="input-group" minus-plus-button-id="#{obj_id}" >
+              <span class="input-group-btn">
+                #{link_to '#minus', class: 'btn btn-default btn-minus' do
+                  s('<b>') + s(icon(:minus)) + s('</b>')
+                end}
+              </span>
+                #{number_field object_name, method_name, options.merge(default_options)}
+              <span class="input-group-btn">
+                #{link_to '#plus', class: 'btn btn-default btn-plus' do
+                  s('<b>') + s(icon(:plus)) + s('</b>')
+                end}
+              </span>
+            </div>
+          </div>
+          <div class="media-right media-middle">库存：#{@item.current_stock.to_i}</div>
+        </div>
       </div>
       <script type="text/javascript">
         (function() {
