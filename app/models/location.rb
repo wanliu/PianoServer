@@ -67,6 +67,10 @@ class Location < ActiveRecord::Base
     to_s
   end
 
+  def address
+    %(#{province_name}#{city_name}#{region_name}#{road})
+  end
+
   def delivery_address
     %(#{province_name}#{city_name}#{region_name}#{road} #{contact_phone})
   end

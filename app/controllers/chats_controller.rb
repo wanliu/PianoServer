@@ -86,6 +86,7 @@ class ChatsController < ApplicationController
 
 		@target = my_chat? ? @chat.target : @chat.owner
     @chats = Chat.in(current_anonymous_or_user.id)
+    @shop = @chat.chatable_type == Shop.name ? Shop.find(@chat.chatable_id) : nil
 
     set_page_title "与 #{@target.name} 洽谈"
     set_page_navbar "#{@target.name}", @target.is_a?(Shop) ? shop_site_path(@target.name) : ''
