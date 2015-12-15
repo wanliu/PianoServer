@@ -44,14 +44,14 @@
   .chat {
     width: 100%;
     position: relative;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 
     >img:first-child{
       border-radius: 50%;
     }
 
     &.me {
-      padding-left: 75px;
+      padding-left: 65px;
 
       &>img:first-child {
         position: absolute;
@@ -62,12 +62,12 @@
     }
 
     &> h2 {
-      margin: 0px;
+      margin: 0px 0 5px 0;
       font-size: 16px;
     }
 
     &.you {
-      padding-right: 75px;
+      padding-right: 65px;
 
       &>h2 {
         text-align: right;
