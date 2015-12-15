@@ -470,6 +470,7 @@ class @Chat
         content: @greetings,
         senderAvatar: @options.avatarDefault,
         senderLogin: '商店',
+        senderShopName: '',
         time: new Date()
       })
 
