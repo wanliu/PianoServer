@@ -1,0 +1,33 @@
+<li class="list-group-item cart-item buy-now-item">
+  <div class="media">
+    <div class='media-left'>
+      <div class="avatar media-left">
+        <%= link_to orderable_url(item) do %>
+          <%= image_tag item.avatar_url, class: 'media-object', alt: "商品图片" %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class='media-left'>
+      <div class="title">
+        <%= item.title %>
+      </div>
+
+      <div class="properties">
+        <%= item.properties_title %>
+      </div>
+
+      <div class="price">
+        <%= number_to_currency item.price %>
+      </div>
+
+      <div class="subtotal media-left">
+        <%= number_to_currency item.price * item.quantity %>
+      </div>
+    </div>
+
+    <div class="quantity">
+      <%= minus_plus_button_field "order[items_attributes][0]", :quantity, value: item.quantity, placeholder: "数量", class: 'form-control cart_item_quantity' %>
+    </div>
+  </div>
+</li>

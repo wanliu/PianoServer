@@ -181,4 +181,12 @@ class ApplicationController < ActionController::Base
     agent_str = request.user_agent.to_s.downcase
     return agent_str =~ /micromessenger/
   end
+
+  def check_for_mobile
+    prepare_for_mobile if mobile?
+  end
+
+  def prepare_for_mobile
+    prepend_view_path Rails.root + 'app' + 'views_mobile'
+  end
 end
