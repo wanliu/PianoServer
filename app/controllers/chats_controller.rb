@@ -8,7 +8,7 @@ class ChatsController < ApplicationController
 
   def index
     @chats = Chat.in(current_anonymous_or_user.id).reject{|chat| chat.owner_id == chat.target_id}.reverse
-    @other_sides = @chats.map{ |chat| chat.other_side(current_anonymous_or_user) }
+    @other_sides = @chats.map{ |chat| chat.other_side(current_anonymous_or_user) }.reject{|user| user.nil?}
 
     render :index
   end
@@ -86,6 +86,7 @@ class ChatsController < ApplicationController
 
 		@target = my_chat? ? @chat.target : @chat.owner
     @chats = Chat.in(current_anonymous_or_user.id)
+    @shop = @chat.chatable_type == Shop.name ? Shop.find(@chat.chatable_id) : nil
 
     set_page_title "与 #{@target.name} 洽谈"
     set_page_navbar "#{@target.name}", @target.is_a?(Shop) ? shop_site_path(@target.name) : ''

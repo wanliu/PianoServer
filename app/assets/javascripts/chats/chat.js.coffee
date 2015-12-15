@@ -71,7 +71,7 @@ class @Chat
     @userSocket.userId
 
   bindAllEvents: () ->
-    $(@textElement).on 'keyup', (e) =>
+    $(@textElement).off('keyup').on 'keyup', (e) =>
       if e.which == 13 and e.ctrlKey
         $(@sendBtn).trigger('click')
       else if e.which == 13
@@ -228,9 +228,7 @@ class @Chat
     )
 
   _pasteText: (text) ->
-    @$textElement ||= $(@textElement)
-    val = @$textElement.val()
-    @$textElement.val([val, text].join(''))
+    return if /(<\/?(?!br)[^>\/]*)\/?>/.test(text)
 
   _insertItemMessage: (message, direction = 'down', isFirstRecord) ->
     {id, senderId, content, senderAvatar, senderLogin, type, time} = message
