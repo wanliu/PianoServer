@@ -1,62 +1,28 @@
-<div class="panel panel-default order">
-  <div class="panel-heading">
-    <div>
-      <%= link_to shop_admin_order_path(current_shop.name, order) do %>
-        订单号: <%= order.id %>
-      <% end %>
-    </div>
-    <div class='create-time'>
-      创建时间：<%= order.created_at.strftime("%Y年%m月%d日 %H:%M:%S") %>
-    </div>
-    <div>客户：<%= order.buyer.username %> ( <%= order.items.count %> 件商品)</div>
-    <div>运送地址：<%= order.delivery_address %></div>
-  </div>
-  <ul class="list-group order-items">
-    <%= render partial: "order_item", collection: order.items, as: :item, locals: { supplier: order.supplier } %>
-  </ul>
-  <div class="panel-footer">
-    <h4>
-      总计：<span><%= number_to_currency order.total %></span>
-      <% if order.total_modified? %>
-        <sub><del><%= number_to_currency order.origin_total %></del></sub>
-      <% end %>
+<table class='table table-bordered order'>
+  <colgroup>
+    <col width="24%" />
+    <col width="20%" />
+    <col width="12%" />
+    <col width="12%" />
+    <col width="12%" />
+    <col width="20%" />
+  </colgroup>
 
-      <% unless order.finish? %>
-        <button type="button" class="btn btn-primary"  data-toggle="modal" data-target="#change-total-<%= order.id %>">
-          修改总价
-        </button>
-      <% end %>
-    </h4>
-  </div>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="change-total-<%= order.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <%= form_for order, url: shop_admin_order_path(@shop.name, order) do |f| %>
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="myModalLabel">修改第<%= order.id %>号订单总价</h4>
-        </div>
-        <div class="modal-body">
-          <div>
-            原价：<span class='order-total'><%= number_to_currency order.total %></span>
-          </div>
-          <form class="form-inline">
-            <div class="form-group">
-              <label for="new-order-total-<%= order.id %>">修改为：</label>
-              <!-- <input type="number" class="form-control" id="new-order-total-<%= order.id %>" placeholder="输入新的订单总价" autocomplete="off"> -->
-              <%= f.number_field :total, class: "form-control", id: "new-order-total-#{ order.id }", placeholder: "输入新的订单总价", autocomplete: "off", step: 0.1 %>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-          <%= f.submit "确定修改", class: "btn btn-primary confirm-order-change" %>
-          <!-- <button type="button" class="btn btn-primary confirm-order-change">确定修改</button> -->
-        </div>
-      </div>
-    </div>
-  <% end %>
-</div>
+  <tbody>
+    <tr class='head'>
+      <td colspan='6'>
+        <span>订单号: <%= order.id %></span>
+        <span class='create-time'>创建时间：<%= order.created_at.strftime("%Y/%m/%d %H:%M") %></span>
+        <span class='buyer pull-right'>客户：<%= order.buyer.username %></span>
+      </td>
+    </tr>
+    <%= render partial: "order_item", collection: order.items, as: :item, locals: { order: order, supplier: order.supplier } %>
+    <tr>
+      <td colspan='6'>
+        <h4 class='text-right'>合计：
+          <span class='total'><%= number_to_currency order.total %>元</span>
+        </h4>
+      </td>
+    </tr>
+  </tbody>
+</table>

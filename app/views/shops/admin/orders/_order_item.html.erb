@@ -1,28 +1,58 @@
-<li class="list-group-item order-item"  id="order-item-<%= item.id %>">
-  <div class="media">
-    <div class="avatar media-left">
-      <%= link_to orderable_url(item) do %>
-        <%= image_tag item.avatar_url, class: 'media-object', alt: "商品图片" %>
+<tr class='item'>
+  <td class='avatar'>
+    <%= link_to orderable_url(item) do %>
+      <%= image_tag item.avatar_url, class: 'media-object', alt: "商品图片" %>
+      <span class='title'>
+        <%= item.title %>
+      </span>
+    <% end %>
+  </td>
+  <td> <%= item.properties_title %> </td>
+  <td> 单价：<%= number_to_currency item.price %> </td>
+  <td> 数量：<%= number_with_delimiter item.quantity %> </td>
+  <td> 小计：<%= number_to_currency item.price * item.quantity %> </td>
+
+  <% if item == order.items.first %>
+    <td rowspan='<%= order.items.count %>' class='operation'>
+      <% unless order.finish? %>
+        <button type="button" class="btn btn-danger"  data-toggle="modal" data-target="#change-total-<%= order.id %>">
+          修改总价
+        </button>
       <% end %>
-    </div>
-    <div class="title media-left">
-      <%= item.title %>
-    </div>
+      
+      <div class='detail text-center'>
+        <span><%= link_to "订单详情", shop_admin_order_path(@shop.name, order) %></span>
+      </div>
+    </td>
+  <% end %>
+</tr>
 
-    <div class="properties media-left">
-      <%= item.properties_title %>
-    </div>
-
-    <div class="price media-left">
-      <%= number_to_currency item.price %>
-    </div>
-
-    <div class="quantity media-left">
-      × <%= number_with_delimiter item.quantity %>
-    </div>
-
-    <div class="subtotal media-left">
-      <%= number_to_currency item.price * item.quantity %>
-    </div>
+<% unless order.finish? %>
+  <div class="modal fade" id="change-total-<%= order.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <%= form_for order, url: shop_admin_order_path(@shop.name, order) do |f| %>
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">修改第<%= order.id %>号订单总价</h4>
+          </div>
+          <div class="modal-body">
+            <div>
+              原价：<span class='order-total'><%= number_to_currency order.total %></span>
+            </div>
+            <div class="form-inline">
+              <div class="form-group">
+                <label for="new-order-total-<%= order.id %>">修改为：</label>
+                <%= f.number_field :total, class: "form-control", id: "new-order-total-#{ order.id }", placeholder: "输入新的订单总价", autocomplete: "off", step: 0.1 %>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            <%= f.submit "确定修改", class: "btn btn-primary confirm-order-change" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
   </div>
-</li>
+<% end %>
