@@ -15,7 +15,7 @@ module MinusPlusButtonHelper
         <div class="media sale-options-media">
           <div class="media-left media-middle">数量：</div>
           <div class="media-body">
-            <div class="input-group" minus-plus-button-id="#{obj_id}" >
+            <div class="input-group minus-plus-button" minus-plus-button-id="#{obj_id}" >
               <span class="input-group-btn">
                 #{link_to '#minus', class: 'btn btn-default btn-minus' do
                   s('<b>') + s(icon(:minus)) + s('</b>')
@@ -29,7 +29,7 @@ module MinusPlusButtonHelper
               </span>
             </div>
           </div>
-          <div class="media-right media-middle">库存：#{@item.current_stock.to_i}</div>
+          <div class="media-right media-middle">库存：<span class='available-stock'>#{@item.current_stock.to_i}</span></div>
         </div>
       </div>
       <script type="text/javascript">

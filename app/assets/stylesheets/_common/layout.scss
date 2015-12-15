@@ -20,7 +20,9 @@ footer {
 
 body.item footer,
 body.detail footer{
-  bottom:50px;
+  @media (max-width:768px ){
+    bottom:50px;
+  }
 }
 
 body.chat footer{

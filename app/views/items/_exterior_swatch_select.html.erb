@@ -21,7 +21,6 @@
   $(".swatch_select.select-<%= property %>>li>a").click(function(e) {
     e.preventDefault();
 
-
     $(e.currentTarget).parents("ul").find(".active").removeClass("active");
     $(e.currentTarget).parent().addClass("active");
 
@@ -39,6 +38,7 @@
       var fullfillProps = _.reduce($form.find('li.active'), function(props, item) {
         var k = $(item).children('a').data('propertyKey');
         var v = $(item).children('a').data('propertyValue');
+
         props[k] = v;
         return props;
       }, {});
@@ -46,10 +46,14 @@
       var fullfillStock = _.find(stocksWithIndex, function (item) {
         var cloneItem = _.clone(item);
         delete cloneItem.quantity;
-        return _.isEqual(cloneItem, fullfillProps);
+
+        for (var key in cloneItem) {
+          if (cloneItem[key] != fullfillProps[key]) return false;
+        }
+        return true;
       });
 
-      $('.available-stock').text(fullfillStock.quantity);
+      $('.available-stock').text(+fullfillStock.quantity);
       $('#cart_item_quantity').prop('max', fullfillStock.quantity);
     }
 

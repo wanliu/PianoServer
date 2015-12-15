@@ -1,4 +1,8 @@
 .shop-item {
+  >div {
+    background: #fff;
+  }
+
   overflow: hidden;
   @media (max-width: 484px){
     padding-left: 0;
@@ -59,10 +63,65 @@
     }
   }
 
+  .minus-plus-button{
+    width: 150px;
+  }
+  
+  .item-option-warp {
+    border-bottom: 1px solid #ddd;
+    padding: 20px 0;
+  }
+
+  .right-shop-infos{
+    width: 30%;
+    border-left: 1px solid #ddd;
+    padding: 15px;
+
+    .avatar-wrap{
+      background: #F2F2F2;
+    }
+    .shop-avatar{
+      display: block;
+      height: 80px;
+      img {
+        height: 100%;
+      }
+    }
+  }
+
+  @media (min-width: 768px) {
+    .i768-block {
+      display: block;
+      border: none;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .m768-block {
+      display: block;
+      border: none;
+    }
+  }
+
+  .js-buy-now{
+    background: #FF2B2A;
+    border-color: #FF2B2A;
+    &:hover {
+      background: #FF2B2A;
+      border-color: #FF2B2A;
+    }
+  }
+  .add-to-cart {
+    background: #FF962F;
+    border-color: #FF962F;
+    &:hover {
+      background: #FF962F;
+      border-color: #FF962F;
+    }
+  }
+
   .item-shop-infos {
     padding: 15px;
-    border-bottom: 1px solid #ddd;
-    border-top: 1px solid #ddd;
 
     .shop-avatar img {
       width: 75px;
