@@ -20,7 +20,7 @@
         </span>
       </td>
     </tr>
-    <%= render partial: "order_item", collection: order.items, as: :item, locals: { order: order, supplier: order.supplier } %>
+    <%= render partial: "order_item", collection: order.items, as: :item, locals: { order: order, supplier: order.supplier, shop: shop } %>
     <tr>
       <td colspan='6'>
         <h4 class='text-right'>合计：
