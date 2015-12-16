@@ -42,7 +42,7 @@ class Template < ActiveRecord::Base
 
   def update_attributes_with_content(attributes)
     content = attributes.delete(:content)
-    update_attributes_without_content(attributes)
+    update_attributes_without_content(attributes.merge(updated_at: Time.now))
     ContentManagementService.update_template(self, content)
   end
 
