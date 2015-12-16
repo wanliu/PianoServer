@@ -9,6 +9,21 @@
     padding-right: 0;
   }
 
+  address {
+    margin: 0;
+  }
+  .btn-sall-type{
+    background: #E9E9E9;
+    border: 1px solid #ddd;
+    color: #BCBCBC;
+    outline: none !important;
+    &.active {
+      background: #FF2B2A;
+      color: #fff;
+      border: 1px solid #FF2B2A;
+    }
+  }
+
   .shop-content{
     background: #FFFFFF;
   }
@@ -45,24 +60,23 @@
     }
   }
   .item-properties {
-    padding: 20px 0 20px 10px;
-    padding-right: 0;
+    padding: 20px 3px 20px 10px;
     border-bottom: 1px solid #ddd;
 
     .media-body{
-      color: #666;
+      color: #333;
     }
     .media-right:not(:last-child) {
       border-right: 1px solid #ddd;
       border-left: 1px solid #ddd;
     }
     .media-right {
-      width: 20%;
+      width: 15%;
       padding: 0 10px;
-      color: #666;
+      color: #333;
     }
   }
-
+  
   .minus-plus-button{
     width: 150px;
   }
@@ -70,21 +84,56 @@
   .item-option-warp {
     border-bottom: 1px solid #ddd;
     padding: 20px 0;
+    margin: 0;
   }
 
   .right-shop-infos{
     width: 30%;
     border-left: 1px solid #ddd;
     padding: 15px;
+    position: relative;
+
+    .fllow-wrap{
+      bottom: 27px;
+      position: absolute;
+      width: 100%;
+    }
 
     .avatar-wrap{
       background: #F2F2F2;
+      color: #333;
+      text-decoration: none;
     }
     .shop-avatar{
       display: block;
       height: 80px;
       img {
         height: 100%;
+      }
+    }
+
+    .follow,
+    .follow-btn {
+      display: block;
+      padding: 10px 0;
+      border: 1px solid #F12A39;
+      color: #333;
+    }
+    .follow {
+      margin-right: -15px;
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px;
+      background: #FFF2F2;
+    }
+    .follow-btn {
+      text-decoration: none;
+      margin-left: -16px;
+      background: #F12A39;
+      color: #fff;
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
+      &:hover {
+        background: #EF1626;
       }
     }
   }
@@ -121,6 +170,9 @@
   }
 
   .item-shop-infos {
+    background: #fff;
+    color: #333;
+    text-decoration: none;
     padding: 15px;
 
     .shop-avatar img {
@@ -194,46 +246,65 @@
 }
 
 .item-link-table-container{
-  background-color:#f0f0f0;
+  background: rgba(177, 177, 177, 0.9);
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   z-index: 200;
+
   .link-table {
     display: table;
     table-layout: fixed;
     width: 100%;
-    border-top: 1px solid #ddd;
+    border-top: 1px solid #ccc;
     height: 50px;
 
-    .into-shop,
-    .fav-button,
-    .cart-button,
-    .buy-button,
-    .chat {
+    .link-button {
+      text-decoration: none;
+      color: #333;
       display: table-cell;
       vertical-align: middle;
       text-align: center;
       padding: 5px 0;
+      position: relative;
     }
-
-    .into-shop,
-    .fav-button,
-    .fav-button {
-      border-right: 1px solid #DDDDDD;
+    
+    .shop-cart {
+      .glyphicon {
+        font-size: 26px;
+        color: #333;
+      }
+      .badge {
+        position: absolute;
+        background: rgba(66, 66, 66, 0.75);
+        border: 1px solid #fff;
+        left: 50%;
+        top: 3px;
+      }
     }
 
     .into-shop{
       color: #333333;
     }
 
+    .add-to-cart-bottom {
+      background: #FF900E;
+      color: #fff;
+    }
     .chat{
       color: #FFFFFF;
-      background-color: #F42B2B;
+      background: #F42B2B;
+      input {
+        width: 100%;
+        height: 100%;
+        background: transparent;
+        outline: none;
+        border: none;
+      }
     }
-    .buy-button{
-      background:#f60;
+    .buy-now{
+      background: #FF4F00;
       color: #fff;
       text-decoration: none;
     }

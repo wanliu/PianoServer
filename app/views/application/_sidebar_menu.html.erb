@@ -107,7 +107,6 @@
   });
 
   $(document)
-    .off('purchase_orders_quantity_changed')
     .on('purchase_orders_quantity_changed', function (e, quantity) {
       if (window.manager) {
         window.manager.updatePurchaseOrderQuantity(quantity);
@@ -115,7 +114,6 @@
     });
 
   $(document)
-    .off('cart_quantity_changed')
     .on('cart_quantity_changed', function (e, quantity) {
       if (window.manager) {
         window.manager.updateCartQuantity(quantity);
