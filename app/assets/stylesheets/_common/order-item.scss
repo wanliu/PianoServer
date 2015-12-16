@@ -147,7 +147,7 @@
     }
   }
 
-  .head {
+  .info-head {
     background-color: red;
     color: white;
     position: relative;
@@ -183,6 +183,11 @@
       width: 20px;
       height: 20px;
     }
+  }
+
+  .list-group.order-items {
+    height: auto;
+    // margin-bottom: 20px;
   }
 }
 
