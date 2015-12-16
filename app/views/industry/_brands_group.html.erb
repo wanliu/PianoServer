@@ -1,12 +1,12 @@
-<% if  @brands.length > 10 %>
+<% if @brands.length > 10 %>
   <% brands_group.each do |group, brands| %>
     <li class="list-group-item letter"><%= group %></li>
-    <% cache brands do %>
+    <% cache [:brand_groups, brands, brand_ids ] do %>
     <%= render partial: "brand", collection: brands, locals: { category: @category, region: region, brand_ids: brand_ids } %>
     <% end %>
   <% end %>
 <% elsif @brands.length > 0 %>
-  <% cache @brands do %>
+  <% cache [ :brand_group, @brands, brand_ids ] do %>
     <%= render partial: "brand", collection: @brands, locals: { category: @category, region: region, brand_ids: brand_ids } %>
   <% end %>
 <% else %>

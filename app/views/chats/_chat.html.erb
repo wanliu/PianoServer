@@ -81,11 +81,15 @@
     } else {
       var ownerUserId = $('meta[name=chatId]').attr('content');
       var userChannelId = 'p' + ownerUserId;
+      var displayUserName = <%= Settings.chat.display_username %>;
+      var displayShopName = <%= Settings.chat.display_shopname %>;
 
       var chat = new Chat($('.chat-order-header'), chatChannelId, {
         sendBtn: $('.btn-send'),
         greetings: greetings,
-        userChannelId: userChannelId
+        userChannelId: userChannelId,
+        displayUserName: displayUserName,
+        displayShopName: displayShopName
       });
 
       <% if Settings.dev.feature.order.chat and @intention %>
