@@ -12,7 +12,7 @@
   <td> 数量：<%= number_with_delimiter item.quantity %> </td>
   <td> 小计：<%= number_to_currency item.price * item.quantity %> </td>
 
-  <% if item == order.items.first %>
+  <% if item == order.items.first && controller.action_name != 'show'%>
     <td rowspan='<%= order.items.count %>' class='operation'>
       <% unless order.finish? %>
         <div class='finish-order text-center'>

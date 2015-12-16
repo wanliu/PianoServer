@@ -12,7 +12,7 @@
   <td> 数量：<%= number_with_delimiter item.quantity %> </td>
   <td> 小计：<%= number_to_currency item.price * item.quantity %> </td>
 
-  <% if item == order.items.first %>
+  <% if item == order.items.first && controller.action_name != 'show' %>
     <td rowspan='<%= order.items.count %>' class='operation'>
       <% unless order.finish? %>
         <button type="button" class="btn btn-danger"  data-toggle="modal" data-target="#change-total-<%= order.id %>">
@@ -21,38 +21,8 @@
       <% end %>
       
       <div class='detail text-center'>
-        <span><%= link_to "订单详情", shop_admin_order_path(@shop.name, order) %></span>
+        <span><%= link_to "订单详情", shop_admin_order_path(supplier.name, order) %></span>
       </div>
     </td>
   <% end %>
 </tr>
-
-<% unless order.finish? %>
-  <div class="modal fade" id="change-total-<%= order.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <%= form_for order, url: shop_admin_order_path(@shop.name, order) do |f| %>
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel">修改第<%= order.id %>号订单总价</h4>
-          </div>
-          <div class="modal-body">
-            <div>
-              原价：<span class='order-total'><%= number_to_currency order.total %></span>
-            </div>
-            <div class="form-inline">
-              <div class="form-group">
-                <label for="new-order-total-<%= order.id %>">修改为：</label>
-                <%= f.number_field :total, class: "form-control", id: "new-order-total-#{ order.id }", placeholder: "输入新的订单总价", autocomplete: "off", step: 0.1 %>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-            <%= f.submit "确定修改", class: "btn btn-primary confirm-order-change" %>
-          </div>
-        </div>
-      </div>
-    <% end %>
-  </div>
-<% end %>

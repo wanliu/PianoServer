@@ -23,7 +23,8 @@
     <%= render partial: "order_item", collection: order.items, as: :item, locals: { order: order, supplier: order.supplier } %>
     <tr>
       <td colspan='6'>
-        <h4 class='text-right'>合计：
+        <h4 class='text-right'>
+          一共<%= order.items_count %>件商品 合计：
           <span class='total'><%= number_to_currency order.total %>元</span>
         </h4>
       </td>

@@ -35,63 +35,6 @@
     margin: 50px 0;
     font-size: 20px;
   }
-
-  .order {
-    td {
-      vertical-align: middle;
-    }
-
-    .item td {
-      text-align: center;
-    }
-
-    .head {
-      font-size: 16px;
-
-      .shop {
-        display: inline-block;
-        margin-right: 10px;
-
-        img {
-          width: 25px;
-          height: 25px;
-        }
-      }
-    }
-
-    .avatar {
-      img {
-        width: 80px;
-        height: 80px;
-        float: left;
-        margin-right: 10px;
-      }
-
-      .title {
-        font-size: 16px;
-        color: black;
-        display: inline-block;
-        float: left;
-      }
-    }
-    
-    .operation {
-      vertical-align: top;
-
-      .finish-order {
-        margin-top: 15px;
-        margin-bottom: 10px;
-      }
-
-      .detail a {
-        color: #d9534f;
-      }
-    }
-  }
-
-  .total {
-    color: #d9534f;
-  }
 }
 
 .mobile-orders {
@@ -150,4 +93,80 @@
 
 .add-to-cart, .buy-now, .add-to-cart-bottom {
   cursor: pointer;
+}
+
+.order {
+  td {
+    vertical-align: middle!important;
+  }
+
+  .item td {
+    text-align: center;
+  }
+
+  .head {
+    font-size: 16px;
+
+    .shop {
+      display: inline-block;
+      margin-right: 10px;
+
+      img {
+        width: 25px;
+        height: 25px;
+      }
+    }
+  }
+
+  .avatar {
+    img {
+      width: 80px;
+      height: 80px;
+      float: left;
+      margin-right: 10px;
+    }
+
+    .title {
+      font-size: 16px;
+      color: black;
+      display: inline-block;
+      float: left;
+    }
+  }
+  
+  .operation {
+    vertical-align: top;
+
+    .finish-order {
+      margin-top: 15px;
+      margin-bottom: 10px;
+    }
+
+    .detail a {
+      color: #d9534f;
+    }
+  }
+}
+
+.total {
+  color: #d9534f;
+}
+
+
+.order-detail {
+  .title {
+    padding: 10px 0;
+    font-size: 16px;
+
+    img {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .details {
+    div {
+      padding: 5px;
+    }
+  }
 }

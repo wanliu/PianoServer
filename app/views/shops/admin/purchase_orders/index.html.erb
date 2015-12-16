@@ -10,7 +10,9 @@
 
   <div role="tabpanel" class="tab-pane current-orders">
     <% if @orders.present? %>
-      <%= render partial: "order", collection: @orders, as: :order, shop: @shop %>
+      <% @orders.each do |order| %>
+        <%= render partial: "order", locals: { order: order, shop: @shop } %>
+      <% end %>
       <%= paginate @orders %>
     <% else %>
       <div class='text-center empty-orders'>没有正在处理的订单！</div>
