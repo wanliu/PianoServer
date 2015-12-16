@@ -146,6 +146,44 @@
       color: #d9534f;
     }
   }
+
+  .head {
+    background-color: red;
+    color: white;
+    position: relative;
+    padding: 10px 20px;
+
+    .status {
+      height: 120px;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+  }
+
+  .receiver-info, .details {
+    font-size: 16px;
+    padding: 20px;
+
+    div {
+      padding: 5px 0;
+    }
+  }
+
+  .details {
+    border-top: 1px solid #ddd;
+  }
+
+  .operation {
+    padding: 0 10px;
+  }
+
+  .shop {
+    img {
+      width: 20px;
+      height: 20px;
+    }
+  }
 }
 
 .total {
