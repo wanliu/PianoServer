@@ -39,6 +39,12 @@ class Shop < ActiveRecord::Base
 
   mount_uploader :logo, ImageUploader
 
+  scope :with_brands, -> (ids) do
+    unless ids.blank?
+      where("items.brand_id in (?)", ids)
+    end
+  end
+
   def avatar_url
     logo.url(:avatar)
   end
