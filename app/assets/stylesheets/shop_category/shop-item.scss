@@ -87,6 +87,17 @@
     margin: 0;
   }
 
+  .left-wrap {
+    position: relative;
+
+    .purchase-buttons{
+      position: absolute;
+      right: 20px;
+      bottom: 0;
+    }
+  }
+
+
   .right-shop-infos{
     width: 30%;
     border-left: 1px solid #ddd;
@@ -94,7 +105,7 @@
     position: relative;
 
     .fllow-wrap{
-      bottom: 27px;
+      bottom: 17px;
       position: absolute;
       width: 100%;
     }
