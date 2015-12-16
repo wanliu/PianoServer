@@ -59,10 +59,10 @@ module ContentManagement
       template_class = options[:template_class] || TemplateObject
 
       if with_object = options[:with]
-        template_object = template_class.new(with_object)
+        template_object = template_class.new(with_object, options[:template])
 
         # options[:template] = options[:filename] || template_object.view_name(options[:template])
-        name, type = template_object.view_name(options[:template])
+        name, type = template_object.view_name
         if type == :file
           options[:file] = File.join(template_object.path, name)
           options.delete(:template)
@@ -73,6 +73,8 @@ module ContentManagement
         template_object.paths.each do |path|
           push_view_paths path
         end
+
+        options[:template_object] = template_object.template
 
         if with_object.respond_to? :templates
           variables = with_object.templates.includes(:variables)
