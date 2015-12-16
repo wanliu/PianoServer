@@ -94,3 +94,6 @@ after_registers:
     max_count: 15
 weixin:
   scope: snsapi_login
+chat:
+  display_username: true
+  display_shopname: true

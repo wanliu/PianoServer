@@ -104,7 +104,9 @@
           </p>
         <% end %>
 
-        <%= render "register_distributor" %>
+        <% if current_user.user_type != 'retail' %>
+          <%= render "register_distributor" %>
+        <% end %>
       <% end %>
     </div>
   </div>

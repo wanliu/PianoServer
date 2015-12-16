@@ -1,7 +1,8 @@
 module ContentManagement
   class TemplateObject
-    def initialize(object, options = {})
+    def initialize(object, name, options = {})
       @object = object
+      @name = name
       @default_prefix = options[:prefix] || "views"
       @root = options[:root] || ContentManagement::Config.options.root
     end
@@ -22,18 +23,19 @@ module ContentManagement
       end
     end
 
-    def view_name(name)
-      template =
-        if @object.respond_to?(:find_template)
-          @object.find_template(name)
-        elsif @object.respond_to?(:templates)
-          @object.templates.find_by(name: name)
-        end
-
+    def view_name
       if template && template.used
         [template.filename, :file]
       else
-        [name, :partial]
+        [@name, :partial]
+      end
+    end
+
+    def template
+      if @object.respond_to?(:find_template)
+        @object.find_template(name)
+      elsif @object.respond_to?(:templates)
+        @object.templates.find_by(name: @name)
       end
     end
 
