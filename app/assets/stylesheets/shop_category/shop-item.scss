@@ -2,8 +2,6 @@
   >div {
     background: #fff;
   }
-
-  overflow: hidden;
   @media (max-width: 484px){
     padding-left: 0;
     padding-right: 0;
@@ -26,6 +24,11 @@
 
   .shop-content{
     background: #FFFFFF;
+    overflow: hidden;
+    margin-top: 20px;
+    @media( max-width: 768px) {
+      margin-top: 0;
+    }
   }
 
   .shop-item-image {
@@ -231,9 +234,7 @@
   .nav > li > a {
     padding: 6px 12px;
   }
-  .minus_plus_input.form-control{
-    border-left: none;
-  }
+
   .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
     background-color: #fff;
     color: #333;
