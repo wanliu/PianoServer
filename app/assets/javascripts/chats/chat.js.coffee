@@ -278,7 +278,7 @@ class @Chat
     toAddClass = if @_isOwnMessage(message) then 'you' else 'me'
 
 
-    senderAvatar = @options.avatarDefault if senderAvatar == '' or senderAvatar?
+    senderAvatar = @options.avatarDefault if senderAvatar == '' or !senderAvatar
 
     if @options.displayUserName && @options.displayShopName
       if senderShopName == ''
