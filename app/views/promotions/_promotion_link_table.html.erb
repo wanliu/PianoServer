@@ -22,14 +22,16 @@
       <% end %>
     <% end %>
 
-
     <% if shop.owner.id === current_anonymous_or_user.id %>
       <div class="chat contact-button">您的店铺</div>
     <% else %>
       <% if promotion.saleable? %>
         <% if Settings.dev.feature.cart %>
+          <a href="/cart"  class="contact-button shop-cart">
+            <%= icon('shopping-cart') %><span class="badge"> <%= current_cart.items_count %></span>
+          </a>
           <div class="contact-button add-to-cart" data-cartable-type="Promotion" data-cartable-id="<%= promotion.id %>" data-moveable="<%= moveable_target %>">
-            <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span><div class="button-text">加入购物车</div>
+            <div class="button-text">加入购物车</div>
           </div>
         <% end %>
         <% if Settings.dev.feature.purchase %>
@@ -44,3 +46,10 @@
     <% end %>
   </div>
 </div>
+
+
+<script>
+  $(document).on('cart_quantity_changed', function(e, quantity){
+    $('.shop-cart').find('.badge').text(quantity);
+  });
+</script>

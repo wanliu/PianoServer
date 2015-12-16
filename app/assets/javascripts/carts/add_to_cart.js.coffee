@@ -5,7 +5,7 @@ $ ()->
     cartableId   = $(@).data('cartableId')
     moveable     = $(@).data('moveable')
     properties   = $(@).data('properties') || {}
-    target       = if $(window).width() < 768 then $('.navbar-toggle') else $('.mycart')
+    target       = if $(window).width() < 768 then $('.shop-cart') else $('.mycart')
     $quantityInput = $(@).parents('form').find('input.cart_item_quantity')
     quantity = if $quantityInput.length
       $quantityInput.val() || 1
@@ -55,6 +55,7 @@ $ ()->
         $divider.before(html)
 
       $('.cart-item-count').text(data.items_count)
+      console.log(1)
       $(document).trigger('cart_quantity_changed', [ data.items_count ])
 
       animate()
@@ -88,7 +89,7 @@ $ ()->
           # length: 0.707
         },
         end: {
-          x: p2.left + 20,
+          x: p2.left + $(target).width()/2,
           y: p2.top + 20,
           angle: 315.012,
           # length: 0.707
