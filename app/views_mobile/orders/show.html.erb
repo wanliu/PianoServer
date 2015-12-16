@@ -47,11 +47,15 @@
   </ul>
 
   <% unless @order.finish? %>
-    <div class='operation pull-right'>您现在可以
-      <button type="button" class="order-finish btn btn-danger" data-toggle="modal" data-target="#finish-order-<%= @order.id %>">
-        确认收货
-      </button>
+  <nav class="navbar navbar-default navbar-fixed-bottom">
+    <div class="container">
+      <div class='operation pull-right'>您现在可以
+        <button type="button" class="order-finish btn btn-danger" data-toggle="modal" data-target="#finish-order-<%= @order.id %>">
+          确认收货
+        </button>
+      </div>
     </div>
+  </nav>
 
     <div class="modal fade" id="finish-order-<%= @order.id %>" tabindex="-1" role="dialog" aria-labelledby="myOrderLable<%= @order.id %>">
         <div class="modal-dialog" role="document">

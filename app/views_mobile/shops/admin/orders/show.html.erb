@@ -44,11 +44,15 @@
   </ul>
 
   <% unless @order.finish? %>
-    <div class='operation pull-right'>您现在可以
-      <button type="button" class="btn btn-danger"  data-toggle="modal" data-target="#change-total-<%= @order.id %>">
-        修改总价
-      </button>
-    </div>
+    <nav class="navbar navbar-default navbar-fixed-bottom">
+      <div class="container">
+        <div class='operation pull-right'>您现在可以
+          <button type="button" class="btn btn-danger"  data-toggle="modal" data-target="#change-total-<%= @order.id %>">
+            修改总价
+          </button>
+        </div>
+      </div>
+    </nav>
 
     <div class="modal fade" id="change-total-<%= @order.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
       <%= form_for @order, url: shop_admin_order_path(@order.supplier.name, @order) do |f| %>
