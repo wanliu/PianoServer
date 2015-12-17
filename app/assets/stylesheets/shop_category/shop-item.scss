@@ -239,8 +239,8 @@
 // 
 }
 .item-sale-options {
-  padding-bottom: 50px;
-  @media (max-width: 768px) {
+  @media (min-width: 768px) {
+    padding-bottom: 50px;
   }
   .media-left,
   .media-right{
