@@ -79,6 +79,7 @@ Rails.application.routes.draw do
   resources :after_registers, concerns: [:statuable] do
     collection do
       get :reset, as: :reset
+      post :upgrade_to_distributor, as: :upgrade
     end
   end
 
