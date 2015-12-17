@@ -82,6 +82,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :smart_fills, concerns: [:statuable]
+
   concern :templable do |options|
     resources :templates, options do
       collection do
@@ -116,6 +118,7 @@ Rails.application.routes.draw do
       collection do
         get 'search_wanliu_user', to: 'accounts#search_wanliu_user'
         put 'import/:wanliu_user_id', to: 'accounts#import', as: :import
+        post 'upload_user_avatar'
       end
 
       member do
@@ -317,6 +320,7 @@ Rails.application.routes.draw do
           put "/change_shop_theme", to: "settings#change_shop_theme"
           put "/reset_shop_poster", to: "settings#reset_shop_poster"
           post "/upload_shop_poster", to: "settings#upload_shop_poster"
+          post "/upload_shop_signage", to: "settings#upload_shop_signage"
         end
       end
     end
