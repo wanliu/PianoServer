@@ -29,22 +29,22 @@
   <div class="item-properties">
     <div class="media">
       <div class="media-body media-middle">
-        <%= @item.title %>
+        <%= @item.description %>
       </div>
-      <div class="media-right media-middle">
+<!--       <div class="media-right media-middle">
         <div class='favor-title text-center'>收藏</div>
         <div class='favor-count text-center'>0</div>
       </div>
       <div class="media-right media-middle">
         <div class='like-title text-center'>赞</div>
         <div class='like-count text-center'>0</div>
-      </div>
+      </div> -->
     </div>
   </div>
 
   <div class="media item-option-warp">
     <div class="media-left left-wrap">
-       <%= render partial: "sale_form", with: @item.category, locals: { item: @item, cartitem: @cartitem, stocks_with_index: @stocks_with_index, moveable_target: ".shop-item-image>img" } %>
+      <%= render partial: "sale_form", with: @item.category, locals: { item: @item, cartitem: @cartitem, stocks_with_index: @stocks_with_index, moveable_target: ".shop-item-image>img" } %>
     </div>
     <div class="media-body right-shop-infos hidden-xs"> <!-- 右侧info -->
       <a href="<%= shop_site_path(@shop.name, format: 'html') %>" class="media avatar-wrap">
@@ -57,12 +57,11 @@
           <div class='name'><%= @shop.title %></div>
         </div>
       </a>
-      <br>
       <address><%= @shop.address %></address>
       <br>
       <div class="row fllow-wrap">
         <div class="col-md-6 col-sm-6 text-center">
-          <div class="follow">关注：200</div>
+          <div class="follow">关注：0</div>
         </div>
         <div class="col-md-6 col-sm-6 text-center">
           <a class="follow-btn" href="#"> <%= icon(:plus) %> 关注</a>

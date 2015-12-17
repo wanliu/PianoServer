@@ -81,22 +81,37 @@
   }
   
   .minus-plus-button{
-    width: 150px;
+    input {
+      display: inline-block;
+      width: 60px;
+      text-align: center;
+    }
   }
   
   .item-option-warp {
     border-bottom: 1px solid #ddd;
-    padding: 20px 0;
+    padding: 10px;
+    padding-right: 0;
     margin: 0;
+    .minus-group {
+      margin: 0;
+    }
+  }
+
+  .wholesale-group {
+    line-height: 1.5
   }
 
   .left-wrap {
     position: relative;
-
     .purchase-buttons{
       position: absolute;
-      right: 20px;
+      right: 16%;
       bottom: 0;
+      margin-bottom: 0;
+      .btn {
+        color: #fff;
+      }
     }
   }
 
@@ -104,19 +119,15 @@
   .right-shop-infos{
     width: 30%;
     border-left: 1px solid #ddd;
-    padding: 15px;
+    padding: 0 15px 50px 15px;
     position: relative;
 
-    .fllow-wrap{
-      bottom: 17px;
-      position: absolute;
-      width: 100%;
-    }
-
     .avatar-wrap{
+      display: block;
       background: #F2F2F2;
       color: #333;
       text-decoration: none;
+      margin-bottom: 10px;
     }
     .shop-avatar{
       display: block;
@@ -126,28 +137,34 @@
       }
     }
 
-    .follow,
-    .follow-btn {
-      display: block;
-      padding: 10px 0;
-      border: 1px solid #F12A39;
-      color: #333;
-    }
-    .follow {
-      margin-right: -15px;
-      border-top-left-radius: 5px;
-      border-bottom-left-radius: 5px;
-      background: #FFF2F2;
-    }
-    .follow-btn {
-      text-decoration: none;
-      margin-left: -16px;
-      background: #F12A39;
-      color: #fff;
-      border-top-right-radius: 5px;
-      border-bottom-right-radius: 5px;
-      &:hover {
-        background: #EF1626;
+    .fllow-wrap{
+      bottom: 0;
+      position: absolute;
+      width: 100%;
+
+      .follow,
+      .follow-btn {
+        display: block;
+        padding: 12px 0;
+        border: 1px solid #F12A39;
+        color: #333;
+      }
+      .follow {
+        margin-right: -15px;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        background: #FFF2F2;
+      }
+      .follow-btn {
+        text-decoration: none;
+        margin-left: -16px;
+        background: #F12A39;
+        color: #fff;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+        &:hover {
+          background: #EF1626;
+        }
       }
     }
   }
@@ -222,7 +239,9 @@
 // 
 }
 .item-sale-options {
-  padding: 10px;
+  @media (min-width: 768px) {
+    padding-bottom: 50px;
+  }
   .media-left,
   .media-right{
     text-align: justify;
