@@ -1,0 +1,16 @@
+<div class='cart mobile-cart'>
+  <!-- <div class="page-header">
+    <h4>购物车 <small>清单</small></h4>
+  </div> -->
+
+  <div>
+    <% if current_cart.items.blank? %>
+      <h2>你的购物车是空的</h2>
+    <% else %>
+      <% groups = @items.group_by {|item| item.supplier } %>
+      <% groups.each do |supplier, items| %>
+        <%= render partial: 'cart_group', locals: { supplier: supplier, items: items } %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

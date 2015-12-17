@@ -191,3 +191,40 @@
     }
   }
 }
+
+.cart.mobile-cart {
+  .cart-group {
+    .cart-item {
+      border-bottom: 1px solid white;
+
+      .avatar {
+        img {
+          width: 70px;
+          height: 70px;
+        }
+      }
+
+      .row {
+        display: table;
+
+        .avatar {
+          display: table-cell;
+          float: none;
+        }
+
+        .remove-item {
+          vertical-align: middle;
+          background-color: #eea236;
+          display: table-cell;
+          float: none;
+          color: white;
+          height: 100%;
+        }
+      }
+
+      table tbody td{
+        border-color: white;
+      }
+    }
+  }
+}
