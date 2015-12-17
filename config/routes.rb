@@ -82,6 +82,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :smart_fills
+
   concern :templable do |options|
     resources :templates, options do
       collection do
