@@ -70,7 +70,7 @@ class AuthorizeController < ApplicationController
     if user.is_done?
       request.referer ? URI(request.referer).path : root_path
     else
-      after_registers_path
+      smart_fills_path
     end
   end
 end
