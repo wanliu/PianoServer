@@ -23,9 +23,9 @@ class @SideMenuManager
   resizeHandler: () ->
     if @$window.width() > 768
       @_hide()
-      # @_destroyHammer()
+      @_destroyHammer()
     else
-      # @_initHammer()
+      @_initHammer()
       $('body').width(@$window.width())
 
   addMenu: (menu) ->

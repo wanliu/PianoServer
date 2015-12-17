@@ -47,12 +47,12 @@ dev:
     weixin: true
     camera: true
     shop:
-      website: true
+      website: false
     mobile:
       mini: true
     purchase: true
     cart: true
-    favorites: true
+    favorites: false
     qrcode: true
     linkmen: true
     location: true

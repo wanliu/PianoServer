@@ -1,14 +1,4 @@
-<% if @shop.present? %>
-  <div class="chat-order-header">
-    <div class="chat-image-wrap">
-      <%= image_tag @shop.avatar_url, class: "chat-order-image" %>
-    </div>
-    <div class="chat-order-title">
-      <div><%= @shop.name %></div>
-      <div><%= @shop.location.try(:address) %></div>
-    </div>
-  </div>
-<% elsif @intention.present? %>
+<% if @intention.present? %>
   <div class="chat-order-header" data-order-id="<%= @intention.id %>">
     <div class="chat-image-wrap">
       <%= image_tag @intention.avatar_url, class: "chat-order-image", "state-load-url" => status_of_intention_path(@intention) %>
@@ -18,6 +8,16 @@
     </div>
     <div class="order-toggle-button">
       <span class="glyphicon glyphicon-menu-down toggle-icon" aria-hidden="true"></span>
+    </div>
+  </div>
+<% elsif @shop.present? %>
+  <div class="chat-order-header">
+    <div class="chat-image-wrap">
+      <%= image_tag @shop.avatar_url, class: "chat-order-image" %>
+    </div>
+    <div class="chat-order-title">
+      <div><%= @shop.name %></div>
+      <div><%= @shop.location.try(:address) %></div>
     </div>
   </div>
 <% end %>

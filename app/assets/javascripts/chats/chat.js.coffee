@@ -16,6 +16,9 @@ class @Chat
     avatarDefault: '/assets/avatar.gif',
     displayUserName: true,
     displayShopName: true,
+    greetingUserName: '',
+    greetingShopName: '',
+    greetingShopLogo: '/assets/avatar.gif',
     miniTimeGroupPeriod: 1000 * 180
     # autoEnter: true
   }
@@ -278,7 +281,7 @@ class @Chat
     toAddClass = if @_isOwnMessage(message) then 'you' else 'me'
 
 
-    senderAvatar = @options.avatarDefault if senderAvatar == '' or senderAvatar?
+    senderAvatar = @options.avatarDefault if senderAvatar == '' or !senderAvatar
 
     if @options.displayUserName && @options.displayShopName
       if senderShopName == ''
@@ -468,9 +471,9 @@ class @Chat
         id: ~(new Date),
         senderId: 0,
         content: @greetings,
-        senderAvatar: @options.avatarDefault,
-        senderLogin: '商店',
-        senderShopName: '',
+        senderAvatar: @options.greetingShopLogo,
+        senderLogin: @options.greetingUserName,
+        senderShopName: @options.greetingShopName,
         time: new Date()
       })
 

@@ -177,7 +177,7 @@
 }
 
 .detail-link-table-container{
-  background-color:#f0f0f0;
+  background: rgba(177, 177, 177, 0.9);
   position: fixed;
   bottom: 0;
   left: 0;
@@ -194,10 +194,13 @@
   .contact-button{
     display: table-cell;
     width: 20%;
+    text-decoration: none;
+    color: #333;
     text-align: center;
     cursor: pointer;
     vertical-align: middle;
     line-height: 100%;
+    position: relative;
 
     .button-text{
       text-align: center;
@@ -205,8 +208,28 @@
     }
   }
 
-  .into-shop, .fav-button{
+  .shop-cart {
+    .glyphicon {
+      font-size: 26px;
+      color: #333;
+    }
+    .badge {
+      position: absolute;
+      background: rgba(66, 66, 66, 0.75);
+      border: 1px solid #fff;
+      left: 50%;
+      top: 3px;
+    }
+  }
+
+  .into-shop,
+  .fav-button {
     border-right: 1px solid #DDDDDD;
+  }
+
+  .add-to-cart {
+    background: #FF900E;
+    color: #fff;
   }
 
   .into-shop{
@@ -218,7 +241,7 @@
   }
 
   .buy-now{
-    background-color: #FF7C00;
+    background-color: #FF4F00;
   }
 
   .chat {
