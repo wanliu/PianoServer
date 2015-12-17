@@ -26,21 +26,21 @@
     </div>
   </div>
 
-  <div class="item-properties">
+<!--   <div class="item-properties">
     <div class="media">
       <div class="media-body media-middle">
-        <%= @item.description %>
+        <%= @item.title %>
       </div>
-<!--       <div class="media-right media-middle">
+      <div class="media-right media-middle">
         <div class='favor-title text-center'>收藏</div>
         <div class='favor-count text-center'>0</div>
       </div>
       <div class="media-right media-middle">
         <div class='like-title text-center'>赞</div>
         <div class='like-count text-center'>0</div>
-      </div> -->
+      </div>
     </div>
-  </div>
+  </div> -->
 
   <div class="media item-option-warp">
     <div class="media-left left-wrap">
@@ -84,6 +84,9 @@
       </div>
     </div>
   </a>
+  <div class="item-description">
+    <%= @item.description %>
+  </div>
 
   <%#= render partial: "sale_options", with: @item.category %>
 </div>
