@@ -7,34 +7,27 @@
     <% if current_cart.items.blank? %>
       <h2>你的购物车是空的</h2>
     <% else %>
+      <table class='table table-bordered' style='background-color: white;'>
+        <colgroup>
+          <col width='30%' />
+          <col width='10%' />
+          <col width='20%' />
+          <col width='10%' />
+          <col width='20%' />
+        </colgroup>
+        <tr>
+          <td>商品</td>
+          <td>单价</td>
+          <td>数量</td>
+          <td>金额</td>
+          <td>操作</td>
+        </tr>
+      </table>
       <% groups = @items.group_by {|item| item.supplier } %>
       <% groups.each do |supplier, items| %>
-        <%= form_for Order.new, url: confirmation_orders_path do |f| %>
-          <%= f.hidden_field :supplier_id, value: supplier.id %>
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <span>
-                <input type='checkbox' class='select-all' data-supplier-id='<%= supplier.id %>' checked='checked' />全选
-              </span>
-              店铺：
-              <%= link_to shop_site_path(supplier.name) do %>
-                <%= supplier.title %>
-              <% end %>
-              (<%= items.map(&:quantity).reduce(:+) %>件商品)
-            </div>
-            <ul class="list-group cart-item-details">
-              <%= render partial: "cart_item", collection: items.sort_by(&:id), as: :item, locals: { supplier: supplier, f: f } %>
-            </ul>
-            <div class="panel-footer">
-              <%= f.submit '结算', class: 'btn btn-primary confirm-order' %>
-            </div>
-          </div>
-        <% end %>
+        <%= render partial: 'cart_group', locals: { supplier: supplier, items: items } %>
       <% end %>
     <% end %>
-
-    <%#= button_to '全部生成订单', class: 'btn btn-primary' %>
-
   </div>
 </div>
 
@@ -53,9 +46,12 @@
     });
 
     // 当有一个取消选中时，取消全部选中；当所属项全部选中时，勾选全部选中按钮
-    $('.chose-item input:checkbox').change(function (event) {
+    $('.avatar input:checkbox').change(function (event) {
       var checked = $(this).prop('checked');
       var allCheckbox = $(this).parents('form').find('.chose-item input:checkbox');
+
+      var $group = $(this).parents('.cart-group');
+      calculateGroupTotal($group);
 
       if (!checked) {
         $(this).parents('form').find('.select-all').prop('checked', false);
@@ -120,6 +116,7 @@
           $subTotal = $cartItem.find('.subtotal');
           $group = $(quantityInput).parent('.input-group'),
           $btnMinus = $group.find('.btn-minus span'),
+          $group = $(quantityInput).parents('.cart-group'),
           $alert = $group.siblings('.alert');
 
       $quantity.val(quantity);
@@ -141,6 +138,7 @@
 
         $(document).trigger('cart_quantity_changed', [ data.ccount ])
 
+        calculateGroupTotal($group);
         if (!reflect) $alert.hide();
       }).fail(function (data, xhr, status) {
         // usually caused by the lack of inventory
@@ -155,6 +153,34 @@
         }
       });
     }
+
+    function calculateGroupTotal($group) {
+      if (!($group instanceof jQuery)) {
+        $group = $($group);
+      }
+
+      var saleableSelected = _.filter($group.find('tr.saleable'), function(item) {
+        return $(item).find('.avatar :checkbox').prop('checked');
+      });
+
+      var totals = _.reduce(saleableSelected, function(mem, item) {
+        var quantity = parseInt($(item).find('.quantity input').val(), 10);
+        var total = parseFloat($(item).find('.subtotal').text().replace('¥', ''), 10);
+
+        mem.quantity || (mem.quantity = 0);
+        mem.total || (mem.total = 0);
+
+        mem.quantity += quantity;
+        mem.total += total;
+
+        return mem;
+      }, {});
+
+      $group.find('tr.footer .total-quantity').text(totals.quantity || 0);
+      $group.find('tr.footer .total-total').text(totals.total || 0);
+    }
+
+    _.each($('.cart .cart-group'), calculateGroupTotal);
   })();
 </script>
 
