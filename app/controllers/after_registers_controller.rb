@@ -208,6 +208,13 @@ class AfterRegistersController < ApplicationController
     render "after_registers/#{@user_type}/#{@step}_status", formats: [:json]
   end
 
+  def upgrade_to_distributor
+    @current_user.user_type = "distributor"
+    @current_user.save(:validate => false)
+
+    redirect_to after_register_path(@current_user.user_type)
+  end
+
   private
 
   def set_type
