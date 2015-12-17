@@ -1,54 +1,65 @@
 <div class="item-sale-options">
   <%= form_for cartitem, url: cart_path, html: { class: 'sale_form item-chose-collection' } do |f| %>
-    <% unless current_anonymous_or_user.user_type == "consumer" %>
-      <div class="form-group">
-        <div class="media">
-          <!-- <div class="media-left media-middle">
-            品牌：
-          </div>
-          <div class="media-left media-middle"><%#= @item.brand %></div> -->
+
+    <div class="form-group">
+      <div class="media">
+        <div class="media-left media-middle">品牌：</div>
+        <div class="media-left media-middle"><%= @item.title %></div>
+        <% unless current_anonymous_or_user.user_type == "consumer" %>
           <div class="media-body">
             <div class="btn-group btn-group" role="group" aria-label="Large button group">
-              <button type="button" class="btn btn-sall-type">零售</button>
-              <button type="button" class="btn btn-sall-type active">批发</button>
+              <button type="button" class="btn btn-sall-type">零售价</button>
+              <button type="button" class="btn btn-sall-type active">批发价</button>
             </div>
           </div>
-        </div>
+<!--           <div class="media-left media-middle">
+            <span>批发价：</span>
+            <%#= number_to_currency item.price %>
+          </div> -->
+        <% end %>
       </div>
-
-      <!-- <div class="form-group" >
-        <label>批发价</label>
-        <%#= number_to_currency item.price %>
-      </div> -->
-    <% end %>
-
+    </div>
     <% item.inventory_properties.each do |property, prop_value| %>
       <%= render partial: "exterior_#{prop_value['exterior'] || "swatch_select"}", with: @item.category, locals: { item: @item, property: property, prop_value: prop_value, shop: @shop } %>
     <% end %>
 
-    <%= minus_plus_button_field :cart_item, :quantity, value: cartitem.quantity, placeholder: "数量", class: 'form-control cart_item_quantity' %>
-
-    <div class="form-group purchase-buttons hidden-xs text-right">
-      <% if item.inventory_properties.present? && stocks_with_index.present? %>
-        <% if Settings.dev.feature.cart %>
-          <%= f.button class: 'btn btn-lg btn-info add-to-cart', disabled: "disabled", "data-cartable-type" => 'Item', "data-cartable-id" => @item.id, type: 'button', "data-moveable" => moveable_target do %>
-            <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>加入购物车
-          <% end %>
-        <% end %>
-        <% if Settings.dev.feature.purchase %>
-          <%= f.button "立即购买", class: 'btn btn-lg btn-danger buy-now js-buy-now', disabled: "disabled", "data-cartable-type" => 'Item', "data-cartable-id" => @item.id, type: 'button' %>
-        <% end %>
-      <% else %>
-        <% if Settings.dev.feature.cart %>
-          <%= f.button class: 'btn btn-lg btn-info add-to-cart', "data-cartable-type" => 'Item', "data-cartable-id" => @item.id, type: 'button', "data-moveable" => moveable_target do %>
-            <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>加入购物车
-          <% end %>
-        <% end %>
-        <% if Settings.dev.feature.purchase %>
-          <%= f.button "立即购买", class: 'btn btn-lg btn-danger buy-now js-buy-now', "data-cartable-type" => 'Item', "data-cartable-id" => @item.id, type: 'button' %>
-        <% end %>
-      <% end %>
+    <div class="media">
+      <div class="media-left media-middle">
+        数量：
+      </div>
+      <div class="media-left media-middle">
+        <%= minus_plus_button_field :cart_item, :quantity, value: cartitem.quantity, placeholder: "数量", class: 'form-control cart_item_quantity' %>
+      </div>
+      <div class="media-right media-middle">
+        件 / 库存：<%= item.current_stock %>
+      </div>
     </div>
+
+      <div class="form-group purchase-buttons hidden-xs text-right">
+        <% if @shop.owner_id === current_user.id %>
+          <!-- 您的店铺 -->
+        <% else %>
+          <% if item.inventory_properties.present? && stocks_with_index.present? %>
+            <% if Settings.dev.feature.cart %>
+              <%= f.button class: 'btn btn-lg add-to-cart', disabled: "disabled", "data-cartable-type" => 'Item', "data-cartable-id" => @item.id, type: 'button', "data-moveable" => moveable_target do %>
+                加入购物车
+              <% end %>
+            <% end %>
+            <% if Settings.dev.feature.purchase %>
+              <%= f.button "立即购买", class: 'btn btn-lg buy-now js-buy-now', disabled: "disabled", "data-cartable-type" => 'Item', "data-cartable-id" => @item.id, type: 'button' %>
+            <% end %>
+          <% else %>
+            <% if Settings.dev.feature.cart %>
+              <%= f.button class: 'btn btn-lg add-to-cart', "data-cartable-type" => 'Item', "data-cartable-id" => @item.id, type: 'button', "data-moveable" => moveable_target do %>
+                加入购物车
+              <% end %>
+            <% end %>
+            <% if Settings.dev.feature.purchase %>
+              <%= f.button "立即购买", class: 'btn btn-lg buy-now js-buy-now', "data-cartable-type" => 'Item', "data-cartable-id" => @item.id, type: 'button' %>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
 
     <%#= f.hidden_field :sale_mode %>
     <%#= f.hidden_field :title %>

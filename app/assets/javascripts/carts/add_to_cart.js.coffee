@@ -7,6 +7,7 @@ $ ()->
     properties   = $(@).data('properties') || {}
     target       = if $(window).width() < 768 then $('.shop-cart') else $('.mycart')
     $quantityInput = $(@).parents('form').find('input.cart_item_quantity')
+
     quantity = if $quantityInput.length
       $quantityInput.val() || 1
     else
@@ -55,7 +56,6 @@ $ ()->
         $divider.before(html)
 
       $('.cart-item-count').text(data.items_count)
-      console.log(1)
       $(document).trigger('cart_quantity_changed', [ data.items_count ])
 
       animate()
