@@ -1,4 +1,4 @@
-<div class="item-link-table-container link-table-container visible-xs">
+<div class="item-link-table-container link-table-container">
   <div class="menu-overlayer"></div>
   <div class="link-table">
     <% if Settings.dev.feature.shop.website %>
@@ -19,21 +19,21 @@
       <div class="contact-button chat">您的店铺</div>
     <% else %>
        <% if Settings.dev.feature.cart %>
-        <a href="/cart"  class="link-button shop-cart">
+        <a href="/cart"  class="link-button shop-cart hidden-sm hidden-md hidden-lg">
           <%= icon('shopping-cart') %>
           <span class="badge"> <%= current_cart.items_count %></span>
         </a>
-        <div class="link-button add-to-cart-bottom" data-cartable-type='<%= @item.class.to_s %>' data-cartable-id='<%= @item.id %>' data-moveable="<%= moveable_target %>">
+        <div class="link-button add-to-cart-bottom hidden-sm hidden-md hidden-lg" data-cartable-type='<%= @item.class.to_s %>' data-cartable-id='<%= @item.id %>' data-moveable="<%= moveable_target %>">
           <div class="button-text">加入购物车</div>
         </div>
       <% end %>
 
       <% if Settings.dev.feature.purchase %>
-        <a class="link-button buy-now buy-now-bottom" data-cartable-type='<%= @item.class.to_s %>' data-cartable-id='<%= @item.id %>'>
+        <a class="link-button buy-now buy-now-bottom hidden-sm hidden-md hidden-lg" data-cartable-type='<%= @item.class.to_s %>' data-cartable-id='<%= @item.id %>'>
           立即购买
         </a>
       <% end %>
-      <%= button_to '洽谈', item_chats_path(@item.id, shop_id: @shop.id), form_class: 'link-button chat' %>
+      <%= button_to '洽谈', item_chats_path(@item.id, shop_id: @shop.id), form_class: 'link-button chat ' %>
     <% end %>
   </div>
 </div>

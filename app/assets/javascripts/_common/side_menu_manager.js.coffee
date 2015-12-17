@@ -101,8 +101,8 @@ class @SideMenuManager
     @hammer = new Hammer.Manager(document.body)
     @hammer.add(new Hammer.Swipe({
       direction: Hammer.DIRECTION_HORIZONTAL,
-      velocity: 0.1,
-      threshold: 1,
+      velocity: 0.65,
+      threshold: 10,
       pointers: 1
     }))
     @hammer.on "swiperight", @_open.bind(@)

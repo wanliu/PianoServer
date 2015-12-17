@@ -17,7 +17,7 @@
       width: 100%;
     }
 
-    .promotion-poster{
+    .promotion-poster {
       max-width: 100%;
       height: auto;
       width: 100%\9;
@@ -87,20 +87,105 @@
     }
   }
 
+  .bottom-infos-wrap {
+    border-top: 1px solid #ddd;
+    padding: 15px;
+    margin-top: 0;
+  }
+
+  .promotion-options-wrap {
+    margin-top: 0;
+    padding: 15px;
+
+    >.media-body {
+      position: relative;
+    }
+
+    .option-group {
+      margin-bottom: 15px;
+    }
+
+    .btn-danger {
+      background: #FF2B2A;
+      border-color: #FF2B2A;
+    }
+
+    .btn-warning {
+      background: #FF962F;
+      border-color: #FF962F;
+    }
+
+    .minus_plus_input {
+      width: 60px;
+    }
+
+    .buy-buttons {
+      position: absolute;
+      bottom: 0;
+      right: 16%;
+    }
+
+    .promotion-option-form {
+      @media (min-width: 768) {
+        padding-bottom: 50px;
+      }
+    }
+
+    .right-infos-wrap {
+      position: relative;
+      width: 30%;
+      padding: 0 15px 50px 15px;
+      padding-right: 0;
+      border-left: 1px solid #ddd;
+
+      .right-fllow-wrap{
+        bottom: 0;
+        position: absolute;
+        width: 100%;
+
+        .follow,
+        .follow-btn {
+          display: block;
+          padding: 12px 0;
+          border: 1px solid #F12A39;
+          color: #333;
+        }
+        .follow {
+          margin-right: -15px;
+          border-top-left-radius: 5px;
+          border-bottom-left-radius: 5px;
+          background: #FFF2F2;
+        }
+        .follow-btn {
+          text-decoration: none;
+          margin-left: -16px;
+          background: #F12A39;
+          color: #fff;
+          border-top-right-radius: 5px;
+          border-bottom-right-radius: 5px;
+          &:hover {
+            background: #EF1626;
+          }
+        }
+      }
+    }
+  }
+
   .title-contact{
-    margin: 1.5em 0;
+    margin: 0;
+    padding: 20px 15px;
     display: table;
     width: 100%;
+    border-bottom: 1px solid #ddd;
 
     .promotion-title{
       display: table-cell;
       vertical-align: middle;
-      padding: 0 15px;
     }
 
     .promotion-favors, .promotion-likers{
       display: table-cell;
-      width: 18%;
+      width: 15%;
       text-align: center;
       vertical-align: middle;
       color: #666666;

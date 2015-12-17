@@ -6,23 +6,23 @@
       <% end %>
     </div>
 
-    <div class="title media-left">
+    <div class="title media-left media-middle">
       <%= item.title %>
     </div>
 
-    <div class="properties media-left">
+    <div class="properties media-left media-middle">
       <%= item.properties_title %>
     </div>
 
-    <div class="price media-left">
+    <div class="price media-left media-middle">
       <%= number_to_currency item.price %>
     </div>
 
-    <div class="quantity media-left">
+    <div class="quantity media-left media-middle">
       <%= minus_plus_button_field "order[items_attributes][0]", :quantity, value: item.quantity, placeholder: "数量", class: 'form-control cart_item_quantity' %>
     </div>
 
-    <div class="subtotal media-left">
+    <div class="subtotal media-left media-middle">
       <%= number_to_currency item.price * item.quantity %>
     </div>
   </div>
