@@ -37,14 +37,14 @@
 
     <div class="title-contact">
       <div class="promotion-title"><%= promotion.title %></div>
-      <div class="promotion-favors">
+<!--       <div class="promotion-favors">
         <p>收藏</p>
         <%= promotion.likers_count %>
       </div>
       <div class="promotion-likers">
         <p>赞</p>
         <%= promotion.favoriters_count %>
-      </div>
+      </div> -->
     </div>
     
     <div class="media promotion-options-wrap">
@@ -93,13 +93,17 @@
 
       <div class="media-right right-infos-wrap hidden-xs">
         <div class="media">
-          <div class="media-left">
-            <%= image_tag shop.logo_url,style:'width:70px;' %>
-          </div>
-          <div class="media-body media-middle">
-            <div><%= shop.title %></div>
-          </div>
-          <div><%= shop.address %></div>
+
+          <%= link_to shop_site_path(shop.name, format: 'html'), class:'reset-a' do %>
+            <div class="media-left">
+              <%= image_tag shop.logo_url,style:'width:70px;' %>
+            </div>
+            <div class="media-body media-middle">
+              <div><%= shop.title %></div>
+            </div>
+            <div><%= shop.address %></div>
+          <% end %>
+
           <div class="row right-fllow-wrap">
             <div class="col-md-6 col-sm-6 text-center">
               <div class="follow">关注：0</div>
@@ -112,17 +116,15 @@
       </div>
     </div>
     
-    <div class="media bottom-infos-wrap visible-xs">
+    <%= link_to shop_site_path(shop.name, format: 'html'), class:'reset-a media bottom-infos-wrap visible-xs' do %>
       <div class="media-left">
-        <%= link_to shop_site_path(shop.name, format: 'html') do %>
-          <%= image_tag shop.logo_url,style:'width:70px;' %>
-        <% end %>
+        <%= image_tag shop.logo_url,style:'width:70px;' %>
       </div>
       <div class="media-body media-middle">
         <div><%= shop.title %></div>
         <div><%= shop.address %></div>
       </div>
-    </div>
+    <% end %>
 
 <!--     <div class="product-brief">
       <div class="row">
