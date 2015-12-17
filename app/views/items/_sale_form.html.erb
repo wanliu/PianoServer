@@ -31,7 +31,7 @@
         <%= minus_plus_button_field :cart_item, :quantity, value: cartitem.quantity, placeholder: "数量", class: 'form-control cart_item_quantity' %>
       </div>
       <div class="media-right media-middle">
-        件 / 库存：<%= item.current_stock %>
+        件 / 库存：<span class='available-stock'><%= @item.current_stock.to_i %></span>
       </div>
     </div>
 
