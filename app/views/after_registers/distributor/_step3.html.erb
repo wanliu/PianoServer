@@ -29,9 +29,9 @@
 <script type="text/template" id="brand_template">
   <input type="checkbox" name="select[{{category_id}}][]" value="{{id}}" id="category_{{category_id}}_brand_{{id}}" />
   <label for="category_{{category_id}}_brand_{{id}}" class="brand-link list-group-item" data-brand-id="{{id}}" data-category-id="{{category_id}}">
-    <span class="glyphicon glyphicon-ok pull-right brand-mark" aria-hidden="true"></span>
+    <span class="glyphicon glyphicon-ok brand-mark" aria-hidden="true"></span>
     <img src="{{image.url}}" width="64" height="32" alt="{{name}}" />
-    <span > {{ title }} </span>
+    <span class="title"> {{ title }} </span>
   </label>
 </script>
 
@@ -79,13 +79,14 @@
   $(".category-body>a").on("change:select_count", function(e) {
     var id = $(e.target).data('category');
     var $ul = $(e.target).parents('.category-body').next().find(">.category-" + id);
-    var count = $ul.find(':checked').length;
+    var count = $ul.find('.brand-link.active').length;
     if (count > 0) {
       $(e.target).find(".badge").text(count);
+
     } else {
       $(e.target).find(".badge").text('');
     }
-    if ($(".category-brand-list :checked").length > 0) {
+    if ($(".category-brand-list .brand-link.active").length > 0) {
       $('.next').attr('disabled', false);
     } else {
       $('.next').attr('disabled', true);
@@ -99,6 +100,7 @@
   });
 
   $(".category-brand-list").on('click', '.brand-link', function(e) {
+    console.log(1)
     $(e.currentTarget).toggleClass('active');
     var id = $(e.currentTarget).data("categoryId")
     var $category = $(e.target).parents('.category-brand-list').prev()
