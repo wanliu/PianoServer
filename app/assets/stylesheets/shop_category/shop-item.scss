@@ -33,7 +33,6 @@
 
   .item-description {
     padding: 20px 10px;
-    border-top: 1px solid #ddd;
   }
 
   .shop-item-image {
@@ -220,29 +219,8 @@
   .item-secodary-properties {
     padding: 15px;
   }
-
-  .item-descriptions {
-    padding: 15px;
-
-    .brief-desc {
-      padding: 5px 15px;
-    }
-
-    .detail-desc {
-      padding: 15px 15px 0;
-
-      .avatar img {
-        max-width: 100%;
-        height: auto;
-        width: 100%\9;
-        min-width: 200px;
-        min-height: 200px;
-      }
-    }
-  }
-
-// 
 }
+
 .item-sale-options {
   @media (min-width: 768px) {
     padding-bottom: 50px;
