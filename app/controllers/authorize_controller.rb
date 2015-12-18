@@ -67,6 +67,8 @@ class AuthorizeController < ApplicationController
   end
 
   def after_sign_in_path(user)
+    return request.referer ? URI(request.referer).path : root_path unless Settings.after_registers.after_sign_in
+
     if user.is_done?
       request.referer ? URI(request.referer).path : root_path
     else

@@ -92,6 +92,7 @@ after_registers:
     validates: strict
   total:
     max_count: 15
+  after_sign_in: false
 weixin:
   scope: snsapi_login
 chat:

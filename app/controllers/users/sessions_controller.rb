@@ -79,6 +79,8 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def after_sign_in_path_for(resource)
+    return callback_url ? callback_url : super(resource) unless Settings.after_registers.after_sign_in
+
     if resource.is_done?
       callback_url ? callback_url : super(resource)
     else
