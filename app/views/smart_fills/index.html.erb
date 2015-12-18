@@ -36,6 +36,7 @@
 
 <script type="text/javascript">
   var url = '<%= fast_register_smart_fills_path %>';
+  var root_path = '<%= root_path %>';
 
   $('.btn-submit').click(function() {
     var phone = $.trim($('input[name="phone"]').val());
@@ -51,10 +52,19 @@
 
     $.ajax({
       url: url,
+      type: 'POST'
       data: {
         shop: {
           title: title
           phone: phone
+        }
+      },
+      dataType: 'json',
+      success: function (data) {
+        if (data.success) {
+          window.location.href = root_path;
+        } else {
+          $('.error-notice').text(data.errors).css('display', 'inline');
         }
       }
     });

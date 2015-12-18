@@ -15,15 +15,20 @@ class SmartFillsController < ApplicationController
     current_user.save(:validate => false)
 
     shop = current_user.owner_shop || Shop.new(shop_params.merge(owner_id: current_user.id))
+    shop.skip_validates = true
     shop.shop_type = 'retail'
     shop.theme = Settings.shop.default_theme
     shop.create_status(state: "select")
 
-    shop.save(:validate => false)
+    if shop.save
+      render json: {success: true}
+    else
+      render json: {success: false, errors: shop.errors.full_messages.join(', ') }
+    end
 
-    @notice = '恭喜您快速开店成功'
+    # @notice = '恭喜您快速开店成功'
 
-    redirect_to root_path
+    # redirect_to root_path
   end
 
   private
