@@ -4,9 +4,14 @@
   <div class='row'>
     <div class='col-xs-9 avatar'>
       <div class='media'>
-        <div class='media-left'>
+        <div class='media-left check-item'>
           <% if saleable %>
-            <%= f.check_box "cart_item_ids", {multiple: true, checked: true}, item.id, nil %>
+            <%= f.label "cart_item_ids_#{item.id}" do %>
+              <%= f.check_box "cart_item_ids", {multiple: true, checked: true}, item.id, nil %>
+              <div class='checkbox-simulator'>
+                <div class='check'></div>
+              </div>
+            <% end %>
           <% else %>
             <span class='unsaleable'>失效</span>
           <% end %>      
@@ -21,7 +26,7 @@
         </div>
       </div>
     </div>
-    <div class='col-xs-3 remove-item'>移除商品</div>
+    <%= link_to "移除商品", item, method: :delete, class: 'col-xs-3 remove-item', data: { confirm: '确定删除这个商品么？' } %>
   </div>
   <table class='table table-bordered'>
     <colgroup>
@@ -34,16 +39,25 @@
     <tbody>
       <tr>
         <% if saleable %>
-          <td>单价:<%= number_to_currency item.price %></td>
-          <td><span class="glyphicon glyphicon-minus"></span></td>
-          <td><%= item.quantity %></td>
-          <td><span class="glyphicon glyphicon-plus"></span></td>
-          <td>小计:<%= number_to_currency item.price * item.quantity %></td>
+          <td class='price'>单价:<%= number_to_currency item.price %></td>
+          <% if item.quantity <= 1 %>
+            <td><span class="glyphicon btn-minus"></span></td>
+          <% else %>
+            <td><span class="glyphicon glyphicon-minus btn-minus"></span></td>
+          <% end %>
+          <td class='quantity'><%= item.quantity %></td>
+          <td><span class="glyphicon glyphicon-plus btn-plus"></span></td>
+          <td>小计:<span class='subtotal'><%= number_to_currency item.price * item.quantity %></span></td>
         <% else %>
-          <td>单价:<%= number_to_currency item.price %></td>
-          <td colspan='3'><%= item.quantity %></td>
-          <td>小计:<%= number_to_currency item.price * item.quantity %></td>
+          <td class='price'>单价:<%= number_to_currency item.price %></td>
+          <td colspan='3' class='quantity'><%= item.quantity %></td>
+          <td>小计:<span class='subtotal'><%= number_to_currency item.price * item.quantity %></span></td>
         <% end %>
+      </tr>
+      <tr class='error'>
+        <td></td>
+        <td colspan='3' class='error-info alert alert-danger fade in'>最多只能购买<span class='max-quantity'></span>件</td>
+        <td></td>
       </tr>
     </tbody>
   </table>

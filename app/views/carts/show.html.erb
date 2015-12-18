@@ -1,6 +1,10 @@
 <div class='cart col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1'>
   <div class="page-header">
-    <h1>购物车 <small>清单</small></h1>
+    <h1>购物车
+      <small>
+      清单(<span class='cart-item-count'><%= current_cart.items_count %></span>)
+      </small>
+    </h1>
   </div>
 
   <div class='no-padding'>
@@ -38,6 +42,9 @@
       var checked = $(this).prop('checked');
       $(this).parents('form').find(':checkbox').prop('checked', checked);
 
+      var $group = $(this).parents('.cart-group');
+      calculateGroupTotal($group);
+
       if (checked) {
         $(this).parents('.cart').find('.confirm-order').removeAttr('disabled');
       } else {
@@ -48,7 +55,7 @@
     // 当有一个取消选中时，取消全部选中；当所属项全部选中时，勾选全部选中按钮
     $('.avatar input:checkbox').change(function (event) {
       var checked = $(this).prop('checked');
-      var allCheckbox = $(this).parents('form').find('.chose-item input:checkbox');
+      var allCheckbox = $(this).parents('form').find('.cart-item input:checkbox');
 
       var $group = $(this).parents('.cart-group');
       calculateGroupTotal($group);
@@ -114,10 +121,9 @@
           cartItemId = $cartItem.data('cartItemId'),
           $quantity = $cartItem.find('input[name=quantity]'),
           $subTotal = $cartItem.find('.subtotal');
-          $group = $(quantityInput).parent('.input-group'),
-          $btnMinus = $group.find('.btn-minus span'),
-          $group = $(quantityInput).parents('.cart-group'),
-          $alert = $group.siblings('.alert');
+          $btnMinus = $cartItem.find('.btn-minus span'),
+          $alert = $cartItem.find('.alert'),
+          $group = $(quantityInput).parents('.cart-group');
 
       $quantity.val(quantity);
 
@@ -159,7 +165,7 @@
         $group = $($group);
       }
 
-      var saleableSelected = _.filter($group.find('tr.saleable'), function(item) {
+      var saleableSelected = _.filter($group.find('.cart-item.saleable'), function(item) {
         return $(item).find('.avatar :checkbox').prop('checked');
       });
 
@@ -176,11 +182,10 @@
         return mem;
       }, {});
 
-      $group.find('tr.footer .total-quantity').text(totals.quantity || 0);
-      $group.find('tr.footer .total-total').text(totals.total || 0);
+      $group.find('.footer .total-quantity').text(totals.quantity || 0);
+      $group.find('.footer .total-total').text(totals.total || 0);
     }
 
     _.each($('.cart .cart-group'), calculateGroupTotal);
   })();
 </script>
-

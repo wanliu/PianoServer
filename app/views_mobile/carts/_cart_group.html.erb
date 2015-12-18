@@ -1,27 +1,29 @@
 <%= form_for Order.new, url: confirmation_orders_path do |f| %>
   <%= f.hidden_field :supplier_id, value: supplier.id %>
   <div class='cart-group'>
-    <div>
-      <span>
-        <input type='checkbox' class='select-all' data-supplier-id='<%= supplier.id %>' checked='checked' />
-      </span>
-      <span class='shop'>
+    <div class='header media'>
+      <div class='media-left check-all'>
+        <label for="cart-groups-<%= index %>">
+          <input type='checkbox' class='select-all' data-supplier-id='<%= supplier.id %>' checked='checked' id="cart-groups-<%= index %>" />
+          <div class='checkbox-simulator'>
+            <div class='check'></div>
+          </div>
+        </lable>
+      </div>
+      <div class='shop media-left'>
         <%= link_to shop_site_path(supplier.name) do %>
           <%= image_tag supplier.avatar_url %><%= supplier.title %>
         <% end %>
-      </span>
+      </div>
     </div>
 
     <%= render partial: "cart_item", collection: items.sort_by(&:id), as: :item, locals: { supplier: supplier, f: f } %>
 
     <div class='footer'>
-      <div class='submit pull-right'>
-        结  算
-      </div>
-      <span class='pull-right'>
+      <span>
         已选择<span class='total-quantity'><%= items.map(&:quantity).reduce(:+) %></span>件商品 合计<span class='total-total'><%= items.map { |item| item.price * item.quantity }.reduce(:+)  %></span>元
-        <%#= f.submit '结算', class: 'btn btn-danger confirm-order' %>
       </span>
+      <%= f.submit "结  算", class: 'submit' %>
     </div>
   </div>
 <% end %>
