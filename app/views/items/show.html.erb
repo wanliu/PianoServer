@@ -84,7 +84,7 @@
     </div>
   </a>
   <div class="item-description">
-    <%= @item.description %>
+    <%= @item.description.html_safe %>
   </div>
 
   <%#= render partial: "sale_options", with: @item.category %>
