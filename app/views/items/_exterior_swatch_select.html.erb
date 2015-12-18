@@ -53,6 +53,7 @@
         return true;
       });
 
+      $(document).data('stock', +fullfillStock.quantity);
       $('.available-stock').text(+fullfillStock.quantity);
       $('#cart_item_quantity').prop('max', fullfillStock.quantity);
     }

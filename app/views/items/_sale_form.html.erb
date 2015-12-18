@@ -1,5 +1,5 @@
 <div class="item-sale-options">
-  <%= form_for cartitem, url: cart_path, html: { class: 'sale_form item-chose-collection' } do |f| %>
+  <%= form_for cartitem, url: cart_path, html: { class: 'sale_form item-chose-collection',onsubmit: "return false;"} do |f| %>
 
     <div class="form-group">
       <div class="media">
@@ -96,5 +96,19 @@
   //   $form = $(e.target).parents("form")
   //   $form.submit();
   // });
+
+  (function(){
+    $('.minus_plus_input').on('change', function(e) {
+      var quantity = $(this).val();
+      var _stock = $(document).data('stock');
+      if ( isNaN(quantity) || +quantity > _stock) {
+        $('.js-buy-now').addClass('disabled');
+        $('.add-to-cart').addClass('disabled');
+      } else {
+        $('.js-buy-now').removeClass('disabled');
+        $('.add-to-cart').removeClass('disabled');
+      }
+    });
+  })();
 
 </script>

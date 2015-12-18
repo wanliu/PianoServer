@@ -48,7 +48,7 @@
     </div>
     
     <div class="media promotion-options-wrap">
-      <form class="promotion-option-form media-body">
+      <form class="promotion-option-form media-body" onSubmit="return false;">
         <div class="media option-group">
           <div class="media-left media-middle">数量：</div>
           <div class="media-left">
@@ -94,7 +94,7 @@
       <div class="media-right right-infos-wrap hidden-xs">
         <div class="media">
 
-          <%= link_to shop_site_path(shop.name, format: 'html'), class:'reset-a' do %>
+          <%= link_to shop_site_path(shop.name, format: 'html'), class:'shop-link reset-a' do %>
             <div class="media-left">
               <%= image_tag shop.logo_url,style:'width:70px;' %>
             </div>
@@ -155,6 +155,7 @@
 
         $number_field.val(new_number);
         $number_field.trigger('change', new_number);
+        $(document).trigger('purchase_amount_changed', [new_number]);
       }
     });
 
@@ -169,8 +170,23 @@
         $number_field.trigger('change', new_number);
       }
     });
-  })();
 
+    var inventory = <%= promotion.product_inventory.to_i %>;
+
+    $(document).data('inventory', inventory);
+
+    $('.minus_plus_input').on('change', function(e) {
+      var _inventory = $(document).data('inventory');
+      var quantity = $(this).val();
+      if (isNaN(quantity) || +quantity > _inventory) {
+        $('.js-buy-now').addClass('disabled');
+        $('.add-to-cart').addClass('disabled');
+      } else {
+        $('.js-buy-now').removeClass('disabled');
+        $('.add-to-cart').removeClass('disabled');
+      }
+    });
+  })();
 
   //$(function() {
     var shopId = '<%= shop.id %>',
