@@ -94,8 +94,12 @@ after_registers:
     validates: strict
   total:
     max_count: 15
+  after_sign_in: false
+  after_sign_in_path: after_registers
 weixin:
   scope: snsapi_login
+  after_sign_in: true
+  after_sign_in_path: smart_fills
 chat:
   display_username: true
   display_shopname: true
