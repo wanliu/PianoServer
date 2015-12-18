@@ -1,0 +1,40 @@
+<% content_for :navbar_title do %>
+  快速开店
+<% end %>
+
+<div class="container smart-fill-container">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="smart-fill-header">
+        <img src="<%= asset_path('sign-background-mobile.jpg') %>" class="header-image">
+      </div>
+      <div class="smart-fill-body">
+        <form class="form-horizontal" onsubmit="return false;">
+          <div class="form-group">
+            <label class="control-label col-xs-2 text-right">联系方式：</label>
+            <div class="col-xs-10">
+              <input type="text" class="form-control" name="telephone">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-xs-2 text-right">店铺名称：</label>
+            <div class="col-xs-10">
+              <input type="text" class="form-control" name="shopname">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-xs-12">
+              <button type="button" class="btn btn-default btn-submit">提交</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $('.btn-submit').click(function() {
+
+  });
+</script>
