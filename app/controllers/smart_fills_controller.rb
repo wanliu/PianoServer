@@ -3,7 +3,7 @@ class SmartFillsController < ApplicationController
   before_action :set_content_for
 
   def index
-    redirect_to smart_fills_path(current_user.user_type) unless current_user.state.nil
+    redirect_to smart_fills_path(current_user.user_type) unless current_user.state.nil?
   end
 
   def show
