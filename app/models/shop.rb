@@ -22,14 +22,15 @@ class Shop < ActiveRecord::Base
 
   validates :title, :phone, :name, presence: true
   validates :name, uniqueness: true
-  validates :location, presence: { message: '请选择有效城市' }, unless: :skip_location
+  validates :location, presence: { message: '请选择有效城市' }, unless: :skip_validates_or_location
 
   if Settings.after_registers.shop.validates == "strict"
-    validates :description, length: { minimum: 4 }
-    validates :address, presence: true
+    validates :description, length: { minimum: 4 }, unless: :skip_validates
+    validates :address, presence: true, unless: :skip_validates
   end
 
-  attr_accessor :skip_location
+  attr_accessor :skip_location, :skip_validates, :skip_validates_or_location
+
 
   # delegate :region, to: :location, allow_nil: true
 
@@ -38,6 +39,10 @@ class Shop < ActiveRecord::Base
   store_accessor :settings, :greetings, :theme, :poster
 
   mount_uploader :logo, ImageUploader
+
+  def skip_validates_or_location
+    skip_validates || skip_location
+  end
 
   def avatar_url
     logo.url(:avatar)

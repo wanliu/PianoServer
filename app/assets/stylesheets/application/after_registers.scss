@@ -1,4 +1,4 @@
-$transition-time:0.4s;
+ $transition-time:0.4s;
 
 #map {
   height: 300px;
@@ -279,5 +279,11 @@ $transition-time:0.4s;
 .wrapper.ui-coverflow-wrapper {
   height: 500px;
   margin-bottom: 30px;
+}
+
+.smart-fill-container {
+  .error-notice {
+    display: none;
+  }
 }
 

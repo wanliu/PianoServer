@@ -1,0 +1,72 @@
+<% content_for :navbar_title do %>
+  快速开店
+<% end %>
+
+<div class="container smart-fill-container">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="smart-fill-header">
+        <img src="<%= asset_path('sign-background-mobile.jpg') %>" class="header-image">
+      </div>
+      <div class="smart-fill-body">
+        <form class="form-horizontal" onsubmit="return false;">
+          <div class="form-group">
+            <label class="control-label col-xs-2 text-right">联系方式：</label>
+            <div class="col-xs-10">
+              <input type="text" class="form-control" name="phone">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-xs-2 text-right">店铺名称：</label>
+            <div class="col-xs-10">
+              <input type="text" class="form-control" name="shop_title">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-xs-12">
+              <button type="button" class="btn btn-default btn-submit">提交</button>
+              <span class="error-notice"></span>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  var url = '<%= fast_register_smart_fills_path %>';
+  var root_path = '<%= root_path %>';
+
+  $('.btn-submit').click(function() {
+    var phone = $.trim($('input[name="phone"]').val());
+    var title = $.trim($('input[name="shop_title"]').val());
+    var reg = /^1\d{10}$/;
+
+    if (!reg.test(phone)) {
+      return;
+      $('.error-notice').text('联系方式格式不正确').css('display', 'inline');
+    }
+
+    $('.error-notice').text('').hide();
+
+    $.ajax({
+      url: url,
+      type: 'POST'
+      data: {
+        shop: {
+          title: title
+          phone: phone
+        }
+      },
+      dataType: 'json',
+      success: function (data) {
+        if (data.success) {
+          window.location.href = root_path;
+        } else {
+          $('.error-notice').text(data.errors).css('display', 'inline');
+        }
+      }
+    });
+  });
+</script>
