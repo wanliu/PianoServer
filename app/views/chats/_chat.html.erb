@@ -1,6 +1,10 @@
 <%= content_for :title, @target.try(:nickname) || @target.try(:name) %>
 <%= nav_back_button %>
 <%= content_for :module, :chat %>
+<%= content_for :javascripts do %>
+  <%= javascript_include_tag :additional %>
+<% end %>
+
 
 <div class="container">
   <div class="row">
@@ -54,6 +58,7 @@
         MiniTable     = window.MiniTable,
         Chat          = window.Chat,
         userSocket    = window.userSocket,
+        CombinationImages = window.CombinationImages,
         greetings     = '<%= @greetings %>',
         chatChannelId,
         targetId;
@@ -67,6 +72,9 @@
     Chat.defaultOptions.avatarDefault = '<%= image_path "avatar.gif" %>';
     var $img = $('.chat-order-image')[0];
     var stateLoad = new StatusLoadUrl($img);
+
+    var order_image = new CombinationImages($img, $(".item-list .item-preview-url"));
+
 
     <% unless @intention.nil? %>
     var order = <%=raw @intention.origin_hash.to_json %>;
