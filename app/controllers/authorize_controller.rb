@@ -68,10 +68,12 @@ class AuthorizeController < ApplicationController
   end
 
   def after_sign_in_path(user)
+    return request.referer ? URI(request.referer).path : root_path unless Settings.weixin.after_sign_in
+
     if user.is_done?
       request.referer ? URI(request.referer).path : root_path
     else
-      after_registers_path
+      smart_fills_path
     end
   end
 end

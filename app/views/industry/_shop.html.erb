@@ -21,7 +21,7 @@
           <%= phone_link shop.phone, class: 'button telephone' do %>
             <%= icon 'phone-alt' %> <%= shop.phone %>
           <% end %>
-          <%= link_to '#', class: "button chat" do %>
+          <%= link_to chats_path(shop_id: shop.id), class: "button chat", method: 'POST' do %>
             <%= icon :comment %> 洽谈
           <% end %>
           <%= link_to shop_site_path(shop.name, format: 'html'), class: "button website" do %>

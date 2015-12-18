@@ -5,7 +5,46 @@
     <%= f.hidden_field :address_id %>
     <%= f.hidden_field :supplier_id %>
 
-    <div class="panel panel-default">
+    <div class='cart-group'>
+      <div class='header'>
+        <span class='shop'>
+          <%= link_to shop_site_path(@supplier.name) do %>
+            <%= image_tag @supplier.avatar_url %><%= @supplier.title %>
+          <% end %>
+        </span>
+      </div>
+
+      <table class='table table-bordered' style='background-color: white;'>
+        <colgroup>
+          <col width='35%' />
+          <col width='15%' />
+          <col width='25%' />
+          <col width='15%' />
+        </colgroup>
+
+        <%= f.fields_for :items do |item_form| %>
+          <%= item_form.hidden_field :orderable_type %>
+          <%= item_form.hidden_field :orderable_id %>
+          <%= item_form.hidden_field :title %>
+          <%= item_form.hidden_field :price %>
+          <% @order_item.properties.each do |key, value| %>
+            <%= item_form.hidden_field "properties[#{key}]", value: value %>
+          <% end %>
+          <%= render partial: "buy_now_item", locals: { item: @order_item, supplier: @supplier, f: item_form, props: @props } %>
+        <% end %>
+      
+        <tr class='footer'>
+          <td colspan='5' class='text-right'>
+            <span>
+              已选择<span class='total-quantity'><%= @order_item.quantity %></span>件商品 合计<span class='total-total'><%= @order_item.price * @order_item.quantity %></span>元
+            </span>
+            <%= f.submit "提交订单", class: 'submit'%>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- <div class="panel panel-default">
       <div class="panel-heading">
         店铺：<%= link_to @supplier.title, shop_site_path(@supplier) %>
       </div>
@@ -28,7 +67,7 @@
 
     <div>
       <%= f.submit "提交订单", value: '立即购买', class: 'btn btn-primary btn-lg'%>
-    </div>
+    </div> -->
   <% end %>
 </div>
 
