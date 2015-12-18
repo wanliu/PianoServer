@@ -35,6 +35,8 @@ assets:
   host: http://wanliu-piano.b0.upaiyun.com
   gray_image: "data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
   avatar_iamge: "http://wanliu-piano.b0.upaiyun.com/uploads/shop/logo/1/default_avatar.gif"
+  alliance_hosts:
+    - 'http://neil-img.b0.upaiyun.com/'
 shop:
   import:
     sale: true
