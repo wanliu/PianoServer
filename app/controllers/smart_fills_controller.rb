@@ -1,4 +1,5 @@
 class SmartFillsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_content_for
 
   def index
