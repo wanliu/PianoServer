@@ -41,9 +41,11 @@
       }
 
       .cancel {
+        display: inline-block;
         border: none;
         background-color: #ff7c1c;;
         padding: 10px 30px;
+        margin-right: -25px;
         color: white;
         font-size: 16px;
       }
