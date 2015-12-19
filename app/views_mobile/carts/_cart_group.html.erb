@@ -21,7 +21,7 @@
 
     <div class='footer'>
       <span>
-        已选择<span class='total-quantity'><%= items.map(&:quantity).reduce(:+) %></span>件商品 合计<span class='total-total'><%= items.map { |item| item.price * item.quantity }.reduce(:+)  %></span>元
+        已选择<span class='total-quantity'><%= items.map(&:quantity).reduce(:+) %></span> 件商品&emsp;&emsp;合计<span class='total-total'><%= items.map { |item| item.price * item.quantity }.reduce(:+)  %></span>元
       </span>
       <%= f.submit "结  算", class: 'submit' %>
     </div>

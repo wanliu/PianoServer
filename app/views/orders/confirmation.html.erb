@@ -29,7 +29,7 @@
         <tr class='footer'>
           <td colspan='5' class='text-right'>
             <span>
-              已选择<span class='total-quantity'><%= @order_items.map(&:quantity).reduce(:+) %></span>件商品 合计<span class='total-total'><%= @order_items.map { |item| item.price * item.quantity }.reduce(:+)  %></span>元
+              已选择<span class='total-quantity'><%= @order_items.map(&:quantity).reduce(:+) %></span> 件商品&emsp;&emsp;合计<span class='total-total'><%= @order_items.map { |item| item.price * item.quantity }.reduce(:+)  %></span>元
             </span>
             <%= link_to "返回购物车", cart_path, class: 'cancel' %>
             <%= f.submit "提交订单", class: 'submit'%>

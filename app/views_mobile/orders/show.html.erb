@@ -40,7 +40,7 @@
     <%= render partial: "order_item", collection: @order.items, as: :item, locals: { supplier: @order.supplier } %>
     <li class="list-group-item order-item">
       <div class='text-right'>
-        一共<%= @order.items_count %>件商品 合计： <%= number_to_currency @order.total %>元
+        一共<%= @order.items_count %> 件商品&emsp;&emsp;合计： <%= number_to_currency @order.total %>元
         <h4>付款：<span class='total'><%= number_to_currency @order.total %>元</span></h4>
       </div>
     </li>
@@ -49,7 +49,8 @@
   <% unless @order.finish? %>
   <nav class="navbar navbar-default navbar-fixed-bottom">
     <div class="container">
-      <div class='operation pull-right'>您现在可以
+      <div class='operation pull-right'>
+        <span class="now-you-can" >您现在可以</span>
         <button type="button" class="order-finish btn btn-danger" data-toggle="modal" data-target="#finish-order-<%= @order.id %>">
           确认收货
         </button>

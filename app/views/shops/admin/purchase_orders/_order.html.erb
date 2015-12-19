@@ -13,7 +13,7 @@
       <td colspan='6'>
         <span>订单号: <%= order.id %></span>
         <span class='create-time'>创建时间：<%= order.created_at.strftime("%Y/%m/%d %H:%M") %></span>
-        <span class='shop pull-right'>
+        <span class='shop-info'>
           <%= link_to shop_site_path(order.supplier.name) do %>
             <%= image_tag order.supplier.avatar_url %><%= order.supplier.title %>
           <% end %>
