@@ -15,10 +15,26 @@ $transition-time:0.4s;
 }
 
 .brand-link {
+  position: relative;
+  padding: 0;
+  height: 54px;
+  img {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+  }  
   .brand-mark {
     display: none;
+    position: absolute;
+    right: 5px;
+    top: 10px;
   }
-
+  span.title {
+    display: block;
+    width: 100%;
+    padding-left: 85px;
+    line-height: 52px;
+  }
   &.active {
     background-color: white!important;
     color: inherit!important;
