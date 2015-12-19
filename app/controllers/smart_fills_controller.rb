@@ -1,9 +1,13 @@
 class SmartFillsController < ApplicationController
+  include RedirectCallback
+
   before_action :authenticate_user!
   before_action :set_content_for
 
   def index
     @location = Location.new
+
+    set_callback
   end
 
   def fast_register
@@ -21,7 +25,13 @@ class SmartFillsController < ApplicationController
     end
 
     if shop.save
-      render json: {success: true}
+      if request.xhr?
+        render json: {success: true, callback_url: callback_url }
+      else
+        redirect_to callback_url
+      end
+
+      clear_callback
     else
       render json: {success: false, errors: shop.errors.full_messages.join(', ') }
     end
