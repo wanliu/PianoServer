@@ -150,11 +150,10 @@
       <% unless Rails.env.production? %>
         console.log('development version: <%= PianoServer::VERSION %>')
       <% end %>
-
+      
       $(document).one('page:change', function(event) {
         $('img').error(function(){
           $(this).attr("src","<%= image_path('img_error.jpg') %>")
-          console.log(1)
         })
       });
 
