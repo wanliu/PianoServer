@@ -26,9 +26,9 @@
           <% if Settings.weixin.regions %>
             <div class="form-group">
               <%
-                province_id = location.try :province_id
-                city_id = location.try :city_id
-                region_id = location.try :region_id
+                province_id = @location.try :province_id
+                city_id = @location.try :city_id
+                region_id = @location.try :region_id
 
                 province_list = ChinaCity.list
                 city_list = ChinaCity.list province_id.to_s
