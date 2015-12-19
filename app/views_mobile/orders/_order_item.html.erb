@@ -1,0 +1,29 @@
+<li class="list-group-item order-item"  id="order-item-<%= item.id %>">
+  <div class='row'>
+    <div class='col-xs-8'>
+      <div class="avatar">
+        <%= link_to orderable_url(item) do %>
+          <%= image_tag item.avatar_url, class: 'media-object', alt: "商品图片" %>
+        <% end %>
+      </div>
+
+      <div class="title">
+        <%= "#{item.title} #{item.properties_title}" %>
+      </div>
+    </div>
+
+    <div class='subtotal col-xs-4'>
+      <div class="text-right">
+        <%= number_to_currency item.price %>
+      </div>
+
+      <div class="text-right">
+        × <%= number_with_delimiter item.quantity %>
+      </div>
+
+      <div class="text-right">
+        <%= number_to_currency item.price * item.quantity %>
+      </div>
+    </div>
+  </div>
+</li>

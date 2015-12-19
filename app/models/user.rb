@@ -157,6 +157,10 @@ class User < ActiveRecord::Base
 
     options = {id: "#{id}", token: pusher_token, login: username, realname: nickname, avatar_url: avatar_url }
 
+    if owner_shop.present?
+       options.merge! shop_name: owner_shop.name
+    end
+
     begin
       RestClient.post pusher_url, options
     rescue Errno::ECONNREFUSED => e

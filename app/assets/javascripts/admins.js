@@ -31,6 +31,7 @@
 //= require lib/bootstrap-select
 //= require lib/ace_editor
 //= require lib/ajax_status
+//= require lib/fastclick
 //= require utils/alert-dismiss
 //= require _common/fileuploader
 //= require _common/paginate
@@ -47,13 +48,16 @@
 //= require jquery-ui/effect.all
 //= require_tree ./locales
 //= require_tree ./admins
+//= require_tree ./utils
 //= require_tree ./shop
 //= require_self
-
-
 
 dataConfirmModal.setDefaults({
   title: '确认执行此操作？',
   commit: '删除',
   cancel: '取消'
+});
+
+$(function() {
+    FastClick.attach(document.body);
 });

@@ -194,7 +194,7 @@ class Item < ActiveRecord::Base
         else
           ""
         end
-      end.join("；")
+      end.join(";")
     else
       ""
     end

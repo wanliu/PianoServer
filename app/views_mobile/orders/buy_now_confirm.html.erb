@@ -1,0 +1,85 @@
+<div class='buy-now-confirm'>
+  <%= render "order_address", locals: { delivery_addresses: @delivery_addresses, order: @order } %>
+
+  <%= form_for @order, url: "/orders/buy_now_create" do |f| %>
+    <%= f.hidden_field :address_id %>
+    <%= f.hidden_field :supplier_id %>
+
+    <div class='cart-group'>
+      <div class='header media'>
+        <div class='shop media-left'>
+          <%= link_to shop_site_path(@supplier.name) do %>
+            <%= image_tag @supplier.avatar_url %><%= @supplier.title %>
+          <% end %>
+        </div>
+      </div>
+
+      <%= f.fields_for :items do |item_form| %>
+        <%= item_form.hidden_field :orderable_type %>
+        <%= item_form.hidden_field :orderable_id %>
+        <%= item_form.hidden_field :title %>
+        <%= item_form.hidden_field :price %>
+        <% @order_item.properties.each do |key, value| %>
+          <%= item_form.hidden_field "properties[#{key}]", value: value %>
+        <% end %>
+        <%= render partial: "buy_now_item", locals: { item: @order_item, supplier: @supplier, f: item_form, props: @props } %>
+      <% end %>
+
+      <div class='footer'>
+        <span>
+          已选择<span class='total-quantity'><%= @order_item.quantity %></span>件商品 合计<span class='total-total'><%= @order_item.price * @order_item.quantity %></span>元
+        </span>
+        <%= f.submit "结  算", class: 'submit' %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<script type="text/javascript">
+
+ // 通过减少按钮，修改所购商品数量
+  $('.cart-item').on('click', '.btn-minus', function (event) {
+    var quantityInput = $(this).parents('tr:first').find('.quantity');
+    var quantity = parseInt($(quantityInput).text(), 10);
+
+    if (quantity > 1) {
+      var newQuantity = quantity - 1;
+      changeQuantity(quantityInput, newQuantity);
+    }
+  });
+
+  // 通过增加按钮，修改所购商品数量
+  $('.cart-item').on('click', '.btn-plus', function (event) {
+    var quantityInput = $(this).parents('tr:first').find('.quantity');
+    var quantity = parseInt($(quantityInput).text(), 10);
+    var newQuantity = quantity + 1;
+
+    changeQuantity(quantityInput, newQuantity);
+  });
+
+  function changeQuantity(quantityInput, quantity, reflect) {
+    var $cartItem = $(quantityInput).parents('.cart-item:first'),
+        $quantity = $cartItem.find('.quantity'),
+        $subTotal = $cartItem.find('.subtotal'),
+        $btnMinus = $cartItem.find('span.btn-minus'),
+        $formQuanInput = $cartItem.find('#order_items_attributes_0_quantity'),
+        $group = $(quantityInput).parents('.cart-group'),
+        $totalQuan = $group.find('.total-quantity'),
+        $totalTotal = $group.find('.total-total'),
+        price = parseFloat($cartItem.find('span.price').text().replace('¥', ''));
+
+    var total = price * quantity;
+
+    $quantity.text(quantity);
+    $totalQuan.text(quantity);
+    $formQuanInput.val(quantity);
+    $subTotal.text('¥' + total);
+    $totalTotal.text('¥' + total)
+
+    if (+quantity > 1) {
+      $btnMinus.addClass('glyphicon-minus');
+    } else {
+      $btnMinus.removeClass('glyphicon-minus');
+    }
+  }
+</script>

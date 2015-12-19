@@ -79,8 +79,11 @@ Rails.application.routes.draw do
   resources :after_registers, concerns: [:statuable] do
     collection do
       get :reset, as: :reset
+      post :upgrade_to_distributor, as: :upgrade
     end
   end
+
+  resources :smart_fills
 
   concern :templable do |options|
     resources :templates, options do
@@ -318,6 +321,7 @@ Rails.application.routes.draw do
           put "/change_shop_theme", to: "settings#change_shop_theme"
           put "/reset_shop_poster", to: "settings#reset_shop_poster"
           post "/upload_shop_poster", to: "settings#upload_shop_poster"
+          post "/upload_shop_signage", to: "settings#upload_shop_signage"
         end
       end
     end

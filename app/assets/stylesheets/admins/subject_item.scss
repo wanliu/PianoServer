@@ -2,14 +2,19 @@
   display: table;
   width: 100%;
 
-  .subject-info{
+  div {
+    width: 25%;
     display: table-cell;
   }
 
   .subject-toggle{
-    display: table-cell;
-    width: 55px;
     line-height: 100%;
     vertical-align: middle;
+    text-align: right;
+  }
+
+  .subject-delete {
+    display: table-cell;
+    text-align: right;
   }
 }

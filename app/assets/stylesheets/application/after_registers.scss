@@ -14,11 +14,38 @@ $transition-time:0.4s;
   margin-right: -10px;
 }
 
+.category-title {
+  padding-right: 20px;
+  .title {
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+    max-width: 100%;
+  }
+}
+
 .brand-link {
+  position: relative;
+  padding: 0;
+  height: 54px;
+  img {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+  }  
   .brand-mark {
     display: none;
+    position: absolute;
+    right: 5px;
+    top: 10px;
   }
-
+  span.title {
+    display: block;
+    width: 100%;
+    padding-left: 85px;
+    line-height: 52px;
+  }
   &.active {
     background-color: white!important;
     color: inherit!important;

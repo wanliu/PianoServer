@@ -1,3 +1,5 @@
+require 'fileutils'
+
 class Subject < ActiveRecord::Base
   include ContentManagement::Model
   include PublicActivity::Model
@@ -13,7 +15,7 @@ class Subject < ActiveRecord::Base
 
   class_attribute :default_templates
 
-  has_many :templates, as: :templable
+  has_many :templates, as: :templable, dependent: :destroy
 
   validates :title, presence: true
   validates :name, uniqueness: true
@@ -23,6 +25,9 @@ class Subject < ActiveRecord::Base
 
   before_validation :default_values
   after_create :create_subject_files
+  after_commit :remove_templates_folder, on: :destroy
+
+  paginates_per 10
 
   scope :availables, -> do
     where("start_at <= ? and end_at >= ? and status = ?", Time.now, Time.now, 0)
@@ -40,7 +45,7 @@ class Subject < ActiveRecord::Base
 
   def default_values
     if self.name.blank?
-      py_name = Pinyin.t(self.title, splitter: '_')
+      py_name = Pinyin.t(self.title, splitter: '_').downcase
       py_name.succ! if same_name?(py_name)
       self.name = py_name
     end
@@ -54,6 +59,18 @@ class Subject < ActiveRecord::Base
     SubjectService.build(name)
   end
 
+  private
+
+  def remove_templates_folder
+    return if persisted?
+
+    puts "尝试删除专题文件夹：#{content_path}"
+    if FileUtils.remove_dir content_path, true
+      puts "专题文件夹删除成功!"
+    else
+      puts "专题文件夹删除失败!"
+    end
+  end
 end
 
 Subject.default_templates = [

@@ -4,24 +4,38 @@
   <%= form_for @order do |f| %>
     <%= f.hidden_field :address_id %>
     <%= f.hidden_field :supplier_id %>
-    <div class="panel panel-default orders">
-      <div class="panel-heading">
-        店铺：<%= link_to @supplier.title, shop_site_path(@supplier) %> ( <%= @order_items.count %> 件商品)
-      </div>
-      <ul class="list-group order-items">
-        <%= render partial: "confirmation_item", collection: @order_items, as: :item, locals: { supplier: @supplier } %>
-      </ul>
-      <div class="panel-footer">
-        <h4>总计：<span><%= @total %>元</span></h4>
-      </div>
-      <% @order_items.each do |item| %>
-        <%= f.hidden_field :cart_item_ids, { multiple: true, value: item.id } %>
-      <% end %>
-    </div>
 
-    <div>
-      <%= link_to "返回购物车", cart_path, class: 'btn btn-default btn-lg' %>
-      <%= f.submit "提交订单", class: 'btn btn-primary btn-lg'%>
+    <% @order_items.each do |item| %>
+      <%= f.hidden_field :cart_item_ids, { multiple: true, value: item.id } %>
+    <% end %>
+
+    <div class='cart-group'>
+      <div class='header'>
+        <span class='shop'>
+          <%= link_to shop_site_path(@supplier.name) do %>
+            <%= image_tag @supplier.avatar_url %><%= @supplier.title %>
+          <% end %>
+        </span>
+      </div>
+
+      <table class='table table-bordered' style='background-color: white;'>
+        <colgroup>
+          <col width='35%' />
+          <col width='15%' />
+          <col width='25%' />
+          <col width='15%' />
+        </colgroup>
+        <%= render partial: "confirmation_item", collection: @order_items.sort_by(&:id), as: :item, locals: { supplier: @supplier, f: f } %>
+        <tr class='footer'>
+          <td colspan='5' class='text-right'>
+            <span>
+              已选择<span class='total-quantity'><%= @order_items.map(&:quantity).reduce(:+) %></span>件商品 合计<span class='total-total'><%= @order_items.map { |item| item.price * item.quantity }.reduce(:+)  %></span>元
+            </span>
+            <%= link_to "返回购物车", cart_path, class: 'cancel' %>
+            <%= f.submit "提交订单", class: 'submit'%>
+          </td>
+        </tr>
+      </table>
     </div>
   <% end %>
 </div>

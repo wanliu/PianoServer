@@ -34,7 +34,7 @@ class IndustryController < ApplicationController
     @shops = Shop
       .joins(:items)
       .where("items.category_id in (?)", [ @category.id, *@category.descendants ])
-      .where("items.brand_id in (?)", brands_ids.map(&:to_i))
+      .with_brands(brands_ids)
       .where("shops.industry_id = ?", @industry.id)
       .where("shops.region_id = ?", @current_region.city_id)
       .group("shops.id")
@@ -58,7 +58,7 @@ class IndustryController < ApplicationController
   end
 
   def brands_ids
-    params[:brands_ids].present? ? params[:brands_ids]: [params[:brand_id]]
+    params[:brands_ids].present? ? params[:brands_ids]: [params[:brand_id]].compact
   end
 
   private

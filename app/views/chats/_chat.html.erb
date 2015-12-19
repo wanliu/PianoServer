@@ -1,6 +1,10 @@
 <%= content_for :title, @target.try(:nickname) || @target.try(:name) %>
 <%= nav_back_button %>
 <%= content_for :module, :chat %>
+<%= content_for :javascripts do %>
+  <%= javascript_include_tag :additional %>
+<% end %>
+
 
 <div class="container">
   <div class="row">
@@ -54,6 +58,7 @@
         MiniTable     = window.MiniTable,
         Chat          = window.Chat,
         userSocket    = window.userSocket,
+        CombinationImages = window.CombinationImages,
         greetings     = '<%= @greetings %>',
         chatChannelId,
         targetId;
@@ -68,6 +73,9 @@
     var $img = $('.chat-order-image')[0];
     var stateLoad = new StatusLoadUrl($img);
 
+    var order_image = new CombinationImages($img, $(".item-list .item-preview-url"));
+
+
     <% unless @intention.nil? %>
     var order = <%=raw @intention.origin_hash.to_json %>;
       <% if Settings.dev.feature.order.chat %>
@@ -81,11 +89,29 @@
     } else {
       var ownerUserId = $('meta[name=chatId]').attr('content');
       var userChannelId = 'p' + ownerUserId;
+      var displayUserName = <%= Settings.chat.display_username %>;
+      var displayShopName = <%= Settings.chat.display_shopname %>;
+      var greetingUserName = '', greetingShopName = '', greetingShopLogo;
+
+      <% if @intention.present? %>
+        greetingUserName = '<%= @intention.supplier.owner.nickname %>';
+        greetingShopName = '<%= @intention.supplier.name %>';
+        greetingShopLogo = '<%= @intention.supplier.owner.avatar_url %>';
+      <% elsif @shop.present? %>
+        greetingUserName = '<%= @shop.owner.nickname %>';
+        greetingShopName = '<%= @shop.name %>';
+        greetingShopLogo = '<%= @shop.owner.avatar_url %>';
+      <% end %>
 
       var chat = new Chat($('.chat-order-header'), chatChannelId, {
         sendBtn: $('.btn-send'),
         greetings: greetings,
-        userChannelId: userChannelId
+        userChannelId: userChannelId,
+        displayUserName: displayUserName,
+        displayShopName: displayShopName,
+        greetingUserName: greetingUserName,
+        greetingShopName: greetingShopName,
+        greetingShopLogo: greetingShopLogo
       });
 
       <% if Settings.dev.feature.order.chat and @intention %>

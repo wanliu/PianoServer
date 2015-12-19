@@ -142,12 +142,19 @@
     <% end %>
 
     <%= render "application/sidebar_menu" %>
-
-
+    <%= render "application/fixed_position_patch" %>
     <script type="text/javascript">
       <% unless Rails.env.production? %>
         console.log('development version: <%= PianoServer::VERSION %>')
       <% end %>
+
+      $(document).one('page:change', function(event) {
+        $('img').error(function(){
+          $(this).attr("src","<%= image_path('img_error.jpg') %>")
+        })
+      });
+
+
     </script>
     <% if Settings.dev.feature.ccnz %>
       <%= render "cnzz" %>

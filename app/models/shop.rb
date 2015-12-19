@@ -35,9 +35,15 @@ class Shop < ActiveRecord::Base
 
   before_validation :default_values
 
-  store_accessor :settings, :greetings, :theme, :poster
+  store_accessor :settings, :greetings, :theme, :poster, :head_url
 
   mount_uploader :logo, ImageUploader
+
+  scope :with_brands, -> (ids) do
+    unless ids.blank?
+      where("items.brand_id in (?)", ids)
+    end
+  end
 
   def avatar_url
     logo.url(:avatar)

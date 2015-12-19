@@ -1,0 +1,43 @@
+<div class="cart-item" data-cart-item-id="<%= item.id %>">
+  <td colspan='4'>
+    <div class='row'>
+      <div class='avatar'>
+        <div class='media'>
+          <div class='media-left'>
+            <%= link_to orderable_url(item) do %>
+              <%= image_tag item.avatar_url, class: 'media-object', alt: "商品图片" %>
+            <% end %>
+          </div>
+          <div class='media-body'>
+            <%= "#{item.title} #{item.properties_title}" %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <table class='table table-bordered'>
+      <colgroup>
+        <col width='30%'>
+        <col width='10%'>
+        <col width='20%'>
+        <col width='10%'>
+        <col width='30%'>
+      </colgroup>
+      <tbody>
+        <tr>
+          <td>单价:<span  class='price'><%= number_to_currency item.price %></span></td>
+          <% if item.quantity <= 1 %>
+            <td><span class="glyphicon btn-minus"></span></td>
+          <% else %>
+            <td><span class="glyphicon glyphicon-minus btn-minus"></span></td>
+          <% end %>
+          <td class='quantity'><%= item.quantity %></td>
+          <td><span class="glyphicon glyphicon-plus btn-plus"></span></td>
+          <td>小计:<span class='subtotal'><%= number_to_currency item.price * item.quantity %></span></td>
+        </tr>
+      </tbody>
+    </table>
+  <td>
+
+  <%= f.hidden_field :quantity %>
+</div>

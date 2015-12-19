@@ -15,7 +15,7 @@
     <%= button_to '确定', set_regions_path, context: :primary, size: 'lg', class: 'set-region btn-block', disabled: true, params: {region_id: nil} %>
   </div>
   <div class="col-xs-6">
-    <%= button context: :default, class: 'get-location btn-block', size: :lg, data: {"loading-text": '正在获取地址'} do %>
+    <%= button context: :default, class: 'get-location btn-block', size: :lg, data: {"loading-text" => '正在获取地址'} do %>
       <%= icon 'map-marker' %>获取地址
     <% end %>
   </div>

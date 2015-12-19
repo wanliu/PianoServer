@@ -1,20 +1,25 @@
-<div class="form-group col-sm-12 properties-goup">
-  <%= label_tag prop_value['title'] %>
-  <ul class="nav nav-pills swatch_select select-<%= property %>">
-    <% prop_value['value'].each do |value, cfg| %>
-      <% if cfg["check"] == "1" %>
-      <li role="presentation">
-        <a href="#" class='btn btn-default property-item' data-property-key="<%= property %>" data-property-value="<%= value %>"><%= cfg["title"] %></a>
-      </li>
-      <% end %>
-    <% end %>
-  </ul>
+<div class="form-group properties-goup">
+  <div class="media">
+    <div class="media-left media-middle">
+      <%= prop_value['title'] %>：
+    </div>
+    <div class="media-body">
+      <ul class="nav nav-pills swatch_select select-<%= property %>">
+        <% prop_value['value'].each do |value, cfg| %>
+          <% if cfg["check"] == "1" %>
+          <li role="presentation">
+            <a href="#" class='btn btn-default property-item' data-property-key="<%= property %>" data-property-value="<%= value %>"><%= cfg["title"] %></a>
+          </li>
+          <% end %>
+        <% end %>
+      </ul>
+    </div>
+  </div>
 </div>
 
 <script type="text/javascript">
   $(".swatch_select.select-<%= property %>>li>a").click(function(e) {
     e.preventDefault();
-
 
     $(e.currentTarget).parents("ul").find(".active").removeClass("active");
     $(e.currentTarget).parent().addClass("active");
@@ -33,6 +38,7 @@
       var fullfillProps = _.reduce($form.find('li.active'), function(props, item) {
         var k = $(item).children('a').data('propertyKey');
         var v = $(item).children('a').data('propertyValue');
+
         props[k] = v;
         return props;
       }, {});
@@ -40,10 +46,15 @@
       var fullfillStock = _.find(stocksWithIndex, function (item) {
         var cloneItem = _.clone(item);
         delete cloneItem.quantity;
-        return _.isEqual(cloneItem, fullfillProps);
+
+        for (var key in cloneItem) {
+          if (cloneItem[key] != fullfillProps[key]) return false;
+        }
+        return true;
       });
 
-      $('.available-stock').text(fullfillStock.quantity);
+      $(document).data('stock', +fullfillStock.quantity);
+      $('.available-stock').text(+fullfillStock.quantity);
       $('#cart_item_quantity').prop('max', fullfillStock.quantity);
     }
 
