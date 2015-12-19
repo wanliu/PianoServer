@@ -11,15 +11,13 @@
       <div class="smart-fill-body">
         <form class="form-horizontal" onsubmit="return false;">
           <div class="form-group">
-            <label class="control-label">联系方式：</label>
-            <div class="input-wrap">
-              <input type="text" class="form-control" name="phone">
+            <div class="col-xs-12">
+              <input type="text" class="form-control" name="phone" placeholder="联系方式">
             </div>
           </div>
           <div class="form-group">
-            <label class="control-label">店铺名称：</label>
-            <div class="input-wrap">
-              <input type="text" class="form-control" name="shop_title">
+            <div class="col-xs-12">
+              <input type="text" class="form-control" name="shop_title" placeholder="店铺名称">
             </div>
           </div>
 
@@ -36,14 +34,14 @@
               %>
 
               <div class="city-group">
-                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding0">
-                  <%= select_tag("province_id", options_for_select(province_list), {prompt: '--省份--'}, {class: "city-select form-control"}) %>
+                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 padding0">
+                  <%= select_tag("province_id", options_for_select(province_list, province_id), {prompt: '--省份--', class: "city-select form-control"}) %>
                 </div>
-                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding0">
-                  <%= select_tag("city_id", options_for_select(city_list), {prompt: "--城市--"}, { class: "city-select form-control" } ) %>
+                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 padding0">
+                  <%= select_tag("city_id", options_for_select(city_list, city_id), {prompt: "--城市--", class: "city-select form-control" } ) %>
                 </div>
-                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding0">
-                  <%= select_tag("region_id", options_for_select(region_list), {prompt: "--地区--"}, { class: "city-select form-control" } ) %>
+                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 padding0">
+                  <%= select_tag("region_id", options_for_select(region_list, region_id), {prompt: "--地区--", class: "city-select form-control" } ) %>
                 </div>
               </div>
             </div>
@@ -52,7 +50,7 @@
           <div class="form-group">
             <div class="col-xs-12">
               <button type="button" class="btn btn-default btn-submit">提交</button>
-              <ul class="error-messages"></ul>
+              <ul class="errors clearfix"></ul>
             </div>
           </div>
         </form>
@@ -67,19 +65,19 @@
 
   $('.btn-submit').click(function() {
     var array = $('form').serializeArray();
-    var phone = array[0];
-    var title = array[1];
+    var phone = array[0].value;
+    var title = array[1].value;
     var reg = /^1\d{10}$/;
 
     var errors = [];
-    var $errors = $('.error-messages');
+    var $errors = $('.errors');
 
     if (!reg.test(phone)) {
       errors.push('<li class="error-message">联系方式格式不正确</li>');
     }
 
     if (title.length === 0) {
-      errors.push('<li class="error-message"></li>');
+      errors.push('<li class="error-message">店铺名称不能为空</li>');
     }
 
     <% if Settings.weixin.regions %>
@@ -87,7 +85,7 @@
       var city_id = array[3].value;
       var region_id = array[4].value;
 
-      var province_name = $("#province_id  option:selected").text();
+      var province_name = $("#province_id option:selected").text();
       var city_name = $("#city_id  option:selected").text();
       var region_name = $("#region_id  option:selected").text();
 
@@ -124,7 +122,7 @@
 
     $.ajax({
       url: url,
-      type: 'POST'
+      type: 'POST',
       data: params,
       dataType: 'json',
       success: function (data) {
