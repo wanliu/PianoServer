@@ -14,10 +14,10 @@ class SmartFillsController < ApplicationController
     shop.skip_validates = true
     shop.shop_type = 'retail'
     shop.theme = Settings.shop.default_theme
-    shop.create_status(state: "select")
+    current_user.create_status(state: :select)
 
     if Settings.weixin.regions
-      @shop.build_location location_params.merge(skip_location: true)
+      shop.build_location location_params.merge(skip_validation: true)
     end
 
     if shop.save

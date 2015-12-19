@@ -270,7 +270,6 @@
     .coverflow-item {
       .thumbnail {
         width: 200px;
-
       }
     }
   }
@@ -291,21 +290,31 @@
     display: block;
   }
 
-  .control-label {
-    margin-bottom: 0;
-    line-height: 34px;
-    float: left;
-    padding-left: 15px;
-    width: 90px;
-  }
-
-  .input-wrap {
-    padding-left: 100px;
-    padding-right: 15px;
-  }
-
-  .error-messages {
+  ul.errors{
+    list-style: none;
+    margin-top: 10px;
     display: none;
+    color: #FF2B2B;
+    padding: 0;
+
+    li {
+      float: left;
+      margin-right: 10px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .smart-fill-container .padding0{
+    padding: 0 5px;
+
+    &:first-child {
+      padding-left: 15px;
+    }
+
+    &:last-child {
+      padding-right: 15px;
+    }
   }
 }
 
