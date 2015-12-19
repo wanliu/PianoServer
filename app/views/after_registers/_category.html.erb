@@ -7,7 +7,7 @@
     <% classes.push("col-xs-6 col-sm-2 category-title") %>
 
     <%= link_to filter_brands_path(category_id: category.id ), class: classes, data: { category: category.id } do %>
-      <span class="title"><%= category.title %><%= category.title %><%= category.title %><%= category.title %></span><span class="badge"></span>
+      <span class="title"><%= category.title %></span><span class="badge"></span>
     <% end %>
   <% end %>
 </div>
