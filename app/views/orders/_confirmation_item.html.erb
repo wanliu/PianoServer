@@ -1,28 +1,23 @@
-<li class="list-group-item order-item"  id="order-item-<%= item.id %>">
-  <div class="media">
-    <div class="avatar media-left">
-      <%= link_to shop_item_path(supplier.name, item.cartable) do %>
-        <%= image_tag item.avatar_url, class: 'media-object', alt: "商品图片" %>
-      <% end %>
+<tr class="cart-item" data-cart-item-id="<%= item.id %>">
+  <td class='avatar'>
+    <div class='media'>
+      <div class='media-left'>
+        <%= link_to cartable_url(item) do %>
+          <%= image_tag item.avatar_url, class: 'media-object', alt: "商品图片" %>
+        <% end %>
+      </div>
+      <div class='media-body'>
+        <%= "#{item.title} #{item.properties_title}" %>
+      </div>
     </div>
-    <div class="title media-left">
-      <%= item.title %>
-    </div>
-
-    <div class="properties media-left">
-      <%= item.properties_title %>
-    </div>
-
-    <div class="price media-left">
-      <%= number_to_currency item.price %>
-    </div>
-
-    <div class="quantity media-left">
-      <%= number_with_delimiter item.quantity %>
-    </div>
-
-    <div class="subtotal media-left">
-      <%= number_to_currency item.price * item.quantity %>
-    </div>
-  </div>
-</li>
+  </td>
+  <td  class="price">
+    <%= number_to_currency item.price %>
+  </td>
+  <td>
+    <span><%= number_with_delimiter item.quantity %></span>
+  </td>
+  <td class="subtotal">
+    <%= number_to_currency item.price * item.quantity %>
+  </td>
+</tr>

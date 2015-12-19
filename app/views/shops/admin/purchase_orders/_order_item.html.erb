@@ -1,29 +1,49 @@
-<li class="list-group-item order-item"  id="order-item-<%= item.id %>">
-  <!-- 大屏幕视图 -->
-  <div class="media">
-    <div class="avatar media-left">
-      <%= link_to orderable_url(item) do %>
-        <%= image_tag item.avatar_url, class: 'media-object', alt: "商品图片" %>
+<tr class='item'>
+  <td class='avatar'>
+    <%= link_to orderable_url(item) do %>
+      <%= image_tag item.avatar_url, class: 'media-object', alt: "商品图片" %>
+      <span class='title'>
+        <%= item.title %>
+      </span>
+    <% end %>
+  </td>
+  <td> <%= item.properties_title %> </td>
+  <td> 单价：<%= number_to_currency item.price %> </td>
+  <td> 数量：<%= number_with_delimiter item.quantity %> </td>
+  <td> 小计：<%= number_to_currency item.price * item.quantity %> </td>
+
+  <% if item == order.items.first && controller.action_name != 'show'%>
+    <td rowspan='<%= order.items.count %>' class='operation'>
+      <% unless order.finish? %>
+        <div class='finish-order text-center'>
+          <button type="button" class="order-finish btn btn-danger" data-toggle="modal" data-target="#finish-order-<%= order.id %>">
+            确认收货
+          </button>
+        </div>
+
+        <div class="modal fade" id="finish-order-<%= order.id %>" tabindex="-1" role="dialog" aria-labelledby="myOrderLable<%= order.id %>">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myOrderLable<%= order.id %>">确认收货</h4>
+              </div>
+              <div class="modal-body">
+                订单号: <%= order.id %> 确认收货?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <%= link_to "确认收货", history_shop_admin_purchase_order_path(shop.name, order, "order[status]" => "finish"), method: :patch, class: 'btn btn-primary' %>
+                <!-- <button type="button" class="btn btn-primary"></button> -->
+              </div>
+            </div>
+          </div>
+        </div>
       <% end %>
-    </div>
-    <div class="title media-left">
-      <%= item.title %>
-    </div>
-
-    <div class="properties media-left">
-      <%= item.properties_title %>
-    </div>
-
-    <div class="price media-left">
-      <%= number_to_currency item.price %>
-    </div>
-
-    <div class="quantity media-left">
-      × <%= number_with_delimiter item.quantity %>
-    </div>
-
-    <div class="subtotal media-left">
-      <%= number_to_currency item.price * item.quantity %>
-    </div>
-  </div>
-</li>
+      
+      <div class='detail text-center'>
+        <span><%= link_to "订单详情", shop_admin_purchase_order_path(order) %></span>
+      </div>
+    </td>
+  <% end %>
+</tr>

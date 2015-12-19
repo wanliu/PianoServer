@@ -1,68 +1,64 @@
 <% saleable = item.cartable.saleable?(item.quantity, item.properties) %>
-<li class="list-group-item cart-item <%= saleable ? 'saleable' : 'unsaleable' %>" data-cart-item-id="<%= item.id %>">
-  <div class="media">
-    <div class='media-left'>
-      <div class="chose-item media-left">
-        <% if saleable %>
-          <%= f.check_box "cart_item_ids", {multiple: true, checked: true}, item.id, nil %>
-        <% else %>
-          <span class='unsaleable'>失效</span>
-        <% end %>
-      </div>
-      <div class="avatar media-left">
-        <%= link_to cartable_url(item) do %>
-          <%= image_tag item.avatar_url, class: 'media-object', alt: "商品图片" %>
-        <% end %>
-      </div>
-    </div>
 
-    <div class='media-left'>
-      <div class="title">
-        <%= item.title %>
-      </div>
-
-      <div class="properties">
-        <%= item.properties_title %>
-      </div>
-
-      <div class="price">
-        <%= number_to_currency item.price %>
-      </div>
-
-      <div class="subtotal media-left">
-        <%= number_to_currency item.price * item.quantity %>
-      </div>
-    </div>
-
-    <div class="quantity">
-      <% if saleable %>
-      <div class="input-group">
-        <span class="input-group-btn">
-          <button type="button" class="btn btn-minus">
-            <% if item.quantity > 1 %>
-              <span class="glyphicon glyphicon-minus"></span>
-            <% else %>
-              <span class="glyphicon"></span>
+<div class="cart-item <%= saleable ? 'saleable' : 'unsaleable' %>" data-cart-item-id="<%= item.id %>">
+  <div class='row'>
+    <div class='col-xs-9 avatar'>
+      <div class='media'>
+        <div class='media-left check-item'>
+          <% if saleable %>
+            <%= f.label "cart_item_ids_#{item.id}" do %>
+              <%= f.check_box "cart_item_ids", {multiple: true, checked: true}, item.id, nil %>
+              <div class='checkbox-simulator'>
+                <div class='check'></div>
+              </div>
             <% end %>
-          </button>
-        </span>
-        <input type="text" name="quantity" class="form-control input-number" value=<%= number_with_delimiter item.quantity %> autocomplete="off">
-        <span class="input-group-btn">
-          <button type="button" class="btn btn-plus">
-              <span class="glyphicon glyphicon-plus"></span>
-          </button>
-        </span>
+          <% else %>
+            <span class='unsaleable'>失效</span>
+          <% end %>      
+        </div>
+        <div class='media-left'>
+          <%= link_to cartable_url(item) do %>
+            <%= image_tag item.avatar_url, class: 'media-object', alt: "商品图片" %>
+          <% end %>
+        </div>
+        <div class='media-body'>
+          <%= "#{item.title} #{item.properties_title}" %>
+        </div>
       </div>
-      <div class="alert alert-danger fade in" role="alert" style='display: none;'>
-        <p>最多只能购买<span class='max-quantity'></span>件</p>
-      </div>
-      <% else %>
-        <span><%= number_with_delimiter item.quantity %></span>
-      <% end %>
     </div>
-
-    <div class="operations">
-      <%= link_to "移出购物车", item, method: :delete, data: { confirm: '确定删除这个商品么？' } %>
-    </div>
+    <%= link_to "移除商品", item, method: :delete, class: 'col-xs-3 remove-item', data: { confirm: '确定删除这个商品么？' } %>
   </div>
-</li>
+  <table class='table table-bordered'>
+    <colgroup>
+      <col width='30%'>
+      <col width='10%'>
+      <col width='20%'>
+      <col width='10%'>
+      <col width='30%'>
+    </colgroup>
+    <tbody>
+      <tr>
+        <% if saleable %>
+          <td class='price'>单价:<%= number_to_currency item.price %></td>
+          <% if item.quantity <= 1 %>
+            <td><span class="glyphicon btn-minus"></span></td>
+          <% else %>
+            <td><span class="glyphicon glyphicon-minus btn-minus"></span></td>
+          <% end %>
+          <td class='quantity'><%= item.quantity %></td>
+          <td><span class="glyphicon glyphicon-plus btn-plus"></span></td>
+          <td>小计:<span class='subtotal'><%= number_to_currency item.price * item.quantity %></span></td>
+        <% else %>
+          <td class='price'>单价:<%= number_to_currency item.price %></td>
+          <td colspan='3' class='quantity'><%= item.quantity %></td>
+          <td>小计:<span class='subtotal'><%= number_to_currency item.price * item.quantity %></span></td>
+        <% end %>
+      </tr>
+      <tr class='error'>
+        <td></td>
+        <td colspan='3' class='error-info alert alert-danger fade in'>最多只能购买<span class='max-quantity'></span>件</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

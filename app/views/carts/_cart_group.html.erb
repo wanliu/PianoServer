@@ -1,0 +1,35 @@
+<%= form_for Order.new, url: confirmation_orders_path do |f| %>
+  <%= f.hidden_field :supplier_id, value: supplier.id %>
+  <div class='cart-group'>
+    <div class='header'>
+      <span>
+        <input type='checkbox' class='select-all' data-supplier-id='<%= supplier.id %>' checked='checked' />
+      </span>
+      <span class='shop'>
+        <%= link_to shop_site_path(supplier.name) do %>
+          <%= image_tag supplier.avatar_url %><%= supplier.title %>
+        <% end %>
+      </span>
+    </div>
+
+    <table class='table table-bordered' style='background-color: white;'>
+      <colgroup>
+        <col width='30%' />
+        <col width='10%' />
+        <col width='20%' />
+        <col width='10%' />
+        <col width='20%' />
+      </colgroup>
+      <%= render partial: "cart_item", collection: items.sort_by(&:id), as: :item, locals: { supplier: supplier, f: f } %>
+      <tr class='footer'>
+        <td colspan='5' class='text-right'>
+          <span>
+            已选择<span class='total-quantity'><%= items.map(&:quantity).reduce(:+) %></span>件商品 合计<span class='total-total'><%= items.map { |item| item.price * item.quantity }.reduce(:+)  %></span>元
+            <%#= f.submit '结算', class: 'btn btn-danger confirm-order' %>
+          </span>
+          <%= f.submit "结  算", class: 'submit' %>
+        </td>
+      </tr>
+    </table>
+  </div>
+<% end %>

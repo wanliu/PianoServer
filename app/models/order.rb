@@ -42,7 +42,13 @@ class Order < ActiveRecord::Base
 
   def address_id=(id)
     @address_id = id
-    self.delivery_address = Location.find_by(id: id).to_s
+    location = Location.find_by(id: id)
+
+    return if location.blank?
+
+    self.delivery_address = location.delivery_address_without_phone
+    self.receiver_name = location.contact
+    self.receiver_phone = location.contact_phone
   end
 
   def save_with_items(operator)
@@ -59,6 +65,10 @@ class Order < ActiveRecord::Base
         false
       end
     end
+  end
+
+  def items_count
+    items.pluck(:quantity).reduce(:+) || 0
   end
 
   private

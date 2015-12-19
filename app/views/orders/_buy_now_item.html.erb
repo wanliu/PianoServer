@@ -1,29 +1,23 @@
-<li class="list-group-item cart-item buy-now-item">
-  <div class="media">
-    <div class="avatar media-left">
-      <%= link_to orderable_url(item) do %>
-        <%= image_tag item.avatar_url, class: 'media-object', alt: "商品图片" %>
-      <% end %>
+<tr class="cart-item" data-cart-item-id="<%= item.id %>">
+  <td class='avatar'>
+    <div class='media'>
+      <div class='media-left'>
+        <%= link_to orderable_url(item) do %>
+          <%= image_tag item.avatar_url, class: 'media-object', alt: "商品图片" %>
+        <% end %>
+      </div>
+      <div class='media-body'>
+        <%= "#{item.title} #{item.properties_title}" %>
+      </div>
     </div>
-
-    <div class="title media-left media-middle">
-      <%= item.title %>
-    </div>
-
-    <div class="properties media-left media-middle">
-      <%= item.properties_title %>
-    </div>
-
-    <div class="price media-left media-middle">
-      <%= number_to_currency item.price %>
-    </div>
-
-    <div class="quantity media-left media-middle">
-      <%= minus_plus_button_field "order[items_attributes][0]", :quantity, value: item.quantity, placeholder: "数量", class: 'form-control cart_item_quantity' %>
-    </div>
-
-    <div class="subtotal media-left media-middle">
-      <%= number_to_currency item.price * item.quantity %>
-    </div>
-  </div>
-</li>
+  </td>
+  <td  class="price">
+    <%= number_to_currency item.price %>
+  </td>
+  <td>
+    <%= minus_plus_button_field "order[items_attributes][0]", :quantity, value: item.quantity, placeholder: "数量", class: 'form-control cart_item_quantity' %>
+  </td>
+  <td class="subtotal">
+    <%= number_to_currency item.price * item.quantity %>
+  </td>
+</tr>

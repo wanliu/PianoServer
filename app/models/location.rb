@@ -72,7 +72,11 @@ class Location < ActiveRecord::Base
   end
 
   def delivery_address
-    %(#{province_name}#{city_name}#{region_name}#{road} #{contact_phone})
+    %(#{delivery_address_without_phone} #{contact_phone})
+  end
+
+  def delivery_address_without_phone
+    %(#{province_name}#{city_name}#{region_name}#{road})
   end
 
   def too_many_record

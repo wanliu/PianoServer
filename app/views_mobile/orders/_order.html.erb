@@ -1,0 +1,53 @@
+<div class="panel panel-default order">
+  <div class="panel-heading">
+    <span class='shop'>
+      <%= link_to shop_site_path(order.supplier.name) do %>
+        <%= image_tag order.supplier.avatar_url %><%= order.supplier.title %>
+      <% end %>
+      <span class='pull-right'>订单号: <%= order.id %></span>
+    </span>
+  </div>
+
+  <ul class="list-group order-items">
+    <%= render partial: "order_item", collection: order.items, as: :item, locals: { supplier: order.supplier } %>
+    <li class="list-group-item order-item">
+      <div class='text-right'>
+        一共<%= order.items_count %>件商品 合计：<span class='total'><%= number_to_currency order.total %></span>元
+      </div>
+    </li>
+  </ul>
+
+  <div class="panel-footer">
+    <div class='text-right'>
+      <%= link_to "订单详情", order_path(order), class: 'btn btn-default' %>
+      <% unless order.finish? %>
+        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#finish-order-<%= order.id %>">
+          确认收货
+        </button>
+      <% end %>
+    </div>
+
+    <% unless order.finish? %>
+      <div class="modal fade" id="finish-order-<%= order.id %>" tabindex="-1" role="dialog" aria-labelledby="myOrderLable<%= order.id %>">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h4 class="modal-title" id="myOrderLable<%= order.id %>">确认收货</h4>
+            </div>
+            <div class="modal-body">
+              订单号: <%= order.id %> 确认收货?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+              <%= link_to "确认收货", order_path(order, "order[status]" => "finish"), method: :patch, class: 'btn btn-primary' %>
+              <!-- <button type="button" class="btn btn-primary"></button> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

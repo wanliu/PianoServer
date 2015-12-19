@@ -1,19 +1,22 @@
-.cart-item {
-  &.unsaleable {
-    color: #ccc;
-
-    .unsaleable {
-      background: #dadada;
-      color: #5f5f5f;
-    }
-
-    .subtotal {
-      color: #ccc;
+.cart-item.buy-now-item {
+  .visible-xs-block, .visible-sm-block {
+    .quantity, .operations {
+      padding: 0;
+      margin: 5px 0;
     }
   }
+}
 
-  .chose-item {
-    width: 45px;
+.cart, .order-confirm, .buy-now-confirm {
+  color: #777777;
+
+  .header {
+    padding: 10px 10px;
+
+    img {
+      width: 30px;
+      height: 30px;
+    }
   }
 
   .avatar {
@@ -23,25 +26,46 @@
     }
   }
 
-  .title {
-    width: 200px;
+  table {
+    tr.footer td {
+      padding: 0;
+      text-align: right;
+
+      .submit {
+        border: none;
+        background-color: red;
+        padding: 10px 30px;
+        color: white;
+        font-size: 16px;
+        margin-left: 20px;
+      }
+
+      .cancel {
+        display: inline-block;
+        border: none;
+        background-color: #ff7c1c;;
+        padding: 10px 30px;
+        margin-right: -25px;
+        color: white;
+        font-size: 16px;
+      }
+    }
+
+    td {
+      vertical-align: middle!important;
+      text-align: center;
+    }
   }
 
-  .properties {
-    width: 172px;
-  }
-
-  .minus-group {
-    margin: 0;
-  }
-
-  .price {
-    width: 100px;
-    font-weight: 700;
+  table td.avatar {
+    text-align: left;
   }
 
   .quantity {
-    width: 161px;
+    max-width: 161px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
 
     .btn-minus {
       color: #707070;
@@ -68,10 +92,14 @@
     }
 
     .alert {
+      position: absolute;
+      height: 30px;
+      bottom: -30px;
       padding: 5px;
       font-size: 10px;
       border-radius: none;
       margin-bottom: 0;
+      width: 100%;
 
       p {
         text-align: center;
@@ -79,30 +107,138 @@
     }
   }
 
-  .subtotal {
-    color: #f40;
-    width: 100px;
-    font-weight: 700;
-  }
+  .cart-item {
+    &.unsaleable {
+      color: #ccc;
 
-  .operations {
-    width: 100px;
-  }
+      .unsaleable {
+        background: #dadada;
+        color: #5f5f5f;
+      }
 
-  .visible-xs-block, .visible-sm-block {
-    .quantity, .operations {
-      padding-left: 24px;
-      margin: 5px 0;
+      .subtotal {
+        color: #ccc;
+      }
     }
   }
 }
 
+.cart.mobile-cart, .buy-now-confirm, .order-confirm-mobile {
+  color: #777777;
 
-.cart-item.buy-now-item {
-  .visible-xs-block, .visible-sm-block {
-    .quantity, .operations {
+  label {
+    display: inline-block;
+    margin: 0;
+
+    input[type=checkbox] {
+      display: none;
+    }
+
+    input[type=checkbox]:checked + .checkbox-simulator {
+      width: 16px;
+      height: 16px;
+      border: 1px solid #ff7c1c;
+
+      .check {
+        width: 10px;
+        height: 10px;
+        margin: 2px;
+        background-color: #ff7c1c;
+      }
+    }
+
+    .checkbox-simulator {
+      width: 16px;
+      height: 16px;
+      border: 1px solid #c4c4c4;
+    }
+  }
+
+  li.header-show a {
+    color: #777777;
+  }
+
+  .cart-group {
+    .check-item, .check-all {
+      display: table-cell;
+      vertical-align: middle;
+    }
+
+    .header {
+      background-color: white;
+      padding: 10px 10px;
+
+      img {
+        width: 30px;
+        height: 30px;
+      }
+    }
+
+    .cart-item {
+      .row {
+        margin-left: 0;
+      }
+
+      .avatar {
+        padding-left: 10px;
+
+        img {
+          width: 70px;
+          height: 70px;
+        }
+      }
+
+      .row {
+        display: table;
+
+        .avatar {
+          display: table-cell;
+          float: none;
+          padding-top: 10px;
+          padding-bottom: 10px;
+        }
+
+        .remove-item {
+          text-decoration: none;
+          vertical-align: middle;
+          background-color: #ff7c1c;
+          display: table-cell;
+          float: none;
+          color: white;
+          height: 80px;
+        }
+      }
+
+      table {
+        margin-bottom: 0;
+
+        tbody td{
+          border-color: white;
+        }
+
+        tr.error {
+          display: none;
+        }
+      }
+    }
+
+    .footer {
       padding: 0;
-      margin: 5px 0;
+      text-align: right;
+
+      .total-total {
+        color: red;
+      }
+
+      .submit {
+        // height: 100%;
+        border: none;
+        background-color: red;
+        padding: 10px 30px;
+        color: white;
+        font-size: 16px;
+        margin-left: 20px;
+      }
     }
   }
 }

@@ -1,7 +1,7 @@
-<div class='orders col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1'>
+<div class='mobile-orders'>
   <ul class="nav nav-pills orders-tab current-history buyer-orders" role="tablist">
     <li role="presentation">
-      <a href="<%= shop_admin_purchase_orders_path(@shop.name) %>">未完成的订单</a>
+      <a href="/orders">未完成的订单</a>
     </li>
     <li role="presentation" class="active">
       <a href="javascrit: void(0)" aria-controls="current-orders" role="tab" data-toggle="tab">历史订单</a>
@@ -11,9 +11,7 @@
   <div class="tab-content">
     <div role="tabpanel" class="tab-pane active history-orders" id="history-orders">
       <% if @orders.present? %>
-        <% @orders.each do |order| %>
-          <%= render partial: "order", locals: { order: order, shop: @shop } %>
-        <% end %>
+        <%= render partial: "order", collection: @orders, as: :order %>
         <%= paginate @orders %>
       <% else %>
         <div class='text-center empty-orders'>没有历史订单！</div>

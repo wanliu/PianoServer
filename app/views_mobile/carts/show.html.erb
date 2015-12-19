@@ -1,35 +1,23 @@
-<div class='cart col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1'>
-  <div class="page-header">
-    <h1>购物车
-      <small>
-      清单(<span class='cart-item-count'><%= current_cart.items_count %></span>)
-      </small>
-    </h1>
-  </div>
+<div class='cart mobile-cart'>
+  <ul class="nav nav-pills">
+    <li role="presentation" class="header-show">
+      <a href="javascript: void(0)">
+        <h4>购物车 <small>
+          清单(<span class='cart-item-count'><%= current_cart.items_count %></span>)
+        </small></h4>
+      </a>
+    </li>
+  </ul>
 
-  <div class='no-padding'>
+  <div>
     <% if current_cart.items.blank? %>
       <h2>你的购物车是空的</h2>
     <% else %>
-      <table class='table table-bordered' style='background-color: white;'>
-        <colgroup>
-          <col width='30%' />
-          <col width='10%' />
-          <col width='20%' />
-          <col width='10%' />
-          <col width='20%' />
-        </colgroup>
-        <tr>
-          <td>商品</td>
-          <td>单价</td>
-          <td>数量</td>
-          <td>金额</td>
-          <td>操作</td>
-        </tr>
-      </table>
       <% groups = @items.group_by {|item| item.supplier } %>
+      <% index = 0 %>
       <% groups.each do |supplier, items| %>
-        <%= render partial: 'cart_group', locals: { supplier: supplier, items: items } %>
+        <%= render partial: 'cart_group', locals: { supplier: supplier, items: items, index: index } %>
+        <% index += 1 %>
       <% end %>
     <% end %>
   </div>
@@ -83,23 +71,10 @@
       }
     });
 
-    // 修改所购商品数量
-    $('.cart-item input[name=quantity]').keyup(function (event) {
-      var quantity = $(this).val()
-
-      if (!/^[1-9]\d*$/.test(quantity)) {
-        quantity = 1;
-      }
-
-      var newQuantity = 1 * quantity;
-
-      changeQuantity(this, newQuantity);
-    });
-
     // 通过减少按钮，修改所购商品数量
     $('.cart-item').on('click', '.btn-minus', function (event) {
-      var quantityInput = $(this).parents('.quantity').find('input');
-      var quantity = 1 * $(quantityInput).val();
+      var quantityInput = $(this).parents('tr:first').find('.quantity');
+      var quantity = parseInt($(quantityInput).text(), 10);
 
       if (quantity > 1) {
         var newQuantity = quantity - 1;
@@ -109,8 +84,8 @@
 
     // 通过增加按钮，修改所购商品数量
     $('.cart-item').on('click', '.btn-plus', function (event) {
-      var quantityInput = $(this).parents('.quantity').find('input');
-      var quantity = 1 * $(quantityInput).val();
+      var quantityInput = $(this).parents('tr:first').find('.quantity');
+      var quantity = parseInt($(quantityInput).text(), 10);
       var newQuantity = quantity + 1;
 
       changeQuantity(quantityInput, newQuantity);
@@ -119,13 +94,13 @@
     function changeQuantity(quantityInput, quantity, reflect) {
       var $cartItem = $(quantityInput).parents('.cart-item:first'),
           cartItemId = $cartItem.data('cartItemId'),
-          $quantity = $cartItem.find('input[name=quantity]'),
+          $quantity = $cartItem.find('.quantity'),
           $subTotal = $cartItem.find('.subtotal');
-          $btnMinus = $cartItem.find('.btn-minus span'),
-          $alert = $cartItem.find('.alert'),
+          $btnMinus = $cartItem.find('span.btn-minus'),
+          $alert = $cartItem.find('tr.error'),
           $group = $(quantityInput).parents('.cart-group');
 
-      $quantity.val(quantity);
+      $quantity.text(quantity);
 
       if (+quantity > 1) {
         $btnMinus.addClass('glyphicon-minus');
@@ -170,7 +145,7 @@
       });
 
       var totals = _.reduce(saleableSelected, function(mem, item) {
-        var quantity = parseInt($(item).find('.quantity input').val(), 10);
+        var quantity = parseInt($(item).find('.quantity').text(), 10);
         var total = parseFloat($(item).find('.subtotal').text().replace('¥', ''), 10);
 
         mem.quantity || (mem.quantity = 0);
