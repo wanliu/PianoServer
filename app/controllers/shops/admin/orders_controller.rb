@@ -1,5 +1,6 @@
 class Shops::Admin::OrdersController < Shops::Admin::BaseController
   before_action :set_order, only: [:show, :update, :destroy]
+  before_action :check_for_mobile, only: [:index, :history, :show]
 
   # GET /shops/admin/orders
   # GET /shops/admin/orders.json

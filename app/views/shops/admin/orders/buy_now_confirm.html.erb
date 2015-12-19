@@ -1,0 +1,64 @@
+<div class='buy-now-confirm col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1'>
+  <%= render "order_address", locals: { delivery_addresses: @delivery_addresses, order: @order } %>
+
+  <%= form_for @order, url: "/orders/buy_now_create" do |f| %>
+    <%= f.hidden_field :address_id %>
+    <%= f.hidden_field :supplier_id %>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        店铺：<%= link_to @supplier.title, shop_site_path(@supplier) %>
+      </div>
+      <%= f.fields_for :items do |item_form| %>
+        <%= item_form.hidden_field :orderable_type %>
+        <%= item_form.hidden_field :orderable_id %>
+        <%= item_form.hidden_field :title %>
+        <%= item_form.hidden_field :price %>
+        <% @order_item.properties.each do |key, value| %>
+          <%= item_form.hidden_field "properties[#{key}]", value: value %>
+        <% end %>
+        <ul class="list-group order-items">
+          <%= render partial: "buy_now_item", locals: { item: @order_item, supplier: @supplier, f: item_form, props: @props } %>
+        </ul>
+      <% end %>
+      <div class="panel-footer">
+        <h4>总计：<span class='js-buy-now-total'><%= @total %></span>元</h4>
+      </div>
+    </div>
+
+    <div>
+      <%= f.submit "提交订单", value: '立即购买', class: 'btn btn-primary btn-lg'%>
+    </div>
+  <% end %>
+</div>
+
+<script type="text/javascript">
+  // TODO backed calculating
+  $('.cart_item_quantity').change(function(event, value) {
+    var quantity = value ? value : (1 * $(this).val());
+
+    changeQuantity(this, quantity);
+  });
+
+  $('.cart_item_quantity').keyup(function(event) {
+    var quantity = $(this).val();
+    if (!quantity) return;
+
+    changeQuantity(this, quantity);
+  });
+
+  function changeQuantity(quantityDom, quantity) {
+    var attrId = $(quantityDom).attr('id');
+    var priceAttrId = attrId.replace('quantity', 'price');
+    var $price = $('#' + priceAttrId);
+    var price = 1 * $price.val();
+    var $subtotal = $(quantityDom).parents('.quantity').siblings('.subtotal');
+    var $total = $('.js-buy-now-total');
+
+    quantity = 1 * quantity;
+
+    var subTotal = (price * quantity).toFixed(2);
+    $subtotal.text("¥ " + subTotal);
+    $total.text(subTotal);
+  }
+</script>

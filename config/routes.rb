@@ -57,6 +57,8 @@ Rails.application.routes.draw do
     get :weixin_redirect_url
   end
 
+  # get '/auth/:provider/callback', to: 'users/sessions#create'
+
   devise_for :admins, controllers: {
     sessions: 'admins/sessions',
     registrations: 'admins/registrations'
@@ -77,8 +79,11 @@ Rails.application.routes.draw do
   resources :after_registers, concerns: [:statuable] do
     collection do
       get :reset, as: :reset
+      post :upgrade_to_distributor, as: :upgrade
     end
   end
+
+  resources :smart_fills
 
   concern :templable do |options|
     resources :templates, options do
@@ -114,6 +119,11 @@ Rails.application.routes.draw do
       collection do
         get 'search_wanliu_user', to: 'accounts#search_wanliu_user'
         put 'import/:wanliu_user_id', to: 'accounts#import', as: :import
+        post 'upload_user_avatar'
+      end
+
+      member do
+        put 'reset', to: 'accounts#reset', as: :reset
       end
     end
     resources :regions
@@ -311,6 +321,7 @@ Rails.application.routes.draw do
           put "/change_shop_theme", to: "settings#change_shop_theme"
           put "/reset_shop_poster", to: "settings#reset_shop_poster"
           post "/upload_shop_poster", to: "settings#upload_shop_poster"
+          post "/upload_shop_signage", to: "settings#upload_shop_signage"
         end
       end
     end

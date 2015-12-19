@@ -41,6 +41,10 @@ class Users::SessionsController < Devise::SessionsController
 
   def create
     params[:format] = "html"
+    if auth_hash
+      logger.info auth_hash
+    end
+
     super
     # render :show, formats: [:json]
   end
@@ -75,7 +79,13 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def after_sign_in_path_for(resource)
-    callback_url ? callback_url : super(resource)
+    return callback_url ? callback_url : super(resource) unless Settings.after_registers.after_sign_in
+
+    if resource.is_done?
+      callback_url ? callback_url : super(resource)
+    else
+      Settings.after_registers.after_sign_in_path || after_registers_path
+    end
   end
 
   # GET /resource/sign_in
@@ -106,5 +116,11 @@ class Users::SessionsController < Devise::SessionsController
       anonymous_cart.items(true)
       anonymous_cart.destroy
     end
+  end
+
+  protected
+
+  def auth_hash
+    request.env['omniauth.auth']
   end
 end

@@ -3,6 +3,8 @@
 ####################
 class Location < ActiveRecord::Base
   belongs_to :user
+  belongs_to :region, foreign_key: :region_id, primary_key: :city_id
+  has_one :shop
 
   AMOUNT_LIMIT = 4
 
@@ -28,7 +30,7 @@ class Location < ActiveRecord::Base
 
   validate :too_many_record, unless: :skip_validation
 
-  belongs_to :region, foreign_key: :region_id, primary_key: :city_id
+  after_commit :reset_user_default_address, on: :destroy
 
   attr_accessor :chat_id, :intention_id
   attr_accessor :skip_validation
@@ -49,12 +51,32 @@ class Location < ActiveRecord::Base
     ChinaCity.get(region_id.to_s)
   end
 
+  def contact
+    super || shop.try(:owner).try(:nickname) || shop.try(:owner).try(:name)
+  end
+
+  def road
+    super || shop.try(:address)
+  end
+
+  def contact_phone
+    super || shop.try(:phone)
+  end
+
   def full_address
     to_s
   end
 
+  def address
+    %(#{province_name}#{city_name}#{region_name}#{road})
+  end
+
   def delivery_address
-    %(#{province_name}#{city_name}#{region_name}#{road} #{contact_phone})
+    %(#{delivery_address_without_phone} #{contact_phone})
+  end
+
+  def delivery_address_without_phone
+    %(#{province_name}#{city_name}#{region_name}#{road})
   end
 
   def too_many_record
@@ -67,5 +89,14 @@ class Location < ActiveRecord::Base
 
   def is_default?
     id == user.latest_location_id
+  end
+
+  # 默认收货地址被删除后，重置用户的默认地址字段
+  def reset_user_default_address
+    return if persisted?
+
+    if user.latest_location_id == id
+      user.update_attribute('latest_location_id', nil)
+    end
   end
 end

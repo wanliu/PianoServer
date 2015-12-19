@@ -14,7 +14,11 @@ class @Chat
     maxMessageGroup: 10,
     earlyTime: 0,
     avatarDefault: '/assets/avatar.gif',
-    displayUserName: false,
+    displayUserName: true,
+    displayShopName: true,
+    greetingUserName: '',
+    greetingShopName: '',
+    greetingShopLogo: '/assets/avatar.gif',
     miniTimeGroupPeriod: 1000 * 180
     # autoEnter: true
   }
@@ -71,7 +75,7 @@ class @Chat
     @userSocket.userId
 
   bindAllEvents: () ->
-    $(@textElement).on 'keyup', (e) =>
+    $(@textElement).off('keyup').on 'keyup', (e) =>
       if e.which == 13 and e.ctrlKey
         $(@sendBtn).trigger('click')
       else if e.which == 13
@@ -228,9 +232,7 @@ class @Chat
     )
 
   _pasteText: (text) ->
-    @$textElement ||= $(@textElement)
-    val = @$textElement.val()
-    @$textElement.val([val, text].join(''))
+    return if /(<\/?(?!br)[^>\/]*)\/?>/.test(text)
 
   _insertItemMessage: (message, direction = 'down', isFirstRecord) ->
     {id, senderId, content, senderAvatar, senderLogin, type, time} = message
@@ -274,16 +276,29 @@ class @Chat
       console.error(e.stack)
 
   _prepareTemplateContext: (message, direction, isFirstRecord)  ->
-    {id, senderId, content, senderAvatar, senderLogin, type, time} = message
+    {id, senderId, content, senderAvatar, senderShopName, senderLogin, type, time} = message
 
     toAddClass = if @_isOwnMessage(message) then 'you' else 'me'
 
-    senderAvatar = @options.avatarDefault if senderAvatar == '' or senderAvatar?
-    senderName = if @options.displayUserName then "<h2>#{senderLogin}</h2>" else ''
+
+    senderAvatar = @options.avatarDefault if senderAvatar == '' or !senderAvatar
+
+    if @options.displayUserName && @options.displayShopName
+      if senderShopName == ''
+        senderDesc = senderLogin
+      else
+        senderDesc = [senderLogin, ' - ', senderShopName].join('')
+    else if @options.displayUserName && !@options.displayShopName
+      senderDesc = senderLogin
+    else if !@options.displayUserName && @options.displayShopName
+      senderDesc = senderShopName
+    else
+      senderDesc = ''
+
+    senderName = if senderDesc.length then "<h2>#{senderDesc}</h2>" else ''
 
     prefixSection = @_getPrefixSection(time, direction, isFirstRecord)
     {prefixSection, senderAvatar, senderName, toAddClass, id, senderId, content, senderLogin, type, time}
-
 
   _getPrefixSection: (time, direction, isFirstRecord) ->
     date = new Date(time)
@@ -456,8 +471,9 @@ class @Chat
         id: ~(new Date),
         senderId: 0,
         content: @greetings,
-        senderAvatar: @options.avatarDefault,
-        senderLogin: '商店',
+        senderAvatar: @options.greetingShopLogo,
+        senderLogin: @options.greetingUserName,
+        senderShopName: @options.greetingShopName,
         time: new Date()
       })
 

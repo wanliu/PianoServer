@@ -65,10 +65,10 @@ class CartItem < ActiveRecord::Base
   end
 
   def cartable_saleable
-    cartable.saleable?(quantity, properties) do |saleable, max|
-      if !saleable && 0 >= max
+    cartable.saleable?(quantity, properties) do |on_sale, saleable, max|
+      if !on_sale
         errors.add(:orderable_id, "已经下架")
-      elsif !saleable && max > 0
+      elsif !saleable
         errors.add(:quantity, max.to_i.to_s)
       end
     end

@@ -44,7 +44,8 @@ gem 'jquery-turbolinks'
 gem 'photoswipe-rails', '~> 4.1.0'
 gem 'bh', '~> 1.3'
 gem "slim-rails"
-gem "select2-rails"
+# gem "select2-rails"
+gem "select2-rails", ">= 4.0.0", github: 'nilbus/select2-rails', branch: 'full'
 gem 'picturefill'
 
 # 后端库
@@ -99,6 +100,7 @@ gem 'sidekiq'
 
 gem 'china_city'
 gem 'table_cloth'
+gem 'acts-as-taggable-on', '~> 3.4'
 
 gem 'oneapm_rpm' if ENV['USE_RPM']
 
@@ -113,7 +115,9 @@ gem 'unicorn'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
-gem 'weixin_authorize'
+gem 'weixin_authorize', github: 'hysios/weixin_authorize'
+gem 'omniauth'
+gem "omniauth-wechat-oauth2"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

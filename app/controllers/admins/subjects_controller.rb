@@ -2,7 +2,7 @@ class Admins::SubjectsController < Admins::BaseController
 
   before_action :set_subject, only: [:edit, :show, :update, :destroy, :upload]
   def index
-    @subjects = Subject.page
+    @subjects = Subject.order(id: :desc).page(params[:page]).per(params[:per])
   end
 
   def new
@@ -34,6 +34,14 @@ class Admins::SubjectsController < Admins::BaseController
 
   def upload
 
+  end
+
+  def destroy
+    if @subject.destroy 
+      redirect_to admins_subjects_path, notice: "主题'#{@subject.title}'已经成功删除！"
+    else
+      redirect_to admins_subjects_path, flash: { error: @subject.errors.full_messages.join('，') }
+    end
   end
 
   private

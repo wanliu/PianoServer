@@ -106,14 +106,16 @@ class @CategoryListWrap extends @HuEvent
       @form.send('category:change', [ category_id, is_leaf ]) if @form?
 
   searchItem: (q) ->
-    data = { category_id: @category_id }
-    data['q'] = q if q?
+    if q
+      @params['q'] = q
+    else
+      delete @params['q']
 
     $.ajax({
       type: 'GET',
       dataType: 'json',
       url: @url,
-      data: data,
+      data: @params,
       success: (data) =>
         { items, brands, meta } = data
         @items.send('items:change', [items]) if @items?

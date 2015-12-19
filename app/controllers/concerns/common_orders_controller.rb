@@ -172,7 +172,7 @@ module CommonOrdersController
   end
 
   def set_feed_back
-    @order_items = current_user.cart.items.find(params[:order][:cart_item_ids])
+    @order_items = current_user.cart.items.find(params[:order][:cart_item_ids] || [])
 
     @supplier = Shop.find(params[:order][:supplier_id])
 
@@ -180,12 +180,17 @@ module CommonOrdersController
   end
 
   def set_addresses
-    @delivery_addresses = current_user.locations.order(id: :asc)
+    shop_address = current_user.owner_shop.try(:location)
+    @delivery_addresses = [shop_address].concat current_user.locations.order(id: :asc)
+    @delivery_addresses.compact!
+
     @order.address_id =
       if current_user.latest_location_id.present?
         current_user.latest_location_id
-      else
-        @delivery_addresses.first.id if @delivery_addresses.present?
+      elsif shop_address.present?
+        shop_address.id
+      elsif @delivery_addresses.present?
+        @delivery_addresses.first.id
       end
   end
 end

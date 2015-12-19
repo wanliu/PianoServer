@@ -1,16 +1,15 @@
 <div class="panel panel-default category-edit category-<%= category.id %>">
   <div class="panel-body">
-    <form>
+    <%= form_for category, url: [:admins, industry, category], layout: :basic, remote: true do |f| %>
+      <%= f.text_field :id, readonly: true %>
+      <%= f.text_field :title %>
       <div class="form-group">
-        <label for="exampleInputPassword1">ID:</label>
-        <span ><%= category.id %></span>
+        <%= label_tag :status %>
+        <%= select2_tags "category", "state_list", Category::STATUS_TAGS, {}, style: 'width: 100%' %>
       </div>
 
-      <div class="form-group">
-        <label for="exampleInputPassword1">标题</label>
-        <%= text_field_tag "title", category.title, placeholder: "标题", class: "form-control" %>
-      </div>
-    </form>
+      <%= f.submit %>
+    <% end %>
     <h4>上级属性</h4>
       <!-- TODO: -->
       <%= select_tag "up_property", options_from_collection_for_select(Category.all, "id", "title"), class: "form-control" %>
@@ -73,4 +72,3 @@
 
   new PropertySearch($('.add-property'), url);
 </script>
-

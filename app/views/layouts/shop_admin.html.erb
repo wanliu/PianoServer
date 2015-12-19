@@ -105,6 +105,7 @@
     <%#= render "shards/ajax_error" %>
 
     <%= render "shop_admin/sidebar_menu" %>
+    <%= render "fixed_position_patch" %>
     <script type="text/javascript">
       <% unless Rails.env.production? %>
         console.log('development version: <%= PianoServer::VERSION %>')

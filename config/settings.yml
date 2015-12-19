@@ -35,6 +35,8 @@ assets:
   host: http://wanliu-piano.b0.upaiyun.com
   gray_image: "data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
   avatar_iamge: "http://wanliu-piano.b0.upaiyun.com/uploads/shop/logo/1/default_avatar.gif"
+  alliance_hosts:
+    - 'http://neil-img.b0.upaiyun.com/'
 shop:
   import:
     sale: true
@@ -47,12 +49,12 @@ dev:
     weixin: true
     camera: true
     shop:
-      website: true
+      website: false
     mobile:
       mini: true
     purchase: true
     cart: true
-    favorites: true
+    favorites: false
     qrcode: true
     linkmen: true
     location: true
@@ -63,6 +65,8 @@ dev:
     industry: true
     weixin: true
     person_page: true
+job:
+  async: open
 sites:
   root: .sites
   shops:
@@ -90,5 +94,12 @@ after_registers:
     validates: strict
   total:
     max_count: 15
+  after_sign_in: false
+  after_sign_in_path: after_registers
 weixin:
   scope: snsapi_login
+  after_sign_in: true
+  after_sign_in_path: smart_fills
+chat:
+  display_username: true
+  display_shopname: true

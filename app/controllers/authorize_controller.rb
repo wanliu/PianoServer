@@ -1,23 +1,40 @@
 class AuthorizeController < ApplicationController
   def weixin
     redirect_url = "#{Settings.app.website}/authorize/weixin_redirect_url"
-    redirect_to wx_client.authorize_url(redirect_url, Settings.weixin.scope) if wx_client.is_valid?
+    authorize_method = mobile? ? :authorize_url : :qrcode_authorize_url
+    redirect_to wx_client.send(authorize_method, redirect_url, Settings.weixin.scope) if wx_client.is_valid?
   end
 
   def weixin_redirect_url
     code = params[:code]
-    status = false
+    # status = false
+    tries = 3
 
     if wx_client.is_valid?
-      access_token = wx_client.get_oauth_access_token(code).result['access_token']
-      profile = wx_client.get_oauth_userinfo(wx_client.app_id, access_token).result
+      begin
+        access_token = wx_client.get_oauth_access_token(code).result['access_token']
+        profile = wx_client.get_oauth_userinfo(wx_client.app_id, access_token).result
 
-      user, status = lookup_user(profile)
-      # sign_in(:user, user) 在登陆前，竟然强制保存了 user.
-      sign_in(:user, user)
+        user, status = lookup_user(profile)
+
+        # sign_in(:user, user) 在登陆前，竟然强制保存了 user.
+        sign_in(:user, user)
+        @to_url =  after_sign_in_path(user)
+        @notice = '微信认证登陆成功'
+      rescue RestClient::RequestTimeout => e
+        tries -= 1
+        if tries > 0
+          retry
+        else
+          @to_url =  new_user_session_path
+          @notice = '微信认证服务器超时'
+          logger.debug "Weixin Login Timeout!"
+        end
+      end
     end
 
-    redirect_to to_path(status), turbolinks: false, notice: '微信认证登陆成功'
+    redirect_to @to_url, notice: @notice
+    # redirect_to root_path
   end
 
   private
@@ -47,6 +64,16 @@ class AuthorizeController < ApplicationController
       after_registers_path
     else
       request.referer ? URI(request.referer).path : root_path
+    end
+  end
+
+  def after_sign_in_path(user)
+    return request.referer ? URI(request.referer).path : root_path unless Settings.weixin.after_sign_in
+
+    if user.is_done?
+      request.referer ? URI(request.referer).path : root_path
+    else
+      smart_fills_path
     end
   end
 end

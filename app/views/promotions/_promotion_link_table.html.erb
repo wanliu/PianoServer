@@ -2,7 +2,7 @@
   <div class="menu-overlayer"></div>
   <div class="link-table">
     <% if Settings.dev.feature.shop.website %>
-      <%= link_to shop_site_path(shop_name: promotion.shop_name), class: "contact-button into-shop" do %>
+      <%= link_to shop_site_path(shop_name: promotion.shop.try(:name)), class: "contact-button into-shop" do %>
         <span class="button-icon glyphicon glyphicon-home" aria-hidden="true"></span>
         <div class="button-text">商家</div>
       <% end %>
@@ -21,19 +21,20 @@
         </div>
       <% end %>
     <% end %>
-
-
-    <% if shop.owner.id === current_anonymous_or_user.id %>
+    <% if shop.owner.id == current_anonymous_or_user.id %>
       <div class="chat contact-button">您的店铺</div>
     <% else %>
       <% if promotion.saleable? %>
         <% if Settings.dev.feature.cart %>
-          <div class="contact-button add-to-cart" data-cartable-type="Promotion" data-cartable-id="<%= promotion.id %>" data-moveable="<%= moveable_target %>">
-            <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span><div class="button-text">加入购物车</div>
+          <a href="/cart"  class="contact-button shop-cart hidden-sm hidden-md hidden-lg">
+            <%= icon('shopping-cart') %><span class="badge"> <%= current_cart.items_count %></span>
+          </a>
+          <div class="contact-button add-to-cart hidden-sm hidden-md hidden-lg" data-cartable-type="Promotion" data-cartable-id="<%= promotion.id %>" data-moveable="<%= moveable_target %>">
+            <div class="button-text">加入购物车</div>
           </div>
         <% end %>
         <% if Settings.dev.feature.purchase %>
-          <div class="buy-now js-buy-now contact-button" data-cartable-type="Promotion" data-cartable-id="<%= promotion.id %>">
+          <div class="buy-now js-buy-now contact-button hidden-sm hidden-md hidden-lg" data-cartable-type="Promotion" data-cartable-id="<%= promotion.id %>">
             立即购买
           </div>
         <% end %>
@@ -44,3 +45,10 @@
     <% end %>
   </div>
 </div>
+
+
+<script>
+  $(document).on('cart_quantity_changed', function(e, quantity){
+    $('.shop-cart').find('.badge').text(quantity);
+  });
+</script>

@@ -26,21 +26,12 @@
     </div>
   </div>
 
-  <%= render partial: "sale_form", with: @item.category, locals: { item: @item, cartitem: @cartitem, stocks_with_index: @stocks_with_index, moveable_target: ".shop-item-image>img" } %>
-
-  <div class='item-secodary-properties clearfix'>
-    <div class='brand-saled-count row'>
-      <p class='inventory col-xs-6 col-sm-6 col-md-6'>库 存：<span class='available-stock'><%= @item.current_stock.to_i %></span></p>
-      <p class='sale-count col-xs-6 col-sm-6 col-md-6 text-right'>总销量：0</p>
-    </div>
-  </div>
-
-  <div class="item-properties">
+<!--   <div class="item-properties">
     <div class="media">
-      <div class="media-left media-middle">
-        <%= @item.title %>
-      </div>
       <div class="media-body media-middle">
+        <%#= @item.title %>
+      </div>
+      <div class="media-right media-middle">
         <div class='favor-title text-center'>收藏</div>
         <div class='favor-count text-center'>0</div>
       </div>
@@ -49,28 +40,52 @@
         <div class='like-count text-center'>0</div>
       </div>
     </div>
-  </div>
+  </div> -->
 
-
-  <%#= render partial: "sale_options", with: @item.category %>
-
-  <div class='item-shop-infos'>
-    <div class="media ">
-      <div class="media-left media-middle">
-        <%= link_to shop_site_path(@shop.name, format: 'html'), class: 'shop-avatar' do %>
-          <%= image_tag @shop.logo_url %>
-        <% end %>
-      </div>
-      <div class="media-body media-middle">
-        <div class='name'>供应商：<%= @shop.title %></div>
-        <div class='address'>地&emsp;址：<%= @shop.address %></div>
-        <div class='follow'>
-          <span>关&emsp;注：0</span>
+  <div class="media item-option-warp">
+    <div class="media-left left-wrap">
+      <%= render partial: "sale_form", with: @item.category, locals: { item: @item, cartitem: @cartitem, stocks_with_index: @stocks_with_index, moveable_target: ".shop-item-image>img" } %>
+    </div>
+    <div class="media-body right-shop-infos hidden-xs"> <!-- 右侧info -->
+      <a href="<%= shop_site_path(@shop.name, format: 'html') %>" class="media avatar-wrap">
+        <div class="media-left">
+          <div class="shop-avatar">
+            <%= image_tag @shop.logo_url %>
+          </div>
+        </div>  
+        <div class="media-body media-middle">
+          <div class='name'><%= @shop.title %></div>
+        </div>
+      </a>
+      <address><%= @shop.address %></address>
+      <br>
+      <div class="row fllow-wrap">
+        <div class="col-md-6 col-sm-6 text-center">
+          <div class="follow">关注：0</div>
+        </div>
+        <div class="col-md-6 col-sm-6 text-center">
+          <a class="follow-btn" href="#"> <%= icon(:plus) %> 关注</a>
         </div>
       </div>
     </div>
   </div>
+
+  <a href="<%= shop_site_path(@shop.name, format: 'html') %>" class='item-shop-infos visible-xs'> <!-- 下方info -->
+    <div class="media ">
+      <div class="media-left media-middle">
+        <div class="shop-avatar">
+          <%= image_tag @shop.logo_url %>
+        </div>
+      </div>
+      <div class="media-body media-middle">
+        <div class='name'><%= @shop.title %></div>
+        <address class='address'><%= @shop.address %></address>
+      </div>
+    </div>
+  </a>
+  <div class="item-description">
+    <%= @item.description.html_safe %>
+  </div>
+
+  <%#= render partial: "sale_options", with: @item.category %>
 </div>
-
-
-
