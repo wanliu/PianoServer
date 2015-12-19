@@ -22,10 +22,37 @@
               <input type="text" class="form-control" name="shop_title">
             </div>
           </div>
+
+          <% if Settings.weixin.regions %>
+            <div class="form-group">
+              <%
+                province_id = location.try :province_id
+                city_id = location.try :city_id
+                region_id = location.try :region_id
+
+                province_list = ChinaCity.list
+                city_list = ChinaCity.list province_id.to_s
+                region_list = ChinaCity.list city_id.to_s
+              %>
+
+              <div class="city-group">
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding0 <%= "#{province_has_error}" %>">
+                  <%= f.select(:province_id, options_for_select(province_list, province_id), {prompt: '--省份--'}, {class: "city-select form-control"}) %>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding0 <%= "#{city_has_error}" %>">
+                  <%= f.select(:city_id, options_for_select(city_list, city_id), {prompt: "--城市--"}, { class: "city-select form-control" } ) %>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding0 <%= "#{region_has_error}" %>">
+                  <%= f.select(:region_id, options_for_select(region_list, region_id), {prompt: "--地区--"}, { class: "city-select form-control" } ) %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+
           <div class="form-group">
             <div class="col-xs-12">
               <button type="button" class="btn btn-default btn-submit">提交</button>
-              <span class="error-notice"></span>
+              <ul class="error-messages"></ul>
             </div>
           </div>
         </form>
@@ -39,26 +66,66 @@
   var root_path = '<%= root_path %>';
 
   $('.btn-submit').click(function() {
-    var phone = $.trim($('input[name="phone"]').val());
-    var title = $.trim($('input[name="shop_title"]').val());
+    var array = $('form').serializeArray();
+    var phone = array[0];
+    var title = array[1];
     var reg = /^1\d{10}$/;
 
+    var errors = [];
+    var $errors = $('.error-messages');
+
     if (!reg.test(phone)) {
-      $('.error-notice').text('联系方式格式不正确').css('display', 'inline-block');
+      errors.push('<li class="error-message">联系方式格式不正确</li>');
+    }
+
+    if (title.length === 0) {
+      errors.push('<li class="error-message"></li>');
+    }
+
+    <% if Settings.weixin.regions %>
+      var province_id = array[2].value;
+      var city_id = array[3].value;
+      var region_id = array[4].value;
+
+      var province_name = $("#location_province_id  option:selected").text();
+      var city_name = $("#location_city_id  option:selected").text();
+      var region_name = $("#location_region_id  option:selected").text();
+
+      if (province_name === "--省份--") {
+        errors.push('<li class="error-message">省份不能为空</li>');
+      }
+
+      if (city_name === "--城市--") {
+        errors.push('<li class="error-message">城市不能为空</li>');
+      }
+
+      if (region_name === "--地区--") {
+        errors.push('<li class="error-message">地区不能为空</li>');
+      }
+    <% end %>
+
+    if (errors.length > 0) {
+      $errors.html(errors.join('')).show();
       return;
     }
 
-    $('.error-notice').text('').hide();
+    $errors.html('').hide();
+
+    var params = {};
+    params['shop'] = { 'title': title, 'phone': phone };
+
+    <% if Settings.weixin.regions %>
+      params['location'] = {
+        'province_id': province_id,
+        'city_id': city_id,
+        'region_id': region_id
+      };
+    <% end %>
 
     $.ajax({
       url: url,
       type: 'POST'
-      data: {
-        shop: {
-          title: title
-          phone: phone
-        }
-      },
+      data: params,
       dataType: 'json',
       success: function (data) {
         if (data.success) {
