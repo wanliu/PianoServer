@@ -1,4 +1,8 @@
 class AuthorizeController < ApplicationController
+  include RedirectCallback
+
+  before_action :set_callback, only: [ :weixin ]
+
   def weixin
     redirect_url = "#{Settings.app.website}/authorize/weixin_redirect_url"
     redirect_to wx_client.authorize_url(redirect_url, Settings.weixin.scope) if wx_client.is_valid?
