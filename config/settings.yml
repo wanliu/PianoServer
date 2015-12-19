@@ -100,6 +100,7 @@ weixin:
   scope: snsapi_login
   after_sign_in: true
   after_sign_in_path: smart_fills
+  regions: true
 chat:
   display_username: true
   display_shopname: true

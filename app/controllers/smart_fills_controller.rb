@@ -3,11 +3,7 @@ class SmartFillsController < ApplicationController
   before_action :set_content_for
 
   def index
-    # redirect_to smart_fills_path(current_user.user_type) unless current_user.state.nil?
-  end
-
-  def show
-
+    @location = Location.new
   end
 
   def fast_register
@@ -20,15 +16,15 @@ class SmartFillsController < ApplicationController
     shop.theme = Settings.shop.default_theme
     shop.create_status(state: "select")
 
+    if Settings.weixin.regions
+      @shop.build_location location_params.merge(skip_location: true)
+    end
+
     if shop.save
       render json: {success: true}
     else
       render json: {success: false, errors: shop.errors.full_messages.join(', ') }
     end
-
-    # @notice = '恭喜您快速开店成功'
-
-    # redirect_to root_path
   end
 
   private
