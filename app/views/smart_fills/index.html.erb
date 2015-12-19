@@ -37,13 +37,13 @@
 
               <div class="city-group">
                 <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding0">
-                  <%= select_tag(@location, :province_id, options_for_select(province_list, province_id), {prompt: '--省份--'}, {class: "city-select form-control"}) %>
+                  <%= select_tag("province_id", options_for_select(province_list), {prompt: '--省份--'}, {class: "city-select form-control"}) %>
                 </div>
                 <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding0">
-                  <%= select_tag(@location, :city_id, options_for_select(city_list, city_id), {prompt: "--城市--"}, { class: "city-select form-control" } ) %>
+                  <%= select_tag("city_id", options_for_select(city_list), {prompt: "--城市--"}, { class: "city-select form-control" } ) %>
                 </div>
                 <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding0">
-                  <%= select_tag(@location, :region_id, options_for_select(region_list, region_id), {prompt: "--地区--"}, { class: "city-select form-control" } ) %>
+                  <%= select_tag("region_id", options_for_select(region_list), {prompt: "--地区--"}, { class: "city-select form-control" } ) %>
                 </div>
               </div>
             </div>
@@ -87,9 +87,9 @@
       var city_id = array[3].value;
       var region_id = array[4].value;
 
-      var province_name = $("#location_province_id  option:selected").text();
-      var city_name = $("#location_city_id  option:selected").text();
-      var region_name = $("#location_region_id  option:selected").text();
+      var province_name = $("#province_id  option:selected").text();
+      var city_name = $("#city_id  option:selected").text();
+      var region_name = $("#region_id  option:selected").text();
 
       if (province_name === "--省份--") {
         errors.push('<li class="error-message">省份不能为空</li>');
