@@ -37,13 +37,13 @@
 
               <div class="city-group">
                 <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding0">
-                  <%= f.select(:province_id, options_for_select(province_list, province_id), {prompt: '--省份--'}, {class: "city-select form-control"}) %>
+                  <%= select_tag(@location, :province_id, options_for_select(province_list, province_id), {prompt: '--省份--'}, {class: "city-select form-control"}) %>
                 </div>
                 <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding0">
-                  <%= f.select(:city_id, options_for_select(city_list, city_id), {prompt: "--城市--"}, { class: "city-select form-control" } ) %>
+                  <%= select_tag(@location, :city_id, options_for_select(city_list, city_id), {prompt: "--城市--"}, { class: "city-select form-control" } ) %>
                 </div>
                 <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding0">
-                  <%= f.select(:region_id, options_for_select(region_list, region_id), {prompt: "--地区--"}, { class: "city-select form-control" } ) %>
+                  <%= select_tag(@location, :region_id, options_for_select(region_list, region_id), {prompt: "--地区--"}, { class: "city-select form-control" } ) %>
                 </div>
               </div>
             </div>
