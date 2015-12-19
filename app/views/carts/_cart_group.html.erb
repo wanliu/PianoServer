@@ -6,8 +6,8 @@
         <input type='checkbox' class='select-all' data-supplier-id='<%= supplier.id %>' checked='checked' />
       </span>
       <span class='shop'>
-        <%= link_to shop_site_path(supplier.name) do %>
-          <%= image_tag supplier.avatar_url %><%= supplier.title %>
+        <%= link_to shop_site_path(supplier.name, format: 'html') do %>
+          <%= image_tag supplier.avatar_url %> <span class="shop-title"><%= supplier.title %></span>
         <% end %>
       </span>
     </div>

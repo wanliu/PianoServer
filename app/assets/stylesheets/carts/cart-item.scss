@@ -7,15 +7,28 @@
   }
 }
 
+
+
 .cart, .order-confirm, .buy-now-confirm {
   color: #777777;
+
+  .cart-group {
+    .shop a {
+      color: #555;
+      font-size: 18px;
+      font-weight: bolder;
+      text-decoration: none;
+    }
+  }
 
   .header {
     padding: 10px 10px;
 
     img {
-      width: 30px;
-      height: 30px;
+      width: 40px;
+      height: 40px;
+      margin-right: 10px;
+      margin-left: 5px;
     }
   }
 
