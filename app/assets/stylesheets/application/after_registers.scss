@@ -282,6 +282,20 @@
 }
 
 .smart-fill-container {
+  .smart-fill-header {
+    margin: 0 -15px 15px -15px;
+  }
+
+  .header-image {
+    width: 100%;
+    display: block;
+  }
+
+  .control-label {
+    margin-bottom: 0;
+    line-height: 34px;
+  }
+
   .error-notice {
     display: none;
   }
