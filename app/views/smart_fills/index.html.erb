@@ -6,18 +6,18 @@
   <div class="row">
     <div class="col-sm-12">
       <div class="smart-fill-header">
-        <img src="<%= image_url('sign-background-mobile.jpg') %>" class="header-image">
+        <img src="<%= image_path('sign-background-mobile.jpg') %>" class="header-image">
       </div>
       <div class="smart-fill-body">
         <form class="form-horizontal" onsubmit="return false;">
           <div class="form-group">
-            <label class="control-label col-xs-4">联系方式：</label>
+            <label class="col-xs-4">联系方式：</label>
             <div class="col-xs-8">
               <input type="text" class="form-control" name="phone">
             </div>
           </div>
           <div class="form-group">
-            <label class="control-label col-xs-4">店铺名称：</label>
+            <label class="col-xs-4">店铺名称：</label>
             <div class="col-xs-8">
               <input type="text" class="form-control" name="shop_title">
             </div>
@@ -44,8 +44,8 @@
     var reg = /^1\d{10}$/;
 
     if (!reg.test(phone)) {
+      $('.error-notice').text('联系方式格式不正确').css('display', 'inline-block');
       return;
-      $('.error-notice').text('联系方式格式不正确').css('display', 'inline');
     }
 
     $('.error-notice').text('').hide();
@@ -64,7 +64,7 @@
         if (data.success) {
           window.location.href = root_path;
         } else {
-          $('.error-notice').text(data.errors).css('display', 'inline');
+          $('.error-notice').text(data.errors).css('display', 'inline-block');
         }
       }
     });
