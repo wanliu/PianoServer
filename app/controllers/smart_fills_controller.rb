@@ -15,6 +15,7 @@ class SmartFillsController < ApplicationController
     current_user.save(:validate => false)
 
     shop = current_user.owner_shop || Shop.new(shop_params.merge(owner_id: current_user.id))
+    shop.send(:default_values)
     shop.skip_validates = true
     shop.shop_type = 'retail'
     shop.theme = Settings.shop.default_theme
