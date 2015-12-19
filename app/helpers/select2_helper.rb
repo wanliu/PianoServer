@@ -7,13 +7,15 @@ module Select2Helper
       "select2-id" => obj_id
     }
 
+    select2_options = options.delete(:select2) || {}
+
     html = <<-HTML
       #{select object_name, method, choices, options, html_options.merge(_html_options), &block}
       <script type="text/javascript">
-
-        $('[select2-id="#{obj_id}"]').select2({
-            theme: "bootstrap"
-        });
+        var options = #{select2_options.to_json};
+        $('[select2-id="#{obj_id}"]').select2($.extend({}, options, {
+          theme: "bootstrap"
+        }));
       </script>
     HTML
     html.html_safe
@@ -44,6 +46,30 @@ module Select2Helper
             type: 'PATCH'
           });
         });
+      </script>
+    HTML
+    html.html_safe
+  end
+
+  def select2_tags(object_name, method, choices = nil, options = {}, html_options = {}, &block)
+    obj_id = caller.object_id
+
+    _html_options = {
+      "select2-id" => obj_id,
+      multiple: true
+    }
+
+    # options = options.merge multiple: true
+    tags = options.delete(:tags) || true
+
+    html = <<-HTML
+      #{select object_name, method, choices, options, html_options.merge(_html_options)}
+      <script type="text/javascript">
+        var options = {}
+        $('[select2-id="#{obj_id}"]').select2($.extend({}, options, {
+          tags: #{tags.to_json},
+          theme: "bootstrap"
+        }));
       </script>
     HTML
     html.html_safe

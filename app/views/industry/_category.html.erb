@@ -2,7 +2,7 @@
 
   <h4 style= "color: #999"><%= category.title %></h4>
 
-  <% category.children.order(:id).each do |category| %>
+  <% category.children.order(:id).tagged_with(["关闭"], exclude: true).each do |category| %>
     <% classes = ["btn", params[:category_id].to_i == category.id ? "btn-primary" : "btn-link" ] %>
     <% classes.push("col-xs-4 col-sm-2") %>
 

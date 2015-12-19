@@ -1,6 +1,6 @@
 class Admins::CategoriesController < Admins::BaseController
   before_action :get_industry
-  before_action :get_category, only: [:properties, :add_property, :update_property, :remove_property, :show_inhibit, :hide_inhibit, :children, :edit, :write_item_desc, :read_item_desc, :resort]
+  before_action :get_category, only: [:properties, :add_property, :update_property, :remove_property, :show_inhibit, :hide_inhibit, :children, :edit, :update, :write_item_desc, :read_item_desc, :resort]
   before_action :get_property, only: [:add_property, :update_property, :remove_property, :resort]
 
   respond_to :js, only: [:new_property]
@@ -14,6 +14,15 @@ class Admins::CategoriesController < Admins::BaseController
 
 
   def show
+  end
+
+  def update
+    if @category.update_attributes(category_params)
+      @category.state_list = params[:category][:state_list]
+      @category.save
+    end
+
+    render json: @category
   end
 
   def properties
@@ -127,5 +136,9 @@ class Admins::CategoriesController < Admins::BaseController
 
   def get_property
     @property = Property.find(params[:property_id])
+  end
+
+  def category_params
+    params.require(:category).permit(:name, :title, :state_list)
   end
 end

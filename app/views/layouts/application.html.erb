@@ -143,9 +143,6 @@
 
     <%= render "application/sidebar_menu" %>
     <%= render "application/fixed_position_patch" %>
-    <% if Settings.dev.feature.ccnz %>
-      <%= render "ccnz" %>
-    <% end %>
     <script type="text/javascript">
       <% unless Rails.env.production? %>
         console.log('development version: <%= PianoServer::VERSION %>')
@@ -159,5 +156,8 @@
 
 
     </script>
+    <% if Settings.dev.feature.ccnz %>
+      <%= render "cnzz" %>
+    <% end %>
   </body>
 </html>
