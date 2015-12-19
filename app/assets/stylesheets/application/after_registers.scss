@@ -294,6 +294,14 @@
   .control-label {
     margin-bottom: 0;
     line-height: 34px;
+    float: left;
+    padding-left: 15px;
+    width: 90px;
+  }
+
+  .input-wrap {
+    padding-left: 100px;
+    padding-right: 15px;
   }
 
   .error-notice {
