@@ -65,6 +65,7 @@ dev:
     industry: true
     weixin: true
     person_page: true
+    to_be_supplier: false
 job:
   async: open
 sites:

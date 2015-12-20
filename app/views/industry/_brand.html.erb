@@ -1,5 +1,6 @@
 <%= check_box_tag "brands_ids[]", brand.id, brand_ids.include?(brand.id.to_s), class: 'hide brand-item', id: "brand_#{brand.id}" %>
-<%= label_tag "brand_#{brand.id}", class: "list-group-item brand-link", data: { brand_id: brand.id } do %>
-  <span class="brand-mark pull-right" ><%=icon :ok %></span>
-  <%= image_tag brand.image.url, size: "64x32" %>&nbsp;&nbsp;<%= brand.title %>
+  <%= label_tag "brand_#{brand.id}", class: "list-group-item brand-link", data: { brand_id: brand.id } do %>
+    <span class="brand-mark" ><%=icon :ok %></span>
+    <%= image_tag brand.image.url, size: "64x32" %>
+    <span class="title"><%= brand.title %></span>
 <% end %>
