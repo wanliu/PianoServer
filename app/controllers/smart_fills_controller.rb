@@ -12,6 +12,7 @@ class SmartFillsController < ApplicationController
 
   def fast_register
     current_user.user_type = "retail"
+    current_user.mobile = params[:shop][:phone]
     current_user.save(:validate => false)
 
     shop = current_user.owner_shop || Shop.new(shop_params.merge(owner_id: current_user.id))
