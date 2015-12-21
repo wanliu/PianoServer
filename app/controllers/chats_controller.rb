@@ -4,6 +4,7 @@ class ChatsController < ApplicationController
   set_parent_param :promotion_id, class_name: 'Promotion'
   before_action :chat_variables, only: [:owner, :target, :channel]
   before_action :get_intention, only: [:owner, :target, :channel, :shop_items]
+  before_action :authenticate_user!, only: [:match]
   # before_action :set_page_info, only: [:show]
 
   def index
@@ -125,6 +126,14 @@ class ChatsController < ApplicationController
 	    @intention.items.add_promotion(@promotion)
 	  end
 	end
+
+  def match
+    owner_id = params[:oid]
+    target_id = params[:tid]
+
+    chat = Chat.both(owner_id, target_id).last
+    redirect_to chat_path(chat)
+  end
 
 	private
 

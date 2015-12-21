@@ -215,7 +215,11 @@ Rails.application.routes.draw do
   resources :categories
   resources :units, only: [:index, :show]
 
-  resources :chats
+  resources :chats do
+    collection do
+      get :match
+    end
+  end
   resources :intentions do
     member do
       get 'status', to: "intentions#status", as: :status_of
