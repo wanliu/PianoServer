@@ -16,7 +16,7 @@
 //= require ace/mode-liquid
 //= require ace/ext-language_tools
 //= require best_in_place
-//= require select2
+//= require select2.full
 //= require select2_locale_zh-CN
 //= require picturefill.all
 //= require _common/fileuploader

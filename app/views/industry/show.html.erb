@@ -55,7 +55,7 @@
       </div>
 
         <%#= render partial: "category", locals: { category: @industry.category} %>
-      <%= render partial: "category", collection: @industry.category.children.order(:id), locals: { region: @current_region } %>
+      <%= render partial: "category", collection: @categories, locals: { region: @current_region } %>
       <% end %>
     <% else %>
       <div class="well">
@@ -86,4 +86,3 @@
     });
   });
 </script>
-

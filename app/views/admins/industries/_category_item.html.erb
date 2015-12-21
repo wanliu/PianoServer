@@ -1,5 +1,10 @@
 <a class="list-group-item<%= category_item.try(:open) ? ' open': ''%>  category-item child-<%= child_depth category_item %>" href='javascript: void(0);' data-category-id="<%= category_item.id %>" data-is-leaf='<%= category_item.is_leaf %>' data-children-fetched='false'>
   <%= toggle_arrow category_item %> <%= category_item.title %>
+  <span class="pull-right">
+    <% category_item.state_list.each do |state| %>
+      <%= color_label_with_name state %>
+    <% end %>
+  </span>
 </a>
 
 <% unless category_item.is_leaf %>

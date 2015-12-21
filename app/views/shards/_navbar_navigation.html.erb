@@ -3,9 +3,6 @@
 
       <% if disable_navbar? %>
         <li><%= link_to "关于我们", about_path  %></li>
-        <% if Settings.dev.feature.qrcode %>
-        <li><%= link_to "二维码", "#share-url-qrcode" , "data-toggle"=>"modal" %></li>
-        <% end %>
 
         <% if Settings.dev.feature.industry %>
           <% if @industry %>
@@ -24,13 +21,18 @@
         <% if Settings.dev.feature.cart %>
           <%= render "shards/cart" %>
         <% end %>
-  
-        <% if Settings.dev.feature.weixin %>
+
+        <% if Settings.dev.feature.weixin && false %>
         <li><%= link_to "微信登陆", authorize_weixin_path %></li>
         <% end %>
+        <% if Settings.dev.feature.qrcode %>
+          <li class="menu-margin">
+            <%= link_to "#share-url-qrcode" , "data-toggle"=>"modal" do %>
+              <%= icon :qrcode %>
+            <% end %>
+          </li>
+          <% end %>
       <% end %>
-
         <%= render "shards/profile_menu" %>
-
       </ul>
     </div>
