@@ -12,19 +12,19 @@
         <li><%= link_to "我的收藏", "/favorites", target: '_blank' %></li>
         <% end %>
 
+        <% if current_user.user_type != 'consumer' && !current_user.is_done? %>
+          <li><%= link_to '完善店铺信息', after_register_path(current_user.user_type), target: '_blank' %></li>
+        <% elsif current_user.user_type == 'consumer' %>
+          <li><%= link_to '升级企业用户', reset_after_registers_path, target: '_blank' %></li>
+        <% end %>
+
         <% if current_user.join_shop %>
           <li><%= link_to '我的店铺', shop_site_path(current_user.join_shop.name), target: '_blank' %></li>
           <li><%= link_to '店铺管理', shop_admin_index_path(current_user.join_shop.name), target: '_blank' %></li>
-
-          <% if current_user.user_type != 'consumer' && !current_user.is_done? %>
-            <li><%= link_to '完善店铺信息', after_register_path(current_user.user_type), target: '_blank' %></li>
-          <% elsif current_user.user_type == 'consumer' %>
-            <li><%= link_to '升级企业用户', reset_after_registers_path, target: '_blank' %></li>
-          <% end %>
-
         <% end %>
+
         <li role="separator" class="divider"></li>
-        <li><%= link_to '登出', destroy_user_session_path, method: :delete %>
+        <li><%= link_to '登出', destroy_user_session_path, method: :delete %></li>
       </ul>
     </li>
   <% end %>
