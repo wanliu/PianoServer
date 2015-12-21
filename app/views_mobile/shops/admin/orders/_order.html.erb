@@ -12,7 +12,7 @@
     <%= render partial: "order_item", collection: order.items, as: :item, locals: { supplier: order.supplier } %>
     <li class="list-group-item order-item">
       <div class='text-right'>
-        一共<%= order.items_count %> 件商品&emsp;&emsp;合计：<span class='total'><%= number_to_currency order.total %></span>元
+        一共<%= order.items_count %> 件商品&emsp;合计：<span class='total'><%= number_to_currency order.total %></span>元
       </div>
     </li>
   </ul>

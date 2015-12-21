@@ -36,7 +36,7 @@
         <tr class='footer'>
           <td colspan='5' class='text-right'>
             <span>
-              已选择<span class='total-quantity'><%= @order_item.quantity %></span> 件商品&emsp;&emsp;合计<span class='total-total'><%= @order_item.price * @order_item.quantity %></span>元
+              已选择<span class='total-quantity'><%= @order_item.quantity %></span> 件商品&emsp;合计<span class='total-total'><%= @order_item.price * @order_item.quantity %></span>元
             </span>
             <%= f.submit "提交订单", class: 'submit'%>
           </td>

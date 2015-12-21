@@ -58,6 +58,6 @@ dataConfirmModal.setDefaults({
   cancel: '取消'
 });
 
-$(function() {
-    FastClick.attach(document.body);
-});
+// $(function() {
+//     FastClick.attach(document.body);
+// });
