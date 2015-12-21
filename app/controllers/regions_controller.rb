@@ -11,7 +11,8 @@ class RegionsController < ApplicationController
       :httponly => true
     }
 
-    redirect_to callback_url || root_path
+    redirect_to callback_url
+    clear_callback
   end
 
   def retrive
