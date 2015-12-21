@@ -27,7 +27,7 @@
         <% end %>
         <% if Settings.dev.feature.qrcode %>
           <li class="menu-margin">
-            <%= link_to "#share-url-qrcode" , "data-toggle"=>"modal" do %>
+            <%= link_to "#share-url-qrcode", class:"qrcode", "data-toggle"=>"modal" do %>
               <%= icon :qrcode %>
             <% end %>
           </li>

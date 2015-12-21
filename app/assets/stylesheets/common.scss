@@ -1,5 +1,12 @@
-.nav > li > a {
-  padding: 15px 10px;
+.main-navbar {
+  .qrcode {
+    padding-top: 0;
+    padding-bottom: 0;
+    span {
+      line-height: 50px;
+      font-size: 20px;
+    }
+  }
 }
 
 @media (max-width: 484px) {
