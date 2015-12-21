@@ -10,6 +10,7 @@ class ShopsController < ApplicationController
 
     unless ShopService.valid?(@shop)
       ShopService.build(params[:shop_name])
+      @shop.reload
     end
 
     @current_user = current_anonymous_or_user
