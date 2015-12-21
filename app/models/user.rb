@@ -139,6 +139,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def sms_forward?
+    distributor?
+  end
+
   private
 
   def generate_authentication_token
@@ -155,7 +159,8 @@ class User < ActiveRecord::Base
     pusher_token = Settings.pusher.pusher_token.clone
     pusher_url << 'users'
 
-    options = {id: "#{id}", token: pusher_token, login: username, realname: nickname, avatar_url: avatar_url }
+    options = {id: "#{id}", token: pusher_token, login: username,
+      realname: nickname, avatar_url: avatar_url, mobile: mobile, sms_forward: sms_forward? }
 
     if owner_shop.present?
        options.merge! shop_name: owner_shop.name
