@@ -3,7 +3,7 @@
     <div class="panel-body">
       <div class='title'>
         订单信息
-        <span class='shop pull-right'>
+        <span class='shop-info'>
           <%= link_to shop_site_path(@order.supplier.name) do %>
             <%= image_tag @order.supplier.avatar_url %><%= @order.supplier.title %>
           <% end %>
@@ -61,7 +61,7 @@
             <tr>
               <td colspan='5'>
                 <div class='text-right'>
-                  一共<%= @order.items_count %>件商品 合计： <%= number_to_currency @order.total %>元
+                  一共<%= @order.items_count %> 件商品&emsp;合计： <%= number_to_currency @order.total %>元
                   <h4>付款：<span class='total'><%= number_to_currency @order.total %>元</span></h4>
                 </div>
               </td>
