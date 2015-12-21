@@ -127,7 +127,7 @@
       dataType: 'json',
       success: function (data) {
         if (data.success) {
-          window.location.href = data.callback_url;
+          window.location.href = root_path;
         } else {
           $('.error-notice').text(data.errors).css('display', 'inline-block');
         }
