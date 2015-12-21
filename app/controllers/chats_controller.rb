@@ -4,6 +4,7 @@ class ChatsController < ApplicationController
   set_parent_param :promotion_id, class_name: 'Promotion'
   before_action :chat_variables, only: [:owner, :target, :channel]
   before_action :get_intention, only: [:owner, :target, :channel, :shop_items]
+  before_action :authenticate_user!, only: [:match]
   # before_action :set_page_info, only: [:show]
 
   def index
@@ -86,6 +87,7 @@ class ChatsController < ApplicationController
 
 		@target = my_chat? ? @chat.target : @chat.owner
     @chats = Chat.in(current_anonymous_or_user.id)
+    @shop = @chat.chatable_type == Shop.name ? Shop.find(@chat.chatable_id) : nil
 
     set_page_title "与 #{@target.name} 洽谈"
     set_page_navbar "#{@target.name}", @target.is_a?(Shop) ? shop_site_path(@target.name) : ''
@@ -124,6 +126,14 @@ class ChatsController < ApplicationController
 	    @intention.items.add_promotion(@promotion)
 	  end
 	end
+
+  def match
+    owner_id = params[:oid]
+    target_id = params[:tid]
+
+    chat = Chat.both(owner_id, target_id).last
+    redirect_to chat_path(chat)
+  end
 
 	private
 

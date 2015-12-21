@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
   before_action :prepare_system_view_path
   before_action :set_locale
 
-  helper_method :current_anonymous_or_user, :anonymous?, :current_cart, :mobile?, :weixin_device?
+  helper_method :current_anonymous_or_user, :anonymous?, :current_cart, :mobile?, :weixin_device?, :current_subject
 
   rescue_from ActionController::RoutingError, :with => :render_404
   rescue_from ActiveResource::ResourceNotFound, :with => :render_404
@@ -105,7 +105,7 @@ class ApplicationController < ActionController::Base
   def authenticate_region!
     @region = cookie_region :region_id do |region, path|
       if region.blank?
-        redirect_to path
+        redirect_to_and_return path
         return false
       end
     end
@@ -180,5 +180,34 @@ class ApplicationController < ActionController::Base
   def weixin_device?
     agent_str = request.user_agent.to_s.downcase
     return agent_str =~ /micromessenger/
+  end
+
+  def check_for_mobile
+    prepare_for_mobile if mobile?
+  end
+
+  def prepare_for_mobile
+    prepend_view_path Rails.root + 'app' + 'views_mobile'
+  end
+
+  def redirect_to_with_callback(url, callback, options = {})
+    url =
+      case url
+      when String
+        url
+      when Hash, Array
+        url_for(url)
+      else
+        throw ArgumentError.new('invalide url argument type')
+      end
+
+    uri = URI.parse(url)
+    query = Hash[URI.decode_www_form(uri.query || '')]
+    uri.query = URI.encode_www_form(query.merge(callback: callback))
+    redirect_to uri.to_s, options
+  end
+
+  def redirect_to_and_return(url, options = {})
+    redirect_to_with_callback url, request.url, options
   end
 end

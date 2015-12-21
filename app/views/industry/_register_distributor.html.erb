@@ -1,3 +1,11 @@
 <!-- <div class="well"> -->
-    <p><a class="btn btn-success btn-lg" href="#" role="button">我要供货</a></p>
+    <p>
+      <% if Settings.dev.feature.to_be_supplier %>
+        <% if current_user.user_type == 'distributor' %>
+          <%= link_to "我要供货", after_registers_path, class: "btn btn-success btn-lg" %>
+        <% elsif current_user.user_type == 'retail' %>
+          <%= link_to "我要供货", upgrade_after_registers_path, class: "btn btn-success btn-lg", method: 'POST', data: { confirm: "确认升级为供货商吗？" } %>
+        <% end %>
+      <% end %>
+    </p>
 <!-- </div> -->

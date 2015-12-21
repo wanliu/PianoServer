@@ -1,5 +1,6 @@
 $ () ->
   $('.js-buy-now').click (event) ->
+    return if $(@).hasClass('disabled')
     cartableType = $(@).data('cartableType')
     cartableId = $(@).data('cartableId')
     properties = ($(@).data('properties') || {})

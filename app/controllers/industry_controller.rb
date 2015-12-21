@@ -8,6 +8,7 @@ class IndustryController < ApplicationController
   def show
     @regions = get_regions(@region)
     @current_region = @region
+    @categories = @industry.category.children.order(:id).tagged_with(["关闭"], exclude: true)
     region_updowns
 
   end
@@ -16,7 +17,9 @@ class IndustryController < ApplicationController
     @category = Category.find(params[:category_id])
     @current_region = Region.find(params[:region_id])
     # @region = Category.find(params[:region_id])
-    @brands = Brand.with_category(params[:category_id])
+    @brands = Brand.with_category(params[:category_id]) do |categories, query|
+      Brand.with_labels(categories)
+    end
     @brands_group = @brands.group_by { |brand| Pinyin.t(brand.title, splitter: '')[0].upcase }.sort {|a,b| a[0]<=>b[0]}
   end
 
@@ -31,7 +34,7 @@ class IndustryController < ApplicationController
     @shops = Shop
       .joins(:items)
       .where("items.category_id in (?)", [ @category.id, *@category.descendants ])
-      .where("items.brand_id in (?)", brands_ids.map(&:to_i))
+      .with_brands(brands_ids)
       .where("shops.industry_id = ?", @industry.id)
       .where("shops.region_id = ?", @current_region.city_id)
       .group("shops.id")
@@ -45,6 +48,7 @@ class IndustryController < ApplicationController
     @current_region = Region.find(params[:region_id])
     @regions = get_regions(@region)
     region_updowns
+    @categories = @industry.category.children.order(:id).tagged_with(["关闭"], exclude: true)
 
     render :show, with: @industry
   end
@@ -54,7 +58,7 @@ class IndustryController < ApplicationController
   end
 
   def brands_ids
-    params[:brands_ids].present? ? params[:brands_ids]: [params[:brand_id]]
+    params[:brands_ids].present? ? params[:brands_ids]: [params[:brand_id]].compact
   end
 
   private

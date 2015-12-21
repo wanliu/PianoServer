@@ -99,26 +99,37 @@
     <%# end %>
 
     <%= yield :fixed_bottom %>
+
     <div class="chat-notices"></div>
     <div class="menu-container"></div>
     <div class="main-container">
       <div class="menu-overlayer"></div>
-      <%= bootstrap_flash %>
-      <%= yield %>
-      <% case _module %>
-      <% when NilClass %>
-        <% cache ["footer", @subject ] do %>
-          <%= render "footer", with: @subject %>
+
+        <% if _module == 'subject' %>
+          <%= bootstrap_flash %>
+        <% else %>
+          <div class="container"><%= bootstrap_flash %></div>
         <% end %>
-      <% when "shop" %>
-        <% cache ["footer", @shop ] do %>
-          <%= render "footer", with: @shop %>
+
+        <%= yield %>
+        <% case _module %>
+        <% when NilClass %>
+          <% cache "footer" do %>
+            <%= render "application/footer" %>
+          <% end %>
+        <% when "shop" %>
+          <% cache ["footer", @shop ] do %>
+            <%= render "footer", with: @shop %>
+          <% end %>
+        <% when "subject" %>
+          <% cache ["footer", @subject ] do %>
+            <%= render "footer", with: @subject %>
+          <% end %>
+        <% else %>
+          <% cache "footer" do %>
+            <%= render "application/footer" %>
+          <% end %>
         <% end %>
-      <% else %>
-        <% cache "footer" do %>
-          <%= render "application/footer" %>
-        <% end %>
-      <% end %>
     </div>
 
     <% cache ['qrcode', request.url] do %>
@@ -130,18 +141,23 @@
       <%= render "application/pswp" %>
     <% end %>
 
-    <% if content_for(:module) != "after_registers" %>
-      <%# cache [ "sidebar_menu", current_anonymous_or_user ] do %>
-        <%= render "application/sidebar_menu" %>
-      <%# end %>
-    <% end %>
-    <% if Settings.dev.feature.ccnz %>
-      <%= render "ccnz" %>
-    <% end %>
+    <%= render "application/sidebar_menu" %>
+    <%= render "application/fixed_position_patch" %>
     <script type="text/javascript">
       <% unless Rails.env.production? %>
         console.log('development version: <%= PianoServer::VERSION %>')
       <% end %>
+
+      $(document).one('page:change', function(event) {
+        $('img').error(function(){
+          $(this).attr("src","<%= image_path('img_error.jpg') %>")
+        })
+      });
+
+
     </script>
+    <% if Settings.dev.feature.ccnz %>
+      <%= render "cnzz" %>
+    <% end %>
   </body>
 </html>

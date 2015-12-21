@@ -21,10 +21,10 @@ module ContentManagement
       template_class = options[:template_class] || PartialTemplateObject
 
       if with_object = options[:with]
-        template_object = template_class.new(with_object)
+        template_object = template_class.new(with_object, options[:partial])
         # self.assigns["templable_object"] = template_object
 
-        name, type = template_object.view_name(options[:partial])
+        name, type = template_object.view_name
         if type == :file && options[:collection]
           options[:partial] = template_object.send(:_normalize_path, name)
         elsif type == :file
@@ -33,6 +33,9 @@ module ContentManagement
         else
           options[:partial] = name
         end
+
+        options[:template_object] = template_object.template
+
         # options[:partial] = options[:filename] || template_object.view_name(options[:partial])
         template_object.paths.each do |path|
           push_view_paths path

@@ -1,0 +1,42 @@
+{% module shop %}
+{% include "style" %}
+
+{% include "header" %}
+
+<div class="container">
+  <div class="row">
+    <div class="cate-items-list clearfix col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+
+      {% paginate shop_categories by 12 %}
+
+        <div class="shop-categories">
+          <div class="text-center category-title">
+            <img class="category-title-img" src="http://wanliu-piano.b0.upaiyun.com/uploads/shop/poster/100159/00a5544b3daa54259e2d855392c0c306.png" alt="本店经营系列">
+          </div>
+          
+          <div class="row">
+            {% include "category" for paginate.collection %}
+          </div>
+
+          <nav class="text-center">
+            <ul class="pagination">
+              {% for part in paginate.parts %}
+                {% if part.is_link %}
+                  <li >
+                    {{ part.title | link_to:  part.url }}
+                  </li>
+                {% else %}
+                  <li class="active">
+                    <span>{{ part.title }}<span class="sr-only">(current)</span></span>
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </nav>
+
+        </div>
+      {% endpaginate %}
+    </div>
+  </div>
+</div>

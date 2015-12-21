@@ -21,9 +21,17 @@
           <%= phone_link shop.phone, class: 'button telephone' do %>
             <%= icon 'phone-alt' %> <%= shop.phone %>
           <% end %>
-          <%= link_to '#', class: "button chat" do %>
-            <%= icon :comment %> 洽谈
+
+          <% if shop.owner_id == current_user.id %>
+            <span class="button chat">
+              <span>您的店铺</span>
+            </span>
+          <% else %>
+            <%= link_to chats_path(shop_id: shop.id), class: "button chat", method: 'POST' do %>
+              <%= icon :comment %> 洽谈
+            <% end %>
           <% end %>
+
           <%= link_to shop_site_path(shop.name, format: 'html'), class: "button website" do %>
             <%= icon :home %> 网店
           <% end %>

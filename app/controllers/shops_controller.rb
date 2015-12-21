@@ -10,8 +10,10 @@ class ShopsController < ApplicationController
 
     unless ShopService.valid?(@shop)
       ShopService.build(params[:shop_name])
+      @shop.reload
     end
 
+    @current_user = current_anonymous_or_user
     @root = @shop.shop_category(true)
     @shop_categories = @root.children.where(status: true)
     @theme_path = @shop.theme.blank? ? "shops" : "themes/#{@shop.theme}"

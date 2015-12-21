@@ -1,4 +1,5 @@
 <%= link_to shops_industry_path(@industry.name, category_id: @category, brand_id: brand_link, region_id: region), "brand_#{brand_link.id}", class: "list-group-item brand-link", data: { brand_id: brand_link.id } do %>
-  <span class="brand-mark pull-right" ><%=icon :ok %></span>
-  <%= image_tag brand_link.image.url, size: "64x32" %>&nbsp;&nbsp;<%= brand_link.title %>
+  <span class="brand-mark" ><%=icon :ok %></span>
+  <%= image_tag brand_link.image.url, size: "64x32" %>
+  <span class="title"><%= brand_link.title %></span>
 <% end %>

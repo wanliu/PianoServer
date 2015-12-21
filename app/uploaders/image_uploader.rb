@@ -28,16 +28,19 @@ class ImageUploader < CarrierWave::Uploader::Base
   end
 
   def url_with_version(version_name = "default")
-    @url ||= url_without_version
+    url_version(url_without_version, version_name)
+  end
 
-    version_name = version_name.to_s
-    return @url if version_name.blank?
+  def url_version(url, version = "default")
+    version_name = version.to_s
+    return url if version_name.blank?
+
     if not version_name.in?(IMAGE_UPLOADER_ALLOW_IMAGE_VERSION_NAMES)
       # To protected version name using, when it not defined, this will be give an error message in development environment
       raise "ImageUploader version_name:#{version_name} not allow."
     end
-    version_urls = version_name == "default" ? [@url] : [@url,version_name]
-    blank_image? ? @url : version_urls.join("!")
+    version_urls = version_name == "default" ? [url] : [url,version_name]
+    blank_image? ? url : version_urls.join("!")
   end
 
   def blank_image?()
@@ -48,7 +51,12 @@ class ImageUploader < CarrierWave::Uploader::Base
     pure_image = self.path && self.path.is_a?(String) ? self.path.sub(/^#{self.store_path}/, '') : ''
 
     if absolute_url?(pure_image)
-      pure_image
+      if alliance_urls?(pure_image)
+        url_version(pure_image, *args)
+        # url_without_absolute_path(*args)
+      else
+        pure_image
+      end
     else
       url_without_absolute_path(*args)
     end
@@ -90,6 +98,10 @@ class ImageUploader < CarrierWave::Uploader::Base
 
   def absolute_url?(url)
     HTTP_PREFIX =~ url
+  end
+
+  def alliance_urls?(url)
+    Settings.assets.alliance_hosts.any? {|host| url.start_with? host }
   end
 
   alias_method_chain :url, :version

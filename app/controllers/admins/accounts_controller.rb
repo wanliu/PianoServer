@@ -94,6 +94,16 @@ class Admins::AccountsController < Admins::BaseController
     head :no_content
   end
 
+  def upload_user_avatar
+    user = User.find(params[:user_id])
+
+    user.update_attribute('image', params[:file])
+    render json: { success: true, url: user.image.url(:cover), filename: user.image.filename }, stauts: :created
+    # else
+    #   render json: { success: false, errors: user.errors }, status: :unprocessable_entity
+    # end
+  end
+
   private
 
   def set_admins_account

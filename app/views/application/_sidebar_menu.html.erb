@@ -67,7 +67,7 @@
 
   menu.insertGroup('about', 'chats', '关于我们', {iconClass: 'glyphicon glyphicon-blackboard' });
   <% if Settings.dev.feature.industry %>
-    <% if @industry %>
+    <% if @industry && @industry.id %>
       route = '<%= industry_path(@industry.name) %>';
       menu.insertGroup(route, 'industry', '行业', { iconClass: 'glyphicon glyphicon-flag' });
     <% end %>
@@ -106,9 +106,17 @@
     }
   });
 
-  $(document).on('cart_quantity_changed', function (e, diff) {
-    if (window.manager) {
-      window.manager.updateCartQuantity(diff);
-    }
-  });
+  $(document)
+    .on('purchase_orders_quantity_changed', function (e, quantity) {
+      if (window.manager) {
+        window.manager.updatePurchaseOrderQuantity(quantity);
+      }
+    });
+
+  $(document)
+    .on('cart_quantity_changed', function (e, quantity) {
+      if (window.manager) {
+        window.manager.updateCartQuantity(quantity);
+      }
+    });
 </script>

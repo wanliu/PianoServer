@@ -1,14 +1,21 @@
 .promotion-detail-container{
+  margin-bottom: 30px;
   @media (max-width: 484px){
     padding-left: 0;
     padding-right: 0;
+  }
+
+  .reset-a {
+    color: #333;
+    text-decoration: none;
   }
 
   .promotion-detail-content {
     background: #FFFFFF;
   }
 
-  .promotion-poster-image{
+  .promotion-poster-image {
+    text-align: center;
     width: 50%;
     margin: 0 auto;
     overflow: hidden;
@@ -16,7 +23,7 @@
       width: 100%;
     }
 
-    .promotion-poster{
+    .promotion-poster {
       max-width: 100%;
       height: auto;
       width: 100%\9;
@@ -86,20 +93,111 @@
     }
   }
 
+  .bottom-infos-wrap {
+    border-top: 1px solid #ddd;
+    padding: 15px;
+    margin-top: 0;
+  }
+
+  .promotion-options-wrap {
+    margin-top: 0;
+    padding: 15px;
+
+    >.media-body {
+      position: relative;
+    }
+
+    .option-group {
+      margin-bottom: 15px;
+    }
+
+    .btn-danger {
+      background: #FF2B2A;
+      border-color: #FF2B2A;
+    }
+
+    .btn-warning {
+      background: #FF962F;
+      border-color: #FF962F;
+    }
+
+    .minus_plus_input {
+      width: 60px;
+    }
+
+    .buy-buttons {
+      position: absolute;
+      bottom: 0;
+      right: 16%;
+    }
+
+    .promotion-option-form {
+      @media (min-width: 768) {
+        padding-bottom: 50px;
+      }
+    }
+
+    .right-infos-wrap {
+      position: relative;
+      width: 30%;
+      padding: 0 15px 50px 15px;
+      padding-right: 0;
+      border-left: 1px solid #ddd;
+
+      .shop-link {
+        margin-bottom: 15px;
+        display: block;
+        background: #f2f2f2;
+      }
+
+      .right-fllow-wrap{
+        bottom: 0;
+        position: absolute;
+        width: 100%;
+
+        .follow,
+        .follow-btn {
+          display: block;
+          padding: 12px 0;
+          border: 1px solid #F12A39;
+          color: #333;
+        }
+        .follow {
+          margin-right: -15px;
+          border-top-left-radius: 5px;
+          border-bottom-left-radius: 5px;
+          background: #FFF2F2;
+        }
+        .follow-btn {
+          text-decoration: none;
+          margin-left: -16px;
+          background: #F12A39;
+          color: #fff;
+          border-top-right-radius: 5px;
+          border-bottom-right-radius: 5px;
+          &:hover {
+            background: #EF1626;
+          }
+        }
+      }
+    }
+  }
+
   .title-contact{
-    margin: 1.5em 0;
+    margin: 0;
+    padding: 20px 15px;
     display: table;
     width: 100%;
+    border-bottom: 1px solid #ddd;
 
     .promotion-title{
       display: table-cell;
       vertical-align: middle;
-      padding: 0 15px;
     }
 
     .promotion-favors, .promotion-likers{
       display: table-cell;
-      width: 18%;
+      width: 15%;
       text-align: center;
       vertical-align: middle;
       color: #666666;
@@ -176,7 +274,7 @@
 }
 
 .detail-link-table-container{
-  background-color:#f0f0f0;
+  background: rgba(177, 177, 177, 0.9);
   position: fixed;
   bottom: 0;
   left: 0;
@@ -193,10 +291,13 @@
   .contact-button{
     display: table-cell;
     width: 20%;
+    text-decoration: none;
+    color: #333;
     text-align: center;
     cursor: pointer;
     vertical-align: middle;
     line-height: 100%;
+    position: relative;
 
     .button-text{
       text-align: center;
@@ -204,8 +305,28 @@
     }
   }
 
-  .into-shop, .fav-button{
+  .shop-cart {
+    .glyphicon {
+      font-size: 26px;
+      color: #333;
+    }
+    .badge {
+      position: absolute;
+      background: rgba(66, 66, 66, 0.75);
+      border: 1px solid #fff;
+      left: 50%;
+      top: 3px;
+    }
+  }
+
+  .into-shop,
+  .fav-button {
     border-right: 1px solid #DDDDDD;
+  }
+
+  .add-to-cart {
+    background: #FF900E;
+    color: #fff;
   }
 
   .into-shop{
@@ -217,7 +338,7 @@
   }
 
   .buy-now{
-    background-color: #FF7C00;
+    background-color: #FF4F00;
   }
 
   .chat {

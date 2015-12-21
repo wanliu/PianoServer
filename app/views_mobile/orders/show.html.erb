@@ -1,0 +1,90 @@
+<div class='order'>
+  <ul class="nav nav-pills">
+    <li role="presentation" class="header-show">
+      <a href="javascript: void(0)">
+        <h4>订单详情</h4>
+      </a>
+    </li>
+  </ul>
+
+  <div class='info-head'>
+    <% if @order.finish? %>
+      <div class='notification pull-left'>
+        <h4>订单已经完成</h4>
+        <h4>交易成功！</h4>
+      </div>
+      <div style='clear: both;'></div>
+      <%= image_tag 'order-finish.png', class: 'status pull-right' %>
+    <% else %>
+      <div class='notification pull-left'>
+        <h4>订单提交成功</h4>
+        <h4>等待买家确认</h4>
+      </div>
+      <div style='clear: both;'></div>
+      <%= image_tag 'order-delivery.png', class: 'status pull-right' %>
+    <% end %>
+  </div>
+
+  <div class='receiver-info'>
+    <div>收 货 人：<%= @order.receiver_name %></div>
+    <div>地 &nbsp;&nbsp;&nbsp;&nbsp; 址：<%= @order.delivery_address %></div>
+    <div>电 &nbsp;&nbsp;&nbsp;&nbsp; 话：<%= @order.receiver_phone %></div>
+  </div>
+
+  <div class='details'>
+    <div>订 单 号： <%= @order.id %></div>
+    <div>创建时间：<%= @order.created_at.strftime("%Y/%m/%d %H:%M") %></div>
+  </div>
+
+  <ul class="list-group order-items">
+    <li class="list-group-item order-item">
+      <span class='shop'>
+        <%= link_to shop_site_path(@order.supplier.name) do %>
+          <%= image_tag @order.supplier.avatar_url %><%= @order.supplier.title %>
+        <% end %>
+        <span class='pull-right'>订单号: <%= @order.id %></span>
+      </span>
+    </li>
+    <%= render partial: "order_item", collection: @order.items, as: :item, locals: { supplier: @order.supplier } %>
+    <li class="list-group-item order-item">
+      <div class='text-right'>
+        一共<%= @order.items_count %> 件商品&emsp;合计： <%= number_to_currency @order.total %>元
+        <h4>付款：<span class='total'><%= number_to_currency @order.total %>元</span></h4>
+      </div>
+    </li>
+  </ul>
+
+  <% unless @order.finish? %>
+  <nav class="navbar navbar-default navbar-fixed-bottom">
+    <div class="container">
+      <div class='operation pull-right'>
+        <span class="now-you-can" >您现在可以</span>
+        <button type="button" class="order-finish btn btn-danger" data-toggle="modal" data-target="#finish-order-<%= @order.id %>">
+          确认收货
+        </button>
+      </div>
+    </div>
+  </nav>
+
+    <div class="modal fade" id="finish-order-<%= @order.id %>" tabindex="-1" role="dialog" aria-labelledby="myOrderLable<%= @order.id %>">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h4 class="modal-title" id="myOrderLable<%= @order.id %>">确认收货</h4>
+            </div>
+            <div class="modal-body">
+              订单号: <%= @order.id %> 确认收货?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+              <%= link_to "确认收货", order_path(@order, "order[status]" => "finish"), method: :patch, class: 'btn btn-primary' %>
+              <!-- <button type="button" class="btn btn-primary"></button> -->
+            </div>
+          </div>
+        </div>
+      </div>
+  <% end %>
+</div>

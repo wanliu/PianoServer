@@ -42,6 +42,7 @@
 //= require lib/pastemedia
 //= require lib/ajax_status
 //= require lib/jquery.path
+//= require lib/fastclick
 //= require utils/alert-dismiss
 //= require utils/parseUrl
 //= require _common/fileuploader
@@ -53,7 +54,7 @@
 //= require _common/adjust_container
 //= require _common/side_menu
 //= require _common/side_menu_manager
-//= require lib/jquery.hammer
+//!= require lib/jquery.hammer
 //= require_tree ./application
 //= require_tree ./chats
 //= require_tree ./carts
@@ -68,3 +69,7 @@ dataConfirmModal.setDefaults({
   commit: '确定',
   cancel: '取消'
 });
+
+// $(function() {
+//     FastClick.attach(document.body);
+// });

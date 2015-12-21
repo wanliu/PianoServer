@@ -1,3 +1,14 @@
+.main-navbar {
+  .qrcode {
+    padding-top: 0;
+    padding-bottom: 0;
+    span {
+      line-height: 50px;
+      font-size: 20px;
+    }
+  }
+}
+
 @media (max-width: 484px) {
   .container, .container-fluid {
     padding-left: 10px;

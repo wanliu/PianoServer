@@ -5,8 +5,9 @@ $ ()->
     cartableId   = $(@).data('cartableId')
     moveable     = $(@).data('moveable')
     properties   = $(@).data('properties') || {}
-    target       = if $(window).width() < 768 then $('.navbar-toggle') else $('.mycart')
+    target       = if $(window).width() < 768 then $('.shop-cart') else $('.mycart')
     $quantityInput = $(@).parents('form').find('input.cart_item_quantity')
+
     quantity = if $quantityInput.length
       $quantityInput.val() || 1
     else
@@ -55,7 +56,7 @@ $ ()->
         $divider.before(html)
 
       $('.cart-item-count').text(data.items_count)
-      $(document).trigger('cart_quantity_changed', [ quantity ])
+      $(document).trigger('cart_quantity_changed', [ data.items_count ])
 
       animate()
 
@@ -68,6 +69,14 @@ $ ()->
             createInventoryLackModal()
 
         $inventoryLackModal.modal('show')
+      else if data.responseJSON.orderable_id
+        $itemOffSaleModal =
+          if $('#item-off-sale-modal').length
+            $('#item-off-sale-modal')
+          else
+            createItemOffSaleModal()
+
+        $itemOffSaleModal.modal('show')
 
     animate = () ->
       p1 = $(moveable).offset()
@@ -80,7 +89,7 @@ $ ()->
           # length: 0.707
         },
         end: {
-          x: p2.left + 20,
+          x: p2.left + $(target).width()/2,
           y: p2.top + 20,
           angle: 315.012,
           # length: 0.707
@@ -124,7 +133,7 @@ $ ()->
                 <h4 class="modal-title">库存不足</h4>
               </div>
               <div class="modal-body">
-                <p>你买的太多了，库存不足了哦</p>
+                <p>库存不足，无法继续购买了哦</p>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-dismiss="modal">知道了</button>
@@ -136,3 +145,26 @@ $ ()->
 
       $('body').append($modal)
       $modal
+
+    createItemOffSaleModal = () ->
+      $offSaleModal = $("""
+        <div class="modal fade" tabindex="-1" role="dialog" id="item-off-sale-modal">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">库存不足</h4>
+              </div>
+              <div class="modal-body">
+                <p>商品已经下架，无法继续购买了哦</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">知道了</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      """)
+
+      $('body').append($offSaleModal)
+      $offSaleModal

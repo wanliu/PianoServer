@@ -44,6 +44,7 @@ class BatchImportProductsJob < ActiveJob::Base
           shop_id: shop.id,
           title: product.name,
           product_id: product.id,
+          price: product.price,
           public_price: product.price,
           on_sale: Settings.shop.import.sale,
           brand_id: product.brand_id,

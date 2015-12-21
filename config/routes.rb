@@ -79,6 +79,7 @@ Rails.application.routes.draw do
   resources :after_registers, concerns: [:statuable] do
     collection do
       get :reset, as: :reset
+      post :upgrade_to_distributor, as: :upgrade
     end
   end
 
@@ -218,7 +219,11 @@ Rails.application.routes.draw do
   resources :categories
   resources :units, only: [:index, :show]
 
-  resources :chats
+  resources :chats do
+    collection do
+      get :match
+    end
+  end
   resources :intentions do
     member do
       get 'status', to: "intentions#status", as: :status_of

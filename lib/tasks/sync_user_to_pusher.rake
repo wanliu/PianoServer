@@ -5,7 +5,13 @@ namespace :db do
     pusher_token = Settings.pusher.pusher_token
     pusher_url << 'users'
     User.all.each do |user|
-      options = {id: "w#{user.id}", token: pusher_token, login: user.username, realname: user.username, avatar_url: (user.image && user.image[:avatar_url]) }
+      options = {id: "#{user.id}", token: pusher_token, login: user.username, sms_forward: user.sms_forward?,
+          realname: user.username, avatar_url: user.avatar_url, mobile: user.mobile }
+
+      if user.owner_shop.present?
+        options.merge! shop_name: user.owner_shop.name
+      end
+
       RestClient.post pusher_url, options
     end
   end

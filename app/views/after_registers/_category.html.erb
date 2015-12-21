@@ -4,10 +4,10 @@
 
   <% category.children.order(:id).each do |category| %>
     <% classes = ["btn", params[:category_id].to_i == category.id ? "btn-primary" : "btn-link" ] %>
-    <% classes.push("col-xs-4 col-sm-2") %>
+    <% classes.push("col-xs-6 col-sm-2 category-title") %>
 
-    <%= link_to filter_brands_path(category_id: category.id ), class: classes, remote: true, data: { category: category.id } do %>
-      <%= category.title %> <span class="badge"></span>
+    <%= link_to filter_brands_path(category_id: category.id ), class: classes, data: { category: category.id } do %>
+      <span class="title"><%= category.title %></span><span class="badge"></span>
     <% end %>
   <% end %>
 </div>

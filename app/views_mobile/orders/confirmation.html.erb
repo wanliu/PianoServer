@@ -1,0 +1,31 @@
+<div class='order-confirm order-confirm-mobile'>
+  <%= render "order_address", locals: { delivery_addresses: @delivery_addresses, order: @order } %>
+
+  <%= form_for @order do |f| %>
+    <%= f.hidden_field :address_id %>
+    <%= f.hidden_field :supplier_id %>
+
+    <% @order_items.each do |item| %>
+      <%= f.hidden_field :cart_item_ids, { multiple: true, value: item.id } %>
+    <% end %>
+
+    <div class='cart-group'>
+      <div class='header'>
+        <span class='shop'>
+          <%= link_to shop_site_path(@supplier.name) do %>
+            <%= image_tag @supplier.avatar_url %><%= @supplier.title %>
+          <% end %>
+        </span>
+      </div>
+
+      <%= render partial: "confirmation_item", collection: @order_items.sort_by(&:id), as: :item, locals: { supplier: @supplier, f: f } %>
+
+      <div class='footer'>
+        <td colspan='5' class='text-right'>
+          <%= link_to "返回购物车", cart_path, class: 'cancel' %>
+          <%= f.submit "提交订单", class: 'submit'%>
+        </td>
+      </div>
+    </div>
+  <% end %>
+</div>
