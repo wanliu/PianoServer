@@ -11,6 +11,7 @@ module RedirectCallback
   end
 
   def clear_callback
+    Rails.logger.debug "callback url is #{session[:callback]}"
     session.delete(:callback)
   end
 end

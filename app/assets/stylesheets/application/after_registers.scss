@@ -1,4 +1,4 @@
-$transition-time:0.4s;
+ $transition-time:0.4s;
 
 #map {
   height: 300px;
@@ -297,7 +297,6 @@ $transition-time:0.4s;
     .coverflow-item {
       .thumbnail {
         width: 200px;
-
       }
     }
   }
@@ -306,5 +305,48 @@ $transition-time:0.4s;
 .wrapper.ui-coverflow-wrapper {
   height: 500px;
   margin-bottom: 30px;
+}
+
+.smart-fill-container {
+  .smart-fill-header {
+    margin: 0 -15px 15px -15px;
+  }
+
+  .header-image {
+    width: 100%;
+    display: block;
+  }
+
+  .btn-submit {
+    background: #F12A39;
+    color: #FFFFFF;
+  }
+
+  ul.errors{
+    list-style: none;
+    margin-top: 10px;
+    display: none;
+    color: #FF2B2B;
+    padding: 0;
+
+    li {
+      float: left;
+      margin-right: 10px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .smart-fill-container .padding0{
+    padding: 0 5px;
+
+    &:first-child {
+      padding-left: 15px;
+    }
+
+    &:last-child {
+      padding-right: 15px;
+    }
+  }
 }
 

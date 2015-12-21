@@ -83,7 +83,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :smart_fills
+  resources :smart_fills do
+    collection do
+      post :fast_register, as: :fast_register
+    end
+  end
 
   concern :templable do |options|
     resources :templates, options do
