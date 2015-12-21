@@ -70,8 +70,8 @@
   .order {
     .shop {
       img {
-        width: 20px;
-        height: 20px;
+        width: 40px;
+        height: 40px;
       }
     }
 
@@ -184,12 +184,22 @@
 
   .shop {
     img {
-      width: 20px;
-      height: 20px;
+      margin-right: 5px;
+      width: 40px;
+      height: 40px;
+    }
+    a {
+      color: #555
+    }
+    .pull-right {
+      padding-top: 10px;
     }
   }
 
   .list-group.order-items {
+    .list-group-item:not(:first-child) {
+      background: transparent;
+    }
     height: auto;
   }
 
@@ -198,15 +208,28 @@
   }
 }
 
+.now-you-can {
+  line-height: 44px;
+}
 
 .order-detail {
   .title {
     padding: 10px 0;
     font-size: 16px;
+    position: relative;
 
     img {
-      width: 20px;
-      height: 20px;
+      margin-right: 5px;
+      width: 40px;
+      height: 40px;
+    }
+    a {
+      color: #555
+    }
+    .shop-info {
+      position: absolute;
+      right: 0;
+      top: 0;
     }
   }
 

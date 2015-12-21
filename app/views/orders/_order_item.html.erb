@@ -2,12 +2,12 @@
   <td class='avatar'>
     <%= link_to orderable_url(item) do %>
       <%= image_tag item.avatar_url, class: 'media-object', alt: "商品图片" %>
-      <span class='title'>
-        <%= item.title %>
-      </span>
     <% end %>
   </td>
-  <td> <%= item.properties_title %> </td>
+  <td>
+    <span class='title'><%= item.title %></span><br>
+    <span><%= item.properties_title %></span>
+    </td>
   <td> 单价：<%= number_to_currency item.price %> </td>
   <td> 数量：<%= number_with_delimiter item.quantity %> </td>
   <td> 小计：<%= number_to_currency item.price * item.quantity %> </td>
