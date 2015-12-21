@@ -1,0 +1,35 @@
+<div class="order-address-new">
+  <div class="col-sm-9">
+    <div class="row">
+      <%= form_for location do |f| %>
+        <%= f.hidden_field :user_id %>
+        <%= f.hidden_field :chat_id %>
+        <%= f.hidden_field :intention_id %>
+
+        <div class="row">
+          <div class="col-sm-6">
+            <%= group_with_errors location, :contact, f, title: '姓&emsp;&emsp;名', layout: :normal, required: true do %>
+              <%= text_field :location, :contact, class: 'form-control required', maxlength: 30 %>
+            <% end %>
+          </div>
+          <div class="col-sm-6">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-6">
+            <%= group_with_errors location, :contact_phone, f, title: '联系电话', layout: :normal, required: true do %>
+              <%= text_field :location, :contact_phone, class: 'form-control required' %>
+            <% end %>
+          </div>
+          <div class="col-sm-6">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class=""></div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

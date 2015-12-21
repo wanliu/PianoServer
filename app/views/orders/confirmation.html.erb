@@ -1,41 +1,42 @@
 <div class='order-confirm col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1'>
-  <%= render "order_address", locals: { delivery_addresses: @delivery_addresses, order: @order } %>
+  <div class="row">
+    <%= render "order_address", locals: { delivery_addresses: @delivery_addresses, order: @order } %>
+    <%= form_for @order do |f| %>
+      <%= f.hidden_field :address_id %>
+      <%= f.hidden_field :supplier_id %>
 
-  <%= form_for @order do |f| %>
-    <%= f.hidden_field :address_id %>
-    <%= f.hidden_field :supplier_id %>
+      <% @order_items.each do |item| %>
+        <%= f.hidden_field :cart_item_ids, { multiple: true, value: item.id } %>
+      <% end %>
 
-    <% @order_items.each do |item| %>
-      <%= f.hidden_field :cart_item_ids, { multiple: true, value: item.id } %>
-    <% end %>
+      <div class='cart-group'>
+        <div class='header'>
+          <span class='shop'>
+            <%= link_to shop_site_path(@supplier.name) do %>
+              <%= image_tag @supplier.avatar_url %><%= @supplier.title %>
+            <% end %>
+          </span>
+        </div>
 
-    <div class='cart-group'>
-      <div class='header'>
-        <span class='shop'>
-          <%= link_to shop_site_path(@supplier.name) do %>
-            <%= image_tag @supplier.avatar_url %><%= @supplier.title %>
-          <% end %>
-        </span>
+        <table class='table table-bordered' style='background-color: white;'>
+          <colgroup>
+            <col width='35%' />
+            <col width='15%' />
+            <col width='25%' />
+            <col width='15%' />
+          </colgroup>
+          <%= render partial: "confirmation_item", collection: @order_items.sort_by(&:id), as: :item, locals: { supplier: @supplier, f: f } %>
+          <tr class='footer'>
+            <td colspan='5' class='text-right'>
+              <span>
+                已选择<span class='total-quantity'><%= @order_items.map(&:quantity).reduce(:+) %></span> 件商品&emsp;合计<span class='total-total'><%= @order_items.map { |item| item.price * item.quantity }.reduce(:+)  %></span>元
+              </span>
+              <%= link_to "返回购物车", cart_path, class: 'cancel' %>
+              <%= f.submit "提交订单", class: 'submit'%>
+            </td>
+          </tr>
+        </table>
       </div>
-
-      <table class='table table-bordered' style='background-color: white;'>
-        <colgroup>
-          <col width='35%' />
-          <col width='15%' />
-          <col width='25%' />
-          <col width='15%' />
-        </colgroup>
-        <%= render partial: "confirmation_item", collection: @order_items.sort_by(&:id), as: :item, locals: { supplier: @supplier, f: f } %>
-        <tr class='footer'>
-          <td colspan='5' class='text-right'>
-            <span>
-              已选择<span class='total-quantity'><%= @order_items.map(&:quantity).reduce(:+) %></span> 件商品&emsp;合计<span class='total-total'><%= @order_items.map { |item| item.price * item.quantity }.reduce(:+)  %></span>元
-            </span>
-            <%= link_to "返回购物车", cart_path, class: 'cancel' %>
-            <%= f.submit "提交订单", class: 'submit'%>
-          </td>
-        </tr>
-      </table>
-    </div>
-  <% end %>
+    <% end %>
+  </div>
 </div>

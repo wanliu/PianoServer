@@ -1,48 +1,54 @@
 <div class='delivery-addresses panel panel-default'>
-  <% if delivery_addresses.present? %>
-    <div class="panel-heading">
-      选择收货地址
-    </div>
-    <% delivery_addresses.each_with_index do |address, index| %>
-      <div class='delivery-address <%= "active" if order.address_id == address.id %>' data-address-id=<%= address.id %>>
-        <div class='title'>
-          <%= address.contact %>
-        </div>
-        <div class='detail'>
-          <%= address.delivery_address %>
-        </div>
-      </div>
-    <% end %>
-    <div class='divider' style='clear: both'></div>
-    <% if current_user.reach_location_limit? %>
-      <span class='reach-limit'>地址数量已达上限，请选择地址</span>
-      <%= link_to "管理收货地址", locations_path, class: 'pull-right manage-locations' %>
-    <% else %>
-      <span class='reach-limit' style='display: none;'>地址数量已达上限，请选择地址</span>
-      <%= link_to "添加一个新的收货地址", 'javascript: void(0)', class: 'add-another-location' %>
-      <%= link_to "管理收货地址", locations_path, class: 'pull-right manage-locations' %>
-    <% end %>
-  <% else %>
-    <div class="panel-heading">
-      <div class='empty-notify'>你还没有收货地址，现在创建一个吧</div>
-    </div>
-    <div class='divider' style='clear: both; display: none;'></div>
-    <span class='reach-limit' style='display: none;'>地址数量已达上限，请选择地址</span>
-    <%= link_to "添加一个新的收货地址", 'javascript: void(0)', class: 'add-another-location', style: 'display: none;' %>
+  <div class="panel-heading">
     <%= link_to "管理收货地址", locations_path, class: 'pull-right manage-locations' %>
-  <% end %>
-  <div class='add-new-location' style='display: <%= delivery_addresses.present? ? "none" : "block" %>'>
-    <%= render 'locations/form', locals: { location: current_user.locations.build } %>
+    收货地址
+  </div>
+
+  <div class="panel-body">
+    <div class="address-container">
+      <% delivery_addresses.each_with_index do |addr, index| %>
+        <div class="col-xs-6 col-sm-4 col-md-3 delivery-address" data-address-id="<%= addr.id %>">
+          <div class="address-header">
+            <%= addr.province_name %>&emsp;<%= addr.city_name %>&emsp;(
+            <%= addr.contact %>&nbsp;收)
+          </div>
+          <div class="address-body">
+            <p>
+              <%= addr.province_name %>&emsp;<%= addr.city_name %>&emsp;<%= addr.region_name%>
+              &emsp;<%= addr.address %>
+            </p>
+            <p>
+              <%= addr.zip_code%>&emsp;<%= addr.contact_phone%>
+            </p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <% unless current_user.reach_location_limit? %>
+      <%= link_to "新增地址", 'javascript: void(0)', class: 'add-another-location' %>
+    <% end %>
+
+    <div class='add-new-location' style='display: <%= delivery_addresses.present? ? "none" : "block" %>'>
+      <%= render 'locations/form', locals: { location: current_user.locations.build } %>
+    </div>
   </div>
 </div>
 
 <script type="text/template" id='delivery-address'>
-  <div class='delivery-address' data-address-id={{= address.id }}>
-    <div class='title'>
-      {{= address.contact }}
+  <div class="col-xs-6 col-sm-4 col-md-3 delivery-address" data-address-id={{= address.id }}>
+    <div class="address-header">
+      {{= addr.province_name }}&emsp;{{= addr.city_name }}&emsp;(
+      {{= addr.contact }}&nbsp;收)
     </div>
-    <div class='detail'>
-      {{= address.delivery_address }}
+    <div class="address-body">
+      <p>
+        {{= addr.province_name }}&emsp;{{= addr.city_name %>}}&emsp;{{= addr.region_name }}
+        &emsp;<%= addr.address }}
+      </p>
+      <p>
+        {{= addr.zip_code %}}&emsp;{{= addr.contact_phone }}
+      </p>
     </div>
   </div>
 </script>
@@ -55,7 +61,7 @@
     var data = $(this).serializeArray();
 
     var q = $.post('/locations', data);
-    
+
     q.done(function (data, status, xhr) {
       var html = addTemplate({ address: data });
       $('div.empty-notify').parent().text('选择收货地址');
