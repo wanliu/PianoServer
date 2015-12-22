@@ -7,10 +7,11 @@ module RedirectCallback
   end
 
   def set_callback
-    session[:callback] = request.referer &&  URI(request.referer).path or params[:callback]
+    session[:callback] = params[:callback] or (request.referer &&  URI(request.referer).path)
   end
 
   def clear_callback
+    Rails.logger.debug "callback url is #{session[:callback]}"
     session.delete(:callback)
   end
 end
