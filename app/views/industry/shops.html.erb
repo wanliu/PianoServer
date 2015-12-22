@@ -100,7 +100,11 @@
         </div>
         <% else %>
           <p class="leading text-muted">
-            对不起！此区域暂无有效的供应商! <%= link_to '#' do %> <%=icon :user %> 申请成为供应商 <% end %>
+            对不起！此区域暂无有效的供应商!
+
+            <% if Settings.dev.feature.to_be_supplier %>
+              <%= link_to '#' do %> <%=icon :user %> 申请成为供应商 <% end %>
+            <% end %>
           </p>
         <% end %>
 
