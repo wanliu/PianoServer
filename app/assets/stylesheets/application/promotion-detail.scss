@@ -195,7 +195,9 @@
       vertical-align: middle;
     }
 
-    .promotion-favors, .promotion-likers{
+    .promotion-favors,
+    .promotion-likers,
+    .promotion-visit {
       display: table-cell;
       width: 15%;
       text-align: center;
