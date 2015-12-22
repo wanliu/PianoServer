@@ -3,11 +3,11 @@ module RedirectCallback
   private
 
   def callback_url
-    params[:callback] || session[:callback]
+    session[:callback] || root_path
   end
 
   def set_callback
-    session[:callback] = URI(request.referer).path if request.referer
+    session[:callback] = request.referer &&  URI(request.referer).path or params[:callback]
   end
 
   def clear_callback
