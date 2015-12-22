@@ -2,7 +2,7 @@
 <%= nav_back_button %>
 <%= content_for :module, :chat %>
 <%= content_for :javascripts do %>
-  <%= javascript_include_tag :additional %>
+  <%= javascript_include_tag :additional,  data: { turbolinks_track: true } %>
 <% end %>
 
 

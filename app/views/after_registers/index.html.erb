@@ -1,5 +1,5 @@
 <% content_for :javascripts do %>
-  <%= javascript_include_tag "additional" %>
+  <%= javascript_include_tag "additional", data: { turbolinks_track: true } %>
 <% end %>
 <% content_for :stylesheets  do %>
   <%= stylesheet_link_tag "additional", :media => "all", 'data-turbolinks-track' => true %>

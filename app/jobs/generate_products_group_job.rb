@@ -7,7 +7,7 @@ class GenerateProductsGroupJob < ActiveJob::Base
     @select_params = select_params
     categories = @select_params.map {|id, brands| id }
     @categories = Category.where(id: categories).order(:id)
-    @all_categories = @categories.map {|cate| {"id" => cate.id, "categories" => cate.self_and_descendants} }
+    @all_categories = @categories.map {|cate| {"id" => cate.id, "title" => cate.title, "categories" => cate.descendants} }
 
     top_category_title = proc { |top, category_id| top["categories"].find {|c| c.id == category_id }.try(:title) }
 
@@ -17,13 +17,15 @@ class GenerateProductsGroupJob < ActiveJob::Base
         group["type"] = 'top'
         group["id"] = top["id"].to_s
         # top["categories"].first.tap { |c| group["title"] = c.title || c.name }
-        group["title"] = top["categories"].first.title
+        # group["title"] = top["categories"].first.title
+        group["title"] = top["title"]
         group["total"] = 0
 
         ids = top["categories"].map &:id
 
 
-        results = Product.with_category_brands(ids, select_params[group["id"]])
+        brands = select_params[group["id"]].map { |key, brands| brands }.flatten
+        results = Product.with_category_brands(ids, brands)
         aggregations = results.response.aggregations
 
         group["categories"] =

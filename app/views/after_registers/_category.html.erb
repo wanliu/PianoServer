@@ -1,5 +1,5 @@
-<div class="panel-body category-body">
-
+<div class="panel-body category-body" data-category-id="<%= category.id %>">
+  <%#= hidden_field_tag "select[#{category.id}]", "0" %>
   <h4 style= "color: #999"><%= category.title %></h4>
 
   <% category.children.order(:id).each do |category| %>
