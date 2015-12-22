@@ -12,7 +12,6 @@ class RegionsController < ApplicationController
     }
 
     redirect_to callback_url
-    clear_callback
   end
 
   def retrive

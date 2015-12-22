@@ -128,6 +128,7 @@
       success: function (data) {
         if (data.success) {
           window.location.href = root_path;
+          console.log('callback_url:', data.callback_url);
         } else {
           $('.error-notice').text(data.errors).css('display', 'inline-block');
         }

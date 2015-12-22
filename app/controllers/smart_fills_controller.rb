@@ -3,7 +3,6 @@ class SmartFillsController < ApplicationController
 
   before_action :authenticate_user!
   before_action :set_content_for
-  before_action :set_callback, only: [ :index ]
 
   def index
     @location = Location.new
