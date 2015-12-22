@@ -185,7 +185,7 @@
 
   .title-contact{
     margin: 0;
-    padding: 20px 15px;
+    padding: 15px;
     display: table;
     width: 100%;
     border-bottom: 1px solid #ddd;
@@ -195,9 +195,12 @@
       vertical-align: middle;
     }
 
-    .promotion-favors, .promotion-likers{
+    .promotion-favors,
+    .promotion-likers,
+    .promotion-visit {
       display: table-cell;
-      width: 15%;
+      width: 30%;
+      padding: 15px 0 15px 15px;
       text-align: center;
       vertical-align: middle;
       color: #666666;

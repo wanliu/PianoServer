@@ -62,7 +62,7 @@ class Intention < ActiveRecord::Base
     def build_with_shop_product(shop_product)
       build({
         title: shop_product.name,
-        price: shop_product.price,
+        price: shop_product.public_price || shop_product.price,
         amount: shop_product.try(:amount) || MIN_AMOUNT,
         item_type: 'product',
         iid: LineItem.last_iid(owner) + 1,
@@ -71,8 +71,8 @@ class Intention < ActiveRecord::Base
           product_inventory: shop_product.try(:inventory)
         },
         image: {
-          avatar_url: shop_product.try(:image_url),
-          preview_url: shop_product.try(:preview_url)
+          avatar_url: shop_product.try(:avatar_url),
+          preview_url: shop_product.try(:cover_url)
         }
       })
     end
@@ -87,7 +87,7 @@ class Intention < ActiveRecord::Base
 
         proxy_association.create({
           title: shop_product.title,
-          price: shop_product.price,
+          price: shop_product.public_price || shop_product.price,
           amount: shop_product.try(:amount) || MIN_AMOUNT,
           item_type: 'product',
           iid: LineItem.last_iid(owner) + 1,
@@ -96,8 +96,8 @@ class Intention < ActiveRecord::Base
             product_inventory: shop_product.try(:inventory)
           },
           image: {
-            avatar_url: shop_product.try(:image_url),
-            preview_url: shop_product.try(:preview_url)
+            avatar_url: shop_product.try(:avatar_url),
+            preview_url: shop_product.try(:cover_url)
           }
         })
       end

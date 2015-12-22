@@ -1,4 +1,8 @@
 class AuthorizeController < ApplicationController
+  include RedirectCallback
+
+  before_action :set_callback, only: [ :weixin ]
+
   def weixin
     redirect_url = "#{Settings.app.website}/authorize/weixin_redirect_url"
     authorize_method = mobile? ? :authorize_url : :qrcode_authorize_url
