@@ -1,30 +1,129 @@
 .delivery-addresses {
-  padding-bottom: 10px;
+  margin-bottom: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+
+  .panel-heading {
+    background: #FFFFFF;
+  }
+
+  .address-container {
+    margin: 0 -15px;
+  }
 
   .delivery-address {
     border: 1px solid #ddd;
-    margin: 5px;
     padding: 5px;
-    float: left;
-    // width: 23%;
-    // height: 73px;
     cursor: pointer;
+    position: relative;
+    margin-bottom: 15px;
+    background: #FFFFFF;
 
-    &.active {
-      border: 1px solid #c00;
+    .address-header, .address-body {
+      padding: 10px;
+    }
+
+    .detail-address {
+      height: 4em;
+      overflow: hidden;
+    }
+
+    .address-header {
+      border-bottom: 2px solid #E5E5E5;
+    }
+
+    .set-default {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      display: none;
+    }
+
+    .default-tip, .default-icon {
+      padding: 0 3px;
+      background: #333333;
+      opacity: 0.5;
+      color: #FFFFFF;
+      display: inline-block;
     }
 
     .title {
       border-bottom: 1px solid #ddd;
       font-size: 16px;
     }
+
+    &.active {
+      .set-default {
+        display: block;
+      }
+    }
   }
 
-  a.add-another-location, a.manage-locations {
-    margin: 0 10px;
+  .add-another-location {
+    color: #E54A2F;
+    display: block;
   }
 
   .add-new-location {
-    margin: 20px 0;
+    display: none;
+    padding-top: 15px;
+    margin-top: 15px;
+    border-top: 1px solid #E5E5E5;
+  }
+}
+
+.cart-group {
+  border-top: none;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  margin-bottom: 0;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+
+  .panel-heading {
+    background: #FFFFFF;
+    border: none;
+
+    .shop-link {
+      color: #333333;
+
+      .shop-logo {
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        margin-right: 5px;
+      }
+    }
+  }
+
+  .panel-body {
+    padding: 0;
+
+    .table {
+      margin-bottom: 0;
+    }
+  }
+
+  .panel-footer {
+    padding: 0;
+
+    .submit {
+      border: none;
+      background-color: red;
+      padding: 10px 30px;
+      color: white;
+      font-size: 16px;
+      margin-left: 20px;
+    }
+
+    .cancel {
+      display: inline-block;
+      border: none;
+      background-color: #ff7c1c;;
+      padding: 10px 30px;
+      margin-right: -25px;
+      color: white;
+      font-size: 16px;
+    }
   }
 }

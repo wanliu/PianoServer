@@ -1,33 +1,93 @@
-<div class="order-address-new">
+<div class="order-address-new clearfix">
   <div class="col-sm-9">
     <div class="row">
       <%= form_for location do |f| %>
-        <%= f.hidden_field :user_id %>
-        <%= f.hidden_field :chat_id %>
-        <%= f.hidden_field :intention_id %>
-
-        <div class="row">
-          <div class="col-sm-6">
-            <%= group_with_errors location, :contact, f, title: '姓&emsp;&emsp;名', layout: :normal, required: true do %>
-              <%= text_field :location, :contact, class: 'form-control required', maxlength: 30 %>
+        <div class="form-group clearfix">
+          <div class="col-sm-6 property-item" property-name="contact">
+            <%= f.label :contact, class: 'item-label control-label' do %>
+              姓　　名
+              <span class="required">*</span>
             <% end %>
+            <div class="input-box">
+              <%= text_field :location, :contact, class: 'form-control' %>
+            </div>
           </div>
-          <div class="col-sm-6">
+          <div class="col-sm-6 property-item" property-name="gender">
+            <%= f.label :gender, class: 'item-label control-label' do%>
+              性　　别
+              <span class="required">*</span>
+            <% end %>
+            <div class="input-box">
+              <label class="gender-label"><input type="radio" name="gender" value="0" checked="checked">男</label>
+              <label class="gender-label"><input type="radio" name="gender" value="1">女</label>
+            </div>
           </div>
         </div>
 
-        <div class="row">
-          <div class="col-sm-6">
-            <%= group_with_errors location, :contact_phone, f, title: '联系电话', layout: :normal, required: true do %>
-              <%= text_field :location, :contact_phone, class: 'form-control required' %>
+        <div class="form-group clearfix">
+          <div class="col-sm-6 property-item" property-name="contact_phone">
+            <%= f.label :contact_phone, class: 'item-label control-label' do%>
+              联系电话
+              <span class="required">*</span>
             <% end %>
+            <div class="input-box">
+              <%= text_field :location, :contact_phone, class: 'form-control' %>
+            </div>
           </div>
-          <div class="col-sm-6">
+
+          <div class="col-sm-6 property-item" property-name="zipcode">
+            <%= f.label :zipcode, "邮　　编", class: 'item-label control-label' %>
+            <div class="input-box">
+              <%= text_field :location, :zipcode, class: 'form-control' %>
+            </div>
           </div>
         </div>
 
-        <div class="form-group">
-          <div class=""></div>
+        <div class="form-group property-item clearfix">
+          <%= f.label :id, class: 'item-label control-label address-label' do%>
+            地　　址
+            <span class="required">*</span>
+          <% end %>
+          <div class="input-box">
+            <%
+              province_id = location.try :province_id
+              city_id = location.try :city_id
+              region_id = location.try :region_id
+
+              province_list = ChinaCity.list
+              city_list = ChinaCity.list province_id.to_s
+              region_list = ChinaCity.list city_id.to_s
+            %>
+
+            <div class="city-group">
+              <div class="col-xs-4 padding0" property-name="province_id">
+                <%= f.select(:province_id, options_for_select(province_list, province_id), {prompt: '--省份--'}, {class: "city-select form-control"}) %>
+              </div>
+              <div class="col-xs-4 padding0" property-name="city_id">
+                <%= f.select(:city_id, options_for_select(city_list, city_id), {prompt: "--城市--"}, { class: "city-select form-control" } ) %>
+              </div>
+              <div class="col-xs-4 padding0" property-name="region_id">
+                <%= f.select(:region_id, options_for_select(region_list, region_id), {prompt: "--地区--"}, { class: "city-select form-control" } ) %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group property-item clearfix" property-name="road">
+          <%= f.label :road, class: 'item-label control-label' do %>
+            详细地址
+            <span class="required">*</span>
+          <% end %>
+          <div class="input-box">
+            <%= text_area :location, :road, class: 'form-control', rows: 3 %>
+          </div>
+        </div>
+
+        <div class="form-group property-item clearfix tool-buttons">
+          <div class="input-box">
+            <button type="reset" class="btn btn-default btn-reset">重&emsp;置</button>
+            <button type="submit" class="btn btn-default btn-save">保&emsp;存</button>
+          </div>
         </div>
       <% end %>
     </div>

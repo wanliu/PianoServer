@@ -21,7 +21,7 @@ class LocationsController < ApplicationController
 
   def create
     # location = current_anonymous_or_user.locations.build(location_params)
-    @location = current_user.locations.build(location_params)
+    @location = current_user.locations.build(location_params.merge(skip_validation: false))
 
     respond_to do |format|
       if @location.save
@@ -32,12 +32,13 @@ class LocationsController < ApplicationController
           redirect_to direction
         end
       else
-        format.json { 
-          render partial: 'locations/form', 
-                 locals: { location: @location },
-                 formats: :html,
-                 layout: false,
-                 status: :unprocessable_entity }
+        format.json {
+          render json: {errors: @location.errors } }
+          # render partial: 'locations/form',
+          #        locals: { location: @location },
+          #        formats: :html,
+          #        layout: false,
+          #        status: :unprocessable_entity }
 
         format.html { render :new }
       end
@@ -60,6 +61,7 @@ class LocationsController < ApplicationController
   end
 
   def destroy
+
     @location.destroy
 
     flash[:notice] = "收货地址删除成功"
@@ -68,7 +70,7 @@ class LocationsController < ApplicationController
 
   def user_default_address
     @location = current_user.locations.find(params[:location_id])
-    current_user.update_attribute('latest_location_id', @location.id)
+    current_user.update_attribute('latest_location_id', @location.id) unless @location.nil?
 
     respond_to do |format|
       format.json { render json: @location }
@@ -80,12 +82,12 @@ class LocationsController < ApplicationController
 
   def location_params
     params.require(:location)
-      .permit(:province_id, :city_id, :region_id, :contact, :id, :road, :zipcode, :contact_phone, :chat_id, :intention_id)
+      .permit(:province_id, :city_id, :region_id, :contact, :id, :road, :zipcode, :contact_phone, :chat_id, :intention_id, :gender)
   end
 
   def location_update_params
     params.require(:location)
-      .permit(:province_id, :city_id, :region_id, :contact, :id, :road, :zipcode, :contact_phone, :is_default)
+      .permit(:province_id, :city_id, :region_id, :contact, :id, :road, :zipcode, :contact_phone, :is_default, :gender)
   end
 
   def set_location

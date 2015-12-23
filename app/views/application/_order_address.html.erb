@@ -5,50 +5,68 @@
   </div>
 
   <div class="panel-body">
-    <div class="address-container">
+    <div class="address-container clearfix">
       <% delivery_addresses.each_with_index do |addr, index| %>
-        <div class="col-xs-6 col-sm-4 col-md-3 delivery-address" data-address-id="<%= addr.id %>">
-          <div class="address-header">
-            <%= addr.province_name %>&emsp;<%= addr.city_name %>&emsp;(
-            <%= addr.contact %>&nbsp;收)
-          </div>
-          <div class="address-body">
-            <p>
-              <%= addr.province_name %>&emsp;<%= addr.city_name %>&emsp;<%= addr.region_name%>
-              &emsp;<%= addr.address %>
-            </p>
-            <p>
-              <%= addr.zip_code%>&emsp;<%= addr.contact_phone%>
-            </p>
+        <div class="col-xs-6 col-sm-3">
+          <div class="delivery-address" data-address-id="<%= addr.id %>">
+            <div class="address-header">
+              <b><%= addr.province_name %>&emsp;<%= addr.city_name %></b>&emsp;(
+              <%= addr.contact %>&nbsp;收)
+            </div>
+            <div class="address-body">
+              <p class="detail-address">
+                <%= addr.province_name %>&nbsp;<%= addr.city_name %>&nbsp;<%= addr.region_name%>
+                &nbsp;<%= addr.road %>
+              </p>
+              <p>
+                <% if addr.zipcode.blank? %>
+                  (未填写邮编)
+                <% else %>
+                  <%= addr.zipcode %>
+                <% end %>
+                &nbsp;<%= addr.contact_phone%>
+              </p>
+            </div>
+
+            <div class="set-default">
+              <span class="default-tip">默认地址</span>
+              <span class="default-icon"><%= icon :ok %></span>
+            </div>
           </div>
         </div>
       <% end %>
     </div>
 
     <% unless current_user.reach_location_limit? %>
-      <%= link_to "新增地址", 'javascript: void(0)', class: 'add-another-location' %>
+      <%= link_to 'javascript: void(0)', class: 'add-another-location' do %>
+        <%= icon :plus %>新增地址
+      <% end %>
     <% end %>
 
-    <div class='add-new-location' style='display: <%= delivery_addresses.present? ? "none" : "block" %>'>
-      <%= render 'locations/form', locals: { location: current_user.locations.build } %>
+    <div class='add-new-location'>
+      <%= render 'order_address_new', locals: { location: current_user.locations.build } %>
     </div>
   </div>
 </div>
 
 <script type="text/template" id='delivery-address'>
-  <div class="col-xs-6 col-sm-4 col-md-3 delivery-address" data-address-id={{= address.id }}>
-    <div class="address-header">
-      {{= addr.province_name }}&emsp;{{= addr.city_name }}&emsp;(
-      {{= addr.contact }}&nbsp;收)
-    </div>
-    <div class="address-body">
-      <p>
-        {{= addr.province_name }}&emsp;{{= addr.city_name %>}}&emsp;{{= addr.region_name }}
-        &emsp;<%= addr.address }}
-      </p>
-      <p>
-        {{= addr.zip_code %}}&emsp;{{= addr.contact_phone }}
-      </p>
+  <div class="col-xs-6 col-sm-4 col-md-3">
+    <div class="delivery-address" data-address-id={{= address.id }}>
+      <div class="address-header">
+        {{= address.province_name }}&emsp;{{= address.city_name }}&emsp;(
+        {{= address.contact }}&nbsp;收)
+      </div>
+      <div class="address-body">
+        <p class="detail-address">
+          {{= address.province_name }}&nbsp;{{= address.city_name }}&nbsp;{{= address.region_name }}
+          &nbsp;{{= address.road }}
+        </p>
+        <p>
+          {{= address.zipcode || '(未填写邮编)' }}
+          &nbsp;
+          {{= address.contact_phone }}
+        </p>
+      </div>
     </div>
   </div>
 </script>
@@ -63,40 +81,44 @@
     var q = $.post('/locations', data);
 
     q.done(function (data, status, xhr) {
-      var html = addTemplate({ address: data });
-      $('div.empty-notify').parent().text('选择收货地址');
-      $('div.empty-notify').remove();
+      $('.add-new-location [property-name]').removeClass('has-error');
 
-      $('div.divider').show();
-      $('div.divider + a').show();
+      if (data.errors) {
+        for (var key in data.errors) {
+          var sel = ['.add-new-location [property-name=', key, ']'].join('')
+          $(sel).addClass('has-error');
 
-      $('div.divider').before(html);
-      $('div.add-new-location').hide();
+          if (key === 'province_id' || key === 'region_id' || key === 'city_id') {
+            $('.add-new-location .address-label').addClass('has-error');
+          }
+        }
+      } else {
+        var html = addTemplate({ address: data });
+        $('.address-container').append(html);
 
-      if (!$('.delivery-address.active').length) {
-        $($('.delivery-address')[0]).addClass('active');
-        $($('.delivery-address')[0]).click();
-      }
+        if (!$('.delivery-address.active').length) {
+          $($('.delivery-address')[0]).addClass('active');
+          $($('.delivery-address')[0]).click();
+        }
 
-      $('.add-another-location').show();
+        $('div.add-new-location form')[0].reset();
 
-      $('div.add-new-location form')[0].reset();
-
-      // 地址数量达到上限
-      if (data.reach_user_limit) {
-        $('.add-another-location').remove();
-        $('.reach-limit').show();
+        // 地址数量达到上限
+        if (data.reach_user_limit) {
+          $('.add-another-location').remove();
+          $('.reach-limit').show();
+        }
       }
     });
 
-    q.fail(function (data, status, xhr) {
-      $('.add-new-location').html(data.responseText);
-      $('.add-new-location .city-group').china_city();
-    })
+    // q.fail(function (data, status, xhr) {
+    //   $('.add-new-location').html(data.responseText);
+    //   $('.add-new-location .city-group').china_city();
+    // })
   });
 
   $('a.add-another-location').click(function (event) {
-    $('div.add-new-location').toggle();
+    $('.add-new-location').slideToggle();
   });
 
   $('.delivery-addresses').on('click', '.delivery-address', function(event) {

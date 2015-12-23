@@ -2,22 +2,22 @@
   <td class='avatar'>
     <div class='media'>
       <div class='media-left'>
-        <%= link_to cartable_url(item) do %>
+        <%= link_to cartable_url(item), class: 'item-avatar' do %>
           <%= image_tag item.avatar_url, class: 'media-object', alt: "商品图片" %>
         <% end %>
       </div>
-      <div class='media-body'>
+      <div class='media-body media-middle'>
         <%= "#{item.title} #{item.properties_title}" %>
       </div>
     </div>
   </td>
   <td  class="price">
-    <%= number_to_currency item.price %>
+    单价：<%= number_to_currency item.price %>
   </td>
   <td>
-    <span><%= number_with_delimiter item.quantity %></span>
+    数量：<span><%= number_with_delimiter item.quantity %></span>
   </td>
   <td class="subtotal">
-    <%= number_to_currency item.price * item.quantity %>
+    小计：<%= number_to_currency item.price * item.quantity %>
   </td>
 </tr>

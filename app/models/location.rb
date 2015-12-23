@@ -35,6 +35,8 @@ class Location < ActiveRecord::Base
   attr_accessor :chat_id, :intention_id
   attr_accessor :skip_validation
 
+  enum gender: {'保密' => 0, '男' => 1, '女' => 2 }
+
   def to_s
     %(#{contact}, #{province_name}#{city_name}#{region_name}#{road}, #{contact_phone})
   end
@@ -95,7 +97,7 @@ class Location < ActiveRecord::Base
   def reset_user_default_address
     return if persisted?
 
-    if user.latest_location_id == id
+    if user && user.latest_location_id == id
       user.update_attribute('latest_location_id', nil)
     end
   end
