@@ -91,17 +91,23 @@
       var userChannelId = 'p' + ownerUserId;
       var displayUserName = <%= Settings.chat.display_username %>;
       var displayShopName = <%= Settings.chat.display_shopname %>;
-      var greetingUserName = '', greetingShopName = '', greetingShopLogo;
+      var greetingUserName = '', greetingShopName = '', greetingShopLogo, realname = '';
 
       <% if @intention.present? %>
-        greetingUserName = '<%= @intention.supplier.owner.nickname %>';
+        realname = '<%= @intention.supplier.owner.realname %>';
+        greetingUserName = '<%= @intention.supplier.owner.realname %>';
         greetingShopName = '<%= @intention.supplier.name %>';
         greetingShopLogo = '<%= @intention.supplier.owner.avatar_url %>';
       <% elsif @shop.present? %>
+        realname = '<%= @shop.owner.realname %>';
         greetingUserName = '<%= @shop.owner.nickname %>';
         greetingShopName = '<%= @shop.name %>';
         greetingShopLogo = '<%= @shop.owner.avatar_url %>';
       <% end %>
+
+      if (realname != '') {
+        greetingUserName = realname;
+      }
 
       var chat = new Chat($('.chat-order-header'), chatChannelId, {
         sendBtn: $('.btn-send'),
