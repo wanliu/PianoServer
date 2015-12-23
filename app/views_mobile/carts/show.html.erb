@@ -33,11 +33,11 @@
       var $group = $(this).parents('.cart-group');
       calculateGroupTotal($group);
 
-      if (checked) {
-        $(this).parents('.cart').find('.confirm-order').removeAttr('disabled');
-      } else {
-        $(this).parents('.cart').find('.confirm-order').attr('disabled', 'disabled');
-      }
+      // if (checked) {
+      //   $(this).parents('.cart').find('.confirm-order').removeAttr('disabled');
+      // } else {
+      //   $(this).parents('.cart').find('.confirm-order').attr('disabled', 'disabled');
+      // }
     });
 
     // 当有一个取消选中时，取消全部选中；当所属项全部选中时，勾选全部选中按钮
@@ -55,11 +55,11 @@
           return !$(item).prop('checked');
         });
 
-        if (allUnChecked) {
-          $(this).parents('.cart').find('.confirm-order').attr('disabled', 'disabled');
-        }
+        // if (allUnChecked) {
+        //   $(this).parents('.cart').find('.confirm-order').attr('disabled', 'disabled');
+        // }
       } else {
-        $(this).parents('.cart').find('.confirm-order').removeAttr('disabled');
+        // $(this).parents('.cart').find('.confirm-order').removeAttr('disabled');
 
         var allChecked = _.all(allCheckbox, function(item) {
           return $(item).prop('checked');
@@ -159,6 +159,12 @@
 
       $group.find('.footer .total-quantity').text(totals.quantity || 0);
       $group.find('.footer .total-total').text(totals.total || 0);
+      
+      if (isNaN(totals.quantity) || totals.quantity == 0) {
+        $group.find('.cart-submit').attr('type','button').css('opacity', 0.5);
+      } else {
+        $group.find('.cart-submit').attr('type','submit').css('opacity', 1);
+      }
     }
 
     _.each($('.cart .cart-group'), calculateGroupTotal);
