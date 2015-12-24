@@ -25,6 +25,8 @@ class SmartFillsController < ApplicationController
       current_user.save(:validate => false)
       current_user.create_status(state: :select)
 
+      current_user.send(:sync_to_pusher)
+
       if request.xhr?
         render json: {success: true, callback_url: callback_url }
       else
