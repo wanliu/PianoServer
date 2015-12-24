@@ -9,15 +9,15 @@ class SmartFillsController < ApplicationController
   end
 
   def fast_register
-    current_user.user_type = "retail"
-    current_user.mobile = params[:shop][:phone]
-    current_user.save(:validate => false)
-
     shop = current_user.owner_shop || Shop.new(shop_params.merge(owner_id: current_user.id))
     shop.send(:default_values)
     shop.skip_validates = true
     shop.shop_type = 'retail'
     shop.theme = Settings.shop.default_theme
+
+    current_user.user_type = "retail"
+    current_user.mobile = params[:shop][:phone]
+    current_user.save(:validate => false)
     current_user.create_status(state: :select)
 
     if Settings.weixin.regions
