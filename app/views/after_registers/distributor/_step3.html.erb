@@ -27,7 +27,7 @@
 </div>
 
 <script type="text/template" id="brand_template">
-  <input type="checkbox" name="select[{{category_id}}][]" value="{{id}}" id="category_{{category_id}}_brand_{{id}}" />
+  <input type="checkbox" name="select[{{top_id}}][{{category_id}}][]" value="{{id}}" id="category_{{category_id}}_brand_{{id}}" />
   <label for="category_{{category_id}}_brand_{{id}}" class="brand-link list-group-item" data-brand-id="{{id}}" data-category-id="{{category_id}}">
     <span class="glyphicon glyphicon-ok brand-mark" aria-hidden="true"></span>
     <img src="{{image.url}}" width="64" height="32" alt="{{name}}" />
@@ -58,7 +58,7 @@
 
   $(".category-body>a").click(function(e) {
     var $target = $(e.currentTarget);
-
+    var topId = $target.parents(".category-body").data("categoryId")
     var id = $target .data('category');
     var $container = $target .parents('.category-body').next();
     var $ul = $container.find('>.category-' + id);
@@ -70,7 +70,7 @@
 
         for (var i = 0; i < brands.length; i++) {
           var brand = brands[i];
-          html += compiled($.extend(brand, {category_id: id }));
+          html += compiled($.extend(brand, {category_id: id, top_id: topId }));
         }
 
         $container.append(template(BRAND_GROUP_TEMPLATE, { list: html, category_id: id }));
@@ -82,7 +82,7 @@
     var id = $(e.target).data('category');
     var $ul = $(e.target).parents('.category-body').next().find(">.category-" + id);
     var count = $ul.find('.brand-link.active').length;
-    
+
     if (count > 0) {
       $(e.target).find(".badge").text(count).show();
       $('.next').removeAttr('disabled');
