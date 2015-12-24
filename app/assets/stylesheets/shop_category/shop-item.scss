@@ -282,6 +282,9 @@
       text-align: center;
       padding: 5px 0;
       position: relative;
+      &.disabled {
+        opacity: 0.5;
+      }
     }
     
     .shop-cart {

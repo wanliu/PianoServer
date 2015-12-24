@@ -38,7 +38,22 @@
             立即购买
           </div>
         <% end %>
+      <% else %>
+        <% if Settings.dev.feature.cart %>
+          <a href="/cart"  class="contact-button shop-cart hidden-sm hidden-md hidden-lg">
+            <%= icon('shopping-cart') %><span class="badge"> <%= current_cart.items_count %></span>
+          </a>
+          <div class="contact-button disabled add-to-cart hidden-sm hidden-md hidden-lg" data-cartable-type="Promotion" data-cartable-id="<%= promotion.id %>" data-moveable="<%= moveable_target %>">
+            <div class="button-text">加入购物车</div>
+          </div>
+        <% end %>
+        <% if Settings.dev.feature.purchase %>
+          <div class="buy-now disabled js-buy-now contact-button hidden-sm hidden-md hidden-lg" data-cartable-type="Promotion" data-cartable-id="<%= promotion.id %>">
+            立即购买
+          </div>
+        <% end %>
       <% end %>
+
 
       <%= link_to '洽谈', promotion_chats_path(promotion, shop_id: @shop.id), class: "chat contact-button",
         method: 'POST' %>
