@@ -98,18 +98,19 @@
         greetingUserName = '<%= @intention.supplier.owner.nickname %>';
         greetingShopName = '<%= @intention.supplier.name %>';
         greetingShopLogo = '<%= @intention.supplier.owner.avatar_url %>';
+
+        alert('intentionShopname:', greetingShopName);
       <% elsif @shop.present? %>
         realname = '<%= @shop.owner.username %>';
         greetingUserName = '<%= @shop.owner.nickname %>';
         greetingShopName = '<%= @shop.name %>';
         greetingShopLogo = '<%= @shop.owner.avatar_url %>';
+        alert('shopname:', greetingShopName);
       <% end %>
 
       if (realname != '') {
         greetingUserName = realname;
       }
-
-      alert('shopname:', greetingShopName);
 
       var chat = new Chat($('.chat-order-header'), chatChannelId, {
         sendBtn: $('.btn-send'),
