@@ -1,4 +1,15 @@
-.locations{
+.locations-container{
+  margin-top: 30px;
+  background: #F6F6F6;
+
+  .location-list {
+    .list-group-item {
+      border-radius: 0;
+      border-width: 0 0 1px 0;
+      margin-bottom: 0;
+    }
+  }
+
     >li >a{
       display: block;
       white-space: nowrap;

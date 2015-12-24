@@ -1,26 +1,25 @@
-<li class='row list-group-item'>
-  <div class='contact col-xs-6 col-sm-6 col-md-2'>
+<li class='list-group-item clearfix'>
+  <div class='contact col-xs-6 col-sm-6 col-md-1'>
     <%= location.contact %>
   </div>
-  <div class='area col-xs-6 col-sm-6 col-md-2'>
-    <%= "#{location.province_name}#{location.city_name}#{location.region_name}" %>
+  <div class='area col-xs-6 col-sm-6 col-md-6'>
+    <%= "#{location.province_name}#{location.city_name}#{location.region_name}#{location.road}" %>
   </div>
-  <div class='street col-xs-6 col-sm-6 col-md-2'>
-    <%= location.road %>
-  </div>
-  <div class='zipcode col-xs-6 col-sm-6 col-md-2'>
+  <div class='zipcode col-xs-6 col-sm-6 col-md-1'>
     <%= location.zipcode %>
   </div>
-  <div class='phone col-xs-6 col-sm-6 col-md-2'>
+  <div class='phone col-xs-6 col-sm-6 col-md-1'>
     <%= location.contact_phone %>
   </div>
-  <div class='operations col-xs-6 col-sm-6 col-md-2'>
-    <%= link_to "修改", edit_location_path(location) %> |
-    <%= link_to "删除", location_path(location), method: :delete, data: { confirm: "确定删除这个收件人地址么？" } %> |
+  <div class='operations col-xs-6 col-sm-6 col-md-2 text-center'>
+    <%= link_to "修改", edit_location_path(location)%> |
+    <%= link_to "删除", location_path(location), method: :delete, data: { confirm: "确定删除这个收件人地址么？" } %>
+  </div>
+  <div class="settings col-xs-6 col-sm-6 col-md-1">
     <% if location.is_default? %>
-      <span class="badge">默认地址</span>
+      <span class="btn btn-default">默认地址</span>
     <% else %>
-      <%= link_to "设置为默认", user_default_address_locations_path(location_id: location), method: :put, data: { confirm: "设置为默认地址？" } %>
+      <%= link_to "设为默认", user_default_address_locations_path(location_id: location), method: :put, data: { confirm: "设置为默认地址？" }, class: 'btn btn-default btn-delete' %>
     <% end %>
   </div>
 </li>
