@@ -53,14 +53,10 @@
           </div>
         <% end %>
       <% end %>
-
-
-      <%= link_to '洽谈', promotion_chats_path(promotion, shop_id: @shop.id), class: "chat contact-button",
-        method: 'POST' %>
+      <%= link_to '洽谈', promotion_chats_path(promotion, shop_id: @shop.id), class: "chat contact-button", method: 'POST' %>
     <% end %>
   </div>
 </div>
-
 
 <script>
   $(document).on('cart_quantity_changed', function(e, quantity){
