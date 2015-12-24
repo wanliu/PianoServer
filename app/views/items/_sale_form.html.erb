@@ -6,12 +6,12 @@
         <div class="media-left media-middle">品牌：</div>
         <div class="media-left media-middle"><%= @item.title %></div>
         <% unless current_anonymous_or_user.user_type == "consumer" %>
-          <div class="media-body">
+<!--           <div class="media-body">
             <div class="btn-group btn-group" role="group" aria-label="Large button group">
               <button type="button" class="btn btn-sall-type">零售价</button>
               <button type="button" class="btn btn-sall-type active">批发价</button>
             </div>
-          </div>
+          </div> -->
 <!--           <div class="media-left media-middle">
             <span>批发价：</span>
             <%#= number_to_currency item.price %>
@@ -100,13 +100,16 @@
   (function(){
     $('.minus_plus_input').on('change', function(e) {
       var quantity = $(this).val();
-      var _stock = $(document).data('stock');
-      if ( isNaN(quantity) || +quantity > _stock) {
-        $('.js-buy-now').addClass('disabled');
+      var _stock = $(document).data('stock') || <%= @item.current_stock.to_i %>;
+
+      if (isNaN(quantity) || +quantity > _stock) {
+        $('.buy-now').addClass('disabled');
         $('.add-to-cart').addClass('disabled');
+        $('.add-to-cart-bottom').addClass('disabled');
       } else {
-        $('.js-buy-now').removeClass('disabled');
+        $('.buy-now').removeClass('disabled');
         $('.add-to-cart').removeClass('disabled');
+        $('.add-to-cart-bottom').removeClass('disabled');
       }
     });
   })();
