@@ -43,6 +43,12 @@
         <%= f.select(:region_id, options_for_select(region_list, region_id), {prompt: "--地区--"}, { class: "city-select form-control" } ) %>
       </div>
     </div>
+
+    <% if [:province_id, :city_id, :region_id].any? {|item| location.errors[item].present? } %>
+      <div class='has-error'>
+        <span class="help-block text-left">请正确地选择省份，城市和地区</span>
+      </div>
+    <% end %>
   </div>
 
   <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
