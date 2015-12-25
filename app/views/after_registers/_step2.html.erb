@@ -25,7 +25,7 @@
             <%= f.text_field :title, label: '商店名'%>
             <%= group_with_errors @shop, :name, f, title: '网址', layout: :normal, input_group: true do %>
                 <span class="input-group-addon" id="basic-addon3"><%= Settings.app.website + '/'%></span>
-                <%= text_field :shop, :name, class: 'form-control', readonly: true %>
+                <%= text_field :shop, :name, class: 'form-control to-lowercase', readonly: true %>
                 <span class="input-group-btn">
                   <%= button class: 'toggle-edit', disabled: @shop.persisted? do %>
                     <b><%= icon :edit %></b>
@@ -72,6 +72,9 @@
             <div id="map">
             </div>
             <script type="text/javascript">
+              $('.to-lowercase').on('change', function(){
+                $(this).val($(this).val().toLowerCase().replace(/[^\w\.\/]/ig,''));
+              });
               // wx.config({
               //     debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
               //     appId: '', // 必填，企业号的唯一标识，此处填写企业号corpid
