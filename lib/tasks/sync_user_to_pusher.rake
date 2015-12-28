@@ -9,7 +9,7 @@ namespace :db do
           realname: user.username, avatar_url: user.avatar_url, mobile: user.mobile }
 
       if user.owner_shop.present?
-        options.merge! shop_name: user.owner_shop.name
+        options.merge! shop_name: user.owner_shop.title
       end
 
       RestClient.post pusher_url, options
