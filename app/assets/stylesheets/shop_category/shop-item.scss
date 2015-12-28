@@ -356,3 +356,14 @@
     }
   }
 }
+
+@media (max-width: 768px) {
+  body.item {
+    .main-container {
+      padding-top: 0;
+    }
+    .main-navbar {
+      opacity: 0.8;
+    }
+  }
+}
