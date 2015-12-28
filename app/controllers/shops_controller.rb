@@ -3,7 +3,7 @@ class ShopsController < ApplicationController
   before_action :set_theme
   before_action :prepare_shop_views_path
   before_action :shop_page_info, except: [ :update_name ]
-  after_commit :sync_shop_info, only: [ :update]
+  after_commit :sync_shop_info
   # caches_page :show, :show_by_name, :about
 
   def show_by_name
