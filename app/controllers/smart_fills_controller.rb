@@ -20,6 +20,7 @@ class SmartFillsController < ApplicationController
     end
 
     if shop.save
+      shop.reload
       current_user.user_type = "retail"
       current_user.mobile = params[:shop][:phone]
       current_user.save(:validate => false)
@@ -33,7 +34,7 @@ class SmartFillsController < ApplicationController
 
       clear_callback
     else
-      render json: {success: false, errors: shop.errors.full_messages.join(', ') }
+      render json: {success: false, errors: shop.errors.full_messages }
     end
   end
 
