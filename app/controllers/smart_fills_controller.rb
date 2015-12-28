@@ -9,22 +9,23 @@ class SmartFillsController < ApplicationController
   end
 
   def fast_register
-    current_user.user_type = "retail"
-    current_user.mobile = params[:shop][:phone]
-    current_user.save(:validate => false)
-
     shop = current_user.owner_shop || Shop.new(shop_params.merge(owner_id: current_user.id))
     shop.send(:default_values)
     shop.skip_validates = true
     shop.shop_type = 'retail'
     shop.theme = Settings.shop.default_theme
-    current_user.create_status(state: :select)
 
     if Settings.weixin.regions
       shop.build_location location_params.merge(skip_validation: true)
     end
 
     if shop.save
+      shop.reload
+      current_user.user_type = "retail"
+      current_user.mobile = params[:shop][:phone]
+      current_user.save(:validate => false)
+      current_user.create_status(state: :select)
+
       if request.xhr?
         render json: {success: true, callback_url: callback_url }
       else
@@ -33,7 +34,7 @@ class SmartFillsController < ApplicationController
 
       clear_callback
     else
-      render json: {success: false, errors: shop.errors.full_messages.join(', ') }
+      render json: {success: false, errors: shop.errors.full_messages }
     end
   end
 

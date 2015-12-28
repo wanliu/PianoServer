@@ -40,11 +40,15 @@
 <!--       <div class="promotion-favors">
         <p>收藏</p>
         <%= promotion.likers_count %>
-      </div>
-      <div class="promotion-likers">
+      </div> -->
+      <!-- <div class="promotion-likers">
         <p>赞</p>
         <%= promotion.favoriters_count %>
       </div> -->
+      <div class="promotion-visit">
+        <p>访问量</p>
+        <%= promotion.hits %>
+      </div>
     </div>
     
     <div class="media promotion-options-wrap">
@@ -101,8 +105,8 @@
             <div class="media-body media-middle">
               <div><%= shop.title %></div>
             </div>
-            <div><%= shop.address %></div>
           <% end %>
+          <div><%= shop.address %></div>
 
           <div class="row right-fllow-wrap">
             <div class="col-md-6 col-sm-6 text-center">

@@ -43,31 +43,6 @@
         </tr>
       </table>
     </div>
-
-    <!-- <div class="panel panel-default">
-      <div class="panel-heading">
-        店铺：<%= link_to @supplier.title, shop_site_path(@supplier) %>
-      </div>
-      <%= f.fields_for :items do |item_form| %>
-        <%= item_form.hidden_field :orderable_type %>
-        <%= item_form.hidden_field :orderable_id %>
-        <%= item_form.hidden_field :title %>
-        <%= item_form.hidden_field :price %>
-        <% @order_item.properties.each do |key, value| %>
-          <%= item_form.hidden_field "properties[#{key}]", value: value %>
-        <% end %>
-        <ul class="list-group order-items">
-          <%= render partial: "buy_now_item", locals: { item: @order_item, supplier: @supplier, f: item_form, props: @props } %>
-        </ul>
-      <% end %>
-      <div class="panel-footer">
-        <h4>总计：<span class='js-buy-now-total'><%= @total %></span>元</h4>
-      </div>
-    </div>
-
-    <div>
-      <%= f.submit "提交订单", value: '立即购买', class: 'btn btn-primary btn-lg'%>
-    </div> -->
   <% end %>
 </div>
 

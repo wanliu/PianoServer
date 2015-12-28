@@ -131,7 +131,7 @@ class ChatsController < ApplicationController
     owner_id = params[:oid]
     target_id = params[:tid]
 
-    chat = Chat.both(owner_id, target_id).last
+    chat = (Chat.both(owner_id, target_id).last || Chat.both(target_id, owner_id).last)
     redirect_to chat_path(chat)
   end
 
