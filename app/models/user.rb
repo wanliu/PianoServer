@@ -162,8 +162,8 @@ class User < ActiveRecord::Base
     options = {id: "#{id}", token: pusher_token, login: username,
       realname: nickname, avatar_url: avatar_url, mobile: mobile, sms_forward: sms_forward? }
 
-    if owner_shop(true).present?
-       options.merge! shop_name: owner_shop.name
+    if owner_shop.present?
+       options.merge! shop_name: owner_shop.title
     end
 
     begin
