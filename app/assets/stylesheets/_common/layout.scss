@@ -27,9 +27,9 @@ body.chat footer{
   display: none;
 }
 
-body.fixed-position-patch {
+body.after_registers.fixed-position-patch {
   position: relative;
-  // height: auto;
+  height: auto;
 
   .navbar-top, .navbar-fixed-bottom {
     position: absolute;

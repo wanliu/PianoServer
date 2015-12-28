@@ -1,0 +1,230 @@
+<style>
+	body.shop .brand-board .shop-info .attention:hover{
+		background: none;
+	}
+	body{
+		background: red;
+	}
+	body.shop .cate a{
+		border-radius:0;
+		display:block;
+		background:transparent;
+	}
+
+	body.shop .brand-board .shop-info{
+    	position: relative;
+    	bottom: 33px;
+    	left: 0;
+    	width: 100%;
+	}
+	body.shop .brand-board .shop-info .media:first-child{
+		background:#D7CABA;
+	}
+	body.shop .brand-board .shop-info{
+		background:none;
+	}
+	body.shop .brand-board .shop-info .shop-logo{
+		width:70px;
+		height:70px;
+	}
+
+	body.shop .brand-board .shop-info .attention{
+		background: #D7CABA;
+	    text-align: center;
+	    color: #5C4942;
+	    text-decoration: none;
+	    min-width: 100px;
+	    padding: 0 -1px;
+	    width: 1%;
+	    border-left:1px dotted #fff;
+	}
+	body.shop .brand-board .shop-info .name-address{
+		color:#5C4942;
+	}
+	body.shop .brand-board{
+		background:#856A5F;
+	}
+	.bottom-shadows:after{
+	    content: "";
+	    display: block;
+	    height: 10px;
+	    width: 100%;
+	    -webkit-background-size: 100% 100%;
+	    background-size: 100% 100%;
+	    background-image: url(http://wanliu-piano.b0.upaiyun.com/uploads/shop/logo/1/5.png);
+	}
+	.promotion .price-board{
+		background:#836658
+	}
+	body.shop .cate a:hover{
+
+	}
+	.shop-items .promotion .prices span{
+		color:#FFFFFF;
+	}
+	.price-Buy{
+		text-align:right;
+	}
+	body.shop .title{
+		background:none;
+		margin:20px 0px;
+		padding:0;
+	}
+	body.shop .promotion-title{
+		color:rgb(114, 81, 68);
+	}
+	.prices-buy{
+		float:right;
+	}
+	strong.prices-buy{
+		font-size:15px;
+	}
+	.shop-items .promotion .prices{
+		padding-right:0;
+	}
+	.item-link-a:hover .promotion-title{
+		color: #FF2B2B;
+	}
+	.item-link-a:hover .price-board {
+		background: #FF2C2B;
+	}
+	body.shop .main-container{
+		background:#EFE6DF;
+	}
+/*	body.shop .cate a img{
+		display: table-cell; 
+		position: relative; 
+		transition: opacity .25s ease-in-out, background .25s ease-in-out; 
+		-moz-transition: opacity .25s ease-in-out, background .25s ease-in-out; 
+		-webkit-transition: opacity .25s ease-in-out, background .25s ease-in-out; 
+		vertical-align: middle; 
+		z-index: 1; 
+		text-decoration: none; 
+		opacity: 1; 
+	}*/
+	body.shop .cate a:hover .nimade {
+		opacity: 1;
+	}
+	body.shop .cate a:hover .mask {
+		background: transparent; 
+		background: rgba(0,0,0,0.3); 
+	}
+	body.shop .cate a .mask {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: transparent;
+		z-index: 1;
+		-webkit-transition: background 0.5s;
+		-o-transition: background 0.5s;
+		transition: background 0.5s;
+	}
+	body.shop .cate a{
+		padding: 15px;
+		border:none;
+		position: relative;
+		background: #fff;
+	}
+/*	body.shop .cate a:hover{
+		padding: 20px;
+	}
+	body.shop .cate a img{
+		position: relative;
+		z-index: 2;
+		border:none;
+	}*/
+	body.shop .cate a img{
+		border:none;
+	}
+
+	.wobaode{
+		position: relative;
+	}
+	.nimade{
+		opacity: 0;
+		position: absolute;
+		height: 20px;
+		width: 20px;
+		border: 2px solid #705448;
+		-webkit-transition: opacity 0.5s;
+		-o-transition: opacity 0.5s;
+		transition: opacity 0.5s;
+	}
+	body.shop .brand-board .shop-info .name-address .name{
+		font-size:26px;
+	}
+	.nimade-1{
+		top: 0;
+		left: 0;
+		border-right: none;
+		border-bottom: none;
+	}
+	.nimade-2{
+		top: 0;
+		right: 0;
+		border-left: none;
+		border-bottom: none;
+	}
+	.nimade-3{
+		bottom: 0;
+		left: 0;
+		border-right: none;
+		border-top: none;
+	}
+	.nimade-4{
+		bottom: 0;
+		right: 0;
+		border-top: none;
+		border-left: none;
+	}
+	body.shop .brand-board .shop-info .name-address{
+		font-weight: 300;
+	}
+	@media(max-width:484px){
+		body.shop .brand-board .shop-info .attention{
+			min-width:57px;
+		}
+		body.shop .brand-board .shop-info .name-address{
+			font-size:16px;
+		}
+		body.shop .cate{
+			padding:0 4px;
+		}
+		body.shop .title img{
+			width:80%;
+		}
+		body.shop .title{
+			margin:0 13px;
+		}
+		body.shop .cate a{
+			padding:0;
+		}
+		body.shop .cate-items-list .cate{
+			margin-bottom:10px;
+		}
+		body.shop .shop-categories{
+			padding:5px 24px;
+		}
+		body.shop .brand-board .shop-bgi{
+			width:100%;
+		}
+		body.shop .brand-board{
+			background:none;
+		}
+		body.shop .brand-board .shop-info{
+			bottom:-5px;
+		}
+		body.shop .brand-board .shop-info .shop-logo{
+			width:44px;
+			height:44px;
+		}
+		body.shop .brand-board .shop-info .media:first-child{
+			padding:4px;
+		}
+		.container, .container-fluid{
+			padding
+		}
+	}
+</style>

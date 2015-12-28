@@ -86,6 +86,8 @@
   .list-group-item {
     padding: 5px 15px;
     cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     .children {
       position: absolute;
