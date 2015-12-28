@@ -33,7 +33,7 @@
     position: absolute;
     left: 10px;
     top: 10px;
-  }  
+  }
   .brand-mark {
     display: none;
     position: absolute;
@@ -347,6 +347,10 @@
     &:last-child {
       padding-right: 15px;
     }
+  }
+
+  .smart_fills .flash-container {
+    padding: 0;
   }
 }
 

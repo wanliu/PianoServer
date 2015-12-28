@@ -163,7 +163,7 @@ class User < ActiveRecord::Base
       realname: nickname, avatar_url: avatar_url, mobile: mobile, sms_forward: sms_forward? }
 
     if owner_shop(true).present?
-       options.merge! shop_name: owner_shop.name
+       options.merge! shop_name: owner_shop.title
     end
 
     begin
