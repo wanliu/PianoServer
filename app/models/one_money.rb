@@ -1,7 +1,13 @@
 class OneMoney
   include Redis::Objects
+  include ActiveSupport::Callbacks
+  define_callbacks :start_at, :end_at, :suspend
+
+  set_callback :start_at, :after, :expired_start_at
+  set_callback :end_at, :after, :expired_end_at
 
   # hash_key :info, global: true
+  #
   value :name
   value :title
   value :description
@@ -47,5 +53,15 @@ class OneMoney
     def per(_per = 25)
       _per
     end
+  end
+
+  private
+
+  def expired_start_at
+    status.set 'started'
+  end
+
+  def expired_end_at
+    status.set 'end'
   end
 end

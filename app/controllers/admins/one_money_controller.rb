@@ -1,7 +1,7 @@
 class Admins::OneMoneyController < Admins::BaseController
 
   def index
-    @one_moneies = OneMoney.page
+    @one_moneies = OneMoney.page 
   end
 
   def show

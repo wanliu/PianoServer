@@ -109,9 +109,12 @@ gem 'carrierwave-upyun', "0.2.1"
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
-gem 'redis', '~>3.2'
-gem "hiredis", "~> 0.4.5"
+gem 'hiredis', "~> 0.5.0"
+gem "redis", ">= 3.2.0", :require => ["redis", "redis/connection/hiredis"]
+
 gem "em-synchrony"
+# gem 'em-hiredis', '~> 0.3.0'
+gem 'em-redis'
 gem 'em-hiredis'
 gem 'redis-objects'
 # Use Unicorn as the app server
