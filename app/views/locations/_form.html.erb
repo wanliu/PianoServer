@@ -44,6 +44,12 @@
         </div>
       </div>
     </div>
+
+    <% if [:province_id, :city_id, :region_id].any? {|item| location.errors[item].present? } %>
+      <div class='has-error'>
+        <span class="help-block text-left">请正确地选择省份，城市和地区</span>
+      </div>
+    <% end %>
   </div>
 
   <div class="col-xs-12">

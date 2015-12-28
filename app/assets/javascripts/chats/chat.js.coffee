@@ -276,12 +276,13 @@ class @Chat
       console.error(e.stack)
 
   _prepareTemplateContext: (message, direction, isFirstRecord)  ->
-    {id, senderId, content, senderAvatar, senderShopName, senderLogin, type, time} = message
+    {id, senderId, content, senderAvatar, senderShopName, senderLogin, senderRealname, type, time} = message
 
     toAddClass = if @_isOwnMessage(message) then 'you' else 'me'
 
-
     senderAvatar = @options.avatarDefault if senderAvatar == '' or !senderAvatar
+
+    senderLogin = senderRealname if senderRealname != ''
 
     if @options.displayUserName && @options.displayShopName
       if senderShopName == ''

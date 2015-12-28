@@ -12,6 +12,10 @@
 
   .promotion-detail-content {
     background: #FFFFFF;
+    margin-top: 20px;
+    @media (max-width: 768px) {
+      margin-top: 0;
+    }
   }
 
   .promotion-poster-image {
@@ -285,6 +289,10 @@
   border-top: 1px solid #DDDDDD;
   z-index: 200;
 
+  .disabled {
+    opacity: 0.5;
+  }
+
   .link-table{
     display: table;
     width: 100%;
@@ -346,5 +354,16 @@
 
   .chat {
     background-color: #F42B2B;
+  }
+}
+
+@media (max-width: 768px) {
+  body.detail {
+    .main-container {
+      padding-top: 0;
+    }
+    .main-navbar {
+      background: rgba(248, 248, 248, 0.6);
+    }
   }
 }

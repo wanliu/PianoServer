@@ -83,7 +83,7 @@ class Shop < ActiveRecord::Base
 
   def default_values
     if self.name.blank?
-      py_name = Pinyin.t(self.title, splitter: '_')
+      py_name = Pinyin.t(self.title, splitter: '_').downcase
       self.name = py_name
     end
   end

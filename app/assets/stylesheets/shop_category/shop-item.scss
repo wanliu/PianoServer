@@ -282,6 +282,9 @@
       text-align: center;
       padding: 5px 0;
       position: relative;
+      &.disabled {
+        opacity: 0.5;
+      }
     }
     
     .shop-cart {
@@ -350,6 +353,17 @@
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  body.item {
+    .main-container {
+      padding-top: 0;
+    }
+    .main-navbar {
+      background: rgba(248, 248, 248, 0.6);
     }
   }
 }
