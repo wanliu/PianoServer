@@ -47,6 +47,7 @@ module PianoServer
     config.autoload_paths += %w(builders services grids drops jobs validators models/variables models/templates models/properties)
       .map { |_p| Rails.root.join('app', _p) }
 
+    config.redis_config = YAML.load(ERB.new(File.read("#{Rails.root}/config/redis.yml")).result)[Rails.env]
     # config.paths['public'].unshift "#{Rails.root.to_s}/public/deploy"
     # config.action_controller.page_cache_directory = "#{Rails.root.to_s}/public/deploy"
 

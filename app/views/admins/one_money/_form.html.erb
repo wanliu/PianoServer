@@ -1,0 +1,37 @@
+<%= form_tag admins_one_money_path(@one_money.id) do %>
+  <div class="form-group">
+    <%= label_tag 'one_money_name', :name %>
+    <%= text_field 'one_moeny', :name, value: @one_money.name.value, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= label_tag 'one_money_title', :title %>
+    <%= text_field 'one_moeny', :title, value: @one_money.title.value, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= label_tag 'one_money_description', :description %>
+    <%= text_area 'one_moeny', :description, value: @one_money.description.value, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= label_tag 'one_money_cover_url', :cover_url %>
+    <%= text_field 'one_moeny', :cover_url, value: @one_money.cover_url.value, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= label_tag 'one_money_start_at', :start_at %>
+    <%= text_field 'one_moeny', :start_at, value: @one_money.start_at.value, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= label_tag 'one_money_end_at', :end_at %>
+    <%= text_field 'one_moeny', :end_at, value: @one_money.end_at.value, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+
+    <%= submit_tag 'save', class: 'btn btn-primary' %>
+  </div>
+
+<% end %>

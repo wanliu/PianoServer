@@ -191,6 +191,10 @@ GEM
       multi_json
     element_factory (0.1.4)
       activesupport (>= 3.1, < 5.0)
+    em-hiredis (0.2.1)
+      hiredis (~> 0.4.0)
+    em-synchrony (1.0.4)
+      eventmachine (>= 1.0.0.beta.1)
     equalizer (0.0.11)
     erubis (2.7.0)
     eventmachine (1.0.8)
@@ -229,6 +233,7 @@ GEM
       sidekiq
     hashdiff (0.2.2)
     hashie (3.4.2)
+    hiredis (0.4.5)
     hitimes (1.2.2)
     httpclient (2.6.0.1)
     i18n (0.7.0)
@@ -376,6 +381,8 @@ GEM
       redis-store (~> 1.1.0)
     redis-namespace (1.5.2)
       redis (~> 3.0, >= 3.0.4)
+    redis-objects (1.2.1)
+      redis (>= 3.0.2)
     redis-rack (1.5.0)
       rack (~> 1.5)
       redis-store (~> 1.1.0)
@@ -524,12 +531,15 @@ DEPENDENCIES
   elasticsearch-model
   elasticsearch-persistence
   elasticsearch-rails
+  em-hiredis
+  em-synchrony
   factory_girl_rails
   google-analytics-rails
   guard-rails
   guard-rspec
   guard-sidekiq
   hashdiff
+  hiredis (~> 0.4.5)
   jbuilder (~> 2.0)
   jquery-rails
   jquery-turbolinks
@@ -562,6 +572,8 @@ DEPENDENCIES
   rails-backup-migrate
   rails-observers!
   rails_config (~> 0.4.2)
+  redis (~> 3.2)
+  redis-objects
   redis-rails
   rest-client
   rspec-rails (~> 3.0)
@@ -582,3 +594,6 @@ DEPENDENCIES
   unicorn
   web-console (~> 2.0)
   weixin_authorize!
+
+BUNDLED WITH
+   1.10.6

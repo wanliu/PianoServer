@@ -138,6 +138,7 @@ Rails.application.routes.draw do
     resources :messages
     resources :contacts
     resources :feedbacks
+    resources :one_money
     resources :attachments
     resources :industries do
       concerns :templable, templable_type: 'Industry', parent_type: 'Industry'
@@ -197,6 +198,9 @@ Rails.application.routes.draw do
     resources :user, only: [:index]
     get "suggestion", :to => "suggestion#index"
 
+    namespace :promotions do
+      resources :one_money, only: [:show, :update]
+    end
     # resources :business, concerns: :roomable do
     #   member do
     #     post :add_participant
