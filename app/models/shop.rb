@@ -40,6 +40,8 @@ class Shop < ActiveRecord::Base
 
   mount_uploader :logo, ImageUploader
 
+  after_commit :sync_shop_info
+
   scope :with_brands, -> (ids) do
     unless ids.blank?
       where("items.brand_id in (?)", ids)
@@ -86,6 +88,10 @@ class Shop < ActiveRecord::Base
       py_name = Pinyin.t(self.title, splitter: '_')
       self.name = py_name
     end
+  end
+
+  def sync_shop_info
+    owner.send(:sync_to_pusher) unless owner.nil?
   end
 end
 
