@@ -16,6 +16,9 @@ class Promotion < ActiveResource::Base
 
   UPYUN_SITES = %r(neil-img.b0.upaiyun.com)
 
+  IMAGE_VERSIONS_SITES = %w(wanliu-piano.b0.upaiyun.com) + Settings.assets.alliance_hosts
+
+
   self.site = Settings.wanliu.backend
   self.collection_parser = PromotionCollection
 
@@ -69,5 +72,25 @@ class Promotion < ActiveResource::Base
 
     yield true, product_inventory >= amount, product_inventory if block_given?
     product_inventory >= amount
+  end
+
+  def wrapper_url(version)
+    IMAGE_VERSIONS_SITES.any? {|url| image_url.start_with?(url) } ? image_url + '!' + version : image_url
+  end
+
+  def logo_url
+    wrapper_url('logo')
+  end
+
+  def avatar_url
+    wrapper_url('avatar')
+  end
+
+  def cover_url
+    wrapper_url('cover')
+  end
+
+  def preview_url
+    wrapper_url('preview')
   end
 end
