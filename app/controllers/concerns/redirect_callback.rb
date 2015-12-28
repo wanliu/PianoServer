@@ -3,7 +3,7 @@ module RedirectCallback
   private
 
   def callback_url
-    session[:callback] || root_path
+    session[:callback] || stored_location_for(:user) || root_path
   end
 
   def set_callback
