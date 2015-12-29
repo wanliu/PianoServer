@@ -28,7 +28,7 @@ class SmartFillsController < ApplicationController
       begin
         current_user.save(:validate => false)
 
-      rescue PG::UniqueViolation => e
+      rescue ActiveRecord::RecordNotUnique => e
         render json: {success: false, errors: ['联系电话已被人使用'] }
         return
       end
