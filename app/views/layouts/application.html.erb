@@ -105,11 +105,9 @@
     <div class="main-container">
       <div class="menu-overlayer"></div>
 
-        <% if _module == 'subject' %>
+        <div class="container flash-container">
           <%= bootstrap_flash %>
-        <% else %>
-          <div class="container"><%= bootstrap_flash %></div>
-        <% end %>
+        </div>
 
         <%= yield %>
         <% case _module %>

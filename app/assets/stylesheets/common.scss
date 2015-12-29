@@ -9,7 +9,17 @@
   }
 }
 
+body.subject .flash-container {
+    width: 100%;
+    padding: 0 !important;
+}
+
 @media (max-width: 484px) {
+  .flash-container {
+    width: 100%;
+    padding: 0 !important;
+  }
+
   .container, .container-fluid {
     padding-left: 10px;
     padding-right: 10px;
