@@ -2,21 +2,78 @@
   margin-top: 30px;
   background: #F6F6F6;
 
-  .location-list {
-    .list-group-item {
-      border-radius: 0;
-      border-width: 0 0 1px 0;
-      margin-bottom: 0;
+  .panel {
+    background: none;
+    margin-bottom: 0;
+    border-radius: 0;
+
+    .panel-heading {
+      background: #FFFFFF;
+    }
+
+    &.locations-panel {
+      margin-bottom: -1px;
     }
   }
 
-    >li >a{
-      display: block;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+  .tip-text {
+    color: #FF2B2B;
+    margin-left: 8px;
+  }
+
+  .location-list {
+    .list-group-item {
+      background: none;
+      margin-bottom: 0;
+      border-radius: 0;
+      border-width: 0 0 1px 0;
+      line-height: 36px;
+    }
+
+    .list-group-item:not(.list-head) {
+      .set-default {
+        display: none;
+      }
+
+      &:hover {
+        background: #FFFFFF;
+
+        .set-default {
+          display: inline-block;
+        }
+      }
+
+      .operations{
+        color: #FF2B2B;
+
+        a {
+          color: #FF2B2B;
+        }
+      }
     }
   }
+
+  >li >a{
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .settings {
+    .set-default {
+      background: #F12E3D;
+      color: #FFFFFF;
+      border-color: #FF2B2B;
+    }
+
+    .is-default {
+      background: #FFFFFF;
+      border-color: #F12E3D;
+      color: #F12E3D;
+    }
+  }
+}
 
 .show-locations{
   .my-locations{
@@ -29,6 +86,7 @@
     &:hover{
       background-color: #ddd;
     }
+
     .address-choiced{
       position: absolute;
       right: 5px;

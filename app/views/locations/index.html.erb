@@ -1,41 +1,35 @@
-<div class="locations-container container">
+<div class="container">
   <div class="col-xs-12">
     <div class="row">
-      <div class="panel panel-default locations-panel">
-        <div class="panel-heading">
-          地址管理
+      <div class="locations-container">
+        <div class="panel panel-default locations-panel">
+          <div class="panel-heading">
+            地址管理
+          </div>
+          <div class="panel-body">
+            <ul class="location-list list-group">
+              <li class='list-head clearfix list-group-item hidden-xs hidde-sm'>
+                <div class='contact col-xs-6 col-sm-6 col-md-1 text-center'>联系人</div>
+                <div class='area col-xs-6 col-sm-6 col-md-6 text-center'>收货地址</div>
+                <div class='zipcode col-xs-6 col-sm-6 col-md-1 text-center'>邮编</div>
+                <div class='phone col-xs-6 col-sm-6 col-md-1 text-center'>联系电话</div>
+                <div class='operations col-xs-6 col-sm-6 col-md-2 text-center'>操作</div>
+                <div class='settings col-xs-6 col-sm-6 col-md-1 text-center'>设置</div>
+              </li>
+              <% @locations.each do |location| %>
+                <%= render location %>
+              <% end %>
+            </ul>
+          </div>
         </div>
-        <div class="panel-body">
-          <ul class="location-list list-group">
-            <li class='list-head clearfix list-group-item hidden-xs hidde-sm'>
-              <div class='contact col-xs-6 col-sm-6 col-md-1 text-center'>联系人</div>
-              <div class='area col-xs-6 col-sm-6 col-md-6 text-center'>收货地址</div>
-              <div class='zipcode col-xs-6 col-sm-6 col-md-1 text-center'>邮编</div>
-              <div class='phone col-xs-6 col-sm-6 col-md-1 text-center'>联系电话</div>
-              <div class='operations col-xs-6 col-sm-6 col-md-2 text-center'>操作</div>
-              <div class='settings col-xs-6 col-sm-6 col-md-1 text-center'>设置</div>
-            </li>
-            <% @locations.each do |location| %>
-              <%= render location %>
-            <% end %>
-          </ul>
-        </div>
-      </div>
 
-      <% unless current_user.reach_location_limit? %>
-        <div class='text-danger'>新增收货地址</div>
-        <div class="new-location">
-          <%= render "form", locals: { location: Location.new } %>
-        </div>
-      <% end %>
-
-      <div class="limit-desc">
-        <div class='text-danger'>
-          <% if current_user.reach_location_limit? %>
-            地址数量已达到上限（<%= Location::AMOUNT_LIMIT %> 条），可选择某条进行修改， 或适当删除一些后再添加
-          <% else %>
-              已保存<%= @locations.size %>条，还可以再创建<%= Location::AMOUNT_LIMIT - @locations.size %>条
-          <% end %>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            添加新地址<small class="tip-text">已添加<%= @locations.size %>个收货地址,还可添加<%= Location::AMOUNT_LIMIT - @locations.size %>个收货地址</small>
+          </div>
+          <div class="panel-body">
+            <%= render 'order_address_new', locals: { location: Location.new } %>
+          </div>
         </div>
       </div>
     </div>

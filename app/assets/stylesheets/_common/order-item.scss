@@ -142,7 +142,7 @@
       float: left;
     }
   }
-  
+
   .operation {
     vertical-align: top;
 
@@ -217,7 +217,18 @@
   line-height: 44px;
 }
 
-.order-detail {
+.order-detail-container {
+  margin-top: 30px;
+
+  .shop-avatar {
+    color: #333333;
+
+    img {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
   .title {
     padding: 10px 0;
     font-size: 16px;

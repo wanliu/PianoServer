@@ -2,9 +2,9 @@
   <%= f.hidden_field :supplier_id, value: supplier.id %>
   <div class='cart-group'>
     <div class='header'>
-      <span>
+      <label class="control-label">
         <input type='checkbox' class='select-all' data-supplier-id='<%= supplier.id %>' checked='checked' />
-      </span>
+      </label>
       <span class='shop'>
         <%= link_to shop_site_path(supplier.name, format: 'html') do %>
           <%= image_tag supplier.avatar_url %> <span class="shop-title"><%= supplier.title %></span>
@@ -27,7 +27,7 @@
             已选择<span class='total-quantity'><%= items.map(&:quantity).reduce(:+) %></span> 件商品&emsp;合计<span class='total-total'><%= items.map { |item| item.price * item.quantity }.reduce(:+)  %></span>元
             <%#= f.submit '结算', class: 'btn btn-danger confirm-order' %>
           </span>
-          <%= f.submit "结  算", class: 'submit cart-submit' %>
+          <%= f.submit "结  算", class: 'btn btn-default btn-danger submit cart-submit' %>
         </td>
       </tr>
     </table>

@@ -19,7 +19,7 @@
     <% if location.is_default? %>
       <span class="btn btn-default">默认地址</span>
     <% else %>
-      <%= link_to "设为默认", user_default_address_locations_path(location_id: location), method: :put, data: { confirm: "设置为默认地址？" }, class: 'btn btn-default btn-delete' %>
+      <%= link_to "设为默认", user_default_address_locations_path(location_id: location), method: :put, data: { confirm: "设置为默认地址？" }, class: 'btn btn-default set-default' %>
     <% end %>
   </div>
 </li>
