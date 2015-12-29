@@ -4,10 +4,17 @@ class PromotionsController < ApplicationController
   before_action :set_promotion, only: [:show, :update, :destroy, :chat, :shop, :toggle_follow]
 
   respond_to :json, :html
+
   # GET /promotions
   # GET /promotions.json
+  # 如果存在有效主题，@promotions就不需要获取
   def index
-    @promotions = Promotion.find(:all, from: :active, params: query_params).to_a
+    @promotions = if current_subject.present?
+      []
+    else
+      Promotion.find(:all, from: :active, params: query_params).to_a
+    end
+
     render :homepage, with: @subject
   end
 
