@@ -142,6 +142,11 @@ Rails.application.routes.draw do
       collection do
         get :search
       end
+      member do
+        patch "add_item/:item_id", to: :add_item, as: :add_item
+        put "update_item/:item_id", to: :update_item, as: :update_item
+        delete "remove_item/:item_id", to: :remove_item, as: :remove_item
+      end
     end
     resources :attachments
     resources :industries do

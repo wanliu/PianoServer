@@ -1,6 +1,6 @@
 <% url = @one_money.new? ? admins_one_money_index_path : admins_one_money_path(@one_money.id) %>
 
-<%= form_tag url do %>
+<%= form_tag url, method: @one_money.new? ? :post : :put do %>
   <div class="form-group">
     <%= label_tag 'one_money_name', :name %>
     <%= text_field 'one_money', :name, value: @one_money.name, class: 'form-control' %>
@@ -23,12 +23,22 @@
 
   <div class="form-group">
     <%= label_tag 'one_money_start_at', :start_at %>
-    <%= text_field 'one_money', :start_at, value: @one_money.start_at, class: 'form-control' %>
+    <div class="input-group date">
+      <%= text_field 'one_money', :start_at, value: @one_money.start_at, class: 'form-control' %>
+      <span class="input-group-addon">
+          <span class="glyphicon glyphicon-calendar"></span>
+      </span>
+    </div>
   </div>
 
   <div class="form-group">
     <%= label_tag 'one_money_end_at', :end_at %>
-    <%= text_field 'one_money', :end_at, value: @one_money.end_at, class: 'form-control' %>
+    <div class="input-group date">
+      <%= text_field 'one_money', :end_at, value: @one_money.end_at, class: 'form-control' %>
+      <span class="input-group-addon">
+          <span class="glyphicon glyphicon-calendar"></span>
+      </span>
+    </div>
   </div>
 
   <div class="form-group">
@@ -37,3 +47,9 @@
   </div>
 
 <% end %>
+<script type="text/javascript">
+  $('.input-group.date').datetimepicker({
+    format: "YYYY-MM-DD HH:mm:ss"
+  });
+
+</script>

@@ -9,7 +9,8 @@ class OneMoney < Ohm::Model
 
   attribute :start_at, Type::Time
   attribute :end_at, Type::Time
-
+  attribute :suspend_at, Type::Time
+  
   attribute :cover_url
   attribute :status
 
@@ -19,6 +20,8 @@ class OneMoney < Ohm::Model
 
   expire :start_at, :expired_start_at
   expire :end_at, :expired_end_at
+
+
 
   index :name
 

@@ -18,11 +18,16 @@ class PmoItem < Ohm::Model
   attribute :status
   attribute :shop_name
   attribute :shop_avatar_url
+  attribute :start_at, Type::Time
+  attribute :end_at, Type::Time
+  attribute :suspend_at, Type::Time
 
   reference :one_money, :OneMoney
 
   set :participants, :PmoUser
   set :winners, :PmoUser
+
+  # list :logs, :PmoLog
 
   counter :completes
 
@@ -53,4 +58,18 @@ class PmoItem < Ohm::Model
   def avatar_url
     avatar_urls.try :first
   end
+
+  def start_at
+    attributes[:start_at] || self.one_money.try(:start_at)
+  end
+
+  def end_at
+    attributes[:end_at] || self.one_money.try(:end_at)
+  end
+
+  def suspend_at
+    attributes[:suspend_at] || self.one_money.try(:suspend_at)    
+  end
+
+
 end

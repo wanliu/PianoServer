@@ -20,6 +20,15 @@ class Admins::OneMoneyController < Admins::BaseController
     @one_money = OneMoney[params[:id]]
   end
 
+  def update
+    @one_money = OneMoney[params[:id].to_i]
+    @one_money.update_attributes one_money_params
+    @one_money.save
+
+    redirect_to action: :edit
+    # params[]
+  end
+
   def search
     q = params[:q]
     if q.to_i == 0
@@ -35,6 +44,31 @@ class Admins::OneMoneyController < Admins::BaseController
                                                  shop_name: item.shop.title,
                                                  price: item.price,
                                                  inventory: item.current_stock }} }
+  end
+
+  def add_item
+    @one_money = OneMoney[params[:id].to_i]
+    item = Item.find(params[:item_id])
+    @item = PmoItem.from(item)
+    @item.one_money = @one_money
+    @item.save
+
+  end
+
+  def remove_item
+    @one_money = OneMoney[params[:id].to_i]
+    @item = PmoItem[params[:item_id]]
+    @item.delete
+  end
+
+  def update_item
+    @item = PmoItem[params[:item_id]]
+    @item.update_attributes(params[:pmo_item])
+    @item.save
+
+    respond_to do |format|
+      format.json  { render json: @item }
+    end
   end
 
   private

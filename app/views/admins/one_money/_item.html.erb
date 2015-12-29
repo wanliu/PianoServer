@@ -1,13 +1,17 @@
 <div class="pmo-item">
+  <%= close_to remove_item_admins_one_money_path(@one_money.id, item.id), remote: true, class: 'pull-right' %>
   <%= image_tag item.cover_url, class: 'item-image' %>
-  <p class="title"><%= item.title %></p>
+
+  <p class="title"><%= b item, :title, :as => :input %></p>
   <p class="prices">
-    <small><span class="pull-right"><s>原价：<%= number_to_currency item.ori_price %></s></span></small>
-    <span class="lead"><%= number_to_currency item.price %></span>
+    <small><span class="pull-right"><s>原价：<%= b item, :ori_price, display_with: :number_to_currency %></s></span></small>
+    <span class="lead"><%=b item, :price, display_with: :number_to_currency %></span>
 
   </p>
-  <p class="from"><%= item.shop_name %></p>
-  <p class="status"><%= status_label item.status %> <%= item.completes %>/<%= item.total_amount %></p>
+
+  <p class="from"><%=b item, :shop_name %></p>
+  <p class="status"><%= status_label item.status %> <%=b item, :completes, title: '完成量' %>/<%=b item, :total_amount, title: '活动总量' %></p>
+  <p class="time"><%= item.start_at %></p>
   <p class="participants">
     <span class="pull-right participants-count "><%= item.participants.count %></span>
     <% item.participants.each do |user| %>

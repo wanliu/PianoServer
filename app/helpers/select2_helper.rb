@@ -62,7 +62,19 @@ module Select2Helper
       placeholder: '选择'
     }
 
+    on_change = <<-JAVASCRIPT
+        function(e) {
+          data = $(this).select2('data')[0];
+
+          $.ajax({
+            url: "#{url}/" + data.id,
+            type: 'PATCH'
+          });
+        }
+      JAVASCRIPT
+
     select2_options[:placeholder] = options[:placeholder] if options[:placeholder].present?
+    on_change = options[:on_change] if options.has_key?(:on_change)
 
     html = <<-HTML
       #{select object_name, method, choices, options, html_options.merge(_html_options), &block}
@@ -80,14 +92,7 @@ module Select2Helper
               url: "#{url}"
             },
             templateResult: formatState
-        }, #{select2_options.to_json})).on('change', function(e) {
-          data = $(this).select2('data')[0];
-
-          $.ajax({
-            url: "#{url}/" + data.id,
-            type: 'PATCH'
-          });
-        });
+        }, #{select2_options.to_json})).on('change', #{on_change});
       </script>
     HTML
     html.html_safe
