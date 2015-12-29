@@ -1,1 +1,53 @@
 <%= render "form" %>
+<%#= search_form search_admins_one_money_index_path, input: { class:  "live-search-brand", placeholder: "输入搜索品牌" }, group: { class: "input-group-lg col-sm-12" } %>
+
+<%#= text_field_tag "q", nil, class: "form-control", id: "one_money_query", placeholder: 'Item id | 店铺, 商品名  -- 例: 1113 | 宝宝贝贝, 贝因美'%>
+<div class="row">
+  <div class="col-xs-12">
+    <% template = <<-HTML
+      <div class="media">
+        <div class="media-left">
+          <img class="media-object" src="{{ avatar_url }}" alt="{{text}}">
+        </div>
+        <div class="media-body">
+          <h4 class="media-heading">{{text}}</h4>
+          <p>
+            <span class="shop_name"> {{shop_name}}</span>
+            <span class="right-side pull-right">
+              <span class="price">价格 {{price}}</span>
+              <span class="inventory">库存 {{inventory}}</span>
+            </span>
+          </p>
+        </div>
+      </div>
+    HTML
+    %>
+    <%= select2_url_template "one_money",
+        "query",
+        search_admins_one_money_index_path,
+        [],
+        placeholder: 'Item id | 店铺, 商品名  -- 例: 1113 | 宝宝贝贝, 贝因美',
+        template: template,
+        class: 'form-control',
+        style: 'width: 100%' %>
+  </div>
+</div>
+<!-- <div class="live-items-query" >
+  <div class="box">
+  </div>
+</div> -->
+<div class="items-container clearfix">
+  <%= render partial: "item", collection: @one_money.items.to_a %>
+</div>
+<script type="text/javascript">
+
+  $(".select2").width('100%');
+  // $("select2-container--bootstrap .select2-results > .select2-results__options").css({maxHeigth: 400});
+</script>
+<!-- <script type="text/javascript">
+  var url = "<%= search_admins_one_money_index_path %>";
+
+  $("#one_money_query").keyup(function() {
+    $.get(url, {q: $(this).val()}, null, 'script')
+  });
+</script> -->

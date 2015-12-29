@@ -58,6 +58,9 @@ dataConfirmModal.setDefaults({
   cancel: '取消'
 });
 
+_.templateSettings = {
+  interpolate: /\{\{(.+?)\}\}/g
+};
 // $(function() {
 //     FastClick.attach(document.body);
 // });

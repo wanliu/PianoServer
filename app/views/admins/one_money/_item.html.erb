@@ -1,0 +1,23 @@
+<div class="pmo-item">
+  <%= image_tag item.cover_url, class: 'item-image' %>
+  <p class="title"><%= item.title %></p>
+  <p class="prices">
+    <small><span class="pull-right"><s>原价：<%= number_to_currency item.ori_price %></s></span></small>
+    <span class="lead"><%= number_to_currency item.price %></span>
+
+  </p>
+  <p class="from"><%= item.shop_name %></p>
+  <p class="status"><%= status_label item.status %> <%= item.completes %>/<%= item.total_amount %></p>
+  <p class="participants">
+    <span class="pull-right participants-count "><%= item.participants.count %></span>
+    <% item.participants.each do |user| %>
+      <%= image_tag user.avatar_url, size: "30x30", class: "slide-image" %>
+    <% end %>
+  </p>
+  <p class="winners">
+    <span class="pull-right winners-count "><%= item.winners.count %></span>
+    <% item.winners.each do |user| %>
+      <%= image_tag user.avatar_url, size: "30x30", class: "slide-image" %>
+    <% end %>
+  </p>
+</div>

@@ -138,7 +138,11 @@ Rails.application.routes.draw do
     resources :messages
     resources :contacts
     resources :feedbacks
-    resources :one_money
+    resources :one_money do
+      collection do
+        get :search
+      end
+    end
     resources :attachments
     resources :industries do
       concerns :templable, templable_type: 'Industry', parent_type: 'Industry'

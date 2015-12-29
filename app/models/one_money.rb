@@ -14,10 +14,15 @@ class OneMoney < Ohm::Model
   attribute :status
 
   attribute :price, Type::Decimal
-  index :name
+
+  collection :items, :PmoItem
 
   expire :start_at, :expired_start_at
   expire :end_at, :expired_end_at
+
+  index :name
+
+  attr_accessor :query
 
   def to_key
     attributes[:id].nil? ? [] : [id.to_s]
