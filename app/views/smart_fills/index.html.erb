@@ -137,7 +137,9 @@
             errors.push(['<li class="error-message">', errs[i], '</li>'].join(''));
           }
 
-          $errors.html(errors).show();
+          if (errors.length > 0) {
+            $errors.html(errors.join('')).show();
+          }
         }
       }
     });
