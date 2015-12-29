@@ -9,9 +9,8 @@ class Cacher < Liquid::Block
 
     if object.present? && object.id && object.updated_at
       key = "subject/#{object.class}/#{object.id}/#{object.updated_at}"
-      puts '================> fetch'
+
       Rails.cache.fetch(key) do
-        puts '=================> super'
         super
       end
     else
