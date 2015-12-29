@@ -131,9 +131,6 @@
         } else {
           var errs = data.errors;
 
-          alert('errs:', errs);
-          alert('data:', data);
-
           errors.length = 0;
 
           for (var i = 0; i < errs.length; i++) {
@@ -144,6 +141,9 @@
             $errors.html(errors.join('')).show();
           }
         }
+      },
+      error: function(response) {
+
       }
     });
   });
