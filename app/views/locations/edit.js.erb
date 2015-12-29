@@ -1,0 +1,3 @@
+$("[edit-location-id=<%= @location.id %>]")
+  .html("<%=j render partial: "order_address_new", locals: {location: @location} %>")
+  .slideToggle()
