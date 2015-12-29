@@ -36,7 +36,7 @@ class SmartFillsController < ApplicationController
 
         clear_callback
       else
-        render json: {success: false, errors: current_user.errors.full_messages }
+        render json: {success: false, errors: ['联系电话已被人使用'] }
       end
     else
       render json: {success: false, errors: shop.errors.full_messages }
