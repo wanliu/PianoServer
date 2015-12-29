@@ -24,16 +24,20 @@ class SmartFillsController < ApplicationController
       current_user.user_type = "retail"
 
       current_user.mobile = params[:shop][:phone]
-      current_user.save(:validate => false)
-      current_user.create_status(state: :shop)
 
-      if request.xhr?
-        render json: {success: true, callback_url: callback_url }
+      if current_user.save(:validate => false)
+        current_user.create_status(state: :shop)
+
+        if request.xhr?
+          render json: {success: true, callback_url: callback_url }
+        else
+          redirect_to callback_url
+        end
+
+        clear_callback
       else
-        redirect_to callback_url
+        render json: {success: false, errors: current_user.errors.full_messages }
       end
-
-      clear_callback
     else
       render json: {success: false, errors: shop.errors.full_messages }
     end
