@@ -7,6 +7,8 @@ redis_config = Rails.application.config.redis_config
 host = redis_config["host"]
 port = redis_config["port"]
 
+Ohm.redis = Redic.new("redis://#{host}:#{port}")
+
 Redis::Objects.redis = ConnectionPool.new(size: 5, timeout: 5) {
   conn = Redis.new driver: :hiredis, host: host, port: port
   conn

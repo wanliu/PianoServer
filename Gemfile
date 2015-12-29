@@ -117,6 +117,8 @@ gem "em-synchrony"
 gem 'em-redis'
 gem 'em-hiredis'
 gem 'redis-objects'
+gem 'ohm'
+gem 'ohm-contrib'
 # Use Unicorn as the app server
 gem 'unicorn'
 # gem 'puma'

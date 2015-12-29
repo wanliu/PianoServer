@@ -4,9 +4,10 @@ class OneMoneyTable < TableCloth::Base
   column :id
 
   COLUMNS.each do |col_name|
-    column col_name do |object|
-      object.send(col_name).value
-    end
+    column col_name
+    # column col_name do |object|
+    #   object.send(col_name).value
+    # end
   end
 
   actions do
