@@ -1,5 +1,5 @@
 class LocationsController < ApplicationController
-  before_action :authenticate_user!, only: [:index, :create, :udpate, :destroy, :user_default_address]
+  before_action :authenticate_user!, only: [:index, :create, :update, :destroy, :user_default_address]
   before_action :set_location, only: [:edit, :update, :destroy]
 
   def index
@@ -12,6 +12,10 @@ class LocationsController < ApplicationController
   end
 
   def edit
+    respond_to do |format|
+      format.html { render :edit }
+      format.js
+    end
   end
 
   def show
@@ -32,8 +36,7 @@ class LocationsController < ApplicationController
           redirect_to direction
         end
       else
-        format.json {
-          render json: {errors: @location.errors } }
+        format.json { render json: {errors: @location.errors } }
           # render partial: 'locations/form',
           #        locals: { location: @location },
           #        formats: :html,

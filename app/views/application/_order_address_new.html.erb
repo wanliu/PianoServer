@@ -18,8 +18,14 @@
               <span class="required">*</span>
             <% end %>
             <div class="input-box">
-              <label class="gender-label"><input type="radio" name="gender" value="0" checked="checked">男</label>
-              <label class="gender-label"><input type="radio" name="gender" value="1">女</label>
+              <label class="gender-label">
+                <%= f.radio_button(:gender, '男') %>
+                男
+              </label>
+              <label class="gender-label">
+                <%= f.radio_button(:gender, '女') %>
+                女
+              </label>
             </div>
           </div>
         </div>
@@ -85,8 +91,13 @@
 
         <div class="form-group property-item clearfix tool-buttons">
           <div class="input-box">
-            <button type="reset" class="btn btn-default btn-reset">重&emsp;置</button>
-            <button type="submit" class="btn btn-default btn-save">保&emsp;存</button>
+            <% if location.persisted? %>
+              <button type="button" class="btn btn-default btn-cancel">取&emsp;消</button>
+              <button type="submit" class="btn btn-default btn-save">保&emsp;存</button>
+            <% else %>
+              <button type="reset" class="btn btn-default btn-reset">重&emsp;置</button>
+              <button type="submit" class="btn btn-default btn-save">添&emsp;加</button>
+            <% end %>
           </div>
         </div>
       <% end %>

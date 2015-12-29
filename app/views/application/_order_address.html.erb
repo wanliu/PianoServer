@@ -28,10 +28,12 @@
               </p>
             </div>
 
-            <div class="set-default">
-              <span class="default-tip">默认地址</span>
-              <span class="default-icon"><%= icon :ok %></span>
-            </div>
+            <% if addr.is_default? %>
+              <div class="default-address">
+                <span class="default-tip">默认地址</span>
+                <span class="default-icon"><%= icon :ok %></span>
+              </div>
+            <% end %>
           </div>
         </div>
       <% end %>
@@ -106,7 +108,7 @@
         // 地址数量达到上限
         if (data.reach_user_limit) {
           $('.add-another-location').remove();
-          $('.reach-limit').show();
+          $('.add-new-location').remove();
         }
       }
     });

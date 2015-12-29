@@ -32,11 +32,10 @@
       border-bottom: 2px solid #E5E5E5;
     }
 
-    .set-default {
+    .default-address {
       position: absolute;
       bottom: 0;
       right: 0;
-      display: none;
     }
 
     .default-tip, .default-icon {
@@ -53,9 +52,7 @@
     }
 
     &.active {
-      .set-default {
-        display: block;
-      }
+      border-color: #FF2B2B;
     }
   }
 

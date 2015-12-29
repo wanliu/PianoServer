@@ -23,15 +23,25 @@
           </div>
         </div>
 
-        <div class="panel panel-default">
+        <div class="panel panel-default new-location-panel">
           <div class="panel-heading">
             添加新地址<small class="tip-text">已添加<%= @locations.size %>个收货地址,还可添加<%= Location::AMOUNT_LIMIT - @locations.size %>个收货地址</small>
           </div>
           <div class="panel-body">
             <%= render 'order_address_new', locals: { location: Location.new } %>
+
+            <% if current_user.reach_location_limit? %>
+              <div class="location-mask"></div>
+            <% end %>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+  $('.locations-container').on('click', '.btn-cancel', function() {
+    $(this).parents('.location-edit-zone').slideUp();
+  });
+</script>
