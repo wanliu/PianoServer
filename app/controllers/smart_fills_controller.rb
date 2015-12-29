@@ -9,6 +9,16 @@ class SmartFillsController < ApplicationController
   end
 
   def fast_register
+    current_user.user_type = "retail"
+    current_user.mobile = params[:shop][:phone]
+
+    begin
+      current_user.save(:validate => false)
+    rescue ActiveRecord::RecordNotUnique => e
+      render json: {success: false, errors: ['联系电话已被人使用'] }
+      return
+    end
+
     shop = current_user.owner_shop || Shop.new(shop_params.merge(owner_id: current_user.id))
     shop.send(:default_values)
     shop.skip_validates = true
@@ -21,17 +31,6 @@ class SmartFillsController < ApplicationController
 
     if shop.save
       shop.reload
-      current_user.user_type = "retail"
-
-      current_user.mobile = params[:shop][:phone]
-
-      begin
-        current_user.save(:validate => false)
-
-      rescue ActiveRecord::RecordNotUnique => e
-        render json: {success: false, errors: ['联系电话已被人使用'] }
-        return
-      end
 
       current_user.create_status(state: :shop)
 
@@ -42,7 +41,6 @@ class SmartFillsController < ApplicationController
       end
 
       clear_callback
-
     else
       render json: {success: false, errors: shop.errors.full_messages }
     end
