@@ -25,19 +25,24 @@ class SmartFillsController < ApplicationController
 
       current_user.mobile = params[:shop][:phone]
 
-      if current_user.save(:validate => false)
-        current_user.create_status(state: :shop)
+      begin
+        current_user.save(:validate => false)
 
-        if request.xhr?
-          render json: {success: true, callback_url: callback_url }
-        else
-          redirect_to callback_url
-        end
-
-        clear_callback
-      else
+      rescue PG::UniqueViolation => e
         render json: {success: false, errors: ['联系电话已被人使用'] }
+        return
       end
+
+      current_user.create_status(state: :shop)
+
+      if request.xhr?
+        render json: {success: true, callback_url: callback_url }
+      else
+        redirect_to callback_url
+      end
+
+      clear_callback
+
     else
       render json: {success: false, errors: shop.errors.full_messages }
     end
