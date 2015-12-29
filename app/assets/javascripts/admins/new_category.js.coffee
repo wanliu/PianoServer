@@ -40,7 +40,7 @@ class @NewShopCategory extends @HuEvent
       }).success (data) =>
         category = @$().before($(data.html)).prev()
         @$input.val('')
-        new EditShopCategory(category)
+        new EditShopCategory(category, data.status)
 
   leaveEdit: () ->
     @$input.hide()
