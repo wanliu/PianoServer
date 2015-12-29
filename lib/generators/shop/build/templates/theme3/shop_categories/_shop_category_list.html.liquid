@@ -16,6 +16,15 @@
         <div class="shop-items">
           <div class="row">
             {% include "item" for items %}
+            {% if items.size == 0 %}
+              {% if shop.owner_id == current_user.id %}
+                <h4 class="text-center">
+                  您的商店还未添加任何分类/商品<br>
+                  请前往 {{ '店铺管理' | link_to: shop.shop_admin_link }} 添加分类/商品</h4>
+              {% else %}
+                <h4 class="text-center">对不起,本商店暂未添加分类/商品</h4>
+              {% endif %}
+            {% endif %}
           </div>
         </div>
       {% endif %}
