@@ -1,47 +1,52 @@
-<div class="col-xs-6 col-sm-3 promotion-wrap">
- <div class="promotion">
-  <a href="/promotions/{{ promotion.id }}">
-   {{ promotion.image_url | image_tag: class: 'promotion-image' }}
-   <p class="promotion-title">
-     {{ promotion.title }}
-   </p>
-   <div class="price-board clearfix">
-    {% if  promotion.status == 'Published' %}
-      <span class="snap-ready">未开始</span>
-    {% elsif promotion.status == 'Active' %}
-      <span class="snap-up">抢购中</span>
-    {% else %}
-      <span class="snap-end">已结束</span>
-    {% endif %}
+{% comment %} ①首先将下面的subjectname更改未对应的主题名称，以避免不用的主题中的模板缓存错调  {% endcomment %}
+{% comment %} ②一旦修改了本模板中的内容，请同时修改版本号(v后面的数字)，否则更改将不起作用  {% endcomment %}
 
-    <div class="prices">
-     <span class="disount-price">￥{{ promotion.discount_price }}</span>
-     <span class="origin-price"><s>￥{{ promotion.product_price }}</s></span>
-    </div>
-   </div>
-  </a>
-  {% if promotion.shop_name %}
-    <a href="/{{ promotion.link_shop_html }}">
-  {% else %}
-    <a href="#">
-  {% endif %}
-    <div class="provider-wrap">
-      <div class="provider">
-        <div class="provider-name">
-        {% if promotion.shop_title %}
-          {{ promotion.shop_title }}
-        {% elsif promotion.shop_name %}
-          {{ promotion.shop_name }}
-        {% else %}
-          活动商家
-        {% endif %}
-          <div>{{ promotion.created_at | date: '%Y/%m/%d %H:%M' }}</div>
-        </div>
-        <div class="avatar-wrap">
-          {{ promotion.publisher_avatar | image_tag: class: "publish-avatar" }}
+{% cache promotion:subjectname_promotion_v1 %}
+  <div class="col-xs-6 col-sm-3 promotion-wrap">
+   <div class="promotion">
+    <a href="/promotions/{{ promotion.id }}">
+     {{ promotion.image_url | image_tag: class: 'promotion-image' }}
+     <p class="promotion-title">
+       {{ promotion.title }}
+     </p>
+     <div class="price-board clearfix">
+      {% if  promotion.status == 'Published' %}
+        <span class="snap-ready">未开始</span>
+      {% elsif promotion.status == 'Active' %}
+        <span class="snap-up">抢购中</span>
+      {% else %}
+        <span class="snap-end">已结束</span>
+      {% endif %}
+
+      <div class="prices">
+       <span class="disount-price">￥{{ promotion.discount_price }}</span>
+       <span class="origin-price"><s>￥{{ promotion.product_price }}</s></span>
+      </div>
+     </div>
+    </a>
+    {% if promotion.shop_name %}
+      <a href="/{{ promotion.link_shop_html }}">
+    {% else %}
+      <a href="#">
+    {% endif %}
+      <div class="provider-wrap">
+        <div class="provider">
+          <div class="provider-name">
+          {% if promotion.shop_title %}
+            {{ promotion.shop_title }}
+          {% elsif promotion.shop_name %}
+            {{ promotion.shop_name }}
+          {% else %}
+            活动商家
+          {% endif %}
+            <div>{{ promotion.created_at | date: '%Y/%m/%d %H:%M' }}</div>
+          </div>
+          <div class="avatar-wrap">
+            {{ promotion.publisher_avatar | image_tag: class: "publish-avatar" }}
+          </div>
         </div>
       </div>
-    </div>
-   </div>
- </a>
-</div>
+     </div>
+   </a>
+  </div>
+{% endcache %}
