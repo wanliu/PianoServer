@@ -15,6 +15,8 @@ class Cart < ActiveRecord::Base
   end
 
   def items_count
-    items.pluck(:quantity).reduce(:+) || 0
+    Rails.cache.fetch self do
+      items.pluck(:quantity).reduce(:+) || 0
+    end
   end
 end
