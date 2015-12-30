@@ -210,8 +210,11 @@ Rails.application.routes.draw do
     namespace :promotions do
       resources :one_money, only: [:show, :update]  do
         member do
+          get "items", action: :items
           get "items/:item_id", action: :item
           get "signup", action: :signup
+
+          get "status", action: :status
         end
       end
     end

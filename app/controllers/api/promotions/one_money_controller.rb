@@ -4,7 +4,9 @@ class Api::Promotions::OneMoneyController < Api::BaseController
   before_action :set_one_money #, except: [:, :update, :status, :item]
 
   def show
-    render json: @one_money.attributes
+    hash = @one_money.attributes
+    hash[:items] = @one_money.items # .map { |item| item.attributes }
+    render json: hash
   end
 
   def status
@@ -19,10 +21,24 @@ class Api::Promotions::OneMoneyController < Api::BaseController
     render json: @item.attributes
   end
 
+  def items
+    hash = @one_money.attributes
+    @items = @one_money.items.map { |item| item.attributes }
+    render json: @items
+  end
+
   def signup
     @one_money.signups.add(pmo_current_user)
     @one_money.save
     render json: {user_id: pmo_current_user.id }
+  end
+
+  def status
+    hash = @one_money.attributes
+    hash[:signup_count] = @one_money.signups.count
+    hash[:participant_count] =  @one_money.participants.count
+    hash[:winner_count] =  @one_money.winners.count
+    render json: hash
   end
 
   private

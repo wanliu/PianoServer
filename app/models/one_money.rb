@@ -17,7 +17,10 @@ class OneMoney < Ohm::Model
   attribute :price, Type::Decimal
 
   collection :items, :PmoItem
+
   set :signups, :PmoUser
+  set :participants, :PmoUser
+  set :winners, :PmoUser
 
   expire :start_at, :expired_start_at
   expire :end_at, :expired_end_at
