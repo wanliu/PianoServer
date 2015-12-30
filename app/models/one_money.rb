@@ -10,18 +10,19 @@ class OneMoney < Ohm::Model
   attribute :start_at, Type::Time
   attribute :end_at, Type::Time
   attribute :suspend_at, Type::Time
-  
+
   attribute :cover_url
   attribute :status
 
   attribute :price, Type::Decimal
 
   collection :items, :PmoItem
+  set :signups, :PmoUser
 
   expire :start_at, :expired_start_at
   expire :end_at, :expired_end_at
 
-
+  counter :hits
 
   index :name
 

@@ -15,6 +15,12 @@ class PmoUser < Ohm::Model
 
   index :user_id
 
+  def before_create
+    if self.id < 0
+    end
+    # self.status = "pending"
+  end
+
   def self.from(user)
     new({
       username: user.username,

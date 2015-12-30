@@ -59,17 +59,20 @@ class PmoItem < Ohm::Model
     avatar_urls.try :first
   end
 
-  def start_at
-    attributes[:start_at] || self.one_money.try(:start_at)
+  def start_at_with_fallback
+    start_at_without_fallback || self.one_money.try(:start_at)
   end
 
-  def end_at
-    attributes[:end_at] || self.one_money.try(:end_at)
+  def end_at_with_fallback
+    end_at_without_fallback || self.one_money.try(:end_at)
   end
 
-  def suspend_at
-    attributes[:suspend_at] || self.one_money.try(:suspend_at)    
+  def suspend_at_with_fallback
+    suspend_at_without_fallback || self.one_money.try(:suspend_at)
   end
 
+  alias_method_chain :start_at, :fallback
+  alias_method_chain :end_at, :fallback
+  alias_method_chain :suspend_at, :fallback
 
 end

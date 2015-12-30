@@ -1,4 +1,12 @@
 <%= render "form" %>
+<div class="signups">
+  <label for="">报名者 (<%= @one_money.signups.count %>)</label>
+  <div>
+    <% @one_money.signups.each do |user| %>
+      <%= image_tag user.avatar_url, size: "30x30" %>
+    <% end %>
+  </div>
+</div>
 
 <div class="row">
   <div class="col-xs-12">
@@ -44,6 +52,7 @@
         style: 'width: 100%' %>
   </div>
 </div>
+
 <div class="items-container clearfix">
   <%= render partial: "item", collection: @one_money.items.to_a %>
 </div>

@@ -143,9 +143,9 @@ Rails.application.routes.draw do
         get :search
       end
       member do
-        patch "add_item/:item_id", to: :add_item, as: :add_item
-        put "update_item/:item_id", to: :update_item, as: :update_item
-        delete "remove_item/:item_id", to: :remove_item, as: :remove_item
+        patch "add_item/:item_id", action: :add_item, as: :add_item
+        put "update_item/:item_id", action: :update_item, as: :update_item
+        delete "remove_item/:item_id", action: :remove_item, as: :remove_item
       end
     end
     resources :attachments
@@ -208,7 +208,12 @@ Rails.application.routes.draw do
     get "suggestion", :to => "suggestion#index"
 
     namespace :promotions do
-      resources :one_money, only: [:show, :update]
+      resources :one_money, only: [:show, :update]  do
+        member do
+          get "items/:item_id", action: :item
+          get "signup", action: :signup
+        end
+      end
     end
     # resources :business, concerns: :roomable do
     #   member do

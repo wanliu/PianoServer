@@ -32,25 +32,69 @@ module Admins::OneMoneyHelper
     best_in_place OhmModel.new(item, model_name: item.class), *args
   end
 
-  def time_prompt(item, time = Time.now)
-    fmt_time = proc {|seconds| Time.at(seconds).utc.strftime("%H:%M:%S")}
-    fmt =
+  def time_prompt(item, time = Time.now, &block)
+    flag, time_str, seconds =
       case item.status
       when "started"
-        seconds = time - item.start_at
-        if seconds > 0
-          "执行了 #{fmt_time.call(seconds)}"
-        else
-          "执行 #{fmt_time.call(seconds)}"
+        short_time(item.start_at, time) do |flag|
+          if flag > 0
+            "执行了 %s"
+          else
+            ""
+          end
         end
       when "end"
-        "中止在 #{item.end_at.strftime("%H:%M:%S")}"
+        short_time(item.end_at, time) do |flag|
+          if flag > 0
+            "中止在 %s"
+          else
+            ""
+          end
+        end
       when "suspend"
-        "暂时 %2d:%2d"
+        short_time(item.suspend_at, time) do |flag|
+          if flag > 0
+            "暂停 %s"
+          else
+            ""
+          end
+        end
       else
-        "等待 %2d:%2d"
+        # seconds = time - item.start_at
+        short_time(item.start_at, time) do |flag|
+          if flag > 0
+            "过期了 %s"
+          elsif flag < 0
+            "等待 %s"
+          else
+            ""
+          end
+        end
       end
 
+    if block_given? then yield(flag,time_str, seconds) else time_str end
+  end
+
+  def short_time(t1, t2, &block)
+    fmt_time = proc {|seconds| Time.at(seconds).utc.strftime("%H:%M:%S")}
+    seconds = t2 - t1
+    flag = 0
+    str = if seconds > 0
+            flag = 1
+            if seconds > 1.days
+              (yield flag) % [time_ago_in_words(t1)]
+            else
+              (yield flag) % [fmt_time.call(seconds.abs)]
+            end
+          elsif seconds < 0
+            flag = -1
+            if seconds.abs > 1.days
+              (yield flag) % [time_ago_in_words(t1)]
+            else
+              (yield flag) % [fmt_time.call(seconds.abs)]
+            end
+          end
+    [flag, str, seconds]
   end
 
   alias_method :b, :best_in_place_item
