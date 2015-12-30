@@ -212,7 +212,7 @@ Rails.application.routes.draw do
         member do
           get "items", action: :items
           get "items/:item_id", action: :item
-          get "signup", action: :signup
+          match "signup", action: :signup, via: Rails.env.production? ? [:put] : [:put, :get]
 
           get "status", action: :status
         end

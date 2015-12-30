@@ -4,7 +4,8 @@ module FastUsers
       @current_user
     else
       if user = warden.authenticate(scope: :user)
-        @current_user = user.attributes.deep_symbolize_keys
+        @current_user = user.as_json.deep_symbolize_keys
+        @current_user.except!(:authentication_token, :provider, :latest_location_id, :data)
         @current_user[:image] = {}
         @current_user[:image][:url] = user.avatar_url
         @current_user
@@ -21,8 +22,6 @@ module FastUsers
   def anonymous(id)
     {
       id: id,
-      email: '',
-      mobile: '',
       # created_at: Time.now,
       # updated_at: Time.now,
       image: {
