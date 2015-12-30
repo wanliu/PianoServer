@@ -11,7 +11,7 @@ class Cacher < Liquid::Block
     if object.present? && object.id && object.updated_at && mark_key
       key = "subject/#{object.class}/#{object.id}/#{object.updated_at}"
 
-      Rails.cache.fetch([object, mark_key]) do
+      Rails.cache.fetch([key, mark_key]) do
         super
       end
     else
