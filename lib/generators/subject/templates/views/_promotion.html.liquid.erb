@@ -1,7 +1,6 @@
-{% comment %} ①首先将下面的subjectname更改未对应的主题名称，以避免不用的主题中的模板缓存错调  {% endcomment %}
-{% comment %} ②一旦修改了本模板中的内容，请同时修改版本号(v后面的数字)，否则更改将不起作用  {% endcomment %}
+{% comment %} 一旦修改了本模板中的内容，请同时增加下一行代码中版本号(v后面的数字)，否则更改将不起作用  {% endcomment %}
 
-{% cache promotion:subjectname_promotion_v1 %}
+{% cache promotion:<%= time_stamps %>_promotion_v1 %}
   <div class="col-xs-6 col-sm-3 promotion-wrap">
    <div class="promotion">
     <a href="/promotions/{{ promotion.id }}">
