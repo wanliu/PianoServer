@@ -3,7 +3,7 @@ class CartItem < ActiveRecord::Base
 
   attr_accessor :sale_mode
 
-  belongs_to :cart
+  belongs_to :cart, touch: true
   belongs_to :supplier, class_name: "Shop"
 
   belongs_to :cartable, polymorphic: true
