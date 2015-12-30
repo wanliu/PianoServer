@@ -2,8 +2,6 @@
   <%= link_to new_admins_industry_path, class: "btn btn-default" do %>
     <%= icon :plus%>
   <% end %>
-<!--     <button type="button" class="btn btn-default">Middle</button>
-    <button type="button" class="btn btn-default">Right</button> -->
   </div>
 </h1>
 
@@ -14,3 +12,32 @@
 <ul class="list-group industry-list">
   <%= render partial: "industry_item", collection: @industries %>
 </ul>
+
+
+<script type="text/javascript">
+
+  $('.industry-list input.toggle-checkbox').on('change', function() {
+    var $this = $(this),
+        $industryItem = $this.closest('.industry-item')
+        industry_id = $industryItem.data('industry-id'),
+        is_open = $this.prop('checked');
+
+    $.ajax({
+      url: '/admins/industries/' + industry_id,
+      data: {
+        industry: {
+          status: is_open ? 'open' : 'close'
+        }
+      },
+      type: 'PUT',
+      dataType: 'json',
+      success: function() {
+
+      }
+    });
+  });
+
+  // $('.industry-list').forEach(function(i, ele) {
+  //   var editor = new EditTemplate($(ele).find('.edit-template'));
+  // })
+</script>

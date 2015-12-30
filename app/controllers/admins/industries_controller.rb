@@ -6,7 +6,7 @@ class Admins::IndustriesController < Admins::BaseController
   end
 
   def index
-    @industries = Industry.all
+    @industries = Industry.all.order(id: :desc)
   end
 
   def create
@@ -24,8 +24,18 @@ class Admins::IndustriesController < Admins::BaseController
   end
 
   def update
-    @industry.update_attributes industry_params
-    redirect_to edit_admins_industry_path(@industry)
+    respond_to do |format|
+      if @industry.update_attributes industry_params
+        format.html { redirect_to admins_industries_path }
+        format.json { render json: {}, status: :ok }
+      else
+        format.json { render json: {error: @industry.errors.fullmessage.join(', ') }, status: :ok }
+        format.html do
+          flash.now[:error] = @industry.errors.full_messages.join(', ')
+          redirect_to edit_admins_industry_path(@industry)
+        end
+      end
+    end
   end
 
   def categories
@@ -71,7 +81,7 @@ class Admins::IndustriesController < Admins::BaseController
   private
 
   def industry_params
-    params.require(:industry).permit(:name, :title, :category_id, :description)
+    params.require(:industry).permit(:name, :title, :category_id, :description, :status)
   end
 
   def get_industry
