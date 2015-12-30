@@ -1,6 +1,10 @@
 class PmoUser < Ohm::Model
+  ALIVE_TIMES = 50
+  # TEMP_USER_ALIVE_TIMES =
+
   include Ohm::Timestamps
   include Ohm::DataTypes
+  include Ohm::Callbacks
   include ExpiredEvents
 
   attribute :username
@@ -15,10 +19,12 @@ class PmoUser < Ohm::Model
 
   index :user_id
 
-  def before_create
-    if self.id < 0
+  def after_create
+    if user_id < 0
+      redis.call("EXPIRE", key, ALIVE_TIMES)
+      redis.call("EXPIRE", "#{key}:_indices", ALIVE_TIMES)
+      redis.call("EXPIRE", "PmoUser:indices:user_id:#{user_id}", ALIVE_TIMES)
     end
-    # self.status = "pending"
   end
 
   def self.from(user)
