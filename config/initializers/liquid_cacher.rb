@@ -5,12 +5,13 @@ class Cacher < Liquid::Block
   end
 
   def render(context)
-    object = context[@key]
+    object_key, mark_key = @key.split(':')
+    object = context[object_key]
 
-    if object.present? && object.id && object.updated_at
+    if object.present? && object.id && object.updated_at && mark_key
       key = "subject/#{object.class}/#{object.id}/#{object.updated_at}"
 
-      Rails.cache.fetch(key) do
+      Rails.cache.fetch([key, mark_key]) do
         super
       end
     else
