@@ -5,15 +5,9 @@ class Api::Promotions::OneMoneyController < Api::BaseController
   before_action :set_one_money #, except: [:, :update, :status, :item]
 
   def show
-    hash = @one_money.attributes
+    hash = @one_money.to_hash
     hash[:items] = @one_money.items # .map { |item| item.attributes }
     render json: hash
-  end
-
-  def status
-  end
-
-  def update
   end
 
   def item
@@ -24,7 +18,7 @@ class Api::Promotions::OneMoneyController < Api::BaseController
 
   def items
     hash = @one_money.attributes
-    @items = @one_money.items.map { |item| item.attributes }
+    @items = @one_money.items
     render json: @items
   end
 
@@ -75,6 +69,47 @@ class Api::Promotions::OneMoneyController < Api::BaseController
     render json: hash
   end
 
+  def grab
+    # params[:item_id]
+    result = {} , code = 200
+    item_id = params[:item_id].to_i
+    @item = @one_money.items[item_id]
+    if @item.present?
+      if is_winner?(@item, pmo_current_user)
+        result, code = {
+          error: "you always winner this OneMoney %d" % [params[:id]],
+          status: "always"
+        }, 201
+      elsif @item.winners.count >= @item.total_amount # full
+        result, code = {
+          error: "this OneMoney dont have inventory",
+          status: "insufficient"
+        }, 500
+
+        @one_money.participants.add(pmo_current_user)
+        @one_money.save
+      else
+        # @one_money.participants.add(pmo_current_user)
+        id = @item.winners.add(pmo_current_user)
+        @one_money.winners.add(pmo_current_user)
+        @one_money.save
+        result, code = {
+          winner: id,
+          user_id: pmo_current_user.id,
+          item: item_id,
+          one_money: params[:id],
+          status: "success"
+        }, 200
+      end
+    else
+      result, code = {
+        error: "can't found item id: %d in OneMoney[%d]" % [item_id, params[:id]]
+      }, 500
+    end
+
+    render json: result, status: code
+  end
+
   private
 
   def set_one_money
@@ -95,5 +130,14 @@ class Api::Promotions::OneMoneyController < Api::BaseController
       })
     end
     user
+  end
+
+  def is_winner?(item, pmo_user)
+    one_money = item.one_money
+    if item.present?
+      one_money.winners.find(user_id: pmo_user.user_id).first
+    else
+      false
+    end
   end
 end

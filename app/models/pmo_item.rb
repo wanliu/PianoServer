@@ -33,6 +33,7 @@ class PmoItem < Ohm::Model
 
   index :title
   # index :id
+
   def self.from(item)
 
     new({
@@ -69,6 +70,22 @@ class PmoItem < Ohm::Model
 
   def suspend_at_with_fallback
     suspend_at_without_fallback || self.one_money.try(:suspend_at)
+  end
+
+  def to_hash
+    super.merge(attributes)
+  end
+
+  def self.find_or_create(item_id)
+    item_id = item_id.to_i
+    if self[item_id].present?
+      return self[item_id]
+    else
+      item = Item.find(item_id)
+      _item = self.from(item)
+      _item.save
+      _item
+    end
   end
 
   alias_method_chain :start_at, :fallback

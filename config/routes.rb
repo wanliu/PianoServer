@@ -208,13 +208,14 @@ Rails.application.routes.draw do
     get "suggestion", :to => "suggestion#index"
 
     namespace :promotions do
-      resources :one_money, only: [:show, :update]  do
+      resources :one_money, except: [:index, :create, :update, :destroy]  do
         member do
           get "items", action: :items
           get "items/:item_id", action: :item
           match "signup", action: :signup, via: Rails.env.production? ? [:put] : [:put, :get]
 
           get "status", action: :status
+          match "grab/:item_id", action: :grab, via: Rails.env.production? ? [:put] : [:put, :get]
         end
       end
     end

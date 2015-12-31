@@ -35,6 +35,10 @@ class OneMoney < Ohm::Model
     attributes[:id].nil? ? [] : [id.to_s]
   end
 
+  def to_hash
+    super.merge(attributes)
+  end
+
   private
 
   def expired_start_at

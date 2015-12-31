@@ -48,8 +48,7 @@ class Admins::OneMoneyController < Admins::BaseController
 
   def add_item
     @one_money = OneMoney[params[:id].to_i]
-    item = Item.find(params[:item_id])
-    @item = PmoItem.from(item)
+    @item = PmoItem.find_or_create(params[:item_id])
     @item.one_money = @one_money
     @item.save
 
