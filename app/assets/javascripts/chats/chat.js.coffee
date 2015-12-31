@@ -282,7 +282,7 @@ class @Chat
 
     senderAvatar = @options.avatarDefault if senderAvatar == '' or !senderAvatar
 
-    senderLogin = senderRealname if senderRealname != ''
+    senderLogin = senderRealname if senderRealname != undefined && senderRealname != ''
 
     if @options.displayUserName && @options.displayShopName
       if senderShopName == ''
