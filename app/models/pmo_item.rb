@@ -34,6 +34,8 @@ class PmoItem < Ohm::Model
   attribute :actions, Type::Array
 
   # list :logs, :PmoLog
+  expire :start_at, :expired_start_at
+  expire :end_at, :expired_end_at
 
   counter :completes
 
@@ -106,4 +108,15 @@ class PmoItem < Ohm::Model
   alias_method_chain :end_at, :fallback
   alias_method_chain :suspend_at, :fallback
 
+  private
+
+  def expired_start_at
+    self.status = 'started'
+    save
+  end
+
+  def expired_end_at
+    self.status = 'end'
+    save
+  end
 end

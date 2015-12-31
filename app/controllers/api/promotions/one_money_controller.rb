@@ -15,11 +15,8 @@ class Api::Promotions::OneMoneyController < Api::BaseController
     @item = PmoItem[params[:item_id].to_i]
     hash = @item.to_hash
     if @item.status == "started"
-      if @item.winners.find(user_id: current_user.user_id).first
-        hash[:winner] = true
-      else
-        hash[:winner] = false
-      end
+      executies = @item.winners.find(user_id: current_user.user_id).count
+      hash[:executies] = executies
     end
 
     render json: hash
@@ -114,7 +111,7 @@ class Api::Promotions::OneMoneyController < Api::BaseController
           }, 200
         else
           result, code = {
-            error: "you cant do %s action in this item" % [:grab ], 
+            error: "you cant do %s action in this item" % [:grab ],
             status: "no_action"
           }, 400
         end

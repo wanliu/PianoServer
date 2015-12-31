@@ -23,6 +23,7 @@ class Admins::OneMoneyController < Admins::BaseController
   def update
     @one_money = OneMoney[params[:id].to_i]
     @one_money.update_attributes one_money_params
+    # @one_money.multiple = one_money_params[:multiple].to_i
     @one_money.save
 
     redirect_to action: :edit

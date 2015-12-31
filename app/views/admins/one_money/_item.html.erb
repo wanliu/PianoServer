@@ -11,7 +11,7 @@
   </p>
 
   <p class="from"><%=b item, :shop_name %></p>
-  <p class="status"><%= status_label item.status %> <%= item.winners.count %> x <%= b item, :quantity %> <%#=b item, :completes, title: '完成量' %>/<%=b item, :total_amount, title: '活动总量' %><%= warning_with item.quantity <= 0 && item.total_amount <= 0 %></p>
+  <p class="status"><%= status_label item.status %> <%= item.winners.count %> x <%= b item, :quantity, title: '一次单位数量' %> <%#=b item, :completes, title: '完成量' %>/<%=b item, :total_amount, title: '活动总量' %><%= warning_with item.quantity <= 0 || item.total_amount <= 0 %></p>
   <p class="time">
     <%= time_prompt(item) do |flag, time_str, seconds| %>
       <% content_tag :span, class: 'time_counter', flag: flag, tick: seconds do %>

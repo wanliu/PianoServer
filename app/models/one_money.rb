@@ -10,7 +10,7 @@ class OneMoney < Ohm::Model
   attribute :start_at, Type::Time
   attribute :end_at, Type::Time
   attribute :suspend_at, Type::Time
-  attribute :multiple, Type:Integer
+  attribute :multi_item, Type::Integer
 
   attribute :cover_url
   attribute :status
@@ -38,6 +38,10 @@ class OneMoney < Ohm::Model
 
   def to_hash
     super.merge(attributes)
+  end
+
+  def before_create
+    self.multi_item = 1
   end
 
   private
