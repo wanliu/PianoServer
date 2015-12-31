@@ -23,6 +23,8 @@ class OneMoney < Ohm::Model
   set :participants, :PmoUser
   set :winners, :PmoUser
 
+  # list :grabs, :PmoGrab
+
   expire :start_at, :expired_start_at
   expire :end_at, :expired_end_at
 

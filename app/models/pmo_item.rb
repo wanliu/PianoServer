@@ -21,15 +21,18 @@ class PmoItem < Ohm::Model
   attribute :category_name
   attribute :status
   attribute :shop_name
+  attribute :shop_id
   attribute :shop_avatar_url
   attribute :start_at, Type::Time
   attribute :end_at, Type::Time
   attribute :suspend_at, Type::Time
 
-  reference :one_money, :OneMoney
 
   set :participants, :PmoUser
   set :winners, :PmoUser
+
+  collection :grabs, :PmoGrab
+  reference :one_money, :OneMoney
 
   attribute :actions, Type::Array
 
@@ -54,6 +57,7 @@ class PmoItem < Ohm::Model
       ori_price: item.public_price,
       quantity: 1,
       max_executies: 1,
+      shop_id: item.shop.id,
       shop_name: item.shop.title,
       shop_avatar_url: item.shop.avatar_url,
       total_amount: item.current_stock || 10,

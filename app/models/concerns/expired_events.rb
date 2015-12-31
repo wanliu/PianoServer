@@ -2,6 +2,11 @@ module ExpiredEvents
   extend ActiveSupport::Concern
   include ActiveSupport::Callbacks
 
+  def cancel_expire(attribute)
+    key_name = "#{key}:__expires:#{attribute}"
+    redis.call("EXPIREAT", key_name, 0) if redis.call("EXISTS", key_name)
+  end
+
   module ClassMethods
 
     def expire(attribute, method)

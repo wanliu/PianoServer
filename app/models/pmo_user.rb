@@ -16,7 +16,6 @@ class PmoUser < Ohm::Model
   attribute :user_id
   attribute :sex
 
-
   index :user_id
 
   def after_create

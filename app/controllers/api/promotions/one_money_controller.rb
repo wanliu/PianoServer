@@ -1,3 +1,7 @@
+require 'grab_machine'
+
+GrabMachine.setup(user_method: :pmo_current_user)
+
 class Api::Promotions::OneMoneyController < Api::BaseController
   include FastUsers
   skip_before_action :authenticate_user!, only: [:show, :item]
@@ -6,7 +10,7 @@ class Api::Promotions::OneMoneyController < Api::BaseController
 
   def show
     hash = @one_money.to_hash
-    hash[:items] = @one_money.items # .map { |item| item.attributes }
+    hash[:items] = @one_money.items.map {|item| {id: item.id, title: item.title, status: item.status }}
     render json: hash
   end
 
@@ -76,53 +80,77 @@ class Api::Promotions::OneMoneyController < Api::BaseController
   end
 
   def grab
-    # params[:item_id]
+    @item = PmoItem[params[:item_id].to_i]
+    GrabMachine.run self, @one_money, @item do |context|
+      # @one_money.participants.add(pmo_current_user)
+      id = @item.winners.add(pmo_current_user)
+      @one_money.winners.add(pmo_current_user)
+      @one_money.save
+      render json: {
+        winner: id,
+        user_id: pmo_current_user.id,
+        item: item_id,
+        one_money: params[:id],
+        status: "success"
+      }
+    end
     result = {} , code = 200
     item_id = params[:item_id].to_i
     @item = @one_money.items[item_id]
 
-    if @item.present?
-      if is_winner?(@item, pmo_current_user)
-        result, code = {
-          error: "you always winner this OneMoney %d" % [params[:id]],
-          status: "always"
-        }, 201
-      elsif @item.winners.count >= @item.total_amount # full
-        result, code = {
-          error: "this OneMoney dont have inventory",
-          status: "insufficient"
-        }, 500
+    # if @item.present?
+    #   if @item.status == "started"
+    #
+    #   @item.grabs.find(user_id: pmo_current_user.id, )
+    #   if is_winner?(@item, pmo_current_user)
+    #     result, code = {
+    #       error: "you always winner this OneMoney %d" % [params[:id]],
+    #       status: "always"
+    #     }, 201
+    #   elsif @item.completes + @item.quantity > @item.total_amount # full
+    #     result, code = {
+    #       error: "Grap this OneMoney dont have inventory",
+    #       status: "insufficient"
+    #     }, 500
+    #
+    #     @one_money.participants.add(pmo_current_user)
+    #     @one_money.save
+    #   else
+    #     if @item.can?(:grab, pmo_current_user)
+    #
+    #       # @one_money.participants.add(pmo_current_user)
+    #       id = @item.winners.add(pmo_current_user)
+    #       @one_money.winners.add(pmo_current_user)
+    #       @one_money.save
+    #       result, code = {
+    #         winner: id,
+    #         user_id: pmo_current_user.id,
+    #         item: item_id,
+    #         one_money: params[:id],
+    #         status: "success"
+    #       }, 200
+    #     else
+    #       result, code = {
+    #         error: "you cant do %s action in this item" % [:grab ],
+    #         status: "no_action"
+    #       }, 400
+    #     end
+    #   end
+    # else
+    #   result, code = {
+    #     error: "can't found item id: %d in OneMoney[%d]" % [item_id, params[:id]]
+    #   }, 404
+    # end
 
-        @one_money.participants.add(pmo_current_user)
-        @one_money.save
-      else
-        if @item.can?(:grab, pmo_current_user)
+    # render json: result, status: code
+  end
 
-          # @one_money.participants.add(pmo_current_user)
-          id = @item.winners.add(pmo_current_user)
-          @one_money.winners.add(pmo_current_user)
-          @one_money.save
-          result, code = {
-            winner: id,
-            user_id: pmo_current_user.id,
-            item: item_id,
-            one_money: params[:id],
-            status: "success"
-          }, 200
-        else
-          result, code = {
-            error: "you cant do %s action in this item" % [:grab ],
-            status: "no_action"
-          }, 400
-        end
-      end
-    else
-      result, code = {
-        error: "can't found item id: %d in OneMoney[%d]" % [item_id, params[:id]]
-      }, 500
-    end
 
-    render json: result, status: code
+  def grab_conditions()
+    [
+      :grab_condition_status?,
+      proc { |item| }
+    ]
   end
 
   private
@@ -132,27 +160,17 @@ class Api::Promotions::OneMoneyController < Api::BaseController
   end
 
   def pmo_current_user
-    user = PmoUser.find(user_id: current_user[:id]).first
+    @pmo_current_user ||= PmoUser.find(user_id: current_user[:id]).first
 
-    unless user
-      user = PmoUser.create({
-        # id: current_user[:id],
+    unless @pmo_current_user
+      @pmo_current_user = PmoUser.create({
         avatar_url: current_user[:image][:url],
         title: current_user[:nickname],
         username: current_user[:username],
         user_id: current_user[:id]
-        # user_type: "consumer"
       })
     end
-    user
+    @pmo_current_user
   end
 
-  def is_winner?(item, pmo_user)
-    one_money = item.one_money
-    if item.present?
-      one_money.winners.find(user_id: pmo_user.user_id).first
-    else
-      false
-    end
-  end
 end
