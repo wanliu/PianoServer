@@ -94,14 +94,14 @@
       var greetingUserName = '', greetingShopName = '', greetingShopLogo, realname = '';
 
       <% if @intention.present? %>
-        realname = '<%= @intention.supplier.owner.username %>';
-        greetingUserName = '<%= @intention.supplier.owner.nickname %>';
+        realname = '<%= @intention.supplier.owner.nickname %>';
+        greetingUserName = '<%= @intention.supplier.owner.username %>';
         greetingShopName = '<%= @intention.supplier.title %>';
         greetingShopLogo = '<%= @intention.supplier.owner.avatar_url %>';
 
       <% elsif @shop.present? %>
-        realname = '<%= @shop.owner.username %>';
-        greetingUserName = '<%= @shop.owner.nickname %>';
+        realname = '<%= @shop.owner.nickname %>';
+        greetingUserName = '<%= @shop.owner.username %>';
         greetingShopName = '<%= @shop.title %>';
         greetingShopLogo = '<%= @shop.owner.avatar_url %>';
       <% end %>
