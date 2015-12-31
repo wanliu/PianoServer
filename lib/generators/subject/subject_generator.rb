@@ -21,10 +21,10 @@ class SubjectGenerator < Rails::Generators::NamedBase
     copy_file footer_template, "#{subject_path}/views/_footer.html.liquid"
     
     self.promotion_template = "views/_promotion.html.liquid"
-    copy_file promotion_template, "#{subject_path}/views/_promotion.html.liquid"
+    template "#{promotion_template}.erb", "#{subject_path}/views/_promotion.html.liquid"
 
     self.promotion_2col_template = "views/_promotion_2col.html.liquid"
-    copy_file promotion_2col_template, "#{subject_path}/views/_promotion_2col.html.liquid"
+    template "#{promotion_2col_template}.erb", "#{subject_path}/views/_promotion_2col.html.liquid"
 
     self.style_template = "views/_style.html.liquid"
     copy_file style_template, "#{subject_path}/views/_style.html.liquid"
@@ -39,6 +39,10 @@ class SubjectGenerator < Rails::Generators::NamedBase
       if subject.blank?
         raise Rails::Generators::Error.new("Invalid subject `#{file_name}`, Task failed!")
       end
+    end
+
+    def time_stamps
+      @stamp ||= Time.now.to_i
     end
 
     def subject_root
