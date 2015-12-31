@@ -17,6 +17,12 @@
   </div>
 
   <div class="form-group">
+    <%= label_tag 'one_money_description', :multiple %>
+    <%= text_field 'one_money', :multiple, value: @one_money.multiple, class: 'form-control' %>
+  </div>
+
+
+  <div class="form-group">
     <%= label_tag 'one_money_cover_url', :cover_url %>
     <%= text_field 'one_money', :cover_url, value: @one_money.cover_url, class: 'form-control' %>
   </div>

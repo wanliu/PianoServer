@@ -97,6 +97,10 @@ module Admins::OneMoneyHelper
     [flag, str, seconds]
   end
 
+  def warning_with(condition)
+    icon(:'exclamation-sign', class: 'text-danger') if condition
+  end
+
   alias_method :b, :best_in_place_item
 
   class OhmModel < Delegator

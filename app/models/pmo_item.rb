@@ -1,4 +1,6 @@
 class PmoItem < Ohm::Model
+  DEFAULT_ACTIONS = %(grab)
+
   include Ohm::Timestamps
   include Ohm::DataTypes
   include ExpiredEvents
@@ -10,8 +12,10 @@ class PmoItem < Ohm::Model
   attribute :avatar_urls, Type::Array
 
   attribute :price, Type::Decimal
+  attribute :quantity, Type::Integer
   attribute :ori_price, Type::Decimal
   attribute :total_amount, Type::Integer
+  attribute :max_executies, Type:Integer
 
   attribute :shop_category_name
   attribute :category_name
@@ -26,6 +30,8 @@ class PmoItem < Ohm::Model
 
   set :participants, :PmoUser
   set :winners, :PmoUser
+
+  attribute :actions, Type::Array
 
   # list :logs, :PmoLog
 
@@ -42,11 +48,13 @@ class PmoItem < Ohm::Model
       image_urls: item.images.map(&:url),
       cover_urls: item.images.map {|img| img.url(:cover) },
       avatar_urls:  item.images.map {|img| img.url(:avatar) },
-      price: item.price,
+      price: item.price || 1,
       ori_price: item.public_price,
+      quantity: 1,
+      max_executies: 1,
       shop_name: item.shop.title,
       shop_avatar_url: item.shop.avatar_url,
-      total_amount: item.current_stock,
+      total_amount: item.current_stock || 10,
       shop_category_name: item.shop_category.try(:title),
       category_name: item.category.try(:title)
     })
@@ -86,6 +94,12 @@ class PmoItem < Ohm::Model
       _item.save
       _item
     end
+  end
+
+  def before_create
+    self.actions = DEFAULT_ACTIONS
+    self.max_executies = 1
+    self.quantity = 1
   end
 
   alias_method_chain :start_at, :fallback

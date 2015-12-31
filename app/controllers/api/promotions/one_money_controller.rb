@@ -13,7 +13,16 @@ class Api::Promotions::OneMoneyController < Api::BaseController
   def item
     # @one_money = OneMoney[params[:id].to_i]
     @item = PmoItem[params[:item_id].to_i]
-    render json: @item.attributes
+    hash = @item.to_hash
+    if @item.status == "started"
+      if @item.winners.find(user_id: current_user.user_id).first
+        hash[:winner] = true
+      else
+        hash[:winner] = false
+      end
+    end
+
+    render json: hash
   end
 
   def items
@@ -74,6 +83,7 @@ class Api::Promotions::OneMoneyController < Api::BaseController
     result = {} , code = 200
     item_id = params[:item_id].to_i
     @item = @one_money.items[item_id]
+
     if @item.present?
       if is_winner?(@item, pmo_current_user)
         result, code = {
@@ -89,17 +99,25 @@ class Api::Promotions::OneMoneyController < Api::BaseController
         @one_money.participants.add(pmo_current_user)
         @one_money.save
       else
-        # @one_money.participants.add(pmo_current_user)
-        id = @item.winners.add(pmo_current_user)
-        @one_money.winners.add(pmo_current_user)
-        @one_money.save
-        result, code = {
-          winner: id,
-          user_id: pmo_current_user.id,
-          item: item_id,
-          one_money: params[:id],
-          status: "success"
-        }, 200
+        if @item.can?(:grab, pmo_current_user)
+
+          # @one_money.participants.add(pmo_current_user)
+          id = @item.winners.add(pmo_current_user)
+          @one_money.winners.add(pmo_current_user)
+          @one_money.save
+          result, code = {
+            winner: id,
+            user_id: pmo_current_user.id,
+            item: item_id,
+            one_money: params[:id],
+            status: "success"
+          }, 200
+        else
+          result, code = {
+            error: "you cant do %s action in this item" % [:grab ], 
+            status: "no_action"
+          }, 400
+        end
       end
     else
       result, code = {

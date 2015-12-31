@@ -10,6 +10,7 @@ class OneMoney < Ohm::Model
   attribute :start_at, Type::Time
   attribute :end_at, Type::Time
   attribute :suspend_at, Type::Time
+  attribute :multiple, Type:Integer
 
   attribute :cover_url
   attribute :status
