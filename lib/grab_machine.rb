@@ -37,14 +37,7 @@ class GrabMachine
       break unless next_if
     end
 
-    pp status, code
     yield status, self if block_given?
-    # if @code >= 200 and @code < 300
-    #   yield (self) if block_given?
-    # else
-    #   context.render(json: result, status: @code)
-    # end
-    #
     self
   end
 
