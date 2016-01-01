@@ -1,6 +1,11 @@
 class Admins::SubjectsController < Admins::BaseController
 
   before_action :set_subject, only: [:edit, :show, :update, :destroy, :upload]
+  before_action :authen_piano_token, only: :touch_current
+  skip_before_action :authenticate_admin!, :verify_authenticity_token, 
+                     :current_industry, :set_current_cart, :prepare_system_view_path, 
+                     :set_locale, :set_meta_user_data, only: :touch_current
+
   def index
     @subjects = Subject.order(id: :desc).page(params[:page]).per(params[:per])
   end
@@ -44,6 +49,12 @@ class Admins::SubjectsController < Admins::BaseController
     end
   end
 
+  def touch_current
+    current_subject.touch
+
+    head :ok
+  end
+
   private
 
   def set_subject
@@ -71,5 +82,13 @@ class Admins::SubjectsController < Admins::BaseController
 
   def default_template_content(filename)
     File.read Rails.root.join('lib/generators/subject/templates', filename)
+  end
+
+  def authen_piano_token
+    subject_touch_token = Settings.wanliu.subject_touch_token
+
+    unless Devise.secure_compare(params[:token], subject_touch_token)
+      head :not_found
+    end
   end
 end
