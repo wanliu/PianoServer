@@ -1,10 +1,23 @@
+require 'digest/md5'
+
 class PromotionsController < ApplicationController
   include DefaultAssetHost
 
   before_action :set_promotion, only: [:show, :update, :destroy, :chat, :shop, :toggle_follow]
 
   caches_action :index, layout: false, cache_path: Proc.new { |request|
-    { etag: @subject.updated_at.utc } if @subject.present?
+    etag = if @subject.present?
+       @subject.updated_at.utc.to_i
+    else
+      @promotions = Promotion.find(:all, from: :active, params: request.query_params).to_a
+      if @promotions.blank?
+        'empty'
+      else
+        Digest::MD5.hexdigest "#{@promotions.first.updated_at}-#{@promotions.last.updated_at}-#{@promotions.length}"
+      end
+    end
+
+    { etag: etag }
   }
 
   respond_to :json, :html
@@ -12,7 +25,7 @@ class PromotionsController < ApplicationController
   # GET /promotions
   # GET /promotions.json
   def index
-    @promotions = Promotion.find(:all, from: :active, params: query_params).to_a
+    # @promotions = Promotion.find(:all, from: :active, params: query_params).to_a
 
     render :homepage, with: @subject
   end
@@ -83,6 +96,17 @@ class PromotionsController < ApplicationController
 
   end
 
+  protected
+
+    def query_params
+      @query_params = {
+        page: params[:page] || 1,
+        per: params[:page] || 24,
+        category_id: params[:category_id],
+        inline: params[:inline]
+      }
+    end
+
   private
 
     def set_promotion
@@ -93,12 +117,4 @@ class PromotionsController < ApplicationController
       params[:promotion]
     end
 
-    def query_params
-      @query_params = {
-        page: params[:page] || 1,
-        per: params[:page] || 24,
-        category_id: params[:category_id],
-        inline: params[:inline]
-      }
-    end
 end
