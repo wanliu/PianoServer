@@ -1,0 +1,125 @@
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0 0 65px 0;
+}
+
+.clear {
+  width: 0;
+  height: 0;
+  clear: both;
+}
+
+.item-detail {
+  padding: 0 15px;
+}
+
+.item-detail .item-poster {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.item-detail .item-poster img {
+  width: 100%;
+  height: auto;
+}
+
+.item-description {
+  padding: 15px 0;
+  border-width: 1px 0;
+  border-style: solid;
+  border-color: #E7E7E7;
+}
+
+.item-detail p {
+  margin: 0 0 10px 0;
+}
+
+.item-detail .item-title {
+  height: 2.6em;
+  overflow: hidden;
+}
+
+.amounts {
+  line-height: 35px;
+}
+
+.amounts .saled-amonut {
+  float: right;
+}
+
+.amounts .inventory, .amounts .amount, .supplier-name {
+  padding: 0 8px;
+}
+
+.amounts .saled_amonut .amount {
+  display: inline-block;
+  width: 35px;
+  text-align: right;
+}
+
+.supplier-desc {
+  margin-top: 10px;
+  line-height: 35px;
+}
+
+.supplier-desc .supplier-avatar{
+  float: right;
+}
+
+.supplier-avatar .avatar {
+  width: 35px;
+  height: 35px;
+}
+
+.countdown-board {
+  display: none;
+  margin-top: 15px;
+}
+
+.countdown-board .countdown-text {
+  padding: 10px 15px;
+  background: #FBCC03;
+  font-size: 24px;
+  color: #FF2B2B;
+}
+
+.actions {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 24px;
+}
+
+.actions .wait-text {
+  background: rgba(0, 0, 0, 0.5);
+  padding: 10px 15px;
+  color: #FFFFFF;
+}
+
+.actions .purchase-btn {
+  width: 100%;
+  border: none;
+  display: block;
+  padding: 10px 15px;
+  text-align: center;
+  background: rgba(255, 1, 1, 0.70);
+  color: #FFFFFF;
+  font-size: 24px;
+  outline: none;
+}
+
+.actions .end-text, .actions .sold-out {
+  background: #333333;
+  color: #FFFFFF;
+  padding: 10px 15px;
+}
+
+
+
