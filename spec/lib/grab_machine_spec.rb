@@ -216,13 +216,6 @@ RSpec.describe GrabController, :type => :controller do
 
         expect(response.status).to eql(200)
       end
-
-      # it "item multiple support" do
-      #   get :index, one_money: {multi_item: 2 }, item: { total_amount: 10,  quantity: 1 }
-      #   expect(response.status).to eql(422)
-      #   result = JSON.parse(response.body)
-      #   expect(result["status"]).to eql("price_zero")
-      # end
     end
 
     describe "多商品模式(multi_item=2)" do
@@ -232,6 +225,8 @@ RSpec.describe GrabController, :type => :controller do
         end
 
         controller do
+
+          # 一个活动，两个商品，其中 Item 1 已经被抢了一次，用户在抢 Item 2
           def index
 
             @one_money = one_money(1, params[:one_money] || {})
@@ -261,7 +256,36 @@ RSpec.describe GrabController, :type => :controller do
             # raise ApplicationController::AccessDenied
           end
 
+          # 一个活动，两个商品，其中 Item 1, 2 都已经被抢了一次，用户再一次抢 Item 2
           def index2
+            @one_money = one_money(1, params[:one_money] || {})
+            @item = item(1, params[:item] || {})
+            @item.one_money = @one_money
+            @item.save
+
+            @item2 = item(2, {id: 2, title: '测试商品2', price: 1, total_amount: 99, quantity: 1}.merge(params[:item2] || {}))
+            @item2.one_money = @one_money
+            @item2.save
+
+            @grab = grab
+            @grab.pmo_item = @item
+            @grab.save
+
+            @grab2 = grab(2)
+            @grab2.pmo_item = @item2
+            @grab2.save
+
+            GrabMachine.run(self, @one_money, @item2) do |status, context|
+              if status == "success"
+                render nothing: true
+              else
+                render json: context.result, status: context.code
+              end
+            end
+          end
+
+          # 一个活动 3 个商品，其中 Item 1, 2 都已经被抢了一次，用户在抢 Item 3
+          def index3
             @one_money = one_money(1, params[:one_money] || {})
             @item = item(1, params[:item] || {})
             @item.one_money = @one_money
@@ -278,6 +302,46 @@ RSpec.describe GrabController, :type => :controller do
             @grab2 = grab(2)
             @grab2.pmo_item = @item2
             @grab2.save
+
+            @item3 = item(3, params[:item3] || {})
+            @item3.one_money = @one_money
+            @item3.save
+
+            GrabMachine.run(self, @one_money, @item3) do |status, context|
+              if status == "success"
+                render nothing: true
+              else
+                render json: context.result, status: context.code
+              end
+            end
+          end
+
+          # 一个活动 2 个商品，其中 Item 2 已经被抢了二次，用户再抢一次
+          def index4
+            @one_money = one_money(1, params[:one_money] || {})
+            @item = item(1, params[:item] || {})
+            @item.one_money = @one_money
+            @item.save
+
+            @item2 = item(2, {id: 2, title: '测试商品2', price: 1, total_amount: 99, quantity: 1}.merge(params[:item2] || {}))
+            @item2.one_money = @one_money
+            @item2.save
+
+            @grab = grab
+            @grab.pmo_item = @item
+            @grab.save
+
+            @grab2 = grab(2)
+            @grab2.pmo_item = @item2
+            @grab2.save
+
+            @grab3 = grab(3)
+            @grab3.pmo_item = @item2
+            @grab3.save
+            #
+            # @item3 = item(3, params[:item3] || {})
+            # @item3.one_money = @one_money
+            # @item3.save
 
             GrabMachine.run(self, @one_money, @item2) do |status, context|
               if status == "success"
@@ -301,18 +365,17 @@ RSpec.describe GrabController, :type => :controller do
 
         it "已经赢得了一个奖励的情况下，用户还能抢" do
           get :index, item: { total_amount: 10,  quantity: 1 }
-
           expect(response.status).to eql(200)
         end
 
-        it "抢第三次看看, 会返回 \"不能再抢\"(lack-multi-item)提示" do
+        it "两抢一次 Item 2, 会返回 \"不能再抢\"(no-executies)提示" do
           routes.draw { get "index2" => "grab#index2" }
 
           get :index2, item: { total_amount: 10,  quantity: 1 }
 
           expect(response.status).to eql(500)
           result = JSON.parse(response.body)
-          expect(result["status"]).to eql("lack-multi-item")
+          expect(result["status"]).to eql("no-executies")
         end
 
         it "活动库存不足时，用户不能抢到奖励" do
@@ -335,12 +398,58 @@ RSpec.describe GrabController, :type => :controller do
           expect(response.status).to eql(200)
         end
 
-        # it "item multiple support" do
-        #   get :index, one_money: {multi_item: 2 }, item: { total_amount: 10,  quantity: 1 }
-        #   expect(response.status).to eql(422)
-        #   result = JSON.parse(response.body)
-        #   expect(result["status"]).to eql("price_zero")
-        # end
+        describe "抢3件商品的抢购情况（items = 3）" do
+          it "抢不到，因为 multi_item = 2" do
+            routes.draw { get "index3" => "grab#index3" }
+
+            get :index3, item3: { quantity: 1, total_amount: 10}
+            expect(response.status).to eql(500)
+            result = JSON.parse(response.body)
+            expect(result["status"]).to eql("lack-multi-item")
+          end
+
+          it "调整 multi_item = 3，能抢成功" do
+            routes.draw { get "index3" => "grab#index3" }
+
+            get :index3, one_money: {multi_item: 3}, item3: { quantity: 1, total_amount: 10}
+            expect(response.status).to eql(200)
+          end
+        end
+
+        describe "同一件商品多次抢购情况" do
+
+          it "设置允许二次抢购 (max_executies: 2)" do
+            routes.draw { get "index2" => "grab#index2" }
+
+            get :index2, item2: { total_amount: 20, quantity: 2, max_executies: 2 }, completes: 10
+            expect(response.status).to eql(200)
+          end
+
+          it "设置不允许二次抢购（max_executies: 1)" do
+            routes.draw { get "index2" => "grab#index2" }
+
+            get :index2, item2: { total_amount: 20, quantity: 2, max_executies: 1 }, completes: 10
+            expect(response.status).to eql(500)
+            result = JSON.parse(response.body)
+            expect(result["status"]).to eql("no-executies")
+          end
+
+          it "抢三次的情况，Item 2 抢过两次商品，再抢一次" do
+            routes.draw { get "index4" => "grab#index4" }
+
+            get :index4, item2: { total_amount: 20, quantity: 2, max_executies: 3 }, completes: 10
+            expect(response.status).to eql(200)
+          end
+
+          it "Item 2 减少配额, 不能再抢了 (max_executies: 2)" do
+            routes.draw { get "index4" => "grab#index4" }
+
+            get :index4, item2: { total_amount: 20, quantity: 2, max_executies: 2 }, completes: 10
+            expect(response.status).to eql(500)
+            result = JSON.parse(response.body)
+            expect(result["status"]).to eql("no-executies")
+          end
+        end
       end
     end
   end

@@ -15,7 +15,7 @@ class PmoItem < Ohm::Model
   attribute :quantity, Type::Integer
   attribute :ori_price, Type::Decimal
   attribute :total_amount, Type::Integer
-  attribute :max_executies, Type:Integer
+  attribute :max_executies, Type::Integer
 
   attribute :shop_category_name
   attribute :category_name

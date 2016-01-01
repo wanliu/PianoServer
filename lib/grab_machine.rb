@@ -198,9 +198,9 @@ class GrabMachine
       .combine(pmo_item_id: one_money.items.ids)
 
     grab_groups = grabs.group_by {|grab| grab.pmo_item_id }
-    always_multi = grab_groups.keys.count
+    always_multi = grab_groups.keys.count + (grab_groups.keys.include?(item.id.to_s) ? 0 : 1)
 
-    if always_multi < multi_item
+    if always_multi <= multi_item
       true
     else
       status 'lack-multi-item'
@@ -215,7 +215,7 @@ class GrabMachine
   def condition_executies?
     return true if @env[:skip_multiple]
 
-    max_executies = item.max_executies || 1
+    max_executies = [item.max_executies, 1].max
 
     grabs = item.grabs.find user_id: current_user.user_id
     always_executies = grabs.count
