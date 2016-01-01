@@ -16,14 +16,29 @@ class Api::Promotions::OneMoneyController < Api::BaseController
 
   def item
     # @one_money = OneMoney[params[:id].to_i]
-    @item = PmoItem[params[:item_id].to_i]
-    hash = @item.to_hash
-    if @item.status == "started"
-      executies = @item.winners.find(user_id: current_user.user_id).count
-      hash[:executies] = executies
-    end
+    # @item = PmoItem[params[:item_id].to_i]
+    # hash = @item.to_hash
+    # if @item.status == "started"
+    #   executies = @item.winners.find(user_id: current_user.user_id).count
+    #   hash[:executies] = executies
+    # end
+    #
+    # render json: hash
 
-    render json: hash
+    @item = PmoItem[params[:item_id].to_i]
+    GrabMachine.run self, @one_money, @item do |status, context|
+      # @one_money.participants.add(pmo_current_user)
+      if status == "success"
+
+        # hash[:item_status] = status
+
+        render json: @item.to_hash
+      else
+        hash = @item.to_hash
+        hash[:item_status] = status
+        render json: hash
+      end
+    end
   end
 
   def items

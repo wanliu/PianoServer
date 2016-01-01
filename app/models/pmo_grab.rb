@@ -26,25 +26,25 @@ class PmoGrab < Ohm::Model
   # expire :end_at, :expired_end_at
 
   index :user_id
-  index :item_id
+  index :pmo_item_id
   index :one_money
 
   def before_save
     self.time_out = DEFAULT_TIMEOUT
-    if self.item && self.item.is_a?(PmoItem)
-      self.item.incr :completes, self.quantity
+    if self.pem_item && self.pem_item.is_a?(PmoItem)
+      self.pem_item.incr :completes, self.quantity
     end
   end
 
   def before_delete
-    if self.item && self.item.is_a?(PmoItem)
-      self.item.decr :completes, self.quantity
+    if self.pem_item && self.pem_item.is_a?(PmoItem)
+      self.pem_item.decr :completes, self.quantity
     end
   end
 
-  def self.from(pmo_item, user)
+  def self.from(pmo_item, one_money, user)
     new({
-      user_id: user,
+      user_id: user.user_id,
       shop_item_id: pmo_item.id,
       title: pmo_item.title,
       price: pmo_item.price,
@@ -52,8 +52,8 @@ class PmoGrab < Ohm::Model
       shop_id: pmo_item.shop_id,
       shop_name: pmo_item.shop_name,
       avatar_urls: pmo_item.avatar_urls,
-      one_money: pmo_item.one_money.id,
-      item: pmo_item
+      one_money: one_money.id,
+      pmo_item: pmo_item
     })
   end
 
