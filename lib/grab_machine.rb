@@ -194,11 +194,12 @@ class GrabMachine
     multi_item = one_money.multi_item
 
     grabs = PmoGrab
-      .find(user_id: current_user.id, one_money: one_money.id)
-      .combine(item_id: one_money.items.ids)
+      .find(user_id: current_user.user_id, one_money: one_money.id)
+      .combine(pmo_item_id: one_money.items.ids)
 
-    grab_groups = grabs.group_by {|grab| grab.item_id }
+    grab_groups = grabs.group_by {|grab| grab.pmo_item_id }
     always_multi = grab_groups.keys.count
+
     if always_multi < multi_item
       true
     else
@@ -216,7 +217,7 @@ class GrabMachine
 
     max_executies = item.max_executies || 1
 
-    grabs = item.grabs.find user_id: current_user.id
+    grabs = item.grabs.find user_id: current_user.user_id
     always_executies = grabs.count
 
     if always_executies < max_executies # have executies
@@ -230,6 +231,7 @@ class GrabMachine
   # 用于在抢购时，检查是否库存不足
   def condition_insufficient?
     if item.completes + item.quantity <= item.total_amount
+      # pp item.completes, item.quantity, item.total_amount
       true
     else
       status "insufficient"
