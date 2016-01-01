@@ -9,8 +9,6 @@ class GrabMachine
   def initialize(action_context, _options = {})
     @context = action_context
     @options = _options
-    pp "initialize #{options}"
-    # ObjectSpace.define_finalizer( self, self.class.finalize(self) } )
   end
 
   def run(_one_money, _item, &block)
@@ -33,12 +31,12 @@ class GrabMachine
                   }) unless Rails.env.production?
                   error exception.to_s
                 end
-      pp condition_method, next_if, @code, status, error
+      # pp condition_method, next_if, @code, status, error
 
       break unless next_if
     end
 
-    if @code > 200 and @code < 300
+    if @code >= 200 and @code < 300
       yield (self) if block_given?
     else
       context.render(json: body, status: @code)
@@ -71,7 +69,6 @@ class GrabMachine
   protected
 
   def current_user
-    pp "__user_method: #{__user_method}"
     @current_user ||= context.send(__user_method)
   end
 
@@ -151,11 +148,11 @@ class GrabMachine
   end
 
   def condition_price?
-    if item.price < item.ori_price
-      true
-    elsif item.price < 0
+    if item.price < 0
       status "price_zero"
       error "price %.2f must great then 0" % [item.price], 422
+    elsif item.price < item.ori_price
+      true
     else
       status "price_too_large"
       error "price: %.2f must less than ori_price: %.2f " % [item.price, item.ori_price], 422
@@ -218,6 +215,8 @@ class GrabMachine
   # 可以参于这个活动中，3种 Item 的抢购， 同样也可以设置一个 Item 能抢购几次
   # PmoItem max_executies = 2 , 你可以抢购同样的这款商品 2 次
   def condition_executies?
+    return true if @env[:skip_multiple]
+
     max_executies = item.max_executies || 1
 
     grabs = item.grabs.find user_id: current_user.id

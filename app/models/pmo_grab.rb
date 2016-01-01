@@ -32,13 +32,13 @@ class PmoGrab < Ohm::Model
   def before_save
     self.time_out = DEFAULT_TIMEOUT
     if self.item && self.item.is_a?(PmoItem)
-      self.item.increment :completes, self.quantity
+      self.item.incr :completes, self.quantity
     end
   end
 
   def before_delete
     if self.item && self.item.is_a?(PmoItem)
-      self.item.decrement :completes, self.quantity
+      self.item.decr :completes, self.quantity
     end
   end
 
