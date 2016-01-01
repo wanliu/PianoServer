@@ -41,7 +41,7 @@
     <%= yield :stylesheets %>
     <%= yield :javascripts %>
 
-    <%#= analytics_init if Rails.env.production? and Settings.GA.track %>
+    <%= analytics_init if Rails.env.production? and Settings.GA.track %>
 
     <!--[if lt IE 9]>
       <style type="text/css">
@@ -155,7 +155,7 @@
 
     </script>
     <% if Settings.dev.feature.ccnz %>
-      <%= render "cnzz" %>
+      <%#= render "cnzz" %>
     <% end %>
   </body>
 </html>

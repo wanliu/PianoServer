@@ -1,7 +1,7 @@
 class AuthorizeController < ApplicationController
   include RedirectCallback
 
-  before_action :set_callback, only: [ :weixin ]
+  before_action :set_callback, only: [:weixin]
 
   def weixin
     redirect_url = "#{Settings.app.website}/authorize/weixin_redirect_url"
@@ -37,6 +37,7 @@ class AuthorizeController < ApplicationController
       end
     end
 
+    # redirect_to_with_callback(@to_url, callback_url, notice: @notice)
     redirect_to @to_url, notice: @notice
     # redirect_to root_path
   end
