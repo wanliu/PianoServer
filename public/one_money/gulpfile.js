@@ -7,11 +7,6 @@ var uglify = require('gulp-uglify');
 var browserSync = require('browser-sync');
 var autoprefixer = require('gulp-autoprefixer');
 
-function errrHandler( e ){
-    gutil.beep();
-    gutil.log( e );
-}
-
 gulp.task('browserSync', function() {
   browserSync({
     files: "./build/*",
