@@ -30,7 +30,6 @@ ul.promotions-list
     color #333
     
     .item-wrap
-      // background #EEE
       overflow hidden
       border-radius 3px
       border 1px solid #ccc
@@ -47,18 +46,20 @@ ul.promotions-list
         display block
         max-width 100%
         max-height 100%
-      .state
+      .status
         position absolute
         right 0
         top 0
         display block
         padding 5px 8px
-        background-color #E64D4D
+        background-color #F00
         font-size 13px
         border-bottom-left-radius 5px
         color #FFF
         &.end
           background-color #333
+        &.wait
+          background-color #060
       .limit
         position absolute
         bottom 0

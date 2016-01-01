@@ -112,6 +112,7 @@
         dataType: 'json',
         url: url,
         success: function(json) {
+          console.log(json);
           parseResponseData(json);
 
           var poster = json['cover_urls'][0];
@@ -124,10 +125,9 @@
           var shop_name = json['shop_name'];
           var shop_avatar_url = json['shop_avatar_url'];
           var status = json['status'] || 'start';
+          var item_status = json['item_status'] || null;
 
           var beforeAjaxTime = Date.now() || new Date().getTime();
-
-
 
           // $.ajax({
           //   url: '',
@@ -164,21 +164,24 @@
 
           var $action = $('.actions');
 
+          // 如果 有这个状态说明已经 grab 了
+          if (item_status) return $action.html('<div class="always-text">莫贪得无厌</div>');
+
           switch(status) {
-          case 'wait':
-            $action.html('<div class="wait-text">请耐心等待</div>');
-            break;
-          case 'start':
-            $action.html('<button class="purchase-btn">马上抢购</button>');
-            break;
-          case 'end':
-            $action.html('<div class="end-text">活动已结束</div>');
-            break;
-          case 'suspend':
-            $action.html('<div class="end-text">已售罄</div>');
-            break;
-          default:
-            $action.html('<div class="wait-text">请耐心等待</div>');
+            case 'wait':
+              $action.html('<div class="wait-text">请耐心等待</div>');
+              break;
+            case 'start':
+              $action.html('<button class="purchase-btn">马上抢购</button>');
+              break;
+            case 'end':
+              $action.html('<div class="end-text">活动已结束</div>');
+              break;
+            case 'suspend':
+              $action.html('<div class="end-text">已售罄</div>');
+              break;
+            default:
+              $action.html('<div class="wait-text">请耐心等待</div>');
           }
         }
       });
@@ -191,6 +194,10 @@
             type: 'GET',
             success: function(res) {
               console.log(res);
+            },
+            error: function(res) {
+              console.log(res.responseText);
+              alert('sth wrong!');
             }
           });
         }

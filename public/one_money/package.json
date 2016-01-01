@@ -1,8 +1,8 @@
 {
-  "name": "1yuangou",
+  "name": "one_money",
   "version": "1.0.0",
   "description": "",
-  "main": "gulp.js",
+  "main": "index.html",
   "dependencies": {
     "browser-sync": "^2.10.1",
     "gulp": "^3.9.0",

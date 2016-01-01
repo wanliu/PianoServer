@@ -1,6 +1,6 @@
 $(function() {
   $.ajax({
-    url:'/api/promotions/one_money/2/items',
+    url:'/api/promotions/one_money/1/items',
     data: {},
     success: function(itemsData) {
       console.log(itemsData);
@@ -33,34 +33,39 @@ PromotionItem.prototype = {
     }
   },
 
-  state: function() {
+  getStatus: function() {
+    if (this.status) return this.status;
     if (Date.now() < this.start_at ) return 'wait';
     if (Date.now() > this.end_at) return 'expired';
     if (this.total_amount < 1) return 'shortage';
     return 'sale';
   },
+
   countDownTime: function() {
-    var element = $('.count-time[data-id='+ this.id +']');
+    var element = $('.promotion-item[name='+ this.id +'] .count-time');
     new CountDown(element, +this.total_amount, this.start_at, this.end_at);
   },
 
-  renderStateFlag: function() {
-    switch (this.state()) {
-      case 'wait': return '<span class="state end">未开始</span>';
-      case 'expired': return '<span class="state end">已结束</span>';
-      case 'shortage': return '<span class="state end">已售罄</span>';
-      default: return '<span class="state">进行中</span>';
+  changeStatus: function() {
+
+  },
+
+  statusFlagTemplate: function() {
+    switch (this.getStatus()) {
+      case 'wait': return '<span class="status wait">未开始</span>';
+      case 'expired': return '<span class="status end">已结束</span>';
+      case 'shortage': return '<span class="status end">已售罄</span>';
+      default: return '<span class="status">进行中</span>';
     } 
   },
   template: function() {
-    return '<li>
-              <a class="item-wrap" href="detail.html?one_money_id='+ this.one_money_id+'&id='+ this.id +'" data-id="'+ this.id +'">\
+    return '<li class="promotion-item" name='+ this.id +'>
+              <a class="item-wrap" href="detail.html?one_money_id='+ this.one_money_id+'&id='+ this.id +'">\
                 <header>
-                  '+ this.renderStateFlag() +'
+                  '+ this.statusFlagTemplate() +'
                   <img src="'+ this.cover_urls[0] +'">
                   <div class="limit">
-                    <span>活动数量: '+ this.total_amount +' 件</span><br />
-                    <span class="count-time" data-id='+ this.id +'></span>
+                    <span class="count-time"></span>
                   </div>
                 </header>
                 <main>

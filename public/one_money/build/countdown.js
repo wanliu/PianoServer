@@ -107,14 +107,14 @@
       }
 
       if (isEnd) {
-        if (this.status && this.status != 'Finish') this.statusChanged('Finish').bind(this);
+        if (this.status && this.status != 'Finish') this.statusChanged.call(this,'Finish');
         this.status = 'Finish';
         this._showFinishText();
         return this._removeCountdownHander();
       }
 
       if (isStarted) {
-        if (this.status && this.status != 'Start') this.statusChanged('Start').bind(this);
+        if (this.status && this.status != 'Start') this.statusChanged.call(this,'Start');
         this.status = 'Start';
 
         prefix = '距活动结束还有';
@@ -124,7 +124,7 @@
         prefix = '距活动开始还有';
         duration = this.duration(now, this.startTime);
 
-        if (duration.times > 5 * CountDown.DATE_UNIT.MINUTE) {
+        if (duration.times > CountDown.DATE_UNIT.DAY) {
           return this._showStartText();
         } else {
           return this._updateCountdownText(prefix, duration);
@@ -133,7 +133,7 @@
     };
 
     CountDown.prototype.statusChanged = function(status) {
-
+      console.log('状态改变成'+ status +'了');
     }
 
     CountDown.prototype._updateCountdownText = function(prefix, duration) {

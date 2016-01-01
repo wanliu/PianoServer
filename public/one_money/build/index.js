@@ -1,1 +1,1 @@
-$(function(){console.log("Hello!")});
+$(function(){$.ajax({url:"/api/promotions/one_money/1/items",data:{},success:function(i){console.log(i),i.map(function(i){console.log(i);var n=JSON.parse(i.cover_urls)[0],o='<li>\n                          <a href="list.html#'+i.id+'">\n                            <img src="'+n+' "/>\n                            <div class="price-wrap">￥'+i.price+"</div>\n                          </a>\n                        </li>";$(".preview-list").append(o)})}})});

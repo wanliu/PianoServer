@@ -103,6 +103,12 @@ body {
   color: #FFFFFF;
 }
 
+.actions .always-text {
+  background: rgba(50, 180, 50, 0.9);
+  padding: 10px 15px;
+  color: #FFFFFF;
+}
+
 .actions .purchase-btn {
   width: 100%;
   border: none;
