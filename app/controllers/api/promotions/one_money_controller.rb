@@ -81,72 +81,25 @@ class Api::Promotions::OneMoneyController < Api::BaseController
 
   def grab
     @item = PmoItem[params[:item_id].to_i]
-    GrabMachine.run self, @one_money, @item do |context|
+    GrabMachine.run self, @one_money, @item do |status, context|
       # @one_money.participants.add(pmo_current_user)
+      if status == "success"
+        id = @one_money.winners.add(pmo_current_user)
+        id = @item.winners.add(pmo_current_user)
+        @one_money.save
+        @item.save
 
-      id = @item.winners.add(pmo_current_user)
-      @one_money.winners.add(pmo_current_user)
-      @one_money.save
-      @item.save
-
-
-      render json: {
-        winner: id,
-        user_id: pmo_current_user.id,
-        item: params[:item_id],
-        one_money: params[:id],
-        status: "success"
-      }
+        render json: {
+          winner: id,
+          user_id: pmo_current_user.user_id,
+          item: params[:item_id],
+          one_money: params[:id],
+          status: "success"
+        }
+      else
+        render json: context.result, status: context.code
+      end
     end
-    # result = {} , code = 200
-    # item_id = params[:item_id].to_i
-    # @item = @one_money.items[item_id]
-
-    # if @item.present?
-    #   if @item.status == "started"
-    #
-    #   @item.grabs.find(user_id: pmo_current_user.id, )
-    #   if is_winner?(@item, pmo_current_user)
-    #     result, code = {
-    #       error: "you always winner this OneMoney %d" % [params[:id]],
-    #       status: "always"
-    #     }, 201
-    #   elsif @item.completes + @item.quantity > @item.total_amount # full
-    #     result, code = {
-    #       error: "Grap this OneMoney dont have inventory",
-    #       status: "insufficient"
-    #     }, 500
-    #
-    #     @one_money.participants.add(pmo_current_user)
-    #     @one_money.save
-    #   else
-    #     if @item.can?(:grab, pmo_current_user)
-    #
-    #       # @one_money.participants.add(pmo_current_user)
-    #       id = @item.winners.add(pmo_current_user)
-    #       @one_money.winners.add(pmo_current_user)
-    #       @one_money.save
-    #       result, code = {
-    #         winner: id,
-    #         user_id: pmo_current_user.id,
-    #         item: item_id,
-    #         one_money: params[:id],
-    #         status: "success"
-    #       }, 200
-    #     else
-    #       result, code = {
-    #         error: "you cant do %s action in this item" % [:grab ],
-    #         status: "no_action"
-    #       }, 400
-    #     end
-    #   end
-    # else
-    #   result, code = {
-    #     error: "can't found item id: %d in OneMoney[%d]" % [item_id, params[:id]]
-    #   }, 404
-    # end
-
-    # render json: result, status: code
   end
 
 
