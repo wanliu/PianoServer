@@ -50,7 +50,7 @@ class Admins::SubjectsController < Admins::BaseController
   end
 
   def touch_current
-    current_subject.touch
+    current_subject.try(:touch)
 
     head :ok
   end
