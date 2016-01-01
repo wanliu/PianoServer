@@ -83,20 +83,24 @@ class Api::Promotions::OneMoneyController < Api::BaseController
     @item = PmoItem[params[:item_id].to_i]
     GrabMachine.run self, @one_money, @item do |context|
       # @one_money.participants.add(pmo_current_user)
+
       id = @item.winners.add(pmo_current_user)
       @one_money.winners.add(pmo_current_user)
       @one_money.save
+      @item.save
+
+
       render json: {
         winner: id,
         user_id: pmo_current_user.id,
-        item: item_id,
+        item: params[:item_id],
         one_money: params[:id],
         status: "success"
       }
     end
-    result = {} , code = 200
-    item_id = params[:item_id].to_i
-    @item = @one_money.items[item_id]
+    # result = {} , code = 200
+    # item_id = params[:item_id].to_i
+    # @item = @one_money.items[item_id]
 
     # if @item.present?
     #   if @item.status == "started"

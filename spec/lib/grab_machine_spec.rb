@@ -46,10 +46,13 @@ RSpec.describe GrabController, :type => :controller do
       @item.one_money = @one_money
       @item.save
 
-      GrabMachine.run(self, @one_money, @item) do |context|
+      GrabMachine.run(self, @one_money, @item) do |status, context|
         # pp one_money
-
-        render nothing: true
+        if status == "success"
+          render nothing: true
+        else
+          render json: context.result, status: context.code
+        end
       end
       # raise ApplicationController::AccessDenied
     end
@@ -121,8 +124,12 @@ RSpec.describe GrabController, :type => :controller do
           @item.one_money = @one_money
           @item.save
 
-          GrabMachine.run(self, @one_money, @item) do |context|
-            render nothing: true
+          GrabMachine.run(self, @one_money, @item) do |status, context|
+            if status == "success"
+              render nothing: true
+            else
+              render json: context.result, status: context.code
+            end
           end
           # raise ApplicationController::AccessDenied
         end
@@ -151,8 +158,12 @@ RSpec.describe GrabController, :type => :controller do
           @item.one_money = @one_money
           @item.save
 
-          GrabMachine.run(self, @one_money, @item) do |context|
-            render nothing: true
+          GrabMachine.run(self, @one_money, @item) do |status, context|
+            if status == "success"
+              render nothing: true
+            else
+              render json: context.result, status: context.code
+            end
           end
           # raise ApplicationController::AccessDenied
         end
@@ -168,8 +179,12 @@ RSpec.describe GrabController, :type => :controller do
           @item.one_money = @one_money
           @item.save
 
-          GrabMachine.run(self, @one_money, @item) do |context|
-            render nothing: true
+          GrabMachine.run(self, @one_money, @item) do |status, context|
+            if status == "success"
+              render nothing: true
+            else
+              render json: context.result, status: context.code
+            end
           end
         end
       end

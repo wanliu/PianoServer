@@ -3,7 +3,7 @@ class GrabMachine
 
   attr_accessor :one_money, :item, :status, :code, :message, :current_user, :options
 
-  attr_reader :context, :body, :env
+  attr_reader :context, :result, :env
   cattr_reader :setup_options
 
   def initialize(action_context, _options = {})
@@ -17,6 +17,7 @@ class GrabMachine
     @item = _item
     @code = 200
     @env = {}
+    @status = "success"
 
     grab_conditions.each do |condition_method|
       # @one_money = one_money
@@ -26,7 +27,7 @@ class GrabMachine
                   self.__send__(condition_method)
                 rescue => exception
                   status "unknown"
-                  @body = body.merge({
+                  @result = result.merge({
                     backtrace: exception.backtrace.join("\n")
                   }) unless Rails.env.production?
                   error exception.to_s
@@ -36,17 +37,30 @@ class GrabMachine
       break unless next_if
     end
 
-    if @code >= 200 and @code < 300
-      yield (self) if block_given?
-    else
-      context.render(json: body, status: @code)
-    end
-
+    pp status, code
+    yield status, self if block_given?
+    # if @code >= 200 and @code < 300
+    #   yield (self) if block_given?
+    # else
+    #   context.render(json: result, status: @code)
+    # end
+    #
     self
   end
 
   def _run(_one_money, _item, &block)
 
+  end
+
+  def result(_result = nil)
+    if _result.nil?
+      @result ||= {}
+      @result[:error] = error[:error]
+      @result[:status] = status
+      @result
+    else
+      @result = _result
+    end
   end
 
   def self.run(context, one_money, item, &block)
@@ -101,16 +115,6 @@ class GrabMachine
     @options[:user_method] || :current_user
   end
 
-  def body(_body = nil)
-    if _body.nil?
-      @body ||= {}
-      @body[:error] = error[:error]
-      @body[:status] = status
-      @body
-    else
-      @body = _body
-    end
-  end
   # 判断状态是不是开始，只在生产模式
   def condition_status?
     if Rails.env.production?
