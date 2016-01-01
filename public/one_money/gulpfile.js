@@ -11,7 +11,7 @@ gulp.task('browserSync', function() {
   browserSync({
     files: "./build/*",
     // server: {baseDir: "./build"},
-    proxy: "0.0.0.0:5000"
+    proxy: "0.0.0.0:3000"
   });
 });
 
