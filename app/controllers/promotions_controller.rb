@@ -3,7 +3,7 @@ class PromotionsController < ApplicationController
 
   before_action :set_promotion, only: [:show, :update, :destroy, :chat, :shop, :toggle_follow]
 
-  caches_action :index, expires_in: 5.minutes, layout: false, cache_path: Proc.new { |request|
+  caches_action :index, layout: false, cache_path: Proc.new { |request|
     { etag: @subject.updated_at.utc } if @subject.present?
   }
 
