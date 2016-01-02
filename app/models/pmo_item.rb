@@ -3,6 +3,7 @@ class PmoItem < Ohm::Model
 
   include Ohm::Timestamps
   include Ohm::DataTypes
+  include Ohm::Callbacks
   include ExpiredEvents
 
   attribute :title
@@ -27,6 +28,7 @@ class PmoItem < Ohm::Model
   attribute :end_at, Type::Time
   attribute :suspend_at, Type::Time
 
+  attribute :independence, Type::Boolean
 
   set :participants, :PmoUser
   set :winners, :PmoUser
@@ -75,15 +77,27 @@ class PmoItem < Ohm::Model
   end
 
   def start_at_with_fallback
-    start_at_without_fallback || self.one_money.try(:start_at)
+    if self.independence
+      start_at_without_fallback
+    else
+      self.one_money.try(:start_at)
+    end
   end
 
   def end_at_with_fallback
-    end_at_without_fallback || self.one_money.try(:end_at)
+    if self.independence
+      end_at_without_fallback
+    else
+      self.one_money.try(:end_at)
+    end
   end
 
   def suspend_at_with_fallback
-    suspend_at_without_fallback || self.one_money.try(:suspend_at)
+    if self.independence
+      suspend_at_without_fallback
+    else
+      self.one_money.try(:suspend_at)
+    end
   end
 
   def to_hash
@@ -106,6 +120,45 @@ class PmoItem < Ohm::Model
     self.actions = DEFAULT_ACTIONS
     self.max_executies = 1
     self.quantity = 1
+  end
+
+  def valid_status?
+    (self.start_at < Time.now && self.status == "started") ||
+    (self.end_at < Time.now && self.status == "end") ||
+    (self.start_at > Time.now && expire_running?(:start_at)) ||
+    (self.end_at > Time.now && expire_running?(:end_at))
+  end
+
+  def valid_status_messages
+    msgs = {}
+    if self.start_at < Time.now # 开始后
+      if self.status == "started"
+        msgs["start_at"] = true
+      else
+        msgs["start_at"] = "未启动"
+      end
+    else                        # 未开始前
+      if expire_running?(:start_at)
+        msgs["start_at"] = true
+      else
+        msgs["start_at"] = "计时器未开启"
+      end
+    end
+
+    if self.end_at < Time.now # 已结束
+      if self.status == "end"
+        msgs["end_at"] = true
+      else
+        msgs["end_at"] = "未启动"
+      end
+    else                      # 未结束
+      if expire_running?(:end_at)
+        msgs["end_at"] = true
+      else
+        msgs["end_at"] = "计时器未开启"
+      end
+    end
+    msgs
   end
 
   alias_method_chain :start_at, :fallback

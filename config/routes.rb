@@ -24,6 +24,7 @@ Rails.application.routes.draw do
       get "categories", to: "industry#categories", as: :categories
     end
   end
+
   resources :regions, only: [ :index, :update ] do
     collection do
       post :set, as: :set
@@ -143,6 +144,8 @@ Rails.application.routes.draw do
         get :search
       end
       member do
+        patch "state/:item_id", action: :state_item, as: :state_item
+        patch "fix_clock/:item_id", action: :fix_clock, as: :fix_clock
         patch "add_item/:item_id", action: :add_item, as: :add_item
         put "update_item/:item_id", action: :update_item, as: :update_item
         delete "remove_item/:item_id", action: :remove_item, as: :remove_item

@@ -62,13 +62,27 @@ class Admins::OneMoneyController < Admins::BaseController
   end
 
   def update_item
-    @item = PmoItem[params[:item_id]]
+    @item = PmoItem[params[:item_id].to_i]
     @item.update_attributes(params[:pmo_item])
     @item.save
 
     respond_to do |format|
       format.json  { render json: @item }
     end
+  end
+
+  def state_item
+    @item = PmoItem[params[:item_id].to_i]
+    @item.status = params[:status] if params[:status]
+    @item.save
+  end
+
+  def fix_clock
+    @item = PmoItem[params[:item_id].to_i]
+
+    @item.set_expire_time(:start_at, @item.start_at)
+    @item.set_expire_time(:end_at, @item.end_at)
+    @item.save
   end
 
   private

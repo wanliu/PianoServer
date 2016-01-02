@@ -28,8 +28,11 @@ module RedisSubscribeManager
       # require 'em-synchrony'
       # require 'em-synchrony/em-hiredis'
       trap(:INT) { puts; exit }
+      puts 'Loading RedisSubscribeManager...'
 
       monitor_model("OneMoney")
+      monitor_model("PmoItem")
+      monitor_model("PmoGrab")
       # Thread.new do
       #   begin
       #     self.redis = Redis.new(url: redis_url)
@@ -73,10 +76,8 @@ module RedisSubscribeManager
         end
       end.call(pattern)
 
-      puts 'Loading RedisSubscribeManager...'
 
-      pattern_names = "__keyspace@#{db}__:#{model}:*"
-
+      pattern_names = "__keyspace@#{db}__:#{model}:*:__expires:*"
       psubscribe pattern_names do |channel, msg, status|
         meth = lambda do |model_name, id, field|
           if status == "expired"
@@ -106,6 +107,7 @@ module RedisSubscribeManager
         begin
           self.redis = Redis.new(url: redis_url)
           @redis = self.redis
+          @redis.config("set", "notify-keyspace-events", "KEA")
           puts "Subscribe #{pattern}"
           @redis.psubscribe pattern do |on|
             on.pmessage &block

@@ -363,16 +363,34 @@ RSpec.describe GrabController, :type => :controller do
           end
         end
 
-        it "已经赢得了一个奖励的情况下，用户还能抢" do
+        it "已经赢得了一个奖励的情况下，用户还能抢其它的 Item" do
           get :index, item: { total_amount: 10,  quantity: 1 }
           expect(response.status).to eql(200)
         end
 
-        it "两抢一次 Item 2, 会返回 \"不能再抢\"(no-executies)提示" do
+        it "但第二次抢 Item 2, 会返回 \"不能再抢\"(no-executies)提示" do
           routes.draw { get "index2" => "grab#index2" }
 
           get :index2, item: { total_amount: 10,  quantity: 1 }
 
+          expect(response.status).to eql(500)
+          result = JSON.parse(response.body)
+          expect(result["status"]).to eql("no-executies")
+        end
+
+        it "如果设置允许抢 3 次 Item 2 (max_executies: 3), 那么可以成功" do
+          routes.draw { get "index4" => "grab#index4" }
+
+          get :index4, item2: { max_executies: 3 }
+          expect(response.status).to eql(200)
+          # result = JSON.parse(response.body)
+          # expect(result["status"]).to eql("no-executies")
+        end
+
+        it "如果只设置两次，第三次就会失败" do
+          routes.draw { get "index4" => "grab#index4" }
+
+          get :index4, item2: { max_executies: 2 }
           expect(response.status).to eql(500)
           result = JSON.parse(response.body)
           expect(result["status"]).to eql("no-executies")

@@ -1,6 +1,7 @@
 class OneMoney < Ohm::Model
   include Ohm::Timestamps
   include Ohm::DataTypes
+  include Ohm::Callbacks
   include ExpiredEvents
 
   attribute :name
