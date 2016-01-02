@@ -5,7 +5,7 @@
     <%= image_tag item.cover_url, class: 'item-image' %>
     <p class="time-panel">
       <span class="time-start_at">开始 <%=l item.start_at, format: :short %></span>
-      <span class="time-end_at">结束 <%=l item.end_at, format: :short %></span>
+      <span class="time-end_at">结束 <%=l item.end_at, format: :short %><%= warning_with item.end_at <= item.start_at %></span>
     </p>
   </div>
   <div class="item-body">

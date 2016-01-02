@@ -1,6 +1,4 @@
 class PmoItem < Ohm::Model
-  DEFAULT_ACTIONS = %(grab)
-
   include Ohm::Timestamps
   include Ohm::DataTypes
   include Ohm::Callbacks
@@ -35,8 +33,6 @@ class PmoItem < Ohm::Model
 
   collection :grabs, :PmoGrab
   reference :one_money, :OneMoney
-
-  attribute :actions, Type::Array
 
   # list :logs, :PmoLog
   expire :start_at, :expired_start_at
@@ -111,13 +107,13 @@ class PmoItem < Ohm::Model
     else
       item = Item.find(item_id)
       _item = self.from(item)
+      pp _item
       _item.save
       _item
     end
   end
 
   def before_create
-    self.actions = DEFAULT_ACTIONS
     self.max_executies = 1
     self.quantity = 1
   end
