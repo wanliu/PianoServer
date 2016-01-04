@@ -1,9 +1,11 @@
+HIDE_ITEMS = true;
+
 $(function() {
+  if (HIDE_ITEMS) return;
   $.ajax({
     url:'/api/promotions/one_money/1/items',
     type:'GET',
     success: function(itemsData) {
-      alert(itemsData);
       itemsData.map(function(itemData) {
         var imgUrl = JSON.parse(itemData.cover_urls)[0];
         var template = '<li>\

@@ -14,6 +14,29 @@ body {
   clear: both;
 }
 
+.error-pannel {
+  background: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  display: none;
+}
+
+.error-pannel .msg-wrap {
+  position: absolute;
+  width: 300px;
+  height: 140px;
+  background: #fff;
+  left: 50%;
+  margin-left: -150px;
+  top: 50%;
+  margin-top: -70px;
+  text-align: center;
+}
+
 .item-detail {
   padding: 0 15px;
 }
@@ -86,6 +109,7 @@ body {
   background: #FBCC03;
   font-size: 24px;
   color: #FF2B2B;
+  text-align: center;
 }
 
 .actions {
@@ -115,7 +139,7 @@ body {
   display: block;
   padding: 10px 15px;
   text-align: center;
-  background: rgba(255, 1, 1, 0.70);
+  background: rgba(255, 0, 0, 0.99);
   color: #FFFFFF;
   font-size: 24px;
   outline: none;

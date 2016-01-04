@@ -6,6 +6,9 @@ $(function() {
       itemsData.map(function(itemData) {
         new PromotionItem(itemData);
       });
+    },
+    error: function (err){
+      $('body').append(err.responseText);
     }
   });
 });
@@ -72,7 +75,7 @@ PromotionItem.prototype = {
                   <hr>\
                   <div class="price-wrap">\
                     <span class="now-price">￥'+ this.price +'</span>\
-                    &emsp;<s class="origin-price">￥'+ this.ori_price +'</s>\
+                    &emsp;<s class="origin-price">￥'+ this.ori_price +'&nbsp;</s>\
                   </div>\
                 </main>\
               </a>\
