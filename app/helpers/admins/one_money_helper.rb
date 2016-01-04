@@ -71,7 +71,7 @@ module Admins::OneMoneyHelper
         btn.call(:pause, :suspend, disabled: true) +
         btn.call(:stop, :end, disabled: true)
       when "timing"
-        
+
       end
     end
   end
@@ -86,7 +86,8 @@ module Admins::OneMoneyHelper
     best_in_place OhmModel.new(item, model_name: item.class), *args
   end
 
-  def time_prompt(item, time = Time.now, &block)
+  def time_prompt(item, time = item.now, &block)
+
     flag, time_str, seconds =
       case item.status
       when "started"
