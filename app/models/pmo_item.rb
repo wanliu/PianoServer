@@ -135,7 +135,6 @@ class PmoItem < Ohm::Model
     else
       item = Item.find(item_id)
       _item = self.from(item)
-      pp _item
       _item.save
       _item
     end
