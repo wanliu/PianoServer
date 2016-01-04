@@ -22,9 +22,9 @@ class PmoItem < Ohm::Model
   attribute :shop_name
   attribute :shop_id
   attribute :shop_avatar_url
-  attribute :start_at, Type::Time
-  attribute :end_at, Type::Time
-  attribute :suspend_at, Type::Time
+  attribute :start_at, Type::Timestamp
+  attribute :end_at, Type::Timestamp
+  attribute :suspend_at, Type::Timestamp
 
   attribute :independence, Type::Boolean
 
@@ -135,7 +135,6 @@ class PmoItem < Ohm::Model
     else
       item = Item.find(item_id)
       _item = self.from(item)
-      pp _item
       _item.save
       _item
     end
