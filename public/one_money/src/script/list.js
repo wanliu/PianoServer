@@ -14,44 +14,35 @@ $(function() {
 });
 
 function PromotionItem(itemData) {
-  this.init(itemData);
+  var shouldJSONParseArr = ['avatar_urls', 'cover_urls', 'image_urls'];
+  var shouldDateParseArr = ['start_at', 'end_at'];
+  for (var key in itemData) {
+    var data = itemData[key];
+    if (shouldJSONParseArr.indexOf(key) > -1) {
+      data = JSON.parse(data);
+    }
+    if (shouldDateParseArr.indexOf(key) > -1) {
+      data = data*1000;
+    }
+    this[key] = data;
+  }
   this.render();
   this.countDownTime();
 }
 
 PromotionItem.prototype = {
-  init: function(itemData) {
-    var shouldJSONParseArr = ['avatar_urls', 'cover_urls', 'image_urls'];
-    var shouldDateParseArr = ['start_at', 'end_at'];
-    for (var key in itemData) {
-      var data = itemData[key];
-      if (shouldJSONParseArr.indexOf(key) > -1) {
-        data = JSON.parse(data);
-      }
-      if (shouldDateParseArr.indexOf(key) > -1) {
-        data = Date.parse(data);
-      }
-      this[key] = data;
-    }
-  },
-
   getStatus: function() {
-    if (this.status) return this.status;
+    if (this.status != "timing")     return this.status;
+    if (this.total_amount < 1)       return 'shortage';
     if (Date.now() < this.start_at ) return 'wait';
-    if (Date.now() > this.end_at) return 'expired';
-    if (this.total_amount < 1) return 'shortage';
-    return 'sale';
+    if (Date.now() > this.end_at)    return 'expired';
+    
+    return 'started';
   },
-
   countDownTime: function() {
     var element = $('.promotion-item[name='+ this.id +'] .count-time');
     new CountDown(element, +this.total_amount, this.start_at, this.end_at);
   },
-
-  changeStatus: function() {
-
-  },
-
   statusFlagTemplate: function() {
     switch (this.getStatus()) {
       case 'wait':
@@ -63,7 +54,7 @@ PromotionItem.prototype = {
       case 'shortage':
         return '<span class="status end">已售罄</span>&emsp;参与人数:' + this.total_amount;
 
-      default:
+      case 'started':
         return '<span class="status">抢购中</span>&emsp;库存:' + this.total_amount;
     } 
   },
