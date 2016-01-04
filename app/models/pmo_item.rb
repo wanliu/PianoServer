@@ -143,39 +143,36 @@ class PmoItem < Ohm::Model
   end
 
   def valid_status?
-    (self.start_at < Time.now && self.status == "started") ||
-    (self.end_at < Time.now && self.status == "end") ||
-    (self.start_at > Time.now && expire_running?(:start_at)) ||
-    (self.end_at > Time.now && expire_running?(:end_at))
+    valid_status_messages.present? && valid_status_messages.values.all? {|v| v == true}
   end
 
   def valid_status_messages
     msgs = {}
-    if self.start_at < Time.now # 开始后
-      if self.status == "started"
-        msgs["start_at"] = true
-      else
-        msgs["start_at"] = "未启动"
-      end
-    else                        # 未开始前
+    time = Time.now
+    if time < self.start_at
       if expire_running?(:start_at)
         msgs["start_at"] = true
       else
         msgs["start_at"] = "计时器未开启"
       end
-    end
-
-    if self.end_at < Time.now # 已结束
-      if self.status == "end"
-        msgs["end_at"] = true
+    elsif self.start_at <= time and time <= self.end_at
+      if self.status == "started"
+        msgs["start_at"] = true
       else
-        msgs["end_at"] = "未启动"
+        msgs["start_at"] = "未启动"
       end
-    else                      # 未结束
+
       if expire_running?(:end_at)
         msgs["end_at"] = true
       else
         msgs["end_at"] = "计时器未开启"
+      end
+    # elsif time > self.end_at
+    else
+      if self.status == "end"
+        msgs["end_at"] = true
+      else
+        msgs["end_at"] = "未启动"
       end
     end
     msgs
@@ -184,7 +181,7 @@ class PmoItem < Ohm::Model
   alias_method_chain :start_at, :fallback
   alias_method_chain :end_at, :fallback
   alias_method_chain :suspend_at, :fallback
-  alias_method_chain :status, :timing
+  # alias_method_chain :status, :timing
 
   private
 
