@@ -39,9 +39,6 @@ module BootstrapHelper
   def close_to(url, options = {}, html_options = {})
     default_html_options = {
       class: "close",
-      data: {
-        dismiss: "alert"
-      },
       "aria-label" => "Close"
     }
 

@@ -88,13 +88,13 @@ class PmoItem < Ohm::Model
     end
   end
 
-  def suspend_at_with_fallback
-    if self.independence
-      suspend_at_without_fallback
-    else
-      self.one_money.try(:suspend_at)
-    end
-  end
+  # def suspend_at_with_fallback
+  #   if self.independence
+  #     suspend_at_without_fallback
+  #   else
+  #     self.one_money.try(:suspend_at)
+  #   end
+  # end
 
   def status_with_timing
     if status_without_timing.blank? or
@@ -117,6 +117,11 @@ class PmoItem < Ohm::Model
     else
       status_without_timing
     end
+  end
+
+  def set_status(state)
+    self.suspend_at = Time.now if state.to_s == "suspend"
+    self.status = state
   end
 
   def to_hash
@@ -180,7 +185,7 @@ class PmoItem < Ohm::Model
 
   alias_method_chain :start_at, :fallback
   alias_method_chain :end_at, :fallback
-  alias_method_chain :suspend_at, :fallback
+  # alias_method_chain :suspend_at, :fallback
   # alias_method_chain :status, :timing
 
   private

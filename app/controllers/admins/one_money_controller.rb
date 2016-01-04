@@ -73,8 +73,9 @@ class Admins::OneMoneyController < Admins::BaseController
   end
 
   def state_item
+    @one_money = OneMoney[params[:id].to_i]
     @item = PmoItem[params[:item_id].to_i]
-    @item.status = params[:status] if params[:status]
+    @item.set_status params[:status] if params[:status]
     @item.save
   end
 

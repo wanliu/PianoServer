@@ -1,6 +1,6 @@
-<div class="pmo-item">
+<div class="pmo-item" pmo-item="<%= item.id %>" >
   <div class="item-head">
-    <%= close_to remove_item_admins_one_money_path(@one_money.id, item.id), remote: true, class: 'pull-right' %>
+    <%= close_to remove_item_admins_one_money_path(@one_money.id, item.id), remote: true, class: 'pull-right', method: :delete %>
     <span class="pull-left"><%= item.id %></span>
     <%= image_tag item.cover_url, class: 'item-image' %>
     <p class="time-panel">
