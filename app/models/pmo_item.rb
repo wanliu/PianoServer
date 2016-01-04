@@ -22,9 +22,9 @@ class PmoItem < Ohm::Model
   attribute :shop_name
   attribute :shop_id
   attribute :shop_avatar_url
-  attribute :start_at, Type::Timestamp
-  attribute :end_at, Type::Timestamp
-  attribute :suspend_at, Type::Timestamp
+  attribute :start_at, OhmTime::Ex
+  attribute :end_at, OhmTime::Ex
+  attribute :suspend_at, OhmTime::Ex
 
   attribute :independence, Type::Boolean
 
