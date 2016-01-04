@@ -15,6 +15,8 @@ module OhmTime
 
   ISO8601 = lambda do |t|
     case t
+    when "", nil
+      nil
     when ISO8601Time
       t
     when Date, Time, DateTime
