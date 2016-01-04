@@ -54,29 +54,36 @@ PromotionItem.prototype = {
 
   statusFlagTemplate: function() {
     switch (this.getStatus()) {
-      case 'wait': return '<span class="status wait">未开始</span>';
-      case 'expired': return '<span class="status end">已结束</span>';
-      case 'shortage': return '<span class="status end">已售罄</span>';
-      default: return '<span class="status">进行中</span>';
+      case 'wait':
+        return '<span class="status wait">未开始</span>&emsp;参与人数:' + this.total_amount;
+
+      case 'expired':
+        return '<span class="status end">已结束</span>&emsp;参与人数:' + this.total_amount;
+
+      case 'shortage':
+        return '<span class="status end">已售罄</span>&emsp;参与人数:' + this.total_amount;
+
+      default:
+        return '<span class="status">抢购中</span>&emsp;库存:' + this.total_amount;
     } 
   },
   template: function() {
     return '<li class="promotion-item" name='+ this.id +'>\
               <a class="item-wrap" href="detail.html?one_money_id='+ this.one_money_id+'&id='+ this.id +'">\
                 <header>\
-                  '+ this.statusFlagTemplate() +'\
-                  <img src="'+ this.cover_urls[0] +'">\
+                  <img class="one-money-logo" src="images/one_money_log.jpg"/>\
+                  <img class="cover" src="'+ this.cover_urls[0] +'">\
                   <div class="limit">\
                     <span class="count-time"></span>\
                   </div>\
                 </header>\
                 <main>\
                   <p class="title">'+ this.title +'</p>\
-                  <hr>\
                   <div class="price-wrap">\
                     <span class="now-price">￥'+ this.price +'</span>\
-                    &emsp;<s class="origin-price">￥'+ this.ori_price +'&nbsp;</s>\
+                    <span class="origin-price">原价<s>￥'+ this.ori_price +'&nbsp;</s></span>\
                   </div>\
+                  <div class="status-wrap">'+ this.statusFlagTemplate() +'</div>\
                 </main>\
               </a>\
             </li>';
