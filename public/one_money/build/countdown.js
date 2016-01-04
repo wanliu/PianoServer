@@ -184,6 +184,7 @@
       minutes = this._format(duration, 'minutes');
       seconds = this._format(duration, 'seconds');
 
+      if (days == 0) return [hours, minutes, seconds].join(':');
       return [days, '天', [hours, minutes, seconds].join(':')].join('');
     };
 
