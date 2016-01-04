@@ -2,6 +2,10 @@ class Item < ActiveRecord::Base
   include DynamicProperty
   include ContentManagement::Model
   include PublicActivity::Model
+  include Elasticsearch::Model
+  include Elasticsearch::Model::Callbacks
+  include ESModel
+
   tracked
 
   html_fragment :description, :scrub => :prune  # scrubs `body` using the :prune scrubber
@@ -63,6 +67,32 @@ class Item < ActiveRecord::Base
     where(shop: shop).maximum(:sid) || 0
   end
 
+  scope :with_shop_or_product, -> (q) do
+    groups = q.split(/[,，。　 ]/)
+    shop_name = groups[0]
+    product = groups[1]
+
+    query = {
+      query: {
+        bool: {
+          should: [
+            {
+              query_string: {"default_field":"item.shop_name","query": shop_name }
+            }
+          ]
+        }
+      }
+    }
+
+    if product.present?
+      query[:query][:bool][:should].push({
+        query_string: {"default_field":"item.title","query": product }
+      })
+    end
+
+    Item.search(query).records #.results
+  end
+
   def product
     Product.find(product_id)
   end
@@ -120,6 +150,13 @@ class Item < ActiveRecord::Base
     end
   end
 
+  def shop_name
+    shop.try(:title)
+  end
+
+  def as_indexed_json(options={})
+    as_json(options.merge(methods: :shop_name))
+  end
   # options: {
   #   data: {size: 'l', color: 'red'},
   #   quantity: 1

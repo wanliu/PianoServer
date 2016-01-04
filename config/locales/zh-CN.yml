@@ -291,3 +291,10 @@ zh-CN:
   dialogs:
     close: '关闭'
     select: '选择'
+  promotions:
+    status:
+      started: 进行中
+      end: 结束
+      suspend: 暂停
+      invalid: 未开始
+      

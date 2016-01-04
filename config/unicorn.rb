@@ -41,7 +41,14 @@ stdout_path APP_PATH + "/log/unicorn.stdout.log"
 
 preload_app true
 
+run_once = true
+
 before_fork do |server, worker|
+  if run_once
+    ENV['SUBSCRIBE_MASTER'] = "true"
+    run_once = false
+  end
+
   defined?(ActiveRecord::Base) and
     ActiveRecord::Base.connection.disconnect!
 end
