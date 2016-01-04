@@ -2,15 +2,16 @@ class OneMoney < Ohm::Model
   include Ohm::Timestamps
   include Ohm::DataTypes
   include Ohm::Callbacks
+  include OhmTime
   include ExpiredEvents
 
   attribute :name
   attribute :title
   attribute :description
 
-  attribute :start_at, Type::Timestamp
-  attribute :end_at, Type::Timestamp
-  attribute :suspend_at, Type::Timestamp
+  attribute :start_at, OhmTime::Ex
+  attribute :end_at, OhmTime::Ex
+  attribute :suspend_at, OhmTime::Ex
   attribute :multi_item, Type::Integer   # 可以抢多种商品设置
   attribute :auto_expire, Type::Boolean  # 自动同步记时器
 

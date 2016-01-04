@@ -61,7 +61,19 @@
 <% end %>
 <script type="text/javascript">
   $('.input-group.date').datetimepicker({
-    format: "YYYY-MM-DD HH:mm:ss"
+    format: "YYYY-MM-DD HH:mm:ss",
+    parseInputDate: function(inputDate) {
+      if (moment.isMoment(inputDate) || inputDate instanceof Date) {
+        return resultDate = moment(inputDate);
+      } else {
+        if (/^\d+$/.test(inputDate)) {
+          return moment(inputDate, "X");
+        } else {
+          // if (/\d{2}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/.test(inputDate)) {
+          return moment(inputDate);
+        }
+      }
+    }
   });
 
 </script>
