@@ -115,6 +115,7 @@ class Api::Promotions::OneMoneyController < Api::BaseController
           item: params[:item_id],
           one_money: params[:id],
           callback_url: @grab.callback_url,
+          time_out: @grab.time_out.minutes.seconds,
           status: "success"
         }
       else
@@ -132,7 +133,13 @@ class Api::Promotions::OneMoneyController < Api::BaseController
       when "always", "no-executies"
         grabs = PmoGrab.find(pmo_item_id: @item.id, one_money: @one_money.id, user_id: pmo_current_user.user_id)
         grab = grabs.reverse_each { |e| break e;  }
-        render json: { status: status, callback_url: grab.callback_url }
+        hash = { status: status,
+                 grab_id: grab.id,
+                 callback_url: grab.callback_url,
+               }
+        hash[:timeout] = [ grab.timeout_at - grab.now, 0].max if grab.timeout_at.present?
+
+        render json: hash
       else
         render json: { status: status }
       end

@@ -1,13 +1,14 @@
 require 'encryptor'
 
 class PmoGrab < Ohm::Model
-  DEFAULT_TIMEOUT = Settings.promotions.one_money.timeout.minutes
+  # DEFAULT_TIMEOUT = Settings.promotions.one_money.timeout.minutes
 
   cattr_reader :encryptor
   @@encryptor = Encryptor.new(Rails.application.secrets[:secret_key_base], "one_money")
 
   include Ohm::Timestamps
   include Ohm::DataTypes
+  include Ohm::Callbacks
   include ExpiredEvents
 
   attribute :user_id
@@ -21,7 +22,7 @@ class PmoGrab < Ohm::Model
   attribute :callback
 
   attribute :avatar_urls, Type::Array
-
+  attribute :timeout_at, OhmTime::ISO8601
   attribute :one_money  # 活动的 id , etc OneMoney
 
   reference :pmo_item, :PmoItem
@@ -34,15 +35,24 @@ class PmoGrab < Ohm::Model
   index :one_money
 
   def before_save
-    self.time_out = DEFAULT_TIMEOUT
-    if self.pem_item && self.pem_item.is_a?(PmoItem)
-      self.pem_item.incr :completes, self.quantity
+    self.time_out = Settings.promotions.one_money.timeout.minutes.minutes
+    self.timeout_at = self.now + self.time_out
+    # pp valid_status_messages
+    if self.pmo_item && self.pmo_item.is_a?(PmoItem)
+      self.pmo_item.incr :completes, self.quantity
     end
   end
 
+  def after_save
+    self.set_expire_time :time_out, self.timeout_at.to_i
+
+  end
+
+
+
   def before_delete
-    if self.pem_item && self.pem_item.is_a?(PmoItem)
-      self.pem_item.decr :completes, self.quantity
+    if self.pmo_item && self.pmo_item.is_a?(PmoItem)
+      self.pmo_item.decr :completes, self.quantity
     end
   end
 
@@ -72,7 +82,6 @@ class PmoGrab < Ohm::Model
   rescue => e
     nil
   end
-
 
   def callback_with_fallback
     if pmo_item && pmo_item.independence # 独立
