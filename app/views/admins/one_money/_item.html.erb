@@ -19,7 +19,10 @@
 
     <p class="from"><%=b item, :shop_name %></p>
     <p class="status">
-      <%= status_label item.status %><%= warning_with_status item %><%= icon :wrench unless item.valid_status? %>
+      <%= status_label item.status %><%= warning_with_status item %>
+      <%= link_to fix_clock_admins_one_money_path(@one_money.id, item.id), class: "btn btn-link", method: :patch, remote: true do  %>
+        <%= icon :wrench unless item.valid_status? %>
+      <% end %>
       <%= status_control item %>
     </p>
     <p class="processes">
