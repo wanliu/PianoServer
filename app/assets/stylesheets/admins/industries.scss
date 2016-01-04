@@ -16,3 +16,25 @@
     }
   }
 }
+
+
+.industry-item {
+  display: table;
+  width: 100%;
+
+  div {
+    width: 33%;
+    display: table-cell;
+  }
+
+  .industry-toggle {
+    line-height: 100%;
+    vertical-align: middle;
+    text-align: right;
+  }
+
+  .industry-delete {
+    display: table-cell;
+    text-align: right;
+  }
+}
