@@ -15,6 +15,8 @@ class Admins::OneMoneyController < Admins::BaseController
   end
 
   def show
+    # @item = PmoItem[params[:item_id]]
+    redirect_to edit_admins_one_money_path(@one_money.id)
   end
 
   def edit
