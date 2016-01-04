@@ -12,4 +12,21 @@ module OhmTime
 
     Ohm::DataTypes::UnixTime.at(_t.to_i)
   end
+
+  ISO8601 = lambda do |t|
+    case t
+    when ISO8601Time
+      t
+    when Date, Time, DateTime
+      ISO8601Time.at(t.to_f)
+    else
+      Time.parse(t)
+    end
+  end
+end
+
+class ISO8601Time < Time
+  def to_s
+    iso8601
+  end
 end
