@@ -68,4 +68,6 @@ class PmoGrab < Ohm::Model
     # save
   end
 
+  def expired_time_out
+  end
 end

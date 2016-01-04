@@ -96,6 +96,29 @@ class PmoItem < Ohm::Model
     end
   end
 
+  def status_with_timing
+    if status_without_timing.blank? or
+       status_without_timing  == "invalid" or
+       status_without_timing == "timing"
+
+      if start_at && end_at
+        if Time.now >= start_at
+          "started"
+        else
+          if Time.now >= end_at
+            "end"
+          else
+            "timing"
+          end
+        end
+      else
+        "invalid"
+      end
+    else
+      status_without_timing
+    end
+  end
+
   def to_hash
     super.merge(attributes)
   end
@@ -116,6 +139,7 @@ class PmoItem < Ohm::Model
   def before_create
     self.max_executies = 1
     self.quantity = 1
+    self.status = "timing"
   end
 
   def valid_status?
@@ -160,6 +184,7 @@ class PmoItem < Ohm::Model
   alias_method_chain :start_at, :fallback
   alias_method_chain :end_at, :fallback
   alias_method_chain :suspend_at, :fallback
+  alias_method_chain :status, :timing
 
   private
 
