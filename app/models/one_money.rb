@@ -8,9 +8,9 @@ class OneMoney < Ohm::Model
   attribute :title
   attribute :description
 
-  attribute :start_at, Type::Time
-  attribute :end_at, Type::Time
-  attribute :suspend_at, Type::Time
+  attribute :start_at, Type::Timestamp
+  attribute :end_at, Type::Timestamp
+  attribute :suspend_at, Type::Timestamp
   attribute :multi_item, Type::Integer   # 可以抢多种商品设置
   attribute :auto_expire, Type::Boolean  # 自动同步记时器
 
