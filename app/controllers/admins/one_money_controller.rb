@@ -1,4 +1,5 @@
 class Admins::OneMoneyController < Admins::BaseController
+  before_action :set_one_money, except: [:index, :new, :create, :search]
 
   def index
     @one_moneies = OneMoney.all
@@ -17,11 +18,9 @@ class Admins::OneMoneyController < Admins::BaseController
   end
 
   def edit
-    @one_money = OneMoney[params[:id]]
   end
 
   def update
-    @one_money = OneMoney[params[:id].to_i]
     @one_money.update_attributes one_money_params
     @one_money.save
 
@@ -47,7 +46,6 @@ class Admins::OneMoneyController < Admins::BaseController
   end
 
   def add_item
-    @one_money = OneMoney[params[:id].to_i]
     @item = PmoItem.find_or_create(params[:item_id])
     @item.one_money = @one_money
     @item.set_expire_time(:start_at, @item.start_at)
@@ -57,7 +55,6 @@ class Admins::OneMoneyController < Admins::BaseController
   end
 
   def remove_item
-    @one_money = OneMoney[params[:id].to_i]
     @item = PmoItem[params[:item_id]]
     @item.delete
   end
@@ -74,7 +71,7 @@ class Admins::OneMoneyController < Admins::BaseController
 
   def state_item
     @item = PmoItem[params[:item_id].to_i]
-    @item.status = params[:status] if params[:status]
+    @item.set_status params[:status] if params[:status]
     @item.save
   end
 
@@ -94,5 +91,9 @@ class Admins::OneMoneyController < Admins::BaseController
       hash[k] = v unless v.blank?
     end
     hash
+  end
+
+  def set_one_money
+    @one_money = OneMoney[params[:id].to_i]
   end
 end

@@ -41,7 +41,13 @@ module Admins::OneMoneyHelper
     end
 
     btn = proc do |icon, status, options |
-      button status_action.call(status), {context: :default, size: :xs}.merge(options || {}) do
+      default_options = {
+        class: 'btn btn-default btn-xs',
+        remote: true,
+        method: 'patch'
+      }
+
+      link_to status_action.call(status), default_options.merge(options || {}) do
         icon icon
       end
     end
@@ -123,7 +129,10 @@ module Admins::OneMoneyHelper
 
   def short_time(t1, t2, &block)
     fmt_time = proc {|seconds| Time.at(seconds).utc.strftime("%H:%M:%S")}
+    return [0, "无效的时间", 0 ] if t1.blank? || t2.blank?
+
     seconds = t2 - t1
+
     flag = 0
     str = if seconds > 0
             flag = 1
