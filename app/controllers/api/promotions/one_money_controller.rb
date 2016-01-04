@@ -4,7 +4,7 @@ GrabMachine.setup(user_method: :pmo_current_user)
 
 class Api::Promotions::OneMoneyController < Api::BaseController
   include FastUsers
-  skip_before_action :authenticate_user!, only: [:show, :item]
+  skip_before_action :authenticate_user!, only: [:show, :item, :items, :status]
   skip_before_action :authenticate_user!, only: [:signup] unless Rails.env.production?
   before_action :set_one_money #, except: [:, :update, :status, :item]
 
@@ -97,12 +97,14 @@ class Api::Promotions::OneMoneyController < Api::BaseController
   def grab
     @item = PmoItem[params[:item_id].to_i]
     GrabMachine.run self, @one_money, @item do |status, context|
-      # @one_money.participants.add(pmo_current_user)
       if status == "success"
         id = @one_money.winners.add(pmo_current_user)
         id = @item.winners.add(pmo_current_user)
         @one_money.save
         @item.save
+        @grab = PmoGrab.from(@item, @one_money, pmo_current_user)
+        @grab.save
+        # @grab.pmo_item = @item        @item.grabs
 
         render json: {
           winner: id,
@@ -112,6 +114,8 @@ class Api::Promotions::OneMoneyController < Api::BaseController
           status: "success"
         }
       else
+        @one_money.participants.add(pmo_current_user)
+        @one_money.save
         render json: context.result, status: context.code
       end
     end

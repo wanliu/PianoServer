@@ -1,8 +1,7 @@
 class PmoItem < Ohm::Model
-  DEFAULT_ACTIONS = %(grab)
-
   include Ohm::Timestamps
   include Ohm::DataTypes
+  include Ohm::Callbacks
   include ExpiredEvents
 
   attribute :title
@@ -15,7 +14,7 @@ class PmoItem < Ohm::Model
   attribute :quantity, Type::Integer
   attribute :ori_price, Type::Decimal
   attribute :total_amount, Type::Integer
-  attribute :max_executies, Type:Integer
+  attribute :max_executies, Type::Integer
 
   attribute :shop_category_name
   attribute :category_name
@@ -27,14 +26,13 @@ class PmoItem < Ohm::Model
   attribute :end_at, Type::Time
   attribute :suspend_at, Type::Time
 
+  attribute :independence, Type::Boolean
 
   set :participants, :PmoUser
   set :winners, :PmoUser
 
   collection :grabs, :PmoGrab
   reference :one_money, :OneMoney
-
-  attribute :actions, Type::Array
 
   # list :logs, :PmoLog
   expire :start_at, :expired_start_at
@@ -75,15 +73,55 @@ class PmoItem < Ohm::Model
   end
 
   def start_at_with_fallback
-    start_at_without_fallback || self.one_money.try(:start_at)
+    if self.independence
+      start_at_without_fallback
+    else
+      self.one_money.try(:start_at)
+    end
   end
 
   def end_at_with_fallback
-    end_at_without_fallback || self.one_money.try(:end_at)
+    if self.independence
+      end_at_without_fallback
+    else
+      self.one_money.try(:end_at)
+    end
   end
 
-  def suspend_at_with_fallback
-    suspend_at_without_fallback || self.one_money.try(:suspend_at)
+  # def suspend_at_with_fallback
+  #   if self.independence
+  #     suspend_at_without_fallback
+  #   else
+  #     self.one_money.try(:suspend_at)
+  #   end
+  # end
+
+  def status_with_timing
+    if status_without_timing.blank? or
+       status_without_timing  == "invalid" or
+       status_without_timing == "timing"
+
+      if start_at && end_at
+        if Time.now >= start_at
+          "started"
+        else
+          if Time.now >= end_at
+            "end"
+          else
+            "timing"
+          end
+        end
+      else
+        "invalid"
+      end
+    else
+      status_without_timing
+    end
+  end
+
+  def set_status(state)
+    self.suspend_at = Time.now if state.to_s == "suspend"
+    self.status = state
   end
 
   def to_hash
@@ -97,20 +135,58 @@ class PmoItem < Ohm::Model
     else
       item = Item.find(item_id)
       _item = self.from(item)
+      pp _item
       _item.save
       _item
     end
   end
 
   def before_create
-    self.actions = DEFAULT_ACTIONS
     self.max_executies = 1
     self.quantity = 1
+    self.status = "timing"
+  end
+
+  def valid_status?
+    valid_status_messages.present? && valid_status_messages.values.all? {|v| v == true}
+  end
+
+  def valid_status_messages
+    msgs = {}
+    time = Time.now
+    if time < self.start_at
+      if expire_running?(:start_at)
+        msgs["start_at"] = true
+      else
+        msgs["start_at"] = "计时器未开启"
+      end
+    elsif self.start_at <= time and time <= self.end_at
+      if self.status == "started"
+        msgs["start_at"] = true
+      else
+        msgs["start_at"] = "未启动"
+      end
+
+      if expire_running?(:end_at)
+        msgs["end_at"] = true
+      else
+        msgs["end_at"] = "计时器未开启"
+      end
+    # elsif time > self.end_at
+    else
+      if self.status == "end"
+        msgs["end_at"] = true
+      else
+        msgs["end_at"] = "未启动"
+      end
+    end
+    msgs
   end
 
   alias_method_chain :start_at, :fallback
   alias_method_chain :end_at, :fallback
-  alias_method_chain :suspend_at, :fallback
+  # alias_method_chain :suspend_at, :fallback
+  # alias_method_chain :status, :timing
 
   private
 
