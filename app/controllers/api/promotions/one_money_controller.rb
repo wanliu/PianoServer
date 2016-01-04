@@ -29,12 +29,20 @@ class Api::Promotions::OneMoneyController < Api::BaseController
     GrabMachine.run self, @one_money, @item do |status, context|
       # @one_money.participants.add(pmo_current_user)
       if status == "success"
+        hash = @item.to_hash
+        if params[:u].present?
+          hash[:td] = (Time.now.to_f * 1000) - params[:u].to_i
+        end
 
         # hash[:item_status] = status
 
         render json: @item.to_hash
       else
         hash = @item.to_hash
+        if params[:u].present?
+          hash[:td] = (Time.now.to_f * 1000) - params[:u].to_i
+        end
+        
         hash[:item_status] = status
         render json: hash
       end
