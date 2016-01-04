@@ -15,7 +15,7 @@ module OhmTime
 
   ISO8601 = lambda do |t|
     case t
-    when "", nil
+    when "", NilClass
       nil
     when ISO8601Time
       t
