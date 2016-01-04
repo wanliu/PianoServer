@@ -2,10 +2,10 @@ module ExpiredEvents
   extend ActiveSupport::Concern
   include ActiveSupport::Callbacks
 
-  included do
-    cattr_accessor :expire_attributes
-    @@expire_attributes = {}
-
+  included do |klass|
+    klass.class_attribute :expire_attributes
+    # @@expire_attributes = {}
+    klass.expire_attributes = {}
     if instance_methods(true).include?(:after_save)
       alias_method_chain :after_save, :expire
     end
@@ -40,7 +40,6 @@ module ExpiredEvents
   end
 
   def after_save_with_expire
-    pp "after_save"
 
     self.expire_attributes.each do |key, v|
       if v

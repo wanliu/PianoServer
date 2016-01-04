@@ -100,14 +100,19 @@ class PmoItem < Ohm::Model
     if status_without_timing.blank? or
        status_without_timing  == "invalid" or
        status_without_timing == "timing"
-      if Time.now >= self.start_at
-        "started"
-      else
-        if Time.now >= self.end_at
-          "end"
+
+      if start_at && end_at
+        if Time.now >= start_at
+          "started"
         else
-          "timing"
+          if Time.now >= end_at
+            "end"
+          else
+            "timing"
+          end
         end
+      else
+        "invalid"
       end
     else
       status_without_timing

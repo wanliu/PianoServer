@@ -55,7 +55,7 @@
 
     <%= submit_tag 'save', class: 'btn btn-primary' %>
 
-    <%= status_control @one_money %>
+    <%= status_control @one_money unless @one_money.new? %>
   </div>
 
 <% end %>
