@@ -22,6 +22,52 @@ module Admins::OneMoneyHelper
     status_label_full status, t(status, scope: 'promotions.status')
   end
 
+  def status_button(item)
+    case item.status
+    when nil, "", 'invalid'
+      button_to "启动", state_item_admins_one_money_path(@one_money.id, item.id, status: "started"), context: :success, size: :xs
+    when "started"
+      button_to "暂停", state_item_admins_one_money_path(@one_money.id, item.id, status: "suspend"), context: :warning, size: :xs
+    when "suspend"
+      button_to "恢复", state_item_admins_one_money_path(@one_money.id, item.id, status: "started"), context: :warning, size: :xs
+    when "end"
+      button_to "重启", state_item_admins_one_money_path(@one_money.id, item.id, status: "started"), context: :success, size: :xs
+    end
+  end
+
+  def status_control(item)
+    status_action = proc do |status|
+      state_item_admins_one_money_path(@one_money.id, item.id, status: status)
+    end
+
+    btn = proc do |icon, status, options |
+      button status_action.call(status), {context: :default, size: :xs}.merge(options || {}) do
+        icon icon
+      end
+    end
+
+    content_tag :span, class: 'btn-group' do
+      case item.status
+      when nil, "", 'invalid'
+        btn.call(:play, :started) +
+        btn.call(:pause, :suspend, disabled: true) +
+        btn.call(:stop, :end, disabled: true)
+      when "started"
+        btn.call(:play, :started, disabled: true) +
+        btn.call(:pause, :suspend) +
+        btn.call(:stop, :end)
+      when "suspend"
+        btn.call(:play, :started) +
+        btn.call(:pause, :suspend, disabled: true) +
+        btn.call(:stop, :end)
+      when "end"
+        btn.call(:play, :started) +
+        btn.call(:pause, :suspend, disabled: true) +
+        btn.call(:stop, :end, disabled: true)
+      end
+    end
+  end
+
   def best_in_place_item(item, *args)
     options = args.extract_options!
     options[:url] = update_item_admins_one_money_path(@one_money.id, item.id)
@@ -97,8 +143,22 @@ module Admins::OneMoneyHelper
     [flag, str, seconds]
   end
 
-  def warning_with(condition)
-    icon(:'exclamation-sign', class: 'text-danger') if condition
+  def warning_with(condition, options = {})
+    icon(:'exclamation-sign', {class: 'text-danger'}.merge(options)) if condition
+  end
+
+  def warning_with_status(item)
+    dict = {
+      "start_at" => "开始时间",
+      "end_at" => "结束时间",
+    }
+
+    unless item.valid_status?
+      messages = []
+      item.valid_status_messages.each {|key, v| messages.push("%s %s" % [dict[key], v]) if v != true }
+      text = messages.join(",")
+      icon(:'exclamation-sign', {class: 'text-danger', title: text})
+    end
   end
 
   alias_method :b, :best_in_place_item

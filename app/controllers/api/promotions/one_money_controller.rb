@@ -4,7 +4,7 @@ GrabMachine.setup(user_method: :pmo_current_user)
 
 class Api::Promotions::OneMoneyController < Api::BaseController
   include FastUsers
-  skip_before_action :authenticate_user!, only: [:show, :item]
+  skip_before_action :authenticate_user!, only: [:show, :item, :items, :status]
   skip_before_action :authenticate_user!, only: [:signup] unless Rails.env.production?
   before_action :set_one_money #, except: [:, :update, :status, :item]
 

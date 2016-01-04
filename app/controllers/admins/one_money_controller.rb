@@ -23,7 +23,6 @@ class Admins::OneMoneyController < Admins::BaseController
   def update
     @one_money = OneMoney[params[:id].to_i]
     @one_money.update_attributes one_money_params
-    # @one_money.multiple = one_money_params[:multiple].to_i
     @one_money.save
 
     redirect_to action: :edit
@@ -51,6 +50,8 @@ class Admins::OneMoneyController < Admins::BaseController
     @one_money = OneMoney[params[:id].to_i]
     @item = PmoItem.find_or_create(params[:item_id])
     @item.one_money = @one_money
+    @item.set_expire_time(:start_at, @item.start_at)
+    @item.set_expire_time(:end_at, @item.end_at)
     @item.save
 
   end
@@ -62,13 +63,27 @@ class Admins::OneMoneyController < Admins::BaseController
   end
 
   def update_item
-    @item = PmoItem[params[:item_id]]
+    @item = PmoItem[params[:item_id].to_i]
     @item.update_attributes(params[:pmo_item])
     @item.save
 
     respond_to do |format|
       format.json  { render json: @item }
     end
+  end
+
+  def state_item
+    @item = PmoItem[params[:item_id].to_i]
+    @item.status = params[:status] if params[:status]
+    @item.save
+  end
+
+  def fix_clock
+    @item = PmoItem[params[:item_id].to_i]
+
+    @item.set_expire_time(:start_at, @item.start_at)
+    @item.set_expire_time(:end_at, @item.end_at)
+    @item.save
   end
 
   private

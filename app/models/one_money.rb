@@ -1,6 +1,7 @@
 class OneMoney < Ohm::Model
   include Ohm::Timestamps
   include Ohm::DataTypes
+  include Ohm::Callbacks
   include ExpiredEvents
 
   attribute :name
@@ -10,7 +11,8 @@ class OneMoney < Ohm::Model
   attribute :start_at, Type::Time
   attribute :end_at, Type::Time
   attribute :suspend_at, Type::Time
-  attribute :multi_item, Type::Integer
+  attribute :multi_item, Type::Integer   # 可以抢多种商品设置
+  attribute :auto_expire, Type::Boolean  # 自动同步记时器
 
   attribute :cover_url
   attribute :status
@@ -44,6 +46,26 @@ class OneMoney < Ohm::Model
 
   def before_create
     self.multi_item = 1
+    self.auto_expire = true
+  end
+
+  def after_save
+    self.items.each do |item|
+      unless item.independence # 未独立
+        if self.start_at > Time.now && item.status == "end" # 设置了新的开始时间，要把状态改为未开始
+          item.status = ""
+          item.save
+        end
+
+        if self.end_at > Time.now && item.status == "started" # 结束时间如果小于当前时间，要提前结束
+          item.status = ""
+          item.save
+        end
+
+        item.set_expire_time(:start_at, self.start_at.to_i)
+        item.set_expire_time(:end_at, self.end_at.to_i)
+      end
+    end
   end
 
   private
