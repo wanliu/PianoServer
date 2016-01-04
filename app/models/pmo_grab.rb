@@ -1,5 +1,10 @@
+require 'encryptor'
+
 class PmoGrab < Ohm::Model
-  DEFAULT_TIMEOUT = 30.minutes
+  DEFAULT_TIMEOUT = Settings.promotions.one_money.timeout.minutes
+
+  cattr_reader :encryptor
+  @@encryptor = Encryptor.new(Rails.application.secrets[:secret_key_base], "one_money")
 
   include Ohm::Timestamps
   include Ohm::DataTypes
@@ -13,14 +18,13 @@ class PmoGrab < Ohm::Model
   attribute :shop_id
   attribute :shop_name
   attribute :time_out, Type::Integer
+  attribute :callback
 
-  # attribute :cover_urls, Type::Array
   attribute :avatar_urls, Type::Array
 
   attribute :one_money  # 活动的 id , etc OneMoney
 
   reference :pmo_item, :PmoItem
-  # reference :one_money, :OneMoney
 
   expire :time_out, :expired_time_out
   # expire :end_at, :expired_end_at
@@ -58,16 +62,55 @@ class PmoGrab < Ohm::Model
   end
 
   def callback_url
+    url = real_callback_url
+    l = URI.parse(url)
+    query = Hash[URI.decode_www_form(l.query)]
+    encode_message =  encrypt(self.attributes.to_json)
+    query = query.merge("encode_message" => encode_message)
+    l.query = URI.encode_www_form(query)
+    l.to_s
+  rescue => e
+    nil
   end
 
-  private
 
-  def expired_created_at
-    self.delete
-    # self.status = 'started'
-    # save
+  def callback_with_fallback
+    if pmo_item && pmo_item.independence # 独立
+      callback_without_fallback
+    else
+      if pmo_item.one_money
+        pmo_item.one_money.callback
+      else
+        nil
+      end
+    end
+  end
+
+  alias_method_chain :callback, :fallback
+
+  private
+  def real_callback_url
+    token_exp = /\{([\w\d\._]*)\}/m
+    callback.gsub token_exp do |word|
+      token = word[1..-2]
+      chains = token.split('.')
+      res = chains.inject(self) do |s, m|
+        begin
+          s.send(m)
+        rescue
+          ''
+        end
+      end
+    end
+  rescue
+    nil
+  end
+
+  def encrypt(args)
+    self.encryptor.encrypt args
   end
 
   def expired_time_out
+    self.delete
   end
 end

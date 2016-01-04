@@ -220,6 +220,8 @@ Rails.application.routes.draw do
 
           get "status", action: :status
           match "grab/:item_id", action: :grab, via: Rails.env.production? ? [:put] : [:put, :get]
+
+          get "callback/:item_id", action: :callback
         end
       end
     end
