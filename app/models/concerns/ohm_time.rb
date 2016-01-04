@@ -20,7 +20,7 @@ module OhmTime
     when Date, Time, DateTime
       ISO8601Time.at(t.to_f)
     when String
-      Time.parse(t.to_s)
+      ISO8601Time.parse(t.to_s)
     else
       nil
     end
