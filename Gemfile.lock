@@ -613,6 +613,3 @@ DEPENDENCIES
   unicorn
   web-console (~> 2.0)
   weixin_authorize!
-
-BUNDLED WITH
-   1.10.6

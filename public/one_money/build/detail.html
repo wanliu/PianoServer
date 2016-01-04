@@ -81,7 +81,8 @@
 
       function parseResponseData(json) {
         var to_parsed_json_keys = [ 'avatar_urls', 'cover_urls', 'image_urls' ];
-        var to_parsed_date_keys = ['created_at', 'updated_at', 'start_at', 'end_at'];
+        var to_parsed_date_keys = [];
+        var to_parsed_time_keys = [ 'created_at', 'updated_at', 'start_at', 'end_at' ];
 
         for (var key in json) {
           if (to_parsed_json_keys.indexOf(key) > -1) {
@@ -91,7 +92,15 @@
           if (to_parsed_date_keys.indexOf(key) > -1) {
             json[key] = Date.parse(json[key]);
           }
+
+          if (to_parsed_time_keys.indexOf(key) > -1) {
+            json[key] *= 1000;
+          }
         }
+      }
+
+      function formatZero(val) {
+        return +val < 10 ? '0' + val : val;
       }
 
       function formatDate(time) {
@@ -103,7 +112,7 @@
         var hour = date.getHours();
         var minute = date.getMinutes();
 
-        return [[year, month, day].join('-'), [hour, minute].join(':')].join(' ');
+        return [[year, formatZero(month), formatZero(day)].join('-'), [formatZero(hour), formatZero(minute)].join(':')].join(' ');
       }
 
       var params = getQueryParams();
@@ -116,7 +125,6 @@
         dataType: 'json',
         url: url,
         success: function(json) {
-          console.log(json);
           parseResponseData(json);
 
           var poster = json['cover_urls'][0];
@@ -130,6 +138,8 @@
           var shop_avatar_url = json['shop_avatar_url'];
           var status = json['status'] || 'wait';
           var item_status = json['item_status'] || null;
+
+          console.log('data is:', json);
 
           var beforeAjaxTime = Date.now() || new Date().getTime();
 
@@ -189,7 +199,7 @@
           }
         }
       });
-      
+
       // 抢购按钮
       $('body').on('click', function(e) {
         if (e.target == $('.purchase-btn')[0]) {

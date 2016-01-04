@@ -77,7 +77,7 @@ class Item < ActiveRecord::Base
         bool: {
           should: [
             {
-              query_string: {"default_field":"item.shop_name","query": shop_name }
+              query_string: {"default_field" => "item.shop_name","query" => shop_name }
             }
           ]
         }
@@ -86,7 +86,7 @@ class Item < ActiveRecord::Base
 
     if product.present?
       query[:query][:bool][:should].push({
-        query_string: {"default_field":"item.title","query": product }
+        query_string: {"default_field" => "item.title","query" => product }
       })
     end
 
