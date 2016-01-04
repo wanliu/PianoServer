@@ -103,6 +103,9 @@ class Api::Promotions::OneMoneyController < Api::BaseController
         id = @item.winners.add(pmo_current_user)
         @one_money.save
         @item.save
+        @grab = PmoGrab.from(@item, @one_money, pmo_current_user)
+        @grab.save
+        # @grab.pmo_item = @item        @item.grabs
 
         render json: {
           winner: id,
