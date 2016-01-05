@@ -20,6 +20,7 @@ class PmoGrab < Ohm::Model
   attribute :shop_name
   attribute :time_out, Type::Integer
   attribute :callback
+  attribute :status
 
   attribute :avatar_urls, Type::Array
   attribute :timeout_at, OhmTime::ISO8601
@@ -37,6 +38,7 @@ class PmoGrab < Ohm::Model
   def before_save
     self.time_out = Settings.promotions.one_money.timeout.minutes.minutes
     self.timeout_at = self.now + self.time_out
+    self.status = "pending"
     # pp valid_status_messages
     if self.pmo_item && self.pmo_item.is_a?(PmoItem)
       self.pmo_item.incr :completes, self.quantity
@@ -47,8 +49,6 @@ class PmoGrab < Ohm::Model
     self.set_expire_time :time_out, self.timeout_at.to_i
 
   end
-
-
 
   def before_delete
     if self.pmo_item && self.pmo_item.is_a?(PmoItem)
@@ -75,7 +75,7 @@ class PmoGrab < Ohm::Model
     url = real_callback_url
     l = URI.parse(url)
     query = Hash[URI.decode_www_form(l.query)]
-    encode_message =  encrypt(self.attributes.to_json)
+    encode_message =  encrypt(self.to_hash.to_json)
     query = query.merge("encode_message" => encode_message)
     l.query = URI.encode_www_form(query)
     l.to_s
@@ -120,6 +120,11 @@ class PmoGrab < Ohm::Model
   def encrypt(args)
     self.encryptor.encrypt args
   end
+
+  def decrypto(args)
+    self.encryptor.decrypto args
+  end
+
 
   def expired_time_out
     self.delete
