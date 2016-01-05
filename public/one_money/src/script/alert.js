@@ -1,8 +1,14 @@
 ;(function() {
-  function Alert(opt) {
-    this.title = opt.title || '消息';
+  var Alert;
+  window.Alert = function(opt) {
+    if (Alert) return Alert;
+    return Alert = new _Alert(opt);
+  }
+
+  function _Alert(opt) {
     this.msg   = opt.msg   || '';
-    this.link  = opt.link  || #;
+    this.link  = opt.link  || '#';
+    this.title = opt.title || '消息';
     this.style = {
       container: {
         top: 0,
@@ -41,17 +47,17 @@
         'font-size': '28px',
       },
       msg: {
-        padding: '10px'
+        padding: '10px',
       }
-
     }
+    this.render();
   }
 
-  Alert.prototype = {
+  _Alert.prototype = {
     styleFormat: function(obj) {
       var style = "";
       for (key in obj) {
-        style += key + ':' + obj[key] + ';'
+        style += key + ':' + obj[key] + ';';
       }
       return style;
     },
@@ -60,9 +66,9 @@
         <div class="alert-container" style="'+ this.styleFormat(this.style.container) +'">\
           <div class="panel" style="'+ this.styleFormat(this.style.panel) +'">\
             <header class="alert-header" style="'+ this.styleFormat(this.style.header) +'">'+ this.title +'</header>\
-            <span class="alert-close-btn" style="'+ this.styleFormat(this.style.close) +'">×</span>
+            <span class="alert-close-btn" style="'+ this.styleFormat(this.style.close) +'">×</span>\
             <p class="alert-msg" style="'+ this.styleFormat(this.style.msg) +'">\
-              <span>'+ this.msg +'</span>
+              <span>'+ this.msg +'</span>\
               <a href="'+ this.link +'">link</a>\
             </p>\
           </div>\
@@ -76,6 +82,8 @@
       $('.alert-container').fadeOut();
     },
     render: function() {
+      if (this.rendered) return this.show();
+      this.rendered = true;
       var _this = this;
       $('body').append(this.template());
       $('.alert-close-btn').on('click', function() {
@@ -84,6 +92,5 @@
       $('.alert-container').fadeIn();
     }
   }
-  window.Alert = Alert;
 
 })();
