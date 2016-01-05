@@ -1,0 +1,1 @@
+(function(){this.ActionButton=function(){function t(t,n,i){this.title=t,this.action=n,"[object Array]"===Object.prototype.toString.call(i)&&(i=i.join(" "));var o=["btn"];void 0!==i&&(o=o.concat(i)),this.classes=o}return t.prototype={getTitle:function(){return this.title},getAction:function(){return this.action},getClasses:function(){return this.classes}},t}()}).call(this);
