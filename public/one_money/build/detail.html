@@ -153,9 +153,9 @@
           new CountDown(element, +total_amount, start_at + diff, end_at + diff,
             function(current_state) {
               switch(current_state) {
-              case 'Start':
+              case 'started':
                 return $action.html('<button class="purchase-btn">马上抢购</button>');
-              case 'Finish':
+              case 'end':
                 return $action.html('<div class="end-text">活动已结束</div>');
               }
             }

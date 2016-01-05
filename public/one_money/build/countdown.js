@@ -42,6 +42,7 @@
       this.inventory = inventory;
       this.startTime = startTime;
       this.endTime = endTime;
+      this.statusChangedCallback = statusChangedCallback;
 
       if (+inventory > 0) {
         this._addCountdownHandler();
@@ -59,13 +60,13 @@
     CountDown.prototype._addCountdownHandler = function() {
       var manager = CountDownManager.getManager();
 
-      manager.addHandler(this._countdownHandler.bind(this));
+      manager.addHandler(this._countdownHandler, this);
     };
 
     CountDown.prototype._removeCountdownHander = function() {
       var manager = CountDownManager.getManager();
 
-      manager.removeHandler(this._countdownHandler.bind(this));
+      manager.removeHandler(this._countdownHandler, this);
     };
 
     CountDown.prototype._diff = function(date1, date2) {
@@ -105,24 +106,24 @@
         if (this.status != 'end') {
           this.status = 'end';
 
-          if (typeof statusChangedCallback === 'function') {
-            statusChangedCallback(this.status);
+          if (typeof this.statusChangedCallback === 'function') {
+            this.statusChangedCallback(this.status);
           }
+
+          this._removeCountdownHander();
         }
 
-        this._showFinishText();
-
-        return this._removeCountdownHander();
+        return this._showFinishText();
       }
 
       if (isStarted) {
         if (this.status != 'started') {
           this.status = 'started';
 
-          if (typeof statusChangedCallback === 'function') {
-            statusChangedCallback(this.status);
+          if (typeof this.statusChangedCallback === 'function') {
+            this.statusChangedCallback(this.status);
           }
-        };
+        }
 
         prefix = '距活动结束还有';
         duration = this.duration(now, this.endTime);

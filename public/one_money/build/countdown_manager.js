@@ -27,30 +27,51 @@ CountDownManager.prototype.start = function() {
 
   this.intervelId = setInterval(function() {
     for(var i=0; i < callbacks.length; i++) {
-      var callback = callbacks[i];
+      var item = callbacks[i];
+      var callback = item['callback'];
+      var context = item['context'];
 
       if (typeof callback === 'function') {
-        callback();
+        callback.call(context ? context : window);
       }
     }
   }, 1000);
 };
 
-CountDownManager.prototype.addHandler = function(callback) {
-  if (!this.isExisted(callback)) {
-    this.callbacks.push(callback);
+CountDownManager.prototype.addHandler = function(callback, context) {
+  if (!this.isExisted(callback, context)) {
+    this.callbacks.push({
+      callback: callback,
+      context: context
+    });
   }
 };
 
-CountDownManager.prototype.isExisted = function(callback) {
-  return this.callbacks.indexOf(callback) > -1;
+CountDownManager.prototype.isExisted = function(callback, context) {
+  for (var i=0; i<this.callbacks.length; i++) {
+    var item = this.callbacks[i];
+
+    if (item['callback'] === callback && item['context'] === context) {
+      return true;
+    }
+  }
+
+  return false;
 };
 
-CountDownManager.prototype.removeHandler = function(callback) {
-  var index = this.callbacks.indexOf(callback);
+CountDownManager.prototype.removeHandler = function(callback, context) {
+  var toRemoveIndex = -1;
 
-  if (index > -1) {
-    this.callbacks.splice(index, 1);
+  for (var i=0; i<this.callbacks.length; i++) {
+    var item = this.callbacks[i];
+
+    if (item['callback'] === callback && item['context'] === context) {
+      toRemoveIndex = i;
+    }
+  }
+
+  if (toRemoveIndex > -1) {
+    this.callbacks.splice(toRemoveIndex, 1);
   }
 };
 
