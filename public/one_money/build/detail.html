@@ -81,8 +81,8 @@
 
       function parseResponseData(json) {
         var to_parsed_json_keys = [ 'avatar_urls', 'cover_urls', 'image_urls' ];
-        var to_parsed_date_keys = [];
-        var to_parsed_time_keys = [ 'created_at', 'updated_at', 'start_at', 'end_at' ];
+        var to_parsed_date_keys = [ 'start_at', 'end_at' ];
+        var to_parsed_time_keys = [ 'created_at', 'updated_at' ];
 
         for (var key in json) {
           if (to_parsed_json_keys.indexOf(key) > -1) {
@@ -119,12 +119,20 @@
       var one_money_id = params['one_money_id'];
       var item_id = params['id'];
       var url = ['/api/promotions/one_money/', one_money_id, '/items/', item_id].join('');
+      var beforeAjaxTime = new Date().getTime();
 
       $.ajax({
         type: 'GET',
         dataType: 'json',
         url: url,
+        data: { u: beforeAjaxTime },
         success: function(json) {
+          var afterAjaxTime = new Date().getTime();
+          var diff = json.td;
+          var sub = (afterAjaxTime - beforeAjaxTime) / 2;
+
+          diff -= Math.ceil(sub);
+
           parseResponseData(json);
 
           var poster = json['cover_urls'][0];
@@ -139,30 +147,7 @@
           var status = json['status'] || 'wait';
           var item_status = json['item_status'] || null;
 
-          console.log('data is:', json);
-
-          var beforeAjaxTime = Date.now() || new Date().getTime();
-
-          // $.ajax({
-          //   url: '',
-          //   type: 'GET',
-          //   dataType: 'json',
-          //   success: function(json) {
-          //     var afterAjaxTime = Date.now() || new Date().getTime();
-
-          //     var diff = data.diff;
-          //     var sub = (afterAjaxTime - beforeAjaxTime) / 2;
-
-          //     diff -= Math.ceil(sub / 2);
-
-          //     new CountDown($('.countdown-board'), inventory, start_at + diff, end_at + diff);
-          //   }
-          // });
-          //
-
-          var element = $('.countdown-board .countdown-text')
-
-          new CountDown(element, +total_amount, start_at, end_at);
+          new CountDown($('.countdown-board'), inventory, start_at + diff, end_at + diff);
 
           setTimeout(function() {
             element.parent().show();
