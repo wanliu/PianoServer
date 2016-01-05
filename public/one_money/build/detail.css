@@ -236,8 +236,8 @@ body {
   display: block;
   padding: 10px 15px;
   text-align: center;
-  background: rgba(255, 0, 0, 0.99);
-  color: #FFFFFF;
+  background: #FF1138;
+  color: #FFF;
   font-size: 24px;
   outline: none;
 }

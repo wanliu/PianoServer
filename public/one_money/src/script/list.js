@@ -84,7 +84,7 @@ PromotionItem.prototype = {
       <li class="promotion-item" name='+ this.id +'>\
         <a class="item-wrap" href="detail.html?one_money_id='+ this.one_money_id+'&id='+ this.id +'">\
           <header>\
-            <img class="one-money-logo" src="images/one_money_log.jpg"/>\
+            <img class="one-money-logo" src="build/images/one_money_log.jpg"/>\
             <img class="cover" src="'+ this.cover_urls[0] +'">\
             <div class="limit">\
             </div>\

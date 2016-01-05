@@ -228,8 +228,8 @@ ActiveRecord::Schema.define(version: 20160105083953) do
     t.jsonb    "properties",                                  default: {}
     t.text     "description"
     t.decimal  "current_stock",      precision: 10, scale: 2
-    t.jsonb    "properties_setting",                          default: {}
     t.boolean  "abandom",                                     default: false, null: false
+    t.jsonb    "properties_setting",                          default: {}
   end
 
   create_table "jobs", force: :cascade do |t|
