@@ -1,4 +1,5 @@
 require 'grab_machine'
+require 'encryptor'
 
 GrabMachine.setup(user_method: :pmo_current_user)
 
@@ -146,6 +147,18 @@ class Api::Promotions::OneMoneyController < Api::BaseController
     end
   end
 
+  def ensure
+    @grab = PmoGrab[params[:grab_id].to_i]
+    hash = JSON.parse encryptor.decrypt(params[:encode_message])
+    @grab.status = hash[:state]
+    @grab.save
+    @grab.cancel_expire(:timeout)
+  rescue
+    hash = { status: "failed" }
+  ensure
+    render json: hash
+  end
+
   private
 
   def set_one_money
@@ -166,4 +179,7 @@ class Api::Promotions::OneMoneyController < Api::BaseController
     @pmo_current_user
   end
 
+  def encryptor
+    @encryptor ||=  Encryptor.new(Rails.application.secrets[:secret_key_base], "one_money")
+  end
 end
