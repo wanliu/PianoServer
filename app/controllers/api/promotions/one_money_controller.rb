@@ -124,7 +124,7 @@ class Api::Promotions::OneMoneyController < Api::BaseController
         @one_money.participants.add(pmo_current_user)
         @one_money.save
 
-        Rails.logger.debug "Status: #{status} context:#{context.results}" if ENV['TEST_PROFORMANCE']
+        Rails.logger.debug "Status: #{status} context:#{context.result}" if ENV['TEST_PROFORMANCE']
         render json: context.result, status: context.code
       end
     end
