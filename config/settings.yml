@@ -106,6 +106,7 @@ chat:
   display_username: true
   display_shopname: true
 promotions:
+  lock_timeout: 200
   one_money:
     timeout:
       minutes: 15

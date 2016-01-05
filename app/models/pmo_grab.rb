@@ -41,7 +41,7 @@ class PmoGrab < Ohm::Model
     self.status = "pending"
     # pp valid_status_messages
     if self.pmo_item && self.pmo_item.is_a?(PmoItem)
-      self.pmo_item.incr :completes, self.quantity
+      self.pmo_item.lock_incr :completes, self.quantity
     end
   end
 
@@ -52,13 +52,13 @@ class PmoGrab < Ohm::Model
 
   def before_delete
     if self.pmo_item && self.pmo_item.is_a?(PmoItem)
-      self.pmo_item.decr :completes, self.quantity
+      self.pmo_item.lock_decr :completes, self.quantity
     end
   end
 
   def to_hash
     super.merge(attributes)
-  end  
+  end
 
   def self.from(pmo_item, one_money, user)
     new({
@@ -125,8 +125,8 @@ class PmoGrab < Ohm::Model
     self.encryptor.encrypt args
   end
 
-  def decrypto(args)
-    self.encryptor.decrypto args
+  def decrypt(args)
+    self.encryptor.decrypt args
   end
 
 
