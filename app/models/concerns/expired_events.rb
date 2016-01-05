@@ -3,7 +3,9 @@ module ExpiredEvents
   include ActiveSupport::Callbacks
 
   included do |klass|
-    klass.class_attribute :expire_attributes
+    klass.class_attribute :expire_attributes, :time_redis
+
+    klass.time_redis = redis
     # @@expire_attributes = {}
     klass.expire_attributes = {}
     if instance_methods(true).include?(:after_save)
@@ -13,7 +15,7 @@ module ExpiredEvents
 
   def cancel_expire(attribute)
     key_name = "#{key}:__expires:#{attribute}"
-    redis.call("EXPIREAT", key_name, 0) if redis.call("EXISTS", key_name)
+    time_redis.call("EXPIREAT", key_name, 0) if time_redis.call("EXISTS", key_name)
   end
 
   def expire_status
@@ -24,9 +26,13 @@ module ExpiredEvents
     status
   end
 
+  def now
+    Time.at(time_redis.call('time')[0].to_i)
+  end
+
   def expire_ttl(attribute)
     key_name = "#{key}:__expires:#{attribute}"
-    ttl = redis.call("TTL", key_name)
+    ttl = time_redis.call("TTL", key_name)
   end
 
   def expire_running?(attribute)
@@ -35,8 +41,8 @@ module ExpiredEvents
 
   def set_expire_time(attribute, time)
     key_name = "#{key}:__expires:#{attribute}"
-    redis.call("SET", key_name, 1)
-    redis.call("EXPIREAT", key_name, time)
+    time_redis.call("SET", key_name, 1)
+    time_redis.call("EXPIREAT", key_name, time)
   end
 
   def after_save_with_expire

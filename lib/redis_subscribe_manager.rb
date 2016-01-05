@@ -77,8 +77,10 @@ module RedisSubscribeManager
       end.call(pattern)
 
 
-      pattern_names = "__keyspace@#{db}__:#{model}:*:__expires:*"
+      # pattern_names = "__keyspace@#{db}__:#{model}:*:__expires:*"
+      pattern_names = "__key*__:*"
       psubscribe pattern_names do |channel, msg, status|
+
         meth = lambda do |model_name, id, field|
           if status == "expired"
             instantialize(model_name, id) do |instance|
@@ -133,26 +135,6 @@ module RedisSubscribeManager
       end
     end
 
-    # def parse_event(msg, event = 'expired')
-    #   namespace, _event = msg.split(':')
-    #   return namespace.start_with?('__keyevent@') && _event == event
-    # end
-    #
-    # def parse_twice_message(msg, &block)
-    #   # puts msg
-    #   _model, id, field = parse_key(msg)
-    #   if _model && id && field
-    #     events_queue.push({model: _model, id: id, field: field})
-    #   elsif parse_event(msg)
-    #     model = events_queue.pop()
-    #     yield model if block_given? and model.present?
-    #   end
-    # end
-
-    # def events_queue
-    #   @events_queue ||= []
-    # end
-    #
     def instantialize(model_name, id, &block)
       klass = model_name.safe_constantize
       yield klass[id] if block_given? and klass.is_a?(Class)
