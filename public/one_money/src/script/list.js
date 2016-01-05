@@ -22,7 +22,7 @@ function PromotionItem(itemData) {
       data = JSON.parse(data);
     }
     if (shouldDateParseArr.indexOf(key) > -1) {
-      data = data*1000;
+      data = Date.parse(data);
     }
     this[key] = data;
   }
@@ -48,7 +48,7 @@ PromotionItem.prototype = {
       case 'wait':
         return '<span class="status wait">未开始</span>&emsp;参与人数:' + this.total_amount;
 
-      case 'expired':
+      case 'end':
         return '<span class="status end">已结束</span>&emsp;参与人数:' + this.total_amount;
 
       case 'shortage':

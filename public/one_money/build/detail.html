@@ -169,23 +169,25 @@
           var $action = $('.actions');
 
           // 如果 有这个状态说明已经 grab 了
-          if (item_status == 'always') return $action.html('<div class="always-text">已经参与过活动了 </div>');
+          if (item_status == "always") return $action.html('<div class="always-text">已经参与过活动了 </div>');
+          if (item_status == "no-executies") return $action.html('<div class="always-text">已经不能再抢此商品了</div>');
 
           switch(status) {
+
             case 'wait':
-              $action.html('<div class="wait-text">请耐心等待</div>');
-              break;
+              return $action.html('<div class="wait-text">请耐心等待</div>');
+
             case 'started':
-              $action.html('<button class="purchase-btn">马上抢购</button>');
-              break;
+              return $action.html('<button class="purchase-btn">马上抢购</button>');
+
             case 'end':
-              $action.html('<div class="end-text">活动已结束</div>');
-              break;
+              return $action.html('<div class="end-text">活动已结束</div>');
+
             case 'suspend':
-              $action.html('<div class="end-text">已售罄</div>');
-              break;
+              return $action.html('<div class="end-text">已售罄</div>');
+
             default:
-              $action.html('<div class="wait-text">请耐心等待</div>');
+              return $action.html('<div class="wait-text">请耐心等待</div>');
           }
         }
       });
