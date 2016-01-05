@@ -15,7 +15,7 @@ class PmoGrab < Ohm::Model
   attribute :shop_item_id
   attribute :title
   attribute :price
-  attribute :quantity
+  attribute :quantity, Type::Integer
   attribute :shop_id
   attribute :shop_name
   attribute :time_out, Type::Integer
@@ -84,14 +84,16 @@ class PmoGrab < Ohm::Model
   end
 
   def callback_with_fallback
-    if pmo_item && pmo_item.independence # 独立
-      callback_without_fallback
-    else
-      if pmo_item.one_money
+    if pmo_item
+      if pmo_item.independence # 独立
+        callback_without_fallback
+      elsif pmo_item.one_money
         pmo_item.one_money.callback
       else
         nil
       end
+    else
+      nil
     end
   end
 

@@ -37,7 +37,7 @@
       SECOND: 1000
     };
 
-    function CountDown(element, inventory, startTime, endTime) {
+    function CountDown(element, inventory, startTime, endTime, statusChangedCallback) {
       this.element = element;
       this.inventory = inventory;
       this.startTime = startTime;
@@ -57,16 +57,15 @@
     };
 
     CountDown.prototype._addCountdownHandler = function() {
-      var intervalHandler = this._countdownHandler.bind(this);
+      var manager = CountDownManager.getManager();
 
-      return this._intervalMark = setInterval(intervalHandler, 1000);
+      manager.addHandler(this._countdownHandler.bind(this));
     };
 
     CountDown.prototype._removeCountdownHander = function() {
-      if (this._intervalMark) {
-        clearInterval(this._intervalMark);
-        return this._intervalMark = null;
-      }
+      var manager = CountDownManager.getManager();
+
+      manager.removeHandler(this._countdownHandler.bind(this));
     };
 
     CountDown.prototype._diff = function(date1, date2) {
@@ -102,20 +101,28 @@
       prefix = null;
       duration = null;
 
-      if (diffStart === 0 || diffEnd === 0) {
-        this._changeClass();
-      }
-
       if (isEnd) {
-        if (this.status && this.status != 'Finish') this.statusChanged.call(this,'Finish');
-        this.status = 'Finish';
+        if (this.status != 'end') {
+          this.status = 'end';
+
+          if (typeof statusChangedCallback === 'function') {
+            statusChangedCallback(this.status);
+          }
+        }
+
         this._showFinishText();
+
         return this._removeCountdownHander();
       }
 
       if (isStarted) {
-        if (this.status && this.status != 'Start') this.statusChanged.call(this,'Start');
-        this.status = 'Start';
+        if (this.status != 'started') {
+          this.status = 'started';
+
+          if (typeof statusChangedCallback === 'function') {
+            statusChangedCallback(this.status);
+          }
+        };
 
         prefix = '距活动结束还有';
         duration = this.duration(now, this.endTime);
@@ -131,10 +138,6 @@
         }
       }
     };
-
-    CountDown.prototype.statusChanged = function(status) {
-      console.log('状态改变成'+ status +'了');
-    }
 
     CountDown.prototype._updateCountdownText = function(prefix, duration) {
       var text = this._formatShortTime(duration);
@@ -185,6 +188,7 @@
       seconds = this._format(duration, 'seconds');
 
       if (days == 0) return [hours, minutes, seconds].join(':');
+
       return [days, '天', [hours, minutes, seconds].join(':')].join('');
     };
 
