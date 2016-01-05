@@ -56,6 +56,10 @@ class PmoGrab < Ohm::Model
     end
   end
 
+  def to_hash
+    super.merge(attributes)
+  end  
+
   def self.from(pmo_item, one_money, user)
     new({
       user_id: user.user_id,
@@ -75,7 +79,7 @@ class PmoGrab < Ohm::Model
     url = real_callback_url
     l = URI.parse(url)
     query = Hash[URI.decode_www_form(l.query)]
-    encode_message =  encrypt(self.attributes.to_json)
+    encode_message =  encrypt(self.to_hash.to_json)
     query = query.merge("encode_message" => encode_message)
     l.query = URI.encode_www_form(query)
     l.to_s
