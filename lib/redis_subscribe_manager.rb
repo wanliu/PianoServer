@@ -1,4 +1,3 @@
-
 module RedisSubscribeManager
   # autoload :OneMoney, 'one_money'
 
@@ -25,38 +24,13 @@ module RedisSubscribeManager
     end
 
     def launch
-      # require 'em-synchrony'
-      # require 'em-synchrony/em-hiredis'
       trap(:INT) { puts; exit }
       puts 'Loading RedisSubscribeManager...'
 
       monitor_model("OneMoney")
       monitor_model("PmoItem")
       monitor_model("PmoGrab")
-      # Thread.new do
-      #   begin
-      #     self.redis = Redis.new(url: redis_url)
-      #     @redis = self.redis
-      #     puts 'Loading RedisSubscribeManager...'
-      #
-      #     @redis.psubscribe '__key*__:*' do |on|
-      #       on.pmessage do |channel, msg|
-      #         parse_twice_message(msg) do |_model|
-      #           try_callback(_model) do |model|
-      #             Rails.logger.debug "expire #{_model}"
-      #           end
-      #         end
-      #         true
-      #       end
-      #     end
-      #   rescue Redis::BaseConnectionError => error
-      #     puts "#{error}, retrying in 1s"
-      #     sleep 1
-      #     retry
-      #   rescue e
-      #     puts e
-      #   end
-      # end
+
     end
 
     def monitor_model(model, db = 0, pattern = "$keyspace:$model:$id:__expires:$field")
@@ -85,7 +59,7 @@ module RedisSubscribeManager
           if status == "expired"
             instantialize(model_name, id) do |instance|
               try_callback(instance, field) do |model|
-                Rails.logger.debug "expire #{model_name}.#{id} events: #{field}"
+                Rails.logger.debug "Expire #{model_name}.#{id} events: #{field}"
               end
             end
           end
