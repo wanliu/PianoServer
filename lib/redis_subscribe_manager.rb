@@ -85,7 +85,7 @@ module RedisSubscribeManager
           if status == "expired"
             instantialize(model_name, id) do |instance|
               try_callback(instance, field) do |model|
-                Rails.logger.debug "expire #{instance} events: #{field}"
+                Rails.logger.debug "expire #{model_name}.#{id} events: #{field}"
               end
             end
           end
@@ -110,7 +110,7 @@ module RedisSubscribeManager
           self.redis = Redis.new(url: redis_url)
           @redis = self.redis
           @redis.config("set", "notify-keyspace-events", "KEA")
-          puts "Subscribe #{pattern}"
+          Rails.logger.debug "Subscribe #{pattern}"
           @redis.psubscribe pattern do |on|
             on.pmessage &block
           end
