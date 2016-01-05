@@ -15,26 +15,26 @@ class Api::Promotions::OneMoneyController < Api::BaseController
   end
 
   def item
-    # @one_money = OneMoney[params[:id].to_i]
-    # @item = PmoItem[params[:item_id].to_i]
-    # hash = @item.to_hash
-    # if @item.status == "started"
-    #   executies = @item.winners.find(user_id: current_user.user_id).count
-    #   hash[:executies] = executies
-    # end
-    #
-    # render json: hash
-
     @item = PmoItem[params[:item_id].to_i]
+
+    now = @item.now.to_f * 1000
     GrabMachine.run self, @one_money, @item do |status, context|
       # @one_money.participants.add(pmo_current_user)
       if status == "success"
+        hash = @item.to_hash
+        if params[:u].present?
+          hash[:td] = now - params[:u].to_i
+        end
 
         # hash[:item_status] = status
 
-        render json: @item.to_hash
+        render json: hash
       else
         hash = @item.to_hash
+        if params[:u].present?
+          hash[:td] = now - params[:u].to_i
+        end
+
         hash[:item_status] = status
         render json: hash
       end
@@ -59,9 +59,9 @@ class Api::Promotions::OneMoneyController < Api::BaseController
     hash[:participant_count] =  @one_money.participants.count
     hash[:winner_count] =  @one_money.winners.count
     hash[:item_count] = @one_money.items.count
-
+    now = @one_money.now.to_f * 1000
     if params[:u].present?
-      hash[:td] = (Time.now.to_f * 1000) - params[:u].to_i
+      hash[:td] = now - params[:u].to_i
     end
 
     if params[:signups].present?
@@ -104,13 +104,18 @@ class Api::Promotions::OneMoneyController < Api::BaseController
         @item.save
         @grab = PmoGrab.from(@item, @one_money, pmo_current_user)
         @grab.save
-        # @grab.pmo_item = @item        @item.grabs
+
+        # pmo_current_user.grabs.add(@grab)
+        # pmo_current_user.save
+
 
         render json: {
           winner: id,
           user_id: pmo_current_user.user_id,
           item: params[:item_id],
           one_money: params[:id],
+          callback_url: @grab.callback_url,
+          time_out: @grab.time_out.minutes.seconds,
           status: "success"
         }
       else
@@ -121,12 +126,24 @@ class Api::Promotions::OneMoneyController < Api::BaseController
     end
   end
 
+  def callback
+    @item = PmoItem[params[:item_id].to_i]
+    GrabMachine.run self, @one_money, @item do |status, context|
+      case status
+      when "always", "no-executies"
+        grabs = PmoGrab.find(pmo_item_id: @item.id, one_money: @one_money.id, user_id: pmo_current_user.user_id)
+        grab = grabs.reverse_each { |e| break e;  }
+        hash = { status: status,
+                 grab_id: grab.id,
+                 callback_url: grab.callback_url,
+               }
+        hash[:timeout] = [ grab.timeout_at - grab.now, 0].max if grab.timeout_at.present?
 
-  def grab_conditions()
-    [
-      :grab_condition_status?,
-      proc { |item| }
-    ]
+        render json: hash
+      else
+        render json: { status: status }
+      end
+    end
   end
 
   private

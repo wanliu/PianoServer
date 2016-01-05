@@ -2,17 +2,19 @@ class OneMoney < Ohm::Model
   include Ohm::Timestamps
   include Ohm::DataTypes
   include Ohm::Callbacks
+  include OhmTime
   include ExpiredEvents
 
   attribute :name
   attribute :title
   attribute :description
 
-  attribute :start_at, Type::Time
-  attribute :end_at, Type::Time
-  attribute :suspend_at, Type::Time
+  attribute :start_at, OhmTime::ISO8601
+  attribute :end_at, OhmTime::ISO8601
+  attribute :suspend_at, OhmTime::ISO8601
   attribute :multi_item, Type::Integer   # 可以抢多种商品设置
   attribute :auto_expire, Type::Boolean  # 自动同步记时器
+  attribute :callback
 
   attribute :cover_url
   attribute :status
@@ -41,7 +43,7 @@ class OneMoney < Ohm::Model
   end
 
   def to_hash
-    super.merge(attributes)
+    super.merge(attributes.except(:callback))
   end
 
   def before_create

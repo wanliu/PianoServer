@@ -106,3 +106,7 @@ weixin:
 chat:
   display_username: true
   display_shopname: true
+promotions:
+  one_money:
+    timeout:
+      minutes: 15

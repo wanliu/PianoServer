@@ -22,9 +22,9 @@ class PmoItem < Ohm::Model
   attribute :shop_name
   attribute :shop_id
   attribute :shop_avatar_url
-  attribute :start_at, Type::Time
-  attribute :end_at, Type::Time
-  attribute :suspend_at, Type::Time
+  attribute :start_at, OhmTime::ISO8601
+  attribute :end_at, OhmTime::ISO8601
+  attribute :suspend_at, OhmTime::ISO8601
 
   attribute :independence, Type::Boolean
 
@@ -102,10 +102,10 @@ class PmoItem < Ohm::Model
        status_without_timing == "timing"
 
       if start_at && end_at
-        if Time.now >= start_at
+        if self.now >= start_at
           "started"
         else
-          if Time.now >= end_at
+          if self.now >= end_at
             "end"
           else
             "timing"
@@ -120,7 +120,7 @@ class PmoItem < Ohm::Model
   end
 
   def set_status(state)
-    self.suspend_at = Time.now if state.to_s == "suspend"
+    self.suspend_at = self.now if state.to_s == "suspend"
     self.status = state
   end
 
@@ -152,7 +152,7 @@ class PmoItem < Ohm::Model
 
   def valid_status_messages
     msgs = {}
-    time = Time.now
+    time = self.now
     if time < self.start_at
       if expire_running?(:start_at)
         msgs["start_at"] = true
@@ -184,8 +184,6 @@ class PmoItem < Ohm::Model
 
   alias_method_chain :start_at, :fallback
   alias_method_chain :end_at, :fallback
-  # alias_method_chain :suspend_at, :fallback
-  # alias_method_chain :status, :timing
 
   private
 
