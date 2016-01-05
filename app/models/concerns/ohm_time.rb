@@ -15,12 +15,16 @@ module OhmTime
 
   ISO8601 = lambda do |t|
     case t
+    when ""
+      nil
+    when NilClass
+      nil
     when ISO8601Time
       t
     when Date, Time, DateTime
       ISO8601Time.at(t.to_f)
     when String
-      ISO8601Time.parse(t.to_s)
+      ISO8601Time.parse(t)
     else
       nil
     end
