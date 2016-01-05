@@ -110,3 +110,4 @@ promotions:
   one_money:
     timeout:
       minutes: 15
+    ensure_url: http://m.wanliu.com/api/promotions/one_money/:id/ensure/:grab_id

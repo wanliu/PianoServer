@@ -80,7 +80,7 @@ class PmoGrab < Ohm::Model
     l = URI.parse(url)
     query = Hash[URI.decode_www_form(l.query)]
     encode_message =  encrypt(self.to_hash.to_json)
-    query = query.merge("encode_message" => encode_message)
+    query = query.merge("i" => encode_message)
     l.query = URI.encode_www_form(query)
     l.to_s
   rescue => e
@@ -99,6 +99,14 @@ class PmoGrab < Ohm::Model
     else
       nil
     end
+  end
+
+  def ensure!
+    self.status = 'created'
+    save
+    cancel_expire(:timeout)
+  rescue
+    raise ActiveRecord::RecordInvalid
   end
 
   alias_method_chain :callback, :fallback
@@ -128,7 +136,6 @@ class PmoGrab < Ohm::Model
   def decrypt(args)
     self.encryptor.decrypt args
   end
-
 
   def expired_time_out
     self.delete
