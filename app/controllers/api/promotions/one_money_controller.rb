@@ -111,7 +111,6 @@ class Api::Promotions::OneMoneyController < Api::BaseController
         # pmo_current_user.grabs.add(@grab)
         # pmo_current_user.save
 
-
         render json: {
           winner: id,
           user_id: pmo_current_user.user_id,
@@ -124,6 +123,8 @@ class Api::Promotions::OneMoneyController < Api::BaseController
       else
         @one_money.participants.add(pmo_current_user)
         @one_money.save
+
+        Rails.logger.debug "Status: #{status} context:#{context.result}" if ENV['TEST_PROFORMANCE']
         render json: context.result, status: context.code
       end
     end
