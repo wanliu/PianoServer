@@ -52,7 +52,6 @@ PromotionItem.prototype = {
 
     function handler() {
       var now = new Date().getTime();
-
       if (now > _this.end_at && status != 'end'){
         status = 'end';
         timeManager.removeHandler(handler); // 移除定时器
