@@ -27,7 +27,8 @@ module ExpiredEvents
   end
 
   def now
-    Time.at(time_redis.call('time')[0].to_i)
+    redis_time = time_redis.call('time').map &:to_i
+    Time.at(*redis_time)
   end
 
   def expire_ttl(attribute)
