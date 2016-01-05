@@ -28,7 +28,7 @@ class Api::Promotions::OneMoneyController < Api::BaseController
 
         # hash[:item_status] = status
 
-        render json: @item.to_hash
+        render json: hash
       else
         hash = @item.to_hash
         if params[:u].present?
