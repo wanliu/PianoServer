@@ -1,11 +1,17 @@
+* {
+  box-sizing: border-box;
+}
+
 html {
   position: relative;
   min-height: 100%;
 }
 
 body {
+  color: #555;
   margin: 0;
   padding: 0 0 65px 0;
+  font-size: 14px;
 }
 
 .clear {
@@ -38,65 +44,143 @@ body {
 }
 
 .item-detail {
-  padding: 0 15px;
 }
 
 .item-detail .item-poster {
-  width: 80%;
-  margin: 0 auto;
+  position: relative;
 }
+
+.item-detail .item-poster .status-wrap {
+  position: absolute;
+  width: 100%;
+  height: 58px;
+  bottom: 0;
+  background-color: #FF0;
+}
+
+.item-detail .item-poster .status-wrap .time {
+  color: #FF1138;
+  bottom: 0;
+  width: 100%;
+  font-weight: 900;
+  line-height: 24px;
+  text-align: center;
+  position: absolute;
+}
+
+.status-wrap .price .a,
+.status-wrap .price .b,
+.status-wrap .price .c,
+.status-wrap .price .d,
+.status-wrap .price .e {
+  float: left;
+  background-color: #FF1138;
+  height: 50px;
+}
+.price .c {
+  width: 60%;
+  bottom: 18px;
+  display: table;
+  position: relative;
+}
+
+.price .c .left {
+  color: #FF0;
+  font-size: 30px;
+  font-weight: 900;
+  text-align: center;
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.price .c .right {
+  color: #FFF;
+  font-size: 14px;
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.price .c .right .sold span {
+  background-color: #D40428;
+  color: #FFF;
+  border-radius: 5px;
+  padding: 3px 8px;
+}
+
+.status-wrap .price .a,
+.status-wrap .price .e {
+  width: 15%;
+}
+.status-wrap .price .b {
+  width: 5%;
+  background-color: #E7052A;
+  transform: skewY(-46deg);
+  transform-origin: 0;
+}
+.status-wrap .price .d {
+  width: 5%;
+  background-color: #E7052A;
+  transform: skewY(46deg);
+  transform-origin: 100%;
+}
+
 
 .item-detail .item-poster img {
   width: 100%;
   height: auto;
+  display: block;
+}
+
+.start-end {
+  text-align: center;
+  line-height: 45px;
+  background-color: #EBEBEB;
 }
 
 .item-description {
+  display: table;
   padding: 15px 0;
-  border-width: 1px 0;
-  border-style: solid;
-  border-color: #E7E7E7;
 }
 
-.item-detail p {
-  margin: 0 0 10px 0;
+.item-description > div{
+  display: table-cell;
 }
 
-.item-detail .item-title {
-  height: 2.8em;
-  overflow: hidden;
+.item-description .item-title {
+  padding: 5px;
 }
 
-.amounts {
-  line-height: 35px;
+.item-description .saled-amonut,
+.item-description .total-amount {
+  vertical-align: middle;
+  text-align: center;
+  width: 22%;
+  border-left: 1px solid #DDD;
 }
 
-.amounts .saled-amonut {
-  float: right;
+.users-list {
+  padding: 10px 5px;
+  border-top: 1px solid #DDD;
+  margin-bottom: 10px;
 }
 
-.amounts .inventory, .amounts .amount, .supplier-name {
-  padding: 0 8px;
+.users-list:after {
+  content: "";
+  display: block;
+  clear: both;
 }
 
-.amounts .saled_amonut .amount {
-  display: inline-block;
-  width: 35px;
-  text-align: right;
+.users-list .title {
+  margin-bottom: 10px;
 }
 
-.supplier-desc {
-  margin-top: 10px;
-  line-height: 35px;
-}
-
-.supplier-desc .supplier-avatar{
-  float: right;
-}
-
-.supplier-avatar .avatar {
-  width: 35px;
-  height: 35px;
+.users-list img{
+  display: block;
+  float: left;
+  width: 40px;
+  height: 40px;
+  margin-right: 3px;
+  margin-bottom: 3px;
 }
 
 .countdown-board {
@@ -111,6 +195,19 @@ body {
   color: #FF2B2B;
   text-align: center;
 }
+
+.supplier-desc {
+  padding: 10px 5px;
+  position: relative;
+  border-top: 1px solid #DDD;
+}
+
+.supplier-desc .avatar {
+  width: 35px;
+  height: 35px;
+  vertical-align: middle;
+}
+
 
 .actions {
   position: fixed;

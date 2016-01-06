@@ -56,6 +56,10 @@ class PmoGrab < Ohm::Model
     end
   end
 
+  def to_hash
+    super.merge(attributes)
+  end  
+
   def self.from(pmo_item, one_money, user)
     new({
       user_id: user.user_id,
