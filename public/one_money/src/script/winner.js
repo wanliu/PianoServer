@@ -1,6 +1,7 @@
 $(function() {
+  var params = getQueryParams();
   $.ajax({
-    url: '/api/promotions/one_money/1/status/1?winners=10',
+    url: '/api/promotions/one_money/'+params.one_money_id+'/status/'+ params.id +'?winners=10',
     success: function(res) {
       var completes = res.completes;
       var participant_count = res.participant_count;
@@ -34,5 +35,4 @@ Winner.prototype = {
   render: function() {
     $('.users-list').append(this.template())
   }
-
 }

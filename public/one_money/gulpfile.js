@@ -1,9 +1,10 @@
 var path = require('path');
 var gulp = require('gulp');
+var clean = require('gulp-clean');
 var gutil = require( 'gulp-util' );
-var plumber = require( 'gulp-plumber' );
 var stylus = require('gulp-stylus');
 var uglify = require('gulp-uglify');
+var plumber = require( 'gulp-plumber' );
 var browserSync = require('browser-sync');
 var autoprefixer = require('gulp-autoprefixer');
 
@@ -16,7 +17,11 @@ gulp.task('browserSync', function() {
 });
 
 gulp.task('stylus', function () {
-  gulp.src('./src/style/*.styl')
+  gulp.src([
+      './src/style/index.styl',
+      './src/style/detail.styl',
+      './src/style/list.styl',
+    ])
     .pipe(plumber())
     .pipe(stylus({compress: true}))
     .pipe(autoprefixer())
@@ -29,6 +34,11 @@ gulp.task('script', function () {
     .pipe(uglify())
     .pipe(gulp.dest('./build'));
 });
+
+gulp.task('clean', function() {
+  gulp.src('./build/*', {read: false})
+    .pipe(clean());
+})
 
 gulp.task('watch', function() {
   gulp.watch('./src/**/*.styl', ['stylus']);
