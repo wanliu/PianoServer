@@ -7,7 +7,7 @@ class Api::Promotions::OneMoneyController < Api::BaseController
   include FastUsers
   skip_before_action :authenticate_user!, only: [:show, :item, :items, :status]
   skip_before_action :authenticate_user!, only: [:signup] unless Rails.env.production?
-  skip_before_action :authenticate_user!, only: [:signup, :grab] if Rails.env.production? && ENV['TEST_PROFORMANCE']
+  skip_before_action :authenticate_user!, only: [:signup, :grab] if ENV['TEST_PERFORMANCE']
 
   before_action :set_one_money #, except: [:, :update, :status, :item]
 
@@ -97,6 +97,38 @@ class Api::Promotions::OneMoneyController < Api::BaseController
     render json: hash
   end
 
+  def item_status
+    @item = PmoItem[params[:item_id].to_i]
+    hash = @item.to_hash
+    now = @item.now.to_f * 1000
+
+    if params[:u].present?
+      hash[:td] = now - params[:u].to_i
+    end
+
+    # if params[:signups].present?
+    #   s = [params[:signups].to_i, 50].min
+    #   hash[:signups] = @one_money.signups.sort(by: :created_at, order: 'desc', limit: [0, s]).map {|u| u.attributes }
+    # end
+
+    if params[:participants].present?
+      s = [params[:participants].to_i, 50].min
+      hash[:participants] = @item.participants.sort(by: :created_at, order: 'desc', limit: [0, s]).map {|u| u.attributes }
+    end
+
+    if params[:winners].present?
+      s = [params[:winners].to_i, 50].min
+      hash[:winners] = @item.winners.sort(by: :created_at, order: 'desc', limit: [0, s]).map {|u| u.attributes }
+    end
+
+    hash[:participant_count] = @item.participants.count
+    hash[:winner_count] = @item.winners.count
+    hash[:total_amount] = @item.total_amount
+    hash[:completes] = @item.completes
+
+    render json: hash
+  end
+
   def grab
     @item = PmoItem[params[:item_id].to_i]
     GrabMachine.run self, @one_money, @item do |status, context|
@@ -123,8 +155,10 @@ class Api::Promotions::OneMoneyController < Api::BaseController
       else
         @one_money.participants.add(pmo_current_user)
         @one_money.save
+        @item.participants.add(pmo_current_user)
+        @item.save
 
-        Rails.logger.debug "Status: #{status} context:#{context.result}" if ENV['TEST_PROFORMANCE']
+        Rails.logger.debug "Status: #{status} context:#{context.result}" if ENV['TEST_PERFORMANCE']
         render json: context.result, status: context.code
       end
     end
@@ -136,12 +170,17 @@ class Api::Promotions::OneMoneyController < Api::BaseController
       case status
       when "always", "no-executies"
         grabs = PmoGrab.find(pmo_item_id: @item.id, one_money: @one_money.id, user_id: pmo_current_user.user_id)
-        grab = grabs.reverse_each { |e| break e;  }
-        hash = { status: status,
-                 grab_id: grab.id,
-                 callback_url: grab.callback_url,
-               }
-        hash[:timeout] = [ grab.timeout_at - grab.now, 0].max if grab.timeout_at.present?
+
+        hash ={
+          status: status
+        }
+        now = @item.now
+        hash[:grabs] = grabs.map do |g|
+          g.to_hash.except(:shop_id, :callback, :time_out).merge({
+            timeout: g.timeout_at.present? ? [ g.timeout_at - now, 0].max : -1,
+            callback_url: g.callback_url
+          })
+        end
 
         render json: hash
       else

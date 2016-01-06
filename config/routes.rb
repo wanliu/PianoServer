@@ -219,6 +219,8 @@ Rails.application.routes.draw do
           match "signup", action: :signup, via: Rails.env.production? ? [:put] : [:put, :get]
 
           get "status", action: :status
+          get "status/:item_id", action: :item_status
+
           match "grab/:item_id", action: :grab, via: Rails.env.production? ? [:put] : [:put, :get]
 
           get "callback/:item_id", action: :callback
