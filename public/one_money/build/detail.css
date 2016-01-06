@@ -188,6 +188,7 @@ body {
   bottom: 0;
   width: 100%;
   text-align: center;
+  font-size: 24px;
 }
 
 .actions .wait-text {
@@ -200,6 +201,12 @@ body {
   background: rgba(50, 180, 50, 0.9);
   padding: 10px 15px;
   color: #FFFFFF;
+}
+
+.actions .no-executies {
+  background: rgba(60, 53, 53, 0.5);
+  padding: 10px 15px;
+  color: #FFF;
 }
 
 .actions .purchase-btn {
