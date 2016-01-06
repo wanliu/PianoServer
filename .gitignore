@@ -25,7 +25,6 @@ config/email.yml
 /public/assets
 /public/uploads
 /public/deploy
-/public/one_money/build
 .gitver
 .powenv
 .ruby-version

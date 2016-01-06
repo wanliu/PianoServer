@@ -1,6 +1,7 @@
 $(function() {
+  var one_money_id = window.one_money_id || 1;
   $.ajax({
-    url:'/api/promotions/one_money/1/items',
+    url:'/api/promotions/one_money/'+ one_money_id +'/items',
     success: function(itemsData) {
       console.log(itemsData);
       itemsData.map(function(itemData) {
