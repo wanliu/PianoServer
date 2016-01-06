@@ -1,1 +1,1 @@
-window.one_money_id = 2;
+window.one_money_id = 1;
