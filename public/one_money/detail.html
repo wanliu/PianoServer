@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>活动详情</title>
     <link rel="stylesheet" type="text/css" href="build/detail.css">
+    <link rel="stylesheet" type="text/css" href="build/alert.css">
     <script src="build/jquery.js" type="text/javascript"></script>
     <script src="build/date_iso8601_polyfill.js" type="text/javascript"></script>
     <script src="build/alert.js" type="text/javascript"></script>
@@ -170,16 +171,16 @@
           var item_status = json['item_status'] || null;
           var element = $('.countdown-text');
 
-          new CountDown(element, +total_amount, start_at + diff, end_at + diff,
-            function(current_state) {
-              switch(current_state) {
-              case 'started':
-                return $action.html('<button class="purchase-btn">马上抢购</button>');
-              case 'end':
-                return $action.html('<div class="end-text">活动已结束</div>');
-              }
+          new CountDown(element, +total_amount, start_at+diff, end_at+diff, function(current_state) {
+            if (item_status === 'always' || item_status === 'no-executies') return;
+
+            switch(current_state) {
+            case 'started':
+              return $action.html('<button class="purchase-btn">马上抢购</button>');
+            case 'end':
+              return $action.html('<div class="end-text">活动已结束</div>');
             }
-          );
+          });
 
           setTimeout(function() {
             element.parent().show();
@@ -193,6 +194,14 @@
           $('.supplier-desc .avatar').attr('src', shop_avatar_url);
           $('.supplier-name').text(shop_name);
 
+          if (status === 'wait') {
+            return $action.html('<div class="wait-text">请耐心等待</div>');
+          }
+
+          if (status === 'end') {
+            return $action.html('<div class="end-text">活动已结束</div>');
+          }
+
           // 如果 有这个状态说明已经 grab 了
           if (item_status == "always") {
             url = [ '/api/promotions/one_money/', one_money_id, '/callback/', item_id ].join('');
@@ -202,26 +211,33 @@
               dataType: 'json',
               url: url,
               success: function(json) {
-                var grab_status = json['grab_status'];
-                var callback_url = json['callback_url'];
+                var grabs = json['grabs'];
 
-                if (grab_status === 'pending') {
-                  window.location.href = callback_url;
-                } else if (grab_status === 'created') {
-                  $action.html('<div class="already-award">已领取奖品</div>');
+                if (grabs.length > 0) {
+                  var grab = grabs[0];
+                  var grab_status = json['grab_status'];
+                  var callback_url = json['callback_url'];
+
+                  if (grab_status === 'pending') {
+                    window.location.href = callback_url;
+                  } else if (grab_status === 'created') {
+                    $action.html('<div class="already-award">已领取奖品</div>');
+                  }
+                } else {
+                  $action.html('<div class="no-executies">没有抢购机会了</div>');
                 }
+
+                return false;
               }
             });
 
             return;
-            //return $action.html('<div class="always-text">已经参与过活动了</div>');
           }
 
 
           if (item_status == "no-executies") return $action.html('<div class="always-text">已经不能再抢此商品了</div>');
 
           switch(status) {
-
             case 'wait':
               return $action.html('<div class="wait-text">请耐心等待</div>');
 
@@ -247,16 +263,16 @@
         $.ajax({
           url: '/api/promotions/one_money/'+ one_money_id +'/grab/' + item_id,
           type: 'PUT',
+          dataType: 'json',
           success: function(res) {
-            console.log(res);
             if (res.status == 'success') {
-              alert('抢购成功,请确认订单');
               $('.actions').html('<div class="always-text">已经参与过活动了 </div>');
             }
           },
-          error: function(res) {
-            console.log(res);
-            if (res.status == 401) {
+          error: function(jqXHR, textStatus, errorThrown) {
+            var json = jqXHR.responseJSON;
+
+            if (json.status == 401) {
               $('.error-pannel').fadeIn(300);
             }
           }

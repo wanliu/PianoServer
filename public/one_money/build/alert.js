@@ -1,29 +1,37 @@
 ;(function() {
-  function Alert(title, msg, opt) {
-    opt = opt || {};
-    this.title = title || '消息';
-    this.msg   = msg   || '';
-    this.link  = opt.link  || '#';
-    this.buttons = opt.buttons || [];
+  this.AlertDismiss = (function() {
+    var globalAlertDismiss;
 
-    this.style = {
-      container: {
-      },
+    function AlertDismiss(title, msg, opt) {
+      opt = opt || {};
 
-      panel: {
-        'background': '#fff'
-      },
+      this.title = title || '消息';
+      this.msg   = msg   || '';
+      this.link  = opt.link  || '#';
+      this.buttons = opt.buttons || [];
 
-      title: {
-      },
+      this.style = {
+        container: {
 
-      close: {
+        },
+
+        panel: {
+          'border-color': '#f10043',
+          'background': '#fff'
+        },
+
+
+        title: {
+        },
+
+        close: {
+        }
       }
-    }
-  }
 
-  Alert.prototype = {
-    styleFormat: function(attr_name) {
+      this.render();
+    }
+
+    AlertDismiss.prototype.styleFormat = function(attr_name) {
       var style = "";
       var obj = this['style'][attr_name];
 
@@ -32,22 +40,23 @@
       }
 
       return style;
-    },
-    template: function() {
+    };
+
+
+    AlertDismiss.prototype.template = function() {
       return [
         '<div class="alert-container" style="', this.styleFormat('container'), '">',
-          '<div class="panel-wrap">',
-            '<div class="panel" style="', this.styleFormat['panel'], '">',
-              '<div class="alert-close-btn" style="', this.styleFormat('close'), '">×</div>',
-              '<div class="alert-title" style="', this.styleFormat('title'), '">', this.title, '</div>',
-              '<p class="alert-msg">', this.msg, '</p>',
-              this.generateButtons(),
-            '</div>',
+          '<div class="panel" style="', this.styleFormat['panel'], '">',
+            '<div class="alert-close-btn" style="', this.styleFormat('close'), '">×</div>',
+            '<div class="alert-header" style="', this.styleFormat('header'), '">', this.title, '</div>',
+            '<p class="alert-msg">', this.msg, '</p>',
+
           '</div>',
         '</div>'
       ].join('');
-    },
-    generateButtons: function() {
+    };
+
+    AlertDismiss.prototype.generateButtons = function() {
       var buttons = this.buttons;
 
       var buttons_ary = [];
@@ -64,10 +73,11 @@
       if (buttons_ary.length > 0) {
         return ['<div class="action-buttons">', buttons_ary.join(''),'</div>'].join('');
       }
-      return '';
-    },
 
-    bindActionButtonEvents: function() {
+      return '';
+    };
+
+    AlertDismiss.prototype.bindActionButtonEvents = function() {
       if (this.buttons.length === 0) return;
 
       this.element.find('.btn').click(function(e) {
@@ -79,40 +89,51 @@
           window.location.href = action;
         }
       });
-    },
+    };
 
-    bindCloseEvent: function() {
+    AlertDismiss.prototype.bindCloseEvent = function() {
       var _this = this;
 
-      $('.alert-close-btn').on('click', function() {
-        _this.hide(function() {
-          _this.destroy();
-        }); 
+      $('.AlertDismiss-close-btn').on('click', function() {
+        _this.destroy();
       });
-    },
+    };
 
-    show: function() {
+    AlertDismiss.prototype.show = function() {
       this.element.fadeIn();
-    },
+    };
 
-    hide: function(cb) {
-      var cb = cb || function(){};
-      this.element.fadeOut(300,cb);
-    },
+    AlertDismiss.prototype.hide = function() {
+      this.element.fadeOut();
+    };
 
-    destroy: function() {
-      console.log(this);
+    AlertDismiss.prototype.destroy = function() {
       this.element.remove();
 
-      globalAlert = null;
-    },
+      globalAlertDismiss = null;
+    };
 
-    render: function() {
+    AlertDismiss.prototype.render = function() {
       var _this = this;
+
       this.element = $(this.template()).appendTo($('body'));
+
       this.bindCloseEvent();
       this.bindActionButtonEvents();
       this.show();
-    }
-  }
+    };
+
+    AlertDismiss.getAlertDismiss = function(title, msg, opt) {
+      if (globalAlertDismiss) {
+        globalAlertDismiss.destroy();
+      }
+
+      globalAlertDismiss = new AlertDismiss(title, msg, opt);
+
+      return globalAlertDismiss;
+    };
+
+
+    return AlertDismiss;
+  })();
 }).call(this);
