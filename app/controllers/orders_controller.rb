@@ -1,16 +1,17 @@
-require 'encryptor'
+require 'digest/md5'
 
 class OrdersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_order, only: [:show, :destroy, :update]
+  before_action :set_order, only: [:show, :destroy, :update, :yiyuan_address, :bind_yiyuan_address]
   before_action :check_for_mobile, only: [:index, :show, :history, :confirmation, :buy_now_confirm]
   before_action :set_yiyuan_item_params, only: :yiyuan_confirm
   before_action :set_yiyuan_order_params, only: :create_yiyuan
 
-  cattr_reader :encryptor
-  @@encryptor = Encryptor.new(Rails.application.secrets[:secret_key_base], "one_money")
-
   include CommonOrdersController
+
+  # caches_action :yiyuan_confirm, layout: false, cache_path: Proc.new do |request|
+  #   { etag: Digest::MD5.hexdigest(request.params[:o]) }
+  # end
 
   def yiyuan_confirm
     @order = current_user.orders.build(one_money_id: @one_money_id, pmo_grab_id: @pmo_grab_id)
@@ -30,9 +31,32 @@ class OrdersController < ApplicationController
     @order_item = @order.items.build(@item_params)
 
     if @order.save_with_pmo(current_user)
-      redirect_to @order
+      if @order.delivery_address.present?
+        redirect_to @order
+      else
+        redirect_to yiyuan_address_order_path(@order)
+      end
     else
       render "orders/yiyuan_fail"
+    end
+  end
+
+  def yiyuan_address
+    if @order.delivery_address.blank?
+      @location = current_user.locations.build
+    else
+      redirect_to @order
+    end
+  end
+
+  def bind_yiyuan_address
+    @location = current_user.locations.build(location_params)
+    if @location.save
+      @order.address_id = @location.id
+      @order.save
+      redirect_to @order
+    else
+      render "orders/yiyuan_address"
     end
   end
 
@@ -91,10 +115,15 @@ class OrdersController < ApplicationController
   end
 
   def decode_yiyuan_params(source)
-    self.class.encryptor.decrypt(source)
+    PmoGrab.encryptor.decrypt(source)
   end
 
   def order_params
     params.require(:order).permit(:supplier_id, :pmo_grab_id, :one_money_id)
+  end
+
+  def location_params
+    params.require(:location)
+      .permit(:province_id, :city_id, :region_id, :contact, :id, :road, :zipcode, :contact_phone)
   end
 end
