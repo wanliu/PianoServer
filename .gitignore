@@ -31,4 +31,3 @@ config/email.yml
 .git-hooks/post_checkout/.read
 
 node_modules
-/public/one_money/build

@@ -34,7 +34,7 @@ gulp.task('script', function () {
   gulp.src('./src/script/*.js')
     .pipe(plumber())
     // .pipe(babel({presets: ['es2015']}))
-    .pipe(uglify())
+    // .pipe(uglify())
     .pipe(gulp.dest('./build'));
 });
 
