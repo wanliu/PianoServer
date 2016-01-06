@@ -74,7 +74,7 @@ class OrdersController < ApplicationController
       # Todo with invlid parms
     end
 
-    user_id = options[:user_id]
+    user_id = options[:user_id].to_i
 
     unless user_id == current_user.id
       raise ActiveResource::ResourceNotFound, "not found"
