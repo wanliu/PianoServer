@@ -41,7 +41,7 @@ class PmoGrab < Ohm::Model
     self.status = "pending"
     # pp valid_status_messages
     if self.pmo_item && self.pmo_item.is_a?(PmoItem)
-      self.pmo_item.incr :completes, self.quantity
+      self.pmo_item.lock_incr :completes, self.quantity
     end
   end
 
@@ -52,13 +52,13 @@ class PmoGrab < Ohm::Model
 
   def before_delete
     if self.pmo_item && self.pmo_item.is_a?(PmoItem)
-      self.pmo_item.decr :completes, self.quantity
+      self.pmo_item.lock_decr :completes, self.quantity
     end
   end
 
   def to_hash
     super.merge(attributes)
-  end  
+  end
 
   def self.from(pmo_item, one_money, user)
     new({
@@ -80,7 +80,7 @@ class PmoGrab < Ohm::Model
     l = URI.parse(url)
     query = Hash[URI.decode_www_form(l.query)]
     encode_message =  encrypt(self.to_hash.to_json)
-    query = query.merge("encode_message" => encode_message)
+    query = query.merge("i" => encode_message)
     l.query = URI.encode_www_form(query)
     l.to_s
   rescue => e
@@ -99,6 +99,14 @@ class PmoGrab < Ohm::Model
     else
       nil
     end
+  end
+
+  def ensure!
+    self.status = 'created'
+    save
+    cancel_expire(:timeout)
+  rescue
+    raise ActiveRecord::RecordInvalid
   end
 
   alias_method_chain :callback, :fallback
@@ -125,10 +133,9 @@ class PmoGrab < Ohm::Model
     self.encryptor.encrypt args
   end
 
-  def decrypto(args)
-    self.encryptor.decrypto args
+  def decrypt(args)
+    self.encryptor.decrypt args
   end
-
 
   def expired_time_out
     self.delete

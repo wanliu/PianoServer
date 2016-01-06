@@ -1,8 +1,14 @@
+require 'redlock'
+
 class PmoItem < Ohm::Model
+  LOCK_TIMEOUT = Settings.promotions.lock_timeout
+
   include Ohm::Timestamps
   include Ohm::DataTypes
   include Ohm::Callbacks
   include ExpiredEvents
+
+  cattr_reader :dlm
 
   attribute :title
   attribute :description
@@ -182,8 +188,58 @@ class PmoItem < Ohm::Model
     msgs
   end
 
+  def lock_incr(attribute, quantity)
+    key_name = "#{key}:__lock.#{attribute}"
+    _incr = 0
+    3.times {
+      inc_lock = self.dlm.lock(key_name, LOCK_TIMEOUT)
+      if inc_lock
+        if inc_lock[:validity] > 50
+            # Note: we assume we can do it in 500 milliseconds. If this
+            # assumption is not correct, the program output will not be
+            # correct.
+            self.incr attribute, quantity
+            _incr += 1
+        end
+        dlm.unlock(inc_lock)
+      end
+    }
+    _incr
+  end
+
+  def lock_decr(attribute, quantity)
+    key_name = "#{key}:__lock.#{attribute}"
+    _incr = 0
+    3.times {
+      inc_lock = self.dlm.lock(key_name, LOCK_TIMEOUT)
+      if inc_lock
+        if inc_lock[:validity] > 50
+            # Note: we assume we can do it in 500 milliseconds. If this
+            # assumption is not correct, the program output will not be
+            # correct.
+            self.decr attribute, quantity
+            _incr += 1
+        end
+        dlm.unlock(inc_lock)
+      end
+    }
+    _incr
+  end
+
   alias_method_chain :start_at, :fallback
   alias_method_chain :end_at, :fallback
+  protected
+
+  def self.redis_url
+    redis_config = Rails.application.config.redis_config
+    host = redis_config["host"]
+    port = redis_config["port"]
+    db = redis_config["db"] || '0'
+    auth = redis_config['auth'] ? ":#{redis_config['auth']}@" : ''
+    url = "redis://#{auth}#{host}:#{port}/#{db}"
+  end
+
+  @@dlm = Redlock.new(self.redis_url)
 
   private
 
