@@ -94,6 +94,14 @@ class Order < ActiveRecord::Base
     items.pluck(:quantity).reduce(:+) || 0
   end
 
+  def yiyuan_promotion?
+    pmo_grab_id.present?
+  end
+
+  def yiyuan_fullfilled?
+    delivery_address.present?
+  end
+
   private
 
   def caculate_total
