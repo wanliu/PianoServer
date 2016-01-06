@@ -11,10 +11,10 @@
       var class_str = [ 'btn' ];
 
       if (classes !== undefined) {
-        class_str = class_str.concat(classes);
+        class_str.push(classes);
       }
 
-      this.classes = class_str;
+      this.classes = class_str.join(' ');
     }
 
     ActionButton.prototype = {

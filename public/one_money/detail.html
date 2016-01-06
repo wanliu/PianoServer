@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="build/detail.css">
     <script src="build/jquery.js" type="text/javascript"></script>
     <script src="build/date_iso8601_polyfill.js" type="text/javascript"></script>
+    <script src="build/action_button.js" type="text/javascript"></script>
     <script src="build/alert.js" type="text/javascript"></script>
     <script src="build/countdown_manager.js" type="text/javascript"></script>
     <script src="build/countdown.js" type="text/javascript"></script>
@@ -216,25 +217,24 @@
 
                 if (grabs.length > 0) {
                   var grab = grabs[0];
-                  var grab_status = json['grab_status'];
-                  var callback_url = json['callback_url'];
+                  var grab_status = grab['status'];
+                  var callback_url = grab['callback_url'];
 
                   if (grab_status === 'pending') {
-                    window.location.href = callback_url;
+                    $action.html(['<a style="text-decoration:none;" href="', callback_url, '"><div class="always-text">领取奖励</div></a>'].join(''));
                   } else if (grab_status === 'created') {
-                    $action.html('<div class="already-award">已领取奖品</div>');
+                    $action.html('<div class="always-text">已领取奖品</div>');
                   }
                 } else {
-                  $action.html('<div class="no-executies">没有抢购机会了</div>');
+                  $action.html('<div class="always-text">没有抢购机会了</div>');
                 }
 
-                return false;
+                return;
               }
             });
 
             return;
           }
-
 
           if (item_status == "no-executies") return $action.html('<div class="always-text">已经不能再抢此商品了</div>');
 
@@ -268,6 +268,10 @@
           success: function(res) {
             if (res.status == 'success') {
               $('.actions').html('<div class="always-text">已经参与过活动了 </div>');
+
+              AlertDismiss.getAlertDismiss('抢购提示', '恭喜您抢购成功！', {
+                buttons: [ new ActionButton('领取奖励', res.callback_url, 'btn-success')]
+              });
             }
           },
           error: function(jqXHR, textStatus, errorThrown) {

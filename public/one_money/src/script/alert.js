@@ -44,6 +44,7 @@
               '<div class="alert-close-btn" style="', this.styleFormat('close'), '">×</div>',
               '<div class="alert-title" style="', this.styleFormat('title'), '">', this.title, '</div>',
               '<p class="alert-msg">', this.msg, '</p>',
+              this.generateButtons(),
             '</div>',
           '</div>',
         '</div>'
@@ -88,7 +89,7 @@
     AlertDismiss.prototype.bindCloseEvent = function() {
       var _this = this;
 
-      $('.AlertDismiss-close-btn').on('click', function() {
+      $('.alert-close-btn').on('click', function() {
         _this.destroy();
       });
     };
