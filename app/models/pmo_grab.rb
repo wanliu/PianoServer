@@ -84,7 +84,7 @@ class PmoGrab < Ohm::Model
   def callback_url!
     url = real_callback_url
     l = URI.parse(url)
-    query = Hash[URI.decode_www_form(l.query)]
+    query = Hash[URI.decode_www_form(l.query || "")]
     encode_message =  encrypt(self.to_hash.to_json)
     query = query.merge("i" => encode_message)
     l.query = URI.encode_www_form(query)
