@@ -25,7 +25,7 @@ gulp.task('stylus', function () {
       './src/style/list.styl',
     ])
     .pipe(plumber())
-    .pipe(stylus({compress: false}))
+    .pipe(stylus({compress: true}))
     .pipe(autoprefixer())
     .pipe(gulp.dest('./build'));
 });
@@ -34,7 +34,7 @@ gulp.task('script', function () {
   gulp.src('./src/script/*.js')
     .pipe(plumber())
     // .pipe(babel({presets: ['es2015']}))
-    // .pipe(uglify())
+    .pipe(uglify())
     .pipe(gulp.dest('./build'));
 });
 

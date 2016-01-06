@@ -1,4 +1,28 @@
-$(function() {
+  function getQueryParams() {
+    var search = location.search;
+    var href = location.href;
+    var hash;
+
+    if (search) {
+      hash = search.slice(1);
+    } else {
+      hash = href.split('?')[1];
+    }
+
+    var params = {};
+    var ary = hash.split('&');
+
+    for (var i=0; i<ary.length; i++) {
+      var entry = ary[i].split('=');
+      var key = entry[0];
+      var value = entry[1];
+
+      params[key] = value;
+    }
+
+    return params;
+  }
+
   var params = getQueryParams();
   $.ajax({
     url: '/api/promotions/one_money/'+params.one_money_id+'/status/'+ params.id +'?winners=10',
@@ -12,12 +36,14 @@ $(function() {
       $('.status-wrap .sold span').text(completes);
 
       var winners = res.winners || [];
+    
+      if (winners.length) $('.users-list').append('<div class="title">幸运用户</div>');
       winners.map(function(winner) {
         new Winner(winner);
       });
     }
   })
-});
+
 
 function Winner(data) {
   for (var key in data) {
@@ -33,6 +59,6 @@ Winner.prototype = {
     ';
   },
   render: function() {
-    $('.users-list').append(this.template())
+    $('.users-list').append(this.template());
   }
 }
