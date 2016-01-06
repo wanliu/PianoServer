@@ -219,10 +219,11 @@ Rails.application.routes.draw do
           match "signup", action: :signup, via: Rails.env.production? ? [:put] : [:put, :get]
 
           get "status", action: :status
+          get "status/:item_id", action: :item_status
+
           match "grab/:item_id", action: :grab, via: Rails.env.production? ? [:put] : [:put, :get]
 
           get "callback/:item_id", action: :callback
-
           get "ensure/:grab_id", action: :ensure, via: Rails.env.production? ? [:put] : [:put, :get]
         end
       end
@@ -274,6 +275,8 @@ Rails.application.routes.draw do
       post "buy_now_create"
       post "buy_now_confirm"
       get "history"
+      get "yiyuan_confirm"
+      post "yiyuan_confirm", to: 'orders#create_yiyuan'
     end
   end
 
