@@ -134,9 +134,9 @@ class PmoItem < Ohm::Model
 
   def to_hash
     super.merge(attributes.except(:start_at, :end_at).merge({
-      start_at:　self.start_at,
+      start_at: self.start_at,
       end_at: self.end_at
-    })
+    }))
   end
 
   def self.find_or_create(item_id)
