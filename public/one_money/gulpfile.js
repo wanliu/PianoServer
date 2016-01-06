@@ -25,7 +25,7 @@ gulp.task('stylus', function () {
       './src/style/list.styl',
     ])
     .pipe(plumber())
-    .pipe(stylus({compress: true}))
+    .pipe(stylus({compress: false}))
     .pipe(autoprefixer())
     .pipe(gulp.dest('./build'));
 });
