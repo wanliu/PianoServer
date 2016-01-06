@@ -1,0 +1,9 @@
+$(".live-items-query>.box").html("<%=j render partial: "live_item", collection: @items %>")
+if ($(".live-items-query>.box").children().length > 0) {
+  $(".live-items-query").show();
+  $(".live-items-query>.box").css({
+    position: 'absolute'
+  })
+} else {
+  $(".live-items-query").hide();
+}

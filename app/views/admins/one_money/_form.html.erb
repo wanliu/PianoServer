@@ -1,0 +1,84 @@
+<% url = @one_money.new? ? admins_one_money_index_path : admins_one_money_path(@one_money.id) %>
+
+<%= form_tag url, method: @one_money.new? ? :post : :put do %>
+  <div class="form-group">
+    <%= label_tag 'one_money_name', :name %>
+    <%= text_field 'one_money', :name, value: @one_money.name, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= label_tag 'one_money_title', :title %>
+    <%= text_field 'one_money', :title, value: @one_money.title, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= label_tag 'one_money_description', :description %>
+    <%= text_area 'one_money', :description, value: @one_money.description, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= label_tag 'one_money_description', :multi_item %>
+    <%= text_field 'one_money', :multi_item, value: @one_money.multi_item, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= label_tag 'one_money_description', :callback %>
+    <%= text_field 'one_money', :callback, value: @one_money.callback, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= label_tag 'one_money_auto_expire', :auto_expire %>
+    <%= check_box 'one_money', :auto_expire, value: @one_money.auto_expire %>
+  </div>
+
+  <div class="form-group">
+    <%= label_tag 'one_money_cover_url', :cover_url %>
+    <%= text_field 'one_money', :cover_url, value: @one_money.cover_url, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= label_tag 'one_money_start_at', :start_at %>
+    <div class="input-group date">
+      <%= text_field 'one_money', :start_at, value: @one_money.start_at, class: 'form-control' %>
+      <span class="input-group-addon">
+          <span class="glyphicon glyphicon-calendar"></span>
+      </span>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= label_tag 'one_money_end_at', :end_at %>
+    <div class="input-group date">
+      <%= text_field 'one_money', :end_at, value: @one_money.end_at, class: 'form-control' %>
+      <span class="input-group-addon">
+          <span class="glyphicon glyphicon-calendar"></span>
+      </span>
+    </div>
+  </div>
+
+  <div class="form-group">
+
+    <%= submit_tag 'save', class: 'btn btn-primary' %>
+
+    <%= status_control @one_money unless @one_money.new? %>
+  </div>
+
+<% end %>
+<script type="text/javascript">
+  $('.input-group.date').datetimepicker({
+    format: "YYYY-MM-DD HH:mm:ss",
+    parseInputDate: function(inputDate) {
+      if (moment.isMoment(inputDate) || inputDate instanceof Date) {
+        return resultDate = moment(inputDate);
+      } else {
+        if (/^\d+$/.test(inputDate)) {
+          return moment(inputDate, "X");
+        } else {
+          // if (/\d{2}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/.test(inputDate)) {
+          return moment(inputDate);
+        }
+      }
+    }
+  });
+
+</script>
