@@ -10,7 +10,7 @@ var autoprefixer = require('gulp-autoprefixer');
 
 gulp.task('browserSync', function() {
   browserSync({
-    files: "./*",
+    files: "./build/*",
     // server: {baseDir: "./build"},
     proxy: "0.0.0.0:3000"
   });
@@ -31,6 +31,9 @@ gulp.task('stylus', function () {
 gulp.task('script', function () {
   gulp.src('./src/script/*.js')
     .pipe(plumber())
+    .pipe(babel({
+      presets: ['es2015']
+    }))
     .pipe(uglify())
     .pipe(gulp.dest('./build'));
 });

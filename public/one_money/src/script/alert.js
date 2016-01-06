@@ -1,7 +1,13 @@
 ;(function() {
-  function Alert(title, msg, opt) {
-    opt = opt || {};
+  Alerta = function(title, msg, opt){
+    if (Alert) {
+      Alert.destroy();
+    }
+    return Alert = new _Alert(title, msg, opt);
+  }
 
+  function _Alert(title, msg, opt) {
+    opt = opt || {};
     this.title = title || '消息';
     this.msg   = msg   || '';
     this.link  = opt.link  || '#';
@@ -9,25 +15,21 @@
 
     this.style = {
       container: {
-        'border-color': '#f10043',
-        'background': '#fff'
       },
 
       panel: {
         'background': '#fff'
       },
 
-      header: {
-        'color': '#f10044'
+      title: {
       },
-
       close: {
-        'background': '#999'
       }
     }
+    this.render();
   }
 
-  Alert.prototype = {
+  _Alert.prototype = {
     styleFormat: function(attr_name) {
       var style = "";
       var obj = this['style'][attr_name];
@@ -41,11 +43,13 @@
     template: function() {
       return [
         '<div class="alert-container" style="', this.styleFormat('container'), '">',
-          '<div class="panel" style="', this.styleFormat['panel'], '">',
-            '<div class="alert-close-btn" style="', this.styleFormat('close'), '">×</div>',
-            '<div class="alert-header" style="', this.styleFormat('header'), '">', this.title, '</div>',
-            '<p class="alert-msg">', this.msg, '</p>',
-            this.generateButtons(),
+          '<div class="panel-wrap">',
+            '<div class="panel" style="', this.styleFormat['panel'], '">',
+              '<div class="alert-close-btn" style="', this.styleFormat('close'), '">×</div>',
+              '<div class="alert-title" style="', this.styleFormat('title'), '">', this.title, '</div>',
+              '<p class="alert-msg">', this.msg, '</p>',
+              this.generateButtons(),
+            '</div>',
           '</div>',
         '</div>'
       ].join('');
@@ -67,7 +71,6 @@
       if (buttons_ary.length > 0) {
         return ['<div class="action-buttons">', buttons_ary.join(''),'</div>'].join('');
       }
-
       return '';
     },
 
@@ -89,7 +92,9 @@
       var _this = this;
 
       $('.alert-close-btn').on('click', function() {
-        _this.destroy();
+        _this.hide(function() {
+          _this.destroy();
+        }); 
       });
     },
 
@@ -97,11 +102,13 @@
       this.element.fadeIn();
     },
 
-    hide: function() {
-      this.element.fadeOut();
+    hide: function(cb) {
+      var cb = cb || function(){};
+      this.element.fadeOut(300,cb);
     },
 
     destroy: function() {
+      console.log(this);
       this.element.remove();
 
       globalAlert = null;
@@ -118,4 +125,4 @@
     }
   }
   this.Alert = Alert;
-}).call(this);
+})();
