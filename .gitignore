@@ -30,4 +30,6 @@ config/email.yml
 .ruby-version
 .git-hooks/post_checkout/.read
 
+node_modules
+
 

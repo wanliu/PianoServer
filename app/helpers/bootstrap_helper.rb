@@ -36,6 +36,17 @@ module BootstrapHelper
     html.html_safe
   end
 
+  def close_to(url, options = {}, html_options = {})
+    default_html_options = {
+      class: "close",
+      "aria-label" => "Close"
+    }
+
+    button_to url, options, html_options.merge(default_html_options) do
+      "<span aria-hidden=\"true\">&times;</span>".html_safe
+    end
+  end
+
   def caret
     r "<span class=\"caret\"></span>"
   end

@@ -69,6 +69,8 @@ GEM
       rack-test (~> 0.6.2)
       rails-dom-testing (~> 1.0, >= 1.0.5)
       rails-html-sanitizer (~> 1.0, >= 1.0.1)
+    actionpack-action_caching (1.1.1)
+      actionpack (>= 4.0.0, < 5.0)
     actionpack-page_caching (1.0.2)
       actionpack (>= 4.0.0, < 5)
     actionview (4.2.0)
@@ -191,6 +193,13 @@ GEM
       multi_json
     element_factory (0.1.4)
       activesupport (>= 3.1, < 5.0)
+    em-hiredis (0.3.0)
+      eventmachine (~> 1.0)
+      hiredis (~> 0.5.0)
+    em-redis (0.3.0)
+      eventmachine
+    em-synchrony (1.0.4)
+      eventmachine (>= 1.0.0.beta.1)
     equalizer (0.0.11)
     erubis (2.7.0)
     eventmachine (1.0.8)
@@ -229,6 +238,7 @@ GEM
       sidekiq
     hashdiff (0.2.2)
     hashie (3.4.2)
+    hiredis (0.5.2)
     hitimes (1.2.2)
     httpclient (2.6.0.1)
     i18n (0.7.0)
@@ -279,11 +289,13 @@ GEM
       actionpack (>= 3.0)
     momentjs-rails (2.10.3)
       railties (>= 3.1)
+    msgpack (0.5.12)
     multi_json (1.11.1)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
     nenv (0.2.0)
     netrc (0.10.2)
+    nido (1.0.0)
     nokogiri (1.6.7)
       mini_portile2 (~> 2.0.0.rc2)
     notiffany (0.0.6)
@@ -296,6 +308,13 @@ GEM
       multi_json (~> 1.3)
       multi_xml (~> 0.5)
       rack (~> 1.2)
+    ohm (2.3.0)
+      msgpack (~> 0.5.0)
+      nido
+      redic (~> 1.5.0)
+      stal
+    ohm-contrib (2.2.0)
+      ohm (~> 2.2)
     oj (2.13.1)
     oj_mimic_json (1.0.1)
     omniauth (1.2.2)
@@ -366,6 +385,8 @@ GEM
     rb-inotify (0.9.5)
       ffi (>= 0.5.0)
     rdoc (4.2.0)
+    redic (1.5.0)
+      hiredis
     redis (3.2.1)
     redis-actionpack (4.0.1)
       actionpack (~> 4)
@@ -376,6 +397,8 @@ GEM
       redis-store (~> 1.1.0)
     redis-namespace (1.5.2)
       redis (~> 3.0, >= 3.0.4)
+    redis-objects (1.2.1)
+      redis (>= 3.0.2)
     redis-rack (1.5.0)
       rack (~> 1.5)
       redis-store (~> 1.1.0)
@@ -450,6 +473,8 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
+    stal (0.1.0)
+      redic
     table_cloth (0.4.3)
       actionpack (>= 3.1, < 5.0)
       element_factory (~> 0.1.3)
@@ -501,6 +526,7 @@ PLATFORMS
 
 DEPENDENCIES
   ace-rails-ap
+  actionpack-action_caching
   actionpack-page_caching
   activeresource
   acts-as-taggable-on (~> 3.4)
@@ -524,12 +550,16 @@ DEPENDENCIES
   elasticsearch-model
   elasticsearch-persistence
   elasticsearch-rails
+  em-hiredis
+  em-redis
+  em-synchrony
   factory_girl_rails
   google-analytics-rails
   guard-rails
   guard-rspec
   guard-sidekiq
   hashdiff
+  hiredis (~> 0.5.0)
   jbuilder (~> 2.0)
   jquery-rails
   jquery-turbolinks
@@ -544,6 +574,8 @@ DEPENDENCIES
   mobylette
   momentjs-rails (>= 2.9.0)
   nprogress-rails
+  ohm
+  ohm-contrib
   oj
   oj_mimic_json
   omniauth
@@ -562,6 +594,8 @@ DEPENDENCIES
   rails-backup-migrate
   rails-observers!
   rails_config (~> 0.4.2)
+  redis (>= 3.2.0)
+  redis-objects
   redis-rails
   rest-client
   rspec-rails (~> 3.0)
@@ -582,6 +616,3 @@ DEPENDENCIES
   unicorn
   web-console (~> 2.0)
   weixin_authorize!
-
-BUNDLED WITH
-   1.10.6
