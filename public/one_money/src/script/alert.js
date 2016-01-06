@@ -46,11 +46,13 @@
     AlertDismiss.prototype.template = function() {
       return [
         '<div class="alert-container" style="', this.styleFormat('container'), '">',
-          '<div class="panel" style="', this.styleFormat['panel'], '">',
-            '<div class="alert-close-btn" style="', this.styleFormat('close'), '">×</div>',
-            '<div class="alert-header" style="', this.styleFormat('header'), '">', this.title, '</div>',
-            '<p class="alert-msg">', this.msg, '</p>',
-
+          '<div class="panel-wrap">',
+            '<div class="panel" style="', this.styleFormat['panel'], '">',
+              '<div class="alert-close-btn" style="', this.styleFormat('close'), '">×</div>',
+              '<div class="alert-title" style="', this.styleFormat('title'), '">', this.title, '</div>',
+              '<p class="alert-msg">', this.msg, '</p>',
+              this.generateButtons(),
+            '</div>',
           '</div>',
         '</div>'
       ].join('');
@@ -94,9 +96,9 @@
     AlertDismiss.prototype.bindCloseEvent = function() {
       var _this = this;
 
-      // $('.alert-close-btn').on('click', function() {
-      //   _this.destroy();
-      // });
+      $('.alert-close-btn').on('click', function() {
+        _this.destroy();
+      });
     };
 
     AlertDismiss.prototype.show = function() {
