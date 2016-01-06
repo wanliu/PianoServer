@@ -71,7 +71,9 @@ module Admins::OneMoneyHelper
         btn.call(:pause, :suspend, disabled: true) +
         btn.call(:stop, :end, disabled: true)
       when "timing"
-
+        btn.call(:play, :started) +
+        btn.call(:pause, :suspend, disabled: true) +
+        btn.call(:stop, :end, disabled: true)
       end
     end
   end

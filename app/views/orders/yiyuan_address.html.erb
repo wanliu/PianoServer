@@ -1,0 +1,80 @@
+<div>
+	<div class="congrat alert alert-success text-center" role="alert">
+    恭喜你，抢购成功！请填写好收货地址信息，我们将主动联系你
+  </div>
+  <div class='address-form'>
+    <%= form_for @location, url: yiyuan_address_order_path(@order) do |f| %>
+      <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+        <%= group_with_errors @location, :contact, f, title: '姓名', layout: :normal, required: true do %>
+          <%= text_field :location, :contact, class: 'form-control required', maxlength: 30 %>
+        <% end %>
+      </div>
+
+      <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+        <% province_has_error = @location.errors[:province_id].present? ? 'has-error' : nil %>
+        <% city_has_error = @location.errors[:city_id].present? ? 'has-error' : nil %>
+        <% region_has_error = @location.errors[:region_id].present? ? 'has-error' : nil %>
+        <% any_has_error = province_has_error || city_has_error || region_has_error %>
+
+        <div class="field_with_errors <%= any_has_error %>">
+          <%= label :location, :id, class: 'control-label' do %>
+            城市<span class="required">*</span>
+          <% end %>
+        </div>
+
+        <%
+          province_id = @location.try :province_id
+          city_id = @location.try :city_id
+          region_id = @location.try :region_id
+
+          province_list = ChinaCity.list
+          city_list = ChinaCity.list province_id.to_s
+          region_list = ChinaCity.list city_id.to_s
+
+        %>
+
+        <div class="city-group">
+          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding0 <%= "#{province_has_error}" %>">
+            <%= f.select(:province_id, options_for_select(province_list, province_id), {prompt: '--省份--'}, {class: "city-select form-control"}) %>
+          </div>
+          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding0 <%= "#{city_has_error}" %>">
+            <%= f.select(:city_id, options_for_select(city_list, city_id), {prompt: "--城市--"}, { class: "city-select form-control" } ) %>
+          </div>
+          <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding0 <%= "#{region_has_error}" %>">
+            <%= f.select(:region_id, options_for_select(region_list, region_id), {prompt: "--地区--"}, { class: "city-select form-control" } ) %>
+          </div>
+        </div>
+
+        <% if [:province_id, :city_id, :region_id].any? {|item| @location.errors[item].present? } %>
+          <div class='has-error'>
+            <span class="help-block text-left">请正确地选择省份，城市和地区</span>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+        <%= group_with_errors @location, :road, f, title: '地址', layout: :normal, required: true do %>
+          <%= text_field :location, :road, class: 'form-control required' %>
+        <% end %>
+      </div>
+
+      <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+        <%= group_with_errors @location, :zipcode, f, title: '邮编', layout: :normal do %>
+          <%= text_field :location, :zipcode, class: 'form-control' %>
+        <% end %>
+      </div>
+
+      <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+        <%= group_with_errors @location, :contact_phone, f, title: '手机/座机号', layout: :normal, required: true do %>
+          <%= text_field :location, :contact_phone, class: 'form-control required' %>
+        <% end %>
+      </div>
+
+      <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <%= f.submit "保存收货地址", class: "btn btn-danger " %>
+      </div>
+
+      <div style='clear: both;'></div>
+    <% end %>
+  </div>
+</div>
