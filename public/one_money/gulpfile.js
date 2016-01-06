@@ -10,7 +10,7 @@ var autoprefixer = require('gulp-autoprefixer');
 
 gulp.task('browserSync', function() {
   browserSync({
-    files: "./build/*",
+    files: "./*",
     // server: {baseDir: "./build"},
     proxy: "0.0.0.0:3000"
   });
