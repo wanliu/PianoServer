@@ -37,12 +37,21 @@
       SECOND: 1000
     };
 
-    function CountDown(element, inventory, startTime, endTime, statusChangedCallback) {
+    function CountDown(element, inventory, startTime, endTime, status, statusChangedCallback) {
       this.element = element;
       this.inventory = inventory;
       this.startTime = startTime;
       this.endTime = endTime;
+      this.status = status;
       this.statusChangedCallback = statusChangedCallback;
+
+      if (status === 'end') {
+        return this._showFinishText();
+      }
+
+      if (status === 'suspend') {
+        return this._showSuspendText();
+      }
 
       if (+inventory > 0) {
         this._addCountdownHandler();
@@ -163,6 +172,12 @@
       return this._applyClass('finished');
     };
 
+    CountDown.prototype._showSuspendText = function() {
+      this.$().html('已售罄');
+
+      return this._applyClass('finished');
+    };
+
     CountDown.prototype._showInventoryText = function() {
       this.$().html('库存剩余' + this.inventory + '件');
 
@@ -195,7 +210,7 @@
         return singleNunber.map(function(n) {
           return '<span class="time-number">'+ n +'</span>';
         }).join('');
-        
+
       });
 
       if (days == 0) return time.join(towDots);
