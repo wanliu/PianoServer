@@ -281,6 +281,11 @@ Rails.application.routes.draw do
       get "yiyuan_confirm"
       post "yiyuan_confirm", to: 'orders#create_yiyuan'
     end
+
+    member do
+      get "yiyuan_address"
+      post "yiyuan_address", to: 'orders#bind_yiyuan_address'
+    end
   end
 
   resources :locations do

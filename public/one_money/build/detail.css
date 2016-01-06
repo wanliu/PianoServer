@@ -52,6 +52,15 @@
 .alert-container .action-buttons {
   text-align: center;
 }
+.alert-container .action-buttons .btn {
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px;
+}
+.alert-container .action-buttons .btn.success {
+  background-color: #080;
+}
 * {
   box-sizing: border-box;
 }
@@ -68,7 +77,7 @@ body {
 .item-detail .item-poster {
   position: relative;
 }
-.item-detail .item-poster img {
+.item-detail .item-poster >img {
   width: 100%;
   height: auto;
   display: block;
@@ -147,24 +156,9 @@ body {
   border-radius: 5px;
   padding: 3px;
 }
-.item-detail .status-wrap .price .a,
-.item-detail .status-wrap .price .e {
-  width: 15%;
-}
-.item-detail .status-wrap .price .b {
-  width: 5%;
-  -webkit-transform-origin: 0;
-          transform-origin: 0;
-}
-.item-detail .status-wrap .price .d {
-  width: 5%;
-  -webkit-transform-origin: 100%;
-          transform-origin: 100%;
-}
 .start-end {
   color: #ff1138;
   bottom: 60px;
-  line-height: 30px;
   font-size: 12px;
   position: relative;
   text-align: center;
@@ -172,27 +166,20 @@ body {
 }
 .start-end:after {
   content: '';
-  display: block;
   clear: both;
+  display: block;
 }
-.start-end .a,
-.start-end .b,
-.start-end .c {
+.start-end .time-desc {
   float: left;
-  background-color: #ff0;
+  line-height: 24px;
+  display: block;
+  background-color: #ffdb01;
 }
-.start-end .a {
-  width: 5%;
-  height: 10px;
-  position: relative;
-  top: 25px;
-}
-.start-end .b {
-  width: 5%;
-  height: 30px;
-}
-.start-end .c {
-  width: 80%;
+.start-end .time-left,
+.start-end .time-right {
+  float: left;
+  height: 24px;
+  display: block;
 }
 .item-description {
   display: table;
@@ -224,7 +211,7 @@ body {
 .users-list .title {
   margin-bottom: 10px;
 }
-.users-list img {
+.users-list > img {
   display: block;
   float: left;
   width: 35px;

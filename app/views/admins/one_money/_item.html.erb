@@ -39,13 +39,13 @@
     </p>
     <p class="participants">
       <span class="pull-right participants-count "><%= item.participants.count %></span>
-      <% item.participants.each do |user| %>
+      <% item.participants.take(5).each do |user| %>
         <%= image_tag user.avatar_url, size: "30x30", class: "slide-image" %>
       <% end %>
     </p>
     <p class="winners">
       <span class="pull-right winners-count "><%= item.winners.count %></span>
-      <% item.winners.each do |user| %>
+      <% item.winners.take(5).each do |user| %>
         <%= image_tag user.avatar_url, size: "30x30", class: "slide-image" %>
       <% end %>
     </p>
