@@ -94,9 +94,9 @@
     AlertDismiss.prototype.bindCloseEvent = function() {
       var _this = this;
 
-      $('.AlertDismiss-close-btn').on('click', function() {
-        _this.destroy();
-      });
+      // $('.alert-close-btn').on('click', function() {
+      //   _this.destroy();
+      // });
     };
 
     AlertDismiss.prototype.show = function() {
