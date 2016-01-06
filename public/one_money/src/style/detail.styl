@@ -17,7 +17,7 @@ body
   .item-poster 
     position relative
 
-  .item-poster img 
+  .item-poster >img 
     width 100%
     height auto
     display block
@@ -89,45 +89,41 @@ body
           color #FFF
           border-radius 5px
           padding 3px
-
-      .a, .e 
-        width 15%
+      // .a, .e 
+        // width 15%
       .b 
-        width 5%
+        // width 5%
         // background-color #E7052A
         // transform skewY(-46deg)
-        transform-origin 0
+        // transform-origin 0
       .d 
-        width 5%
+        // width 5%
         // background-color #E7052A
         // transform skewY(46deg)
-        transform-origin 100%
+        // transform-origin 100%
 
 .start-end
   color #FF1138
-  bottom 60px;
-  line-height 30px
+  bottom 60px
   font-size 12px
   position relative
   text-align center
   width 100%
   &:after
     content ''
-    display block
     clear both
-  .a, .b, .c
+    display block
+    
+  .time-desc
     float left
-    background-color #FF0
-  .a
-    width 5%
-    height 10px
-    position relative
-    top 25px
-  .b
-    width 5%
-    height 30px
-  .c
-    width 80%
+    line-height 24px
+    display block
+    background-color #FFDB01
+  .time-left
+  .time-right
+    float left
+    height 24px
+    display block
 
 .item-description 
   display table
@@ -153,7 +149,7 @@ body
     clear both
   .title 
     margin-bottom 10px
-  img
+  > img
     display block
     float left
     width 35px

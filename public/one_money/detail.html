@@ -17,13 +17,12 @@
   <body>
     <div class="item-detail">
       <div class="item-poster">
-        <img src="" class="poster" alt="商品大图">
+        <img src="images/time-left.png" class="poster" alt="商品大图">
         <div class="start-end">
-          <div class="a"></div>
-          <div class="b"></div>
-          <div class="c"><span class="time-desc"></span></div>
-          <div class="b"></div>
-          <div class="a"></div>
+          <img class="time-left" src="images/time-left.png">
+          <span class="time-desc"></span>
+          <img class="time-right" src="images/time-right.png">
+
         </div>
         <div class="status-wrap">
           <div class="price">
@@ -56,7 +55,7 @@
       </div>
 
       <div class="users-list">
-        <div class="title">抢购成功用户</div>
+        <div class="title">幸运用户</div>
 
       </div>
 
@@ -76,6 +75,10 @@
       // }
       // adjustBottom();
       // $(window).resize(adjustBottom);
+      function adjustWidth() {
+        var widht = ($('body').width() - $('.time-desc').width())/2;
+        
+      }
 
 
       function getQueryParams() {

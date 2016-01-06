@@ -103,7 +103,9 @@
     };
 
     AlertDismiss.prototype.destroy = function() {
-      this.element.remove();
+      this.element.fadeOut(function() {
+        $(this).remove();
+      });
 
       globalAlertDismiss = null;
     };
