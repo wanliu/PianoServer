@@ -106,8 +106,8 @@
       now = new Date();
       diffStart = this._diff(this.startTime, now);
       diffEnd = this._diff(now, this.endTime);
-      isStarted = diffStart > 0;
-      isEnd = diffEnd < 0;
+      isStarted = (this.status === 'started' ? true : diffStart > 0);
+      isEnd = (this.status === 'started' && diffEnd < 0);
       prefix = null;
       duration = null;
 
@@ -148,6 +148,27 @@
         }
       }
     };
+
+    CountDown.prototype.getCurrentStatus = function() {
+      switch(this.status) {
+      case 'started':
+      case 'end':
+      case 'suspend':
+        return this.status;
+
+      default:
+        var now = new Date();
+        var diffStart = this._diff(this.startTime, now);
+        var diffEnd = this._diff(now, this.endTime);
+        var isStarted = diffStart > 0;
+        var isEnd = diffEnd < 0;
+
+        if (isStarted) return 'started';
+
+        if (isEnd) return 'end';
+
+      }
+    }
 
     CountDown.prototype._updateCountdownText = function(prefix, duration) {
       var text = this._formatShortTime(duration);
