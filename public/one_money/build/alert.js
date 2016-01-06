@@ -1,1 +1,139 @@
-(function(){this.AlertDismiss=function(){function t(t,e,n){n=n||{},this.title=t||"消息",this.msg=e||"",this.link=n.link||"#",this.buttons=n.buttons||[],this.style={container:{},panel:{"border-color":"#f10043",background:"#fff"},header:{color:"#f10044"},close:{background:"#999"}},this.render()}var e;return t.prototype.styleFormat=function(t){var e="",n=this.style[t];for(var i in n)e+=[i,":",n[i],";"].join("");return e},t.prototype.template=function(){return['<div class="alert-container" style="',this.styleFormat("container"),'">','<div class="panel" style="',this.styleFormat.panel,'">','<div class="alert-close-btn" style="',this.styleFormat("close"),'">×</div>','<div class="alert-header" style="',this.styleFormat("header"),'">',this.title,"</div>",'<p class="alert-msg">',this.msg,"</p>","</div>","</div>"].join("")},t.prototype.generateButtons=function(){for(var t=this.buttons,e=[],n=0;n<t.length;n++){var i=t[n],o=i.getTitle(),s=i.getAction(),r=i.getClasses();e.push(['<button class="',r,'" action="',s,'">',o,"</button>"].join(""))}return e.length>0?['<div class="action-buttons">',e.join(""),"</div>"].join(""):""},t.prototype.bindActionButtonEvents=function(){0!==this.buttons.length&&this.element.find(".btn").click(function(t){t.preventDefault();var e=$(this).attr("action");"#"!==e&&(window.location.href=e)})},t.prototype.bindCloseEvent=function(){var t=this;$(".AlertDismiss-close-btn").on("click",function(){t.destroy()})},t.prototype.show=function(){this.element.fadeIn()},t.prototype.hide=function(){this.element.fadeOut()},t.prototype.destroy=function(){this.element.remove(),e=null},t.prototype.render=function(){this.element=$(this.template()).appendTo($("body")),this.bindCloseEvent(),this.bindActionButtonEvents(),this.show()},t.getAlertDismiss=function(n,i,o){return e&&e.destroy(),e=new t(n,i,o)},t}()}).call(this);
+;(function() {
+  this.AlertDismiss = (function() {
+    var globalAlertDismiss;
+
+    function AlertDismiss(title, msg, opt) {
+      opt = opt || {};
+
+      this.title = title || '消息';
+      this.msg   = msg   || '';
+      this.link  = opt.link  || '#';
+      this.buttons = opt.buttons || [];
+
+      this.style = {
+        container: {
+
+        },
+
+        panel: {
+          'border-color': '#f10043',
+          'background': '#fff'
+        },
+
+
+        title: {
+        },
+
+        close: {
+        }
+      }
+
+      this.render();
+    }
+
+    AlertDismiss.prototype.styleFormat = function(attr_name) {
+      var style = "";
+      var obj = this['style'][attr_name];
+
+      for (var key in obj) {
+        style += [key, ':', obj[key], ';'].join('')
+      }
+
+      return style;
+    };
+
+
+    AlertDismiss.prototype.template = function() {
+      return [
+        '<div class="alert-container" style="', this.styleFormat('container'), '">',
+          '<div class="panel" style="', this.styleFormat['panel'], '">',
+            '<div class="alert-close-btn" style="', this.styleFormat('close'), '">×</div>',
+            '<div class="alert-header" style="', this.styleFormat('header'), '">', this.title, '</div>',
+            '<p class="alert-msg">', this.msg, '</p>',
+
+          '</div>',
+        '</div>'
+      ].join('');
+    };
+
+    AlertDismiss.prototype.generateButtons = function() {
+      var buttons = this.buttons;
+
+      var buttons_ary = [];
+
+      for (var i=0; i<buttons.length; i++) {
+        var button = buttons[i];
+        var title = button.getTitle();
+        var action = button.getAction();
+        var classes = button.getClasses();
+
+        buttons_ary.push(['<button class="', classes, '" action="', action, '">', title,'</button>'].join(''));
+      }
+
+      if (buttons_ary.length > 0) {
+        return ['<div class="action-buttons">', buttons_ary.join(''),'</div>'].join('');
+      }
+
+      return '';
+    };
+
+    AlertDismiss.prototype.bindActionButtonEvents = function() {
+      if (this.buttons.length === 0) return;
+
+      this.element.find('.btn').click(function(e) {
+        e.preventDefault();
+
+        var action = $(this).attr('action');
+
+        if (action !== '#') {
+          window.location.href = action;
+        }
+      });
+    };
+
+    AlertDismiss.prototype.bindCloseEvent = function() {
+      var _this = this;
+
+      $('.AlertDismiss-close-btn').on('click', function() {
+        _this.destroy();
+      });
+    };
+
+    AlertDismiss.prototype.show = function() {
+      this.element.fadeIn();
+    };
+
+    AlertDismiss.prototype.hide = function() {
+      this.element.fadeOut();
+    };
+
+    AlertDismiss.prototype.destroy = function() {
+      this.element.remove();
+
+      globalAlertDismiss = null;
+    };
+
+    AlertDismiss.prototype.render = function() {
+      var _this = this;
+
+      this.element = $(this.template()).appendTo($('body'));
+
+      this.bindCloseEvent();
+      this.bindActionButtonEvents();
+      this.show();
+    };
+
+    AlertDismiss.getAlertDismiss = function(title, msg, opt) {
+      if (globalAlertDismiss) {
+        globalAlertDismiss.destroy();
+      }
+
+      globalAlertDismiss = new AlertDismiss(title, msg, opt);
+
+      return globalAlertDismiss;
+    };
+
+
+    return AlertDismiss;
+  })();
+}).call(this);

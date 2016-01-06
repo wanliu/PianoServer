@@ -1,11 +1,14 @@
 var path = require('path');
 var gulp = require('gulp');
+var clean = require('gulp-clean');
 var gutil = require( 'gulp-util' );
-var plumber = require( 'gulp-plumber' );
 var stylus = require('gulp-stylus');
 var uglify = require('gulp-uglify');
+var plumber = require( 'gulp-plumber' );
 var browserSync = require('browser-sync');
 var autoprefixer = require('gulp-autoprefixer');
+const babel = require('gulp-babel');
+
 
 gulp.task('browserSync', function() {
   browserSync({
@@ -16,7 +19,11 @@ gulp.task('browserSync', function() {
 });
 
 gulp.task('stylus', function () {
-  gulp.src('./src/style/*.styl')
+  gulp.src([
+      './src/style/index.styl',
+      './src/style/detail.styl',
+      './src/style/list.styl',
+    ])
     .pipe(plumber())
     .pipe(stylus({compress: true}))
     .pipe(autoprefixer())
@@ -26,9 +33,15 @@ gulp.task('stylus', function () {
 gulp.task('script', function () {
   gulp.src('./src/script/*.js')
     .pipe(plumber())
-    .pipe(uglify())
+    // .pipe(babel({presets: ['es2015']}))
+    // .pipe(uglify())
     .pipe(gulp.dest('./build'));
 });
+
+gulp.task('clean', function() {
+  gulp.src('./build/*', {read: false})
+    .pipe(clean());
+})
 
 gulp.task('watch', function() {
   gulp.watch('./src/**/*.styl', ['stylus']);

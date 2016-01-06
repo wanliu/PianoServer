@@ -1,1 +1,21 @@
-HIDE_ITEMS=!0,$(function(){HIDE_ITEMS||$.ajax({url:"/api/promotions/one_money/1/items",type:"GET",success:function(i){i.map(function(i){var e=JSON.parse(i.cover_urls)[0],r='<li>                          <a href="list.html#'+i.id+'">                            <img src="'+e+' "/>                            <div class="price-wrap">￥'+i.price+"</div>                          </a>                        </li>";$(".preview-list").append(r)})}})});
+HIDE_ITEMS = true;
+
+$(function() {
+  if (HIDE_ITEMS) return;
+  $.ajax({
+    url:'/api/promotions/one_money/1/items',
+    type:'GET',
+    success: function(itemsData) {
+      itemsData.map(function(itemData) {
+        var imgUrl = JSON.parse(itemData.cover_urls)[0];
+        var template = '<li>\
+                          <a href="list.html#'+ itemData.id +'">\
+                            <img src="'+ imgUrl+' "/>\
+                            <div class="price-wrap">￥'+ itemData.price +'</div>\
+                          </a>\
+                        </li>'
+        $('.preview-list').append(template)
+      });
+    }
+  });
+});

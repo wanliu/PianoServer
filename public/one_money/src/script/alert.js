@@ -20,12 +20,11 @@
           'background': '#fff'
         },
 
-        header: {
-          'color': '#f10044'
+
+        title: {
         },
 
         close: {
-          'background': '#999'
         }
       }
 
