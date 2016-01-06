@@ -171,10 +171,20 @@ class Api::Promotions::OneMoneyController < Api::BaseController
       when "always", "no-executies"
         grabs = PmoGrab.find(pmo_item_id: @item.id, one_money: @one_money.id, user_id: pmo_current_user.user_id)
         grab = grabs.reverse_each { |e| break e;  }
-        hash = { status: status,
+
+
+        hash = {
+                 status: status,
                  grab_id: grab.id,
                  callback_url: grab.callback_url,
                }
+
+        if grab.status == "created"
+          hash[:grab_status] = "created"
+        else
+          hash[:grab_status] = "pending"
+        end
+
         hash[:timeout] = [ grab.timeout_at - grab.now, 0].max if grab.timeout_at.present?
 
         render json: hash
