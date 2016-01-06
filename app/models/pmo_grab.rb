@@ -76,6 +76,12 @@ class PmoGrab < Ohm::Model
   end
 
   def callback_url
+    callback_url!
+  rescue => e
+    nil
+  end
+
+  def callback_url!
     url = real_callback_url
     l = URI.parse(url)
     query = Hash[URI.decode_www_form(l.query)]
@@ -83,8 +89,6 @@ class PmoGrab < Ohm::Model
     query = query.merge("i" => encode_message)
     l.query = URI.encode_www_form(query)
     l.to_s
-  rescue => e
-    nil
   end
 
   def callback_with_fallback
