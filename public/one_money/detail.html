@@ -22,7 +22,6 @@
           <img class="time-left" src="images/time-left.png">
           <span class="time-desc"></span>
           <img class="time-right" src="images/time-right.png">
-
         </div>
         <div class="status-wrap">
           <div class="price">
@@ -75,9 +74,11 @@
       // }
       // adjustBottom();
       // $(window).resize(adjustBottom);
+      adjustWidth()
       function adjustWidth() {
         var widht = ($('body').width() - $('.time-desc').width())/2;
-        
+        $('.time-left').widht(widht);
+        $('.time-right').widht(widht);
       }
 
 
