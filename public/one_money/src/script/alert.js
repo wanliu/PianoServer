@@ -1,12 +1,5 @@
 ;(function() {
-  Alerta = function(title, msg, opt){
-    if (Alert) {
-      Alert.destroy();
-    }
-    return Alert = new _Alert(title, msg, opt);
-  }
-
-  function _Alert(title, msg, opt) {
+  function Alert(title, msg, opt) {
     opt = opt || {};
     this.title = title || '消息';
     this.msg   = msg   || '';
@@ -23,13 +16,13 @@
 
       title: {
       },
+
       close: {
       }
     }
-    this.render();
   }
 
-  _Alert.prototype = {
+  Alert.prototype = {
     styleFormat: function(attr_name) {
       var style = "";
       var obj = this['style'][attr_name];
@@ -116,13 +109,10 @@
 
     render: function() {
       var _this = this;
-
       this.element = $(this.template()).appendTo($('body'));
-
       this.bindCloseEvent();
       this.bindActionButtonEvents();
       this.show();
     }
   }
-  this.Alert = Alert;
-})();
+}).call(this);

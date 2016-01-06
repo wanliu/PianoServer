@@ -20,7 +20,7 @@ $(function() {
 });
 
 function Winner(data) {
-  for (key in data) {
+  for (var key in data) {
     this[key] = data[key]
   }
   this.render();

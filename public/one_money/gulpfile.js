@@ -7,6 +7,8 @@ var uglify = require('gulp-uglify');
 var plumber = require( 'gulp-plumber' );
 var browserSync = require('browser-sync');
 var autoprefixer = require('gulp-autoprefixer');
+const babel = require('gulp-babel');
+
 
 gulp.task('browserSync', function() {
   browserSync({
@@ -31,9 +33,7 @@ gulp.task('stylus', function () {
 gulp.task('script', function () {
   gulp.src('./src/script/*.js')
     .pipe(plumber())
-    .pipe(babel({
-      presets: ['es2015']
-    }))
+    // .pipe(babel({presets: ['es2015']}))
     .pipe(uglify())
     .pipe(gulp.dest('./build'));
 });
