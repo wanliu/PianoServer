@@ -125,11 +125,11 @@
           }
         }
 
-        prefix = '距活动结束还有';
+        prefix = '距活动结束还有<br />';
         duration = this.duration(now, this.endTime);
         return this._updateCountdownText(prefix, duration);
       } else {
-        prefix = '距活动开始还有';
+        prefix = '距活动开始还有<br />';
         duration = this.duration(now, this.startTime);
 
         if (duration.times > CountDown.DATE_UNIT.DAY) {
@@ -143,7 +143,7 @@
     CountDown.prototype._updateCountdownText = function(prefix, duration) {
       var text = this._formatShortTime(duration);
 
-      return this.$().text(prefix + text);
+      return this.$().html(prefix + text);
     };
 
     CountDown.prototype._showStartText = function() {
@@ -152,19 +152,19 @@
       }
 
       this._hasShown = true;
-      this.$().text('活动开始时间: ' + this._formatFullyTime(this.startTime));
+      this.$().html('活动开始时间: ' + this._formatFullyTime(this.startTime));
 
       return this._applyClass('not-started');
     };
 
     CountDown.prototype._showFinishText = function() {
-      this.$().text('活动已结束');
+      this.$().html('活动已结束');
 
       return this._applyClass('finished');
     };
 
     CountDown.prototype._showInventoryText = function() {
-      this.$().text('库存剩余' + this.inventory + '件');
+      this.$().html('库存剩余' + this.inventory + '件');
 
       return this._applyClass('started');
     };
@@ -188,9 +188,18 @@
       minutes = this._format(duration, 'minutes');
       seconds = this._format(duration, 'seconds');
 
-      if (days == 0) return [hours, minutes, seconds].join(':');
+      var towDots = '<span class="tow-dots">:</span>';
 
-      return [days, '天', [hours, minutes, seconds].join(':')].join('');
+      var time = [hours, minutes, seconds].map(function(i) {
+        var singleNunber = i.toString().split('');
+        return singleNunber.map(function(n) {
+          return '<span class="time-number">'+ n +'</span>';
+        }).join('');
+        
+      });
+
+      if (days == 0) return time.join(towDots);
+      return [days, '天', time.join(towDots)].join('');
     };
 
     CountDown.prototype._format = function(duration, key) {
