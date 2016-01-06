@@ -174,14 +174,13 @@ class Api::Promotions::OneMoneyController < Api::BaseController
         hash ={
           status: status
         }
-
+        now = @item.now
         hash[:grabs] = grabs.map { |g| {
           id: g.id,
           status: g.status,
-          callback_url: g.callback_url
+          callback_url: g.callback_url,
+          timeout: g.timeout_at.present? ? [ g.timeout_at - now, 0].max : -1
         }}
-
-        hash[:timeout] = [ grab.timeout_at - grab.now, 0].max if grab.timeout_at.present?
 
         render json: hash
       else
