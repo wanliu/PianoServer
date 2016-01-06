@@ -14,7 +14,7 @@ body
   font-size 14px
 
 .item-detail
-  .item-poster 
+  .item-poster
     position relative
 
   .item-poster >img 
@@ -39,7 +39,7 @@ body
       line-height 24px
       display table-cell
       vertical-align middle
-      padding-left 10px
+      padding-left 20px
       
       .tow-dots
         font-size 30px
@@ -103,27 +103,35 @@ body
         // transform-origin 100%
 
 .start-end
+  width 100%
   color #FF1138
   bottom 60px
-  font-size 12px
   position relative
   text-align center
-  width 100%
-  &:after
-    content ''
-    clear both
-    display block
-    
-  .time-desc
-    float left
-    line-height 24px
-    display block
+  display inline-block
+  .bottom
     background-color #FFDB01
-  .time-left
-  .time-right
-    float left
-    height 24px
-    display block
+    height 7px
+  .in-line
+    display inline-block
+    position relative
+    background-color #ffdb01
+    > img
+      display block
+      position absolute
+      width 24px
+      bottom 0 
+      &.left
+        left -24px
+      &.right
+        right -24px
+    .time-desc
+      display inline-block
+      line-height 24px
+      height 24px
+      background-color #FFDB01
+      position relative
+      top 5px  
 
 .item-description 
   display table
@@ -170,7 +178,6 @@ body
 .supplier-desc 
   padding 10px 5px
   position relative
-  border-top 1px solid #DDD
   .avatar
     width 35px
     height 35px
@@ -184,11 +191,13 @@ body
   
   .wait-text 
     background rgba(0, 0, 0, 0.5)
+    font-size 24px
     padding 10px 15px
     color #FFFFFF
 
   .always-text 
     background rgba(50, 180, 50, 0.9)
+    font-size 24px
     padding 10px 15px
     color #FFFFFF
 

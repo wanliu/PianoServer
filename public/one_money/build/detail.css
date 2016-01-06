@@ -21,7 +21,7 @@
   background: #fff;
   border-radius: 5px;
   border: 6px solid #f10043;
-  padding-top: 35px;
+  padding: 35px 0;
 }
 .alert-container .panel-wrap .alert-close-btn {
   background-color: #666;
@@ -57,6 +57,8 @@
   border: none;
   border-radius: 5px;
   padding: 8px 12px;
+  color: #fff;
+  background-color: #f10043;
 }
 .alert-container .action-buttons .btn.success {
   background-color: #080;
@@ -98,7 +100,7 @@ body {
   line-height: 24px;
   display: table-cell;
   vertical-align: middle;
-  padding-left: 10px;
+  padding-left: 20px;
 }
 .item-detail .status-wrap .time .tow-dots {
   font-size: 30px;
@@ -157,29 +159,41 @@ body {
   padding: 3px;
 }
 .start-end {
+  width: 100%;
   color: #ff1138;
   bottom: 60px;
-  font-size: 12px;
   position: relative;
   text-align: center;
-  width: 100%;
+  display: inline-block;
 }
-.start-end:after {
-  content: '';
-  clear: both;
-  display: block;
+.start-end .bottom {
+  background-color: #ffdb01;
+  height: 7px;
 }
-.start-end .time-desc {
-  float: left;
-  line-height: 24px;
-  display: block;
+.start-end .in-line {
+  display: inline-block;
+  position: relative;
   background-color: #ffdb01;
 }
-.start-end .time-left,
-.start-end .time-right {
-  float: left;
-  height: 24px;
+.start-end .in-line > img {
   display: block;
+  position: absolute;
+  width: 24px;
+  bottom: 0;
+}
+.start-end .in-line > img.left {
+  left: -24px;
+}
+.start-end .in-line > img.right {
+  right: -24px;
+}
+.start-end .in-line .time-desc {
+  display: inline-block;
+  line-height: 24px;
+  height: 24px;
+  background-color: #ffdb01;
+  position: relative;
+  top: 5px;
 }
 .item-description {
   display: table;
@@ -233,7 +247,6 @@ body {
 .supplier-desc {
   padding: 10px 5px;
   position: relative;
-  border-top: 1px solid #ddd;
 }
 .supplier-desc .avatar {
   width: 35px;
@@ -248,11 +261,13 @@ body {
 }
 .actions .wait-text {
   background: rgba(0,0,0,0.5);
+  font-size: 24px;
   padding: 10px 15px;
   color: #fff;
 }
 .actions .always-text {
   background: rgba(50,180,50,0.9);
+  font-size: 24px;
   padding: 10px 15px;
   color: #fff;
 }

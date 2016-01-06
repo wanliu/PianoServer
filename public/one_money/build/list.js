@@ -44,7 +44,7 @@ PromotionItem.prototype = {
   },
   countDownTime: function() {
     var status = this.getStatus();
-    if (status == 'end' || status == 'shortage') return;
+    if (status == 'end' || status == 'suspend') return;
 
     var _this = this;
     var timeManager = CountDownManager.getManager();
@@ -65,15 +65,16 @@ PromotionItem.prototype = {
   },
   statusFlagTemplate: function(status) {
     var status = status || this.getStatus();
+    console.log(status)
     switch (status) {
       case 'wait':
-        return '<span class="status wait">未开始</span>&emsp;参与人数:' + this.total_amount;
+        return '<span class="status wait">未开始</span>&emsp;库存:' + this.total_amount;
 
       case 'end':
-        return '<span class="status end">已结束</span>&emsp;参与人数:' + this.total_amount;
+        return '<span class="status end">已结束</span>&emsp;库存:' + this.total_amount;
 
-      case 'shortage':
-        return '<span class="status end">已售罄</span>&emsp;参与人数:' + this.total_amount;
+      case 'suspend':
+        return '<span class="status end">已售罄</span>&emsp;库存:' + this.total_amount;
 
       case 'started':
         return '<span class="status">抢购中</span>&emsp;库存:' + this.total_amount;
@@ -84,7 +85,7 @@ PromotionItem.prototype = {
       <li class="promotion-item" name='+ this.id +'>\
         <a class="item-wrap" href="detail.html?one_money_id='+ this.one_money_id+'&id='+ this.id +'">\
           <header>\
-            <img class="one-money-logo" src="../images/one_money_log.jpg"/>\
+            <img class="one-money-logo" src="./images/one_money_log.jpg"/>\
             <img class="cover" src="'+ this.cover_urls[0] +'">\
             <div class="limit">\
             </div>\

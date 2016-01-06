@@ -17,11 +17,14 @@
   <body>
     <div class="item-detail">
       <div class="item-poster">
-        <img src="images/time-left.png" class="poster" alt="商品大图">
+        <img src="" class="poster" alt="商品大图">
         <div class="start-end">
-          <img class="time-left" src="images/time-left.png">
-          <span class="time-desc"></span>
-          <img class="time-right" src="images/time-right.png">
+          <div class="in-line">
+            <img class="left" src="images/left.png">
+            <span class="time-desc"></span>
+            <img class="right" src="images/right.png">
+          </div>
+          <div class="bottom"></div>
         </div>
         <div class="status-wrap">
           <div class="price">
@@ -54,7 +57,6 @@
       </div>
 
       <div class="users-list">
-        <div class="title">幸运用户</div>
 
       </div>
 
@@ -134,7 +136,7 @@
         var hour = date.getHours();
         var minute = date.getMinutes();
 
-        return [[year, formatZero(month), formatZero(day)].join('-'), [formatZero(hour), formatZero(minute)].join(':')].join(' ');
+        return [[year, formatZero(month), formatZero(day)].join('-')].join(' ');
       }
 
       var params = getQueryParams();
@@ -190,7 +192,8 @@
           $('img.poster').attr('src', poster);
           $('.item-title').text(title);
           $('.total-amount .inventory').text(total_amount);
-          $('.start-end .time-desc').text([formatDate(start_at), '至', formatDate(end_at)].join(' '));
+          $('.start-end .time-desc').text(['活动时间', formatDate(start_at), '至', formatDate(end_at)].join(' '));
+
           $('.supplier-desc .avatar').attr('src', shop_avatar_url);
           $('.supplier-name').text(shop_name);
 
