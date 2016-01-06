@@ -20,32 +20,6 @@ body {
   clear: both;
 }
 
-.error-pannel {
-  background: rgba(0, 0, 0, 0.5);
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  z-index: 1;
-  left: 0;
-  top: 0;
-  display: none;
-}
-
-.error-pannel .msg-wrap {
-  position: absolute;
-  width: 300px;
-  height: 140px;
-  background: #fff;
-  left: 50%;
-  margin-left: -150px;
-  top: 50%;
-  margin-top: -70px;
-  text-align: center;
-}
-
-.item-detail {
-}
-
 .item-detail .item-poster {
   position: relative;
 }
@@ -74,8 +48,8 @@ body {
 .status-wrap .price .d,
 .status-wrap .price .e {
   float: left;
-  background-color: #FF1138;
   height: 50px;
+  background-color: #FF1138;
 }
 .price .c {
   width: 60%;
@@ -150,7 +124,7 @@ body {
   padding: 5px;
 }
 
-.item-description .saled-amonut,
+.item-description .participant-amonut,
 .item-description .total-amount {
   vertical-align: middle;
   text-align: center;
@@ -177,8 +151,8 @@ body {
 .users-list img{
   display: block;
   float: left;
-  width: 40px;
-  height: 40px;
+  width: 35px;
+  height: 35px;
   margin-right: 3px;
   margin-bottom: 3px;
 }
@@ -212,10 +186,8 @@ body {
 .actions {
   position: fixed;
   bottom: 0;
-  left: 0;
-  right: 0;
+  width: 100%;
   text-align: center;
-  font-size: 24px;
 }
 
 .actions .wait-text {
@@ -232,14 +204,14 @@ body {
 
 .actions .purchase-btn {
   width: 100%;
+  color: #FFF;
   border: none;
+  outline: none;
   display: block;
   padding: 10px 15px;
   text-align: center;
   background: #FF1138;
-  color: #FFF;
   font-size: 24px;
-  outline: none;
 }
 
 .actions .end-text, .actions .sold-out {
