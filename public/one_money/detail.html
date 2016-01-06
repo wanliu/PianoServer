@@ -195,7 +195,30 @@
           $('.supplier-name').text(shop_name);
 
           // 如果 有这个状态说明已经 grab 了
-          if (item_status == "always") return $action.html('<div class="always-text">已经参与过活动了</div>');
+          if (item_status == "always") {
+            url = [ '/api/promotions/one_money/', one_money_id, '/callback/', item_id ].join('');
+
+            $.ajax({
+              type: 'GET',
+              dataType: 'json',
+              url: url,
+              success: function(json) {
+                var grab_status = json['grab_status'];
+                var callback_url = json['callback_url'];
+
+                if (grab_status === 'pending') {
+                  window.location.href = callback_url;
+                } else if (grab_status === 'created') {
+                  $action.html('<div class="already-award">已领取奖品</div>');
+                }
+              }
+            });
+
+            return;
+            //return $action.html('<div class="always-text">已经参与过活动了</div>');
+          }
+
+
           if (item_status == "no-executies") return $action.html('<div class="always-text">已经不能再抢此商品了</div>');
 
           switch(status) {
