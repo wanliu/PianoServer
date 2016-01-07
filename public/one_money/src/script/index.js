@@ -1,6 +1,11 @@
 HIDE_ITEMS = true;
 
 $(function() {
+  $('a.signup').click(function() {
+    $.get(window.signup_url + '?callback=' + window.authorized_callback_url);
+  });
+
+
   if (HIDE_ITEMS) return;
   $.ajax({
     url:'/api/promotions/one_money/1/items',
