@@ -25,7 +25,7 @@ class PromotionsController < ApplicationController
   # GET /promotions
   # GET /promotions.json
   def index
-    # @promotions = Promotion.find(:all, from: :active, params: query_params).to_a
+    @promotions ||= Promotion.find(:all, from: :active, params: query_params).to_a
 
     render :homepage, with: @subject
   end
