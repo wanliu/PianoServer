@@ -6,13 +6,11 @@ var params = getQueryParams();
 if (params['status']) {
   $.ajax({
     url: '/api/promotions/one_money/' + window.one_money_id + '/signup',
-    type: 'GET',
+    type: 'PUT',
     dataType: 'json',
     success: function() {
-
     },
     error: function() {
-
     }
   });
 }
@@ -42,7 +40,7 @@ function PromotionItem(itemData, td) {
       data = JSON.parse(data);
     }
     if (shouldDateParseArr.indexOf(key) > -1) {
-      data = Date.parse(data) + td;
+      data = Date.parse(data) - td;
     }
     this[key] = data;
   }

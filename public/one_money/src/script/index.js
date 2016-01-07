@@ -4,7 +4,7 @@ $(function() {
   $('a.signup').click(function() {
     $.ajax({
       url: '/api/promotions/one_money/' + window.one_money_id + '/signup',
-      type: 'GET',
+      type: 'PUT',
       dataType: 'json',
       success: function(data) {
         location.href = '/one_money/list.html';
