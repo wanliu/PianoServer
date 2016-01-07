@@ -68,7 +68,7 @@ $.ajax({
     var item_status = json['item_status'] || null;
     var element = $('.countdown-text');
 
-    new CountDown(element, +total_amount, start_at+diff, end_at+diff, status, function(current_state) {
+    new CountDown(element, +total_amount, start_at-diff, end_at-diff, status, function(current_state) {
       if (item_status === 'always' || item_status === 'no-executies') return;
 
       switch(current_state) {

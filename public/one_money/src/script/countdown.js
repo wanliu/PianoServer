@@ -38,6 +38,7 @@
     };
 
     function CountDown(element, inventory, startTime, endTime, status, statusChangedCallback) {
+
       this.element = element;
       this.inventory = inventory;
       this.startTime = startTime;

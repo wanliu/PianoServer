@@ -9,10 +9,8 @@ if (params['status']) {
     type: 'GET',
     dataType: 'json',
     success: function() {
-
     },
     error: function() {
-
     }
   });
 }
@@ -42,7 +40,7 @@ function PromotionItem(itemData, td) {
       data = JSON.parse(data);
     }
     if (shouldDateParseArr.indexOf(key) > -1) {
-      data = Date.parse(data) + td;
+      data = Date.parse(data) - td;
     }
     this[key] = data;
   }
