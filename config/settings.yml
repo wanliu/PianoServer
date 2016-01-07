@@ -103,7 +103,6 @@ weixin:
   after_sign_in: true
   after_sign_in_path: smart_fills
   regions: true
-  one_money: false
 chat:
   display_username: true
   display_shopname: true

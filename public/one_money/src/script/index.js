@@ -15,7 +15,7 @@ $(function() {
         if (jqXHR.status == 401) {
           var url = window.authorized_callback_url + '?status=' + json.status;
 
-          location.href = window.signup_url + '?callback=' + encodeURIComponent(url);
+          location.href = window.signup_url + '?callback=' + encodeURIComponent(url) + '&goto_one_money=true';
         }
       }
     })
