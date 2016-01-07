@@ -2,7 +2,23 @@ HIDE_ITEMS = true;
 
 $(function() {
   $('a.signup').click(function() {
-    $.get(window.signup_url + '?callback=' + window.authorized_callback_url);
+    $.ajax({
+      url: '/api/promotions/one_money/' + window.one_money_id + '/signup',
+      type: 'GET',
+      dataType: 'json',
+      success: function(data) {
+        location.href = '/one_money/list.html';
+      },
+      error: function(jqXHR) {
+        var json = jqXHR.responseJSON;
+
+        if (jqXHR.status == 401) {
+          var url = window.authorized_callback_url + '?status=' + json.status;
+
+          location.href = window.signup_url + '?callback=' + encodeURIComponent(url);
+        }
+      }
+    })
   });
 
 
