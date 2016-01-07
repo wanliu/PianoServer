@@ -113,3 +113,10 @@ promotions:
       minutes: 15
     ensure_url: http://m.wanliu.com/api/promotions/one_money/:id/ensure/:grab_id
     default_callback: http://m.wanliu.biz/orders/yiyuan_confirm
+    sms_to_supplier: true
+    sms_to_supplier_template: '【万流网】你的商店有一个新的一元购订单，请及时查看！'
+sms:
+  host: sms.yunpian.com
+  api_uri: /v1/sms/send.json
+  token: '2ff4409770a685e7d3edabe1f80c92c1'
+

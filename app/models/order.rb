@@ -24,6 +24,8 @@ class Order < ActiveRecord::Base
   before_save :set_modified, if: :total_changed?
   before_create :caculate_total
 
+  after_commit :send_sms_notification, on: :create
+
   paginates_per 5
 
   # create new order_items
@@ -136,5 +138,15 @@ class Order < ActiveRecord::Base
     if items.blank?
       errors.add(:base, "订单中没有商品，无法创建订单")
     end
+  end
+
+  def send_sms_notification
+    seller_mobile = supplier.try(:owner).try(:mobile)
+
+    unless persisted? && Settings.promotions.one_money.sms_to_supplier && pmo_grab_id && seller_mobile
+      return
+    end
+
+    SmsSender.delay.send_sms({mobile: seller_mobile})
   end
 end
