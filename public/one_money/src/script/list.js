@@ -1,20 +1,24 @@
 $(function() {
   var one_money_id = window.one_money_id || 1;
+  var beforeTime = new Date().getTime();
+
   $.ajax({
-    url:'/api/promotions/one_money/'+ one_money_id +'/items',
-    success: function(itemsData) {
-      console.log(itemsData);
-      itemsData.map(function(itemData) {
-        new PromotionItem(itemData);
+    url:'/api/promotions/one_money/'+ one_money_id +'/items?u='+ beforeTime,
+    success: function(res) {
+      var afterTime = new Date().getTime();
+      var td = Math.ceil(res.td + (afterTime - beforeTime) / 2);
+      res.items.map(function(itemData) {
+        new PromotionItem(itemData, td);
       });
     },
-    error: function (err){
-      $('body').append(err.responseText);
+    error: function (res){
+      console.log(res)
+      // $('body').append(err.responseText);
     }
   });
 });
 
-function PromotionItem(itemData) {
+function PromotionItem(itemData, td) {
   var shouldJSONParseArr = ['avatar_urls', 'cover_urls', 'image_urls'];
   var shouldDateParseArr = ['start_at', 'end_at'];
   for (var key in itemData) {
@@ -23,7 +27,7 @@ function PromotionItem(itemData) {
       data = JSON.parse(data);
     }
     if (shouldDateParseArr.indexOf(key) > -1) {
-      data = Date.parse(data);
+      data = Date.parse(data) + td;
     }
     this[key] = data;
   }
