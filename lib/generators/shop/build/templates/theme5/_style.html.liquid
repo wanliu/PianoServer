@@ -91,6 +91,7 @@
 	body.shop .main-container{
 		background:#EFE6DF;
 	}
+
 /*	body.shop .cate a img{
 		display: table-cell; 
 		position: relative; 
@@ -152,6 +153,9 @@
 		-o-transition: opacity 0.5s;
 		transition: opacity 0.5s;
 	}
+	body.shop .brand-board .shop-info .name-address .name{
+		font-size:26px;
+	}
 	.nimade-1{
 		top: 0;
 		left: 0;
@@ -178,11 +182,13 @@
 	}
 	body.shop .brand-board .shop-info .name-address{
 		font-weight: 300;
-		font-size:26px;
 	}
 	@media(max-width:484px){
 		body.shop .brand-board .shop-info .attention{
-			min-width:57px;
+			min-width:60px;
+		}
+		body.shop .brand-board .shop-info {
+			bottom:0;
 		}
 		body.shop .brand-board .shop-info .name-address{
 			font-size:16px;
@@ -211,18 +217,15 @@
 		body.shop .brand-board{
 			background:none;
 		}
-		body.shop .brand-board .shop-info{
-			bottom:-5px;
-		}
 		body.shop .brand-board .shop-info .shop-logo{
-			width:44px;
-			height:44px;
+			width:55px;
+			height:55px;
 		}
-		body.shop .brand-board .shop-info .media:first-child{
-			padding:4px;
+		body.shop .brand-board .shop-info .name-address .name{
+			font-size:24px;
 		}
-		.container, .container-fluid{
-			padding
+		body.shop .brand-board .shop-info .shop-logo-wrapper{
+			padding:10px;
 		}
 	}
 </style>

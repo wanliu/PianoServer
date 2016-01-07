@@ -135,6 +135,9 @@ Rails.application.routes.draw do
     resources :promotions
     resources :subjects do
       concerns :templable, templable_type: 'Subject', parent_type: 'Subject'
+      collection do
+        post :touch_current
+      end
     end
     resources :messages
     resources :contacts

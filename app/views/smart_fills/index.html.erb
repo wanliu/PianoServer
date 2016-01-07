@@ -127,10 +127,19 @@
       dataType: 'json',
       success: function (data) {
         if (data.success) {
-          window.location.href = root_path;
-          console.log('callback_url:', data.callback_url);
+          window.location.href = data.callback_url;
         } else {
-          $('.error-notice').text(data.errors).css('display', 'inline-block');
+          var errs = data.errors;
+
+          errors.length = 0;
+
+          for (var i = 0; i < errs.length; i++) {
+            errors.push(['<li class="error-message">', errs[i], '</li>'].join(''));
+          }
+
+          if (errors.length > 0) {
+            $errors.html(errors.join('')).show();
+          }
         }
       }
     });

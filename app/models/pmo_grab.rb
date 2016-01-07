@@ -40,9 +40,6 @@ class PmoGrab < Ohm::Model
     self.timeout_at = self.now + self.time_out
     self.status = "pending"
     # pp valid_status_messages
-    if self.pmo_item && self.pmo_item.is_a?(PmoItem)
-      self.pmo_item.lock_incr :completes, self.quantity
-    end
   end
 
   def after_save
@@ -52,7 +49,8 @@ class PmoGrab < Ohm::Model
 
   def before_delete
     if self.pmo_item && self.pmo_item.is_a?(PmoItem)
-      self.pmo_item.lock_decr :completes, self.quantity
+      Rails.logger.debug "Decrement Completes + #{self.quantity}"
+      self.pmo_item.decr :completes, self.quantity
     end
   end
 
@@ -76,15 +74,19 @@ class PmoGrab < Ohm::Model
   end
 
   def callback_url
+    callback_url!
+  rescue => e
+    nil
+  end
+
+  def callback_url!
     url = real_callback_url
     l = URI.parse(url)
-    query = Hash[URI.decode_www_form(l.query)]
+    query = Hash[URI.decode_www_form(l.query || "")]
     encode_message =  encrypt(self.to_hash.to_json)
     query = query.merge("i" => encode_message)
     l.query = URI.encode_www_form(query)
     l.to_s
-  rescue => e
-    nil
   end
 
   def callback_with_fallback

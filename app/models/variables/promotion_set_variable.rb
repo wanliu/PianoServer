@@ -5,7 +5,7 @@ class PromotionSetVariable < ArrayVariable
   validates :promotion_string, presence: { message: "请至少选择一个活动！" }
 
   def call
-    (promotion_string || '').split(',').map {|id| Promotion.find(id) }
+    Promotion.where(ids: promotion_ids).to_a
   end
 
   def promotion_ids

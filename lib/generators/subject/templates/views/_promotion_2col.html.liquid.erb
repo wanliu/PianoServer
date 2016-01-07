@@ -1,0 +1,33 @@
+{% comment %} 一旦修改了本模板中的内容，请同时增加下一行代码中版本号(v后面的数字)，否则更改将不起作用  {% endcomment %}
+
+{% cache promotion_2col:<%= time_stamps %>_promotion_2col_v1 %}
+    <div class="col-xs-12 col-sm-6 promotion-wrap">
+        <div class="promotion">
+            <a href="/promotions/{{ promotion_2col.id }}">
+                <div class="promotion-left">
+                    {{ promotion_2col.image_url | image_tag: class: 'promotion-image' }}
+                </div>
+                <div class="promotion-right">
+                    <p class="promotion-title">
+                       {{ promotion_2col.title }}
+                    </p>
+                    <div class="prices">
+                      <span class="discount-price">￥{{ promotion_2col.discount_price }}</span>
+                      <span class="origin-price"><s>￥{{ promotion_2col.product_price }}</s></span>
+                    </div>
+                    <div class="action-detail">
+                    {% if promotion_2col.status == 'Published'%}
+                      <span class="snap-ready">即将开始</span>
+                    {% elsif promotion_2col.status == 'Active' %}
+                      <span class="snap-up">马上抢购</span>
+                    {% else %}
+                      <span class="snap-up" style="background:#666">活动结束</span>
+                    {% endif %}
+                      <!--<span class="sales-mount">活跃度：{{promotion_2col.hits}}</span>-->
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+{% endcache %}
+      

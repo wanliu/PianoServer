@@ -5,31 +5,47 @@
 <div class="container">
   <div class="row">
     <div class="cate-items-list clearfix col-xs-12 col-sm-12 col-md-12 col-lg-12">
-      <div class="title ">
-        <img src="http://wanliu-piano.b0.upaiyun.com/uploads/shop/poster/1/f7383c8c63356af8ffca8f879ddc87dd.png">
-      </div>
-      {% paginate shop_categories by 12 %}
-        <div class="shop-categories">
-          <div class="row">
-            {% include "category" for paginate.collection %}
-          </div>
-        </div>
 
-        <nav class="text-center">
-          <ul class="pagination">
-            {% for part in paginate.parts %}
-              {% if part.is_link %}
-                <li >
-                  {{ part.title | link_to:  part.url }}
-                </li>
-              {% else %}
-                <li class="active">
-                  <span>{{ part.title }}<span class="sr-only">(current)</span></span>
-                </li>
-              {% endif %}
-            {% endfor %}
-          </ul>
-        </nav>
+      {% paginate shop_categories by 12 %}
+
+        {% if paginate.items == 0 %}
+          {% if shop.owner_id == current_user.id %}
+            <h4 class="text-center">
+              您的商店还未添加任何分类/商品<br>
+              请前往 {{ '店铺管理' | link_to: shop.shop_admin_link }} 添加分类/商品</h4>
+          {% else %}
+            <h4 class="text-center">对不起,本商店暂未添加分类/商品</h4>
+          {% endif %}
+        {% else %}
+
+          <div class="title ">
+            <img src="http://wanliu-piano.b0.upaiyun.com/uploads/shop/poster/1/f7383c8c63356af8ffca8f879ddc87dd.png">
+          </div>
+
+          <div class="shop-categories">
+            <div class="row">
+              {% include "category" for paginate.collection %}
+            </div>
+          </div>
+
+          <nav class="text-center">
+            <ul class="pagination">
+              {% for part in paginate.parts %}
+                {% if part.is_link %}
+                  <li >
+                    {{ part.title | link_to:  part.url }}
+                  </li>
+                {% else %}
+                  <li class="active">
+                    <span>{{ part.title }}<span class="sr-only">(current)</span></span>
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </nav>
+
+        {% endif %}
+
       {% endpaginate %}
     </div>
   </div>

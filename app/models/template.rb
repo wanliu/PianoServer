@@ -8,7 +8,7 @@ class Template < ActiveRecord::Base
 
   attr_accessor :content
 
-  belongs_to :templable, polymorphic: true
+  belongs_to :templable, polymorphic: true, touch: true
   has_many :variables, as: :host, dependent: :destroy
   has_many :attachments, dependent: :destroy, as: :attachable
 

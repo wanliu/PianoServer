@@ -1,8 +1,9 @@
 <li class="list-group-item industry-item" data-industry-id="<%= industry_item.id %>">
   <div class="industry-info">
     <%= link_to edit_admins_industry_path(industry_item) do %>
-      <%= icon :ok %>
-      <h3><%= industry_item.title %></h3>
+      <h3>
+        <%= industry_item.title %>
+      </h3>
     <% end %>
   </div>
 
@@ -14,4 +15,9 @@
       </div>
     </label>
   </div>
+
+  <div class='industry-delete'>
+    <%#= link_to "Delete", admins_industry_path(industry_item), class: 'btn btn-danger', method: :delete,  data: { confirm: "确定删除该主题，以及该主题对应的所有模板文件么？" } %>
+  </div>
 </li>
+
