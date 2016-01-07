@@ -1,11 +1,3 @@
-// 自动调整头部(一元购)的 bottom
-// function adjustBottom() {
-//   var bottom = $('.d').width();
-//   $('.c').css('bottom',bottom+1);
-// }
-// adjustBottom();
-// $(window).resize(adjustBottom);
-
 
 function getQueryParams() {
   var search = location.search;
@@ -126,18 +118,9 @@ $.ajax({
     $('.supplier-desc .avatar').attr('src', shop_avatar_url);
     $('.supplier-name').text(shop_name);
 
-    if (status === 'wait') {
-      return $action.html('<div class="wait-text">请耐心等待</div>');
-    }
-
-    if (status === 'end') {
-      return $action.html('<div class="end-text">活动已结束</div>');
-    }
-
-    // 如果 有这个状态说明已经 grab 了
-    if (item_status == "always") {
+    // 如果存在抢购成功状态,判断是否是当前商品
+    if (item_status == "always" || item_status == "no-executies") {
       url = [ '/api/promotions/one_money/', one_money_id, '/callback/', item_id ].join('');
-
       $.ajax({
         type: 'GET',
         dataType: 'json',
@@ -158,15 +141,15 @@ $.ajax({
           } else {
             $action.html('<div class="always-text">没有抢购机会了</div>');
           }
-
           return;
+        },
+        error: function(res) {
+          console.log(res);
         }
       });
 
       return;
     }
-
-    if (item_status == "no-executies") return $action.html('<div class="always-text">已经不能再抢此商品了</div>');
 
     switch(status) {
       case 'wait':
@@ -181,34 +164,40 @@ $.ajax({
       case 'suspend':
         return $action.html('<div class="end-text">已售罄</div>');
 
+      case 'no-executies':
+        return $action.html('<div class="always-text">已经不能再抢此商品了</div>');
+
       default:
         return $action.html('<div class="wait-text">请耐心等待</div>');
     }
+  },
+  error: function(jqXHR, textStatus, errorThrown) {
+    console.log(textStatus);
   }
 });
 
 // 抢购按钮
 $action.on('click', '.purchase-btn', function(e) {
   e.stopPropagation();
-
   $.ajax({
     url: '/api/promotions/one_money/'+ one_money_id +'/grab/' + item_id,
     type: 'PUT',
     dataType: 'json',
     success: function(res) {
       if (res.status == 'success') {
-        $('.actions').html('<div class="always-text">已经参与过活动了 </div>');
+        var callback_url = res.callback_url;
+        $('.actions').html(['<a style="text-decoration:none;" href="', callback_url, '"><div class="always-text">领取奖励</div></a>'].join(''));
 
         AlertDismiss.getAlertDismiss('抢购提示', '恭喜您抢购成功！', {
           buttons: [ new ActionButton('领取奖励', res.callback_url, 'btn-success')]
         });
       }
     },
-    error: function(jqXHR, textStatus, errorThrown) {
-      var json = jqXHR.responseJSON;
-
-      if (json.status == 401) {
-        $('.error-pannel').fadeIn(300);
+    error: function(res) {
+      console.log(res);
+      switch (res.status) {
+        case 401: return AlertDismiss.getAlertDismiss('抢购提示', '您尚未 登陆/注册.', {buttons: [ new ActionButton('前往 登陆/注册 页面', '/authorize/weixin', 'btn')]});
+        default: return AlertDismiss.getAlertDismiss('抢购提示', '抢购失败, 请稍后再试.');
       }
     }
   });
