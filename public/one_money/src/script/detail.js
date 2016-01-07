@@ -196,7 +196,7 @@ $action.on('click', '.purchase-btn', function(e) {
     error: function(res) {
       console.log(res);
       switch (res.status) {
-        case 401: return AlertDismiss.getAlertDismiss('抢购提示', '您尚未 登陆/注册.', {buttons: [ new ActionButton('前往 登陆/注册 页面', '/users/sign_in', 'btn')]});
+        case 401: return AlertDismiss.getAlertDismiss('抢购提示', '您尚未 登陆/注册.', {buttons: [ new ActionButton('前往 登陆/注册 页面', '/authorize/weixin', 'btn')]});
         default: return AlertDismiss.getAlertDismiss('抢购提示', '抢购失败, 请稍后再试.');
       }
     }
