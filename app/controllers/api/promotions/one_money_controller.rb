@@ -140,6 +140,10 @@ class Api::Promotions::OneMoneyController < Api::BaseController
         @grab = PmoGrab.from(@item, @one_money, pmo_current_user)
         @grab.save
 
+
+        Rails.logger.debug "Increment Completes + #{@item.quantity}"
+        @item.incr :completes, @item.quantity
+
         # pmo_current_user.grabs.add(@grab)
         # pmo_current_user.save
 
