@@ -75,7 +75,7 @@ class Promotion < ActiveResource::Base
   end
 
   def wrapper_url(version)
-    IMAGE_VERSIONS_SITES.any? {|url| image_url.start_with?(url) } ? image_url + '!' + version : image_url
+    IMAGE_VERSIONS_SITES.any? {|url| image_url.try(:start_with?, url) } ? image_url + '!' + version : image_url
   end
 
   def logo_url
