@@ -58,7 +58,12 @@ class Admins::OneMoneyController < Admins::BaseController
 
   def remove_item
     @item = PmoItem[params[:item_id]]
-    @item.delete
+    if @item.grabs.count == 0
+      @item.delete
+      @deleted = true
+    else
+      @deleted = false
+    end
   end
 
   def update_item
