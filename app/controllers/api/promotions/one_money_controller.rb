@@ -45,9 +45,17 @@ class Api::Promotions::OneMoneyController < Api::BaseController
   end
 
   def items
-    hash = @one_money.attributes
+    hash = {}
     @items = @one_money.items
-    render json: @items
+
+    if params[:u].present?
+      now = @one_money.now.to_f * 1000
+      hash[:td] = now - params[:u].to_i
+    end
+
+    hash[:items] = @items
+
+    render json: hash
   end
 
   def signup
