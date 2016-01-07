@@ -1,1 +1,5 @@
-$("[pmo-item=<%= @item.id %>]").fadeOut();
+<% if @deleted %>
+  $("[pmo-item=<%= @item.id %>]").fadeOut();
+<% else %>
+  alert("此活动商品已经有人抢购了，不能删除");
+<% end %>
