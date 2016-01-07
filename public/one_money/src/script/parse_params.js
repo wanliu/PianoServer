@@ -4,9 +4,11 @@ function getQueryParams() {
   var hash;
 
   if (search) {
-    hash = search.slice(1);
+    hash = search.length === 0 ? search : search.slice(1);
   } else {
-    hash = href.split('?')[1];
+    var ary = href.split('?');
+
+    hash = ary.length > 1 ? ary[1] : '';
   }
 
   var params = {};

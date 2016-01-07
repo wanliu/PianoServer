@@ -85,7 +85,7 @@ PromotionItem.prototype = {
   },
   statusFlagTemplate: function(status) {
     var status = status || this.getStatus();
-    console.log(status)
+
     switch (status) {
       case 'wait':
         return '<span class="status wait">未开始</span>&emsp;库存:' + this.total_amount;
