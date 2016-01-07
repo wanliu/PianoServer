@@ -14,7 +14,7 @@
     <label for="">查找商品</label>
 
     <% template = <<-HTML
-      <div class="media">
+      <div class="media" item-id="{{id}}" item-price="{{price}}" item-inventory="{{inventory}}">
         <div class="media-left">
           <img class="media-object" src="{{ avatar_url }}" alt="{{text}}">
         </div>
@@ -63,4 +63,24 @@
 
   $(".select2").width('100%');
   $(".best_in_place").best_in_place();
+
+  $('#one_money_query').on('select2:selecting', function(e) {
+    try {
+
+      var data = e.params.args.data,
+        id = data.id,
+        price = data.price,
+        inventory = data.inventory,
+        text = data.text;
+
+
+      if (!(price && price > 0)) {
+        return confirm(text + "商品库存或价格为零，确定需要添加进入活动？");
+      } else {
+        return true;
+      }
+    } catch(e) {
+      alert('因为错误，这个商品没办法添加进来');
+    }
+  });
 </script>
