@@ -4,7 +4,7 @@ $(function() {
   $('a.signup').click(function() {
     $.ajax({
       url: '/api/promotions/one_money/' + window.one_money_id + '/signup',
-      type: 'GET',
+      type: 'PUT',
       dataType: 'json',
       success: function(data) {
         location.href = '/one_money/list.html';
@@ -15,7 +15,7 @@ $(function() {
         if (jqXHR.status == 401) {
           var url = window.authorized_callback_url + '?status=' + json.status;
 
-          location.href = window.signup_url + '?callback=' + encodeURIComponent(url);
+          location.href = window.signup_url + '?callback=' + encodeURIComponent(url) + '&goto_one_money=true';
         }
       }
     })
