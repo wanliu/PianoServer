@@ -6,7 +6,7 @@ var params = getQueryParams();
 if (params['status']) {
   $.ajax({
     url: '/api/promotions/one_money/' + window.one_money_id + '/signup',
-    type: 'GET',
+    type: 'PUT',
     dataType: 'json',
     success: function() {
     },
