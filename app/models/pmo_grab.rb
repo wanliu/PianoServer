@@ -40,9 +40,6 @@ class PmoGrab < Ohm::Model
     self.timeout_at = self.now + self.time_out
     self.status = "pending"
     # pp valid_status_messages
-    if self.pmo_item && self.pmo_item.is_a?(PmoItem)
-      self.pmo_item.incr :completes, self.quantity
-    end
   end
 
   def after_save
@@ -52,6 +49,7 @@ class PmoGrab < Ohm::Model
 
   def before_delete
     if self.pmo_item && self.pmo_item.is_a?(PmoItem)
+      Rails.logger.debug "Decrement Completes + #{self.quantity}"
       self.pmo_item.decr :completes, self.quantity
     end
   end
