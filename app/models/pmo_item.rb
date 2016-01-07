@@ -15,6 +15,7 @@ class PmoItem < Ohm::Model
   attribute :image_urls, Type::Array
   attribute :cover_urls, Type::Array
   attribute :avatar_urls, Type::Array
+  attribute :item_id, Type::Integer
 
   attribute :price, Type::Decimal
   attribute :quantity, Type::Integer
@@ -60,6 +61,7 @@ class PmoItem < Ohm::Model
       price: item.price || 1,
       ori_price: item.public_price,
       quantity: 1,
+      item_id: item.id,
       max_executies: 1,
       shop_id: item.shop.id,
       shop_name: item.shop.title,
@@ -131,7 +133,10 @@ class PmoItem < Ohm::Model
   end
 
   def to_hash
-    super.merge(attributes)
+    super.merge(attributes.except(:start_at, :end_at).merge({
+      start_at: self.start_at,
+      end_at: self.end_at
+    }))
   end
 
   def self.find_or_create(item_id)

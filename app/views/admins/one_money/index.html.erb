@@ -1,1 +1,11 @@
+<h1 class="page-header">一元购
+  <div class="btn-toolbar pull-right" role="toolbar" aria-label="...">
+    <div class="btn-group" role="group" aria-label="...">
+      <%= link_to new_admins_one_money_path do %>
+        <%= icon :plus %>
+      <% end %>
+    </div>
+  </div>
+</h1>
+
 <%= simple_table_for @one_moneies, with: OneMoneyTable %>

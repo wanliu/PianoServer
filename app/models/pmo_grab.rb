@@ -63,7 +63,7 @@ class PmoGrab < Ohm::Model
   def self.from(pmo_item, one_money, user)
     new({
       user_id: user.user_id,
-      shop_item_id: pmo_item.id,
+      shop_item_id: pmo_item.item_id,
       title: pmo_item.title,
       price: pmo_item.price,
       quantity: pmo_item.quantity,
