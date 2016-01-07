@@ -147,6 +147,6 @@ class Order < ActiveRecord::Base
       return
     end
 
-    SmsSender.delay.send_sms({mobile: seller_mobile})
+    SmsSender.delay.send_sms({mobile: seller_mobile, order_id: id})
   end
 end
