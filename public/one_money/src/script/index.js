@@ -2,7 +2,7 @@ HIDE_ITEMS = true;
 
 $(function() {
   $('a.signup').click(function() {
-    $.get(window.signup_url + '?callback=' + window.authorized_callback_url);
+    location.href = window.signup_url + '?callback=' + window.authorized_callback_url;
   });
 
 
