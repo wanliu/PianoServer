@@ -5,7 +5,7 @@ GrabMachine.setup(user_method: :pmo_current_user)
 
 class Api::Promotions::OneMoneyController < Api::BaseController
   include FastUsers
-  skip_before_action :authenticate_user!, only: [:show, :item, :items, :status]
+  skip_before_action :authenticate_user!, only: [:show, :item, :items, :status, :item_status]
   skip_before_action :authenticate_user!, only: [:signup] unless Rails.env.production?
   skip_before_action :authenticate_user!, only: [:signup, :grab] if ENV['TEST_PERFORMANCE']
 
@@ -45,9 +45,17 @@ class Api::Promotions::OneMoneyController < Api::BaseController
   end
 
   def items
-    hash = @one_money.attributes
+    hash = {}
     @items = @one_money.items
-    render json: @items
+
+    if params[:u].present?
+      now = @one_money.now.to_f * 1000
+      hash[:td] = now - params[:u].to_i
+    end
+
+    hash[:items] = @items
+
+    render json: hash
   end
 
   def signup
