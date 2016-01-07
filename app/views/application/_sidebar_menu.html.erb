@@ -45,12 +45,16 @@
       <% if current_user.join_shop.shop_category.present? %>
         route = '<%= shop_admin_shop_category_path(current_user.join_shop.name, current_user.join_shop.shop_category.name) %>';
 
-        var title = '商品分类 ( ' + '<%= current_user.join_shop.shop_category.title %>' + ' )';
+        var title = '分类';
         menu.insertSection('shop', route, 'shop-category', title, { iconClass: 'glyphicon glyphicon-th-list' });
       <% end %>
 
       route = '<%= shop_admin_items_path(current_user.join_shop.name) %>';
       menu.insertSection('shop', route, 'goods', '商品', { iconClass: 'glyphicon glyphicon-list-alt'});
+
+      route = '<%= shop_admin_orders_path(current_user.join_shop.name) %>';
+      var sale_amount = <%= current_user.join_shop.orders.count %>;
+      menu.insertSection('shop', route, 'sale-orders', '销售订单', { iconClass: 'glyphicon glyphicon-export', has_quantity: true, quantity: sale_amount });
 
       route = '<%= shop_admin_settings_path(current_user.join_shop.name) %>';
       menu.insertSection('shop', route, 'settings', '设置', { iconClass: 'glyphicon glyphicon-cog' });

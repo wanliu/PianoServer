@@ -44,7 +44,7 @@
       <% if current_user.join_shop.shop_category.present? %>
         route = '<%= shop_admin_shop_category_path(current_user.join_shop.name, current_user.join_shop.shop_category.name) %>';
 
-        var title = '商品分类 ( ' + '<%= current_user.join_shop.shop_category.title %>' + ' )';
+        var title = '分类';
         menu.insertSection('shop', route, 'shop-category', title, { iconClass: 'glyphicon glyphicon-th-list' });
       <% end %>
 
