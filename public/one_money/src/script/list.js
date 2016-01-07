@@ -1,22 +1,35 @@
-$(function() {
-  var one_money_id = window.one_money_id || 1;
-  var beforeTime = new Date().getTime();
+var one_money_id = window.one_money_id || 1;
+var beforeTime = new Date().getTime();
 
+var params = getQueryParams();
+
+if (params['status']) {
   $.ajax({
-    url:'/api/promotions/one_money/'+ one_money_id +'/items?u='+ beforeTime,
-    success: function(res) {
-      var afterTime = new Date().getTime();
-      var td = Math.ceil(res.td + (afterTime - beforeTime) / 2);
-      res.items.map(function(itemData) {
-        new PromotionItem(itemData, td);
-      });
+    url: '/api/promotions/one_money/' + window.one_money_id + '/signup',
+    type: 'GET',
+    dataType: 'json',
+    success: function() {
     },
-    error: function (res){
-      console.log(res)
-      // $('body').append(err.responseText);
+    error: function() {
     }
   });
+}
+
+$.ajax({
+  url:'/api/promotions/one_money/'+ one_money_id +'/items?u='+ beforeTime,
+  success: function(res) {
+    var afterTime = new Date().getTime();
+    var td = Math.ceil(res.td + (afterTime - beforeTime) / 2);
+    res.items.map(function(itemData) {
+      new PromotionItem(itemData, td);
+    });
+  },
+  error: function (res){
+    console.log(res)
+    // $('body').append(err.responseText);
+  }
 });
+
 
 function PromotionItem(itemData, td) {
   var shouldJSONParseArr = ['avatar_urls', 'cover_urls', 'image_urls'];
@@ -70,7 +83,7 @@ PromotionItem.prototype = {
   },
   statusFlagTemplate: function(status) {
     var status = status || this.getStatus();
-    console.log(status)
+
     switch (status) {
       case 'wait':
         return '<span class="status wait">未开始</span>&emsp;库存:' + this.total_amount;
@@ -83,7 +96,7 @@ PromotionItem.prototype = {
 
       case 'started':
         return '<span class="status">抢购中</span>&emsp;库存:' + this.total_amount;
-    } 
+    }
   },
   template: function() {
     return '\

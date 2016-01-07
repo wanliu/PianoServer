@@ -1,29 +1,3 @@
-
-function getQueryParams() {
-  var search = location.search;
-  var href = location.href;
-  var hash;
-
-  if (search) {
-    hash = search.slice(1);
-  } else {
-    hash = href.split('?')[1];
-  }
-
-  var params = {};
-  var ary = hash.split('&');
-
-  for (var i=0; i<ary.length; i++) {
-    var entry = ary[i].split('=');
-    var key = entry[0];
-    var value = entry[1];
-
-    params[key] = value;
-  }
-
-  return params;
-}
-
 function parseResponseData(json) {
   var to_parsed_json_keys = [ 'avatar_urls', 'cover_urls', 'image_urls' ];
   var to_parsed_date_keys = [ 'start_at', 'end_at' ];

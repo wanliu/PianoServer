@@ -73,6 +73,13 @@ class AuthorizeController < ApplicationController
   end
 
   def after_sign_in_path(user)
+    if (session[:goto_one_money])
+      path = callback_url
+      clear_callback
+
+      return path
+    end
+
     return request.referer ? URI(request.referer).path : root_path unless Settings.weixin.after_sign_in
 
     if user.is_done?
