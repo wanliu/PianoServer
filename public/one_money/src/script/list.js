@@ -27,7 +27,7 @@ function PromotionItem(itemData, td) {
       data = JSON.parse(data);
     }
     if (shouldDateParseArr.indexOf(key) > -1) {
-      data = Date.parse(data) + td;
+      data = Date.parse(data) - td;
     }
     this[key] = data;
   }
