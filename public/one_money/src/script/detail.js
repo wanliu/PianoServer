@@ -35,7 +35,7 @@ function formatDate(time) {
 }
 
 var params = getQueryParams();
-var one_money_id = params['one_money_id'];
+var one_money_id = params['one_money_id'] || window.one_money_id;
 var item_id = params['id'];
 var url = ['/api/promotions/one_money/', one_money_id, '/items/', item_id].join('');
 var beforeAjaxTime = new Date().getTime();

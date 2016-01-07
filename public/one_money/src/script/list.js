@@ -83,6 +83,10 @@ PromotionItem.prototype = {
   },
   statusFlagTemplate: function(status) {
     var status = status || this.getStatus();
+    var completes = this.completes || 0;
+    var total_amount = this.total_amount;
+
+    total_amount -= completes;
 
     switch (status) {
       case 'wait':
