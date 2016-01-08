@@ -32,14 +32,14 @@ body
 
   .status-wrap
     .time
-      width auto
+      width 50%
       color #FF0
       font-weight 900
       font-size 13px
-      line-height 24px
+      line-height 14px
+      padding-left 5%
       display table-cell
       vertical-align middle
-      padding-left 20px
       
       .tow-dots
         font-size 30px
@@ -54,53 +54,37 @@ body
         margin 0 1px
 
     .price
-      width auto
+      width 50%
+      padding 0 10px
       display table-cell
       vertical-align middle
       &:after
         content ''
         clear both
         display block
-      .a, .b, .c, .d, .e 
-        float left
-        height 50px
-
-      .c 
-        width 100%
-        // width 60%
-        // bottom 18px
-        display table
-        position relative
-        .left 
-          color #FF0
-          font-size 30px
-          font-weight 900
-          text-align center
-          display table-cell
-          vertical-align middle
-        .right 
-          color #FFF
-          font-size 14px
-          display table-cell
-          vertical-align middle
-        .right .sold
-          text-align center 
-          background-color #D40428
-          color #FFF
-          border-radius 5px
-          padding 3px
-      // .a, .e 
-        // width 15%
-      .b 
-        // width 5%
-        // background-color #E7052A
-        // transform skewY(-46deg)
-        // transform-origin 0
-      .d 
-        // width 5%
-        // background-color #E7052A
-        // transform skewY(46deg)
-        // transform-origin 100%
+      .left 
+        color #FF0
+        font-size 30px
+        font-weight 900
+        text-align center
+        display table-cell
+        vertical-align middle
+        padding-right 10px
+        img
+          width 100%
+          display block
+      .right 
+        color #FFF
+        font-size 14px
+        display table-cell
+        vertical-align middle
+      .right .sold
+        white-space nowrap
+        text-align center 
+        background-color #D40428
+        color #FFF
+        border-radius 5px
+        padding 3px 8px
 
 .start-end
   width 100%
@@ -133,7 +117,8 @@ body
       position relative
       top 5px  
 
-.item-description 
+.item-description
+  width 100%
   display table
   padding 15px 0
   > div
@@ -189,15 +174,16 @@ body
   width 100%
   text-align center
   
+  > *
+    font-size 24px
+  
   .wait-text 
     background rgba(0, 0, 0, 0.5)
-    font-size 24px
     padding 10px 15px
     color #FFFFFF
 
   .always-text 
     background rgba(50, 180, 50, 0.9)
-    font-size 24px
     padding 10px 15px
     color #FFFFFF
 
@@ -210,7 +196,6 @@ body
     padding 10px 15px
     text-align center
     background #FF1138
-    font-size 24px
 
   .end-text, .sold-out 
     background #333333

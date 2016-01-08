@@ -1,6 +1,4 @@
-
-
-(function() {
+;(function() {
   if (!Function.prototype.bind) {
     Function.prototype.bind = function(oThis) {
       if (typeof this !== 'function') {
@@ -38,6 +36,7 @@
     };
 
     function CountDown(element, inventory, startTime, endTime, status, statusChangedCallback) {
+
       this.element = element;
       this.inventory = inventory;
       this.startTime = startTime;
@@ -103,11 +102,11 @@
 
     CountDown.prototype._countdownHandler = function() {
       var diffEnd, diffStart, duration, isEnd, isStarted, now, prefix;
-      now = new Date();
+      now = new Date().getTime();
       diffStart = this._diff(this.startTime, now);
       diffEnd = this._diff(now, this.endTime);
-      isStarted = (this.status === 'started' ? true : diffStart > 0);
-      isEnd = (this.status === 'started' && diffEnd < 0);
+      isStarted = this.status === 'started' ? true : diffStart > 0;
+      isEnd = ((this.status === 'started' || this.status === 'timing') && diffEnd < 0);
       prefix = null;
       duration = null;
 

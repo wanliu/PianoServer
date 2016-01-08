@@ -36,7 +36,7 @@
       $('.status-wrap .sold span').text(completes);
 
       var winners = res.winners || [];
-    
+
       if (winners.length) $('.users-list').append('<div class="title">幸运用户</div>');
       winners.map(function(winner) {
         new Winner(winner);
@@ -54,9 +54,7 @@ function Winner(data) {
 
 Winner.prototype = {
   template: function() {
-    return '\
-      <img src="'+ this.avatar_url +'"/>\
-    ';
+    return '<img src="'+ this.avatar_url || window.default_avatar +'"/>';
   },
   render: function() {
     $('.users-list').append(this.template());
