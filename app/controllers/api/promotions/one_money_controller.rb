@@ -61,7 +61,7 @@ class Api::Promotions::OneMoneyController < Api::BaseController
   def signup
     status = @one_money.signups.add(pmo_current_user)
     @one_money.save
-    render json: {user_id: pmo_current_user.id user_user_id: pmo_current_user.user_id, status: status > 0 ? "success" : "always" }
+    render json: {user_id: pmo_current_user.id, user_user_id: pmo_current_user.user_id, status: status > 0 ? "success" : "always" }
   end
 
   def status
@@ -226,7 +226,7 @@ class Api::Promotions::OneMoneyController < Api::BaseController
   end
 
   def pmo_current_user
-    @pmo_current_user ||= PmoUser.find(user_user_id: current_user[:id]).first
+    @pmo_current_user ||= PmoUser.find(user_id: current_user[:id]).first
 
     unless @pmo_current_user
       @pmo_current_user = PmoUser.create({
