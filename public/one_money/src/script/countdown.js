@@ -1,6 +1,4 @@
-
-
-(function() {
+;(function() {
   if (!Function.prototype.bind) {
     Function.prototype.bind = function(oThis) {
       if (typeof this !== 'function') {
