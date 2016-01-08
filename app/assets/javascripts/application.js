@@ -60,6 +60,7 @@
 //= require_tree ./carts
 //= require_tree ./orders
 //= require_tree ./promotions
+//= require_tree ./notify
 //= require_tree ./utils
 //= require_self
 
