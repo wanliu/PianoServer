@@ -61,12 +61,9 @@ class Admins::OneMoneyController < Admins::BaseController
     if @item.grabs.count == 0
       @item.delete
       @deleted = true
-      flash[:notice] = "活动商品已删除."
     else
       @deleted = false
-      flash[:error] = "已有用户抢购成功,不能删除."
     end
-    redirect_to action: :edit
   end
 
   def update_item
@@ -77,6 +74,16 @@ class Admins::OneMoneyController < Admins::BaseController
     respond_to do |format|
       format.json  { render json: @item }
     end
+  end
+
+  def set_item_completes
+    @item = PmoItem[params[:item_id].to_i]
+    new_completes = parmas[:pmo_item][:completes].to_i
+    diff = new_completes - @item.completes
+
+    @item.incr diff
+    @item.save
+    format.json  { render json: @item }
   end
 
   def state_item

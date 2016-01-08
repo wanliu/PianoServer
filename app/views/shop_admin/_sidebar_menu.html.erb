@@ -36,7 +36,7 @@
       menu.insertSection('profile', route, 'own_shop', '我的店铺', { iconClass: 'glyphicon glyphicon-home' });
 
       route = '<%= shop_admin_index_path(current_user.join_shop.name) %>';
-      menu.insertGroup(route, 'shop', '商店', { iconClass: 'glyphicon glyphicon-dashboard' });
+      menu.insertGroup(route, 'shop', '商店管理', { iconClass: 'glyphicon glyphicon-dashboard' });
 
       route = '<%= shop_admin_profile_path(current_user.join_shop.name) %>';
       menu.insertSection('shop', route, 'profile', '档案', { iconClass: 'glyphicon glyphicon-briefcase' });
@@ -44,7 +44,7 @@
       <% if current_user.join_shop.shop_category.present? %>
         route = '<%= shop_admin_shop_category_path(current_user.join_shop.name, current_user.join_shop.shop_category.name) %>';
 
-        var title = '商品分类 ( ' + '<%= current_user.join_shop.shop_category.title %>' + ' )';
+        var title = '分类';
         menu.insertSection('shop', route, 'shop-category', title, { iconClass: 'glyphicon glyphicon-th-list' });
       <% end %>
 
