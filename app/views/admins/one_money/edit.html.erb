@@ -1,0 +1,66 @@
+<%= render "form" %>
+<div class="signups">
+  <label for="">报名者 (<%= @one_money.signups.count %>)</label>
+  <div>
+    <% @one_money.signups.sort(by: :created_at, limit: [0, 25], order: 'desc').each do |user| %>
+      <%= image_tag user.avatar_url, size: "30x30" %>
+    <% end %>
+  </div>
+</div>
+
+<br />
+<div class="row">
+  <div class="col-xs-12">
+    <label for="">查找商品</label>
+
+    <% template = <<-HTML
+      <div class="media">
+        <div class="media-left">
+          <img class="media-object" src="{{ avatar_url }}" alt="{{text}}">
+        </div>
+        <div class="media-body">
+          <h4 class="media-heading">{{text}}</h4>
+          <p>
+            <span class="shop_name"> {{shop_name}}</span>
+            <span class="right-side pull-right">
+              <span class="price">价格 {{price}}</span>
+              <span class="inventory">库存 {{inventory}}</span>
+            </span>
+          </p>
+        </div>
+      </div>
+    HTML
+    %>
+    <% on_change = <<-JAVASCRIPT
+      function(e) {
+        var url = "#{admins_one_money_path(@one_money.id)}";
+        data = $(this).select2('data')[0];
+
+        $.ajax({
+          url: url + "/add_item/" + data.id,
+          type: 'PATCH',
+          dataType: 'script'
+        });
+      }
+    JAVASCRIPT
+    %>
+    <%= select2_url_template "one_money",
+        "query",
+        search_admins_one_money_index_path,
+        [],
+        placeholder: 'Item id | 店铺, 商品名  -- 例: 1113 | 宝宝贝贝, 贝因美',
+        template: template,
+        on_change: on_change,
+        class: 'form-control',
+        style: 'width: 100%' %>
+  </div>
+</div>
+
+<div class="items-container clearfix">
+  <%= render partial: "item", collection: @one_money.items.to_a %>
+</div>
+<script type="text/javascript">
+
+  $(".select2").width('100%');
+  $(".best_in_place").best_in_place();
+</script>

@@ -23,6 +23,7 @@ system:
 wanliu:
   backend: http://www.wanliu.biz/api/v1/
   pry_token: 87c87f8ef9699391e15202ca63cf1ebeb46314e04f2f6de002047c2f42ad57d936dc068888cb4e96c9be46b5bdb86de09fc5a00fce7092adf09f269d243af6c2
+  subject_touch_token: cd74c43ecffc326040f9a314cf9d2e4afc534855bbf7a3c10a8486013e114ae97e69982de938839b4c21dd83fc27d18d3e002abedfc2c29b946e6ede69ac00e3
 pusher:
   socket_host: www.wanliu.biz
   socket_port: 8000
@@ -34,7 +35,7 @@ elasticsearch:
 assets:
   host: http://wanliu-piano.b0.upaiyun.com
   gray_image: "data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
-  avatar_iamge: "http://wanliu-piano.b0.upaiyun.com/uploads/shop/logo/1/default_avatar.gif"
+  avatar_image: "http://wanliu-piano.b0.upaiyun.com/uploads/shop/logo/1/default_avatar.gif"
   alliance_hosts:
     - 'http://neil-img.b0.upaiyun.com/'
 shop:
@@ -105,3 +106,9 @@ weixin:
 chat:
   display_username: true
   display_shopname: true
+promotions:
+  lock_timeout: 200
+  one_money:
+    timeout:
+      minutes: 15
+    ensure_url: http://m.wanliu.com/api/promotions/one_money/:id/ensure/:grab_id

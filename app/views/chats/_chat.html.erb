@@ -59,7 +59,7 @@
         Chat          = window.Chat,
         userSocket    = window.userSocket,
         CombinationImages = window.CombinationImages,
-        greetings     = '<%= @greetings %>',
+        greetings     = '<%=j @greetings %>',
         chatChannelId,
         targetId;
 
@@ -96,12 +96,13 @@
       <% if @intention.present? %>
         realname = '<%= @intention.supplier.owner.username %>';
         greetingUserName = '<%= @intention.supplier.owner.nickname %>';
-        greetingShopName = '<%= @intention.supplier.name %>';
+        greetingShopName = '<%= @intention.supplier.title %>';
         greetingShopLogo = '<%= @intention.supplier.owner.avatar_url %>';
+
       <% elsif @shop.present? %>
         realname = '<%= @shop.owner.username %>';
         greetingUserName = '<%= @shop.owner.nickname %>';
-        greetingShopName = '<%= @shop.name %>';
+        greetingShopName = '<%= @shop.title %>';
         greetingShopLogo = '<%= @shop.owner.avatar_url %>';
       <% end %>
 

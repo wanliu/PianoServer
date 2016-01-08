@@ -204,6 +204,7 @@ class ApplicationController < ActionController::Base
     uri = URI.parse(url)
     query = Hash[URI.decode_www_form(uri.query || '')]
     uri.query = URI.encode_www_form(query.merge(callback: callback))
+
     redirect_to uri.to_s, options
   end
 

@@ -12,7 +12,9 @@ class Order < ActiveRecord::Base
 
   validates :supplier, presence: true
   validates :buyer, presence: true
-  validates :delivery_address, presence: true
+  validates :delivery_address, presence: true, unless: :pmo_grab_id
+  validates :pmo_grab_id, uniqueness: true, allow_nil: true
+  validates :one_money_id, presence: true, if: :pmo_grab_id
 
   validate :avoid_from_shop_owner
   validate :status_transfer, on: :update
@@ -60,6 +62,27 @@ class Order < ActiveRecord::Base
         items.each do |item|
           item.deduct_stocks!(operator)
         end
+      rescue ActiveRecord::RecordInvalid => e
+        raise ActiveRecord::Rollback
+        false
+      end
+    end
+  end
+
+  def save_with_pmo(operator)
+    self.transaction do
+      begin
+        save!
+
+        items.each do |item|
+          item.deduct_stocks!(operator)
+        end
+
+        pmo_grab = PmoGrab[pmo_grab_id]
+        unless pmo_grab.present? && pmo_grab.status == 'pending'
+          raise ActiveRecord::RecordInvalid, "PmoGrab timout"
+        end
+        pmo_grab.ensure!
       rescue ActiveRecord::RecordInvalid => e
         raise ActiveRecord::Rollback
         false

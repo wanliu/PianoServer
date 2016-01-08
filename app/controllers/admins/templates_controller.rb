@@ -35,7 +35,7 @@ class Admins::TemplatesController < Admins::BaseController
   end
 
   def show
-    @templates = combine @parent.templates, default_templates
+    @templates = combine(@parent.templates, default_templates).sort_by(&:id)
     @template = @templates.select { |tpl| tpl.filename == params[:id] } [0]
   end
 

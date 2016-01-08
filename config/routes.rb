@@ -24,6 +24,7 @@ Rails.application.routes.draw do
       get "categories", to: "industry#categories", as: :categories
     end
   end
+
   resources :regions, only: [ :index, :update ] do
     collection do
       post :set, as: :set
@@ -134,10 +135,26 @@ Rails.application.routes.draw do
     resources :promotions
     resources :subjects do
       concerns :templable, templable_type: 'Subject', parent_type: 'Subject'
+      collection do
+        post :touch_current
+      end
     end
     resources :messages
     resources :contacts
     resources :feedbacks
+    resources :one_money do
+      collection do
+        get :search
+      end
+      member do
+        put "state", action: :state, as: :state
+        patch "state_item/:item_id", action: :state_item, as: :state_item
+        patch "fix_clock/:item_id", action: :fix_clock, as: :fix_clock
+        patch "add_item/:item_id", action: :add_item, as: :add_item
+        put "update_item/:item_id", action: :update_item, as: :update_item
+        delete "remove_item/:item_id", action: :remove_item, as: :remove_item
+      end
+    end
     resources :attachments
     resources :industries do
       concerns :templable, templable_type: 'Industry', parent_type: 'Industry'
@@ -197,6 +214,23 @@ Rails.application.routes.draw do
     resources :user, only: [:index]
     get "suggestion", :to => "suggestion#index"
 
+    namespace :promotions do
+      resources :one_money, except: [:index, :create, :update, :destroy]  do
+        member do
+          get "items", action: :items
+          get "items/:item_id", action: :item
+          match "signup", action: :signup, via: Rails.env.production? ? [:put] : [:put, :get]
+
+          get "status", action: :status
+          get "status/:item_id", action: :item_status
+
+          match "grab/:item_id", action: :grab, via: Rails.env.production? ? [:put] : [:put, :get]
+
+          get "callback/:item_id", action: :callback
+          get "ensure/:grab_id", action: :ensure, via: Rails.env.production? ? [:put] : [:put, :get]
+        end
+      end
+    end
     # resources :business, concerns: :roomable do
     #   member do
     #     post :add_participant
@@ -244,6 +278,8 @@ Rails.application.routes.draw do
       post "buy_now_create"
       post "buy_now_confirm"
       get "history"
+      get "yiyuan_confirm"
+      post "yiyuan_confirm", to: 'orders#create_yiyuan'
     end
   end
 

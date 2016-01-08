@@ -4,10 +4,11 @@ default: &default
 
 development:
   <<: *default
-  host: localhost
+  host: 127.0.0.1
 test:
   <<: *default
   host: localhost
+  db: 4
 production:
   <<: *default
   host: <%= ENV['REDISDEV_PORT_6379_TCP_ADDR'] || ENV['REDISBETA_PORT_6379_TCP_ADDR'] || ENV['REDISDEVRC_PORT_6379_TCP_ADDR'] || 'localhost' %>

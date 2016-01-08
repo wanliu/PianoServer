@@ -31,4 +31,4 @@ node_modules
 .ruby-version
 .git-hooks/post_checkout/.read
 
-
+node_modules
