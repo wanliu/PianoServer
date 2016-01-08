@@ -25,6 +25,7 @@ config/email.yml
 /public/assets
 /public/uploads
 /public/deploy
+node_modules
 .gitver
 .powenv
 .ruby-version
