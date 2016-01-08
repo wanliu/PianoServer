@@ -52,10 +52,10 @@ PromotionItem.prototype = {
   getStatus: function() {
     var now = new Date().getTime();
     if (this.status != "timing") return this.status;
-    if (this.total_amount < 1)   return 'shortage';
+    if (this.total_amount < 1)   return 'suspend';
     if (now < this.start_at )    return 'wait';
-    if (now > this.end_at)       return 'expired';
-    return 'wait';
+    if (now > this.end_at)       return 'end';
+    return 'started';
   },
   changeStatus: function(status) {
     $('.promotion-item[name='+this.id+'] .status-wrap').html(this.statusFlagTemplate(status));
@@ -83,6 +83,10 @@ PromotionItem.prototype = {
   },
   statusFlagTemplate: function(status) {
     var status = status || this.getStatus();
+    var completes = this.completes || 0;
+    var total_amount = this.total_amount;
+
+    total_amount -= completes;
 
     switch (status) {
       case 'wait':
