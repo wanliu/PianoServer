@@ -32,14 +32,14 @@ body
 
   .status-wrap
     .time
-      width auto
+      width 50%
       color #FF0
       font-weight 900
       font-size 13px
       line-height 14px
+      padding-left 5%
       display table-cell
       vertical-align middle
-      width 50%
       
       .tow-dots
         font-size 30px
@@ -70,12 +70,16 @@ body
         display table-cell
         vertical-align middle
         padding-right 10px
+        img
+          width 100%
+          display block
       .right 
         color #FFF
         font-size 14px
         display table-cell
         vertical-align middle
       .right .sold
+        white-space nowrap
         text-align center 
         background-color #D40428
         color #FFF
@@ -170,15 +174,16 @@ body
   width 100%
   text-align center
   
+  > *
+    font-size 24px
+  
   .wait-text 
     background rgba(0, 0, 0, 0.5)
-    font-size 24px
     padding 10px 15px
     color #FFFFFF
 
   .always-text 
     background rgba(50, 180, 50, 0.9)
-    font-size 24px
     padding 10px 15px
     color #FFFFFF
 
@@ -191,7 +196,6 @@ body
     padding 10px 15px
     text-align center
     background #FF1138
-    font-size 24px
 
   .end-text, .sold-out 
     background #333333
