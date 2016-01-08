@@ -35,7 +35,7 @@
 
 .pmo-item {
   width: 212px;
-  height: 400px;
+  height: 425px;
   float: left;
   background-color: white;
   padding: 5px;
@@ -47,10 +47,24 @@
 
   .item-head {
     position: relative;
+
+    .close {
+      position: absolute;
+      right: 0;
+    }
+
+    .item-id {
+      position: absolute;
+      left: 0;
+    }
   }
 
   .item-body {
     position: relative;
+
+    .title {
+      max-height: 2.5em;
+    }
   }
   .item-image {
     width: 200px;
