@@ -172,7 +172,7 @@ class GrabMachine
     multi_item = one_money.multi_item
     case multi_item
     when nil, 0, 1
-      winner = one_money.winners.find(user_id: current_user.user_id).first
+      winner = one_money.winners.find(user_id: current_user.id).first
 
       if winner.present?
         status "always"
@@ -194,7 +194,7 @@ class GrabMachine
     multi_item = one_money.multi_item
 
     grabs = PmoGrab
-      .find(user_id: current_user.user_id, one_money: one_money.id)
+      .find(user_id: current_user.id, one_money: one_money.id)
       .combine(pmo_item_id: one_money.items.ids)
 
     grab_groups = grabs.group_by {|grab| grab.pmo_item_id }
@@ -217,7 +217,7 @@ class GrabMachine
 
     max_executies = [item.max_executies, 1].max
 
-    grabs = item.grabs.find user_id: current_user.user_id
+    grabs = item.grabs.find user_id: current_user.id
     always_executies = grabs.count
 
     if always_executies < max_executies # have executies

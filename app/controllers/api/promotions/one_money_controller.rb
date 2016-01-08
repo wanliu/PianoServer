@@ -61,7 +61,7 @@ class Api::Promotions::OneMoneyController < Api::BaseController
   def signup
     status = @one_money.signups.add(pmo_current_user)
     @one_money.save
-    render json: {user_id: pmo_current_user.id, status: status > 0 ? "success" : "always" }
+    render json: {user_id: pmo_current_user.id user_user_id: pmo_current_user.user_id, status: status > 0 ? "success" : "always" }
   end
 
   def status
@@ -157,7 +157,9 @@ class Api::Promotions::OneMoneyController < Api::BaseController
 
         render json: {
           winner: id,
-          user_id: pmo_current_user.user_id,
+          grab_id: @grab.id,
+          user_id: pmo_current_user.id,
+          user_user_id: pmo_current_user.user_id,
           item: params[:item_id],
           one_money: params[:id],
           callback_url: @grab.callback_url,
@@ -185,7 +187,7 @@ class Api::Promotions::OneMoneyController < Api::BaseController
     GrabMachine.run self, @one_money, @item do |status, context|
       case status
       when "always", "no-executies"
-        grabs = PmoGrab.find(pmo_item_id: @item.id, one_money: @one_money.id, user_id: pmo_current_user.user_id)
+        grabs = PmoGrab.find(pmo_item_id: @item.id, one_money: @one_money.id, user_id: pmo_current_user.id)
 
         hash ={
           status: status
@@ -224,7 +226,7 @@ class Api::Promotions::OneMoneyController < Api::BaseController
   end
 
   def pmo_current_user
-    @pmo_current_user ||= PmoUser.find(user_id: current_user[:id]).first
+    @pmo_current_user ||= PmoUser.find(user_user_id: current_user[:id]).first
 
     unless @pmo_current_user
       @pmo_current_user = PmoUser.create({

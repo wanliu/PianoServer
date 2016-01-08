@@ -60,6 +60,10 @@ class PmoGrab < Ohm::Model
           end
         end
       end
+
+      if self.pmo_item && self.pmo_item.grabs.find(user_id: user_id).count == 0
+        self.pmo_item.winners.delete(PmoUser.new(id: user_id))
+      end
     end
   end
 
@@ -69,7 +73,8 @@ class PmoGrab < Ohm::Model
 
   def self.from(pmo_item, one_money, user)
     new({
-      user_id: user.user_id,
+      user_id: user.id,
+      user_user_id: user.user_id,
       shop_item_id: pmo_item.item_id,
       title: pmo_item.title,
       price: pmo_item.price,
@@ -150,8 +155,5 @@ class PmoGrab < Ohm::Model
 
   def expired_time_out
     self.delete
-    if pmo_item && pmo_item.grabs.find(user_id: user_id).count == 0
-      pmo_item.winners.delete(PmoUser.new(id: user_id))
-    end
   end
 end
