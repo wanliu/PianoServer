@@ -54,6 +54,7 @@ module RedisSubscribeManager
       # pattern_names = "__keyspace@#{db}__:#{model}:*:__expires:*"
       pattern_names = "__key*__:*"
       psubscribe pattern_names do |channel, msg, status|
+        Rails.logger.info("on_message #{channel} #{msg} #{status}") if status == "expired"
 
         meth = lambda do |model_name, id, field|
           if status == "expired"
@@ -83,10 +84,13 @@ module RedisSubscribeManager
         begin
           self.redis = Redis.new(url: redis_url)
           @redis = self.redis
-          @redis.config("set", "notify-keyspace-events", "KEA")
-          Rails.logger.info "Subscribe #{pattern}"
-          @redis.psubscribe pattern do |on|
-            on.pmessage &block
+          if @redis.config("set", "notify-keyspace-events", "KEA")
+            Rails.logger.info "Subscribe #{pattern}"
+            @redis.psubscribe pattern do |on|
+              on.pmessage &block
+            end
+          else
+            Redis::BaseConnectionError.new('config is error')
           end
         rescue Redis::BaseConnectionError => error
           puts "#{error}, retrying in 1s"

@@ -49,7 +49,7 @@ class PmoGrab < Ohm::Model
 
   def before_delete
     if self.pmo_item && self.pmo_item.is_a?(PmoItem)
-      Rails.logger.debug "Decrement Completes + #{self.quantity}"
+      Rails.logger.debug "Decrement Completes - #{self.quantity}"
       self.pmo_item.decr :completes, self.quantity
 
       if self.pmo_item.completes < self.pmo_item.total_amount
@@ -150,5 +150,8 @@ class PmoGrab < Ohm::Model
 
   def expired_time_out
     self.delete
+    if pmo_item && pmo_item.grabs.find(user_id: user_id).count == 0
+      pmo_item.winners.delete(PmoUser.new(id: user_id))
+    end
   end
 end

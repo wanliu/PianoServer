@@ -76,6 +76,16 @@ class Admins::OneMoneyController < Admins::BaseController
     end
   end
 
+  def set_item_completes
+    @item = PmoItem[params[:item_id].to_i]
+    new_completes = parmas[:pmo_item][:completes].to_i
+    diff = new_completes - @item.completes
+
+    @item.incr diff
+    @item.save
+    format.json  { render json: @item }
+  end
+
   def state_item
     @item = PmoItem[params[:item_id].to_i]
     @item.set_status params[:status] if params[:status]
