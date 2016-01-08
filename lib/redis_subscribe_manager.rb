@@ -84,7 +84,7 @@ module RedisSubscribeManager
           self.redis = Redis.new(url: redis_url)
           @redis = self.redis
           @redis.config("set", "notify-keyspace-events", "KEA")
-          Rails.logger.debug "Subscribe #{pattern}"
+          Rails.logger.info "Subscribe #{pattern}"
           @redis.psubscribe pattern do |on|
             on.pmessage &block
           end
