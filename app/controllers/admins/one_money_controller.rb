@@ -61,12 +61,9 @@ class Admins::OneMoneyController < Admins::BaseController
     if @item.grabs.count == 0
       @item.delete
       @deleted = true
-      flash[:notice] = "活动商品已删除."
     else
       @deleted = false
-      flash[:error] = "已有用户抢购成功,不能删除."
     end
-    redirect_to action: :edit
   end
 
   def update_item
