@@ -165,11 +165,15 @@ class Api::Promotions::OneMoneyController < Api::BaseController
           status: "success"
         }
       else
+        case status
+        when "insufficient"
+          @item.set_status :suspend
+        end
+
         @one_money.participants.add(pmo_current_user)
         @one_money.save
         @item.participants.add(pmo_current_user)
         @item.save
-
         Rails.logger.debug "Status: #{status} context:#{context.result}" if ENV['TEST_PERFORMANCE']
         render json: context.result, status: context.code
       end

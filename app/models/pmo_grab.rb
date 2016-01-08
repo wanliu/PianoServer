@@ -51,6 +51,15 @@ class PmoGrab < Ohm::Model
     if self.pmo_item && self.pmo_item.is_a?(PmoItem)
       Rails.logger.debug "Decrement Completes + #{self.quantity}"
       self.pmo_item.decr :completes, self.quantity
+
+      if self.pmo_item.completes < self.pmo_item.total_amount
+        if self.pmo_item.status == "suspend"
+          if self.now < self.pmo_item.end_at
+            self.pmo_item.set_status "started"
+            self.pmo_item.save
+          end
+        end
+      end
     end
   end
 
