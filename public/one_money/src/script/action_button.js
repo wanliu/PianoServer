@@ -7,13 +7,11 @@
       if (Object.prototype.toString.call(classes) === '[object Array]') {
         classes = classes.join(' ');
       }
-
       var class_str = [ 'btn' ];
 
       if (classes !== undefined) {
         class_str.push(classes);
       }
-
       this.classes = class_str.join(' ');
     }
 

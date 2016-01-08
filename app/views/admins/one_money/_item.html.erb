@@ -2,6 +2,7 @@
   <div class="item-head">
     <%= close_to remove_item_admins_one_money_path(@one_money.id, item.id), remote: true, class: 'pull-right', method: :delete %>
     <span class="item-id"><%= item.id %></span>
+
     <%= image_tag item.cover_url, class: 'item-image' %>
     <p class="time-panel">
       <% unless item.start_at.blank? || item.end_at.blank? %>

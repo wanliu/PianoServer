@@ -35,7 +35,7 @@ function formatDate(time) {
 }
 
 var params = getQueryParams();
-var one_money_id = params['one_money_id'];
+var one_money_id = params['one_money_id'] || window.one_money_id;
 var item_id = params['id'];
 var url = ['/api/promotions/one_money/', one_money_id, '/items/', item_id].join('');
 var beforeAjaxTime = new Date().getTime();
@@ -68,7 +68,7 @@ $.ajax({
     var item_status = json['item_status'] || null;
     var element = $('.countdown-text');
 
-    new CountDown(element, +total_amount, start_at+diff, end_at+diff, status, function(current_state) {
+    new CountDown(element, +total_amount, start_at-diff, end_at-diff, status, function(current_state) {
       if (item_status === 'always' || item_status === 'no-executies') return;
 
       switch(current_state) {
