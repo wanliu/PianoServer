@@ -12,6 +12,7 @@ class PmoGrab < Ohm::Model
   include ExpiredEvents
 
   attribute :user_id
+  attribute :user_user_id
   attribute :shop_item_id
   attribute :title
   attribute :price
@@ -60,9 +61,20 @@ class PmoGrab < Ohm::Model
           end
         end
       end
+    end
+  end
 
-      if self.pmo_item && self.pmo_item.grabs.find(user_id: user_id).count == 0
-        self.pmo_item.winners.delete(PmoUser.new(id: user_id))
+  def after_delete
+    if self.pmo_item && self.pmo_item.grabs.find(user_id: user_id).count <= 0
+      # self.pmo_item.winners.delete(PmoUser.new(id: user_id))
+      if redis.call("SREM", "#{key}:winners", user_id)
+        Rails.logger.info "Remove winner user #{user_id}"
+        if PmoUser[user_id]
+          self.pmo_item.participants.add(PmoUser[user_id])
+          Rails.logger.info "Add participant user #{user_id} "
+        end
+      else
+        Rails.logger.info "Can't remove winner user #{user_id} in Item #{self.pmo_item.id}"
       end
     end
   end
