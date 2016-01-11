@@ -3,6 +3,10 @@
   <%= f.hidden_field :chat_id %>
   <%= f.hidden_field :intention_id %>
 
+  <% if callback_url.present? %>
+    <%= f.hidden_field :callback, value: callback_url, name: 'callback' %>
+  <% end %>
+
   <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
     <%= group_with_errors location, :contact, f, title: '姓名', layout: :normal, required: true do %>
       <%= text_field :location, :contact, class: 'form-control required', maxlength: 30 %>

@@ -6,7 +6,7 @@ class Location < ActiveRecord::Base
   belongs_to :region, foreign_key: :region_id, primary_key: :city_id
   has_one :shop
 
-  AMOUNT_LIMIT = 4
+  AMOUNT_LIMIT = 5
 
   VALID_PHONE_REGEX = /\A((\d{3,4}-\d{7,8}(-\d+)?)|((\+?86)?1\d{10}))\z/
   VALID_CONTACT_REGEX = /([\u4e00-\u9fa5]|[a-zA-Z0-9_]|[\uFF10-\uFF19])+/
@@ -28,12 +28,14 @@ class Location < ActiveRecord::Base
   validates :city_id, presence: true
   validates :region_id, presence: true
 
-  validate :too_many_record, unless: :skip_validation
+  validate :too_many_record, unless: Proc.new { |location|
+    location.skip_validation || location.skip_limit_validation
+  }
 
   after_commit :reset_user_default_address, on: :destroy
 
   attr_accessor :chat_id, :intention_id
-  attr_accessor :skip_validation
+  attr_accessor :skip_validation, :skip_limit_validation
 
   def to_s
     %(#{contact}, #{province_name}#{city_name}#{region_name}#{road}, #{contact_phone})

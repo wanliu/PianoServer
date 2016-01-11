@@ -20,13 +20,9 @@
   <div class="panel-footer">
     <div class='text-right'>
       <%= link_to "订单详情", order_path(order), class: 'btn btn-default' %>
-      <% if order.yiyuan_promotion? && !order.yiyuan_fullfilled? %>
-        <%= link_to "完善收货地址", yiyuan_address_order_path(order), class: "btn btn-success" %> 
-      <% elsif !order.finish? %>
-        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#finish-order-<%= order.id %>">
-          确认收货
-        </button>
-      <% end %>
+      <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#finish-order-<%= order.id %>">
+        确认收货
+      </button>
     </div>
 
     <% unless order.finish? %>
