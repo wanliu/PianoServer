@@ -3,6 +3,7 @@
     this.personChannelReady = false;
     this.anonymous = false;
     this.personCallbacks = [];
+    this.notifyCallbacks = [];
 
     this.eventListeners = [];
     this.emiters = [];
@@ -21,8 +22,21 @@
     this.personCallbacks.push(callback);
   }
 
+  UserSocket.prototype.onNotifyMessage = function(callback) {
+    this.notifyCallbacks.push(callback);
+  }
+
   UserSocket.prototype.offPersonMessage = function(callback) {
     var callbacks = this.personCallbacks,
+      index = callbacks.indexOf(callback);
+
+    if (index > -1) {
+      callbacks.splice(index, 1);
+    }
+  }
+
+  UserSocket.prototype.offNotifyMessage = function(callback) {
+    var callbacks = this.notifyCallbacks,
       index = callbacks.indexOf(callback);
 
     if (index > -1) {
@@ -139,9 +153,15 @@
 
     var personalChannel = socket.subscribe(this.userChannelId);
     personalChannel.watch(function(message) {
-      _this.personCallbacks.forEach(function(callback) {
-        callback(message);
-      })
+      if ('notify' == message.type) {
+        _this.notifyCallbacks.forEach(function(callback) {
+          callback(message);
+        })
+      } else {      
+        _this.personCallbacks.forEach(function(callback) {
+          callback(message);
+        })
+      }
     });
 
     this.eventListeners.forEach(function(args) {
