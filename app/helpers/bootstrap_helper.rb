@@ -42,7 +42,7 @@ module BootstrapHelper
       "aria-label" => "Close"
     }
 
-    button_to url, options, html_options.merge(default_html_options) do
+    link_to url, options.merge(default_html_options) do
       "<span aria-hidden=\"true\">&times;</span>".html_safe
     end
   end

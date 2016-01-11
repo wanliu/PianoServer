@@ -1,43 +1,43 @@
 <% url = @one_money.new? ? admins_one_money_index_path : admins_one_money_path(@one_money.id) %>
 
 <%= form_tag url, method: @one_money.new? ? :post : :put do %>
-  <div class="form-group">
-    <%= label_tag 'one_money_name', :name %>
-    <%= text_field 'one_money', :name, value: @one_money.name, class: 'form-control' %>
-  </div>
+  <!-- <div class="form-group"> -->
+    <%#= label_tag 'one_money_name', :name %>
+    <%#= text_field 'one_money', :name, value: @one_money.name, class: 'form-control' %>
+  <!-- </div> -->
 
   <div class="form-group">
-    <%= label_tag 'one_money_title', :title %>
+    <%= label_tag 'one_money_title', '标题' %>
     <%= text_field 'one_money', :title, value: @one_money.title, class: 'form-control' %>
   </div>
 
   <div class="form-group">
-    <%= label_tag 'one_money_description', :description %>
+    <%= label_tag 'one_money_description', '描述' %>
     <%= text_area 'one_money', :description, value: @one_money.description, class: 'form-control' %>
   </div>
 
   <div class="form-group">
-    <%= label_tag 'one_money_description', :multi_item %>
+    <%= label_tag 'one_money_description', '抢购商品种类' %>
     <%= text_field 'one_money', :multi_item, value: @one_money.multi_item, class: 'form-control' %>
   </div>
 
   <div class="form-group">
-    <%= label_tag 'one_money_description', :callback %>
-    <%= text_field 'one_money', :callback, value: @one_money.callback, class: 'form-control' %>
+    <%= label_tag 'one_money_description', '订单生成地址' %>
+    <%= text_field 'one_money', :callback, value: @one_money.callback || Settings.promotions.one_money.default_callback, class: 'form-control' %>
   </div>
 
-  <div class="form-group">
-    <%= label_tag 'one_money_auto_expire', :auto_expire %>
-    <%= check_box 'one_money', :auto_expire, value: @one_money.auto_expire %>
-  </div>
+  <!-- <div class="form-group">
+    <%#= label_tag 'one_money_auto_expire', :auto_expire %>
+    <%#= check_box 'one_money', :auto_expire, value: @one_money.auto_expire %>
+  </div> -->
 
   <div class="form-group">
-    <%= label_tag 'one_money_cover_url', :cover_url %>
+    <%= label_tag 'one_money_cover_url', '封面 url' %>
     <%= text_field 'one_money', :cover_url, value: @one_money.cover_url, class: 'form-control' %>
   </div>
 
   <div class="form-group">
-    <%= label_tag 'one_money_start_at', :start_at %>
+    <%= label_tag 'one_money_start_at', '开始时间'%>
     <div class="input-group date">
       <%= text_field 'one_money', :start_at, value: @one_money.start_at, class: 'form-control' %>
       <span class="input-group-addon">
@@ -47,7 +47,7 @@
   </div>
 
   <div class="form-group">
-    <%= label_tag 'one_money_end_at', :end_at %>
+    <%= label_tag 'one_money_end_at', '结束时间' %>
     <div class="input-group date">
       <%= text_field 'one_money', :end_at, value: @one_money.end_at, class: 'form-control' %>
       <span class="input-group-addon">
@@ -58,7 +58,7 @@
 
   <div class="form-group">
 
-    <%= submit_tag 'save', class: 'btn btn-primary' %>
+    <%= submit_tag '保存', class: 'btn btn-primary' %>
 
     <%= status_control @one_money unless @one_money.new? %>
   </div>
@@ -80,5 +80,14 @@
       }
     }
   });
+
+  // $("#one_money_start_at #one_money_end_at").change(function() {
+  //   var start_at = moment($("#one_money_start_at").val());
+  //   var end_at = moment($("#one_money_end_at").val());
+  //
+  //   if (start_at > end_at) {
+  //
+  //   }
+  // })
 
 </script>

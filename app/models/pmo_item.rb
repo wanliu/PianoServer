@@ -15,6 +15,7 @@ class PmoItem < Ohm::Model
   attribute :image_urls, Type::Array
   attribute :cover_urls, Type::Array
   attribute :avatar_urls, Type::Array
+  attribute :item_id, Type::Integer
 
   attribute :price, Type::Decimal
   attribute :quantity, Type::Integer
@@ -60,6 +61,7 @@ class PmoItem < Ohm::Model
       price: item.price || 1,
       ori_price: item.public_price,
       quantity: 1,
+      item_id: item.id,
       max_executies: 1,
       shop_id: item.shop.id,
       shop_name: item.shop.title,
@@ -131,7 +133,10 @@ class PmoItem < Ohm::Model
   end
 
   def to_hash
-    super.merge(attributes)
+    super.merge(attributes.except(:start_at, :end_at).merge({
+      start_at: self.start_at,
+      end_at: self.end_at
+    }))
   end
 
   def self.find_or_create(item_id)
@@ -159,30 +164,40 @@ class PmoItem < Ohm::Model
   def valid_status_messages
     msgs = {}
     time = self.now
-    if time < self.start_at
+    if self.status == "suspend"
+      if time > self.end_at
+        msgs["suspend_at"] = "已经结束"
+      else
+        msgs["suspend_at"] = true
+      end
+    elsif self.start_at.nil?
+      msgs["start_at"] = "未设置"
+    elsif self.end_at.nil?
+      msgs["end_at"] = "未设置"
+    elsif time < self.start_at
       if expire_running?(:start_at)
         msgs["start_at"] = true
       else
-        msgs["start_at"] = "计时器未开启"
+        msgs["start_at"] = "定时器未开启"
       end
     elsif self.start_at <= time and time <= self.end_at
       if self.status == "started"
         msgs["start_at"] = true
       else
-        msgs["start_at"] = "未启动"
+        msgs["start_at"] = "已超过启动时间"
       end
 
       if expire_running?(:end_at)
         msgs["end_at"] = true
       else
-        msgs["end_at"] = "计时器未开启"
+        msgs["end_at"] = "定时器未开启"
       end
     # elsif time > self.end_at
     else
       if self.status == "end"
         msgs["end_at"] = true
       else
-        msgs["end_at"] = "未启动"
+        msgs["end_at"] = "已超过结束时间"
       end
     end
     msgs

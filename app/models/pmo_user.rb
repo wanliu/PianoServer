@@ -1,5 +1,5 @@
 class PmoUser < Ohm::Model
-  ALIVE_TIMES = 50
+  ALIVE_TIMES = 180
   # TEMP_USER_ALIVE_TIMES =
 
   include Ohm::Timestamps
@@ -13,16 +13,16 @@ class PmoUser < Ohm::Model
   attribute :avatar_url
 
   attribute :title
-  attribute :user_id
+  attribute :user_id, Type::Integer
   attribute :sex
 
   index :user_id
 
   def after_create
-    if user_id < 0
+    if self.user_id < 0
       redis.call("EXPIRE", key, ALIVE_TIMES)
       redis.call("EXPIRE", "#{key}:_indices", ALIVE_TIMES)
-      redis.call("EXPIRE", "PmoUser:indices:user_id:#{user_id}", ALIVE_TIMES)
+      redis.call("EXPIRE", "PmoUser:indices:user_id:#{id}", ALIVE_TIMES)
     end
   end
 

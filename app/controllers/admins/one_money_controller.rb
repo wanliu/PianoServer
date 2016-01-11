@@ -58,7 +58,12 @@ class Admins::OneMoneyController < Admins::BaseController
 
   def remove_item
     @item = PmoItem[params[:item_id]]
-    @item.delete
+    if @item.grabs.count == 0
+      @item.delete
+      @deleted = true
+    else
+      @deleted = false
+    end
   end
 
   def update_item
@@ -69,6 +74,16 @@ class Admins::OneMoneyController < Admins::BaseController
     respond_to do |format|
       format.json  { render json: @item }
     end
+  end
+
+  def set_item_completes
+    @item = PmoItem[params[:item_id].to_i]
+    new_completes = parmas[:pmo_item][:completes].to_i
+    diff = new_completes - @item.completes
+
+    @item.incr diff
+    @item.save
+    format.json  { render json: @item }
   end
 
   def state_item

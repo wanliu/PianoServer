@@ -112,3 +112,4 @@ promotions:
     timeout:
       minutes: 15
     ensure_url: http://m.wanliu.com/api/promotions/one_money/:id/ensure/:grab_id
+    default_callback: http://m.wanliu.biz/orders/yiyuan_confirm

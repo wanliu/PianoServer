@@ -8,7 +8,7 @@ module Admins::OneMoneyHelper
       when "end"
         "danger"
       when "suspend"
-        "warring"
+        "warning"
       else
         "default"
       end
@@ -165,6 +165,7 @@ module Admins::OneMoneyHelper
     dict = {
       "start_at" => "开始时间",
       "end_at" => "结束时间",
+      "suspend_at" => "暂停时间"
     }
 
     unless item.valid_status?

@@ -1,6 +1,4 @@
-
-
-(function() {
+;(function() {
   if (!Function.prototype.bind) {
     Function.prototype.bind = function(oThis) {
       if (typeof this !== 'function') {
@@ -37,12 +35,22 @@
       SECOND: 1000
     };
 
-    function CountDown(element, inventory, startTime, endTime, statusChangedCallback) {
+    function CountDown(element, inventory, startTime, endTime, status, statusChangedCallback) {
+
       this.element = element;
       this.inventory = inventory;
       this.startTime = startTime;
       this.endTime = endTime;
+      this.status = status;
       this.statusChangedCallback = statusChangedCallback;
+
+      if (status === 'end') {
+        return this._showFinishText();
+      }
+
+      if (status === 'suspend') {
+        return this._showSuspendText();
+      }
 
       if (+inventory > 0) {
         this._addCountdownHandler();
@@ -94,11 +102,11 @@
 
     CountDown.prototype._countdownHandler = function() {
       var diffEnd, diffStart, duration, isEnd, isStarted, now, prefix;
-      now = new Date();
+      now = new Date().getTime();
       diffStart = this._diff(this.startTime, now);
       diffEnd = this._diff(now, this.endTime);
-      isStarted = diffStart > 0;
-      isEnd = diffEnd < 0;
+      isStarted = this.status === 'started' ? true : diffStart > 0;
+      isEnd = ((this.status === 'started' || this.status === 'timing') && diffEnd < 0);
       prefix = null;
       duration = null;
 
@@ -140,6 +148,27 @@
       }
     };
 
+    CountDown.prototype.getCurrentStatus = function() {
+      switch(this.status) {
+      case 'started':
+      case 'end':
+      case 'suspend':
+        return this.status;
+
+      default:
+        var now = new Date();
+        var diffStart = this._diff(this.startTime, now);
+        var diffEnd = this._diff(now, this.endTime);
+        var isStarted = diffStart > 0;
+        var isEnd = diffEnd < 0;
+
+        if (isStarted) return 'started';
+
+        if (isEnd) return 'end';
+
+      }
+    }
+
     CountDown.prototype._updateCountdownText = function(prefix, duration) {
       var text = this._formatShortTime(duration);
 
@@ -159,6 +188,12 @@
 
     CountDown.prototype._showFinishText = function() {
       this.$().html('活动已结束');
+
+      return this._applyClass('finished');
+    };
+
+    CountDown.prototype._showSuspendText = function() {
+      this.$().html('已售罄');
 
       return this._applyClass('finished');
     };
@@ -195,7 +230,7 @@
         return singleNunber.map(function(n) {
           return '<span class="time-number">'+ n +'</span>';
         }).join('');
-        
+
       });
 
       if (days == 0) return time.join(towDots);
