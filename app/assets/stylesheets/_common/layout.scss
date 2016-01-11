@@ -1,8 +1,8 @@
 $transition-time: 0.3s;
 
-html,body {
-  height: 100%;
+html{
   position: relative;
+  min-height: 100%;
 }
 
 body {
