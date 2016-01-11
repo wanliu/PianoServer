@@ -23,9 +23,6 @@ module CommonOrdersController
   # GET /orders/1
   # GET /orders/1.json
   def show
-    if @order.pmo_grab_id.present? && @order.delivery_address.blank?
-      redirect_to yiyuan_address_order_path(@order)
-    end
   end
 
   # POST /orders

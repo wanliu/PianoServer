@@ -1,29 +1,39 @@
 require 'digest/md5'
 
 class OrdersController < ApplicationController
+  include CommonOrdersController
+  include RedirectCallback
+
   before_action :authenticate_user!
-  before_action :set_order, only: [:show, :destroy, :update, :yiyuan_address, :bind_yiyuan_address]
+  before_action :set_order, only: [:show, :destroy, :update]
   before_action :check_for_mobile, only: [:index, :show, :history, :confirmation, :buy_now_confirm]
   before_action :set_yiyuan_item_params, only: :yiyuan_confirm
   before_action :set_yiyuan_order_params, only: :create_yiyuan
-
-  include CommonOrdersController
+  before_action :set_callback, only: [:yiyuan_address, :bind_yiyuan_address, :create_yiyuan]
 
   # caches_action :yiyuan_confirm, layout: false, cache_path: Proc.new do |request|
   #   { etag: Digest::MD5.hexdigest(request.params[:o]) }
   # end
 
   def yiyuan_confirm
-    @order = current_user.orders.build(one_money_id: @one_money_id, pmo_grab_id: @pmo_grab_id)
+    if params[:address_id].present?
+      @location = current_user.locations.find(params[:address_id])
 
-    @order_item = @order.items.build(@item_params)
+      @order = current_user.orders.build(one_money_id: @one_money_id, pmo_grab_id: @pmo_grab_id, address_id: @location.id)
 
-    @order.supplier_id = @order_item.orderable.try(:shop_id)
-    @order_item.title = @order_item.orderable.title
+      @order_item = @order.items.build(@item_params)
 
-    @supplier = @order.supplier
-    @total = @order_item.orderable_id * @order_item.quantity
-    @props = @order_item.properties
+      @order.supplier_id = @order_item.orderable.try(:shop_id)
+      @order_item.title = @order_item.orderable.title
+
+      @supplier = @order.supplier
+      @total = @order_item.orderable_id * @order_item.quantity
+      @props = @order_item.properties
+    elsif current_user.locations.present?
+      redirect_to chose_yiyuan_address_orders_path(callback: request.fullpath)
+    else
+      redirect_to new_yiyuan_address_orders_path(callback: request.fullpath)
+    end
   end
 
   def create_yiyuan
@@ -31,30 +41,27 @@ class OrdersController < ApplicationController
     @order_item = @order.items.build(@item_params)
 
     if @order.save_with_pmo(current_user)
-      if @order.delivery_address.present?
-        redirect_to @order
-      else
-        redirect_to yiyuan_address_order_path(@order)
-      end
+      redirect_to @order
+    elsif @order.errors.messages.present?
+      flash[:error] = @order.errors.full_messages.join(',')
+      redirect_to callback_url
     else
       render "orders/yiyuan_fail"
     end
   end
 
-  def yiyuan_address
-    if @order.delivery_address.blank?
-      @location = current_user.locations.build
-    else
-      redirect_to @order
-    end
+  def new_yiyuan_address
+    @location = current_user.locations.build
+  end
+
+  def chose_yiyuan_address
+    @locations = current_user.locations
   end
 
   def bind_yiyuan_address
     @location = current_user.locations.build(location_params)
     if @location.save
-      @order.address_id = @location.id
-      @order.save
-      redirect_to @order
+      redirect_to callback_url
     else
       render "orders/yiyuan_address"
     end
@@ -119,7 +126,7 @@ class OrdersController < ApplicationController
   end
 
   def order_params
-    params.require(:order).permit(:supplier_id, :pmo_grab_id, :one_money_id)
+    params.require(:order).permit(:supplier_id, :pmo_grab_id, :one_money_id, :address_id)
   end
 
   def location_params
