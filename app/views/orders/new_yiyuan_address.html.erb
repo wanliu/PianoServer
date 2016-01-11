@@ -15,7 +15,7 @@
       <%= f.hidden_field :region_id, value: '430481' %>
 
       <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
-        <%= group_with_errors @location, :road, f, title: '地址', layout: :normal, required: true do %>
+        <%= group_with_errors @location, :road, f, title: '街道地址', layout: :normal, required: true do %>
           <%= text_field :location, :road, class: 'form-control required' %>
         <% end %>
       </div>

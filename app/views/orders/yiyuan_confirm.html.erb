@@ -8,7 +8,7 @@
   <div>电 &nbsp;&nbsp;&nbsp;&nbsp; 话：<%= @order.receiver_phone %></div>
 </div>
 <div>
-  <%= link_to "管理收货地址", locations_path(callback: callback_url) %>
+  <%= link_to "修改收货地址", chose_yiyuan_address_orders_path(callback: callback_url) %>
 </div>
 
 <div class='yiyuan-confirm order-confirm-mobile'>

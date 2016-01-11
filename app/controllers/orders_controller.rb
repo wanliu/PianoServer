@@ -9,7 +9,7 @@ class OrdersController < ApplicationController
   before_action :check_for_mobile, only: [:index, :show, :history, :confirmation, :buy_now_confirm]
   before_action :set_yiyuan_item_params, only: :yiyuan_confirm
   before_action :set_yiyuan_order_params, only: :create_yiyuan
-  before_action :set_callback, only: [:yiyuan_address, :bind_yiyuan_address, :create_yiyuan]
+  before_action :set_callback, only: [:new_yiyuan_address, :chose_yiyuan_address, :bind_yiyuan_address, :create_yiyuan]
 
   # caches_action :yiyuan_confirm, layout: false, cache_path: Proc.new do |request|
   #   { etag: Digest::MD5.hexdigest(request.params[:o]) }
@@ -60,10 +60,12 @@ class OrdersController < ApplicationController
 
   def bind_yiyuan_address
     @location = current_user.locations.build(location_params)
+    @location.skip_limit_validation = true
+
     if @location.save
-      redirect_to callback_url
+      redirect_to callback_url + "&address_id=#{@location.id}"
     else
-      render "orders/yiyuan_address"
+      render "orders/new_yiyuan_address"
     end
   end
 

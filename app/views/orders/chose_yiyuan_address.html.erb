@@ -1,0 +1,44 @@
+<div class="congrat alert alert-success text-center" role="alert">
+  恭喜你，抢购成功！请选择收货地址
+</div>
+
+<ul class='locations list-group'>
+  <% @locations.each do |location| %>
+    <li class='list-group-item yiyuan-address-item' data-address-id='<%= location.id %>'>
+      <div class='contact'>
+        收货人：<%= location.contact %>
+      </div>
+      <div class='row'>
+        <div class='area col-xs-10'>
+          地址：<%= "#{location.province_name}#{location.city_name}#{location.region_name}#{location.road}" %>
+        </div>
+        <div class='col-xs-2'>
+          <span class='glyphicon glyphicon-menu-right'></span>
+        </div>
+      </div>
+      <div class='phone'>
+        电话：<%= location.contact_phone %>
+      </div>
+    </li>
+  <% end %>
+</ul>
+
+<div class='padding-text'>
+  <%= link_to "使用一个新的地址", new_yiyuan_address_orders_path(callback: callback_url) %>
+</div>
+<%#= link_to "管理我的收货地址", locations_path(callback: request.fullpath), class: 'pull-right' %>
+
+<script type="text/javascript">
+  $(document).on('ready page:load', function() {
+    $('.yiyuan-address-item').click(function (event) {
+      event.preventDefault();
+
+      var addressId = $(this).data('addressId');
+      var url = "<%= callback_url %>";
+
+      url += ('&address_id=' + addressId);
+      Turbolinks.visit(url);
+      // window.location.href = url;
+    })
+  })
+</script>
