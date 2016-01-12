@@ -1,0 +1,7 @@
+<div class="list-group">
+  <ul class="media-list">
+    <% @one_money.signups.each do |user| %>
+      <%= render :partial => "user", object: user %>
+    <% end %>
+  </ul>
+</div>

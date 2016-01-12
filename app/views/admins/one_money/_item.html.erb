@@ -50,6 +50,7 @@
       <% item.winners.take(5).each do |user| %>
         <%= image_tag user.avatar_url, size: "30x30", class: "slide-image", title: user.title %>
       <% end %>
+      <%= link_to_if item.winners.count > 5, '...', details_admins_one_money_path(@one_money.id, item.id) %>
     </p>
     <% end %>
     <% if item.participants.count > 0 %>

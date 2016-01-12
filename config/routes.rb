@@ -153,6 +153,9 @@ Rails.application.routes.draw do
         patch "add_item/:item_id", action: :add_item, as: :add_item
         put "update_item/:item_id", action: :update_item, as: :update_item
         delete "remove_item/:item_id", action: :remove_item, as: :remove_item
+
+        get :signups
+        get "details/:item_id", action: :details, as: :details
       end
     end
     resources :attachments
