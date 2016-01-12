@@ -71,12 +71,12 @@
 
       var data = e.params.args.data,
         id = data.id,
-        price = data.price,
-        inventory = data.inventory,
+        price = parseFloat(data.price),
+        inventory = parseInt(data.inventory),
         text = data.text;
 
 
-      if (!(price && price > 0)) {
+      if (!(price && price > 0) || (inventory && inventory > 0)) {
         return confirm(text + "商品库存或价格为零，确定需要添加进入活动？");
       } else {
         return true;
