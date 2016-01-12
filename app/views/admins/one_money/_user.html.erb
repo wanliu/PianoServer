@@ -1,0 +1,19 @@
+<li class="media">
+  <div class="media-left">
+    <%= image_tag user.avatar_url, size: "50x50", title: user.title %>
+  </div>
+  <div class="media-body">
+    <h4 class="media-heading">
+      <% if user.title.blank? %>
+        <%= "匿名用户" %>
+      <% else %>
+        <%= user.title %>
+      <% end %>
+    </h4>
+    <p>
+      <% if user.created_at %>
+      第一次参于时间 <%=l user.created_at, format: :long %>
+      <% end %>
+    </p>
+  </div>
+</li>
