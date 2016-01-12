@@ -7,7 +7,7 @@ class Api::Promotions::OneMoneyController < Api::BaseController
   include FastUsers
   skip_before_action :authenticate_user!, only: [:show, :item, :items, :status, :item_status]
   skip_before_action :authenticate_user!, only: [:signup] unless Rails.env.production?
-  skip_before_action :authenticate_user!, only: [:signup, :grab] if ENV['TEST_PERFORMANCE']
+  skip_before_action :authenticate_user!, only: [:signup, :grab, :callback] if ENV['TEST_PERFORMANCE']
 
   before_action :set_one_money #, except: [:, :update, :status, :item]
 
