@@ -13,6 +13,11 @@ class Api::Promotions::OneMoneyController < Api::BaseController
 
   def show
     hash = @one_money.to_hash
+    now = @one_money.now.to_f * 1000
+
+    if params[:u].present?
+      hash[:td] = now - params[:u].to_i
+    end
     hash[:items] = @one_money.items.map {|item| {id: item.id, title: item.title, status: item.status }}
     render json: hash
   end
