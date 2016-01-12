@@ -17,6 +17,7 @@ class PmoUser < Ohm::Model
   attribute :sex
 
   index :user_id
+  index :title
 
   def after_create
     if self.user_id < 0

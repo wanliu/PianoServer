@@ -21,7 +21,7 @@
     </p>
 
     <p class="from"><%=b item, :shop_name %></p>
-    <p class="status">
+    <p class="status" item-status="<%= item.status %>">
       <%= status_label item.status %><%= warning_with_status item %>
       <%= link_to fix_clock_admins_one_money_path(@one_money.id, item.id), class: "btn btn-link", method: :patch, remote: true do  %>
         <%= icon :wrench unless item.valid_status? %>
@@ -48,8 +48,9 @@
     <p class="winners">
       <span class="pull-right winners-count "><%= item.winners.count %></span>
       <% item.winners.take(5).each do |user| %>
-        <%= image_tag user.avatar_url, size: "30x30", class: "slide-image" %>
+        <%= image_tag user.avatar_url, size: "30x30", class: "slide-image", title: user.title %>
       <% end %>
+      <%= link_to_if item.winners.count > 5, '...', details_admins_one_money_path(@one_money.id, item.id) %>
     </p>
     <% end %>
     <% if item.participants.count > 0 %>

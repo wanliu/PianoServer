@@ -22,8 +22,13 @@
   </div>
 
   <div class="form-group">
+    <%= label_tag 'one_money_fare', '运费' %>
+    <%= text_field 'one_money', :fare, value: @one_money.fare || Settings.promotions.one_money.default.fare, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
     <%= label_tag 'one_money_description', '订单生成地址' %>
-    <%= text_field 'one_money', :callback, value: @one_money.callback || Settings.promotions.one_money.default_callback, class: 'form-control' %>
+    <%= text_field 'one_money', :callback, value: @one_money.callback || Settings.promotions.one_money.default.callback, class: 'form-control' %>
   </div>
 
   <!-- <div class="form-group">

@@ -40,9 +40,13 @@ module Admins::OneMoneyHelper
       state_item_admins_one_money_path(@one_money.id, item.id, status: status)
     end
 
-    btn = proc do |icon, status, options |
+    btn = proc do |icon, status, options = {} |
+      disabled = options[:disabled]
+
+      classes = %w(btn btn-default btn-xs)
+      classes.push "disabled" if disabled
       default_options = {
-        class: 'btn btn-default btn-xs',
+        class: classes,
         remote: true,
         method: 'patch'
       }
@@ -57,23 +61,28 @@ module Admins::OneMoneyHelper
       when nil, "", 'invalid'
         btn.call(:play, :started) +
         btn.call(:pause, :suspend, disabled: true) +
-        btn.call(:stop, :end, disabled: true)
+        btn.call(:stop, :end, disabled: true) +
+        btn.call(:record, :timing, disabled: true)
       when "started"
         btn.call(:play, :started, disabled: true) +
         btn.call(:pause, :suspend) +
-        btn.call(:stop, :end)
+        btn.call(:stop, :end) +
+        btn.call(:record, :timing, disabled: true)
       when "suspend"
         btn.call(:play, :started) +
         btn.call(:pause, :suspend, disabled: true) +
-        btn.call(:stop, :end)
+        btn.call(:stop, :end) +
+        btn.call(:record, :timing, disabled: true)
       when "end"
         btn.call(:play, :started) +
         btn.call(:pause, :suspend, disabled: true) +
-        btn.call(:stop, :end, disabled: true)
+        btn.call(:stop, :end, disabled: true) +
+        btn.call(:record, :timing, disabled: false)
       when "timing"
         btn.call(:play, :started) +
         btn.call(:pause, :suspend, disabled: true) +
-        btn.call(:stop, :end, disabled: true)
+        btn.call(:stop, :end, disabled: true) +
+        btn.call(:record, :timing, disabled: true)
       end
     end
   end

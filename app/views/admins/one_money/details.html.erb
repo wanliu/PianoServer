@@ -1,0 +1,21 @@
+<h1 class="page-header">一元购 <%= @one_money.title %>
+</h1>
+
+<h3><%= @item.title %> <small>(<%=@item.completes %>/<%= @item.total_amount%>)</small></h3>
+<p class="lead">幸运用户 <%= @item.winners.count %></p>
+<div class="list-group">
+  <ul class="media-list">
+    <% @item.winners.each do |user| %>
+      <%= render :partial => "user", object: user %>
+    <% end %>
+  </ul>
+</div>
+
+<p class="lead">参于用户 <%= @item.participants.count %></p>
+<div class="list-group">
+  <ul class="media-list">
+    <% @item.participants.each do |user| %>
+      <%= render :partial => "user", object: user %>
+    <% end %>
+  </ul>
+</div>
