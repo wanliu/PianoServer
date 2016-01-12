@@ -13,7 +13,7 @@ class Order < ActiveRecord::Base
   validates :supplier, presence: true
   validates :buyer, presence: true
   validates :delivery_address, presence: true
-  validates :pmo_grab_id, uniqueness: { scope: :buyer_id }, allow_nil: true
+  validates :pmo_grab_id, uniqueness: true, allow_nil: true
   validates :one_money_id, presence: true, if: :pmo_grab_id
 
   validate :avoid_from_shop_owner
