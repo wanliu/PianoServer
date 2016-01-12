@@ -12,6 +12,7 @@ class OneMoney < Ohm::Model
   attribute :start_at, OhmTime::ISO8601
   attribute :end_at, OhmTime::ISO8601
   attribute :suspend_at, OhmTime::ISO8601
+  attribute :fare, Type::Decimal
   attribute :multi_item, Type::Integer   # 可以抢多种商品设置
   attribute :auto_expire, Type::Boolean  # 自动同步记时器
   attribute :callback
@@ -67,7 +68,7 @@ class OneMoney < Ohm::Model
         item.set_expire_time(:start_at, self.start_at.to_i)
         Rails.logger.info "Set start_at Expire Time #{self.start_at}" if self.start_at && self.now < self.start_at
         item.set_expire_time(:end_at, self.end_at.to_i)
-        Rails.logger.info "Set end_at Expire Time #{self.end_at}" if self.end_at && self.now < self.end_at  
+        Rails.logger.info "Set end_at Expire Time #{self.end_at}" if self.end_at && self.now < self.end_at
       end
     end
   end

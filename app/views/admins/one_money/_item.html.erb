@@ -48,7 +48,7 @@
     <p class="winners">
       <span class="pull-right winners-count "><%= item.winners.count %></span>
       <% item.winners.take(5).each do |user| %>
-        <%= image_tag user.avatar_url, size: "30x30", class: "slide-image" %>
+        <%= image_tag user.avatar_url, size: "30x30", class: "slide-image", title: user.title %>
       <% end %>
     </p>
     <% end %>
