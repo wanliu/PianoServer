@@ -50,6 +50,7 @@
 //= require_tree ./admins
 //= require_tree ./utils
 //= require_tree ./shop
+//= require_tree ./notify
 //= require_self
 
 dataConfirmModal.setDefaults({

@@ -24,6 +24,20 @@ module MessageSystemService
     send('messages', msg )
   end
 
+  def push_notification(target_id, content, options = {})
+    type = 'notify'
+    to = options[:to] || [target_id]
+
+    msg = {
+      targetId: target_id,
+      content: content,
+      type: type,
+      to: to.to_json,
+    }
+
+    send('notifications', msg )
+  end
+
   # 向用户发送命令
   def push_command(author_id, target_id, cmd)
     msg = {

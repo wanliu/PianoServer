@@ -14,7 +14,7 @@ module RedirectCallback
 
   def set_callback
     session[:callback] = params[:callback] or (request.referer &&  URI(request.referer).path)
-    session[:goto_one_money] = params[:callback] == 'true'
+    session[:goto_one_money] = params[:goto_one_money] == 'true'
   end
 
   def clear_callback

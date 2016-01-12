@@ -24,6 +24,8 @@ class Order < ActiveRecord::Base
   before_save :set_modified, if: :total_changed?
   before_create :caculate_total
 
+  after_commit :send_notify_to_seller, on: :create
+
   paginates_per 5
 
   # create new order_items
@@ -136,5 +138,18 @@ class Order < ActiveRecord::Base
     if items.blank?
       errors.add(:base, "订单中没有商品，无法创建订单")
     end
+  end
+
+  def send_notify_to_seller
+    seller_mobile = supplier.try(:owner).try(:mobile)
+    seller_id = supplier.try(:owner).try(:id)
+
+    unless persisted? && Settings.promotions.one_money.sms_to_supplier && pmo_grab_id && seller_mobile
+      return
+    end
+
+    order_url = Rails.application.routes.url_helpers.shop_admin_order_path(supplier.name, self)
+    # NotificationSender.delay.send_sms({mobile: seller_mobile, order_id: id, order_url: order_url, seller_id: seller_id})
+    NotificationSender.delay.notify({mobile: seller_mobile, order_id: id, order_url: order_url, seller_id: seller_id})
   end
 end
