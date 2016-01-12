@@ -105,10 +105,9 @@ class PmoItem < Ohm::Model
   # end
 
   def status_with_timing
-    if status_without_timing.blank? or
-       status_without_timing  == "invalid" or
-       status_without_timing == "timing"
-
+    _status = status_without_timing
+    case _status
+    when nil, "", "invalid", "timing"
       if start_at && end_at
         if self.now >= start_at
           "started"
@@ -122,8 +121,14 @@ class PmoItem < Ohm::Model
       else
         "invalid"
       end
+    when "started", "suspend"
+      if self.now >= end_at
+        "end"
+      else
+        _status
+      end
     else
-      status_without_timing
+      _status
     end
   end
 
@@ -243,6 +248,8 @@ class PmoItem < Ohm::Model
 
   alias_method_chain :start_at, :fallback
   alias_method_chain :end_at, :fallback
+  alias_method_chain :status, :timing
+
   protected
 
   def self.redis_url
