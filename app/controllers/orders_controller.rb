@@ -42,11 +42,11 @@ class OrdersController < ApplicationController
 
     if @order.save_with_pmo(current_user)
       redirect_to @order
-    elsif @order.errors.messages.present?
-      flash[:error] = @order.errors.full_messages.join(',')
-      redirect_to callback_url
+    # elsif @order.errors.messages.present?
+    #   flash[:error] = @order.errors.full_messages.join(',')
+    #   redirect_to callback_url
     else
-      render "orders/yiyuan_fail"
+      render "orders/yiyuan_fail", status: :unprocessable_entity
     end
   end
 
