@@ -76,10 +76,10 @@
         text = data.text;
 
 
-      if (!(price && price > 0) || (inventory && inventory > 0)) {
-        return confirm(text + "商品库存或价格为零，确定需要添加进入活动？");
-      } else {
+      if (price > 0 && inventory > 0) {
         return true;
+      } else {
+        return confirm(text + "商品库存或价格为零，确定需要添加进入活动？");
       }
     } catch(e) {
       alert('因为错误，这个商品没办法添加进来');
