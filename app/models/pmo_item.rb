@@ -132,6 +132,24 @@ class PmoItem < Ohm::Model
     end
   end
 
+
+  def status_with_inventory
+    _now =  self.now
+    if self.start_at && self.end_at
+      if _now > self.start_at && _now < self.end_at
+        if completes >= total_amount
+          "suspend"
+        else
+          status_without_inventory
+        end
+      else
+        status_without_inventory
+      end
+    else
+      status_without_inventory
+    end
+  end
+
   def set_status(state)
     self.suspend_at = self.now if state.to_s == "suspend"
     self.status = state
@@ -249,7 +267,8 @@ class PmoItem < Ohm::Model
   alias_method_chain :start_at, :fallback
   alias_method_chain :end_at, :fallback
   alias_method_chain :status, :timing
-
+  alias_method_chain :status, :inventory
+  
   protected
 
   def self.redis_url
