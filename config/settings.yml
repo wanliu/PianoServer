@@ -112,6 +112,7 @@ promotions:
     timeout:
       minutes: 15
     ensure_url: http://m.wanliu.com/api/promotions/one_money/:id/ensure/:grab_id
+    discharge_express_fee_on: 64
     default:
       callback: http://m.wanliu.biz/orders/yiyuan_confirm
       fare: 10

@@ -19,9 +19,10 @@ class OrdersController < ApplicationController
     if params[:address_id].present?
       @location = current_user.locations.find(params[:address_id])
 
-      @order = current_user.orders.build(one_money_id: @one_money_id, pmo_grab_id: @pmo_grab_id, address_id: @location.id)
+      @order = current_user.orders.build one_money_id: @one_money_id, pmo_grab_id: @pmo_grab_id, address_id: @location.id
 
       @order_item = @order.items.build(@item_params)
+      @order.express_fee = @order.get_pmo_express_fee
 
       @order.supplier_id = @order_item.orderable.try(:shop_id)
       @order_item.title = @order_item.orderable.title
@@ -81,10 +82,12 @@ class OrdersController < ApplicationController
     @pmo_grab_id = options[:id]
     @one_money_id = options[:one_money]
     pmo_grab = PmoGrab[@pmo_grab_id]
-    if pmo_grab.blank?
+    one_money = OneMoney[@one_money_id]
+    if pmo_grab.blank? || one_money.blank?
       render "orders/yiyuan/timeout", status: :unprocessable_entity
       return
     end
+    # @express_fee = one_money.fare || 0
 
     user_id = options[:user_user_id].to_i
 

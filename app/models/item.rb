@@ -207,13 +207,15 @@ class Item < ActiveRecord::Base
       return false
     end
 
+    stock = (current_stock || 0)
+
     if props.present?
       props_stock = stocks.find { |item| item.data == props }.try(:quantity).to_f
       yield true, props_stock >= amount, props_stock if block_given?
       props_stock >= amount
     else
-      yield true, current_stock >= amount, current_stock if block_given?
-      current_stock >= amount
+      yield true, stock >= amount, stock if block_given?
+      stock >= amount
     end
   end
 
