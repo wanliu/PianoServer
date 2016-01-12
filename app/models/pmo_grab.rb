@@ -36,7 +36,7 @@ class PmoGrab < Ohm::Model
   index :pmo_item_id
   index :one_money
 
-  def before_save
+  def before_create
     self.time_out = Settings.promotions.one_money.timeout.minutes.minutes
     self.timeout_at = self.now + self.time_out
     self.status = "pending"
