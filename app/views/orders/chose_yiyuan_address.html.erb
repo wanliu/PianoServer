@@ -5,7 +5,22 @@
 <ul class='locations list-group'>
   <% @locations.each do |location| %>
     <li class='list-group-item yiyuan-address-item' data-address-id='<%= location.id %>'>
-      <div class='contact'>
+      <div class='yiyuan-confirm-location'>
+        <div class='location-detail'>
+          <div class='contact'>
+            <span class='contact'><%= location.contact %></span>
+            <span class='contact-phone'><%= location.contact_phone %></span>
+          </div>
+          <div class='address-detail'>
+            <%= "#{location.province_name}#{location.city_name}#{location.region_name}#{location.road}" %>
+          </div>
+        </div>
+
+        <div class='array'>
+          <span class='glyphicon glyphicon-menu-right glyphicon-next'></span>
+        </div>
+      </div>
+      <!-- <div class='contact'>
         收货人：<%= location.contact %>
       </div>
       <div class='row'>
@@ -13,12 +28,12 @@
           地址：<%= "#{location.province_name}#{location.city_name}#{location.region_name}#{location.road}" %>
         </div>
         <div class='col-xs-2'>
-          <span class='glyphicon glyphicon-menu-right'></span>
+          <span class='glyphicon glyphicon-menu-right glyphicon-next'></span>
         </div>
       </div>
       <div class='phone'>
         电话：<%= location.contact_phone %>
-      </div>
+      </div> -->
     </li>
   <% end %>
 </ul>
