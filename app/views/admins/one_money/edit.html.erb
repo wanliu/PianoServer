@@ -1,6 +1,8 @@
 <%= render "form" %>
 <div class="signups">
+  <%= link_to action: :signups do %>
   <label for="">报名者 (<%= @one_money.signups.count %>)</label>
+  <% end %>
   <div>
     <% @one_money.signups.sort(by: :created_at, limit: [0, 25], order: 'desc').each do |user| %>
       <%= image_tag user.avatar_url, size: "30x30", title: user.title %>
