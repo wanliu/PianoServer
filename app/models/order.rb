@@ -73,11 +73,13 @@ class Order < ActiveRecord::Base
     self.transaction do
       begin
         pmo_grab = PmoGrab[pmo_grab_id]
-        unless pmo_grab.present? && pmo_grab.status == 'pending'
+        one_money = OneMoney[one_money_id]
+
+        unless pmo_grab.present? && one_money.present? && pmo_grab.status == 'pending'
           raise ActiveRecord::RecordInvalid, "PmoGrab timout"
         end
 
-        self.express_fee = 10
+        self.express_fee = get_pmo_express_fee
         save!
 
         items.each do |item|
@@ -104,11 +106,28 @@ class Order < ActiveRecord::Base
     delivery_address.present?
   end
 
+  def get_pmo_express_fee
+    one_money = OneMoney[one_money_id]
+
+    return 0 if one_money.blank?
+
+    discharge_express_fee_on = Settings.promotions.one_money.discharge_express_fee_on
+
+    if discharge_express_fee_on.present? && items_total >= discharge_express_fee_on
+      0
+    else
+      one_money.fare || 0
+    end
+  end
+
   private
 
   def caculate_total
-    item_total = items.reduce(0) { |total, item| total += item.price * item.quantity }
-    self.origin_total = self.total = item_total + (express_fee || 0)
+    self.origin_total = self.total = items_total + (express_fee || 0)
+  end
+
+  def items_total
+    items.reduce(0) { |total, item| total += item.price * item.quantity }
   end
 
   def avoid_from_shop_owner

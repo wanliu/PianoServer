@@ -172,7 +172,7 @@ class GrabMachine
     multi_item = one_money.multi_item
     case multi_item
     when nil, 0, 1
-      winner = one_money.winners.find(user_id: current_user.id).first
+      winner = one_money.winners.find(user_id: current_user.user_id).first
 
       if winner.present?
         status "always"
