@@ -42,11 +42,8 @@ class OrdersController < ApplicationController
 
     if @order.save_with_pmo(current_user)
       redirect_to @order
-    # elsif @order.errors.messages.present?
-    #   flash[:error] = @order.errors.full_messages.join(',')
-    #   redirect_to callback_url
     else
-      render "orders/yiyuan_fail", status: :unprocessable_entity
+      render "orders/yiyuan/fail", status: :unprocessable_entity
     end
   end
 
@@ -76,11 +73,17 @@ class OrdersController < ApplicationController
 
     options = JSON.parse(decode_yiyuan_params(params[:i])).deep_symbolize_keys
 
+    if current_user.orders.exists?(pmo_grab_id: options[:id])
+      render "orders/yiyuan/bought", status: :unprocessable_entity
+      return
+    end
+
     @pmo_grab_id = options[:id]
     @one_money_id = options[:one_money]
     pmo_grab = PmoGrab[@pmo_grab_id]
     if pmo_grab.blank?
-      # Todo with invlid parms
+      render "orders/yiyuan/timeout", status: :unprocessable_entity
+      return
     end
 
     user_id = options[:user_user_id].to_i
