@@ -14,6 +14,14 @@ class Admins::OneMoneyController < Admins::BaseController
     redirect_to action: :index
   end
 
+  def signups
+    # @one_money = OneMoney
+  end
+
+  def details
+    @item = PmoItem[params[:item_id].to_i]
+  end
+
   def show
     # @item = PmoItem[params[:item_id]]
     redirect_to edit_admins_one_money_path(@one_money.id)
@@ -74,6 +82,16 @@ class Admins::OneMoneyController < Admins::BaseController
     respond_to do |format|
       format.json  { render json: @item }
     end
+  end
+
+  def set_item_completes
+    @item = PmoItem[params[:item_id].to_i]
+    new_completes = parmas[:pmo_item][:completes].to_i
+    diff = new_completes - @item.completes
+
+    @item.incr diff
+    @item.save
+    format.json  { render json: @item }
   end
 
   def state_item

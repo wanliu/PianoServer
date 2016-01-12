@@ -1,7 +1,8 @@
 <div class="pmo-item" pmo-item="<%= item.id %>" >
   <div class="item-head">
     <%= close_to remove_item_admins_one_money_path(@one_money.id, item.id), remote: true, class: 'pull-right', method: :delete %>
-    <span class="pull-left"><%= item.id %></span>
+    <span class="item-id"><%= item.id %></span>
+
     <%= image_tag item.cover_url, class: 'item-image' %>
     <p class="time-panel">
       <% unless item.start_at.blank? || item.end_at.blank? %>
@@ -20,7 +21,7 @@
     </p>
 
     <p class="from"><%=b item, :shop_name %></p>
-    <p class="status">
+    <p class="status" item-status="<%= item.status %>">
       <%= status_label item.status %><%= warning_with_status item %>
       <%= link_to fix_clock_admins_one_money_path(@one_money.id, item.id), class: "btn btn-link", method: :patch, remote: true do  %>
         <%= icon :wrench unless item.valid_status? %>
@@ -28,26 +29,38 @@
       <%= status_control item %>
     </p>
     <p class="processes">
-      <%=b item, :completes, title: '完成量' %> x <%= b item, :quantity, title: '一次单位数量' %> <%#=b item, :completes, title: '完成量' %>/<%=b item, :total_amount, title: '活动总量' %><%= warning_with item.quantity <= 0 || item.total_amount <= 0 %>
-    </p>
-    <p class="time">
-      <%= time_prompt(item) do |flag, time_str, seconds| %>
-        <% content_tag :span, class: 'time_counter', flag: flag, tick: seconds do %>
-          <%= time_str %>
+      <span class="processage"
+        <%=b item, :completes, title: '完成量' %> x <%= b item, :quantity, title: '一次单位数量' %> <%#=b item, :completes, title: '完成量' %>/<%=b item, :total_amount, title: '活动总量' %><%= warning_with item.quantity <= 0 || item.total_amount <= 0 %>
+      </span>
+      <span class="time pull-right">
+        <%= time_prompt(item) do |flag, time_str, seconds| %>
+          <% content_tag :span, class: 'time_counter', flag: flag, tick: seconds do %>
+            <%= time_str %>
+          <% end %>
         <% end %>
-      <% end %>
+
+      </span>
     </p>
-    <p class="participants">
-      <span class="pull-right participants-count "><%= item.participants.count %></span>
-      <% item.participants.take(5).each do |user| %>
-        <%= image_tag user.avatar_url, size: "30x30", class: "slide-image" %>
-      <% end %>
-    </p>
+    <!-- <p class="time">
+    </p> -->
+    <% if item.winners.count > 0 %>
+
     <p class="winners">
       <span class="pull-right winners-count "><%= item.winners.count %></span>
       <% item.winners.take(5).each do |user| %>
-        <%= image_tag user.avatar_url, size: "30x30", class: "slide-image" %>
+        <%= image_tag user.avatar_url, size: "30x30", class: "slide-image", title: user.title %>
       <% end %>
+      <%= link_to_if item.winners.count > 5, '...', details_admins_one_money_path(@one_money.id, item.id) %>
     </p>
+    <% end %>
+    <% if item.participants.count > 0 %>
+    <p class="participants">
+      <span class="participants-count ">其它参与者 <%= item.participants.count %></span>
+      <%# item.participants.take(5).each do |user| %>
+        <%#= image_tag user.avatar_url, size: "30x30", class: "slide-image" %>
+      <%# end %>
+    </p>
+    <% end %>
+
   </div>
 </div>

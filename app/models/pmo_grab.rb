@@ -12,6 +12,7 @@ class PmoGrab < Ohm::Model
   include ExpiredEvents
 
   attribute :user_id
+  attribute :user_user_id
   attribute :shop_item_id
   attribute :title
   attribute :price
@@ -49,8 +50,32 @@ class PmoGrab < Ohm::Model
 
   def before_delete
     if self.pmo_item && self.pmo_item.is_a?(PmoItem)
-      Rails.logger.debug "Decrement Completes + #{self.quantity}"
+      Rails.logger.debug "Decrement Completes - #{self.quantity}"
       self.pmo_item.decr :completes, self.quantity
+
+      if self.pmo_item.completes < self.pmo_item.total_amount
+        if self.pmo_item.status == "suspend"
+          if self.now < self.pmo_item.end_at
+            self.pmo_item.set_status "started"
+            self.pmo_item.save
+          end
+        end
+      end
+    end
+  end
+
+  def after_delete
+    if self.pmo_item && self.pmo_item.grabs.find(user_id: user_id).count <= 0
+      # self.pmo_item.winners.delete(PmoUser.new(id: user_id))
+      if redis.call("SREM", "#{key}:winners", user_id)
+        Rails.logger.info "Remove winner user #{user_id}"
+        if PmoUser[user_id]
+          self.pmo_item.participants.add(PmoUser[user_id])
+          Rails.logger.info "Add participant user #{user_id} "
+        end
+      else
+        Rails.logger.info "Can't remove winner user #{user_id} in Item #{self.pmo_item.id}"
+      end
     end
   end
 
@@ -60,7 +85,8 @@ class PmoGrab < Ohm::Model
 
   def self.from(pmo_item, one_money, user)
     new({
-      user_id: user.user_id,
+      user_id: user.id,
+      user_user_id: user.user_id,
       shop_item_id: pmo_item.item_id,
       title: pmo_item.title,
       price: pmo_item.price,

@@ -29,3 +29,7 @@
     <% end %>
   </ul>
 </div>
+
+<% if callback_url != root_path %>
+  <%= link_to "Back", callback_url %>
+<% end %>

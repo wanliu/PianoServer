@@ -1,6 +1,9 @@
 class LocationsController < ApplicationController
+  include RedirectCallback
+
   before_action :authenticate_user!, only: [:index, :create, :udpate, :destroy, :user_default_address]
   before_action :set_location, only: [:edit, :update, :destroy]
+  before_action :set_callback, only: [:index, :create]
 
   def index
     @locations = current_user.locations.order(id: :desc)
@@ -28,7 +31,7 @@ class LocationsController < ApplicationController
         format.json { render :show }
         format.html do
           flash[:notice] = "收货地址创建成功"
-          direction = @location.chat_id.present? ? chat_path(@location.chat_id) : locations_path
+          direction = @location.chat_id.present? ? chat_path(@location.chat_id) : locations_path(callback: callback_url)
           redirect_to direction
         end
       else

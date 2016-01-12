@@ -7,12 +7,17 @@ class Api::Promotions::OneMoneyController < Api::BaseController
   include FastUsers
   skip_before_action :authenticate_user!, only: [:show, :item, :items, :status, :item_status]
   skip_before_action :authenticate_user!, only: [:signup] unless Rails.env.production?
-  skip_before_action :authenticate_user!, only: [:signup, :grab] if ENV['TEST_PERFORMANCE']
+  skip_before_action :authenticate_user!, only: [:signup, :grab, :callback] if ENV['TEST_PERFORMANCE']
 
   before_action :set_one_money #, except: [:, :update, :status, :item]
 
   def show
     hash = @one_money.to_hash
+    now = @one_money.now.to_f * 1000
+
+    if params[:u].present?
+      hash[:td] = now - params[:u].to_i
+    end
     hash[:items] = @one_money.items.map {|item| {id: item.id, title: item.title, status: item.status }}
     render json: hash
   end
@@ -61,7 +66,7 @@ class Api::Promotions::OneMoneyController < Api::BaseController
   def signup
     status = @one_money.signups.add(pmo_current_user)
     @one_money.save
-    render json: {user_id: pmo_current_user.id, status: status > 0 ? "success" : "always" }
+    render json: {user_id: pmo_current_user.id, user_user_id: pmo_current_user.user_id, status: status > 0 ? "success" : "always" }
   end
 
   def status
@@ -157,7 +162,9 @@ class Api::Promotions::OneMoneyController < Api::BaseController
 
         render json: {
           winner: id,
-          user_id: pmo_current_user.user_id,
+          grab_id: @grab.id,
+          user_id: pmo_current_user.id,
+          user_user_id: pmo_current_user.user_id,
           item: params[:item_id],
           one_money: params[:id],
           callback_url: @grab.callback_url,
@@ -165,11 +172,15 @@ class Api::Promotions::OneMoneyController < Api::BaseController
           status: "success"
         }
       else
+        case status
+        when "insufficient"
+          @item.set_status :suspend
+        end
+
         @one_money.participants.add(pmo_current_user)
         @one_money.save
         @item.participants.add(pmo_current_user)
         @item.save
-
         Rails.logger.debug "Status: #{status} context:#{context.result}" if ENV['TEST_PERFORMANCE']
         render json: context.result, status: context.code
       end
@@ -181,7 +192,7 @@ class Api::Promotions::OneMoneyController < Api::BaseController
     GrabMachine.run self, @one_money, @item do |status, context|
       case status
       when "always", "no-executies"
-        grabs = PmoGrab.find(pmo_item_id: @item.id, one_money: @one_money.id, user_id: pmo_current_user.user_id)
+        grabs = PmoGrab.find(pmo_item_id: @item.id, one_money: @one_money.id, user_id: pmo_current_user.id)
 
         hash ={
           status: status

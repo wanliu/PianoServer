@@ -1,0 +1,7 @@
+<div class="alert alert-danger" role="alert">
+  <% if @order.errors[:pmo_grab_id].present? %>
+    <span class='glyphicon glyphicon-exclamation-sign'></span>你已经成功购买了本活动的商品，请勿重复提交。查看已经购买的订单，请点击：<%= link_to "我的订单", orders_path %>
+  <% else %>
+    <span class='glyphicon glyphicon-exclamation-sign'></span>操作失败，已经没货或者失效了～
+  <% end %>
+</div>

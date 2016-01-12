@@ -12,11 +12,9 @@
   <td> 数量：<%= number_with_delimiter item.quantity %> </td>
   <td> 小计：<%= number_to_currency item.price * item.quantity %> </td>
 
-  <% if item == order.items.first && controller.action_name != 'show' %>
+  <% if controller.action_name != 'show' %>
     <td rowspan='<%= order.items.count %>' class='operation'>
-      <% if order.yiyuan_promotion? && !order.yiyuan_fullfilled? %>
-        <%= link_to "完善收货地址", yiyuan_address_order_path(order), class: "btn btn-success" %> 
-      <% elsif !order.finish? %>
+      <% if item == order.items.first && !order.finish? %>
         <div class='finish-order text-center'>
           <button type="button" class="order-finish btn btn-danger" data-toggle="modal" data-target="#finish-order-<%= order.id %>">
             确认收货
@@ -42,7 +40,7 @@
           </div>
         </div>
       <% end %>
-      
+
       <div class='detail text-center'>
         <span><%= link_to "订单详情", order_path(order) %></span>
       </div>

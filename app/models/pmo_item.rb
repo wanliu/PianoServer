@@ -105,10 +105,9 @@ class PmoItem < Ohm::Model
   # end
 
   def status_with_timing
-    if status_without_timing.blank? or
-       status_without_timing  == "invalid" or
-       status_without_timing == "timing"
-
+    _status = status_without_timing
+    case _status
+    when nil, "", "invalid", "timing"
       if start_at && end_at
         if self.now >= start_at
           "started"
@@ -122,8 +121,32 @@ class PmoItem < Ohm::Model
       else
         "invalid"
       end
+    when "started", "suspend"
+      if self.now >= end_at
+        "end"
+      else
+        _status
+      end
     else
-      status_without_timing
+      _status
+    end
+  end
+
+
+  def status_with_inventory
+    _now =  self.now
+    if self.start_at && self.end_at
+      if _now > self.start_at && _now < self.end_at
+        if completes >= total_amount
+          "suspend"
+        else
+          status_without_inventory
+        end
+      else
+        status_without_inventory
+      end
+    else
+      status_without_inventory
     end
   end
 
@@ -164,30 +187,40 @@ class PmoItem < Ohm::Model
   def valid_status_messages
     msgs = {}
     time = self.now
-    if time < self.start_at
+    if self.status == "suspend"
+      if time > self.end_at
+        msgs["suspend_at"] = "已经结束"
+      else
+        msgs["suspend_at"] = true
+      end
+    elsif self.start_at.nil?
+      msgs["start_at"] = "未设置"
+    elsif self.end_at.nil?
+      msgs["end_at"] = "未设置"
+    elsif time < self.start_at
       if expire_running?(:start_at)
         msgs["start_at"] = true
       else
-        msgs["start_at"] = "计时器未开启"
+        msgs["start_at"] = "定时器未开启"
       end
     elsif self.start_at <= time and time <= self.end_at
       if self.status == "started"
         msgs["start_at"] = true
       else
-        msgs["start_at"] = "未启动"
+        msgs["start_at"] = "已超过启动时间"
       end
 
       if expire_running?(:end_at)
         msgs["end_at"] = true
       else
-        msgs["end_at"] = "计时器未开启"
+        msgs["end_at"] = "定时器未开启"
       end
     # elsif time > self.end_at
     else
       if self.status == "end"
         msgs["end_at"] = true
       else
-        msgs["end_at"] = "未启动"
+        msgs["end_at"] = "已超过结束时间"
       end
     end
     msgs
@@ -233,6 +266,9 @@ class PmoItem < Ohm::Model
 
   alias_method_chain :start_at, :fallback
   alias_method_chain :end_at, :fallback
+  alias_method_chain :status, :timing
+  alias_method_chain :status, :inventory
+  
   protected
 
   def self.redis_url
