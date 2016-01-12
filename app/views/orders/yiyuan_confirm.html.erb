@@ -2,12 +2,12 @@
   <strong>注意！</strong>本活动的付款方式为货到付款，如果您不同意此种付款方式，请不要提交此订单！
 </div>
 
-<div class='receiver-info'>
-  <div>收 货 人：<%= @order.receiver_name %></div>
-  <div>地 &nbsp;&nbsp;&nbsp;&nbsp; 址：<%= @order.delivery_address %></div>
-  <div>电 &nbsp;&nbsp;&nbsp;&nbsp; 话：<%= @order.receiver_phone %></div>
+<div class='receiver-info padding-text'>
+  <div>收货人：<%= @order.receiver_name %></div>
+  <div>地址：<%= @order.delivery_address %></div>
+  <div>电话：<%= @order.receiver_phone %></div>
 </div>
-<div>
+<div class='padding-text'>
   <%= link_to "修改收货地址", chose_yiyuan_address_orders_path(callback: callback_url) %>
 </div>
 
