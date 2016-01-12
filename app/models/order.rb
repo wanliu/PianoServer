@@ -72,16 +72,18 @@ class Order < ActiveRecord::Base
   def save_with_pmo(operator)
     self.transaction do
       begin
+        pmo_grab = PmoGrab[pmo_grab_id]
+        unless pmo_grab.present? && pmo_grab.status == 'pending'
+          raise ActiveRecord::RecordInvalid, "PmoGrab timout"
+        end
+
+        self.express_fee = 10
         save!
 
         items.each do |item|
           item.deduct_stocks!(operator)
         end
 
-        pmo_grab = PmoGrab[pmo_grab_id]
-        unless pmo_grab.present? && pmo_grab.status == 'pending'
-          raise ActiveRecord::RecordInvalid, "PmoGrab timout"
-        end
         pmo_grab.ensure!
       rescue ActiveRecord::RecordInvalid => e
         raise ActiveRecord::Rollback
@@ -105,7 +107,8 @@ class Order < ActiveRecord::Base
   private
 
   def caculate_total
-    self.origin_total = self.total = items.reduce(0) { |total, item| total += item.price * item.quantity }
+    item_total = items.reduce(0) { |total, item| total += item.price * item.quantity }
+    self.origin_total = self.total = item_total + (express_fee || 0)
   end
 
   def avoid_from_shop_owner

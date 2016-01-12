@@ -1,14 +1,28 @@
-<div class="alert alert-info" role="alert" style='margin-bottom: 0;'>
-  <strong>注意！</strong>本活动的付款方式为货到付款，如果您不同意此种付款方式，请不要提交此订单！
-</div>
+<% content_for :module, 'orders' %>
 
-<div class='receiver-info padding-text'>
-  <div>收货人：<%= @order.receiver_name %></div>
-  <div>地址：<%= @order.delivery_address %></div>
-  <div>电话：<%= @order.receiver_phone %></div>
+<div class='yiyuan-confirm-location'>
+  <div class='location-mark'>
+    <span class='glyphicon glyphicon-map-marker'></span>
+  </div>
+
+  <div class='location-detail'>
+    <div class='contact'>
+      <span class='contact'><%= @location.contact %></span>
+      <span class='contact-phone'><%= @location.contact_phone %></span>
+    </div>
+    <div class='address-detail'>
+      <%= "#{@location.province_name}#{@location.city_name}#{@location.region_name}#{@location.road}" %>
+    </div>
+  </div>
+
+  <div class='array'>
+    <span class='glyphicon glyphicon-menu-right glyphicon-next'></span>
+  </div>
 </div>
-<div class='padding-text'>
-  <%= link_to "修改收货地址", chose_yiyuan_address_orders_path(callback: callback_url) %>
+<div class='envelope-border'></div>
+
+<div class='prmotion-desc'>
+  货到付款<span class='notify'>（本活动仅支持货到付款）</span>
 </div>
 
 <div class='yiyuan-confirm order-confirm-mobile'>
@@ -26,47 +40,71 @@
         </span>
       </div>
 
-      <div class="cart-item" data-cart-item-id="<%= @order_item.id %>">
+      <div class="list-group-item order-item">
         <div class='row'>
-          <div class='avatar'>
-            <div class='media'>
-              <div class='media-left'>
-                <%= image_tag @order_item.avatar_url, class: 'media-object', alt: "商品图片" %>
-              </div>
-              <div class='media-body'>
-                <%= "#{@order_item.title} #{@order_item.properties_title}" %>
-              </div>
+          <div class='col-xs-8'>
+            <div class="avatar">
+              <%= image_tag @order_item.avatar_url, class: 'media-object', alt: "商品图片" %>
+            </div>
+
+            <div class="title">
+              <%= "#{@order_item.title} #{@order_item.properties_title}" %>
+            </div>
+          </div>
+
+          <div class='subtotal col-xs-4'>
+            <div class="text-right">
+              <%= number_to_currency @order_item.price %>
+            </div>
+
+            <div class="text-right">
+              × <%= number_with_delimiter @order_item.quantity %>
+            </div>
+
+            <div class="text-right">
+              <%= number_to_currency @order_item.price * @order_item.quantity %>
             </div>
           </div>
         </div>
-        <table class='table table-bordered'>
-          <colgroup>
-            <col width='30%'>
-            <col width='10%'>
-            <col width='20%'>
-            <col width='10%'>
-            <col width='30%'>
-          </colgroup>
-          <tbody>
-            <tr>
-              <td class='price'>单价:<%= number_to_currency @order_item.price %></td>
-              <td colspan='3' class='quantity'><%= @order_item.quantity %></td>
-              <td>小计:<span class='subtotal'><%= number_to_currency @order_item.price * @order_item.quantity %></span></td>
-            </tr>
-            <tr class='error'>
-              <td></td>
-              <td colspan='3' class='error-info alert alert-danger fade in'>最多只能购买<span class='max-quantity'></span>件</td>
-              <td></td>
-            </tr>
-          </tbody>
-        </table>
       </div>
 
       <div class='footer'>
-        <td colspan='5' class='text-right'>
-          货到付款<%= f.submit "提交订单", class: 'submit'%>
-        </td>
+        <div class='text-right'>
+          共件<%= @order_item.quantity %>商品 <%= number_to_currency @order_item.price * @order_item.quantity %>元 
+        </div>
+        <div class='text-right'>
+          快递费用 <%= number_to_currency @order.express_fee %>
+        </div>
+        <div  class='text-right total'>
+          合计 <span class='amount'><%= number_to_currency @order.express_fee + @order_item.price * @order_item.quantity %></span>
+        </div>
       </div>
     </div>
+    
   <% end %>
 </div>
+
+<div class='yiyuan-confirm-submit'>
+  <div>
+    <span class='total'><%= number_to_currency @order.express_fee + @order_item.price * @order_item.quantity %></span>元 货到付款
+  </div>
+  <input type="button" name="commit" value="提交订单" class="submit pull-right" id="submit-yiyuan-confirm">
+</div>
+
+<script type="text/javascript">
+  $(document).on('ready page:load', function() {
+    $('#submit-yiyuan-confirm').click(function (event) {
+      event.preventDefault();
+
+      var $form = $('.yiyuan-confirm form');
+      $form.submit();
+    });
+
+    $('.yiyuan-confirm-location').click(function (event) {
+      event.preventDefault();
+
+      var url = "<%= chose_yiyuan_address_orders_path(callback: callback_url) %>"
+      window.location.href = url;
+    })
+  })
+</script>

@@ -1,3 +1,134 @@
 .padding-text {
   padding: 0 15px;
 }
+
+.yiyuan-confirm-location {
+  display: table;
+  width: 100%;
+  padding: 10px;
+  background-color: white;
+  color: #777777;
+
+  &>div {
+    display: table-cell;
+    vertical-align: middle;
+  }
+
+  .location-mark {
+    color: red;
+    width: 10%;
+    font-size: 2em;
+  }
+
+  .location-detail {
+    width: 80%;
+
+    .contact {
+      font-size: 1.2em;
+    }
+  }
+
+  .array {
+    width: 10%
+  }
+}
+
+.envelope-border {
+  height: 6px;
+  width: 100%;
+  background-image: image-url("envelope.jpg");
+}
+
+.prmotion-desc {
+  background-color: white;
+  padding: 10px;
+
+  .notify {
+    color: #777777;
+  }
+
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  margin: 10px 0;
+}
+
+.yiyuan-confirm {
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  background-color: white;
+
+  .cart-group {
+    .header {
+      padding: 10px 15px;
+
+      .shop {
+        img {
+          margin-right: 10px;
+        }
+      }
+    }
+
+    .order-item {
+      border-top: 1px solid #ddd;
+      border-bottom: 1px solid #ddd;
+
+      .avatar, .title {
+        float: left;
+      }
+
+      .title {
+        padding-left: 10px;
+      }
+
+    }
+
+    .footer {
+      padding: 10px 15px;
+
+      .total {
+        font-size: 1.2em;
+
+        .amount {
+          color: red;
+        }
+      }
+    }
+  }
+}
+
+.yiyuan-confirm-submit {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: black;
+  color: white;
+  display: table;
+
+  div {
+    display: table-cell;
+    vertical-align: middle;
+    padding-left: 15px;
+
+    span {
+      font-size: 1.5em;
+      font-weight: bolder;
+    }
+  }
+
+  input.submit {
+    border-radius: 0;
+    border: none;
+    background-color: red;
+    padding: 10px 30px;
+    font-size: 16px;
+    margin-left: 20px;
+  }
+}
+
+body.orders footer.bottom {
+  display: none;
+}
+
+.glyphicon-next {
+  color: #aaa;
+}
