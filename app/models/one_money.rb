@@ -13,6 +13,7 @@ class OneMoney < Ohm::Model
   attribute :end_at, OhmTime::ISO8601
   attribute :suspend_at, OhmTime::ISO8601
   attribute :fare, Type::Decimal
+  attribute :max_free_fare, Type::Decimal
   attribute :multi_item, Type::Integer   # 可以抢多种商品设置
   attribute :auto_expire, Type::Boolean  # 自动同步记时器
   attribute :callback
