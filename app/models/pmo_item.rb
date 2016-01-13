@@ -156,9 +156,10 @@ class PmoItem < Ohm::Model
   end
 
   def to_hash
-    super.merge(attributes.except(:start_at, :end_at).merge({
+    super.merge(attributes.except(:status, :start_at, :end_at).merge({
       start_at: self.start_at,
-      end_at: self.end_at
+      end_at: self.end_at,
+      status: self.status
     }))
   end
 
@@ -268,7 +269,7 @@ class PmoItem < Ohm::Model
   alias_method_chain :end_at, :fallback
   alias_method_chain :status, :timing
   alias_method_chain :status, :inventory
-  
+
   protected
 
   def self.redis_url
