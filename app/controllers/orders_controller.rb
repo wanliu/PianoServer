@@ -18,23 +18,25 @@ class OrdersController < ApplicationController
   def yiyuan_confirm
     if params[:address_id].present?
       @location = current_user.locations.find(params[:address_id])
-
-      @order = current_user.orders.build one_money_id: @one_money_id, pmo_grab_id: @pmo_grab_id, address_id: @location.id
-
-      @order_item = @order.items.build(@item_params)
-      @order.express_fee = @order.get_pmo_express_fee
-
-      @order.supplier_id = @order_item.orderable.try(:shop_id)
-      @order_item.title = @order_item.orderable.title
-
-      @supplier = @order.supplier
-      @total = @order_item.orderable_id * @order_item.quantity
-      @props = @order_item.properties
     elsif current_user.locations.present?
-      redirect_to chose_yiyuan_address_orders_path(callback: request.fullpath)
+      # redirect_to chose_yiyuan_address_orders_path(callback: request.fullpath)
+      @location = current_user.latest_location || current_user.locations.last
     else
       redirect_to new_yiyuan_address_orders_path(callback: request.fullpath)
+      return
     end
+
+    @order = current_user.orders.build one_money_id: @one_money_id, pmo_grab_id: @pmo_grab_id, address_id: @location.id
+
+    @order_item = @order.items.build(@item_params)
+    @order.express_fee = @order.get_pmo_express_fee
+
+    @order.supplier_id = @order_item.orderable.try(:shop_id)
+    @order_item.title = @order_item.orderable.title
+
+    @supplier = @order.supplier
+    @total = @order_item.orderable_id * @order_item.quantity
+    @props = @order_item.properties
   end
 
   def create_yiyuan
