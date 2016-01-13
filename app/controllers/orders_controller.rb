@@ -2,14 +2,13 @@ require 'digest/md5'
 
 class OrdersController < ApplicationController
   include CommonOrdersController
-  include RedirectCallback
+  include ParamsCallback
 
   before_action :authenticate_user!
   before_action :set_order, only: [:show, :destroy, :update]
   before_action :check_for_mobile, only: [:index, :show, :history, :confirmation, :buy_now_confirm]
   before_action :set_yiyuan_item_params, only: :yiyuan_confirm
   before_action :set_yiyuan_order_params, only: :create_yiyuan
-  before_action :set_callback, only: [:new_yiyuan_address, :chose_yiyuan_address, :bind_yiyuan_address, :create_yiyuan]
 
   # caches_action :yiyuan_confirm, layout: false, cache_path: Proc.new do |request|
   #   { etag: Digest::MD5.hexdigest(request.params[:o]) }
@@ -63,7 +62,7 @@ class OrdersController < ApplicationController
     @location.skip_limit_validation = true
 
     if @location.save
-      redirect_to callback_url + "&address_id=#{@location.id}"
+      redirect_to callback_url.split('&').first + "&address_id=#{@location.id}"
     else
       render "orders/new_yiyuan_address"
     end
