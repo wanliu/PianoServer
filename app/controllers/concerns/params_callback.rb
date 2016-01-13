@@ -12,6 +12,6 @@ module ParamsCallback
   private
 
   def callback_url
-    params[:callback] || super
+    params[:callback]
   end
 end

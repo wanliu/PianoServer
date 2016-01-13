@@ -1,5 +1,7 @@
 class ShopCategoriesController < ShopsController
 
+  before_action :set_shop
+  before_action :set_theme
   before_action :set_shop_category, only: [ :show ]
   # caches_page :index, :show
 
