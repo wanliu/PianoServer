@@ -78,7 +78,7 @@ class Order < ActiveRecord::Base
         one_money = OneMoney[one_money_id]
 
         unless pmo_grab.present? && one_money.present? && pmo_grab.status == 'pending'
-          raise ActiveRecord::RecordInvalid, "PmoGrab timout"
+          raise ActiveRecord::Rollback, "PmoGrab timout"
         end
 
         self.express_fee = get_pmo_express_fee
@@ -109,17 +109,34 @@ class Order < ActiveRecord::Base
   end
 
   def get_pmo_express_fee
+    express_fee = 0
+
+    discharge_for_express? do |discharge, fee, discharge_express_fee_on|
+      express_fee = fee
+      # return fee
+    end
+
+    express_fee
+  end
+
+  def discharge_for_express?
     one_money = OneMoney[one_money_id]
 
-    return 0 if one_money.blank?
-
-    discharge_express_fee_on = Settings.promotions.one_money.discharge_express_fee_on
-
-    if discharge_express_fee_on.present? && items_total >= discharge_express_fee_on
-      0
-    else
-      one_money.fare || 0
+    if one_money.blank?
+      yield false, 0, 0 if block_given?
+      return false
     end
+
+    discharge_express_fee_on = one_money.max_free_fare
+
+    discharge = discharge_express_fee_on.present? && items_total >= discharge_express_fee_on
+    if discharge
+      yield discharge, 0, discharge_express_fee_on if block_given?
+    else
+      yield discharge, one_money.fare, discharge_express_fee_on if block_given?
+    end
+
+    discharge
   end
 
   def items_total
