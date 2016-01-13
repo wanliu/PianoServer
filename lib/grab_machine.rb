@@ -119,6 +119,9 @@ class GrabMachine
       elsif item.status == "end"
         status "end"
         error 'item is stop.'
+      elsif item.status == "timing" || item.status.blank?
+        status "waiting"
+        error 'acitvity no started.'
       else
         status "state-invalid"
         error 'must at started status'
