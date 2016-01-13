@@ -98,6 +98,7 @@
   // });
 
   (function(){
+
     $('.minus_plus_input').on('change', function(e) {
       var quantity = $(this).val();
       var _stock = $(document).data('stock') || <%= @item.current_stock.to_i %>;
@@ -112,6 +113,7 @@
         $('.add-to-cart-bottom').removeClass('disabled');
       }
     });
+    $('.minus_plus_input').trigger('change');
   })();
 
 </script>
