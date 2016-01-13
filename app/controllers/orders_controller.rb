@@ -63,7 +63,7 @@ class OrdersController < ApplicationController
     @location.skip_limit_validation = true
 
     if @location.save
-      redirect_to callback_url + "&address_id=#{@location.id}"
+      redirect_to callback_url.split('&').first + "&address_id=#{@location.id}"
     else
       render "orders/new_yiyuan_address"
     end
