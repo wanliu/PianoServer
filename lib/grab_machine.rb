@@ -113,6 +113,12 @@ class GrabMachine
     if Rails.env.production?
       if item.status == "started"
         true
+      elsif item.status == "suspend"
+        status "suspend"
+        error 'item has be suspend.'
+      elsif item.status == "end"
+        status "end"
+        error 'item is stop.'
       else
         status "state-invalid"
         error 'must at started status'

@@ -122,14 +122,14 @@ class Order < ActiveRecord::Base
     end
   end
 
+  def items_total
+    items.reduce(0) { |total, item| total += item.price * item.quantity }
+  end
+
   private
 
   def caculate_total
     self.origin_total = self.total = items_total + (express_fee || 0)
-  end
-
-  def items_total
-    items.reduce(0) { |total, item| total += item.price * item.quantity }
   end
 
   def avoid_from_shop_owner

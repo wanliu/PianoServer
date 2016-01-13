@@ -361,12 +361,6 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :purchase_orders, only: [:index, :show, :destroy, :update] do
-        collection do
-          get "history"
-        end
-      end
-
       resources :settings do
         collection do
           put "/change_shop_theme", to: "settings#change_shop_theme"
