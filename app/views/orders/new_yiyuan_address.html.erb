@@ -2,32 +2,61 @@
 	<div class="congrat alert alert-success text-center" role="alert">
     恭喜你，抢购成功！请填写好收货地址信息
   </div>
-  <div class='address-form'>
+  <div class='yiyuan-address-form'>
     <%= form_for @location, url: yiyuan_address_orders_path(callback: callback_url) do |f| %>
-      <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
-        <%= group_with_errors @location, :contact, f, title: '姓名', layout: :normal, required: true do %>
-          <%= text_field :location, :contact, class: 'form-control required', maxlength: 30 %>
-        <% end %>
+      <div class='fields'>
+        <div class="row <%= @location.errors.messages[:contact].present? ? 'has-error' : '' %>">
+          <div class='col-xs-offset-2 col-xs-10 error-message control-label'>
+            <% if @location.errors.messages[:contact].present? %>
+              收件人<%= @location.errors.messages[:contact].join(', ') %>
+            <% end %>
+            &nbsp;
+          </div>
+          <label class="col-xs-2 control-label text-right" for="location_contact">
+            收件人
+          </label>
+          <div class="col-xs-10">
+            <%= f.text_field :contact, class: 'required', maxlength: 30, autofocus: true, autocomplete: :off %>
+          </div>
+        </div>
+
+        <div class="row <%= @location.errors.messages[:contact_phone].present? ? 'has-error' : '' %>">
+          <div class='col-xs-offset-2 col-xs-10 error-message control-label'>
+            <% if @location.errors.messages[:contact_phone].present? %>
+              手机<%= @location.errors.messages[:contact_phone].join(', ') %>
+            <% end %>
+            &nbsp;
+          </div>
+          <label class="col-xs-2 control-label text-right" for="location_contact_phone">
+            手机
+          </label>
+          <div class="col-xs-10">
+            <%= f.text_field :contact_phone, class: 'required', maxlength: 15, autocomplete: :off %>
+          </div>
+        </div>
+
+        <div class="row <%= @location.errors.messages[:road].present? ? 'has-error' : '' %>">
+          <div class='col-xs-offset-2 col-xs-10 error-message control-label'>
+            <% if @location.errors.messages[:road].present? %>
+              地址<%= @location.errors.messages[:road].join(', ') %>
+            <% end %>
+            &nbsp;
+          </div>
+          <label class="col-xs-2 control-label text-right" for="location_road">
+            地址
+          </label>
+          <div class="col-xs-10">
+            <%= f.text_field :road, class: 'required', autocomplete: :off %>
+          </div>
+        </div>
       </div>
 
       <%= f.hidden_field :province_id, value: '430000' %>
       <%= f.hidden_field :city_id, value: '430400' %>
       <%= f.hidden_field :region_id, value: '430481' %>
 
-      <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
-        <%= group_with_errors @location, :road, f, title: '街道地址', layout: :normal, required: true do %>
-          <%= text_field :location, :road, class: 'form-control required' %>
-        <% end %>
-      </div>
-
-      <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
-        <%= group_with_errors @location, :contact_phone, f, title: '手机/座机号', layout: :normal, required: true do %>
-          <%= text_field :location, :contact_phone, class: 'form-control required' %>
-        <% end %>
-      </div>
-
-      <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <%= f.submit "保存收货地址", class: "btn btn-danger " %>
+      <div class="form-group submit pull-right">
+        <%= f.submit "保存地址", class: "btn btn-danger " %>
       </div>
 
       <div style='clear: both;'></div>

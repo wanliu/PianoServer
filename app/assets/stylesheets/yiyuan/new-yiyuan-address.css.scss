@@ -1,0 +1,47 @@
+.yiyuan-address-form {
+  .fields {
+    background-color: white;
+    color: #777777;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 20px;
+
+    .row {
+      padding: 0 15px 0 15px;
+      border-top: 1px solid #ddd;
+      label {
+        margin-bottom: 0;
+        padding: 0;
+      }
+
+      .error-message {
+        height: 20px;
+      }
+
+      input {
+        background-color: transparent;
+        border: none;
+        width: 100%;
+
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+  }
+
+  .submit {
+    padding-right: 10px;
+  }
+}
+
+.new-yiyuan-address {
+  padding: 0 2px;
+  a {
+    display: inline-block;
+    width: 100%;
+    padding: 10px 2px;
+    background-color: #FF2B2B;
+    color: white;
+    border-radius: 3px;
+  }
+}
