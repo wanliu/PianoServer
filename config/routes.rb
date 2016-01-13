@@ -300,6 +300,7 @@ Rails.application.routes.draw do
 
   match '@:profile', :to => 'profile#username', as: :profile, via: [ :get ]
 
+  match 'goshop/:id', :to => 'shops#show', via: :get
   match ':shop_name', :to => 'shops#show_by_name', constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ }, via: [ :get ], as: :shop_site
 
   match "create_shop", to: "shops#create", via: [:post], as: :create_shop

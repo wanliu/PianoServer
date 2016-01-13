@@ -2,14 +2,13 @@ require 'digest/md5'
 
 class OrdersController < ApplicationController
   include CommonOrdersController
-  include RedirectCallback
+  include ParamsCallback
 
   before_action :authenticate_user!
   before_action :set_order, only: [:show, :destroy, :update]
   before_action :check_for_mobile, only: [:index, :show, :history, :confirmation, :buy_now_confirm]
   before_action :set_yiyuan_item_params, only: :yiyuan_confirm
   before_action :set_yiyuan_order_params, only: :create_yiyuan
-  before_action :set_callback, only: [:new_yiyuan_address, :chose_yiyuan_address, :bind_yiyuan_address, :create_yiyuan]
 
   # caches_action :yiyuan_confirm, layout: false, cache_path: Proc.new do |request|
   #   { etag: Digest::MD5.hexdigest(request.params[:o]) }
@@ -18,23 +17,25 @@ class OrdersController < ApplicationController
   def yiyuan_confirm
     if params[:address_id].present?
       @location = current_user.locations.find(params[:address_id])
-
-      @order = current_user.orders.build one_money_id: @one_money_id, pmo_grab_id: @pmo_grab_id, address_id: @location.id
-
-      @order_item = @order.items.build(@item_params)
-      @order.express_fee = @order.get_pmo_express_fee
-
-      @order.supplier_id = @order_item.orderable.try(:shop_id)
-      @order_item.title = @order_item.orderable.title
-
-      @supplier = @order.supplier
-      @total = @order_item.orderable_id * @order_item.quantity
-      @props = @order_item.properties
     elsif current_user.locations.present?
-      redirect_to chose_yiyuan_address_orders_path(callback: request.fullpath)
+      # redirect_to chose_yiyuan_address_orders_path(callback: request.fullpath)
+      @location = current_user.latest_location || current_user.locations.last
     else
       redirect_to new_yiyuan_address_orders_path(callback: request.fullpath)
+      return
     end
+
+    @order = current_user.orders.build one_money_id: @one_money_id, pmo_grab_id: @pmo_grab_id, address_id: @location.id
+
+    @order_item = @order.items.build(@item_params)
+    @order.express_fee = @order.get_pmo_express_fee
+
+    @order.supplier_id = @order_item.orderable.try(:shop_id)
+    @order_item.title = @order_item.orderable.title
+
+    @supplier = @order.supplier
+    @total = @order_item.orderable_id * @order_item.quantity
+    @props = @order_item.properties
   end
 
   def create_yiyuan
@@ -61,7 +62,7 @@ class OrdersController < ApplicationController
     @location.skip_limit_validation = true
 
     if @location.save
-      redirect_to callback_url + "&address_id=#{@location.id}"
+      redirect_to callback_url.split('&').first + "&address_id=#{@location.id}"
     else
       render "orders/new_yiyuan_address"
     end

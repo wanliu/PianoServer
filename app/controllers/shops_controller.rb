@@ -1,8 +1,8 @@
 class ShopsController < ApplicationController
-  before_action :set_shop, only: [ :show_by_name, :show, :about, :update ]
+  before_action :set_shop, only: [ :show_by_name, :about, :update ]
   before_action :set_theme
   before_action :prepare_shop_views_path
-  before_action :shop_page_info, except: [ :update_name ]
+  before_action :shop_page_info, except: [ :update_name, :show ]
   # caches_page :show, :show_by_name, :about
 
   def show_by_name
@@ -22,8 +22,8 @@ class ShopsController < ApplicationController
   end
 
   def show
-    # @shop = Shop.find params[:id]
-    @shop_categories = @shop.shop_category.children.where(status: true).page(params[:page]).per(params[:per])
+    @shop = Shop.find(params[:id])
+    redirect_to shop_site_path(@shop.name)
   end
 
   def create
