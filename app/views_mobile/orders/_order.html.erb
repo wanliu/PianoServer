@@ -12,7 +12,12 @@
     <%= render partial: "order_item", collection: order.items, as: :item, locals: { supplier: order.supplier } %>
     <li class="list-group-item order-item">
       <div class='text-right'>
-        一共<%= order.items_count %> 件商品&emsp;合计：<span class='total'><%= number_to_currency order.total %></span>元
+        一共<%= order.items_count %>件商品&emsp;合计：<%= number_to_currency order.items_total %>元<br>
+        运送费用：<%= number_to_currency(order.express_fee || 0) %>元<br>
+        <% if order.total != order.origin_total %>
+          <span class='reduce'>已优惠：<%= number_to_currency order.origin_total - order.total %>元</span><br>
+        <% end %>
+        总计：<b class='total'><%= number_to_currency order.total %>元</b>
       </div>
     </li>
   </ul>

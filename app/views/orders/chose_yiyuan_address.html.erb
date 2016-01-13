@@ -51,7 +51,7 @@
       var addressId = $(this).data('addressId');
       var url = "<%= callback_url.html_safe %>";
 
-      url = url.split('&')[0]
+      url = url.split('&address_id=')[0]
       url += ('&address_id=' + addressId);
       Turbolinks.visit(url);
       // window.location.href = url;

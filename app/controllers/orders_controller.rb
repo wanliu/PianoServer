@@ -63,7 +63,7 @@ class OrdersController < ApplicationController
     @location.skip_limit_validation = true
 
     if @location.save
-      redirect_to callback_url.split('&').first + "&address_id=#{@location.id}"
+      redirect_to callback_url.split('&address_id=').first + "&address_id=#{@location.id}"
     else
       render "orders/new_yiyuan_address"
     end
@@ -89,7 +89,6 @@ class OrdersController < ApplicationController
       render "orders/yiyuan/timeout", status: :unprocessable_entity
       return
     end
-    # @express_fee = one_money.fare || 0
 
     user_id = options[:user_user_id].to_i
 
@@ -108,7 +107,8 @@ class OrdersController < ApplicationController
 
     pmo_grab = PmoGrab[pmo_grab_id]
     if pmo_grab.blank?
-      # Todo with invlid parms
+      render "orders/yiyuan/timeout", status: :unprocessable_entity
+      return
     end
 
     user_id = pmo_grab.user_user_id.try(:to_i)

@@ -33,7 +33,7 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                <%= link_to "确认收货", history_shop_admin_purchase_order_path(shop.name, order, "order[status]" => "finish"), method: :patch, class: 'btn btn-primary' %>
+                <%= link_to "确认收货", shop_admin_purchase_order_path(shop.name, order, "order[status]" => "finish"), method: :patch, class: 'btn btn-primary' %>
                 <!-- <button type="button" class="btn btn-primary"></button> -->
               </div>
             </div>
