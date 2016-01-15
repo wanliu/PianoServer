@@ -130,6 +130,9 @@ gem 'weixin_authorize', github: 'hysios/weixin_authorize'
 gem 'omniauth'
 gem "omniauth-wechat-oauth2"
 
+#excel导入导出
+gem 'spreadsheet'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
