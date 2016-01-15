@@ -77,7 +77,7 @@ class Shops::Admin::OrdersController < Shops::Admin::BaseController
     elsif params[:finish].present?
       orders = current_shop.orders.finish.includes(items: :orderable).page(params[:page])
         .per(params[:per]).order(id: :desc)
-      spreadsheet = orders.to_spreadsheet("已完成订单")
+      spreadsheet = orders.to_spreadsheet("已完成订单(第#{params[:page]}页)")
     else
       orders = current_shop.orders.none
       spreadsheet = orders.to_spreadsheet
