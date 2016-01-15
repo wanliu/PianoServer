@@ -357,6 +357,7 @@ Rails.application.routes.draw do
 
       resources :orders, except: [:edit, :new, :create] do
         collection do
+          get 'export_excel'
           get 'history'
         end
       end
