@@ -190,25 +190,23 @@ class Api::Promotions::OneMoneyController < Api::BaseController
   def callback
     @item = PmoItem[params[:item_id].to_i]
     GrabMachine.run self, @one_money, @item do |status, context|
-      case status
-      when "always", "no-executies"
-        grabs = PmoGrab.find(pmo_item_id: @item.id, one_money: @one_money.id, user_id: pmo_current_user.id)
+      grabs = PmoGrab.find(pmo_item_id: @item.id, one_money: @one_money.id, user_id: pmo_current_user.id)
 
-        hash ={
-          status: status
-        }
-        now = @item.now
+      hash ={
+        status: status
+      }
+      now = @item.now
+
+      if grabs.count > 0
         hash[:grabs] = grabs.map do |g|
           g.to_hash.except(:shop_id, :callback, :time_out).merge({
             timeout: g.timeout_at.present? ? [ g.timeout_at - now, 0].max : -1,
             callback_url: g.callback_url
           })
         end
-
-        render json: hash
-      else
-        render json: { status: status }
       end
+
+      render json: hash
     end
   end
 
