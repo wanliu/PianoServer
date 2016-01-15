@@ -8,7 +8,7 @@
     </li>
 
     <li class='export-excel pull-right'>
-      <%= link_to export_excel_shop_admin_orders_path(finish: true) do %>
+      <%= link_to export_excel_shop_admin_orders_path(finish: true, page: params[:page] || 1) do %>
         <span class='glyphicon glyphicon-download-alt'></span>导出Excel 
       <% end %>
     </li>
