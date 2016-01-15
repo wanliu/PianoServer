@@ -70,6 +70,26 @@ class Shops::Admin::OrdersController < Shops::Admin::BaseController
     end
   end
 
+  def export_excel
+    if params[:initiated].present?
+      orders = current_shop.orders.initiated.includes(items: :orderable).order(id: :desc)
+      spreadsheet = orders.to_spreadsheet("未完成订单")
+    elsif params[:finish].present?
+      orders = current_shop.orders.finish.includes(items: :orderable).page(params[:page])
+        .per(params[:per]).order(id: :desc)
+      spreadsheet = orders.to_spreadsheet("已完成订单(第#{params[:page]}页)")
+    else
+      orders = current_shop.orders.none
+      spreadsheet = orders.to_spreadsheet
+    end
+
+
+    file_name = "#{current_shop.title}-#{Time.now.strftime('%Y%m%d%H%M%S')}#{Time.now.tv_usec}导出订单.xls"
+    temp_sheet = StringIO.new
+    spreadsheet.write temp_sheet
+    send_data temp_sheet.string, :filename => file_name # :type => "application/vnd.ms-excel"
+  end
+
   private
 
     def set_order
