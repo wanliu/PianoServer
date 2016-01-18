@@ -29,6 +29,22 @@ class Admins::VariablesController < Admins::BaseController
     render :new_promotion_set_variable, layout: false
   end
 
+  def new_item_variable
+    @variable = ItemVariable.new
+
+    @items = []
+
+    render :new_item_variable, layout: false
+  end
+
+  def new_item_set_variable
+    @variable = ItemSetVariable.new
+
+    @items = []
+
+    render :new_item_set_variable, layout: false
+  end
+
   def search_promotion
     params[:statuses] = [ "Published", "Active", "Finish" ]
     @promotions = Promotion.find(:all, params: query_params)
@@ -36,9 +52,37 @@ class Admins::VariablesController < Admins::BaseController
     render :show, formats: [:json]
   end
 
+
+  def search_item
+    q = params[:q]
+
+    if q.to_i == 0
+      @items = Item.with_shop_or_product(q)
+    else
+      item = Item.where(id: q).first
+      @items = if item.nil? then [] else [item] end
+    end
+
+    render :show_item, formats: [:json]
+  end
+
   def create
     case variable_params[:type]
     when "promotion_variable", "promotion_set_variable"
+      params_name = "#{variable_params[:type]}_params".to_sym
+      create_params = send(params_name)
+      create_params.merge! type: variable_params[:type].classify
+      klass = variable_params[:type].classify.safe_constantize
+
+      if klass
+        @variable = klass.new(create_params)
+        @variable.host = @host
+
+        @variable.save!
+
+        render json: @variable
+      end
+    when "item_variable", "item_set_variable"
       params_name = "#{variable_params[:type]}_params".to_sym
       create_params = send(params_name)
       create_params.merge! type: variable_params[:type].classify
@@ -76,6 +120,11 @@ class Admins::VariablesController < Admins::BaseController
       @variablePromotions = (promotion_string || '').split(',').map {|id| Promotion.find(id) }
 
       render :edit_promotion_set_variable, layout: false
+    when "item_variable"
+      @item = Item.find(@variable.item_id) unless @variable.item_id.nil?
+      @items = []
+
+      render :edit_item_variable, layout: false
     else
 
     end
@@ -91,6 +140,14 @@ class Admins::VariablesController < Admins::BaseController
       @variable.update_attributes!(update_params)
 
       render json: @variable
+    when "item_variable", "item_set_variable"
+      @variable = Variable.find(params[:id])
+      params_name = "#{variable_params[:type]}_params".to_sym
+      update_params = send(params_name)
+      update_params.delete(:type)
+      @variable.update_attributes!(update_params)
+
+      render json: @variable      
     else
 
     end
@@ -138,6 +195,14 @@ class Admins::VariablesController < Admins::BaseController
 
   def promotion_set_variable_params
     params.require(:variable).permit(:id, :type, :name, :promotion_string)
+  end
+
+  def item_variable_params
+    params.require(:variable).permit(:id, :type, :name, :item_id)
+  end
+
+  def item_set_variable_params
+    params.require(:variable).permit(:id, :type, :name, :items_string)
   end
 
   def raise_validates_errors(e)

@@ -1,4 +1,4 @@
-#= ./modal_base
+#=require ./modal_base
 
 class @PromotionSetVariableEditModal extends @ModalBase
 
@@ -112,4 +112,3 @@ class @PromotionSetVariableEditModal extends @ModalBase
 
         $ids.val(ids.join(','))
     })
-

@@ -1,6 +1,6 @@
 #=require ./modal_base
 
-class @PromotionSetVariableModal extends @ModalBase
+class @ItemSetVariableModal extends @ModalBase
 
   events:
     'click .promotion': 'toggleSelectedItem'

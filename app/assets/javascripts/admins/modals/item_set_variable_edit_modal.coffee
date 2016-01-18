@@ -1,6 +1,6 @@
 #=require ./modal_base
 
-class @PromotionSetVariableModal extends @ModalBase
+class @ItemSetVariableEditModal extends @ModalBase
 
   events:
     'click .promotion': 'toggleSelectedItem'
@@ -13,6 +13,7 @@ class @PromotionSetVariableModal extends @ModalBase
     @$seleteds = @$().find('.selected-promotions')
     @$list = @$().find('.promotion-set-variable .list-group')
     @$ids = @$().find('#variable_promotion_string')
+    @handleSortable()
 
   toggleSelectedItem: (e) ->
     $target = $(e.currentTarget)
@@ -49,14 +50,16 @@ class @PromotionSetVariableModal extends @ModalBase
       @$ids.val(ids.join(','))
 
   onSave: (e) ->
+    url = @url.replace('/edit', '')
+
     $.ajax
-      type: "POST",
-      url: @url,
+      type: "PUT",
+      url: url,
       data: @$().find('.modal-body>div>form').serialize(),
       dataType: 'json',
       success: (data) =>
         @$().modal('hide')
-        @variableCRUD('add', data)
+        @variableCRUD('update', data)
       error: (jqXHR, textStatus, errorThrown) =>
         json = eval("(" + jqXHR.responseText + ")");
         fields = json.errors.fields
@@ -65,7 +68,11 @@ class @PromotionSetVariableModal extends @ModalBase
 
   onVariableNameChange: (e) ->
     name = $.trim($(e.target).val())
-    url = [@url, '/search_promotion'].join('')
+
+    str = "variables"
+    index = @url.indexOf(str)
+
+    url = [@url.slice(0, index + str.length), '/search_promotion'].join('')
 
     if (name.length > 0)
       $.get url, { inline: true, q: name }, (json) =>
@@ -92,3 +99,16 @@ class @PromotionSetVariableModal extends @ModalBase
       $promotions.addClass('has-error').find('.help-block').text(fields['promotion_string'])
     else
       $promotions.removeClass('has-error').find('.help-block').text('')
+
+  handleSortable: () ->
+    $ids = @$ids
+
+    @$().find('ul.selected-promotions').sortable({
+      update: (e, ui) ->
+        ids = []
+        $(this).find('li').map(() ->
+          ids.push($(this).attr('id'))
+        )
+
+        $ids.val(ids.join(','))
+    })
