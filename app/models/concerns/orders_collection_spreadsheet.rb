@@ -18,36 +18,20 @@ module OrdersCollectionSpreadsheet
     end
 
     all.each do |order|
-      sheet[row += 1, 0] = "订单号：#{order.id}"
-      sheet.merge_cells(row, 0, row, 3)
-      sheet[row += 1, 0] = "创建时间：#{order.created_at.strftime("%Y/%m/%d %H:%M")}"
-      sheet.merge_cells(row, 0, row, 3)
-      sheet[row += 1, 0] = "收货人：#{order.receiver_name}"
-      sheet.merge_cells(row, 0, row, 3)
-      sheet[row += 1, 0] = "联系电话：#{order.receiver_phone}"
-      sheet.merge_cells(row, 0, row, 3)
-      sheet[row += 1, 0] = "收货地址：#{order.delivery_address}"
-      sheet.merge_cells(row, 0, row, 3)
-
-      sheet.row(row += 1).concat ["商品", "价格(元)", "数量(件)", "小计(元)"]
+      sheet.row(row += 1).concat ["订单号：#{order.id}", 
+        "创建时间：#{order.created_at.strftime("%Y/%m/%d %H:%M")}",
+        "收货人：#{order.receiver_name}",
+        "联系电话：#{order.receiver_phone}",
+        "收货地址：#{order.delivery_address}"]
+      # sheet.row(row += 1).concat ["商品", "价格(元)", "数量(件)", "小计(元)"]
       order.items.each do |item|
-        sheet.row(row += 1).concat ["#{item.title}#{item.properties_title}", "#{item.price.round(2)}", "#{item.quantity}", "#{(item.quantity * item.price).round(2)}"]
+        sheet.row(row += 1).concat ["#{item.title}#{item.properties_title}", "#{item.price.round(2)}元", "#{item.quantity}件", "#{(item.quantity * item.price).round(2)}元"]
       end
 
-      sheet[row += 1, 0] = "共#{order.items_count}件商品，合计：#{order.items_total.round(2)}元"
-      sheet.merge_cells(row, 0, row, 3)
-      sheet.row(row).default_format = format
+      sheet.row(row += 1).concat [nil, "共#{order.items_count}件商品#{order.items_total.round(2)}元",
+        "运费：#{(order.express_fee || 0).round(2)}元",
+        "总计：#{order.total.round(2)}元"]
 
-      sheet[row += 1, 0] = "运费：#{(order.express_fee || 0).round(2)}元"
-      sheet.merge_cells(row, 0, row, 3)
-      sheet.row(row).default_format = format
-
-      sheet[row += 1, 0] = "总计：#{order.total.round(2)}元"
-      sheet.merge_cells(row, 0, row, 3)
-      sheet.row(row).default_format = format
-
-      sheet.row(row += 1).concat []
-      sheet.row(row += 1).concat []
       sheet.row(row += 1).concat []
     end
 
