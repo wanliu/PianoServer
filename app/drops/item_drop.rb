@@ -11,4 +11,13 @@ class ItemDrop < Liquid::Rails::Drop
   def link_html
     "/items/#{object.sid}.html"
   end
+
+
+  def shop_link
+    if object.shop.present?
+      "/#{object.shop.name}/items/#{object.sid}"
+    else
+      ""
+    end
+  end
 end
