@@ -1,18 +1,19 @@
 #=require ./modal_base
 
-class @PromotionSetVariableModal extends @ModalBase
+class @ItemSetVariableEditModal extends @ModalBase
 
   events:
-    'click .promotion': 'toggleSelectedItem'
+    'click .item': 'toggleSelectedItem'
     'click .save': 'onSave'
     'keyup input[name=q]': 'onVariableNameChange'
 
   constructor: (@element, @url, $variableList) ->
     super(@element, @url, $variableList)
 
-    @$seleteds = @$().find('.selected-promotions')
-    @$list = @$().find('.promotion-set-variable .list-group')
-    @$ids = @$().find('#variable_promotion_string')
+    @$seleteds = @$().find('.selected-items')
+    @$list = @$().find('.item-set-variable .list-group')
+    @$ids = @$().find('#variable_items_string')
+    @handleSortable()
 
   toggleSelectedItem: (e) ->
     $target = $(e.currentTarget)
@@ -24,15 +25,15 @@ class @PromotionSetVariableModal extends @ModalBase
         $(this).remove()
         $target.removeClass('active')
 
-      @removePromotionId(id);
+      @removeItemId(id);
     else
       $target.addClass('active')
 
-      new SelectedPromotion(@$seleteds, id, title)
+      new SelectedItem(@$seleteds, id, title)
 
-      @addPromotionId(id)
+      @addItemId(id)
 
-  addPromotionId: (id) ->
+  addItemId: (id) ->
     ids = @$ids.val()
 
     if ids == ''
@@ -40,7 +41,7 @@ class @PromotionSetVariableModal extends @ModalBase
     else
       @$ids.val([ids, id].join(','))
 
-  removePromotionId: (id) ->
+  removeItemId: (id) ->
     ids = @$ids.val().split(',')
     index = ids.indexOf(id)
 
@@ -49,14 +50,16 @@ class @PromotionSetVariableModal extends @ModalBase
       @$ids.val(ids.join(','))
 
   onSave: (e) ->
+    url = @url.replace('/edit', '')
+
     $.ajax
-      type: "POST",
-      url: @url,
+      type: "PUT",
+      url: url,
       data: @$().find('.modal-body>div>form').serialize(),
       dataType: 'json',
       success: (data) =>
         @$().modal('hide')
-        @variableCRUD('add', data)
+        @variableCRUD('update', data)
       error: (jqXHR, textStatus, errorThrown) =>
         json = eval("(" + jqXHR.responseText + ")");
         fields = json.errors.fields
@@ -65,30 +68,47 @@ class @PromotionSetVariableModal extends @ModalBase
 
   onVariableNameChange: (e) ->
     name = $.trim($(e.target).val())
-    url = [@url, '/search_promotion'].join('')
+
+    str = "variables"
+    index = @url.indexOf(str)
+
+    url = [@url.slice(0, index + str.length), '/search_item'].join('')
 
     if (name.length > 0)
       $.get url, { inline: true, q: name }, (json) =>
         @unbindAllEvents()
-        promotions = json.promotions
+        items = json.items
         htmlAry = []
 
-        for promotion in promotions
-          htmlAry.push(promotion.html) if promotion.html?
+        for item in items
+          htmlAry.push(item.html) if item.html?
 
-        @$().find('.promotion-list .list-group').html(htmlAry.join(''))
+        @$().find('.item-list .list-group').html(htmlAry.join(''))
         @bindAllEvents()
 
   hanldeErrors: (fields) ->
     $fieldName = @$().find('.field-name')
-    $promotions = @$().find('.field-promotions')
+    $items = @$().find('.field-items')
 
     if fields['name']?
       $fieldName.addClass('has-error').find('.help-block').text(fields['name'])
     else
       $fieldName.removeClass('has-error').find('.help-block').text('')
 
-    if fields['promotion_string']?
-      $promotions.addClass('has-error').find('.help-block').text(fields['promotion_string'])
+    if fields['items_string']?
+      $items.addClass('has-error').find('.help-block').text(fields['items_string'])
     else
-      $promotions.removeClass('has-error').find('.help-block').text('')
+      $items.removeClass('has-error').find('.help-block').text('')
+
+  handleSortable: () ->
+    $ids = @$ids
+
+    @$().find('ul.selected-items').sortable({
+      update: (e, ui) ->
+        ids = []
+        $(this).find('li').map(() ->
+          ids.push($(this).attr('id'))
+        )
+
+        $ids.val(ids.join(','))
+    })

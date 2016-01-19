@@ -1,9 +1,9 @@
 #=require ./modal_base
 
-class @PromotionVariableModal extends @ModalBase
+class @ItemVariableModal extends @ModalBase
 
   events:
-    'click .promotion': 'onSelectedItem'
+    'click .item': 'onSelectedItem'
     'click .save': 'onSave'
     'keyup input[name=q]': 'onVariableNameChange'
 
@@ -19,10 +19,10 @@ class @PromotionVariableModal extends @ModalBase
     $(e.currentTarget).addClass('active').siblings().removeClass('active')
     @$selected.find('.id').text(id)
     @$selected.find('.title').text(title)
-    @$().find('#variable_promotion_id').val(id)
+    @$().find('#variable_item_id').val(id)
 
   onSave: (e) ->
-    promotion_id = @$().find('#variable_promotion_id').val()
+    item_id = @$().find('#variable_item_id').val()
     name = @$selected
 
     $.ajax
@@ -41,16 +41,16 @@ class @PromotionVariableModal extends @ModalBase
 
   onVariableNameChange: (e) ->
     name = $.trim($(e.target).val())
-    url = [@url, '/search_promotion'].join('')
+    url = [@url, '/search_item'].join('')
 
     if (name.length > 0)
       $.get url, { inline: true, q: name }, (json) =>
         @unbindAllEvents()
-        promotions = json.promotions
+        items = json.items
         htmlAry = []
 
-        for promotion in promotions
-          htmlAry.push(promotion.html) if promotion.html?
+        for item in items
+          htmlAry.push(item.html) if item.html?
 
         @$().find('.promotion-list .list-group').html(htmlAry.join(''))
         @bindAllEvents()

@@ -61,6 +61,16 @@ class @EditVariableModal
             @modal = new PromotionSetVariableEditModal(@$modal, url, $variableList)
           else
             @modal = new PromotionSetVariableModal(@$modal, url, $variableList)
+        when 'item_variable'
+          if isEdit
+            @modal = new ItemVariableEditModal(@$modal, url, $variableList)
+          else
+            @modal = new ItemVariableModal(@$modal, url, $variableList)
+        when 'item_set_variable'
+          if isEdit
+            @modal = new ItemSetVariableEditModal(@$modal, url, $variableList)
+          else
+            @modal = new ItemSetVariableModal(@$modal, url, $variableList)
 
 
   onModalHide: () ->
@@ -70,5 +80,3 @@ class @EditVariableModal
 
   @getModal: () ->
     @editVariableModal = new EditVariableModal()
-
-

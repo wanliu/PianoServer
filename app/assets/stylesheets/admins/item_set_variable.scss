@@ -1,0 +1,60 @@
+.item-set-variable{
+  .item-set{
+    display: table;
+    width: 100%;
+
+    .item-list{
+      display: table-cell;
+      max-width: 0px;
+      padding-right: 10px;
+      border-right: 1px dashed #CCCCCC;
+
+      .list-group-item.active {
+        border-color: #515151;
+      }
+    }
+
+    .item-selected{
+      display: table-cell;
+      vertical-align: top;
+      width: 35%;
+      padding-left: 10px;
+
+      .control-label{
+        line-height: 34px;
+        margin-bottom: 15px;
+      }
+
+      .selected-items{
+        margin: 0;
+        padding: 0;
+
+        .selected-item {
+          display: table;
+          width: 100%;
+          padding: 10px;
+
+          .item-name{
+            display: table-cell;
+          }
+
+          .remove-item{
+            display: table-cell;
+            width: 25px;
+            text-align: center;
+            vertical-align: middle;
+            cursor: pointer;
+          }
+
+          &:hover{
+            background: #EEEEEE;
+
+            .remove-item{
+              color: #FF2B2B;
+            }
+          }
+        }
+      }
+    }
+  }
+}
