@@ -125,6 +125,13 @@ class Admins::VariablesController < Admins::BaseController
       @items = []
 
       render :edit_item_variable, layout: false
+
+    when "item_set_variable"
+      items_string = @variable.items_string.split(',')
+      @items = Item.where(id: items_string)
+      @variableItems= @items
+
+      render :edit_item_set_variable, layout: false
     else
 
     end
@@ -147,7 +154,7 @@ class Admins::VariablesController < Admins::BaseController
       update_params.delete(:type)
       @variable.update_attributes!(update_params)
 
-      render json: @variable      
+      render json: @variable
     else
 
     end
