@@ -107,7 +107,10 @@ Rails.application.routes.draw do
         collection do
           get :new_promotion_variable
           get :new_promotion_set_variable
+          get :new_item_variable
+          get :new_item_set_variable
           get :search_promotion
+          get :search_item
         end
       end
     end

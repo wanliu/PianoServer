@@ -1,0 +1,19 @@
+<a href="javascript:void(0);" class="list-group-item item clearfix" data-id="<%= item.id %>" >
+  <%= image_tag item.avatar_url, class: 'item-image' %>
+  <div class="item-infor">
+    <div class="title">
+      <span class="id"><%= item.id %></span>
+      <span class="title"><%= item.title %></span>
+    </div>
+    <div class="shop-infor">
+      商店: <%= item.shop_name %>
+      <% unless item.on_sale %>
+      <label class="label label-danger">下架</label>
+      <% end %>
+      <span class="pull-right">
+        <span class="price">单价<%= number_to_currency(item.price) %></span>
+        <span class="current_stock">库存<%= number_with_delimiter(item.current_stock) %></span>
+      </span>
+    </div>
+  </div>
+</a>

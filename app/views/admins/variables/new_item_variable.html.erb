@@ -1,0 +1,26 @@
+<%= form_for @variable, as: :variable, url: variables_path(@subject, @host) do |f| %>
+  <%= f.hidden_field :item_id %>
+
+  <div class="form-group field-name">
+    <%= f.text_field :name, class: "form-control", placeholder: "对象名" %>
+    <div class="help-block error-name"></div>
+  </div>
+  <div class="list-group selected field-promotion">
+    <div class="list-group-item">
+      <h4>
+      <span class="id">&nbsp;</span>
+      <span class="title">暂未选择一个商品名</span>
+      </h4>
+    </div>
+    <div class="help-block"></div>
+  </div>
+  <div class="promotion-list">
+    <div class="form-group">
+      <input type="text" class="form-control" placeholder="Search" name="q" autocomplete='off'>
+    </div>
+    <%= f.hidden_field :type, value: @variable.class.name.underscore %>
+    <div class="list-group items">
+      <%= render partial: "item", collection: @items %>
+    </div>
+  </div>
+<% end %>

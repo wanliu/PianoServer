@@ -78,5 +78,13 @@ Template.customize_variables = [
     name: 'promotion_set_variable',
     title: '活动集',
     class: PromotionSetVariable
+  }, {
+    name: 'item_variable',
+    title: '商品',
+    class: ItemVariable
+  }, {
+    name: 'item_set_variable',
+    title: '商品集',
+    class: ItemSetVariable
   }
 ]

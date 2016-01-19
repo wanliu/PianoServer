@@ -1,11 +1,11 @@
 #=require ./modal_base
 
-class @PromotionVariableEditModal extends @ModalBase
+class @ItemVariableEditModal extends @ModalBase
 
   events:
     'click .save': 'onSave'
     'click .selected': 'showPromotions'
-    'click .promotion': 'onSelectedItem'
+    'click .item': 'onSelectedItem'
     'keyup input': 'onVariableNameChange'
 
   constructor: (@element, @url, @$variableList) ->
@@ -29,7 +29,7 @@ class @PromotionVariableEditModal extends @ModalBase
 
   showPromotions: () ->
     @$().find('.list-group.selected').addClass('pressed')
-    @$().find('.promotion-list').removeClass('hidden')
+    @$().find('.item-list').removeClass('hidden')
 
   onSelectedItem: (e) ->
     id = $(e.currentTarget).find('.id').text()
@@ -38,25 +38,25 @@ class @PromotionVariableEditModal extends @ModalBase
     $(e.currentTarget).addClass('active').siblings().removeClass('active')
     @$selected.find('.id').text(id)
     @$selected.find('.title').text(title)
-    @$().find('#variable_promotion_id').val(id)
+    @$().find('#variable_item_id').val(id)
 
   onVariableNameChange: (e) ->
     name = $.trim($(e.target).val())
     str = "variables"
     index = @url.indexOf(str)
 
-    url = [@url.slice(0, index + str.length), '/search_promotion'].join('')
+    url = [@url.slice(0, index + str.length), '/search_item'].join('')
 
     if (name.length > 0)
       $.get url, { inline: true, q: name }, (json) =>
         @unbindAllEvents()
-        promotions = json.promotions
+        items = json.items
         htmlAry = []
 
-        for promotion in promotions
-          htmlAry.push(promotion.html) if promotion.html?
+        for item in items
+          htmlAry.push(item.html) if item.html?
 
-        @$().find('.promotion-list .list-group').html(htmlAry.join(''))
+        @$().find('.item-list .list-group').html(htmlAry.join(''))
         @bindAllEvents()
 
   hanldeErrors: (fields) ->

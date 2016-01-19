@@ -1,0 +1,38 @@
+<div class="item-set-variable" >
+  <%= form_for @variable, as: :variable, url: variables_path(@subject, @host) do |f| %>
+    <%= f.hidden_field :items_string %>
+
+    <div class="form-group field-name">
+      <%= f.text_field :name, class: "form-control", placeholder: "活动集名" %>
+      <div class="help-block"></div>
+    </div>
+    <div class="item-set">
+      <div class="item-list items">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search" name="q">
+        </div>
+        <%= f.hidden_field :type, value: @variable.class.name.underscore %>
+        <div class="list-group">
+
+        </div>
+      </div>
+      <div class="item-selected field-items">
+        <label class="control-label">
+          已选择的商品：
+        </label>
+        <ul class="selected-items">
+          <% @variableItems.each do |item| %>
+            <script type="text/javascript">
+              var container = $('.selected-items'),
+                  itemId = "<%= item.id %>",
+                  title = "<%= item.title %>";
+
+              new SelectedItem(container, itemId, title, true);
+            </script>
+          <% end %>
+        </ul>
+        <div class="help-block"></div>
+      </div>
+    </div>
+  <% end %>
+</div>
