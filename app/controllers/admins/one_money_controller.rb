@@ -34,9 +34,14 @@ class Admins::OneMoneyController < Admins::BaseController
     @item = PmoItem[params[:item_id]]
     uploader = NativeUploader.new(@item, :cover_url)
     uploader.store! params[:file]
+
     cover_urls = @item.cover_urls.unshift(uploader.url(:cover)).uniq
+    image_urls = @item.image_urls.unshift(uploader.url).uniq
     @item.cover_urls = cover_urls
+    @item.image_urls = image_urls
+
     @item.save
+
     render json: { success: true, url: uploader.url(:cover) }
   end
 
