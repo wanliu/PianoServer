@@ -366,7 +366,6 @@ ActiveRecord::Schema.define(version: 20160119072214) do
     t.integer  "pmo_grab_id"
     t.integer  "one_money_id"
     t.decimal  "express_fee",      precision: 10, scale: 2, default: 0.0
-    t.string   "barcode_token"
     t.integer  "pay_kind"
     t.boolean  "paid",                                      default: false
     t.string   "wx_prepare_id"
