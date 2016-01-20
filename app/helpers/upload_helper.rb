@@ -49,7 +49,11 @@ module UploadHelper
 
   def image_upload_button(object_name, field, *args)
     options = args.extract_options!
-    object = self.instance_variable_get("@#{object_name}")
+    if object_name.is_a?(String) or object_name.is_a?(Symbol)
+      object = self.instance_variable_get("@#{object_name}")
+    else
+      object = object_name
+    end
     title = object.send(field)
     url = options[:url]
     upload_object_id = caller.object_id
