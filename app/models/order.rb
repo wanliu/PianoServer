@@ -1,4 +1,8 @@
+require 'order_wx_pay'
+
 class Order < ActiveRecord::Base
+  include OrderWxPay
+
   extend OrdersCollectionSpreadsheet
 
   belongs_to :buyer, class_name: 'User'
@@ -8,7 +12,7 @@ class Order < ActiveRecord::Base
   accepts_nested_attributes_for :items
 
   attr_accessor :cart_item_ids
-  attr_accessor :address_id
+  attr_accessor :address_id, :request_ip
 
   enum status: { initiated: 0, finish: 1 }
 

@@ -3,8 +3,8 @@ require 'digest/md5'
 class OrdersController < ApplicationController
   include ParamsCallback
 
-  before_action :authenticate_user!
-  before_action :set_order, only: [:show, :destroy, :update]
+  before_action :authenticate_user!, except: [:wx_notify]
+  before_action :set_order, only: [:show, :destroy, :update, :set_pay_kind, :pay_kind, :waiting_wx_pay]
   before_action :check_for_mobile, only: [:index, :show, :history, :confirmation, :buy_now_confirm]
   before_action :set_yiyuan_item_params, only: :yiyuan_confirm
   before_action :set_yiyuan_order_params, only: :create_yiyuan
@@ -47,7 +47,6 @@ class OrdersController < ApplicationController
     respond_to do |format|
       if @order.save_with_items(current_user)
         format.html { redirect_to @order }
-        format.mobile { redirect_to @order }
         format.json { render json: @order, status: :created }
       else
         format.any(:html, :mobile) do
@@ -184,6 +183,7 @@ class OrdersController < ApplicationController
     @order_item = @order.items.build(@item_params)
 
     if @order.save_with_pmo(current_user)
+      # redirect_to pay_kind_order_path(@order)
       redirect_to @order
     else
       render "orders/yiyuan/fail", status: :unprocessable_entity
@@ -207,6 +207,68 @@ class OrdersController < ApplicationController
     else
       render "orders/new_yiyuan_address"
     end
+  end
+
+  def pay_kind
+  end
+
+  def set_pay_kind
+    if "wx_pay" == params[:order][:pay_kind]
+      @order.request_ip = request.ip
+      if @order.create_wx_order
+        redirect_to wxpay_test_orders_path(oid: @order.id)
+      else
+        flash[:error] = " 请求微信支付失败，请稍后再试！"
+        redirect_to pay_kind_order_path(@order)
+      end
+    else
+      redirect_to @order
+    end
+  end
+
+  def waiting_wx_pay
+
+  end
+
+  def wx_notify
+    @order = Order.find(params[:id])
+
+    result = Hash.from_xml(request.body.read)["xml"]
+
+    if WxPay::Sign.verify?(result)
+
+      # find your order and process the post-paid logic.
+      puts "微信支付成功返回，结果：#{result.to_json}"
+
+      render :xml => {return_code: "SUCCESS"}.to_xml(root: 'xml', dasherize: false)
+    else
+      render :xml => {return_code: "FAIL", return_msg: "签名失败"}.to_xml(root: 'xml', dasherize: false)
+    end
+  end
+
+  def wxpay_test
+    @order = current_user.orders.build id: "-#{rand(1000)}#{rand(1000)}",
+      total: 0.01
+
+    @order.request_ip = request.ip
+
+    @order.create_wx_order do |order_created, err_msg|
+      if order_created
+        params = {
+          prepayid: @order.wx_prepay_id,
+          noncestr: @order.wx_noncestr
+        }
+
+        @params = WxPay::Service::generate_app_pay_req params
+      else
+        flash[:error] = "请求微信支付失败，请稍后再试！错误信息：#{err_msg}"
+        # redirect_to pay_kind_order_path(@order)
+        render "orders/yiyuan/wx_order_fail"
+      end
+    end
+  end
+
+  def wxpay
   end
 
   private
