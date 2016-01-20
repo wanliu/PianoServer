@@ -7,7 +7,7 @@ module OrderWxPay
       spbill_create_ip: request_ip,
       notify_url: "http://m.wanliu.biz/orders/#{id}/wx_notify",
       trade_type: 'JSAPI',
-      opendid: buyer.weixin_openid
+      openid: buyer.weixin_openid
     }
 
     wx_order = WxPay::Service.invoke_unifiedorder params
