@@ -1,0 +1,33 @@
+<div class='container'>
+  微信支付
+</div>
+
+<% if @params.present? %>
+  <script>
+    var WXPayment = function() {
+      if( typeof WeixinJSBridge === 'undefined' ) {
+          alert('请在微信在打开页面！');
+          return false;
+      }
+
+      WeixinJSBridge.invoke('getBrandWCPayRequest', <%= @params.to_json.html_safe %>, function(res) {
+        switch(res.err_msg) {
+          case 'get_brand_wcpay_request:cancel':
+            alert('用户取消支付！');
+            break;
+          case 'get_brand_wcpay_request:fail':
+            alert('支付失败！（'+res.err_desc+'）');
+            break;
+          case 'get_brand_wcpay_request:ok':
+            alert('支付成功！');
+            break;
+          default:
+            alert(JSON.stringify(res));
+            break;
+        }
+      });
+    }
+  </script>
+<% else %>
+  请求已经过时，请返回上级重新开始！
+<% end %>

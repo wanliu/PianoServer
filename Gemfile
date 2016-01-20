@@ -133,6 +133,8 @@ gem "omniauth-wechat-oauth2"
 #excel导入导出
 gem 'spreadsheet'
 
+gem 'wx_pay'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
