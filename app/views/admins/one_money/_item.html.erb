@@ -2,8 +2,8 @@
   <div class="item-head">
     <%= close_to remove_item_admins_one_money_path(@one_money.id, item.id), remote: true, class: 'pull-right', method: :delete %>
     <span class="item-id"><%= item.id %></span>
-
-    <%= image_tag item.cover_url, class: 'item-image' %>
+    <div class="item-image upload-button-<%=item.id %>">
+    </div>
     <p class="time-panel">
       <% unless item.start_at.blank? || item.end_at.blank? %>
         <span class="time-start_at">开始 <%=l item.start_at, format: :short %></span>
@@ -64,3 +64,32 @@
 
   </div>
 </div>
+
+<script type="text/javascript">
+  var html = [ "<div class=\"qq-uploader\">",
+                 "<div class=\"qq-upload-drop-area\"><span>{dragText}</span></div>",
+                 "<div class=\"qq-upload-button\">",
+                   "<%=j image_tag(item.cover_url, class: "upload-image-#{item.id}") %>",
+                 "</div>",
+                 "<ul class=\"qq-upload-list\"></ul>",
+               "</div>"
+             ].join('\n');
+
+var $element = $(".upload-button-<%=item.id %>")[0];
+var actionUrl = "<%= upload_image_admins_one_money_path(@one_money.id, item.id) %>";
+var token = $('meta[name=csrf-token]').attr('content');
+
+// <%= image_tag item.cover_url, class: 'item-image', data: { image_id: item.id } %>
+
+new qq.FileUploader({
+  element: $element,
+  customHeaders: { "X-CSRF-TOKEN": token },
+  template: html,
+  action:  actionUrl + "?authenticity_token=" + encodeURIComponent(token),
+  multiple: false,
+  onComplete: function (id, filename, responseJSON) {
+    var url = responseJSON.url;
+    $(".upload-image-<%= item.id %>").attr('src', url);
+  }
+});
+</script>

@@ -156,7 +156,7 @@ Rails.application.routes.draw do
         patch "add_item/:item_id", action: :add_item, as: :add_item
         put "update_item/:item_id", action: :update_item, as: :update_item
         delete "remove_item/:item_id", action: :remove_item, as: :remove_item
-
+        post "upload_image/:item_id", action: :upload_image, as: :upload_image
         get :signups
         get "details/:item_id", action: :details, as: :details
       end
