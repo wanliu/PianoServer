@@ -1,4 +1,5 @@
 require 'digest/md5'
+require 'weixin_api'
 
 class OrdersController < ApplicationController
   include ParamsCallback
@@ -247,12 +248,15 @@ class OrdersController < ApplicationController
   end
 
   def wxpay_test
+    wx_query_code = params[:code]
+    openid = WeixinApi.code_to_openid(wx_query_code)
+
     @order = current_user.orders.build id: "-#{rand(1000)}#{rand(1000)}",
       total: 0.01
 
     @order.request_ip = request.ip
 
-    @order.create_wx_order do |order_created, err_msg|
+    @order.create_wx_order(openid: openid) do |order_created, err_msg|
       if order_created
         params = {
           prepayid: @order.wx_prepay_id,
