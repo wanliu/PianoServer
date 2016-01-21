@@ -1,5 +1,5 @@
 module OrderWxPay
-  def create_wx_order
+  def create_wx_order(options)
     params = {
       body: "#{id}号订单支付",
       out_trade_no: id.to_s,
@@ -7,7 +7,7 @@ module OrderWxPay
       spbill_create_ip: request_ip,
       notify_url: "http://m.wanliu.biz/orders/#{id}/wx_notify",
       trade_type: 'JSAPI',
-      openid: buyer.weixin_openid
+      openid: options[:openid]
     }
 
     wx_order = WxPay::Service.invoke_unifiedorder params
