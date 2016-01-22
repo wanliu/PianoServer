@@ -16,6 +16,7 @@ module YiyuanOrdersController
       redirect_to new_yiyuan_address_orders_path(callback: request.fullpath)
       return
     end
+
     @order = current_user.orders.build one_money_id: @one_money_id, pmo_grab_id: @pmo_grab_id, address_id: @location.id
 
     @order_item = @order.items.build(@item_params)

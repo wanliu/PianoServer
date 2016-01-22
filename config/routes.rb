@@ -290,6 +290,15 @@ Rails.application.routes.draw do
       get "new_yiyuan_address"
       get "chose_yiyuan_address"
       post "yiyuan_address", to: 'orders#bind_yiyuan_address'
+      get "wxpay"
+      get "wxpay_test"
+    end
+
+    member do
+      get "waiting_wx_pay"
+      get "pay_kind"
+      post "set_pay_kind"
+      post "wx_notify"
     end
   end
 
