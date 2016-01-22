@@ -123,6 +123,35 @@ class Admins::OneMoneyController < Admins::BaseController
     @item.save
   end
 
+  # 用户退出统计
+  # 在资料页退出的用户　And 在提交订单业退出的用户
+  def churn_stastic
+    @stastics = {}
+
+    @one_money.items.each do |pmo_item|
+      title = pmo_item.title
+      stastic = @stastics[title] = {}
+
+      joined_user_ids = PmoGrab.find(pmo_item_id: pmo_item.id)
+        .combine(one_money: @one_money.id).map(&:user_user_id)
+      stastic[:joined] = joined_user_ids.count
+
+      address_quite_user_ids = User.includes(:locations).where(id: joined_user_ids)
+        .select{ |user| user.locations.blank? }.map { |item| item.id.to_s }
+      stastic[:address_quite] = address_quite_user_ids.count
+
+      grab_ids = PmoGrab.find(one_money: @one_money.id).combine(pmo_item_id: pmo_item.id).map(&:id)
+      ordered_user_ids = Order.where(one_money_id: @one_money.id, pmo_grab_id: grab_ids)
+        .pluck(:buyer_id).map(&:to_s)
+      stastic[:ordered] = ordered_user_ids.count
+    
+      order_quite_user_ids = joined_user_ids - address_quite_user_ids - ordered_user_ids
+      stastic[:order_quite] = order_quite_user_ids.count
+    end
+
+    @stastics
+  end
+
   private
 
   def one_money_params

@@ -1,0 +1,31 @@
+<h3>
+  <%= @one_money.title %>活动用户订单统计表
+</h3>
+
+<table class='table'>
+  <colgroup width='32%'></colgroup>
+  <colgroup width='17%'></colgroup>
+  <colgroup width='17%'></colgroup>
+  <colgroup width='17%'></colgroup>
+  <colgroup width='17%'></colgroup>
+  <thead>
+    <tr>
+      <th>活动名称</th>
+      <th>未填写地址</th>
+      <th>已填写地址未确认订单</th>
+      <th>已经提交订单</th>
+      <th>合计</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @stastics.each do |title, stastic| %>
+      <tr>
+        <td> <%= title %> </td>
+        <td> <%= stastic[:address_quite] %> </td>
+        <td> <%= stastic[:order_quite] %> </td>
+        <td> <%= stastic[:ordered] %> </td>
+        <td> <%= stastic[:joined] %> </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
