@@ -1,5 +1,5 @@
 <div class='container'>
-  微信支付
+  微信支付 <%= @params.to_json %>
 </div>
 
 <% if @params.present? %>
@@ -9,7 +9,7 @@
           alert('请在微信在打开页面！');
           return false;
       }
-
+      // getBrandWCPayRequest
       WeixinJSBridge.invoke('getBrandWCPayRequest', <%= @params.to_json.html_safe %>, function(res) {
         switch(res.err_msg) {
           case 'get_brand_wcpay_request:cancel':
