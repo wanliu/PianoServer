@@ -159,6 +159,7 @@ Rails.application.routes.draw do
         post "upload_image/:item_id", action: :upload_image, as: :upload_image
         get :signups
         get "details/:item_id", action: :details, as: :details
+        get "churn_stastic"
       end
     end
     resources :attachments
