@@ -28,10 +28,12 @@
       <%= link_to '查看反馈列表', feedbacks_path, class: "btn btn-default" %>
     </div>
     <div class="col-md-8 col-sm-8 col-xs-8 text-right">
-      <%= f.check_box(:is_show, checked: true) %>
-      <%= label :feedback, :is_show do %>
-        是否公开
-      <% end %>
+      <span class="hidden">
+        <%= f.check_box(:is_show, checked: false) %>
+        <%= label :feedback, :is_show do %>
+          是否公开
+        <% end %>
+      </span>
       <%= f.submit "提交", class: "btn btn-primary" %>
     </div>
   </div>

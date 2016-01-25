@@ -15,6 +15,7 @@ class FeedbacksController < ApplicationController
 
   def create
     @feedback = Feedback.new(feedback_params)
+    @feedback[:is_show] = false
 
     if @feedback.save
       flash[:notice] = "感谢您的反馈, 我们将努力做得更好!"
