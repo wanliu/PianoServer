@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160119072214) do
+ActiveRecord::Schema.define(version: 20160125075406) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -160,6 +160,22 @@ ActiveRecord::Schema.define(version: 20160119072214) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  create_table "evaluations", force: :cascade do |t|
+    t.integer  "evaluationable_id"
+    t.string   "evaluationable_type"
+    t.integer  "user_id"
+    t.integer  "order_id"
+    t.boolean  "hidden",              default: false
+    t.string   "desc"
+    t.jsonb    "items",               default: {}
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+  end
+
+  add_index "evaluations", ["evaluationable_type", "evaluationable_id"], name: "index_evaluations_on_evaluationable_type_and_evaluationable_id", using: :btree
+  add_index "evaluations", ["order_id"], name: "index_evaluations_on_order_id", using: :btree
+  add_index "evaluations", ["user_id"], name: "index_evaluations_on_user_id", using: :btree
 
   create_table "feedbacks", force: :cascade do |t|
     t.string   "name"
@@ -366,10 +382,12 @@ ActiveRecord::Schema.define(version: 20160119072214) do
     t.integer  "pmo_grab_id"
     t.integer  "one_money_id"
     t.decimal  "express_fee",      precision: 10, scale: 2, default: 0.0
+    t.string   "barcode_token"
     t.integer  "pay_kind"
     t.boolean  "paid",                                      default: false
     t.string   "wx_prepare_id"
     t.string   "wx_noncestr"
+    t.boolean  "evaluated"
   end
 
   add_index "orders", ["buyer_id"], name: "index_orders_on_buyer_id", using: :btree

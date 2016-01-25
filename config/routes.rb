@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :evaluations, except: [:edit, :destroy, :update]
   resources :order_items, except: [:new, :edit]
   concern :messable do
     resources :messages

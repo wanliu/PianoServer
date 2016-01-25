@@ -58,7 +58,11 @@
     </li>
   </ul>
 
-  <% unless @order.finish? %>
+  <% if @order.finish? %>
+    <% if !@order.evaluated? && @order.pmo_grab_id.present? %>
+      <div><%= link_to '评价', new_evaluation_path(pmo_grab_id: @order.pmo_grab_id), class: 'btn btn-primary' %></div>
+    <% end %>
+  <% else %>
   <nav class="navbar navbar-default navbar-fixed-bottom">
     <div class="container">
       <div class='operation pull-right'>
