@@ -1,0 +1,7 @@
+<div>
+  <% if @order.paid? %>
+    支付成功！点击<%= link_to "查看订单", order_path(@order) %>
+  <% else %>
+    正在等待支付结果，请耐心等候:)
+  <% end %>
+</div>

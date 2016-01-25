@@ -159,6 +159,7 @@ Rails.application.routes.draw do
         post "upload_image/:item_id", action: :upload_image, as: :upload_image
         get :signups
         get "details/:item_id", action: :details, as: :details
+        get "churn_stastic"
       end
     end
     resources :attachments
@@ -289,6 +290,15 @@ Rails.application.routes.draw do
       get "new_yiyuan_address"
       get "chose_yiyuan_address"
       post "yiyuan_address", to: 'orders#bind_yiyuan_address'
+      get "wxpay"
+      get "wxpay_test"
+    end
+
+    member do
+      get "waiting_wx_pay"
+      get "pay_kind"
+      post "set_pay_kind"
+      post "wx_notify"
     end
   end
 

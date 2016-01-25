@@ -11,6 +11,7 @@ class OneMoneyTable < TableCloth::Base
   end
 
   actions do
+    action {|object| link_to "下单情况", churn_stastic_admins_one_money_path(object.id), class: "btn btn-primary" }
     action {|object| link_to "编辑", edit_admins_one_money_path(object.id), class: "btn btn-primary" }
   end
 end
