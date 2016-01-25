@@ -1,5 +1,5 @@
 <div class='container'>
-  微信支付 <%= @params.to_json %>
+  <pre>微信支付 <%= JSON.pretty_generate @params %></pre>
 </div>
 
 <% if @params.present? %>
