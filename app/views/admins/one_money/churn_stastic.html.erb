@@ -27,5 +27,12 @@
         <td> <%= stastic[:joined] %> </td>
       </tr>
     <% end %>
+    <tr>
+      <td>合计</td>
+      <td> <%= @stastics.values.map {|item| item[:address_quite]}.reduce(:+) %> </td>
+      <td> <%= @stastics.values.map {|item| item[:order_quite]}.reduce(:+) %> </td>
+      <td> <%= @stastics.values.map {|item| item[:ordered]}.reduce(:+) %> </td>
+      <td> <%= @stastics.values.map {|item| item[:joined]}.reduce(:+) %> </td>
+    </tr>
   </tbody>
 </table>
