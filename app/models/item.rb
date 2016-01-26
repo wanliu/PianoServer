@@ -84,8 +84,6 @@ class Item < ActiveRecord::Base
       }
     }
 
-    pp product
-
     if product.present?
       if product.to_i > 0
         query[:query][:bool][:should].push({
