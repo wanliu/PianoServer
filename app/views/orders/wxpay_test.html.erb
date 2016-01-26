@@ -23,6 +23,7 @@
     function onBridgeReady(){
       alert("..start.. pay fn" + "typeof WeixinJSBridge" + typeof WeixinJSBridge);
       alert("..start.. pay fn" + "WeixinJSBridge.invoke" + typeof WeixinJSBridge.invoke);
+      alert("<%= @params.to_json.html_safe %>");
       var WXPayment = function() {
         if( typeof(WeixinJSBridge) === 'undefined' ) {
             alert('请在微信在打开页面！');
@@ -30,6 +31,7 @@
         }
         // getBrandWCPayRequest
         WeixinJSBridge.invoke('getBrandWCPayRequest', <%= @params.to_json.html_safe %>, function(res) {
+          alert(JSON.stringify(res));
           switch(res.err_msg) {
             case 'get_brand_wcpay_request:cancel':
               alert('用户取消支付！');
