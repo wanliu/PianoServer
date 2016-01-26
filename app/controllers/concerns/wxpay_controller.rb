@@ -41,7 +41,7 @@ module WxpayController
         @params = {
           appId: WxPay.appid,
           timeStamp: Time.now.to_i.to_s,
-          noncestr: Devise.friendly_token,
+          nonceStr: Devise.friendly_token,
           package: "prepay_id=#{@order.wx_prepay_id}",
           signType: "MD5"
         }
