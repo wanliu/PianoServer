@@ -23,7 +23,7 @@
     function onBridgeReady(){
       alert("..start.. pay fn" + "typeof WeixinJSBridge" + typeof WeixinJSBridge);
       alert("..start.. pay fn" + "WeixinJSBridge.invoke" + typeof WeixinJSBridge.invoke);
-      alert("<%= @params.to_json %>");
+      // alert("<%= @params.to_json %>");
       var WXPayment = function() {
         if( typeof(WeixinJSBridge) === 'undefined' ) {
             alert('请在微信在打开页面！');
