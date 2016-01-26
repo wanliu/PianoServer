@@ -48,6 +48,7 @@ class PmoItem < Ohm::Model
   counter :completes
 
   index :title
+  index :item_id
   # index :id
 
   def self.from(item)
@@ -165,7 +166,8 @@ class PmoItem < Ohm::Model
 
   def self.find_or_create(item_id)
     item_id = item_id.to_i
-    if self[item_id].present?
+    item = PmoItem.find(item_id: item_id)
+    if item.present?
       return self[item_id]
     else
       item = Item.find(item_id)
