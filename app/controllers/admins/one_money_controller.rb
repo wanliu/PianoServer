@@ -66,6 +66,7 @@ class Admins::OneMoneyController < Admins::BaseController
                                                  text: item.title,
                                                  avatar_url: item.avatar_url,
                                                  shop_name: item.shop.title,
+                                                 sid: item.sid,
                                                  price: item.price,
                                                  inventory: item.current_stock }} }
   end
@@ -144,7 +145,7 @@ class Admins::OneMoneyController < Admins::BaseController
       ordered_user_ids = Order.where(one_money_id: @one_money.id, pmo_grab_id: grab_ids)
         .pluck(:buyer_id).map(&:to_s)
       stastic[:ordered] = ordered_user_ids.count
-    
+
       order_quite_user_ids = joined_user_ids - address_quite_user_ids - ordered_user_ids
       stastic[:order_quite] = order_quite_user_ids.count
     end

@@ -70,7 +70,7 @@ class Item < ActiveRecord::Base
   scope :with_shop_or_product, -> (q) do
     groups = q.split(/[,，。　 ]/)
     shop_name = groups[0]
-    product = groups[1]
+    product = groups[1..-1].join('')
 
     query = {
       query: {
@@ -84,10 +84,18 @@ class Item < ActiveRecord::Base
       }
     }
 
+    pp product
+
     if product.present?
-      query[:query][:bool][:should].push({
-        query_string: {"default_field" => "item.title","query" => product }
-      })
+      if product.to_i > 0
+        query[:query][:bool][:should].push({
+          "range":{"item.sid": {"from" => product,"to" => product }}
+        })
+      else
+        query[:query][:bool][:should].push({
+          query_string: {"default_field" => "item.title","query" => product }
+        })
+      end
     end
 
     Item.search(query).records #.results

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160119072214) do
+ActiveRecord::Schema.define(version: 20160125093353) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -228,8 +228,8 @@ ActiveRecord::Schema.define(version: 20160119072214) do
     t.jsonb    "properties",                                  default: {}
     t.text     "description"
     t.decimal  "current_stock",      precision: 10, scale: 2
-    t.jsonb    "properties_setting",                          default: {}
     t.boolean  "abandom",                                     default: false, null: false
+    t.jsonb    "properties_setting",                          default: {}
   end
 
   create_table "jobs", force: :cascade do |t|
@@ -366,7 +366,6 @@ ActiveRecord::Schema.define(version: 20160119072214) do
     t.integer  "pmo_grab_id"
     t.integer  "one_money_id"
     t.decimal  "express_fee",      precision: 10, scale: 2, default: 0.0
-    t.integer  "pay_kind"
     t.boolean  "paid",                                      default: false
     t.string   "wx_prepay_id"
     t.string   "wx_noncestr"
