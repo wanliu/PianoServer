@@ -42,8 +42,8 @@ module WxpayController
           appId: WxPay.appid,
           timeStamp: Time.now.to_i.to_s,
           noncestr: Devise.friendly_token,
-          package："prepay_id=#{@order.wx_prepay_id}",
-          signType："MD5"
+          package: "prepay_id=#{@order.wx_prepay_id}",
+          signType: "MD5"
         }
 
         @params[:paySign] = WxPay::Sign.generate(@params)
