@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160125075406) do
+ActiveRecord::Schema.define(version: 20160127051649) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -385,9 +385,9 @@ ActiveRecord::Schema.define(version: 20160125075406) do
     t.string   "barcode_token"
     t.integer  "pay_kind"
     t.boolean  "paid",                                      default: false
-    t.string   "wx_prepare_id"
+    t.string   "wx_prepay_id"
     t.string   "wx_noncestr"
-    t.boolean  "evaluated"
+    t.boolean  "evaluated",                                 default: false
   end
 
   add_index "orders", ["buyer_id"], name: "index_orders_on_buyer_id", using: :btree

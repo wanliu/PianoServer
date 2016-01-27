@@ -39,10 +39,14 @@ class EvaluationsController < ApplicationController
   def create
     @evaluation = current_user.evaluations.build(evaluation_params)
 
-    if @evaluation.save
-      render :show, status: :created
+    if @evaluation.order.evaluated?
+      render json: {errors: ["你已经评论过了！"]}, status: :unprocessable_entity
     else
-      render json: {errors: @evaluation.errors.full_messages.join(',')}, status: :unprocessable_entity
+      if @evaluation.save
+        render :show, status: :created
+      else
+        render json: {errors: @evaluation.errors.full_messages.join(',')}, status: :unprocessable_entity
+      end
     end
   end
 
