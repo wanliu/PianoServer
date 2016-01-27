@@ -1,7 +1,7 @@
 class Evaluation < ActiveRecord::Base
   belongs_to :evaluationable, polymorphic: true, autosave: false
   belongs_to :user
-  belongs_to :order, autosave: true
+  belongs_to :order
 
   store_accessor :items, :good, :delivery, :customer_service
 
@@ -14,7 +14,7 @@ class Evaluation < ActiveRecord::Base
   validates :user, presence: true
   validates :order, presence: true
 
-  before_create :set_order_evaluated
+  after_commit :set_order_evaluated, on: :create
 
   validate :check_user
 
@@ -50,6 +50,8 @@ class Evaluation < ActiveRecord::Base
   end
 
   def set_order_evaluated
-    order.evaluated = true
+    if persisted?
+      order.update_attribute('evaluated', true)
+    end
   end
 end
