@@ -38,12 +38,15 @@ module WxpayController
 
     @order.create_wx_order(openid: openid) do |order_created, err_msg|
       if order_created
-        params = {
-          prepayid: @order.wx_prepay_id,
-          noncestr: @order.wx_noncestr
+        @params = {
+          appId: WxPay.appid,
+          timeStamp: Time.now.to_i.to_s,
+          nonceStr: Devise.friendly_token,
+          package: "prepay_id=#{@order.wx_prepay_id}",
+          signType: "MD5"
         }
 
-        @params = WxPay::Service::generate_app_pay_req params
+        @params[:paySign] = WxPay::Sign.generate(@params)
       else
         flash[:error] = "请求微信支付失败，请稍后再试！错误信息：#{err_msg}"
         # redirect_to pay_kind_order_path(@order)

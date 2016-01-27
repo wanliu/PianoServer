@@ -166,6 +166,6 @@ class PmoGrab < Ohm::Model
   end
 
   def expired_time_out
-    self.delete
+    self.delete unless self.status == "created"
   end
 end
