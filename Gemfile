@@ -130,6 +130,8 @@ gem 'weixin_authorize', github: 'hysios/weixin_authorize'
 gem 'omniauth'
 gem "omniauth-wechat-oauth2"
 
+gem 'wechat'
+
 #excel导入导出
 gem 'spreadsheet'
 
@@ -157,3 +159,5 @@ group :development, :test do
   gem 'spring-commands-teaspoon'
   gem "table_print"
 end
+
+# gem 'redis'

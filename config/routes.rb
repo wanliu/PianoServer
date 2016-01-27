@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resource :wechat, only: [:show, :create]
   resources :order_items, except: [:new, :edit]
   concern :messable do
     resources :messages
