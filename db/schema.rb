@@ -244,8 +244,8 @@ ActiveRecord::Schema.define(version: 20160127051649) do
     t.jsonb    "properties",                                  default: {}
     t.text     "description"
     t.decimal  "current_stock",      precision: 10, scale: 2
-    t.jsonb    "properties_setting",                          default: {}
     t.boolean  "abandom",                                     default: false, null: false
+    t.jsonb    "properties_setting",                          default: {}
   end
 
   create_table "jobs", force: :cascade do |t|
@@ -382,8 +382,6 @@ ActiveRecord::Schema.define(version: 20160127051649) do
     t.integer  "pmo_grab_id"
     t.integer  "one_money_id"
     t.decimal  "express_fee",      precision: 10, scale: 2, default: 0.0
-    t.string   "barcode_token"
-    t.integer  "pay_kind"
     t.boolean  "paid",                                      default: false
     t.string   "wx_prepay_id"
     t.string   "wx_noncestr"

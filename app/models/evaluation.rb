@@ -1,5 +1,5 @@
 class Evaluation < ActiveRecord::Base
-  belongs_to :evaluationable, polymorphic: true
+  belongs_to :evaluationable, polymorphic: true, autosave: false
   belongs_to :user
   belongs_to :order, autosave: true
 
@@ -38,13 +38,13 @@ class Evaluation < ActiveRecord::Base
   def pmo_grab_id=(grab_id)
     pmo_grab = PmoGrab[grab_id]
     self.evaluationable = pmo_grab.pmo_item
-    self.order = Order.find(pmo_grab_id: grab_id)
+    self.order = Order.find_by(pmo_grab_id: grab_id)
   end
 
   private
 
   def check_user
-    unless user_id != order.buyer_id
+    if user_id != order.buyer_id
       errors.add(:user_id, "只有买家才可以发表评论")
     end
   end
