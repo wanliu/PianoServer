@@ -20,7 +20,7 @@
     });
 
     wx.ready(function(){
-      function onBridgeReady(){
+      // function onBridgeReady(){
         alert("..start.. pay fn" + "typeof WeixinJSBridge" + typeof WeixinJSBridge);
         alert("..start.. pay fn" + "WeixinJSBridge.invoke" + typeof WeixinJSBridge.invoke);
         // alert("<%= @params.to_json.html_safe %>");
@@ -48,8 +48,13 @@
             }
           });
         }
-      }
+      // }
     });
+
+    wx.error(function(res){
+      // alert('wx config error')
+      alert('error msg:' +  JSON.stringify(res));
+    })
   </script>
 <% else %>
   请求已经过时，请返回上级重新开始！
