@@ -20,35 +20,17 @@
     });
 
     wx.ready(function(){
-      // function onBridgeReady(){
-        alert("..start.. pay fn" + "typeof WeixinJSBridge" + typeof WeixinJSBridge);
-        alert("..start.. pay fn" + "WeixinJSBridge.invoke" + typeof WeixinJSBridge.invoke);
-        // alert("<%= @params.to_json.html_safe %>");
-        var WXPayment = function() {
-          if( typeof(WeixinJSBridge) === 'undefined' ) {
-              alert('请在微信在打开页面！');
-              return false;
+      wx.chooseWXPay({
+          timestamp: <%= @params[:timeStamp] %>, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+          nonceStr: '<%= @params[:nonceStr] %>', // 支付签名随机串，不长于 32 位
+          package: '<%= @params[:package] %>', // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
+          signType: '<%= @params[:signType] %>', // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+          paySign: '<%= @params[:paySign] %>', // 支付签名
+          success: function (res) {
+              // 支付成功后的回调函数
+              alert('pay success!' + JSON.stringify(res));
           }
-          // getBrandWCPayRequest
-          WeixinJSBridge.invoke('getBrandWCPayRequest', <%= @params.to_json.html_safe %>, function(res) {
-            alert(JSON.stringify(res));
-            switch(res.err_msg) {
-              case 'get_brand_wcpay_request:cancel':
-                alert('用户取消支付！');
-                break;
-              case 'get_brand_wcpay_request:fail':
-                alert('支付失败！（'+res.err_desc+'）');
-                break;
-              case 'get_brand_wcpay_request:ok':
-                alert('支付成功！');
-                break;
-              default:
-                alert(JSON.stringify(res));
-                break;
-            }
-          });
-        }
-      // }
+      });
     });
 
     wx.error(function(res){
