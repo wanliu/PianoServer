@@ -1,6 +1,8 @@
+require 'weixin_api'
+
 class OrdersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_order, only: [:show, :destroy, :update, :set_pay_kind, :pay_kind, :waiting_wx_pay]
+  before_action :set_order, only: [:show, :destroy, :update, :set_wx_pay, :pay_kind]
   before_action :check_for_mobile, only: [:index, :show, :history, :confirmation, :buy_now_confirm]
 
   include ParamsCallback
@@ -39,8 +41,15 @@ class OrdersController < ApplicationController
 
     respond_to do |format|
       if @order.save_with_items(current_user)
-        format.html { redirect_to @order }
         format.json { render json: @order, status: :created }
+        format.html do
+          if @order.pmo_grab_id.present?
+            redirect_to @order
+            # redirect_to wxpay_orders_path(@order)
+          else
+            redirect_to @order
+          end
+        end
       else
         format.any(:html, :mobile) do
           set_feed_back

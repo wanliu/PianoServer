@@ -8,9 +8,6 @@ module WxpayController
     end
   end
 
-  def waiting_wx_pay
-  end
-
   def wx_notify
     @order = Order.find(params[:id])
 
@@ -56,5 +53,30 @@ module WxpayController
   end
 
   def wxpay
+    wx_query_code = params[:code]
+    openid = WeixinApi.code_to_openid(wx_query_code)
+
+    @order.request_ip = request.ip
+
+    @order.create_wx_order(openid: openid) do |order_created, err_msg|
+      if order_created
+        @params = {
+          appId: WxPay.appid,
+          timeStamp: Time.now.to_i.to_s,
+          nonceStr: Devise.friendly_token,
+          package: "prepay_id=#{@order.wx_prepay_id}",
+          signType: "MD5"
+        }
+
+        @params[:paySign] = WxPay::Sign.generate(@params)
+      else
+        flash[:error] = "请求微信支付失败，请稍后再试！错误信息：#{err_msg}"
+        # redirect_to pay_kind_order_path(@order)
+        render "orders/yiyuan/wx_order_fail"
+      end
+    end
+  end
+
+  def set_wx_pay
   end
 end
