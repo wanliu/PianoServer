@@ -1,6 +1,7 @@
 class EvaluationsController < ApplicationController
   before_action :authenticate_user!, only: [:create]
   before_action :set_evaluation, only: [:show, :update, :destroy]
+  skip_before_action :verify_authenticity_token, only: :create
 
   # GET /evaluations
   # GET /evaluations.json
@@ -21,7 +22,6 @@ class EvaluationsController < ApplicationController
   # GET /evaluations/1
   # GET /evaluations/1.json
   def show
-    render json: @evaluation
   end
 
   def new
@@ -40,7 +40,7 @@ class EvaluationsController < ApplicationController
     @evaluation = current_user.evaluations.build(evaluation_params)
 
     if @evaluation.save
-      render :show, status: :created
+      render json: {evaluation: @evaluation}, status: :created
     else
       render json: {errors: @evaluation.errors.full_messages.join(',')}, status: :unprocessable_entity
     end
