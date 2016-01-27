@@ -383,7 +383,7 @@ ActiveRecord::Schema.define(version: 20160127051649) do
     t.integer  "one_money_id"
     t.decimal  "express_fee",      precision: 10, scale: 2, default: 0.0
     t.boolean  "paid",                                      default: false
-    t.string   "wx_prepay_id"
+    t.string   "wx_prepare_id"
     t.string   "wx_noncestr"
     t.boolean  "evaluated",                                 default: false
   end
