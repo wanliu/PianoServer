@@ -45,7 +45,8 @@
         <span><%= link_to "订单详情", order_path(order) %></span>
       </div>
       <% if !order.evaluated? && order.pmo_grab_id.present? %>
-        <div><%= link_to '评价', new_evaluation_path(pmo_grab_id: order.pmo_grab_id), class: 'btn btn-primary' %></div>
+        <% one_mone = OneMoney[order.one_mone_id] %>
+        <div><%= link_to '评价', "/one_money/<%= one_money.start_at.format('%y-%M-%d') %>/index.html#/comment/<%=order.pmo_grab_id %>", class: 'btn btn-primary' %></div>
         <% end %>
     </td>
   <% end %>
