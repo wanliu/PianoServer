@@ -1,13 +1,13 @@
 Rails.application.routes.draw do
 
-  resources :thumbs, except: [:new, :edit] do
+  resources :thumbs, except: [:new, :edit]
+
+  resources :evaluations, except: [:edit, :destroy, :update] do
     member do
       post :thumb
       post :un_thumb
     end
   end
-
-  resources :evaluations, except: [:edit, :destroy, :update]
 
   resource :wechat, only: [:show, :create]
 

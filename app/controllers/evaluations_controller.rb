@@ -1,7 +1,7 @@
 class EvaluationsController < ApplicationController
   before_action :authenticate_user!, only: [:create, :thumb, :un_thumb]
   before_action :set_evaluation, only: [:show, :update, :destroy, :thumb, :un_thumb]
-  skip_before_action :verify_authenticity_token, only: :create
+  skip_before_action :verify_authenticity_token, only: [:create, :thumb, :un_thumb]
 
   # GET /evaluations
   # GET /evaluations.json
@@ -42,7 +42,8 @@ class EvaluationsController < ApplicationController
     @evaluation = current_user.evaluations.build(evaluation_params)
 
     if @evaluation.order.evaluated?
-      render json: {errors: ["你已经评论过了！"]}, status: :unprocessable_entity
+      evaluation = @evaluation.order.evaluations.find_by(user_id: current_user.id)
+      render json: {errors: ["你已经评论过了！"], evaluation_id: evaluation.try(:id)}, status: :unprocessable_entity
     else
       if @evaluation.save
         # render :show, status: :created
@@ -56,9 +57,9 @@ class EvaluationsController < ApplicationController
   def thumb
     @thumb = current_user.thumbs.build(thumbable: @evaluation)
     if @thumb.save
-      render json: {}, status: :created
+      render json: {nickname: current_user.nickname, avatar: current_user.avatar_url}, status: :created
     else
-      render json: {errors: @thumb.errorr.full_messages.join(', ')}, status: :unprocessable_entity
+      render json: {errors: @thumb.errors.full_messages.join(', ')}, status: :unprocessable_entity
     end
   end
 
