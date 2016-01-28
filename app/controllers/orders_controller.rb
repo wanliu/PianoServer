@@ -133,7 +133,18 @@ class OrdersController < ApplicationController
     respond_to do |format|
       if @order.update(order_update_params)
         format.json { head :no_content }
-        format.html { redirect_to history_orders_path }
+        format.html do
+          # 一元购收货后跳到评价页面
+          if @order.status_changed?(from: :initiated, to: :finish) &&
+            @order.pmo_grab_id.present? &&
+            !@order.evaluated?
+
+            one_money = OneMoney[@order.one_money]
+            redirect_to "/one_money/#{ one_money.start_at.strftime('%Y-%m-%d') }/index.html#/comment/#{ @order.pmo_grab_id }"
+          else
+            redirect_to history_orders_path
+          end
+        end
       else
         format.json { render json: @order.errors, status: :unprocessable_entity }
         format.html { render :show, flash[:now] = @order.errors.full_messages.join(', ') }

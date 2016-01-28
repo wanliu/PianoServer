@@ -40,9 +40,6 @@
               <% elsif @order.finish? %>
                 <div class='title'>订单状态：订单已经完成，交易成功！</div>
                 <div>订单编号：<%= @order.id %></div>
-                <% if !@order.evaluated? && @order.pmo_grab_id.present? %>
-                  <div><%= link_to '评价', new_evaluation_path(pmo_grab_id: @order.pmo_grab_id), class: 'btn btn-primary' %></div>
-                <% end %>
               <% end %>
             </div>
           </td>
