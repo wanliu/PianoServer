@@ -97,6 +97,14 @@ class PmoItem < Ohm::Model
     end
   end
 
+  def evaluations
+    Evaluation.where(evaluation_type: 'PmoItem', evaluation_id: id)
+  end
+
+  def marked_for_destruction?
+    false
+  end
+
   # def suspend_at_with_fallback
   #   if self.independence
   #     suspend_at_without_fallback

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160125093353) do
+ActiveRecord::Schema.define(version: 20160128032922) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -160,6 +160,22 @@ ActiveRecord::Schema.define(version: 20160125093353) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  create_table "evaluations", force: :cascade do |t|
+    t.integer  "evaluationable_id"
+    t.string   "evaluationable_type"
+    t.integer  "user_id"
+    t.integer  "order_id"
+    t.boolean  "hidden",              default: false
+    t.string   "desc"
+    t.jsonb    "items",               default: {}
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+  end
+
+  add_index "evaluations", ["evaluationable_type", "evaluationable_id"], name: "index_evaluations_on_evaluationable_type_and_evaluationable_id", using: :btree
+  add_index "evaluations", ["order_id"], name: "index_evaluations_on_order_id", using: :btree
+  add_index "evaluations", ["user_id"], name: "index_evaluations_on_user_id", using: :btree
 
   create_table "feedbacks", force: :cascade do |t|
     t.string   "name"
@@ -369,6 +385,7 @@ ActiveRecord::Schema.define(version: 20160125093353) do
     t.boolean  "paid",                                      default: false
     t.string   "wx_prepay_id"
     t.string   "wx_noncestr"
+    t.boolean  "evaluated",                                 default: false
   end
 
   add_index "orders", ["buyer_id"], name: "index_orders_on_buyer_id", using: :btree
@@ -537,6 +554,17 @@ ActiveRecord::Schema.define(version: 20160125093353) do
     t.boolean  "used",           default: false
   end
 
+  create_table "thumbs", force: :cascade do |t|
+    t.integer  "thumber_id"
+    t.integer  "thumbable_id"
+    t.string   "thumbable_type"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  add_index "thumbs", ["thumbable_type", "thumbable_id"], name: "index_thumbs_on_thumbable_type_and_thumbable_id", using: :btree
+  add_index "thumbs", ["thumber_id"], name: "index_thumbs_on_thumber_id", using: :btree
+
   create_table "units", force: :cascade do |t|
     t.string   "name"
     t.string   "title"
@@ -599,4 +627,5 @@ ActiveRecord::Schema.define(version: 20160125093353) do
   add_foreign_key "stock_changes", "items"
   add_foreign_key "stock_changes", "units"
   add_foreign_key "stock_changes", "users", column: "operator_id"
+  add_foreign_key "thumbs", "users", column: "thumber_id"
 end
