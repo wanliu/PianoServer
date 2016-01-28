@@ -27,6 +27,9 @@ class User < ActiveRecord::Base
 
   has_many :orders, foreign_key: 'buyer_id'
 
+  has_many :evaluations
+  has_many :thumbs, foreign_key: :thumber_id
+
   validates :username, presence: true, uniqueness: true
   validates :mobile, presence: true, uniqueness: true
 

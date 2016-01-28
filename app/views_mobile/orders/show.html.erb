@@ -58,7 +58,12 @@
     </li>
   </ul>
 
-  <% unless @order.finish? %>
+  <% if @order.finish? %>
+    <% if !@order.evaluated? && @order.pmo_grab_id.present? %>
+      <% one_money = OneMoney[@order.one_money_id] %>
+      <div><%= link_to '评价', "/one_money/#{ one_money.start_at.strftime('%Y-%m-%d') }/index.html#/comment/#{ @order.pmo_grab_id }", class: 'btn btn-primary' %></div>
+    <% end %>
+  <% else %>
   <nav class="navbar navbar-default navbar-fixed-bottom">
     <div class="container">
       <div class='operation pull-right'>
