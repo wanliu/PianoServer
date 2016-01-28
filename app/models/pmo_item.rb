@@ -176,12 +176,10 @@ class PmoItem < Ohm::Model
     item_id = item_id.to_i
     item = PmoItem.find(item_id: item_id)
     if item.present?
-      return self[item_id]
+      return item
     else
       item = Item.find(item_id)
       _item = self.from(item)
-      _item.save
-      _item
     end
   end
 
