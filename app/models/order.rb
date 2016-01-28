@@ -111,6 +111,12 @@ class Order < ActiveRecord::Base
     pmo_grab_id.present?
   end
 
+  def wait_for_yiyuan_evaluate?
+    previous_changes["status"].present? &&
+    previous_changes["status"].last == "finish" &&
+    pmo_grab_id.present? && !evaluated?
+  end
+
   def yiyuan_fullfilled?
     delivery_address.present?
   end
