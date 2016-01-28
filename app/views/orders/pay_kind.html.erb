@@ -20,7 +20,7 @@
       e.preventDefault();
 
       var orderId = $(this).data('orderId');
-      var url = "<%= WeixinApi.get_openid_url wxpay_orders_path(@order) %>";
+      var url = "<%= WeixinApi.get_openid_url(wxpay_orders_path(@order)).html_safe %>";
       window.location.href = url;
     })
   })
