@@ -137,7 +137,7 @@ class OrdersController < ApplicationController
           # 一元购收货后跳到评价页面
           if @order.wait_for_yiyuan_evaluate?
             one_money = OneMoney[@order.one_money_id]
-            redirect_to "/one_money/#{ one_money.start_at.strftime('%Y-%m-%d') }/index.html#/comment/#{ @order.pmo_grab_id }"
+            redirect_to "/one_money/#{ one_money.start_at.strftime('%Y-%m-%d') }/index.html#/comment/#{ @order.pmo_grab_id }/#{@order.id}"
           else
             redirect_to history_orders_path
           end
