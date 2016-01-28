@@ -1,7 +1,27 @@
-<div class='container'>
-  <div>
-    <%= button_to set_pay_kind_order_path(@order, order: {pay_kind: :wx_pay}) do %>
-      微信支付
-    <% end %>
+<div class='container order-pay'>
+  <div class='order-amount text-center'>
+    总计：<%= number_to_currency @order.total %>元
+  </div>
+
+  <div class='chose-pay-kind'>  
+    <div class='pay-kind wx-pay text-center' data-order-id='<%= @order.id %>'>
+      微信支付（优惠５元）
+    </div>
+    <div class='pay-kind cod text-center' data-order-id='<%= @order.id %>'>
+      货到付款
+    </div>
   </div>
 </div>
+
+<script>
+  $(function() {
+    // 用户点击“微信支付”
+    $('.chose-pay-kind .wx-pay').click(function(e) {
+      e.preventDefault();
+
+      var orderId = $(this).data('orderId');
+      var url = "<%= WeixinApi.get_openid_url wxpay_orders_path(@order) %>";
+      window.location.href = url;
+    })
+  })
+</script>
