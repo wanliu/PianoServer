@@ -42,14 +42,7 @@ class OrdersController < ApplicationController
     respond_to do |format|
       if @order.save_with_items(current_user)
         format.json { render json: @order, status: :created }
-        format.html do
-          if @order.pmo_grab_id.present?
-            redirect_to @order
-            # redirect_to wxpay_orders_path(@order)
-          else
-            redirect_to @order
-          end
-        end
+        format.html { redirect_to @order }
       else
         format.any(:html, :mobile) do
           set_feed_back
