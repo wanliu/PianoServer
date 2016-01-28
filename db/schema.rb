@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160127051649) do
+ActiveRecord::Schema.define(version: 20160128032922) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -261,17 +261,6 @@ ActiveRecord::Schema.define(version: 20160127051649) do
     t.datetime "updated_at",                null: false
   end
 
-  create_table "likes", force: :cascade do |t|
-    t.string   "liker_type"
-    t.integer  "liker_id"
-    t.string   "likeable_type"
-    t.integer  "likeable_id"
-    t.datetime "created_at"
-  end
-
-  add_index "likes", ["likeable_id", "likeable_type"], name: "fk_likeables", using: :btree
-  add_index "likes", ["liker_id", "liker_type"], name: "fk_likes", using: :btree
-
   create_table "line_items", force: :cascade do |t|
     t.integer  "itemable_id"
     t.string   "itemable_type"
@@ -311,17 +300,6 @@ ActiveRecord::Schema.define(version: 20160127051649) do
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
   end
-
-  create_table "mentions", force: :cascade do |t|
-    t.string   "mentioner_type"
-    t.integer  "mentioner_id"
-    t.string   "mentionable_type"
-    t.integer  "mentionable_id"
-    t.datetime "created_at"
-  end
-
-  add_index "mentions", ["mentionable_id", "mentionable_type"], name: "fk_mentionables", using: :btree
-  add_index "mentions", ["mentioner_id", "mentioner_type"], name: "fk_mentions", using: :btree
 
   create_table "messages", force: :cascade do |t|
     t.integer  "messable_id"
@@ -473,8 +451,8 @@ ActiveRecord::Schema.define(version: 20160127051649) do
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
     t.string   "logo"
-    t.string   "address"
     t.jsonb    "settings",    default: {}
+    t.string   "address"
     t.integer  "shop_type",   default: 0
     t.float    "lat"
     t.float    "lon"
@@ -554,6 +532,17 @@ ActiveRecord::Schema.define(version: 20160127051649) do
     t.boolean  "used",           default: false
   end
 
+  create_table "thumbs", force: :cascade do |t|
+    t.integer  "thumber_id"
+    t.integer  "thumbable_id"
+    t.string   "thumbable_type"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  add_index "thumbs", ["thumbable_type", "thumbable_id"], name: "index_thumbs_on_thumbable_type_and_thumbable_id", using: :btree
+  add_index "thumbs", ["thumber_id"], name: "index_thumbs_on_thumber_id", using: :btree
+
   create_table "units", force: :cascade do |t|
     t.string   "name"
     t.string   "title"
@@ -616,4 +605,5 @@ ActiveRecord::Schema.define(version: 20160127051649) do
   add_foreign_key "stock_changes", "items"
   add_foreign_key "stock_changes", "units"
   add_foreign_key "stock_changes", "users", column: "operator_id"
+  add_foreign_key "thumbs", "users", column: "thumber_id"
 end

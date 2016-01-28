@@ -1,6 +1,6 @@
 class EvaluationsController < ApplicationController
-  before_action :authenticate_user!, only: [:create]
-  before_action :set_evaluation, only: [:show, :update, :destroy]
+  before_action :authenticate_user!, only: [:create, :thumb, :un_thumb]
+  before_action :set_evaluation, only: [:show, :update, :destroy, :thumb, :un_thumb]
   skip_before_action :verify_authenticity_token, only: :create
 
   # GET /evaluations
@@ -22,6 +22,8 @@ class EvaluationsController < ApplicationController
   # GET /evaluations/1
   # GET /evaluations/1.json
   def show
+    @thumbers_count = @evaluation.thumbers.count
+    @thumbers = @evaluation.thumbers.page(params[:page]).per(params[:per])
   end
 
   def new
@@ -49,6 +51,22 @@ class EvaluationsController < ApplicationController
         render json: {errors: @evaluation.errors.full_messages.join(',')}, status: :unprocessable_entity
       end
     end
+  end
+
+  def thumb
+    @thumb = current_user.thumbs.build(thumbable: @evaluation)
+    if @thumb.save
+      render json: {}, status: :created
+    else
+      render json: {errors: @thumb.errorr.full_messages.join(', ')}, status: :unprocessable_entity
+    end
+  end
+
+  def unthumb
+    @thumb = current_user.thumb.find_by(thumbable_id: @evaluation.id, thumbable_type: "Evaluation")
+    @thumb.destroy if @thumb.present?
+
+    render json: {}, status: :ok
   end
 
   # PATCH/PUT /evaluations/1

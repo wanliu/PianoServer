@@ -3,6 +3,9 @@ class Evaluation < ActiveRecord::Base
   belongs_to :user
   belongs_to :order
 
+  has_many :thumbs, as: :thumbable
+  has_many :thumbers, through: :thumbs
+
   store_accessor :items, :good, :delivery, :customer_service
 
   attr_reader :pmo_grab_id
