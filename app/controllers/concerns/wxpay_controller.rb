@@ -53,6 +53,11 @@ module WxpayController
   end
 
   def wxpay
+    if @order.paid?
+      render "orders/yiyuan/wx_paid"
+      return
+    end
+
     wx_query_code = params[:code]
     openid = WeixinApi.code_to_openid(wx_query_code)
 
