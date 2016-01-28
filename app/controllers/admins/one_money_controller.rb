@@ -75,10 +75,9 @@ class Admins::OneMoneyController < Admins::BaseController
     item = Item.find(params[:item_id])
     @item = PmoItem.from(item)
     @item.one_money = @one_money
+    @item.save
     @item.set_expire_time(:start_at, @item.start_at)
     @item.set_expire_time(:end_at, @item.end_at)
-    @item.save
-
   end
 
   def remove_item
