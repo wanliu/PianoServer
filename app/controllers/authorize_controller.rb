@@ -23,8 +23,10 @@ class AuthorizeController < ApplicationController
 
     if wx_client.is_valid?
       begin
-        access_token = wx_client.get_oauth_access_token(code).result['access_token']
+        # access_token = wx_client.get_oauth_access_token(code).result['access_token']
+        access_token = wx_client.get_access_token
         profile = wx_client.get_oauth_userinfo(wx_client.app_id, access_token).result
+
 
         user, status = lookup_user(profile)
 

@@ -621,6 +621,7 @@ DEPENDENCIES
   rails-observers!
   rails_config (~> 0.4.2)
   redis (>= 3.2.0)
+  redis-namespace (~> 1.5.2)
   redis-objects
   redis-rails
   rest-client
