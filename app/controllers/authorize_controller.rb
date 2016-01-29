@@ -13,10 +13,10 @@ class AuthorizeController < ApplicationController
     logger.info wx_client.token_store.token_expired?.inspect
     logger.info wx_client.inspect
     logger.info wx_client.token_store.inspect
-    unless wx_client.is_valid?
-      wx_client.get_access_token if wx_client.token_store.token_expired?
-    end
-    redirect_to wx_client.send(authorize_method, redirect_url, Settings.weixin.scope) if wx_client.is_valid?
+    # unless wx_client.is_valid?
+    #   wx_client.get_access_token if wx_client.token_store.token_expired?
+    # end
+    redirect_to wx_client.send(authorize_method, redirect_url, Settings.weixin.scope)# if wx_client.is_valid?
   end
 
   def weixin_redirect_url
