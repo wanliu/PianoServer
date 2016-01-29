@@ -24,7 +24,7 @@ class AuthorizeController < ApplicationController
     # status = false
     tries = 3
 
-    if wx_client.is_valid?
+    # if wx_client.is_valid?
       begin
         access_token = wx_client.get_oauth_access_token(code).result['access_token']
         # access_token = wx_client.get_access_token
@@ -47,7 +47,7 @@ class AuthorizeController < ApplicationController
           logger.debug "Weixin Login Timeout!"
         end
       end
-    end
+    # end
 
     # redirect_to_with_callback(@to_url, callback_url, notice: @notice)
     redirect_to @to_url, notice: @notice
