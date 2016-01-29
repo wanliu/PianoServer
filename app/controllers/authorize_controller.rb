@@ -7,6 +7,7 @@ class AuthorizeController < ApplicationController
     redirect_url = "#{Settings.app.website}/authorize/weixin_redirect_url"
     authorize_method = mobile? ? :authorize_url : :qrcode_authorize_url
     logger.info wx_client.is_valid?.inspect
+    logger.info wx_client.token_store.token_expired?.inspect
     logger.info wx_client.inspect
     logger.info wx_client.token_store.inspect
     redirect_to wx_client.send(authorize_method, redirect_url, Settings.weixin.scope) if wx_client.is_valid?
