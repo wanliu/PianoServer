@@ -2,6 +2,9 @@ class AuthorizeController < ApplicationController
   include RedirectCallback
 
   before_action :set_callback, only: [:weixin]
+  rescue_from WeixinAuthorize::ValidAccessTokenException do |exception|
+    render plain: "WEIXIN API 调用超过限制！！请稍后尝试"
+  end
 
   def weixin
     redirect_url = "#{Settings.app.website}/authorize/weixin_redirect_url"
