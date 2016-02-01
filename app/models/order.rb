@@ -156,15 +156,6 @@ class Order < ActiveRecord::Base
     items.reduce(0) { |total, item| total += item.price * item.quantity }
   end
 
-  def verify_wx_notify(result)
-    result["out_trade_no"].to_s == id.to_s &&
-    result["transaction_id"].to_s == wx_prepay_id &&
-    result["appid"] == WxPay.appid &&
-    result["mch_id"] == WxPay.mch_id &&
-    result["trade_type"] == "JSAPI"# &&
-    # result["attach"] == attach
-  end
-
   private
 
   def caculate_total
