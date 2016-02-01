@@ -1,4 +1,4 @@
-module OrderWxPay
+module WxOrder
   ORDER_QUERY_URL = "https://api.mch.weixin.qq.com/pay/orderquery"
   WECHAT_CONFIG = Rails.application.config_for(:wechat)
 

@@ -1,7 +1,7 @@
-require 'order_wx_pay'
+require 'wx_order'
 
 class Order < ActiveRecord::Base
-  include OrderWxPay
+  include WxOrder
 
   extend OrdersCollectionSpreadsheet
 
