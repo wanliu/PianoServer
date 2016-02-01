@@ -61,11 +61,15 @@ module WxOrder
   # 随机字符串 nonce_str 是 String(32)  C380BEC2BFD727A4B6845133519F3AD6  随机字符串，不长于32位。推荐随机数生成算法
   # 签名  sign  是 String(32)  5K8264ILTKCH16CQ2502SI8ZNMTM67VS  签名，详见签名生成算法
   def wx_order_paid?
+    if wx_prepay_id.blank?
+      return false
+    end
+
     params = {
       transaction_id: wx_prepay_id
     }
 
-    res = WxPay.Service.order_query params
+    res = WxPay::Service.order_query params
     res.present? && verify_wx_notify(res) && "SUCCESS" == res["result_code"]
   end
 
