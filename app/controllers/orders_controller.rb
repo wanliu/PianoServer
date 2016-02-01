@@ -2,7 +2,7 @@ require 'weixin_api'
 
 class OrdersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_order, only: [:show, :destroy, :update, :set_wx_pay, :pay_kind, :wxpay]
+  before_action :set_order, only: [:show, :destroy, :update, :set_wx_pay, :pay_kind, :wxpay, :wxpay_confirm]
   before_action :check_for_mobile, only: [:index, :show, :history, :confirmation, :buy_now_confirm]
 
   include ParamsCallback

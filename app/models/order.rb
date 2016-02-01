@@ -9,8 +9,9 @@ class Order < ActiveRecord::Base
   belongs_to :supplier, class_name: 'Shop'
 
   has_many :items, class_name: 'OrderItem', autosave: true, dependent: :destroy
-  has_many :evaluations
   accepts_nested_attributes_for :items
+
+  has_many :evaluations
 
   attr_accessor :cart_item_ids
   attr_accessor :address_id, :request_ip

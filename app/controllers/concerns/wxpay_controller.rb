@@ -67,6 +67,19 @@ module WxpayController
     end
   end
 
-  def set_wx_pay
+  def wxpay_confirm
+    if @order.paid?
+      render json: {paid: true}, status: :ok
+    else
+      if @order.wx_order_paid?
+        @order.update_attribute('paid', true)
+        render json: {paid: true}, status: :ok
+      else
+        render json: {paid: false}, status: :unprocessable_entity
+      end
+    end
   end
+
+  # def set_wx_pay
+  # end
 end

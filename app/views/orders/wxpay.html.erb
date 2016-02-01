@@ -42,6 +42,17 @@
       success: function (res) {
         // 支付成功后的回调函数
         alert('pay success!' + JSON.stringify(res));
+
+        var csrfToken = $('meta[name=csrf-token]').attr('content');
+        var res = $.post('/orders/<%= @order.id %>/wx_confirm', {authenticity_token: csrfToken});
+
+        res.done(function (data, status, xhr) {
+          // 确认支付成功
+        });
+
+        res.fail(function (data, status, xhr) {
+          // 无法确认支付成功
+        })
       },
       fail: function(res) {
         // 支付失败后的回调函数
