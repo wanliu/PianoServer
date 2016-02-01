@@ -13,7 +13,8 @@ module WxpayController
 
     result = Hash.from_xml(request.body.read)["xml"]
 
-    if WxPay::Sign.verify?(result)
+    if WxPay::Sign.verify?(result) && @order.verify_wx_notify(result)
+      @order.update_attribute('paid', true)
 
       # find your order and process the post-paid logic.
       puts "微信支付成功返回，结果：#{result.to_json}"
