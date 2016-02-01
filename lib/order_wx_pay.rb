@@ -14,16 +14,16 @@ module OrderWxPay
     prepayid = wx_order["prepay_id"]
     noncestr = wx_order["nonce_str"]
 
-    if persisted?
-      result = update_attributes(wx_prepay_id: prepayid, wx_noncestr: noncestr)
-      yield result, nil if block_given?
-      result
-    else
-      self.wx_prepay_id = prepayid
-      self.wx_noncestr = noncestr
-      yield true, nil if block_given?
-      true
-    end
+    # if persisted?
+    result = update_attributes(wx_prepay_id: prepayid, wx_noncestr: noncestr)
+    yield result, nil if block_given?
+    result
+    # else
+    #   self.wx_prepay_id = prepayid
+    #   self.wx_noncestr = noncestr
+    #   yield true, nil if block_given?
+    #   true
+    # end
   end
 
   def generate_wx_pay_params
