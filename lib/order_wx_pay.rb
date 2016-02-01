@@ -1,18 +1,9 @@
 module OrderWxPay
   ORDER_QUERY_URL = "https://api.mch.weixin.qq.com/pay/orderquery"
+  WECHAT_CONFIG = Rails.application.config_for(:wechat)
 
   def create_wx_order(options)
-    params = {
-      body: "#{id}号订单支付",
-      out_trade_no: id.to_s,
-      total_fee: (total * 100).to_i,
-      spbill_create_ip: request_ip,
-      notify_url: "#{Settings.app.website}/orders/#{id}/wx_notify",
-      trade_type: 'JSAPI',
-      openid: options[:openid]
-    }
-
-    wx_order = WxPay::Service.invoke_unifiedorder params
+    wx_order = WxPay::Service.invoke_unifiedorder prepay_params.merge(options)
 
     unless wx_order.success?
       puts "微信支付失败！", wx_order["return_msg"]
@@ -37,7 +28,7 @@ module OrderWxPay
 
   def generate_wx_pay_params
     params = {
-      appId: WxPay.appid,
+      appId: appid,
       timeStamp: Time.now.to_i.to_s,
       nonceStr: Devise.friendly_token,
       package: "prepay_id=#{wx_prepay_id}",
@@ -50,10 +41,14 @@ module OrderWxPay
   end
 
   def verify_wx_notify(result)
+    unless result.respond_to?(:[])
+      return false
+    end
+
     result["out_trade_no"].to_s == id.to_s &&
     result["transaction_id"].to_s == wx_prepay_id &&
-    result["appid"] == WxPay.appid &&
-    result["mch_id"] == WxPay.mch_id &&
+    result["appid"] == appid &&
+    result["mch_id"] == mch_id &&
     result["trade_type"] == "JSAPI"# &&
     # result["attach"] == attach
   end
@@ -72,5 +67,30 @@ module OrderWxPay
 
     res = WxPay.Service.order_query params
     res.present? && verify_wx_notify(res) && "SUCCESS" == res["result_code"]
+  end
+
+  private
+
+  def prepay_params
+    {
+      body: "#{id}号订单支付",
+      out_trade_no: id.to_s,
+      total_fee: (total * 100).to_i,
+      spbill_create_ip: request_ip,
+      notify_url: "#{Settings.app.website}/orders/#{id}/wx_notify",
+      trade_type: 'JSAPI'
+    }
+  end
+
+  def appid
+    WECHAT_CONFIG["appid"]
+  end
+
+  def mch_id
+    WECHAT_CONFIG["mch_id"]
+  end
+
+  def secret
+    WECHAT_CONFIG["token"]
   end
 end
