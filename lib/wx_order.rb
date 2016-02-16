@@ -52,12 +52,22 @@ module WxOrder
       id.to_s
     end
 
-    result["out_trade_no"].to_s == out_trade_no &&
+
+    valid = result["out_trade_no"].to_s == out_trade_no &&
     result["transaction_id"].to_s == wx_prepay_id &&
     result["appid"] == appid &&
     result["mch_id"] == mch_id &&
     result["trade_type"] == "JSAPI"# &&
     # result["attach"] == attach
+
+    puts "比较结果:#{valid}"
+    puts "out_trade_no: #{result['out_trade_no'].to_s == out_trade_no}"
+    puts "transaction_id: #{result['transaction_id'].to_s == wx_prepay_id}"
+    puts "appid: #{result['appid'].to_s == appid}"
+    puts "mch_id: #{result['mch_id'].to_s == mch_id}"
+    puts "trade_type: #{result['trade_type'].to_s == 'JSAPI'}"
+
+    valid
   end
 
   # 访问微信服务器，查看订单是否完成支付
