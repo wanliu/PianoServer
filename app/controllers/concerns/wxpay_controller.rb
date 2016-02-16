@@ -16,9 +16,11 @@ module WxpayController
     puts "微信支付确认请求，#{result.to_json}"
 
     if WxPay::Sign.verify?(result) && @order.verify_wx_notify(result)
-      @order.update_attribute('paid', true)
-
       # find your order and process the post-paid logic.
+      @order.paid = true
+      @order.wx_transaction_id = result["transaction_id"]
+      @order.save(validate: false)
+
       puts "微信支付成功返回，结果：#{result.to_json}"
 
       render :xml => {return_code: "SUCCESS"}.to_xml(root: 'xml', dasherize: false)
