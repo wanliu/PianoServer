@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160128032922) do
+ActiveRecord::Schema.define(version: 20160216081309) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -348,22 +348,23 @@ ActiveRecord::Schema.define(version: 20160128032922) do
   create_table "orders", force: :cascade do |t|
     t.integer  "buyer_id"
     t.integer  "supplier_id"
-    t.decimal  "total",            precision: 10, scale: 2
+    t.decimal  "total",             precision: 10, scale: 2
     t.string   "delivery_address"
-    t.boolean  "total_modified",                            default: false, null: false
-    t.decimal  "origin_total",     precision: 10, scale: 2
-    t.integer  "status",                                    default: 0
-    t.datetime "created_at",                                                null: false
-    t.datetime "updated_at",                                                null: false
+    t.boolean  "total_modified",                             default: false, null: false
+    t.decimal  "origin_total",      precision: 10, scale: 2
+    t.integer  "status",                                     default: 0
+    t.datetime "created_at",                                                 null: false
+    t.datetime "updated_at",                                                 null: false
     t.string   "receiver_name"
     t.string   "receiver_phone"
     t.integer  "pmo_grab_id"
     t.integer  "one_money_id"
-    t.decimal  "express_fee",      precision: 10, scale: 2, default: 0.0
-    t.boolean  "paid",                                      default: false
+    t.decimal  "express_fee",       precision: 10, scale: 2, default: 0.0
+    t.boolean  "paid",                                       default: false
     t.string   "wx_prepay_id"
     t.string   "wx_noncestr"
-    t.boolean  "evaluated",                                 default: false
+    t.boolean  "evaluated",                                  default: false
+    t.string   "wx_transaction_id"
   end
 
   add_index "orders", ["buyer_id"], name: "index_orders_on_buyer_id", using: :btree

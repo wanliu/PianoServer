@@ -54,7 +54,6 @@ module WxOrder
 
 
     valid = result["out_trade_no"].to_s == out_trade_no &&
-    result["transaction_id"].to_s == wx_prepay_id &&
     result["appid"] == appid &&
     result["mch_id"] == mch_id &&
     result["trade_type"] == "JSAPI"# &&
@@ -62,7 +61,6 @@ module WxOrder
 
     puts "比较结果:#{valid}"
     puts "out_trade_no: #{result['out_trade_no'].to_s == out_trade_no}"
-    puts "transaction_id: #{result['transaction_id'].to_s == wx_prepay_id}"
     puts "appid: #{result['appid'].to_s == appid}"
     puts "mch_id: #{result['mch_id'].to_s == mch_id}"
     puts "trade_type: #{result['trade_type'].to_s == 'JSAPI'}"
@@ -78,12 +76,12 @@ module WxOrder
   # 随机字符串 nonce_str 是 String(32)  C380BEC2BFD727A4B6845133519F3AD6  随机字符串，不长于32位。推荐随机数生成算法
   # 签名  sign  是 String(32)  5K8264ILTKCH16CQ2502SI8ZNMTM67VS  签名，详见签名生成算法
   def wx_order_paid?
-    if wx_prepay_id.blank?
+    if wx_transaction_id.blank?
       return false
     end
 
     params = {
-      transaction_id: wx_prepay_id
+      transaction_id: wx_transaction_id
     }
 
     res = WxPay::Service.order_query params
