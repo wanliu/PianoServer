@@ -46,7 +46,13 @@ module WxOrder
       return false
     end
 
-    result["out_trade_no"].to_s == id.to_s &&
+    out_trade_no = if Rails.env.development?
+      "development#{id}"
+    else
+      id.to_s
+    end
+
+    result["out_trade_no"].to_s == out_trade_no &&
     result["transaction_id"].to_s == wx_prepay_id &&
     result["appid"] == appid &&
     result["mch_id"] == mch_id &&
@@ -77,9 +83,15 @@ module WxOrder
   private
 
   def prepay_params
+    out_trade_no = if Rails.env.development?
+      "development#{id}"
+    else
+      id.to_s
+    end
+
     {
       body: "#{id}号订单支付",
-      out_trade_no: id.to_s,
+      out_trade_no: out_trade_no,
       total_fee: (total * 100).to_i,
       spbill_create_ip: request_ip,
       notify_url: "#{Settings.app.website}/orders/#{id}/wx_notify",
