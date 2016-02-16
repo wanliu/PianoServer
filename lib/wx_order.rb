@@ -46,13 +46,6 @@ module WxOrder
       return false
     end
 
-    out_trade_no = if Rails.env.development?
-      "development#{id}"
-    else
-      id.to_s
-    end
-
-
     valid = result["out_trade_no"].to_s == out_trade_no &&
     result["appid"] == appid &&
     result["mch_id"] == mch_id &&
@@ -76,13 +69,11 @@ module WxOrder
   # 随机字符串 nonce_str 是 String(32)  C380BEC2BFD727A4B6845133519F3AD6  随机字符串，不长于32位。推荐随机数生成算法
   # 签名  sign  是 String(32)  5K8264ILTKCH16CQ2502SI8ZNMTM67VS  签名，详见签名生成算法
   def wx_order_paid?
-    if wx_transaction_id.blank?
-      return false
+    params = if wx_transaction_id.present?
+      { transaction_id: wx_transaction_id }
+    else
+      { out_trade_no: out_trade_no }
     end
-
-    params = {
-      transaction_id: wx_transaction_id
-    }
 
     res = WxPay::Service.order_query params
     res.present? && verify_wx_notify(res) && "SUCCESS" == res["result_code"]
@@ -91,12 +82,6 @@ module WxOrder
   private
 
   def prepay_params
-    out_trade_no = if Rails.env.development?
-      "development#{id}"
-    else
-      id.to_s
-    end
-
     {
       body: "#{id}号订单支付",
       out_trade_no: out_trade_no,
@@ -117,5 +102,13 @@ module WxOrder
 
   def secret
     WECHAT_CONFIG["token"]
+  end
+
+  def out_trade_no
+    if Rails.env.development?
+      "development#{id}"
+    else
+      id.to_s
+    end
   end
 end
