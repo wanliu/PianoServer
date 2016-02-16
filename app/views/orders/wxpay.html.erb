@@ -40,8 +40,25 @@
       signType: '<%= @params[:signType] %>', // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
       paySign: '<%= @params[:paySign] %>', // 支付签名
       success: function (res) {
-          // 支付成功后的回调函数
-          alert('pay success!' + JSON.stringify(res));
+        // 支付成功后的回调函数
+        alert('pay success!' + JSON.stringify(res));
+
+        var csrfToken = $('meta[name=csrf-token]').attr('content');
+        var res = $.post('/orders/<%= @order.id %>/wx_confirm', {authenticity_token: csrfToken});
+
+        res.done(function (data, status, xhr) {
+          // 确认支付成功
+          alert("支付成功");
+        });
+
+        res.fail(function (data, status, xhr) {
+          // 无法确认支付成功
+          alert("由于某种原因，支付没有成功，如有疑问请联系客服");
+        });
+      },
+      fail: function(res) {
+        // 支付失败后的回调函数
+        alert('pay fail', + JSON.stringify(res));
       }
     });
   }

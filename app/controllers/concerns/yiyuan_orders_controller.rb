@@ -104,7 +104,6 @@ module YiyuanOrdersController
     unless user_id == current_user.id
       raise ActiveResource::ResourceNotFound, "not found"
     end
-
     set_params_from_pmo(pmo_grab)
     @item_params
   end
@@ -125,7 +124,6 @@ module YiyuanOrdersController
     unless user_id == current_user.id
       raise ActiveResource::ResourceNotFound, "not found"
     end
-
     set_params_from_pmo(pmo_grab)
 
     @item_params

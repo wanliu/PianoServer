@@ -13,7 +13,8 @@ module WxpayController
 
     result = Hash.from_xml(request.body.read)["xml"]
 
-    if WxPay::Sign.verify?(result)
+    if WxPay::Sign.verify?(result) && @order.verify_wx_notify(result)
+      @order.update_attribute('paid', true)
 
       # find your order and process the post-paid logic.
       puts "微信支付成功返回，结果：#{result.to_json}"
@@ -35,15 +36,7 @@ module WxpayController
 
     @order.create_wx_order(openid: openid) do |order_created, err_msg|
       if order_created
-        @params = {
-          appId: WxPay.appid,
-          timeStamp: Time.now.to_i.to_s,
-          nonceStr: Devise.friendly_token,
-          package: "prepay_id=#{@order.wx_prepay_id}",
-          signType: "MD5"
-        }
-
-        @params[:paySign] = WxPay::Sign.generate(@params)
+        @params = @order.generate_wx_pay_params
       else
         flash[:error] = "请求微信支付失败，请稍后再试！错误信息：#{err_msg}"
         # redirect_to pay_kind_order_path(@order)
@@ -65,15 +58,7 @@ module WxpayController
 
     @order.create_wx_order(openid: openid) do |order_created, err_msg|
       if order_created
-        @params = {
-          appId: WxPay.appid,
-          timeStamp: Time.now.to_i.to_s,
-          nonceStr: Devise.friendly_token,
-          package: "prepay_id=#{@order.wx_prepay_id}",
-          signType: "MD5"
-        }
-
-        @params[:paySign] = WxPay::Sign.generate(@params)
+        @params = @order.generate_wx_pay_params
       else
         flash[:error] = "请求微信支付失败，请稍后再试！错误信息：#{err_msg}"
         # redirect_to pay_kind_order_path(@order)
@@ -82,6 +67,19 @@ module WxpayController
     end
   end
 
-  def set_wx_pay
+  def wxpay_confirm
+    if @order.paid?
+      render json: {paid: true}, status: :ok
+    else
+      if @order.wx_order_paid?
+        @order.update_attribute('paid', true)
+        render json: {paid: true}, status: :ok
+      else
+        render json: {paid: false}, status: :unprocessable_entity
+      end
+    end
   end
+
+  # def set_wx_pay
+  # end
 end
