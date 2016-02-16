@@ -3,7 +3,8 @@ module WxOrder
   WECHAT_CONFIG = Rails.application.config_for(:wechat)
 
   def create_wx_order(options)
-    wx_order = WxPay::Service.invoke_unifiedorder prepay_params.merge(options)
+    params = prepay_params.merge(options)
+    wx_order = WxPay::Service.invoke_unifiedorder params
 
     unless wx_order.success?
       puts "微信支付失败！", wx_order["return_msg"]
