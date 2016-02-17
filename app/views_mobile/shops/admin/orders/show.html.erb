@@ -7,10 +7,17 @@
       </div>
       <div style='clear: both;'></div>
       <%= image_tag 'order-finish.png', class: 'status pull-right' %>
+    <% elsif @order.paid? %>
+      <div class='notification pull-left'>
+        <h4>订单已经支付成功</h4>
+        <h4>等待买家确认收货</h4>
+      </div>
+      <div style='clear: both;'></div>
+      <%= image_tag 'order-delivery.png', class: 'status pull-right' %>
     <% else %>
       <div class='notification pull-left'>
         <h4>订单提交成功</h4>
-        <h4>等待买家确认</h4>
+        <h4>等待买家确认收货</h4>
       </div>
       <div style='clear: both;'></div>
       <%= image_tag 'order-delivery.png', class: 'status pull-right' %>
