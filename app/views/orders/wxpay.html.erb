@@ -9,7 +9,7 @@
  
   <div  class='chose-pay-kind'>
     <div class='pay-kind wx-pay-now text-center' data-order-id='<%= @order.id %>'>
-      微信支付<%= @order.wx_total_fee %>元（优惠<%= Settings.promotions.one_money.wx_pay_discount || 0 %>元）
+      <%= image_tag "wxpay_logo.png", class: 'wx-pay-logo' %>微信支付<%= @order.wx_total_fee %>元（优惠<%= Settings.promotions.one_money.wx_pay_discount || 0 %>元）
     </div>
   </div>
 </div>
