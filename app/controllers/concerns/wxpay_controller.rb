@@ -30,23 +30,23 @@ module WxpayController
   end
 
   def wxpay_test
-    wx_query_code = params[:code]
-    openid = WeixinApi.code_to_openid(wx_query_code)
+    # wx_query_code = params[:code]
+    # openid = WeixinApi.code_to_openid(wx_query_code)
 
-    @order = current_user.orders.build id: "-#{rand(1000)}#{rand(1000)}",
-      total: 0.01
+    # @order = current_user.orders.build id: "-#{rand(1000)}#{rand(1000)}",
+    #   total: 0.01
 
-    @order.request_ip = request.ip
+    # @order.request_ip = request.ip
 
-    @order.create_wx_order(openid: openid) do |order_created, err_msg|
-      if order_created
-        @params = @order.generate_wx_pay_params
-      else
-        flash[:error] = "请求微信支付失败，请稍后再试！错误信息：#{err_msg}"
-        # redirect_to pay_kind_order_path(@order)
-        render "orders/yiyuan/wx_order_fail"
-      end
-    end
+    # @order.create_wx_order(openid: openid)# do |order_created, err_msg|
+    #   if order_created
+    #     @params = @order.generate_wx_pay_params
+    #   else
+    #     flash[:error] = "请求微信支付失败，请稍后再试！错误信息：#{err_msg}"
+    #     # redirect_to pay_kind_order_path(@order)
+    #     render "orders/yiyuan/wx_order_fail"
+    #   end
+    # end
   end
 
   def wxpay
@@ -60,14 +60,18 @@ module WxpayController
 
     @order.request_ip = request.ip
 
-    @order.create_wx_order(openid: openid) do |order_created, err_msg|
-      if order_created
-        @params = @order.generate_wx_pay_params
+    @order.create_wx_order(openid: openid)
+
+    if @order.wx_order_created
+      if @order.paid?
+        render "orders/yiyuan/wx_paid"
       else
-        flash[:error] = "请求微信支付失败，请稍后再试！错误信息：#{err_msg}"
-        # redirect_to pay_kind_order_path(@order)
-        render "orders/yiyuan/wx_order_fail"
+        @params = @order.generate_wx_pay_params
       end
+    else
+      flash[:error] = "请求微信支付失败，请稍后再试！错误信息：#{@order.wx_create_response['err_code_des']}"
+      # redirect_to pay_kind_order_path(@order)
+      render "orders/yiyuan/wx_order_fail"
     end
   end
 

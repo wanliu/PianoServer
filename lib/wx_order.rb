@@ -2,29 +2,33 @@ module WxOrder
   ORDER_QUERY_URL = "https://api.mch.weixin.qq.com/pay/orderquery"
   WECHAT_CONFIG = Rails.application.config_for(:wechat)
 
+  attr_accessor :wx_order_created, :wx_create_response
+
   def create_wx_order(options)
     params = prepay_params.merge(options)
     wx_order = WxPay::Service.invoke_unifiedorder params
 
-    unless wx_order.success?
-      puts "微信支付失败！", wx_order["return_msg"]
-      yield false, "返回值: #{wx_order['return_msg']}, 错误码:#{wx_order['err_code']}, 错误描述: #{wx_order['err_code_des']}:#{params.to_json}" if block_given?
-      return false
+    self.wx_create_response = wx_order
+    self.wx_order_created = wx_order.success?
+
+    if wx_order_created
+      prepayid = wx_order["prepay_id"]
+      noncestr = wx_order["nonce_str"]
+
+      update_attributes(wx_prepay_id: prepayid, wx_noncestr: noncestr)
+    else
+      puts "微信支付统一下单失败！", wx_order.to_json
     end
 
-    prepayid = wx_order["prepay_id"]
-    noncestr = wx_order["nonce_str"]
+    if wx_create_response_paid? && wx_order_paid?(true)
+      self.wx_order_created = true
+    end
+  end
 
-    # if persisted?
-    result = update_attributes(wx_prepay_id: prepayid, wx_noncestr: noncestr)
-    yield result, nil if block_given?
-    result
-    # else
-    #   self.wx_prepay_id = prepayid
-    #   self.wx_noncestr = noncestr
-    #   yield true, nil if block_given?
-    #   true
-    # end
+  def wx_create_response_paid?
+    wx_create_response.present? &&
+      wx_create_response['return_msg'].present? &&
+      "ORDERPAID" == wx_create_response["err_code"]
   end
 
   def generate_wx_pay_params
@@ -46,19 +50,11 @@ module WxOrder
       return false
     end
 
-    valid = result["out_trade_no"].to_s == out_trade_no &&
-    result["appid"] == appid &&
-    result["mch_id"] == mch_id &&
-    result["trade_type"] == "JSAPI"# &&
-    # result["attach"] == attach
-
-    puts "比较结果:#{valid}"
-    puts "out_trade_no: #{result['out_trade_no'].to_s == out_trade_no}"
-    puts "appid: #{result['appid'].to_s == appid}"
-    puts "mch_id: #{result['mch_id'].to_s == mch_id}"
-    puts "trade_type: #{result['trade_type'].to_s == 'JSAPI'}"
-
-    valid
+    result["out_trade_no"].to_s == out_trade_no &&
+      result["appid"] == appid &&
+      result["mch_id"] == mch_id &&
+      result["trade_type"] == "JSAPI"# &&
+      # result["attach"] == attach
   end
 
   # 访问微信服务器，查看订单是否完成支付
@@ -68,7 +64,7 @@ module WxOrder
   # 商户订单号 out_trade_no  二选一 String(32)  20150806125346  商户系统内部的订单号，当没提供transaction_id时需要传这个。
   # 随机字符串 nonce_str 是 String(32)  C380BEC2BFD727A4B6845133519F3AD6  随机字符串，不长于32位。推荐随机数生成算法
   # 签名  sign  是 String(32)  5K8264ILTKCH16CQ2502SI8ZNMTM67VS  签名，详见签名生成算法
-  def wx_order_paid?
+  def wx_order_paid?(udpate_wx_transation_id_if_paid=false)
     params = if wx_transaction_id.present?
       { transaction_id: wx_transaction_id }
     else
@@ -76,7 +72,15 @@ module WxOrder
     end
 
     res = WxPay::Service.order_query params
-    res.present? && verify_wx_notify(res) && "SUCCESS" == res["result_code"]
+    paid = res.present? && verify_wx_notify(res) && "SUCCESS" == res["result_code"]
+
+    if true == paid && true == udpate_wx_transation_id_if_paid
+      self.paid = true
+      self.wx_transaction_id = res["transaction_id"]
+      save(validate: false)
+    end
+
+    paid
   end
 
   private

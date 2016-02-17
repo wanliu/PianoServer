@@ -64,19 +64,19 @@ module YiyuanOrdersController
   def pay_kind
   end
 
-  def set_pay_kind
-    if "wx_pay" == params[:order][:pay_kind]
-      @order.request_ip = request.ip
-      if @order.create_wx_order
-        redirect_to wxpay_test_orders_path(oid: @order.id)
-      else
-        flash[:error] = " 请求微信支付失败，请稍后再试！"
-        redirect_to pay_kind_order_path(@order)
-      end
-    else
-      redirect_to @order
-    end
-  end
+  # def set_pay_kind
+  #   if "wx_pay" == params[:order][:pay_kind]
+  #     @order.request_ip = request.ip
+  #     if @order.create_wx_order
+  #       redirect_to wxpay_test_orders_path(oid: @order.id)
+  #     else
+  #       flash[:error] = " 请求微信支付失败，请稍后再试！"
+  #       redirect_to pay_kind_order_path(@order)
+  #     end
+  #   else
+  #     redirect_to @order
+  #   end
+  # end
 
   private
 
