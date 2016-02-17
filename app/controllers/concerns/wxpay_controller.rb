@@ -50,6 +50,12 @@ module WxpayController
     # end
   end
 
+  def wx_paid
+    unless @order.paid?
+      redirect_to pay_kind_order_path(@order)
+    end
+  end
+
   def wxpay
     if @order.paid?
       render "orders/yiyuan/wx_paid"
