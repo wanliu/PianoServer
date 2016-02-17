@@ -86,14 +86,27 @@ module WxOrder
   private
 
   def prepay_params
+    # 微信支付优惠
     {
       body: "#{id}号订单支付",
       out_trade_no: out_trade_no,
-      total_fee: (total * 100).to_i,
+      total_fee: (wx_total_fee * 100).to_i,
       spbill_create_ip: request_ip,
       notify_url: "#{Settings.app.website}/orders/#{id}/wx_notify",
       trade_type: 'JSAPI'
     }
+  end
+
+  def wx_total_fee
+    wx_pay_discount = if Settings.promotions.one_money.wx_pay_discount.present?
+      Settings.promotions.one_money.wx_pay_discount
+    else
+      0
+    end
+
+    total_fee = total - wx_pay_discount
+
+    total_fee > 0 ? total_fee : 0
   end
 
   def appid
