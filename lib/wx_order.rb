@@ -8,7 +8,7 @@ module WxOrder
 
     unless wx_order.success?
       puts "微信支付失败！", wx_order["return_msg"]
-      yield false, "#{wx_order["return_msg"]}:#{params.to_json}" if block_given?
+      yield false, "返回值: #{wx_order['return_msg']}, 错误码:#{wx_order['err_code']}, 错误描述: #{wx_order['err_code_des']}:#{params.to_json}" if block_given?
       return false
     end
 
