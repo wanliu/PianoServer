@@ -9,7 +9,7 @@
 <% else %>
   <div class='container order-pay'>
     <div class='order-amount text-center'>
-      总计：<%= number_to_currency @order.total %>元
+      <h1>总计：<%= number_to_currency @order.total %>元</h1>
     </div>
 
     <div class='chose-pay-kind'>  
@@ -25,12 +25,21 @@
 
 <script>
   $(function() {
-    // 用户点击“微信支付”
+    // 用户点击 “微信支付”
     $('.chose-pay-kind .wx-pay').click(function(e) {
       e.preventDefault();
 
       var orderId = $(this).data('orderId');
       var url = "<%= WeixinApi.get_openid_url(wxpay_orders_path(@order)).html_safe %>";
+      window.location.href = url;
+    })
+
+    // 用户点击 “货到付款”，直接跳转到订单详情页面
+    $('.chose-pay-kind .cod').click(function(e) {
+      e.preventDefault();
+
+      var orderId = $(this).data('orderId');
+      var url = "<%= order_path(@order) %>";
       window.location.href = url;
     })
   })
