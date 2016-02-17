@@ -19,6 +19,7 @@ module WxpayController
       # find your order and process the post-paid logic.
       @order.paid = true
       @order.wx_transaction_id = result["transaction_id"]
+      @order.paid_total = @order.wx_total_fee
       @order.save(validate: false)
 
       puts "微信支付成功返回，结果：#{result.to_json}"
