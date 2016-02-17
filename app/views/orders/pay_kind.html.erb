@@ -8,13 +8,17 @@
   </div>
 <% else %>
   <div class='container order-pay'>
+    <div class='header'>
+      选择付款方式
+    </div>
+
     <div class='order-amount text-center'>
       <h1><%= number_to_currency @order.total %></h1>
     </div>
 
-    <div class='chose-pay-kind'>  
+    <div class='chose-pay-kind'>
       <div class='pay-kind wx-pay text-center' data-order-id='<%= @order.id %>'>
-        <%= image_tag "wxpay_logo.png", class: 'wx-pay-logo' %>微信支付（优惠<%= Settings.promotions.one_money.wx_pay_discount || 0 %>元）
+        <%= image_tag "wxpay_logo.png", class: 'wx-pay-logo' %>微信支付（立减<%= Settings.promotions.one_money.wx_pay_discount || 0 %>元,仅<%= @order.wx_total_fee %>元）
       </div>
       <div class='pay-kind cod text-center' data-order-id='<%= @order.id %>'>
         货到付款
