@@ -17,7 +17,7 @@ module WxOrder
 
       update_attributes(wx_prepay_id: prepayid, wx_noncestr: noncestr)
     else
-      puts "微信支付统一下单失败！", wx_order.to_json
+      puts "微信支付统一下单失败！", 'options:', params.to_json, ',responses:', wx_order.to_json
     end
 
     if wx_create_response_paid? && wx_order_paid?(true)
@@ -83,6 +83,18 @@ module WxOrder
     paid
   end
 
+  def wx_total_fee
+    wx_pay_discount = if Settings.promotions.one_money.wx_pay_discount.present?
+      Settings.promotions.one_money.wx_pay_discount
+    else
+      0
+    end
+
+    total_fee = total - wx_pay_discount
+
+    total_fee > 0 ? total_fee : 0
+  end
+
   private
 
   def prepay_params
@@ -95,18 +107,6 @@ module WxOrder
       notify_url: "#{Settings.app.website}/orders/#{id}/wx_notify",
       trade_type: 'JSAPI'
     }
-  end
-
-  def wx_total_fee
-    wx_pay_discount = if Settings.promotions.one_money.wx_pay_discount.present?
-      Settings.promotions.one_money.wx_pay_discount
-    else
-      0
-    end
-
-    total_fee = total - wx_pay_discount
-
-    total_fee > 0 ? total_fee : 0
   end
 
   def appid
