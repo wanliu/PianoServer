@@ -35,8 +35,8 @@ module YiyuanOrdersController
     @order_item = @order.items.build(@item_params)
 
     if @order.save_with_pmo(current_user)
-      redirect_to pay_kind_order_path(@order)
-      # redirect_to @order
+      # redirect_to pay_kind_order_path(@order)
+      redirect_to @order
     else
       render "orders/yiyuan/fail", status: :unprocessable_entity
     end
