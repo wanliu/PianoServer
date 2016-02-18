@@ -178,8 +178,10 @@ class Order < ActiveRecord::Base
 
   # 暂时的解决：订单完成后不能再修改总价
   def change_total_on_initiated
-    if total_changed? && finish?
-      errors.add(:base, "不能修改已经完成的订单总价")
+    if total_changed?
+      if finish? || paid?
+        errors.add(:base, "不能修改订单总价，该订单已经完成，或者已经支付")
+      end
     end
   end
 

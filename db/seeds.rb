@@ -21,3 +21,6 @@ Property.create name: 'factory', prop_type: 'string', title: '生产厂家'
 Property.create name: 'production_license_number', prop_type: 'number', title: '生产许可证编号'
 Property.create name: 'shelf_life', prop_type: 'number', title: '保质期', unit_type: '天'
 
+if Rails.env.development?
+  load 'db/seeds/development.rb'
+end

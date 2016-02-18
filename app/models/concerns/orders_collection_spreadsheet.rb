@@ -29,9 +29,20 @@ module OrdersCollectionSpreadsheet
         sheet.row(row += 1).concat ["#{item.title}#{item.properties_title}", "#{item.price.round(2)}元", "#{item.quantity}件", "#{(item.quantity * item.price).round(2)}元"]
       end
 
-      sheet.row(row += 1).concat [nil, "共#{order.items_count}件商品#{order.items_total.round(2)}元",
-        "运费：#{(order.express_fee || 0).round(2)}元",
-        "总计：#{order.total.round(2)}元"]
+      row_content = [nil, "共#{order.items_count}件商品#{order.items_total.round(2)}元",
+        "运费：#{(order.express_fee || 0).round(2)}元"]
+
+      discount = if order.paid_total && order.paid_total != order.origin_total
+        "已优惠：#{order.origin_total - order.paid_total}元"
+      elsif order.total != order.origin_total
+        "已优惠：#{number_to_currency order.origin_total - order.total}元"
+      end
+
+      row_content << discount if discount.present?
+
+      row_content << "总计：#{order.paid_total.round(2) || order.total.round(2)}元"
+
+      sheet.row(row += 1).concat row_content
 
       sheet.row(row += 1).concat []
     end

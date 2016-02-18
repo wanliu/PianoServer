@@ -14,7 +14,9 @@
 
   <% if item == order.items.first && controller.action_name != 'show' %>
     <td rowspan='<%= order.items.count %>' class='operation'>
-      <% unless order.finish? %>
+      <% if order.paid %>
+        <div class='order-paid'>已支付</div>
+      <% elsif !order.finish? %>
         <button type="button" class="btn btn-danger"  data-toggle="modal" data-target="#change-total-<%= order.id %>">
           修改总价
         </button>
