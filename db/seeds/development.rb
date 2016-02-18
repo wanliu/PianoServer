@@ -3,6 +3,8 @@ mobile = 12345678911
 
 owner = User.create!(username: 'owner', password: password, email: 'owner@mail.com', mobile: mobile += 1)
 
+admin = Admin.create(email: 'admin@126.com', password: '12345678')
+
 province_id = ChinaCity.list[0][1]
 city_id = ChinaCity.list(province_id)[0][1]
 region_id = ChinaCity.list(city_id)[0][1]
