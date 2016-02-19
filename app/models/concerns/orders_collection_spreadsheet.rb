@@ -34,13 +34,13 @@ module OrdersCollectionSpreadsheet
 
       discount = if order.paid_total && order.paid_total != order.origin_total
         "已优惠：#{order.origin_total - order.paid_total}元"
-      elsif order.total != order.origin_total
-        "已优惠：#{number_to_currency order.origin_total - order.total}元"
+      else
+        "已优惠：#{order.origin_total - order.total}元"
       end
 
       row_content << discount if discount.present?
 
-      row_content << "总计：#{order.paid_total.round(2) || order.total.round(2)}元"
+      row_content << "总计：#{(order.paid_total || order.total).round(2)}元"
 
       sheet.row(row += 1).concat row_content
 
