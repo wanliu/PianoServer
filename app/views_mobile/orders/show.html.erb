@@ -43,6 +43,20 @@
     <div>创建时间：<%= @order.created_at.strftime("%Y/%m/%d %H:%M") %></div>
   </div>
 
+  <div class='order-note row show mobile'>
+    <div class='content col-xs-9'>
+      <div>备注：</div>
+      <div class='note'>
+        <%= @order.note.present? ? @order.note : "暂无备注" %>
+      </div>
+    </div>
+    <% unless @order.finish? %>
+      <div class='operation col-xs-3'>
+        <button class='btn btn-default add-note' data-toggle="modal" data-target="#note-order-<%= @order.id %>"><%= @order.note.present? ? "修改" : "添加" %></button>
+      </div>
+    <% end %>
+  </div>
+
   <ul class="list-group order-items">
     <li class="list-group-item order-item">
       <span class='shop'>
@@ -104,5 +118,55 @@
           </div>
         </div>
       </div>
+
+      <!-- 修改备注弹出框 -->
+    <div class="modal fade" id="note-order-<%= @order.id %>" tabindex="-1" role="dialog" aria-labelledby="noteOrderLable<%= @order.id %>">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myOrderLable<%= @order.id %>">备注</h4>
+          </div>
+          <div class="modal-body">
+            <div class='add-order-note row'>
+              <div class='col-xs-2'>备注</div>
+              <div class='col-xs-10'>
+                <input type='text' class='new-order-note' placeholder='暂无备注' autocomplete='off' value="<%= @order.note %>">
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-primary add-note-ok">确定</button>
+          </div>
+        </div>
+      </div>
+    </div>
   <% end %>
 </div>
+
+<script type="text/javascript">
+  $(function () {
+    $('.add-note-ok').click(function (event) {
+      var $modal = $(this).closest('.modal');
+      var note = $modal.find('input.new-order-note').val();
+
+      // if(note.length > 0) {
+        $.post('/orders/<%= @order.id %>', {
+          order: {
+            note: note
+          },
+          _method: 'patch'
+        }).done(function (data, status, xhr) {
+          if (note.length == 0) note = "暂无备注";
+          $('.order-note .note').text(note);
+          $modal.modal('hide');
+        }).always(function () {
+          $modal.modal('hide');
+        })
+      // } else {
+      //   $modal.modal('hide');
+      // }
+    })
+  })
+</script>

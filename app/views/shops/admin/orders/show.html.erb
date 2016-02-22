@@ -46,6 +46,13 @@
         </tr>
       </table>
 
+      <div class='order-note row show'>
+        <div class='col-xs-2'>备注</div>
+        <div class='col-xs-8 note'>
+          <%= @order.note.present? ? @order.note : "暂无备注" %>
+        </div>
+      </div>
+
       <div class='title'>商品清单</div>
       <div class='items'>
         <table class='table table-bordered order'>

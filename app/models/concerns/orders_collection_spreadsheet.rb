@@ -23,7 +23,8 @@ module OrdersCollectionSpreadsheet
         "收货人：#{order.receiver_name}",
         "联系电话：#{order.receiver_phone}",
         "收货地址：#{order.delivery_address}",
-        "支付状态：#{order.paid? ? '已支付' : '未支付'}"]
+        "支付状态：#{order.paid? ? '已支付' : '未支付'}",
+        "备注: #{order.note.present? ? order.note : '无'}"]
       # sheet.row(row += 1).concat ["商品", "价格(元)", "数量(件)", "小计(元)"]
       order.items.each do |item|
         sheet.row(row += 1).concat ["#{item.title}#{item.properties_title}", "#{item.price.round(2)}元", "#{item.quantity}件", "#{(item.quantity * item.price).round(2)}元"]
