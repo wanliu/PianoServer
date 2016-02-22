@@ -52,13 +52,6 @@ RSpec.describe EvaluationsController, type: :controller do
     end
   end
 
-  describe "GET #new" do
-    it "assigns a new evaluation as @evaluation" do
-      get :new, {}, valid_session
-      expect(assigns(:evaluation)).to be_a_new(Evaluation)
-    end
-  end
-
   describe "GET #edit" do
     it "assigns the requested evaluation as @evaluation" do
       evaluation = Evaluation.create! valid_attributes

@@ -1,26 +1,49 @@
-<div class='container order-pay'>
-  <div class='order-amount text-center'>
-    总计：<%= number_to_currency @order.total %>元
+<% if @order.paid? %>
+  <div class='container'>
+    订单已经支付成功，<%= link_to "查看订单详情", order_path(@order) %>
   </div>
+<% elsif @order.finish? %>
+  <div class='container'>
+    订单已经交易成功，<%= link_to "查看订单详情", order_path(@order) %>
+  </div>
+<% else %>
+  <div class='container order-pay'>
+    <div class='header'>
+      选择付款方式
+    </div>
 
-  <div class='chose-pay-kind'>  
-    <div class='pay-kind wx-pay text-center' data-order-id='<%= @order.id %>'>
-      微信支付（优惠５元）
+    <div class='order-amount text-center'>
+      <h1><%= number_to_currency @order.total %></h1>
     </div>
-    <div class='pay-kind cod text-center' data-order-id='<%= @order.id %>'>
-      货到付款
+
+    <div class='chose-pay-kind'>
+      <div class='pay-kind wx-pay text-center' data-order-id='<%= @order.id %>'>
+        <%= image_tag "wxpay_logo.png", class: 'wx-pay-logo' %>微信支付（立减<%= Settings.promotions.one_money.wx_pay_discount || 0 %>元,仅<%= @order.wx_total_fee %>元）
+      </div>
+      <div class='pay-kind cod text-center' data-order-id='<%= @order.id %>'>
+        货到付款
+      </div>
     </div>
   </div>
-</div>
+<% end %>
 
 <script>
   $(function() {
-    // 用户点击“微信支付”
+    // 用户点击 “微信支付”
     $('.chose-pay-kind .wx-pay').click(function(e) {
       e.preventDefault();
 
       var orderId = $(this).data('orderId');
       var url = "<%= WeixinApi.get_openid_url(wxpay_orders_path(@order)).html_safe %>";
+      window.location.href = url;
+    })
+
+    // 用户点击 “货到付款”，直接跳转到订单详情页面
+    $('.chose-pay-kind .cod').click(function(e) {
+      e.preventDefault();
+
+      var orderId = $(this).data('orderId');
+      var url = "<%= order_path(@order) %>";
       window.location.href = url;
     })
   })

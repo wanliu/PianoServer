@@ -1,7 +1,7 @@
-require 'order_wx_pay'
+require 'wx_order'
 
 class Order < ActiveRecord::Base
-  include OrderWxPay
+  include WxOrder
 
   extend OrdersCollectionSpreadsheet
 
@@ -9,8 +9,9 @@ class Order < ActiveRecord::Base
   belongs_to :supplier, class_name: 'Shop'
 
   has_many :items, class_name: 'OrderItem', autosave: true, dependent: :destroy
-  has_many :evaluations
   accepts_nested_attributes_for :items
+
+  has_many :evaluations
 
   attr_accessor :cart_item_ids
   attr_accessor :address_id, :request_ip
@@ -111,6 +112,12 @@ class Order < ActiveRecord::Base
     pmo_grab_id.present?
   end
 
+  def wait_for_yiyuan_evaluate?
+    previous_changes["status"].present? &&
+    previous_changes["status"].last == "finish" &&
+    pmo_grab_id.present? && !evaluated?
+  end
+
   def yiyuan_fullfilled?
     delivery_address.present?
   end
@@ -178,8 +185,10 @@ class Order < ActiveRecord::Base
 
   # 暂时的解决：订单完成后不能再修改总价
   def change_total_on_initiated
-    if total_changed? && finish?
-      errors.add(:base, "不能修改已经完成的订单总价")
+    if total_changed?
+      if finish? || paid?
+        errors.add(:base, "不能修改订单总价，该订单已经完成，或者已经支付")
+      end
     end
   end
 

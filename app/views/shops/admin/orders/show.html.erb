@@ -25,13 +25,18 @@
           <td>
             <div class='order-status'>
               <% if @order.initiated? %>
-                <div class='title'>订单状态：订单生成成功，等待买家确认！</div>
-                <div>订单编号：<%= @order.id %></div>
-                <div>您可以
-                  <button type="button" class="btn btn-danger"  data-toggle="modal" data-target="#change-total-<%= @order.id %>">
-                    修改总价
-                  </button>
-                </div>
+                <% if @order.paid? %>
+                  <div class='title'>订单状态：订单已经支付，等待买家确认！</div>
+                  <div>订单编号：<%= @order.id %></div>
+                <% else %>
+                  <div class='title'>订单状态：订单生成成功，等待买家确认！</div>
+                  <div>订单编号：<%= @order.id %></div>
+                  <div>您可以
+                    <button type="button" class="btn btn-danger"  data-toggle="modal" data-target="#change-total-<%= @order.id %>">
+                      修改总价
+                    </button>
+                  </div>
+                <% end %>
               <% elsif @order.finish? %>
                 <div class='title'>订单状态：订单已经完成，交易成功！</div>
                 <div>订单编号：<%= @order.id %></div>
@@ -59,10 +64,17 @@
                 <div class='text-right'>
                   一共<%= @order.items_count %>件商品&emsp;合计：<%= number_to_currency @order.items_total %>元<br>
                   运送费用：<%= number_to_currency(@order.express_fee || 0) %>元<br>
-                  <% if @order.total != @order.origin_total %>
+                  <% if @order.paid_total && @order.paid_total != @order.origin_total %>
+                    <span class='reduce'>已优惠：<%= number_to_currency @order.origin_total - @order.paid_total %>元</span><br>
+                  <% elsif @order.total != @order.origin_total %>
                     <span class='reduce'>已优惠：<%= number_to_currency @order.origin_total - @order.total %>元</span><br>
                   <% end %>
-                  <h4>付款：<span class='total'><%= number_to_currency @order.total %>元</span></h4>
+                  <h4>
+                    付款：
+                    <span class='total'>
+                      <%= number_to_currency @order.paid_total || @order.total %>元
+                    </span>
+                  </h4>
                 </div>
               </td>
             </tr>

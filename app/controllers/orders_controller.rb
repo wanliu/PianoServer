@@ -2,7 +2,7 @@ require 'weixin_api'
 
 class OrdersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_order, only: [:show, :destroy, :update, :set_wx_pay, :pay_kind, :wxpay]
+  before_action :set_order, only: [:show, :destroy, :update, :set_wx_pay, :pay_kind, :wxpay, :wxpay_confirm, :wx_paid]
   before_action :check_for_mobile, only: [:index, :show, :history, :confirmation, :buy_now_confirm]
 
   include ParamsCallback
@@ -133,7 +133,15 @@ class OrdersController < ApplicationController
     respond_to do |format|
       if @order.update(order_update_params)
         format.json { head :no_content }
-        format.html { redirect_to history_orders_path }
+        format.html do
+          # 一元购收货后跳到评价页面
+          if @order.wait_for_yiyuan_evaluate?
+            one_money = OneMoney[@order.one_money_id]
+            redirect_to "/one_money/#{ one_money.start_at.strftime('%Y-%m-%d') }/index.html#/comment/#{ @order.pmo_grab_id }/#{@order.id}"
+          else
+            redirect_to history_orders_path
+          end
+        end
       else
         format.json { render json: @order.errors, status: :unprocessable_entity }
         format.html { render :show, flash[:now] = @order.errors.full_messages.join(', ') }

@@ -52,12 +52,12 @@ RSpec.describe ThumbsController, type: :controller do
     end
   end
 
-  describe "GET #new" do
-    it "assigns a new thumb as @thumb" do
-      get :new, {}, valid_session
-      expect(assigns(:thumb)).to be_a_new(Thumb)
-    end
-  end
+  # describe "GET #new" do
+  #   it "assigns a new thumb as @thumb" do
+  #     get :new, {}, valid_session
+  #     expect(assigns(:thumb)).to be_a_new(Thumb)
+  #   end
+  # end
 
   describe "GET #edit" do
     it "assigns the requested thumb as @thumb" do

@@ -312,8 +312,10 @@ Rails.application.routes.draw do
 
     member do
       get "pay_kind"
-      post "set_wx_pay"
+      get "wx_paid"
+      # post "set_wx_pay"
       post "wx_notify"
+      post "wxpay_confirm"
     end
   end
 

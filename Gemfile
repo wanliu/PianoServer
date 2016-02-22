@@ -117,6 +117,8 @@ gem "em-synchrony"
 # gem 'em-hiredis', '~> 0.3.0'
 gem 'em-redis'
 gem 'em-hiredis'
+gem "redis-namespace", "~> 1.5.2"
+
 gem 'redis-objects'
 gem 'ohm'
 gem 'ohm-contrib'
