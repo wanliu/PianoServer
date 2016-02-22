@@ -22,6 +22,8 @@ class PmoItem < Ohm::Model
   attribute :ori_price, Type::Decimal
   attribute :total_amount, Type::Integer
   attribute :max_executies, Type::Integer
+  attribute :fare, Type::Decimal
+  attribute :max_free_fare, Type::Decimal
 
   attribute :shop_category_name
   attribute :category_name
@@ -32,6 +34,7 @@ class PmoItem < Ohm::Model
   attribute :start_at, OhmTime::ISO8601
   attribute :end_at, OhmTime::ISO8601
   attribute :suspend_at, OhmTime::ISO8601
+  attribute :overwrites, Type::Hash
 
   attribute :independence, Type::Boolean
 
@@ -159,6 +162,41 @@ class PmoItem < Ohm::Model
     end
   end
 
+  def fare_with_overwrites
+    if self.overwrites.try(:[], "fare")
+      fare_without_overwrites
+    else
+      self.one_money.try(:fare)
+    end
+  end
+
+  def max_free_fare_with_overwrites
+    if self.overwrites.try(:[], "max_free_fare")
+      max_free_fare_without_overwrites
+    else
+      self.one_money.try(:max_free_fare)
+    end
+  end
+
+  def set_overwrite_value(name, value)
+    overwrites = self.overwrites ||  {}
+    overwrites[name.to_s] = true
+    self.overwrites = overwrites
+    self.send("#{name}=", value)
+    self.save
+  end
+
+  def clear_overwrite(name)
+    overwrites = self.overwrites ||  {}
+    overwrites.delete(name.to_s)
+    self.overwrites = overwrites
+    self.save
+  end
+
+  def is_overwrites?
+    (self.overwrites || {}).values.any? { |v| v }
+  end
+
   def set_status(state)
     self.suspend_at = self.now if state.to_s == "suspend"
     self.status = state
@@ -279,6 +317,9 @@ class PmoItem < Ohm::Model
   alias_method_chain :end_at, :fallback
   alias_method_chain :status, :timing
   alias_method_chain :status, :inventory
+
+  alias_method_chain :fare, :overwrites
+  alias_method_chain :max_free_fare, :overwrites
 
   protected
 
