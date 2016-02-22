@@ -13,12 +13,16 @@ FactoryGirl.define do
     sequence(:public_price, 20) { |n| n }
     sequence(:income_price, 20) { |n| n }
 
-    properties "{}"
     description "description"
 
-    after(:create) do |item|
+    before(:create) do |item|
       item.build_stocks(item.shop.owner, rand(1000))
-      item.save
+    end
+
+    # FactoryGirl/Rspec dont call after_commit callbacks before Rails 5,
+    # this is a hot fix, remove this hook if updated to Rails 5
+    after(:create) do |item|
+      item.update_current_stock!
     end
   end
 end
