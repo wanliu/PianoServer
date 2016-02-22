@@ -163,17 +163,13 @@ class OrdersController < ApplicationController
     @order = current_user.orders.find(params[:id])
   end
 
-  def order_params
-    params.require(:order).permit(:supplier_id, :address_id, cart_item_ids: [])
-  end
-
   def order_update_params
-    params.require(:order).permit(:status)
+    params.require(:order).permit(:status, :note)
   end
 
   def buy_now_order_params
     params.require(:order)
-      .permit(:supplier_id, :address_id, items_attributes: [:orderable_type, :orderable_id, :quantity, :price, :title])
+      .permit(:supplier_id, :address_id, :note, items_attributes: [:orderable_type, :orderable_id, :quantity, :price, :title])
       .tap do |white_list|
         white_list[:items_attributes].each do |key, attributes|
           attributes[:properties] = params[:order][:items_attributes][key][:properties] || {}
@@ -211,7 +207,8 @@ class OrdersController < ApplicationController
   end
 
   def order_params
-    params.require(:order).permit(:supplier_id, :pmo_grab_id, :one_money_id, :address_id)
+    params.require(:order)
+      .permit(:supplier_id, :address_id, :pmo_grab_id, :one_money_id, :note, cart_item_ids: [])
   end
 
   def location_params
