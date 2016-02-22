@@ -127,20 +127,27 @@ class Order < ActiveRecord::Base
   end
 
   def discharge_for_express?
-    one_money = OneMoney[one_money_id]
+    pmo_grab = PmoGrab[pmo_grab_id]
 
-    if one_money.blank?
+    if pmo_grab.blank?
       yield false, 0, 0 if block_given?
       return false
     end
 
-    discharge_express_fee_on = one_money.max_free_fare
+    pmo_item = pmo_grab.pmo_item
+
+    if pmo_item.blank?
+      yield false, 0, 0 if block_given?
+      return false
+    end
+
+    discharge_express_fee_on = pmo_item.max_free_fare
 
     discharge = discharge_express_fee_on.present? && items_total >= discharge_express_fee_on
     if discharge
       yield discharge, 0, discharge_express_fee_on if block_given?
     else
-      yield discharge, one_money.fare, discharge_express_fee_on if block_given?
+      yield discharge, pmo_item.fare, discharge_express_fee_on if block_given?
     end
 
     discharge
