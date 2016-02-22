@@ -151,21 +151,22 @@
       var $modal = $(this).closest('.modal');
       var note = $modal.find('input.new-order-note').val();
 
-      if(note.length > 0) {
+      // if(note.length > 0) {
         $.post('/orders/<%= @order.id %>', {
           order: {
             note: note
           },
           _method: 'patch'
         }).done(function (data, status, xhr) {
+          if (note.length == 0) note = "暂无备注";
           $('.order-note .note').text(note);
           $modal.modal('hide');
         }).always(function () {
           $modal.modal('hide');
         })
-      } else {
-        $modal.modal('hide');
-      }
+      // } else {
+      //   $modal.modal('hide');
+      // }
     })
   })
 </script>
