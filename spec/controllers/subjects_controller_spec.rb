@@ -52,12 +52,12 @@ RSpec.describe SubjectsController, type: :controller do
     end
   end
 
-  describe "GET #new" do
-    it "assigns a new subject as @subject" do
-      get :new, {}, valid_session
-      expect(assigns(:subject)).to be_a_new(Subject)
-    end
-  end
+  # describe "GET #new" do
+  #   it "assigns a new subject as @subject" do
+  #     get :new, {}, valid_session
+  #     expect(assigns(:subject)).to be_a_new(Subject)
+  #   end
+  # end
 
   describe "GET #edit" do
     it "assigns the requested subject as @subject" do

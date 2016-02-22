@@ -120,6 +120,7 @@ promotions:
     default_callback: http://m.wanliu.biz/orders/yiyuan_confirm
     sms_to_supplier: true
     sms_to_supplier_template: '【万流网】你的商店有一个新的一元购订单，订单号：#o_id#，请及时查看！'
+    wx_pay_discount: 5
 sms:
   host: sms.yunpian.com
   api_uri: /v1/sms/send.json

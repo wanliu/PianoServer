@@ -14,10 +14,12 @@
       <div class='text-right'>
         一共<%= order.items_count %>件商品&emsp;合计：<%= number_to_currency order.items_total %>元<br>
         运送费用：<%= number_to_currency(order.express_fee || 0) %>元<br>
-        <% if order.total != order.origin_total %>
+        <% if order.paid_total && order.paid_total != order.origin_total %>
+          <span class='reduce'>已优惠：<%= number_to_currency order.origin_total - order.paid_total %>元</span><br>
+        <% elsif order.total != order.origin_total %>
           <span class='reduce'>已优惠：<%= number_to_currency order.origin_total - order.total %>元</span><br>
         <% end %>
-        总计：<b class='total'><%= number_to_currency order.total %>元</b>
+        总计：<b class='total'><%= number_to_currency order.paid_total || order.total %>元</b>
       </div>
     </li>
   </ul>
@@ -25,14 +27,16 @@
   <div class="panel-footer">
     <div class='text-right'>
       <%= link_to "订单详情", shop_admin_order_path(order.supplier.name, order), class: 'btn btn-default' %>
-      <% unless order.finish? %>
+      <% if order.paid? %>
+        <span>已支付</span>
+      <% elsif !order.finish? %>
         <button type="button" class="btn btn-danger"  data-toggle="modal" data-target="#change-total-<%= order.id %>">
         修改总价
       </button>
       <% end %>
     </div>
 
-    <% unless order.finish? %>
+    <% unless order.finish? || order.paid?  %>
     <div class="modal fade" id="change-total-<%= order.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
       <%= form_for order, url: shop_admin_order_path(order.supplier.name, order) do |f| %>
         <div class="modal-dialog" role="document">

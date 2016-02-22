@@ -1,10 +1,21 @@
 .order-pay {
+  .header {
+    margin: 10px 15px;
+    // border-bottom: 1px solid #ddd;
+  }
+
   .chose-pay-kind {
     .pay-kind {
       margin: 10px 15px;
       padding: 10px 0;
       border: 1px solid #ddd;
       cursor: pointer;
+
+      .wx-pay-logo {
+        display: inline-block;
+        height: 25px;
+        margin: -5px 3px;
+      }
     }
   }
 }

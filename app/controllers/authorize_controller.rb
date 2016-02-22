@@ -2,11 +2,21 @@ class AuthorizeController < ApplicationController
   include RedirectCallback
 
   before_action :set_callback, only: [:weixin]
+  rescue_from WeixinAuthorize::ValidAccessTokenException do |exception|
+    render plain: "WEIXIN API 调用超过限制！！请稍后尝试"
+  end
 
   def weixin
     redirect_url = "#{Settings.app.website}/authorize/weixin_redirect_url"
     authorize_method = mobile? ? :authorize_url : :qrcode_authorize_url
-    redirect_to wx_client.send(authorize_method, redirect_url, Settings.weixin.scope) if wx_client.is_valid?
+    logger.info wx_client.is_valid?.inspect
+    logger.info wx_client.token_store.token_expired?.inspect
+    logger.info wx_client.inspect
+    logger.info wx_client.token_store.inspect
+    # unless wx_client.is_valid?
+    #   wx_client.get_access_token if wx_client.token_store.token_expired?
+    # end
+    redirect_to wx_client.send(authorize_method, redirect_url, Settings.weixin.scope)# if wx_client.is_valid?
   end
 
   def weixin_redirect_url
@@ -14,10 +24,12 @@ class AuthorizeController < ApplicationController
     # status = false
     tries = 3
 
-    if wx_client.is_valid?
+    # if wx_client.is_valid?
       begin
         access_token = wx_client.get_oauth_access_token(code).result['access_token']
+        # access_token = wx_client.get_access_token
         profile = wx_client.get_oauth_userinfo(wx_client.app_id, access_token).result
+
 
         user, status = lookup_user(profile)
 
@@ -35,7 +47,7 @@ class AuthorizeController < ApplicationController
           logger.debug "Weixin Login Timeout!"
         end
       end
-    end
+    # end
 
     # redirect_to_with_callback(@to_url, callback_url, notice: @notice)
     redirect_to @to_url, notice: @notice

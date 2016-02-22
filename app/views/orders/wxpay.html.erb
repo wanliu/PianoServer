@@ -3,12 +3,18 @@
 <% end %>
 
 <div class='container order-pay'>
+  <div class='header'>
+    微信支付
+  </div>
+
   <div class='order-amount text-center'>
-    总计：<%= number_to_currency @order.total %>元
+    <h1><%= number_to_currency @order.total %></h1>
   </div>
  
-  <div class='pay-kind wx-pay-now text-center' data-order-id='<%= @order.id %>'>
-    微信支付（优惠５元）
+  <div  class='chose-pay-kind'>
+    <div class='pay-kind wx-pay-now text-center' data-order-id='<%= @order.id %>'>
+      <%= image_tag "wxpay_logo.png", class: 'wx-pay-logo' %>微信支付<%= @order.wx_total_fee %>元（优惠<%= Settings.promotions.one_money.wx_pay_discount || 0 %>元）
+    </div>
   </div>
 </div>
 
@@ -16,7 +22,7 @@
   <% signature = Wechat.api.jsapi_ticket.signature request.original_url %>
   // <%= signature.to_json.html_safe %>
   wx.config({
-    debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+    // debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
     appId: '<%= WxPay.appid %>', // 必填，公众号的唯一标识
     timestamp: <%= signature[:timestamp] %>, // 必填，生成签名的时间戳
     nonceStr: '<%= signature[:noncestr] %>', // 必填，生成签名的随机串
@@ -40,11 +46,29 @@
       signType: '<%= @params[:signType] %>', // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
       paySign: '<%= @params[:paySign] %>', // 支付签名
       success: function (res) {
-          // 支付成功后的回调函数
-          alert('pay success!' + JSON.stringify(res));
+        // 支付成功后的回调函数
+        // alert('pay success!' + JSON.stringify(res));
+
+        var csrfToken = $('meta[name=csrf-token]').attr('content');
+        var res = $.post('/orders/<%= @order.id %>/wxpay_confirm', {authenticity_token: csrfToken});
+
+        res.done(function (data, status, xhr) {
+          // 确认支付成功
+          // alert("支付成功");
+          window.location.href = "<%= wx_paid_order_path(@order) %>";
+        });
+
+        res.fail(function (data, status, xhr) {
+          // 无法确认支付成功
+          alert("由于某种原因，支付没有成功，如有疑问请联系客服");
+        });
+      },
+      fail: function(res) {
+        // 支付失败后的回调函数
+        alert('pay fail', + JSON.stringify(res));
       }
     });
-  }
+  } 
 
   $(function() {
     // 用户点击“微信支付”
