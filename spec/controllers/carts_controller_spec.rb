@@ -52,13 +52,6 @@ RSpec.describe CartsController, type: :controller do
     end
   end
 
-  describe "GET #new" do
-    it "assigns a new cart as @cart" do
-      get :new, {}, valid_session
-      expect(assigns(:cart)).to be_a_new(Cart)
-    end
-  end
-
   describe "GET #edit" do
     it "assigns the requested cart as @cart" do
       cart = Cart.create! valid_attributes

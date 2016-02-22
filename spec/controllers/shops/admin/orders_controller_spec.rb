@@ -36,124 +36,124 @@ RSpec.describe Shops::Admin::OrdersController, type: :controller do
   # Shops::Admin::OrdersController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
-  describe "GET #index" do
-    it "assigns all shops_admin_orders as @shops_admin_orders" do
-      order = Shops::Admin::Order.create! valid_attributes
-      get :index, {}, valid_session
-      expect(assigns(:shops_admin_orders)).to eq([order])
-    end
-  end
+  # describe "GET #index" do
+  #   it "assigns all shops_admin_orders as @shops_admin_orders" do
+  #     order = Shops::Admin::Order.create! valid_attributes
+  #     get :index, {}, valid_session
+  #     expect(assigns(:shops_admin_orders)).to eq([order])
+  #   end
+  # end
 
-  describe "GET #show" do
-    it "assigns the requested shops_admin as @shops_admin" do
-      order = Shops::Admin::Order.create! valid_attributes
-      get :show, {:id => order.to_param}, valid_session
-      expect(assigns(:shops_admin)).to eq(order)
-    end
-  end
+  # describe "GET #show" do
+  #   it "assigns the requested shops_admin as @shops_admin" do
+  #     order = Shops::Admin::Order.create! valid_attributes
+  #     get :show, {:id => order.to_param}, valid_session
+  #     expect(assigns(:shops_admin)).to eq(order)
+  #   end
+  # end
 
-  describe "GET #new" do
-    it "assigns a new shops_admin as @shops_admin" do
-      get :new, {}, valid_session
-      expect(assigns(:shops_admin)).to be_a_new(Shops::Admin::Order)
-    end
-  end
+  # describe "GET #new" do
+  #   it "assigns a new shops_admin as @shops_admin" do
+  #     get :new, {}, valid_session
+  #     expect(assigns(:shops_admin)).to be_a_new(Shops::Admin::Order)
+  #   end
+  # end
 
-  describe "GET #edit" do
-    it "assigns the requested shops_admin as @shops_admin" do
-      order = Shops::Admin::Order.create! valid_attributes
-      get :edit, {:id => order.to_param}, valid_session
-      expect(assigns(:shops_admin)).to eq(order)
-    end
-  end
+  # describe "GET #edit" do
+  #   it "assigns the requested shops_admin as @shops_admin" do
+  #     order = Shops::Admin::Order.create! valid_attributes
+  #     get :edit, {:id => order.to_param}, valid_session
+  #     expect(assigns(:shops_admin)).to eq(order)
+  #   end
+  # end
 
-  describe "POST #create" do
-    context "with valid params" do
-      it "creates a new Shops::Admin::Order" do
-        expect {
-          post :create, {:shops_admin => valid_attributes}, valid_session
-        }.to change(Shops::Admin::Order, :count).by(1)
-      end
+  # describe "POST #create" do
+  #   context "with valid params" do
+  #     it "creates a new Shops::Admin::Order" do
+  #       expect {
+  #         post :create, {:shops_admin => valid_attributes}, valid_session
+  #       }.to change(Shops::Admin::Order, :count).by(1)
+  #     end
 
-      it "assigns a newly created shops_admin as @shops_admin" do
-        post :create, {:shops_admin => valid_attributes}, valid_session
-        expect(assigns(:shops_admin)).to be_a(Shops::Admin::Order)
-        expect(assigns(:shops_admin)).to be_persisted
-      end
+  #     it "assigns a newly created shops_admin as @shops_admin" do
+  #       post :create, {:shops_admin => valid_attributes}, valid_session
+  #       expect(assigns(:shops_admin)).to be_a(Shops::Admin::Order)
+  #       expect(assigns(:shops_admin)).to be_persisted
+  #     end
 
-      it "redirects to the created shops_admin" do
-        post :create, {:shops_admin => valid_attributes}, valid_session
-        expect(response).to redirect_to(Shops::Admin::Order.last)
-      end
-    end
+  #     it "redirects to the created shops_admin" do
+  #       post :create, {:shops_admin => valid_attributes}, valid_session
+  #       expect(response).to redirect_to(Shops::Admin::Order.last)
+  #     end
+  #   end
 
-    context "with invalid params" do
-      it "assigns a newly created but unsaved shops_admin as @shops_admin" do
-        post :create, {:shops_admin => invalid_attributes}, valid_session
-        expect(assigns(:shops_admin)).to be_a_new(Shops::Admin::Order)
-      end
+  #   context "with invalid params" do
+  #     it "assigns a newly created but unsaved shops_admin as @shops_admin" do
+  #       post :create, {:shops_admin => invalid_attributes}, valid_session
+  #       expect(assigns(:shops_admin)).to be_a_new(Shops::Admin::Order)
+  #     end
 
-      it "re-renders the 'new' template" do
-        post :create, {:shops_admin => invalid_attributes}, valid_session
-        expect(response).to render_template("new")
-      end
-    end
-  end
+  #     it "re-renders the 'new' template" do
+  #       post :create, {:shops_admin => invalid_attributes}, valid_session
+  #       expect(response).to render_template("new")
+  #     end
+  #   end
+  # end
 
-  describe "PUT #update" do
-    context "with valid params" do
-      let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
-      }
+  # describe "PUT #update" do
+  #   context "with valid params" do
+  #     let(:new_attributes) {
+  #       skip("Add a hash of attributes valid for your model")
+  #     }
 
-      it "updates the requested shops_admin" do
-        order = Shops::Admin::Order.create! valid_attributes
-        put :update, {:id => order.to_param, :shops_admin => new_attributes}, valid_session
-        order.reload
-        skip("Add assertions for updated state")
-      end
+  #     it "updates the requested shops_admin" do
+  #       order = Shops::Admin::Order.create! valid_attributes
+  #       put :update, {:id => order.to_param, :shops_admin => new_attributes}, valid_session
+  #       order.reload
+  #       skip("Add assertions for updated state")
+  #     end
 
-      it "assigns the requested shops_admin as @shops_admin" do
-        order = Shops::Admin::Order.create! valid_attributes
-        put :update, {:id => order.to_param, :shops_admin => valid_attributes}, valid_session
-        expect(assigns(:shops_admin)).to eq(order)
-      end
+  #     it "assigns the requested shops_admin as @shops_admin" do
+  #       order = Shops::Admin::Order.create! valid_attributes
+  #       put :update, {:id => order.to_param, :shops_admin => valid_attributes}, valid_session
+  #       expect(assigns(:shops_admin)).to eq(order)
+  #     end
 
-      it "redirects to the shops_admin" do
-        order = Shops::Admin::Order.create! valid_attributes
-        put :update, {:id => order.to_param, :shops_admin => valid_attributes}, valid_session
-        expect(response).to redirect_to(order)
-      end
-    end
+  #     it "redirects to the shops_admin" do
+  #       order = Shops::Admin::Order.create! valid_attributes
+  #       put :update, {:id => order.to_param, :shops_admin => valid_attributes}, valid_session
+  #       expect(response).to redirect_to(order)
+  #     end
+  #   end
 
-    context "with invalid params" do
-      it "assigns the shops_admin as @shops_admin" do
-        order = Shops::Admin::Order.create! valid_attributes
-        put :update, {:id => order.to_param, :shops_admin => invalid_attributes}, valid_session
-        expect(assigns(:shops_admin)).to eq(order)
-      end
+  #   context "with invalid params" do
+  #     it "assigns the shops_admin as @shops_admin" do
+  #       order = Shops::Admin::Order.create! valid_attributes
+  #       put :update, {:id => order.to_param, :shops_admin => invalid_attributes}, valid_session
+  #       expect(assigns(:shops_admin)).to eq(order)
+  #     end
 
-      it "re-renders the 'edit' template" do
-        order = Shops::Admin::Order.create! valid_attributes
-        put :update, {:id => order.to_param, :shops_admin => invalid_attributes}, valid_session
-        expect(response).to render_template("edit")
-      end
-    end
-  end
+  #     it "re-renders the 'edit' template" do
+  #       order = Shops::Admin::Order.create! valid_attributes
+  #       put :update, {:id => order.to_param, :shops_admin => invalid_attributes}, valid_session
+  #       expect(response).to render_template("edit")
+  #     end
+  #   end
+  # end
 
-  describe "DELETE #destroy" do
-    it "destroys the requested shops_admin" do
-      order = Shops::Admin::Order.create! valid_attributes
-      expect {
-        delete :destroy, {:id => order.to_param}, valid_session
-      }.to change(Shops::Admin::Order, :count).by(-1)
-    end
+  # describe "DELETE #destroy" do
+  #   it "destroys the requested shops_admin" do
+  #     order = Shops::Admin::Order.create! valid_attributes
+  #     expect {
+  #       delete :destroy, {:id => order.to_param}, valid_session
+  #     }.to change(Shops::Admin::Order, :count).by(-1)
+  #   end
 
-    it "redirects to the shops_admin_orders list" do
-      order = Shops::Admin::Order.create! valid_attributes
-      delete :destroy, {:id => order.to_param}, valid_session
-      expect(response).to redirect_to(shops_admin_orders_url)
-    end
-  end
+  #   it "redirects to the shops_admin_orders list" do
+  #     order = Shops::Admin::Order.create! valid_attributes
+  #     delete :destroy, {:id => order.to_param}, valid_session
+  #     expect(response).to redirect_to(shops_admin_orders_url)
+  #   end
+  # end
 
 end
