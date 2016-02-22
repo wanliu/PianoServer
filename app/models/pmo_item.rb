@@ -188,7 +188,7 @@ class PmoItem < Ohm::Model
 
   def clear_overwrite(name)
     overwrites = self.overwrites ||  {}
-    overwrites.delete(name)
+    overwrites.delete(name.to_s)
     self.overwrites = overwrites
     self.save
   end
