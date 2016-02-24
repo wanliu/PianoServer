@@ -58,6 +58,10 @@
   border-bottom: 1px solid #ddd;
   margin: 0 0 10px 0;
 
+  .note {
+    overflow-wrap: break-word;
+  }
+
   &.show {
     padding: 10px 10px 2px 10px;
   }
@@ -79,7 +83,7 @@
 }
 
 .add-order-note {
-  input {
+  textarea {
     width: 100%;
   }
 }
