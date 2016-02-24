@@ -167,6 +167,8 @@ Rails.application.routes.draw do
         patch "fix_clock/:item_id", action: :fix_clock, as: :fix_clock
         patch "add_item/:item_id", action: :add_item, as: :add_item
         put "update_item/:item_id", action: :update_item, as: :update_item
+        put "overwrite_item/:item_id", action: :overwrite_item, as: :overwrite_item
+        delete "clear_overwrite_item/:item_id", action: :clear_overwrite_item, as: :clear_overwrite_item 
         delete "remove_item/:item_id", action: :remove_item, as: :remove_item
         post "upload_image/:item_id", action: :upload_image, as: :upload_image
         get :signups

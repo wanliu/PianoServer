@@ -100,6 +100,21 @@ class Admins::OneMoneyController < Admins::BaseController
     end
   end
 
+  def overwrite_item
+    @item = PmoItem[params[:item_id].to_i]
+    key =  params[:pmo_item].keys.first
+    value =  params[:pmo_item].values.first
+    @item.set_overwrite_value(key.to_sym, value)
+    respond_to do |format|
+      format.json  { render json: @item }
+    end
+  end
+
+  def clear_overwrite_item
+    @item = PmoItem[params[:item_id].to_i]
+    @item.clear_overwrite(params[:name])
+  end
+
   def set_item_completes
     @item = PmoItem[params[:item_id].to_i]
     new_completes = parmas[:pmo_item][:completes].to_i

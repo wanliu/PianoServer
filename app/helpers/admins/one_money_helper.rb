@@ -89,13 +89,21 @@ module Admins::OneMoneyHelper
 
   def best_in_place_item(item, *args)
     options = args.extract_options!
-    options[:url] = update_item_admins_one_money_path(@one_money.id, item.id)
+    options[:url] ||= update_item_admins_one_money_path(@one_money.id, item.id)
     default_options = {
        inner_class: 'form-control'
     }
     args.push options.merge(default_options)
     best_in_place OhmModel.new(item, model_name: item.class), *args
   end
+
+  def clear_over_link_to(name, item)
+    url =  clear_overwrite_item_admins_one_money_path(@one_money.id, item.id, name: name )
+    link_to url, remote: true, method: :delete do
+      icon :repeat
+    end
+  end
+
 
   def time_prompt(item, time = item.now, &block)
 
