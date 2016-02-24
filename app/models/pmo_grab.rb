@@ -133,8 +133,9 @@ class PmoGrab < Ohm::Model
     self.status = 'created'
     save
     cancel_expire(:timeout)
-  rescue
-    raise ActiveRecord::RecordInvalid
+  # rescue => e
+    # raise ActiveRecord::RecordInvalid.new(self)
+    # raise "pmo grab timeout"
   end
 
   alias_method_chain :callback, :fallback
