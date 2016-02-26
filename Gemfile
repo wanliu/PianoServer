@@ -1,4 +1,8 @@
-source 'https://ruby.taobao.org'
+if ENV['NOT_TAOBAO']
+  source :rubygems
+else
+  source 'https://ruby.taobao.org'
+end
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
