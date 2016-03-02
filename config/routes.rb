@@ -267,7 +267,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :items, concerns: [ :chatable ]
+  resources :items, concerns: [ :chatable ] do
+    collection do
+      get "search_ly"
+    end
+  end
 
   resources :cart_items, only: [:index, :show, :create, :update, :destroy]
 

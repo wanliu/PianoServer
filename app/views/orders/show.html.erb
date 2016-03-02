@@ -46,6 +46,18 @@
         </tr>
       </table>
 
+      <div class='order-note row show'>
+        <div class='col-xs-2'>备注</div>
+        <div class='col-xs-8 note'>
+          <%= @order.note.present? ? @order.note : "暂无备注" %>
+        </div>
+        <% unless @order.finish? %>
+          <div class='col-xs-2'>
+            <button class='btn btn-default add-note' data-toggle="modal" data-target="#note-order-<%= @order.id %>"><%= @order.note.present? ? "修改" : "添加" %></button>
+          </div>
+        <% end %>
+      </div>
+
       <div class='title'><b>商品清单</b></div>
       <div class='items'>
         <table class='table table-bordered order'>
@@ -86,6 +98,7 @@
 </div>
 
 <% unless @order.finish? %>
+  <!-- 确认收货弹出框 -->
   <div class="modal fade" id="finish-order-<%= @order.id %>" tabindex="-1" role="dialog" aria-labelledby="myOrderLable<%= @order.id %>">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -104,4 +117,55 @@
       </div>
     </div>
   </div>
+
+  <!-- 修改备注弹出框 -->
+  <div class="modal fade" id="note-order-<%= @order.id %>" tabindex="-1" role="dialog" aria-labelledby="noteOrderLable<%= @order.id %>">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myOrderLable<%= @order.id %>">备注</h4>
+        </div>
+        <div class="modal-body">
+          <div class='add-order-note row'>
+            <div class='col-xs-2'>备注</div>
+            <div class='col-xs-10'>
+              <textarea class='new-order-note' rows=5  maxlength="150"><%= @order.note %></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          <button type="button" class="btn btn-primary add-note-ok">确定</button>
+        </div>
+      </div>
+    </div>
+  </div>
 <% end %>
+
+
+<script type="text/javascript">
+  $(function () {
+    $('.add-note-ok').click(function (event) {
+      var $modal = $(this).closest('.modal');
+      var note = $modal.find('textarea.new-order-note').val();
+
+      // if(note.length > 0) {
+        $.post('/orders/<%= @order.id %>', {
+          order: {
+            note: note
+          },
+          _method: 'patch'
+        }).done(function (data, status, xhr) {
+          if (note.length == 0) note = "暂无备注";
+          $('.order-note .note').text(note);
+          $modal.modal('hide');
+        }).always(function () {
+          $modal.modal('hide');
+        })
+      // } else {
+      //   $modal.modal('hide');
+      // }
+    })
+  })
+</script>

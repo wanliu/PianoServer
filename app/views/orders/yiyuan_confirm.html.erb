@@ -25,8 +25,15 @@
   货到付款<span class='notify'>（本活动仅货到付款）</span>
 </div>
 
-<div class='yiyuan-confirm order-confirm-mobile'>
-  <%= form_for @order, url: yiyuan_confirm_orders_path(callback: request.fullpath) do |f| %>
+
+<%= form_for @order, url: yiyuan_confirm_orders_path(callback: request.fullpath), html: { class: 'yiyuan-order-form' } do |f| %>
+  <div class='order-note row'>
+    <div class='col-xs-2'>备注</div>
+    <div class='col-xs-10'><%= f.text_field :note, placeholder: '暂无备注', autocomplete: 'off', autofocus: true %></div>
+  </div>
+
+  <div class='yiyuan-confirm order-confirm-mobile'>
+
     <%= f.hidden_field :supplier_id %>
     <%= f.hidden_field :address_id, value: @location.id %>
 
@@ -80,9 +87,8 @@
         </div>
       </div>
     </div>
-    
-  <% end %>
-</div>
+  </div>
+<% end %>
 
 <div class='yiyuan-confirm-submit'>
   <div>
@@ -96,7 +102,7 @@
     $('#submit-yiyuan-confirm').click(function (event) {
       event.preventDefault();
 
-      var $form = $('.yiyuan-confirm form');
+      var $form = $('form.yiyuan-order-form');
       $form.submit();
     });
 

@@ -8,21 +8,21 @@ default: &default
   adapter: postgresql
   pool: 5
   timeout: 5000
-  username: postgres
-  password: postgres
+  username: <%= ENV['PG_USER'] || "postgres" %>
+  password: <%= ENV['PG_PASSWORD'] || "postgres" %>
   host: localhost
   port: 5432
 
 development:
   <<: *default
-  database: piano_development
+  database: piano_development<%= ENV['TEST_ENV_NUMBER'] %>
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: piano_test
+  database: piano_test<%= ENV['TEST_ENV_NUMBER'] %>
 
 production:
   <<: *default

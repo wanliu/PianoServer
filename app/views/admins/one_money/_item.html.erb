@@ -8,21 +8,21 @@
 
       <% overwrite_url = overwrite_item_admins_one_money_path(@one_money.id, item.id) %>
       <div class="collapse" id="collapseOverwrites-<%= item.id %>">
-        <div class="well">
+        <div class='well fare-modifier'>
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">运费</span>
-            <span class="input-group-addon" ><%=b item, :fare, title: '运费', url: overwrite_url %></span>
+            <span id="basic-addon1">运费:</span>
+            <span class='value'><%=b item, :fare, title: '运费', url: overwrite_url %></span>
             <% if (item.overwrites || {})["fare"] %>
-            <span class="input-group-addon" ><%= clear_over_link_to :fare, item %>
+            <span><%= clear_over_link_to :fare, item %>
             </span>
             <% end %>
           </div>
 
           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">免运费金额</span>
-            <span class="input-group-addon" ><%=b item, :max_free_fare, title: '免运费金额', url: overwrite_url %></span>
+            <span id="basic-addon1">免运费额:</span>
+            <span class='value'><%=b item, :max_free_fare, title: '免运费金额', url: overwrite_url %></span>
             <% if (item.overwrites || {})["max_free_fare"] %>
-            <span class="input-group-addon" ><%= clear_over_link_to :max_free_fare, item %>
+            <span><%= clear_over_link_to :max_free_fare, item %>
             </span>
             <% end %>
           </div>

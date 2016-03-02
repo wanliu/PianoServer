@@ -35,6 +35,13 @@
     <div>创建时间：<%= @order.created_at.strftime("%Y/%m/%d %H:%M") %></div>
   </div>
 
+  <div class='order-note row show mobile'>
+    <div class='col-xs-2'>备注</div>
+    <div class='col-xs-8 note'>
+      <%= @order.note.present? ? @order.note : "暂无备注" %>
+    </div>
+  </div>
+
   <ul class="list-group order-items">
     <li class="list-group-item order-item">
       <span class='shop'>

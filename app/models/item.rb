@@ -34,13 +34,64 @@ class Item < ActiveRecord::Base
   validates :income_price, :price, numericality: true, unless: :skip_batch
   validates :description, length: { minimum: 4 }, unless: :skip_batch
 
+  delegate :region_id, to: :shop, prefix: true
+
   if Settings.dev.feature.dynamic_property
     validates :properties, properties: {
       method_prefix: 'property',
       definitions: :definition_properties
     }
   end
-    # definitions: -> (item) { Hash[item.definition_properties.map {|name, cfg| ["property_#{name}", cfg] }] }}
+
+  settings(index: {
+      analysis: {
+        analyzer: {
+            pinyin_analyzer: {
+              tokenizer: "my_pinyin",
+              filter: ["word_delimiter", "nGram"]
+            }
+        },
+        tokenizer: {
+          my_pinyin: {
+            type: "pinyin",
+            first_letter: "prefix",
+            padding_char: " "
+          }
+        }
+      }
+    }) do
+
+    mappings dynamic: 'true' do
+      indexes :title, 
+        type: 'string', 
+        analyzer: 'ik',
+        fields: {
+          pinyin: {
+            type: 'string', 
+            analyzer: 'pinyin_analyzer',
+            term_vector: "with_positions_offsets"
+          }
+        }
+      indexes :shop_name, type: 'string'
+      indexes :brand_id, type: 'long'
+      indexes :category_id, type: 'long'
+      indexes :shop_category_id, type: 'long'
+      indexes :shop_id, type: 'long'
+      indexes :current_stock, type: 'float'
+      indexes :description, type: 'string', analyzer: 'ik'
+      indexes :on_sale, type: 'boolean'
+      indexes :abandom, type: 'boolean'
+      indexes :price, type: 'float'
+      indexes :income_price, type: 'float'
+      indexes :public_price, type: 'float'
+      indexes :properties, type: 'object'
+      indexes :sid, type: 'long'
+      indexes :shop_region_id, type: 'long'
+      # indexes :pinyin, type: 'string', analyzer: 'pinyin_analyzer'
+    end
+  end
+  
+  # definitions: -> (item) { Hash[item.definition_properties.map {|name, cfg| ["property_#{name}", cfg] }] }}
 
   # delegate :name, to: :product
   # delegate :price, to: :product, prefix: true
@@ -97,6 +148,48 @@ class Item < ActiveRecord::Base
     end
 
     Item.search(query).records #.results
+  end
+
+  scope :search_leiyang_items, ->(params) do
+    leiyang_region_id = Settings.elasticsearch.default_region_id
+
+    query_params = {
+      query: {
+        bool: {
+          should: [
+            { match: {"title.pinyin" => params[:q]} },
+            { match: {title: params[:q]} }
+          ],
+          filter: [
+            term: {
+              shop_region_id: leiyang_region_id
+            },
+            term: {
+              on_sale: true
+            }
+          ],
+          minimum_should_match: 1
+        }
+      }
+    }
+
+    if params[:category_id].present?
+      query_params[:query][:bool][:filter].push({
+        term: {
+          category_id: params[:category_id]
+        }
+      })
+    end
+
+    Item.search(query_params)
+  end
+
+  def as_indexed_json(options={})
+    self.as_json(methods: [:shop_region_id, :shop_name])
+  end
+
+  def pinyin
+    Pinyin.t title
   end
 
   def product
@@ -160,9 +253,6 @@ class Item < ActiveRecord::Base
     shop.try(:title)
   end
 
-  def as_indexed_json(options={})
-    as_json(options.merge(methods: :shop_name))
-  end
   # options: {
   #   data: {size: 'l', color: 'red'},
   #   quantity: 1

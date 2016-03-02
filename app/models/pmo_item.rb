@@ -203,8 +203,10 @@ class PmoItem < Ohm::Model
   end
 
   def to_hash
-    super.merge(attributes.except(:status, :start_at, :end_at).merge({
+    super.merge(attributes.except(:status, :fare, :max_free_fare, :start_at, :end_at).merge({
       start_at: self.start_at,
+      fare: self.fare,
+      max_free_fare: self.max_free_fare,
       end_at: self.end_at,
       status: self.status
     }))
