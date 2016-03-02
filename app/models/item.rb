@@ -161,11 +161,15 @@ class Item < ActiveRecord::Base
             { match: {title: params[:q]} }
           ],
           filter: [
-            term: {
-              shop_region_id: leiyang_region_id
+            {
+              term: {
+                shop_region_id: leiyang_region_id
+              }
             },
-            term: {
-              on_sale: true
+            {
+              term: {
+                on_sale: true
+              }
             }
           ],
           minimum_should_match: 1
@@ -179,6 +183,11 @@ class Item < ActiveRecord::Base
           category_id: params[:category_id]
         }
       })
+    end
+
+    min_score = Settings.elasticsearch.item_min_score
+    if min_score.present?
+      query_params[:min_score] = min_score
     end
 
     Item.search(query_params)
