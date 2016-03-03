@@ -10,3 +10,5 @@ os: linux
 files:
   - source: /
     destination: /var/www/PianoServer
+  - source: etc/piano_server.conf
+    destination: /etc/nginx/conf.d
