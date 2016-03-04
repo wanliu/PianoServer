@@ -4,11 +4,13 @@ set -e
 # since nginx and unicorn accept the same signals
 
 # Feel free to change any of the following variables for your app:
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+$DIR/var.sh
+
 TIMEOUT=${TIMEOUT-60}
 APP_ROOT=/var/www/PianoServer
 PID=$APP_ROOT/tmp/pids/unicorn.pid
-export SECRET_KEY_BASE="XXX"
-export LIVE_KEY_BASE="XXX"
+
 CMD="bundle exec unicorn -D -c $APP_ROOT/config/unicorn.rb"
 INIT_CONF=$APP_ROOT/config/init.conf
 action="$1"
