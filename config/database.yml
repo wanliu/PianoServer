@@ -10,7 +10,7 @@ default: &default
   timeout: 5000
   username: <%= ENV['PG_USER'] || "postgres" %>
   password: <%= ENV['PG_PASSWORD'] || "postgres" %>
-  host: localhost
+  host: <%= ENV['DATABASE_HOST'] || ENV['DBDEV_PORT_5432_TCP_ADDR'] || ENV['DBBETA_PORT_5432_TCP_ADDR'] || ENV['DBDEVRC_PORT_5432_TCP_ADDR'] || 'localhost' %>
   port: 5432
 
 development:
@@ -22,9 +22,9 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: piano_test<%= ENV['TEST_ENV_NUMBER'] %>
+  database: <%= piano_test<%= ENV['TEST_ENV_NUMBER'] %>
 
 production:
   <<: *default
   database: piano
-  host: <%= ENV['DATABASE_HOST'] || ENV['DBDEV_PORT_5432_TCP_ADDR'] || ENV['DBBETA_PORT_5432_TCP_ADDR'] || ENV['DBDEVRC_PORT_5432_TCP_ADDR'] || 'localhost' %>
+
