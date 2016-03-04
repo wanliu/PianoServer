@@ -7,7 +7,7 @@ echo "Database Host: $DATABASE_HOST"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PREFIX=" bundle exec "
 ENV="RAILS_ENV=production"
-CMD_PREFIX="DATABASE_HOST='$DATABASE_HOST' $ENV $PREFIX "
+CMD_PREFIX="DATABASE_HOST=\"$DATABASE_HOST\" $ENV $PREFIX "
 
 $CMD_PREFIX rake db:create 
 $CMD_PREFIX rake db:migrate && rake assets:clean
