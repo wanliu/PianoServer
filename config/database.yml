@@ -27,4 +27,4 @@ test:
 production:
   <<: *default
   database: piano
-  host: <%= ENV['DBDEV_PORT_5432_TCP_ADDR'] || ENV['DBBETA_PORT_5432_TCP_ADDR'] || ENV['DBDEVRC_PORT_5432_TCP_ADDR'] || 'localhost' %>
+  host: <%= ENV['DATABASE_HOST'] || ENV['DBDEV_PORT_5432_TCP_ADDR'] || ENV['DBBETA_PORT_5432_TCP_ADDR'] || ENV['DBDEVRC_PORT_5432_TCP_ADDR'] || 'localhost' %>

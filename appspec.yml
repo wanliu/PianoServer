@@ -10,3 +10,7 @@ os: linux
 files:
   - source: /
     destination: /var/www/PianoServer
+hooks:
+  AfterInstall:
+    - location: scripts/deploy.sh
+      timeout: 300
