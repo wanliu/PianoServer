@@ -22,7 +22,7 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: <%= piano_test<%= ENV['TEST_ENV_NUMBER'] %>
+  database: piano_test<%= ENV['TEST_ENV_NUMBER'] %>
 
 production:
   <<: *default
