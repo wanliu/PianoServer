@@ -1,3 +1,5 @@
+#!/bin/sh
+
 export SECRET_KEY_BASE="XXX"
 export LIVE_KEY_BASE="XXX"
 export INSTANCE_ID=`wget -q -O - http://instance-data/latest/meta-data/instance-id`
