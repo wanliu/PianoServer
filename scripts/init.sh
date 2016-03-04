@@ -7,7 +7,7 @@ set -e
 TIMEOUT=${TIMEOUT-60}
 APP_ROOT=/var/www/PianoServer
 PID=$APP_ROOT/tmp/pids/unicorn.pid
-CMD="/usr/bin/unicorn -D -c $APP_ROOT/config/unicorn.rb"
+CMD="bundle exec unicorn -D -c $APP_ROOT/config/unicorn.rb"
 INIT_CONF=$APP_ROOT/config/init.conf
 action="$1"
 set -u
