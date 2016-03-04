@@ -5,8 +5,7 @@ DATABASE_HOST=`aws ec2 describe-tags --filters "Name=key,Values=PostgresHost" | 
 DATABASE_PORT=5432
 echo "Database Host: $DATABASE_HOST"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-RAILS_ENV=production
-bundle exec rake db:migrate && rake assets:clean
+RAILS_ENV=production DATABASE_HOST=$DATABASE_HOST bundle exec rake db:migrate && rake assets:clean
 bundle exec rake assets:precompile
 
 $DIR/init.sh upgrade
