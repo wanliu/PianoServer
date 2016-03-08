@@ -4,7 +4,7 @@ class Api::UserController < Api::BaseController
   include AnonymousController
   include FastUsers
   # before_action :authenticate_user # only: [:index]
-  skip_before_action :authenticate_user!, except: :logined
+  skip_before_action :authenticate_user!
   skip_before_action :authenticate_user_from_token!
   skip_before_action :verify_signed_out_user_with_token
 
