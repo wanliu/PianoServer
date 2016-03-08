@@ -23,7 +23,9 @@
         </div>
       </div>
       <div class="media-body text-right">
-        <%= link_to "马上注册", new_registration_path(resource_name), class: 'link toggle-btn' %>
+        <% if Settings.dev.feature.user.sign_up %>
+          <%= link_to "马上注册", new_registration_path(resource_name), class: 'link toggle-btn' %>
+        <% end %>
         <% if mobile? %>
         &nbsp;|&nbsp;
         <% end -%>

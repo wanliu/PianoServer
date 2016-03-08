@@ -25,10 +25,12 @@
   </div>
 
   <!-- 注册 -->
-  <div class="sign-container regist-container">
-    <h4>会员注册</h4>
-    <%= render '/users/registrations/regist_form' %>
-  </div>
+  <% if Settings.dev.feature.user.sign_up %>
+    <div class="sign-container regist-container">
+      <h4>会员注册</h4>
+      <%= render '/users/registrations/regist_form' %>
+    </div>
+  <% end %>
 
   <!-- 找回密码 -->
   <div class="sign-container password-container">
