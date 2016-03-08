@@ -71,6 +71,7 @@ Rails.application.routes.draw do
   end
 
   # get '/auth/:provider/callback', to: 'users/sessions#create'
+  get '/users/logined', to: 'api/user#logined'
 
   devise_for :admins, controllers: {
     sessions: 'admins/sessions',

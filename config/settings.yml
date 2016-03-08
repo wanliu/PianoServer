@@ -65,6 +65,7 @@ dev:
       chat: true
     user:
       sign_in: true
+      sign_up: false
     industry: true
     weixin: true
     person_page: true
