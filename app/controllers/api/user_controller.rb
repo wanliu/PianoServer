@@ -24,10 +24,6 @@ class Api::UserController < Api::BaseController
     render json: current_user
   end
 
-  def logined
-    render json: {}
-  end
-
   # def anonymous(id)
   #   {
   #     id: id,
