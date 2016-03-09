@@ -62,12 +62,12 @@ class Item < ActiveRecord::Base
     }) do
 
     mappings dynamic: 'true' do
-      indexes :title, 
-        type: 'string', 
+      indexes :title,
+        type: 'string',
         analyzer: 'ik',
         fields: {
           pinyin: {
-            type: 'string', 
+            type: 'string',
             analyzer: 'pinyin_analyzer',
             term_vector: "with_positions_offsets"
           }
@@ -90,7 +90,7 @@ class Item < ActiveRecord::Base
       # indexes :pinyin, type: 'string', analyzer: 'pinyin_analyzer'
     end
   end
-  
+
   # definitions: -> (item) { Hash[item.definition_properties.map {|name, cfg| ["property_#{name}", cfg] }] }}
 
   # delegate :name, to: :product
@@ -138,11 +138,11 @@ class Item < ActiveRecord::Base
     if product.present?
       if product.to_i > 0
         query[:query][:bool][:should].push({
-          "range":{"item.sid": {"from" => product,"to" => product }}
+          "range" => {"item.sid" => {"from" => product,"to" => product }}
         })
       else
         query[:query][:bool][:should].push({
-          query_string: {"default_field" => "item.title","query" => product }
+          "query_string" => {"default_field" => "item.title","query" => product }
         })
       end
     end
