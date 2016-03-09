@@ -182,12 +182,17 @@ class Item < ActiveRecord::Base
 
     query_params = {
       query: {
-        bool: {
-          should: [
-            { match: {title: params[:q]} }
-            # { match: {"title.first_lt" => params[:q]} },
-            # { match: {"title.pinyin" => params[:q]} }
-          ],
+        filtered: {
+          query: {
+            bool: {
+              should: [
+                { match: {title: params[:q]} }
+                # { match: {"title.first_lt" => params[:q]} },
+                # { match: {"title.pinyin" => params[:q]} }
+              ],
+              minimum_should_match: 1
+            }
+          },
           filter: [
             {
               term: {
@@ -199,14 +204,13 @@ class Item < ActiveRecord::Base
                 on_sale: true
               }
             }
-          ],
-          minimum_should_match: 1
+          ]
         }
       }
     }
 
     if params[:category_id].present?
-      query_params[:query][:bool][:filter].push({
+      query_params[:query][:filtered][:filter].push({
         term: {
           category_id: params[:category_id]
         }
@@ -235,9 +239,9 @@ class Item < ActiveRecord::Base
           .gsub(/\W+n\z/, "n")
           .strip
 
-        query_params[:query][:bool][:should].push({ match: {"title.pinyin" => pinyin} })
+        query_params[:query][:filtered][:query][:bool][:should].push({ match: {"title.pinyin" => pinyin} })
       else
-        query_params[:query][:bool][:should].push({ match: {"title.first_lt" => params[:q]} })
+        query_params[:query][:filtered][:query][:bool][:should].push({ match: {"title.first_lt" => params[:q]} })
       end
     end
 
