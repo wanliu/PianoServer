@@ -70,7 +70,7 @@ class Order < ActiveRecord::Base
       save
     end
 
-    self.reload
+    # self.reload
     super
   end
 
