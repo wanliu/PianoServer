@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160222023330) do
+ActiveRecord::Schema.define(version: 20160311065537) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -248,6 +248,8 @@ ActiveRecord::Schema.define(version: 20160222023330) do
     t.jsonb    "properties_setting",                          default: {}
   end
 
+  add_index "items", ["shop_category_id"], name: "index_items_on_shop_category_id", using: :btree
+
   create_table "jobs", force: :cascade do |t|
     t.string   "status"
     t.integer  "jobable_id"
@@ -389,6 +391,7 @@ ActiveRecord::Schema.define(version: 20160222023330) do
     t.string   "wx_transaction_id"
     t.decimal  "paid_total",        precision: 10, scale: 2
     t.string   "note"
+    t.string   "receive_token"
   end
 
   add_index "orders", ["buyer_id"], name: "index_orders_on_buyer_id", using: :btree

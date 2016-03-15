@@ -396,6 +396,10 @@ Rails.application.routes.draw do
           get 'export_excel'
           get 'history'
         end
+
+        member do
+          get 'qr', to: "orders#qrcode_receive"
+        end
       end
 
       resources :settings do

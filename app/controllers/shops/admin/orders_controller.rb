@@ -1,6 +1,6 @@
 class Shops::Admin::OrdersController < Shops::Admin::BaseController
-  before_action :set_order, only: [:show, :update, :destroy]
-  before_action :check_for_mobile, only: [:index, :history, :show]
+  before_action :set_order, only: [:show, :update, :destroy, :qrcode_receive]
+  before_action :check_for_mobile, only: [:index, :history, :show, :qrcode_receive]
 
   # GET /shops/admin/orders
   # GET /shops/admin/orders.json
@@ -88,6 +88,22 @@ class Shops::Admin::OrdersController < Shops::Admin::BaseController
     temp_sheet = StringIO.new
     spreadsheet.write temp_sheet
     send_data temp_sheet.string, :filename => file_name # :type => "application/vnd.ms-excel"
+  end
+
+  def qrcode_receive
+    receive_token = params[:t]
+    if @order.finish?
+      flash[:alert] = '订单已经收货完成，无需再次收货'
+      @receive = 'done already'
+    else
+      if Devise.secure_compare(@order.receive_token, receive_token)
+        @order.finish!
+        @receive = 'yes'
+      else
+        flash[:error] = '无效的收货编码，无法完成收货！'
+        @receive = 'no'
+      end
+    end
   end
 
   private
