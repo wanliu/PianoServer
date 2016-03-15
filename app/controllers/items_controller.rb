@@ -1,5 +1,5 @@
 class ItemsController < ApplicationController
-  before_filter :set_shop
+  before_filter :set_shop, except: [:search_ly]
   before_filter :set_item, only: [ :show ]
 
   # caches_page :index, :show
@@ -16,6 +16,15 @@ class ItemsController < ApplicationController
       []
     end
 
+  end
+
+  def search_ly
+    @items = Item.search_leiyang_items(params)
+      .page(params[:page])
+      .per(params[:per])
+      .records
+
+    render json: { items: @items, page: @items.current_page, total_page: @items.total_pages }
   end
 
   def show
