@@ -51,7 +51,7 @@ class Admins::SuggestionsController < Admins::BaseController
         format.json { render json: @suggestion.errors, status: :unprocessable_entity }
         format.html {
           flash.alert = @suggestion.errors.full_messages.join(', ')
-          redirect_to new_admins_suggestion_path
+          render :new
         }
       end
     end
