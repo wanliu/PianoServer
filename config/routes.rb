@@ -2,12 +2,12 @@ Rails.application.routes.draw do
 
   resources :thumbs, except: [:new, :edit]
 
-  resources :evaluations, except: [:edit, :destroy, :update] do
-    member do
-      post :thumb
-      post :un_thumb
-    end
-  end
+  # resources :evaluations, except: [:edit, :destroy, :update] do
+  #   member do
+  #     post :thumb
+  #     post :un_thumb
+  #   end
+  # end
 
   resource :wechat, only: [:show, :create]
 
@@ -26,6 +26,17 @@ Rails.application.routes.draw do
       get :status
     end
   end
+
+  concern :evaluationable do
+    resources :evaluations, except: [:edit, :destroy, :update] do
+      member do
+        post :thumb
+        post :un_thumb
+      end
+    end
+  end
+
+  concerns :evaluationable
 
   resources :industry, only: [ :show ] do
     member do
@@ -259,6 +270,8 @@ Rails.application.routes.draw do
     # end
 
     resources :cart_items, only: [:index, :create]
+
+    concerns :evaluationable
   end
 
   resources :promotions, concerns: [ :chatable ] do
