@@ -168,7 +168,7 @@ Rails.application.routes.draw do
         patch "add_item/:item_id", action: :add_item, as: :add_item
         put "update_item/:item_id", action: :update_item, as: :update_item
         put "overwrite_item/:item_id", action: :overwrite_item, as: :overwrite_item
-        delete "clear_overwrite_item/:item_id", action: :clear_overwrite_item, as: :clear_overwrite_item 
+        delete "clear_overwrite_item/:item_id", action: :clear_overwrite_item, as: :clear_overwrite_item
         delete "remove_item/:item_id", action: :remove_item, as: :remove_item
         post "upload_image/:item_id", action: :upload_image, as: :upload_image
         get :signups
@@ -257,6 +257,8 @@ Rails.application.routes.draw do
     #     post :add_participant
     #   end
     # end
+
+    resources :cart_items, only: [:index, :create]
   end
 
   resources :promotions, concerns: [ :chatable ] do
@@ -267,7 +269,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :items, concerns: [ :chatable ]
+  resources :items, concerns: [ :chatable ] do
+    collection do
+      get "search_ly"
+    end
+  end
 
   resources :cart_items, only: [:index, :show, :create, :update, :destroy]
 

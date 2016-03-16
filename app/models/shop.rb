@@ -1,3 +1,5 @@
+require 'elasticsearch_import'
+
 class Shop < ActiveRecord::Base
   GREETINGS = %w(您好，请问我有什么可以帮您。 亲，欢迎您光临本店喔。 来者都是客，相逢拱拱手，本店商品玲琅满目、应有尽有，请客官放心挑选)
 
@@ -35,12 +37,12 @@ class Shop < ActiveRecord::Base
   # delegate :region, to: :location, allow_nil: true
 
   before_validation :default_values
+  after_commit :sync_shop_info
+  after_commit :sync_elasticsearch_items
 
   store_accessor :settings, :greetings, :theme, :poster, :head_url
 
   mount_uploader :logo, ImageUploader
-
-  after_commit :sync_shop_info
 
   scope :with_brands, -> (ids) do
     unless ids.blank?
@@ -92,6 +94,12 @@ class Shop < ActiveRecord::Base
 
   def sync_shop_info
     owner.send(:sync_to_pusher) unless owner.nil?
+  end
+
+  def sync_elasticsearch_items
+    if persisted? && previous_changes.include?("region_id")
+      ElasticsearchImport.perform_async({class: Item.to_s, ids: item_ids})
+    end
   end
 end
 

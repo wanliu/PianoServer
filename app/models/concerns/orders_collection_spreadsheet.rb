@@ -45,7 +45,7 @@ module OrdersCollectionSpreadsheet
 
       sheet.row(row += 1).concat row_content
 
-      sheet.row(row += 1).concat []
+      # sheet.row(row += 1).concat []
     end
 
     book

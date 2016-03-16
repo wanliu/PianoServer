@@ -9,6 +9,7 @@ default: &default
   jsapi_ticket: "/var/tmp/wechat_jsapi_ticket"
 
 production:
+  <<: *default
   timeout: 30,
   skip_verify_ssl: true
 

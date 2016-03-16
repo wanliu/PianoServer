@@ -34,13 +34,91 @@ class Item < ActiveRecord::Base
   validates :income_price, :price, numericality: true, unless: :skip_batch
   validates :description, length: { minimum: 4 }, unless: :skip_batch
 
+  delegate :region_id, to: :shop, prefix: true
+
   if Settings.dev.feature.dynamic_property
     validates :properties, properties: {
       method_prefix: 'property',
       definitions: :definition_properties
     }
   end
-    # definitions: -> (item) { Hash[item.definition_properties.map {|name, cfg| ["property_#{name}", cfg] }] }}
+
+  settings(index: {
+      analysis: {
+        analyzer: {
+            pinyin_analyzer: {
+              tokenizer: "my_pinyin",
+              filter: ["word_delimiter"]
+              # filter: ["word_delimiter", "pinyin_edgeNGram"]
+            },
+            first_pinyin_analyzer: {
+              tokenizer: "first_pinyin",
+              filter: ["word_delimiter", "first_pinyin_edgeNGram"]
+            }
+        },
+        tokenizer: {
+          my_pinyin: {
+            type: "pinyin",
+            first_letter: "none",
+            padding_char: " "
+          },
+          first_pinyin: {
+            type: "pinyin",
+            first_letter: "only",
+            padding_char: ""
+          }
+        },
+        filter: {
+          # pinyin_edgeNGram: {
+          #   type: "edgeNGram",
+          #   min_gram: 2,
+          #   max_gram: 5
+          # },
+          first_pinyin_edgeNGram: {
+            type: "nGram",
+            min_gram: 2,
+            max_gram: 5
+          }
+        }
+      }
+    }) do
+
+    mappings dynamic: 'true' do
+      indexes :title,
+        type: 'string',
+        analyzer: 'ik',
+        fields: {
+          pinyin: {
+            type: 'string',
+            analyzer: 'pinyin_analyzer',
+            term_vector: "with_positions_offsets"
+          },
+          first_lt: {
+            type: 'string',
+            analyzer: 'first_pinyin_analyzer',
+            term_vector: "with_positions_offsets"
+          }
+        }
+      indexes :shop_name, type: 'string'
+      indexes :brand_id, type: 'long'
+      indexes :category_id, type: 'long'
+      indexes :shop_category_id, type: 'long'
+      indexes :shop_id, type: 'long'
+      indexes :current_stock, type: 'float'
+      indexes :description, type: 'string', analyzer: 'ik'
+      indexes :on_sale, type: 'boolean'
+      indexes :abandom, type: 'boolean'
+      indexes :price, type: 'float'
+      indexes :income_price, type: 'float'
+      indexes :public_price, type: 'float'
+      indexes :properties, type: 'object'
+      indexes :sid, type: 'long'
+      indexes :shop_region_id, type: 'long'
+      # indexes :pinyin, type: 'string', analyzer: 'pinyin_analyzer'
+    end
+  end
+
+  # definitions: -> (item) { Hash[item.definition_properties.map {|name, cfg| ["property_#{name}", cfg] }] }}
 
   # delegate :name, to: :product
   # delegate :price, to: :product, prefix: true
@@ -87,16 +165,95 @@ class Item < ActiveRecord::Base
     if product.present?
       if product.to_i > 0
         query[:query][:bool][:should].push({
-          "range":{"item.sid": {"from" => product,"to" => product }}
+          "range" => {"item.sid" => {"from" => product,"to" => product }}
         })
       else
         query[:query][:bool][:should].push({
-          query_string: {"default_field" => "item.title","query" => product }
+          "query_string" => {"default_field" => "item.title","query" => product }
         })
       end
     end
 
     Item.search(query).records #.results
+  end
+
+  scope :search_leiyang_items, ->(params) do
+    leiyang_region_id = Settings.elasticsearch.default_region_id
+
+    query_params = {
+      query: {
+        filtered: {
+          query: {
+            bool: {
+              should: [
+                { match: {title: params[:q]} }
+                # { match: {"title.first_lt" => params[:q]} },
+                # { match: {"title.pinyin" => params[:q]} }
+              ],
+              minimum_should_match: 1
+            }
+          },
+          filter: [
+            {
+              term: {
+                shop_region_id: leiyang_region_id
+              }
+            },
+            {
+              term: {
+                on_sale: true
+              }
+            }
+          ]
+        }
+      }
+    }
+
+    if params[:category_id].present?
+      query_params[:query][:filtered][:filter].push({
+        term: {
+          category_id: params[:category_id]
+        }
+      })
+    end
+
+    min_score = Settings.elasticsearch.item_min_score
+    if min_score.present?
+      query_params[:min_score] = min_score
+    end
+
+    # 搜索内容只有字母的时候
+    # ①只有声母
+    # ②声母韵母都有
+    if /[a-z]+/.match params[:q]
+      if /[(a|o|e|i|u|ü|v)]/.match params[:q]
+        pinyin = params[:q].gsub /[(b|p|m|f|d|t|n|l|g|k|h|j|q|x|zh|ch|sh|r|z|c|s|w|y)]/ do |i|
+          " #{i}"
+        end
+        pinyin = pinyin.gsub(" z ", " z")
+          .gsub(" c ", " c")
+          .gsub(" s ", " s")
+          .gsub(" n ", "n ")
+          .gsub(" g ", "g ")
+          .gsub(/\W+g\z/, "g")
+          .gsub(/\W+n\z/, "n")
+          .strip
+
+        query_params[:query][:filtered][:query][:bool][:should].push({ match: {"title.pinyin" => pinyin} })
+      else
+        query_params[:query][:filtered][:query][:bool][:should].push({ match: {"title.first_lt" => params[:q]} })
+      end
+    end
+
+    Item.search(query_params)
+  end
+
+  def as_indexed_json(options={})
+    self.as_json(methods: [:shop_region_id, :shop_name])
+  end
+
+  def pinyin
+    Pinyin.t title
   end
 
   def product
@@ -160,9 +317,6 @@ class Item < ActiveRecord::Base
     shop.try(:title)
   end
 
-  def as_indexed_json(options={})
-    as_json(options.merge(methods: :shop_name))
-  end
   # options: {
   #   data: {size: 'l', color: 'red'},
   #   quantity: 1
