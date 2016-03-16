@@ -1,0 +1,5 @@
+<%= form_for [:admins, @suggestion] do |f| %>
+  <%= f.text_field :title, autocomplete: 'off' %>
+  <%= f.hidden_field :check %>
+  <%= f.submit "确认", class: 'btn btn-primary' %>
+<% end %>
