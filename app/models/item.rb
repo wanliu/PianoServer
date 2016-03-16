@@ -84,12 +84,12 @@ class Item < ActiveRecord::Base
     }) do
 
     mappings dynamic: 'true' do
-      indexes :title, 
-        type: 'string', 
+      indexes :title,
+        type: 'string',
         analyzer: 'ik',
         fields: {
           pinyin: {
-            type: 'string', 
+            type: 'string',
             analyzer: 'pinyin_analyzer',
             term_vector: "with_positions_offsets"
           },
@@ -117,7 +117,7 @@ class Item < ActiveRecord::Base
       # indexes :pinyin, type: 'string', analyzer: 'pinyin_analyzer'
     end
   end
-  
+
   # definitions: -> (item) { Hash[item.definition_properties.map {|name, cfg| ["property_#{name}", cfg] }] }}
 
   # delegate :name, to: :product
@@ -165,11 +165,11 @@ class Item < ActiveRecord::Base
     if product.present?
       if product.to_i > 0
         query[:query][:bool][:should].push({
-          "range":{"item.sid": {"from" => product,"to" => product }}
+          "range" => {"item.sid" => {"from" => product,"to" => product }}
         })
       else
         query[:query][:bool][:should].push({
-          query_string: {"default_field" => "item.title","query" => product }
+          "query_string" => {"default_field" => "item.title","query" => product }
         })
       end
     end
@@ -182,12 +182,17 @@ class Item < ActiveRecord::Base
 
     query_params = {
       query: {
-        bool: {
-          should: [
-            { match: {title: params[:q]} }
-            # { match: {"title.first_lt" => params[:q]} },
-            # { match: {"title.pinyin" => params[:q]} }
-          ],
+        filtered: {
+          query: {
+            bool: {
+              should: [
+                { match: {title: params[:q]} }
+                # { match: {"title.first_lt" => params[:q]} },
+                # { match: {"title.pinyin" => params[:q]} }
+              ],
+              minimum_should_match: 1
+            }
+          },
           filter: [
             {
               term: {
@@ -199,14 +204,13 @@ class Item < ActiveRecord::Base
                 on_sale: true
               }
             }
-          ],
-          minimum_should_match: 1
+          ]
         }
       }
     }
 
     if params[:category_id].present?
-      query_params[:query][:bool][:filter].push({
+      query_params[:query][:filtered][:filter].push({
         term: {
           category_id: params[:category_id]
         }
@@ -235,9 +239,9 @@ class Item < ActiveRecord::Base
           .gsub(/\W+n\z/, "n")
           .strip
 
-        query_params[:query][:bool][:should].push({ match: {"title.pinyin" => pinyin} })
+        query_params[:query][:filtered][:query][:bool][:should].push({ match: {"title.pinyin" => pinyin} })
       else
-        query_params[:query][:bool][:should].push({ match: {"title.first_lt" => params[:q]} })
+        query_params[:query][:filtered][:query][:bool][:should].push({ match: {"title.first_lt" => params[:q]} })
       end
     end
 
