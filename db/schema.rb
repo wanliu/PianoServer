@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160222023330) do
+ActiveRecord::Schema.define(version: 20160315031735) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -248,6 +248,8 @@ ActiveRecord::Schema.define(version: 20160222023330) do
     t.jsonb    "properties_setting",                          default: {}
   end
 
+  add_index "items", ["shop_category_id"], name: "index_items_on_shop_category_id", using: :btree
+
   create_table "jobs", force: :cascade do |t|
     t.string   "status"
     t.integer  "jobable_id"
@@ -389,6 +391,7 @@ ActiveRecord::Schema.define(version: 20160222023330) do
     t.string   "wx_transaction_id"
     t.decimal  "paid_total",        precision: 10, scale: 2
     t.string   "note"
+    t.string   "receive_token"
   end
 
   add_index "orders", ["buyer_id"], name: "index_orders_on_buyer_id", using: :btree
@@ -524,6 +527,18 @@ ActiveRecord::Schema.define(version: 20160222023330) do
     t.datetime "updated_at",              null: false
     t.integer  "status",      default: 0
   end
+
+  create_table "suggestions", force: :cascade do |t|
+    t.string   "title"
+    t.integer  "count",      default: 0
+    t.boolean  "check",      default: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
+  add_index "suggestions", ["check"], name: "index_suggestions_on_check", using: :btree
+  add_index "suggestions", ["count"], name: "index_suggestions_on_count", using: :btree
+  add_index "suggestions", ["title"], name: "index_suggestions_on_title", using: :btree
 
   create_table "taggings", force: :cascade do |t|
     t.integer  "tag_id"

@@ -1,0 +1,5 @@
+<%= form_for [:admins, @suggestion] do |f| %>
+  <%= f.text_field :title %>
+
+  <%= f.submit "确定", class: 'btn btn-primary' %>
+<% end %>

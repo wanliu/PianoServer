@@ -133,6 +133,12 @@ Rails.application.routes.draw do
   match "admins", to: "admins/dashboards#index", via: :get
 
   namespace :admins do
+    resources :suggestions do
+      collection do
+        get 'uncheck'
+      end
+    end
+
     resources :settings, path: 'settings/key', only: [:show, :update], constraints: {id: /[\S]+/}
     resources :dashboards
     resources :accounts, except: [:new, :edit] do

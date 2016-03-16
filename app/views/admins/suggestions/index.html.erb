@@ -1,0 +1,23 @@
+<table class='table'>
+  <thead>
+    <th>ID</th>
+    <th>名称</th>
+    <th>搜索次数</th>
+    <th>操作</th>
+  </thead>
+  <% @suggestions.each do |suggestion| %>
+    <tr>
+      <td><%= suggestion.id %></td>
+      <td><%= suggestion.title %></td>
+      <td><%= suggestion.count %></td>
+      <td>
+        <%= button_to "刪除", admins_suggestion_path(suggestion), method: :delete, data: {confirm: "确定刪除么?"}, class: 'btn btn-danger' %>
+        <%= button_to "撤销审核", admins_suggestion_path(suggestion, suggestion: {check: false}),
+          method: :put, data: {confirm: "确定撤销审核么？" },
+          class: 'btn btn-warning' %>
+      </td>
+    </tr>
+  <% end %>
+</table>
+
+<%= paginate @suggestions %>

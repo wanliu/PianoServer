@@ -24,6 +24,15 @@ class ItemsController < ApplicationController
       .per(params[:per])
       .records
 
+    if @items.count > 0
+      suggestion = Suggestion.find_by(title: params[:q])
+      if suggestion.present?
+        suggestion.increment!(:count)
+      else
+        Suggestion.create(title: params[:q], count: 1)
+      end
+    end
+
     render json: { items: @items, page: @items.current_page, total_page: @items.total_pages }
   end
 
