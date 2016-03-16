@@ -28,15 +28,28 @@ class Admins::SuggestionsController < Admins::BaseController
   def edit
   end
 
+  def new
+    @suggestion = Suggestion.new(check: true)
+  end
+
   # POST /suggestions
   # POST /suggestions.json
   def create
     @suggestion = Suggestion.new(suggestion_params)
 
-    if @suggestion.save
-      render json: @suggestion, status: :created, location: @suggestion
-    else
-      render json: @suggestion.errors, status: :unprocessable_entity
+    respond_to do |format|
+      if @suggestion.save
+        format.json { render json: @suggestion, status: :created }
+        format.html do
+          if @suggestion.check?
+            redirect_to admins_suggestions_path
+          else
+            redirect_to uncheck_admins_suggestions_path
+          end
+        end
+      else
+        render json: @suggestion.errors, status: :unprocessable_entity
+      end
     end
   end
 
