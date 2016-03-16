@@ -14,7 +14,7 @@ class Suggestion < ActiveRecord::Base
           analyzer: {
             pinyin_analyzer: {
               tokenizer: "my_pinyin",
-              filter: ["word_delimiter"]
+              filter: ["word_delimiter", "pinyin_edgeNGram"]
             },
             first_pinyin_analyzer: {
               tokenizer: "first_pinyin",
@@ -37,6 +37,10 @@ class Suggestion < ActiveRecord::Base
             first_pinyin_edgeNGram: {
               type: "edgeNGram",
               max_gram: 4
+            },
+            pinyin_edgeNGram: {
+              type: "edgeNGram",
+              max_gram: 5
             }
           }
         }
