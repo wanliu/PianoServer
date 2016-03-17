@@ -238,6 +238,7 @@ Rails.application.routes.draw do
   namespace :api do
     resources :user, only: [:index]
     get "suggestion", :to => "suggestion#index"
+    get "/items/search_ly", :to => "items#search_ly"
 
     namespace :promotions do
       resources :one_money, except: [:index, :create, :update, :destroy]  do
