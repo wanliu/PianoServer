@@ -5,7 +5,7 @@ module EvaluationsConcern
     @evaluations = if params[:pmo_item_id].present?
       Evaluation.where(evaluationable_type: 'PmoItem', evaluationable_id: params[:pmo_item_id])
     else
-      Evaluation.where(evaluationable_id: params[:evaluationable_id], evaluationable_type: params[:evaluationable_id])
+      Evaluation.where(evaluationable_id: params[:evaluationable_id], evaluationable_type: params[:evaluationable_type])
     end
 
     @total = @evaluations.count
@@ -97,7 +97,7 @@ module EvaluationsConcern
         params.require(:evaluation).permit(:desc, :pmo_grab_id,
           :good, :delivery, :customer_service)
       else
-        params.require(:evaluation).permit(:evaluationable_id, 
+        params.require(:evaluation).permit(:evaluationable_id,
           :evaluationable_type, :desc, :order_id,
           :good, :delivery, :customer_service)
       end
