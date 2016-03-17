@@ -183,16 +183,16 @@ class Item < ActiveRecord::Base
     query_params = {
       query: {
         filtered: {
-          query: {
-            bool: {
-              should: [
-                { match: {title: params[:q]} }
+          # query: {
+          #   bool: {
+          #     should: [
+                # { match: {title: params[:q]} }
                 # { match: {"title.first_lt" => params[:q]} },
                 # { match: {"title.pinyin" => params[:q]} }
-              ],
-              minimum_should_match: 1
-            }
-          },
+              # ],
+          #     minimum_should_match: 1
+          #   }
+          # },
           filter: [
             {
               term: {
@@ -217,31 +217,41 @@ class Item < ActiveRecord::Base
       })
     end
 
-    min_score = Settings.elasticsearch.item_min_score
-    if min_score.present?
-      query_params[:min_score] = min_score
-    end
 
     # 搜索内容只有字母的时候
     # ①只有声母
     # ②声母韵母都有
-    if /[a-z]+/.match params[:q]
-      if /[(a|o|e|i|u|ü|v)]/.match params[:q]
-        pinyin = params[:q].gsub /[(b|p|m|f|d|t|n|l|g|k|h|j|q|x|zh|ch|sh|r|z|c|s|w|y)]/ do |i|
-          " #{i}"
-        end
-        pinyin = pinyin.gsub(" z ", " z")
-          .gsub(" c ", " c")
-          .gsub(" s ", " s")
-          .gsub(" n ", "n ")
-          .gsub(" g ", "g ")
-          .gsub(/\W+g\z/, "g")
-          .gsub(/\W+n\z/, "n")
-          .strip
+    if params[:q].present?
+      min_score = Settings.elasticsearch.item_min_score
+      if min_score.present?
+        query_params[:min_score] = min_score
+      end
 
-        query_params[:query][:filtered][:query][:bool][:should].push({ match: {"title.pinyin" => pinyin} })
-      else
-        query_params[:query][:filtered][:query][:bool][:should].push({ match: {"title.first_lt" => params[:q]} })
+      query_params[:query][:filtered][:query] = {
+        bool: {
+          should: [{ match: {title: params[:q]} }],
+          minimum_should_match: 1
+        }
+      }
+
+      if /[a-z]+/.match params[:q]
+        if /[(a|o|e|i|u|ü|v)]/.match params[:q]
+          pinyin = params[:q].gsub /[(b|p|m|f|d|t|n|l|g|k|h|j|q|x|zh|ch|sh|r|z|c|s|w|y)]/ do |i|
+            " #{i}"
+          end
+          pinyin = pinyin.gsub(" z ", " z")
+            .gsub(" c ", " c")
+            .gsub(" s ", " s")
+            .gsub(" n ", "n ")
+            .gsub(" g ", "g ")
+            .gsub(/\W+g\z/, "g")
+            .gsub(/\W+n\z/, "n")
+            .strip
+
+          query_params[:query][:filtered][:query][:bool][:should].push({ match: {"title.pinyin" => pinyin} })
+        else
+          query_params[:query][:filtered][:query][:bool][:should].push({ match: {"title.first_lt" => params[:q]} })
+        end
       end
     end
 
