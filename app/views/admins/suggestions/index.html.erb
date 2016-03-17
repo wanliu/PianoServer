@@ -1,27 +1,72 @@
+<div class="form-group">
+  <label for="suggest-search">搜索</label>
+  <input type="text" class="form-control" id="suggest-search" placeholder="搜索">
+</div>
+
 <%= link_to new_admins_suggestion_path, class: 'btn btn-default' do %>
   <span class="glyphicon glyphicon-plus"></span>新增关键字
 <% end %>
 
-<table class='table'>
+<table class='table' id='suggestions-list'>
   <thead>
     <th>ID</th>
     <th>名称</th>
     <th>搜索次数</th>
     <th>操作</th>
   </thead>
-  <% @suggestions.each do |suggestion| %>
-    <tr>
-      <td><%= suggestion.id %></td>
-      <td><%= suggestion.title %></td>
-      <td><%= suggestion.count %></td>
-      <td>
-        <%= button_to "刪除", admins_suggestion_path(suggestion), method: :delete, data: {confirm: "确定刪除么?"}, class: 'btn btn-danger' %>
-        <%= button_to "撤销审核", admins_suggestion_path(suggestion, suggestion: {check: false}),
-          method: :put, data: {confirm: "确定撤销审核么？" },
-          class: 'btn btn-warning' %>
-      </td>
-    </tr>
-  <% end %>
+  <tbody>
+  </tbody>
 </table>
 
 <%= paginate @suggestions %>
+
+<script type="text/template" id='suggestion-template'>
+  <tr>
+    <td>{{ id }}</td>
+    <td>{{ title }}</td>
+    <td>{{ count }}</td>
+    <td>
+      <%= button_to "刪除", admins_suggestion_path(10001000), method: :delete, data: {confirm: "确定刪除么?"}, class: 'btn btn-danger' %>
+      <%= button_to "撤销审核", admins_suggestion_path(10001000, suggestion: {check: false}),
+        method: :put, data: {confirm: "确定撤销审核么？" },
+        class: 'btn btn-warning' %>
+    </td>
+  </tr>
+</script>
+
+<script type="text/javascript">
+  $(function (event) {
+    var suggestions = <%= @suggestions.to_json.html_safe %>;
+
+    var templateString = $('#suggestion-template').html()
+      .replace(/10001000/g, "{{ id }}");
+    var template = _.template(templateString);
+
+    function addToList(suggestions) {
+      var $body = $('#suggestions-list tbody');
+      $body.html('');
+
+      suggestions.forEach(function (suggestion) {
+        var html = template(suggestion);
+        $body.append(html);
+      });
+    }
+
+    addToList(suggestions);
+
+    $('#suggest-search').keyup(function (e) {
+      var query = $(this).val();
+
+      if (query.length > 0) {
+        $.get('/api/suggestion/search?q=' + query)
+        .done(function (data, status, xhr) {
+          $('ul.pagination').remove();
+          addToList(data);
+        })
+        .fail(function (data, status, xhr) {
+          // body...
+        })
+      }
+    })
+  })
+</script>
