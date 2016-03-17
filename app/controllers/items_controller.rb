@@ -24,7 +24,7 @@ class ItemsController < ApplicationController
       .per(params[:per])
       .records
 
-    if @items.count > 0
+    if params[:q].present? && @items.count > 0
       suggestion = Suggestion.find_by(title: params[:q])
       if suggestion.present?
         suggestion.increment!(:count)
