@@ -237,6 +237,13 @@ Rails.application.routes.draw do
 
   namespace :api do
     resources :user, only: [:index]
+
+    resources :favorites, except: [:new, :edit, :update] do
+      collection do
+        get 'favored'
+      end
+    end
+
     get "suggestion", :to => "suggestion#index"
     get "/items/search_ly", :to => "items#search_ly"
 

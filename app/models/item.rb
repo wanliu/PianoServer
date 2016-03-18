@@ -19,6 +19,8 @@ class Item < ActiveRecord::Base
   belongs_to :brand
   belongs_to :shop
 
+  has_many :favoritors, as: :favoritable, class_name: 'Favorite'
+
   has_many :stock_changes, autosave: true
 
   mount_uploaders :images, ItemImageUploader

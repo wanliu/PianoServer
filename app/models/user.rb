@@ -25,6 +25,8 @@ class User < ActiveRecord::Base
   has_many :followers, as: :followable, class_name: 'Follow'
   has_many :followables, as: :follower, class_name: 'Follow'
 
+  has_many :favoritables, as: :favoritor, class_name: 'Favorite'
+
   has_many :orders, foreign_key: 'buyer_id'
 
   has_many :evaluations
