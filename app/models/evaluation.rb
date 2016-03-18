@@ -6,6 +6,8 @@ class Evaluation < ActiveRecord::Base
   has_many :thumbs, as: :thumbable
   has_many :thumbers, through: :thumbs
 
+  has_many :favoritors, as: :favoritable, class_name: 'Favorite'
+
   store_accessor :items, :good, :delivery, :customer_service
 
   attr_reader :pmo_grab_id
