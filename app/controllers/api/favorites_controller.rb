@@ -30,8 +30,8 @@ class Api::FavoritesController < Api::BaseController
 
   def favored
     is_favored = current_user.favoritables
-      .exsit?(favoritable_type: params[:favoritable_type], favoritable_id: params[:favoritable_id])
-    
+      .exists?(favoritable_type: params[:favoritable_type], favoritable_id: params[:favoritable_id])
+
     render json: {favored: is_favored}
   end
 
@@ -68,7 +68,11 @@ class Api::FavoritesController < Api::BaseController
   private
 
     def set_favorite
-      @favorite = current_user.favoritables.find(params[:id])
+      @favorite = if params[:favoritable_id].present? && params[:favoritable_type].present?
+        current_user.favoritables.find_by(favoritable_id: params[:favoritable_id], favoritable_type: params[:favoritable_type])
+      else
+        current_user.favoritables.find(params[:id])
+      end
     end
 
     def favorite_params
