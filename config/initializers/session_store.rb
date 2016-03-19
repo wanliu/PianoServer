@@ -4,7 +4,6 @@
 
 Rails.application.config.session_store :redis_session_store, {
   key: '_PianoServer_session',
-  domain: "all",
   redis: {
     db: 2,
     expire_after: 3.days,
