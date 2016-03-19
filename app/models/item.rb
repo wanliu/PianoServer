@@ -329,6 +329,10 @@ class Item < ActiveRecord::Base
     shop.try(:title)
   end
 
+  def shop_realname
+    shop.try(:name)
+  end
+
   # options: {
   #   data: {size: 'l', color: 'red'},
   #   quantity: 1
