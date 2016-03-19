@@ -9,7 +9,7 @@ Rails.application.config.session_store :redis_session_store, {
     db: 2,
     expire_after: 3.days,
     key_prefix: 'piano:session:',
-    host: Rails.application.config.redis_config.host, # Redis host name, default is localhost
-    port: Rails.application.config.redis_config.port   # Redis port, default is 6379
+    host: Rails.application.config.redis_config["host"], # Redis host name, default is localhost
+    port: Rails.application.config.redis_config["port"]   # Redis port, default is 6379
   }
 }
