@@ -128,6 +128,13 @@ html{
     // -webkit-transition-timing-function: ease;
     // transition-timing-function: ease;
   }
+
+  li.go-back {
+    padding-right: 0;
+    a {
+      padding-right: 0;
+    }
+  }
 }
 
 .navbar-collapse .navbar-nav{

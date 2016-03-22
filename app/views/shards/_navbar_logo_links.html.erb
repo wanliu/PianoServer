@@ -1,5 +1,15 @@
     <ul class="nav navbar-nav navbar-left">
-      <%= yield :back %>
+      <li class="go-back">
+        <%= link_to('javascript:history.back()') do %>
+          <%= icon :'chevron-left' %>
+        <% end %>
+        <script type="text/javascript">
+          if (history.length < 2) {
+            $('li.go-back').hide();
+          }
+        </script>
+      </li>
+
       <li>
         <%= link_to root_path, class: "navbar-brand", title: Settings.app.title do %>
           <%= image_tag 'logo.png' %>
