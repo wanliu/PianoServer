@@ -363,7 +363,7 @@ Rails.application.routes.draw do
 
 
     resources :shop_categories, path: "categories"
-    resources :items, key: :sid
+    resources :items, key: :sid, constraints: { id: /\d+/ }
 
     namespace :admin, module: 'shops/admin' do
       get "/", to: "dashboard#index", as: :index

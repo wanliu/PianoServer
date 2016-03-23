@@ -1,0 +1,1 @@
+json.extract! @item, *@item.attribute_names - ["income_price"]
