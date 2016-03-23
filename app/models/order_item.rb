@@ -14,6 +14,15 @@ class OrderItem < ActiveRecord::Base
   # before_save :set_title, on: :create
   before_save :set_properties
 
+  # 统计/排序 从某个时间起，对商品的卖出数量
+  def self.hots_since(time)
+    select("SUM(quantity) AS amount, orderable_id")
+      .where(orderable_type: 'Item')
+      .where("created_at > ?", time)
+      .group("orderable_id")
+      .order("amount desc")
+  end
+
   def orderable
     if orderable_type == 'Promotion'
       Promotion.find(orderable_id)
