@@ -246,6 +246,7 @@ Rails.application.routes.draw do
 
     get "suggestion", :to => "suggestion#index"
     get "/items/search_ly", :to => "items#search_ly"
+    get "/items/hots", :to => "items#hots"
 
     namespace :promotions do
       resources :one_money, except: [:index, :create, :update, :destroy]  do
