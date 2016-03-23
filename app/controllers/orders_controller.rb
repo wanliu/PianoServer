@@ -103,11 +103,6 @@ class OrdersController < ApplicationController
     @props = params[:cart_item][:properties]
   end
 
-  # 为避免用户回退到立即购买的post页面，提供一个过期提示窗口
-  def buy_now_confirm_expire
-    render file: "public/expire"
-  end
-
   # 直接购买生成订单
   def buy_now_create
     @order = current_user.orders.build(buy_now_order_params)

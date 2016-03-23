@@ -320,7 +320,16 @@ Rails.application.routes.draw do
       post "confirmation"
       post "buy_now_create"
       post "buy_now_confirm"
-      get "buy_now_confirm", to: 'orders#buy_now_confirm_expire'
+
+      # 为避免用户回退到立即购买的post页面，提供一个过期提示窗口
+      get "buy_now_confirm", to: Proc.new { |env|
+        [
+          200, 
+          {"Content-Type" => "text/html"},
+          [File.read("public/expire.html")]
+        ]
+      }
+
       get "history"
       get "yiyuan_confirm"
       post "yiyuan_confirm", to: 'orders#create_yiyuan'
