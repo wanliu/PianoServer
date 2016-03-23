@@ -17,7 +17,7 @@ class OrderItem < ActiveRecord::Base
   # 统计/排序 从某个时间起，对商品的卖出数量
   # 只限耒阳地区
   def self.hots_since(time)
-    shop_ids = Shop.where(region_id: 421800).pluck(:id)
+    shop_ids = Shop.where(region_id: 430481).pluck(:id)
 
     select("SUM(order_items.quantity) AS amount, order_items.orderable_id")
       .joins("LEFT JOIN items ON items.id = order_items.orderable_id")
