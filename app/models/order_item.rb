@@ -15,11 +15,17 @@ class OrderItem < ActiveRecord::Base
   before_save :set_properties
 
   # 统计/排序 从某个时间起，对商品的卖出数量
+  # 只限耒阳地区
   def self.hots_since(time)
-    select("SUM(quantity) AS amount, orderable_id")
+    shop_ids = Shop.where(region_id: 421800).pluck(:id)
+
+    select("SUM(order_items.quantity) AS amount, order_items.orderable_id")
+      .joins("LEFT JOIN items ON items.id = order_items.orderable_id")
       .where(orderable_type: 'Item')
-      .where("created_at > ?", time)
-      .group("orderable_id")
+      .where("items.on_sale = ?", true)
+      .where("items.shop_id IN (?)", shop_ids)
+      .where("order_items.created_at > ?", time)
+      .group("order_items.orderable_id")
       .order("amount desc")
   end
 
