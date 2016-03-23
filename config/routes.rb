@@ -320,6 +320,7 @@ Rails.application.routes.draw do
       post "confirmation"
       post "buy_now_create"
       post "buy_now_confirm"
+      get "buy_now_confirm", to: 'orders#buy_now_confirm_expire'
       get "history"
       get "yiyuan_confirm"
       post "yiyuan_confirm", to: 'orders#create_yiyuan'
