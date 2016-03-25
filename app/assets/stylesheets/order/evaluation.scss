@@ -1,0 +1,45 @@
+.order-evaluation {
+  .header {
+    background-color: white;
+    padding: 16px;
+  }
+
+  .wrapper {
+    .title {
+      padding: 16px;
+    }
+
+    .item-evaluation {
+      background-color: white;
+      padding: 16px;
+      border-bottom: 1px solid #ddd;
+
+      .evaluationable {
+        img {        
+          width: 50px;
+          height: 50px;
+        }
+
+        .avatar, .desc {
+          float: left;
+          padding: 8px;
+        }
+      }
+
+      .evaluation {
+        border: 1px solid #d0e4c2;
+        padding: 10px 100px;
+
+        .stars, .desc {
+          padding: 5px 0;
+
+          .star {
+            cursor: pointer;
+            margin: 0 5px;
+          }
+        }
+      }
+    }
+
+  }
+}

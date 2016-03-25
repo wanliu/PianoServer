@@ -1,68 +1,180 @@
-<div class='header'>
-  评价晒单
-</div>
-<div class='wrapper container'>
-  <div class='title row'>
-    <div class='col-xs-7'>商品信息</div>
-    <div class='col-xs-5'>评价状态</div>
+<div class='order-evaluation container'>
+  <div class='header'>
+    评价
   </div>
-  <%= form_for @order, url: create_evaluations_order_path(@order) do |f| %>
-    <% @order.items.each_with_index do |item, index| %>
-      <% evaluation = @evaluations[item.id.to_s] %>
-      <% evaluated = evaluation.id.present? %>
+  <div class='wrapper'>
+    <div class='title row'>
+      <div class='col-xs-10'>商品信息</div>
+      <div class='col-xs-2'>评价状态</div>
+    </div>
+    <% need_submit = false %>
+    <%= form_for @order, url: create_evaluations_order_path(@order) do |f| %>
+      <% @order.items.each_with_index do |item, index| %>
+        <% evaluation = @evaluations[item.id.to_s] %>
+        <% evaluated = evaluation.id.present? %>
+        <% need_submit = true unless evaluated %>
 
-      <div class='evaluationable row'>
-        <div class='col-xs-7'>
-          <%= item.orderable.title %>
-        </div>
-        <div class='col-xs-5'>
+        <div class='item-evaluation'>
+          <div class='evaluationable row'>
+            <div class='col-xs-10'>
+              <div class='avatar'>
+                <%= image_tag item.orderable.avatar_url %>
+              </div>
+              <div class='desc'>
+                <div class='item-name'>
+                  <%= item.orderable.title %>
+                </div>
+                <div class='buy-time'>
+                  购买时间：<%= @order.created_at.strftime("%Y年%m月%d日") %>
+                </div>
+              </div>
+            </div>
+            <div class='col-xs-2'>
+              <% if evaluated %>
+                已评价
+              <% else %>
+                <button type="button" class='btn btn-default toggle-evaluation' data-item-id='<%= item.id %>'>点击评价</button>
+              <% end %>
+            </div>
+          </div>
           <% if evaluated %>
-            已评价
+            <div class='evaluation'>
+              <div class='stars row'>
+                <div class='col-xs-2'>
+                  商品评分
+                </div>
+                <div class='col-xs-10'>
+                  <% evaluation.good.to_i.times do %>
+                    <span class="star glyphicon glyphicon-star"></span>
+                  <% end %>
+                  <% (5 - evaluation.good.to_i).times do %>
+                    <span class="star glyphicon glyphicon-star-empty"></span>
+                  <% end %>
+                </div>
+              </div>
+              <div class='stars row'>
+                <div class='col-xs-2'>
+                  物流评分
+                </div>
+                <div class='col-xs-10'>
+                  <% evaluation.delivery.to_i.times do %>
+                    <span class="star glyphicon glyphicon-star"></span>
+                  <% end %>
+                  <% (5 - evaluation.delivery.to_i).times do %>
+                    <span class="star glyphicon glyphicon-star-empty"></span>
+                  <% end %>
+                </div>
+              </div>
+              <div class='stars row'>
+                <div class='col-xs-2'>
+                  客服评分
+                </div>
+                <div class='col-xs-10'>
+                  <% evaluation.customer_service.to_i.times do %>
+                    <span class="star glyphicon glyphicon-star"></span>
+                  <% end %>
+                  <% (5 - evaluation.customer_service.to_i).times do %>
+                    <span class="star glyphicon glyphicon-star-empty"></span>
+                  <% end %>
+                </div>
+              </div>
+              <div class='desc row'>
+                <div class='col-xs-2'>
+                  心得
+                </div>
+                <div class='col-xs-10'>
+                  <%= evaluation.desc %>
+                </div>
+              </div>
+            </div>
           <% else %>
-            <button class='btn btn-default'>点击评价</button>
+            <%= f.fields_for "evaluations_attributes[#{index}]", evaluation do |evaluation_fields| %>
+              <%= evaluation_fields.hidden_field :evaluationable_type %>
+              <%= evaluation_fields.hidden_field :evaluationable_id %>
+              <div class='evaluation' style='display: none;' data-item-id='<%= item.id %>'>
+                <div class='stars row'>
+                  <div class='col-xs-2'>
+                    商品评分
+                  </div>
+                  <div class='col-xs-10'>
+                    <%= evaluation_fields.hidden_field :good %>
+                    <% (1..5).each do |i| %>
+                      <span data-id='<%= i %>' data-input-id='order_evaluations_attributes_<%= index %>__good' class="star glyphicon glyphicon-star-empty"></span>
+                    <% end %>
+                  </div>
+                </div>
+                <div class='stars row'>
+                  <div class='col-xs-2'>
+                    物流评分
+                  </div>
+                  <div class='col-xs-10'>
+                    <%= evaluation_fields.hidden_field :delivery %>
+                    <% (1..5).each do |i| %>
+                      <span data-id='<%= i %>' data-input-id='order_evaluations_attributes_<%= index %>__delivery' class="star glyphicon glyphicon-star-empty"></span>
+                    <% end %>
+                  </div>
+                </div>
+                <div class='stars row'>
+                  <div class='col-xs-2'>
+                    客服评分
+                  </div>
+                  <div class='col-xs-10'>
+                    <%= evaluation_fields.hidden_field :customer_service, data: {field: ''} %>
+                    <% (1..5).each do |i| %>
+                      <span data-id='<%= i %>' data-input-id='order_evaluations_attributes_<%= index %>__customer_service' class="star glyphicon glyphicon-star-empty"></span>
+                    <% end %>
+                  </div>
+                </div>
+                <div class='desc row'>
+                  <div class='col-xs-2'>
+                    心得
+                  </div>
+                  <div class='col-xs-10'>
+                    <%= evaluation_fields.text_area :desc, style: "width:500px; height:200px;" %>
+                    <!-- <textarea style="width:500px; height:200px;"></textarea> -->
+                  </div>
+                </div>
+              </div>
+            <% end %>
           <% end %>
         </div>
-      </div>
-      <%= f.fields_for "evaluations_attributes[#{index}]", evaluation do |evaluation_fields| %>
-        <%= evaluation_fields.hidden_field :evaluationable_type %>
-        <%= evaluation_fields.hidden_field :evaluationable_id %>
-        <div class='evaluation'>
-          <div class='stars row'>
-            <div class='col-xs-3'>
-              商品评分
-            </div>
-            <div class='col-xs-9'>
-              <%= evaluation_fields.select :good, (1..5).to_a, include_blank: true %>
-            </div>
-          </div>
-          <div class='stars row'>
-            <div class='col-xs-3'>
-              物流评分
-            </div>
-            <div class='col-xs-9'>
-              <%= evaluation_fields.select :delivery, (1..5).to_a, include_blank: true %>
-            </div>
-          </div>
-          <div class='stars row'>
-            <div class='col-xs-3'>
-              客服评分
-            </div>
-            <div class='col-xs-9'>
-              <%= evaluation_fields.select :customer_service, (1..5).to_a, include_blank: true %>
-            </div>
-          </div>
-          <div class='desc row'>
-            <div class='col-xs-3'>
-              心得
-            </div>
-            <div class='col-xs-9'>
-              <%= evaluation_fields.text_area :desc, style: "width:500px; height:200px;" %>
-              <!-- <textarea style="width:500px; height:200px;"></textarea> -->
-            </div>
-          </div>
-        </div>
+      <% end %>
+      <% if need_submit %>
+        <%= f.submit "提交评价", class: 'btn btn-default' %>
+        <%= link_to "跳过，查看订单", order_path(@order), class: 'btn btn-default pull-right' %>
       <% end %>
     <% end %>
-    <%= f.submit "提交评价" %>
-  <% end %>
+  </div>
 </div>
+
+<script type="text/javascript">
+  $(function (e) {
+    $('button.toggle-evaluation').click(function(event) {
+      event.preventDefault();
+
+      $(this).closest('.item-evaluation')
+        .children('.evaluation')
+        .toggle();
+    });
+
+    $('.stars .star').click(function(event) {
+      var id = $(this).data('id');
+      var inputId = $(this).data('inputId');
+
+      $('input#' + inputId).val(id);
+      $(this).removeClass('glyphicon-star-empty');
+      $(this).addClass('glyphicon-star');
+
+      _.each($(this).siblings('.star'), function(item) {
+        var starId = $(item).data('id');
+        if  ((+ starId) <= (+ id)) {
+          $(item).removeClass('glyphicon-star-empty');
+          $(item).addClass('glyphicon-star');
+        } else {
+          $(item).removeClass('glyphicon-star');
+          $(item).addClass('glyphicon-star-empty');
+        }
+      })
+    });
+  })
+</script>
