@@ -347,6 +347,8 @@ Rails.application.routes.draw do
       # post "set_wx_pay"
       post "wx_notify"
       post "wxpay_confirm"
+      get "evaluate"
+      patch "create_evaluations"
     end
   end
 

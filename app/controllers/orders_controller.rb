@@ -3,9 +3,10 @@ require 'weixin_api'
 class OrdersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_order, only: [:show, :destroy, :update, :set_wx_pay, :pay_kind, :wxpay, :wxpay_confirm, :wx_paid]
-  before_action :check_for_mobile, only: [:index, :show, :history, :confirmation, :buy_now_confirm, :buy_now_create]
-  skip_before_filter :verify_authenticity_token, :only => [:buy_now_confirm]
+  before_action :set_evaluatable_order, only: [:evaluate, :create_evaluations]
+  before_action :check_for_mobile, only: [:index, :show, :history, :confirmation, :buy_now_confirm, :buy_now_create, :evaluate, :create_evaluations]
 
+  skip_before_filter :verify_authenticity_token, :only => [:buy_now_confirm]
 
   include ParamsCallback
   include YiyuanOrdersController
@@ -140,6 +141,8 @@ class OrdersController < ApplicationController
           if @order.wait_for_yiyuan_evaluate?
             one_money = OneMoney[@order.one_money_id]
             redirect_to "/one_money/#{ one_money.start_at.strftime('%Y-%m-%d') }/index.html#/comment/#{ @order.pmo_grab_id }/#{@order.id}"
+          elsif @order.wait_for_evaluate?
+            redirect_to evaluate_order_path(@order)
           else
             redirect_to history_orders_path
           end
@@ -159,10 +162,35 @@ class OrdersController < ApplicationController
     head :no_content
   end
 
+  def evaluate
+    @evaluations = @order.evaluations_list_with_build
+  end
+
+  def create_evaluations
+    if @order.update(evaluation_params)
+      redirect_to order_path(@order)
+    else
+      flash.alert = @order.errors.full_messages.join(', ')
+      @evaluations = @order.evaluations_list_with_build
+      render :evaluate
+    end
+  end
+
   private
 
   def set_order
     @order = current_user.orders.find(params[:id])
+  end
+
+  def set_evaluatable_order
+    @order = current_user.orders
+      .includes(:items)
+      .find(params[:id])
+
+    unless @order.evaluatable?
+      flash.alert = "订单未完成，无法评价"
+      redirect_to order_path(@order)
+    end
   end
 
   def order_update_params
@@ -216,5 +244,20 @@ class OrdersController < ApplicationController
   def location_params
     params.require(:location)
       .permit(:province_id, :city_id, :region_id, :contact, :id, :road, :zipcode, :contact_phone)
+  end
+
+  def evaluation_params
+    params.require(:order).permit(evaluations_attributes: [
+      :desc,
+      :good,
+      :delivery,
+      :evaluationable_id,
+      :evaluationable_type,
+      :customer_service
+    ]).tap do |white_list|
+      white_list[:evaluations_attributes].each do |key, value|
+        value["user_id"] = current_user.id
+      end
+    end
   end
 end

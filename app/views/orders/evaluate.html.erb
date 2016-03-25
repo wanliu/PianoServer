@@ -1,0 +1,63 @@
+<div class='header'>
+  评价晒单
+</div>
+<div class='wrapper container'>
+  <div class='title row'>
+    <div class='col-xs-7'>商品信息</div>
+    <div class='col-xs-5'>评价状态</div>
+  </div>
+  <%= form_for @order, url: create_evaluations_order_path(@order) do |f| %>
+    <% @order.items.each_with_index do |item, index| %>
+      <% evaluation = @evaluations[item.id.to_s] %>
+
+      <div class='evaluationable row'>
+        <div class='col-xs-7'>
+          <%= item.orderable.title %>
+        </div>
+        <div class='col-xs-5'>
+          <button class='btn btn-default'>点击评价</button>
+        </div>
+      </div>
+      <%= f.fields_for "evaluations_attributes[#{index}]", evaluation do |evaluation_fields| %>
+        <%= evaluation_fields.hidden_field :evaluationable_type %>
+        <%= evaluation_fields.hidden_field :evaluationable_id %>
+        <div class='evaluation'>
+          <div class='stars row'>
+            <div class='col-xs-3'>
+              商品评分
+            </div>
+            <div class='col-xs-9'>
+              <%= evaluation_fields.select :good, (1..5).to_a %>
+            </div>
+          </div>
+          <div class='stars row'>
+            <div class='col-xs-3'>
+              物流评分
+            </div>
+            <div class='col-xs-9'>
+              <%= evaluation_fields.select :delivery, (1..5).to_a %>
+            </div>
+          </div>
+          <div class='stars row'>
+            <div class='col-xs-3'>
+              客服评分
+            </div>
+            <div class='col-xs-9'>
+              <%= evaluation_fields.select :customer_service, (1..5).to_a %>
+            </div>
+          </div>
+          <div class='desc row'>
+            <div class='col-xs-3'>
+              心得
+            </div>
+            <div class='col-xs-9'>
+              <%= evaluation_fields.text_area :desc, style: "width:500px; height:200px;" %>
+              <!-- <textarea style="width:500px; height:200px;"></textarea> -->
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+    <%= f.submit "提交评价" %>
+  <% end %>
+</div>
