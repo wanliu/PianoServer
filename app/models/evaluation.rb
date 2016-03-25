@@ -17,6 +17,9 @@ class Evaluation < ActiveRecord::Base
 
   validates :user, presence: true
   validates :order, presence: true
+  validates :good, presence: true
+  validates :delivery, presence: true
+  validates :customer_service, presence: true
 
   validates :evaluationable, presence: true, 
     unless: Proc.new { |ee| "Promotion" == ee.evaluationable_type }

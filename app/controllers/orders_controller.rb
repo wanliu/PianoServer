@@ -246,6 +246,7 @@ class OrdersController < ApplicationController
       .permit(:province_id, :city_id, :region_id, :contact, :id, :road, :zipcode, :contact_phone)
   end
 
+  # 过滤空的未填写的评价，并且设置user_id
   def evaluation_params
     params.require(:order).permit(evaluations_attributes: [
       :desc,
@@ -256,7 +257,14 @@ class OrdersController < ApplicationController
       :customer_service
     ]).tap do |white_list|
       white_list[:evaluations_attributes].each do |key, value|
-        value["user_id"] = current_user.id
+        if value[:good].blank? && 
+           value[:delivery].blank? && 
+           value[:customer_service].blank?
+
+          white_list[:evaluations_attributes].delete(key)
+        else
+          value["user_id"] = current_user.id
+        end
       end
     end
   end
