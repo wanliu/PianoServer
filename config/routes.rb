@@ -315,7 +315,6 @@ Rails.application.routes.draw do
   end
 
   resources :orders, only: [:index, :show, :destroy, :create, :update] do
-
     collection do
       post "confirmation"
       post "buy_now_create"
@@ -349,6 +348,14 @@ Rails.application.routes.draw do
       post "wxpay_confirm"
       get "evaluate"
       patch "create_evaluations"
+
+      get "evaluate_items/:order_item_id", 
+        to: "orders#evaluate_item", 
+        as: :evaluate_items
+
+      post "evaluate_items/:order_item_id", 
+        to: "orders#evaluate_item_create",
+        as: :evaluate_items_create
     end
   end
 

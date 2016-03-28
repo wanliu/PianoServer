@@ -1,0 +1,96 @@
+<div class='order-evaluation-mobile container'>
+  <div class='header'>
+    评价
+  </div>
+  <div class='wrapper'>
+    <%= form_for @evaluation, url: evaluate_items_create_order_path(@order, @item) do |f| %>
+      <div class='item-evaluation'>
+        <div class='evaluationable'>
+          <div class='row info'>
+            <div class='avatar'>
+              <%= image_tag @item.orderable.avatar_url %>
+            </div>
+            <div class='desc'>
+              <div class='item-name'>
+                <%= @item.orderable.title %>
+              </div>
+              <div class='buy-time'>
+                购买时间：<%= @order.created_at.strftime("%Y年%m月%d日") %>
+              </div>
+              <div style='clear: both'></div>
+            </div>
+          </div>
+        </div>
+        <div class='evaluation' data-item-id='<%= @item.id %>'>
+          <div class='stars'>
+            <div>
+              商品评分
+            </div>
+            <div>
+              <%= f.hidden_field :good %>
+              <% (1..5).each do |i| %>
+                <span data-id='<%= i %>' data-input-id='evaluation_good' class="star glyphicon glyphicon-star-empty"></span>
+              <% end %>
+            </div>
+          </div>
+          <div class='stars'>
+            <div>
+              物流评分
+            </div>
+            <div>
+              <%= f.hidden_field :delivery %>
+              <% (1..5).each do |i| %>
+                <span data-id='<%= i %>' data-input-id='evaluation_delivery' class="star glyphicon glyphicon-star-empty"></span>
+              <% end %>
+            </div>
+          </div>
+          <div class='stars'>
+            <div>
+              客服评分
+            </div>
+            <div>
+              <%= f.hidden_field :customer_service, data: {field: ''} %>
+              <% (1..5).each do |i| %>
+                <span data-id='<%= i %>' data-input-id='evaluation_customer_service' class="star glyphicon glyphicon-star-empty"></span>
+              <% end %>
+            </div>
+          </div>
+          <div class='desc'>
+            <div>
+              心得
+            </div>
+            <div>
+              <%= f.text_area :desc %>
+            </div>
+          </div>
+        </div>
+      </div>
+      <%= f.submit "提交评价", class: 'btn btn-default' %>
+      <%= link_to "跳过，查看订单", order_path(@order), class: 'btn btn-default pull-right' %>
+    <% end %>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(function() {
+    $('.stars .star').click(function(event) {
+      var id = $(this).data('id');
+      var inputId = $(this).data('inputId');
+
+      $('input#' + inputId).val(id);
+      $(this).removeClass('glyphicon-star-empty');
+      $(this).addClass('glyphicon-star');
+
+      _.each($(this).siblings('.star'), function(item) {
+        var starId = $(item).data('id');
+        if  ((+ starId) <= (+ id)) {
+          $(item).removeClass('glyphicon-star-empty');
+          $(item).addClass('glyphicon-star');
+        } else {
+          $(item).removeClass('glyphicon-star');
+          $(item).addClass('glyphicon-star-empty');
+        }
+      })
+    });
+  });
+</script>
