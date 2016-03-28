@@ -24,8 +24,8 @@ class Api::EvaluationsController < Api::BaseController
 
     render json: {
       evaluations: @evaluations,
-      page: @items.current_page,
-      total_page: @items.total_pages
+      page: @evaluations.current_page,
+      total_page: @evaluations.total_pages
     }
   end
 
