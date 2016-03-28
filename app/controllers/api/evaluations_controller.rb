@@ -11,11 +11,13 @@ class Api::EvaluationsController < Api::BaseController
       when nil, "ALL"
         @evaluations
       when "GOOD"
-        @evaluations.where("(good + delivery + customer_service) >= 12")
+        @evaluations.where("(CAST(items ->> 'good' as integer) + CAST(items ->> 'delivery' AS integer) + CAST(items ->>  'customer_service' AS integer)) > 12")
       when "MEDIUM"
-        @evaluations.where("(good + delivery + customer_service) < 12 AND (good + delivery + customer_service) >= 9")
+        @evaluations.where("(CAST(items ->> 'good' as integer) + CAST(items ->> 'delivery' AS integer) + CAST(items ->>  'customer_service' AS integer)) BETWEEN 9 AND 12")
       when "BAD"
-        @evaluations.where("(good + delivery + customer_service) < 9")
+        @evaluations.where("(CAST(items ->> 'good' as integer) + CAST(items ->> 'delivery' AS integer) + CAST(items ->>  'customer_service' AS integer)) < 9")
+      when "IMAGES"
+        @evaluations
       end
 
     @total = @evaluations.count
