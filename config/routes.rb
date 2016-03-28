@@ -26,6 +26,11 @@ Rails.application.routes.draw do
         post :thumb
         post :un_thumb
       end
+
+      collection do
+        get "aggregate", to: "evaluations#aggregate"
+        get "specified", t0: "evaluations#specified"
+      end
     end
   end
 
@@ -324,7 +329,7 @@ Rails.application.routes.draw do
       # 为避免用户回退到立即购买的post页面，提供一个过期提示窗口
       get "buy_now_confirm", to: Proc.new { |env|
         [
-          200, 
+          200,
           {"Content-Type" => "text/html"},
           [File.read("public/expire.html")]
         ]
