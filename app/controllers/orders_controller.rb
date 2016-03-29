@@ -113,15 +113,15 @@ class OrdersController < ApplicationController
     @order_item.quantity ||= 1
     @order_item.title = @order_item.orderable.title
 
-    sale_mode = current_anonymous_or_user.sale_mode
+    # sale_mode = current_anonymous_or_user.sale_mode
     @order_item.price =
       case @order_item.orderable
       when Item
-        if sale_mode == "retail"
-          @order_item.orderable.public_price
-        else
-          @order_item.orderable.price
-        end
+        # if sale_mode == "retail"
+          # @order_item.orderable.public_price
+        # else
+        @order_item.orderable.price
+        # end
       when Promotion
         @order_item.orderable.discount_price
       else
