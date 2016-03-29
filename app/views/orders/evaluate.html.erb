@@ -83,7 +83,7 @@
                   心得
                 </div>
                 <div class='col-xs-10'>
-                  <%= evaluation.desc %>
+                  <%= evaluation.desc.present? ? evaluation.desc : "暂无描述" %>
                 </div>
               </div>
             </div>
