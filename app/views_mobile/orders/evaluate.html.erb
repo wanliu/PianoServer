@@ -40,10 +40,10 @@
               </div>
               <div>
                 <% evaluation.good.to_i.times do %>
-                  <span class="glyphicon glyphicon-star"></span>
+                  <span class="star glyphicon glyphicon-star full"></span>
                 <% end %>
                 <% (5 - evaluation.good.to_i).times do %>
-                  <span class="glyphicon glyphicon-star-empty"></span>
+                  <span class="star glyphicon glyphicon-star empty"></span>
                 <% end %>
               </div>
             </div>
@@ -53,10 +53,10 @@
               </div>
               <div>
                 <% evaluation.delivery.to_i.times do %>
-                  <span class="glyphicon glyphicon-star"></span>
+                  <span class="star glyphicon glyphicon-star full"></span>
                 <% end %>
                 <% (5 - evaluation.delivery.to_i).times do %>
-                  <span class="glyphicon glyphicon-star-empty"></span>
+                  <span class="star glyphicon glyphicon-star empty"></span>
                 <% end %>
               </div>
             </div>
@@ -66,10 +66,10 @@
               </div>
               <div>
                 <% evaluation.customer_service.to_i.times do %>
-                  <span class="glyphicon glyphicon-star"></span>
+                  <span class="star glyphicon glyphicon-star full"></span>
                 <% end %>
                 <% (5 - evaluation.customer_service.to_i).times do %>
-                  <span class="glyphicon glyphicon-star-empty"></span>
+                  <span class="star glyphicon glyphicon-star empty"></span>
                 <% end %>
               </div>
             </div>

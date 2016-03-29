@@ -29,7 +29,8 @@
             <div>
               <%= f.hidden_field :good %>
               <% (1..5).each do |i| %>
-                <span data-id='<%= i %>' data-input-id='evaluation_good' class="star glyphicon glyphicon-star-empty"></span>
+                <% class_name = @evaluation.good.to_i >= i ? "full" : "empty" %>
+                <span data-id='<%= i %>' data-input-id='evaluation_good' class="star glyphicon glyphicon-star <%= class_name %>"></span>
               <% end %>
             </div>
           </div>
@@ -40,7 +41,8 @@
             <div>
               <%= f.hidden_field :delivery %>
               <% (1..5).each do |i| %>
-                <span data-id='<%= i %>' data-input-id='evaluation_delivery' class="star glyphicon glyphicon-star-empty"></span>
+                <% class_name = @evaluation.delivery.to_i >= i ? "full" : "empty" %>
+                <span data-id='<%= i %>' data-input-id='evaluation_delivery' class="star glyphicon glyphicon-star <%= class_name %>"></span>
               <% end %>
             </div>
           </div>
@@ -51,7 +53,8 @@
             <div>
               <%= f.hidden_field :customer_service, data: {field: ''} %>
               <% (1..5).each do |i| %>
-                <span data-id='<%= i %>' data-input-id='evaluation_customer_service' class="star glyphicon glyphicon-star-empty"></span>
+                <% class_name = @evaluation.customer_service.to_i >= i ? "full" : "empty" %>
+                <span data-id='<%= i %>' data-input-id='evaluation_customer_service' class="star glyphicon glyphicon-star <%= class_name %>"></span>
               <% end %>
             </div>
           </div>
@@ -78,17 +81,17 @@
       var inputId = $(this).data('inputId');
 
       $('input#' + inputId).val(id);
-      $(this).removeClass('glyphicon-star-empty');
-      $(this).addClass('glyphicon-star');
+      $(this).removeClass('empty');
+      $(this).addClass('full');
 
       _.each($(this).siblings('.star'), function(item) {
         var starId = $(item).data('id');
         if  ((+ starId) <= (+ id)) {
-          $(item).removeClass('glyphicon-star-empty');
-          $(item).addClass('glyphicon-star');
+          $(item).removeClass('empty');
+          $(item).addClass('full');
         } else {
-          $(item).removeClass('glyphicon-star');
-          $(item).addClass('glyphicon-star-empty');
+          $(item).removeClass('full');
+          $(item).addClass('empty');
         }
       })
     });
