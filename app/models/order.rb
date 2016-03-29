@@ -12,6 +12,7 @@ class Order < ActiveRecord::Base
   accepts_nested_attributes_for :items
 
   has_many :evaluations
+  accepts_nested_attributes_for :evaluations
 
   attr_accessor :cart_item_ids
   attr_accessor :address_id, :request_ip
@@ -112,14 +113,58 @@ class Order < ActiveRecord::Base
     pmo_grab_id.present?
   end
 
-  def wait_for_yiyuan_evaluate?
+  def evaluatable?
+    finish?
+  end
+
+  def wait_for_evaluate?
     previous_changes["status"].present? &&
-    previous_changes["status"].last == "finish" &&
-    pmo_grab_id.present? && !evaluated?
+    previous_changes["status"].last == "finish"
+  end
+
+  def wait_for_yiyuan_evaluate?
+    wait_for_evaluate? && pmo_grab_id.present?
   end
 
   def yiyuan_fullfilled?
     delivery_address.present?
+  end
+
+  def evaluations_list
+    evaluations(true)
+
+    items.reduce({}) do |result, item|
+      evaluation = evaluations.find do |evan|
+        evan.evaluationable_type == item.orderable_type &&
+        evan.evaluationable_id == item.orderable_id
+      end
+
+      if evaluation.present?
+        result[item.id.to_s] = evaluation
+      end
+
+      result
+    end
+  end
+
+  def evaluations_list_with_build
+    # evans = evaluations.to_a
+    items.reduce({}) do |result, item|
+      evaluation = evaluations.find do |evan|
+        evan.evaluationable_type == item.orderable_type &&
+        evan.evaluationable_id == item.orderable_id
+      end
+
+      result[item.id.to_s] = if evaluation.present?
+        evaluation
+      else
+        evaluations.build(
+          evaluationable_id: item.orderable_id,
+          evaluationable_type: item.orderable_type)
+      end
+
+      result
+    end
   end
 
   def get_pmo_express_fee

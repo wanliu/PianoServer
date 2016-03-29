@@ -22,6 +22,7 @@ class Item < ActiveRecord::Base
   has_many :favoritors, as: :favoritable, class_name: 'Favorite'
 
   has_many :stock_changes, autosave: true
+  has_many :evaluations, as: :evaluationable
 
   mount_uploaders :images, ItemImageUploader
 
