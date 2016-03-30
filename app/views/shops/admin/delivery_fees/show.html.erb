@@ -1,0 +1,49 @@
+<div>
+  <table class='table'>
+    <thead>
+      <tr>
+        <th colspan='2'>
+          本店运费规则
+        </th>
+        <th>
+          <button class='btn btn-default' id='set-shop-delivery' data-url='<%= shop_admin_delivery_fee_path(@shop.name) %>'>点击添加规则</button>
+        </th>
+      </tr>
+      <tr>
+        <th width='33%'>地区</th>
+        <th width='33%'>运费</th>
+        <th width='34%'>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if @delivery_fee_settings.blank? %>
+        <tr>
+          <td colspan='3' class='text-center'>
+            暂未设置任何规则, <button class='btn btn-default' id='set-shop-delivery' data-url='<%= shop_admin_delivery_fee_path(@shop.name) %>'>点击添加规则</button>
+          </td>
+        </tr>
+      <% else %>
+        <% @delivery_fee_settings.each do |area_code, fee| %>
+          <tr>
+            <td>
+              <%= "default" == area_code ? "全国默认" : ChinaCity.get(area_code) %>
+            </td>
+            <td>
+              <%= fee %>
+            </td>
+            <td>
+              <button class='btn btn-default'>设置</button>
+            </td>
+          </tr>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<script type="text/javascript">
+  $(function () {
+    var $deliveryElement = $('#set-shop-delivery');
+    var deliverySetter = new DeliveryArea($deliveryElement);
+  });
+</script>

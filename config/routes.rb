@@ -386,7 +386,6 @@ Rails.application.routes.draw do
       get "/about", to: "shops#about"
     end
 
-
     resources :shop_categories, path: "categories"
     resources :items, key: :sid, constraints: { id: /\d+/ }
 
