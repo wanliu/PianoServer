@@ -395,7 +395,11 @@ Rails.application.routes.draw do
         post :upload_shop_logo
       end
 
-      resource :delivery_fee
+      resource :delivery_fee do
+        collection do
+          get "next_nodes"
+        end
+      end
 
       resources :dashboard
       resources :shop_categories,  path: "categories", constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do

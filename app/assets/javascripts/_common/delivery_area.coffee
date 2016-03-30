@@ -6,7 +6,7 @@ tableHtml = '''
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title">选择范围</h4>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" style="max-height: 350px; overflow-y: scroll; background-color: #fff;">
           <table class="table setting-code">
             <thead>
               <tr>
@@ -15,13 +15,13 @@ tableHtml = '''
               </tr>
             </thead>
             <tbody>
-              <tr>
+              <tr data-node-lv=1>
                 <td>默认全部</td>
                 <td>
                   <button class="btn btn-default" data-type="province" data-id="default">默认全部</button>
                 </td>
               </tr>
-              <tr>
+              <tr data-node-lv=1>
                 <td>
                   华北
                 </td>
@@ -33,7 +33,7 @@ tableHtml = '''
                     <button class="btn btn-default" data-type="province" data-id="150000">内蒙古自治区</button>
                 </td>
               </tr>
-              <tr>
+              <tr data-node-lv=1>
                 <td>东北</td>
                 <td>
                     <button class="btn btn-default" data-type="province" data-id="210000">辽宁省</button>
@@ -41,7 +41,7 @@ tableHtml = '''
                     <button class="btn btn-default" data-type="province" data-id="230000">黑龙江省</button>
                 </td>
               </tr>
-              <tr>
+              <tr data-node-lv=1>
                 <td>
                   华中
                 </td>
@@ -51,7 +51,7 @@ tableHtml = '''
                     <button class="btn btn-default" data-type="province" data-id="430000">湖南省</button>
                 </td>
               </tr>
-              <tr>
+              <tr data-node-lv=1>
                 <td>华东</td>
                 <td>
                     <button class="btn btn-default" data-type="province" data-id="310000">上海市</button>
@@ -63,7 +63,7 @@ tableHtml = '''
                     <button class="btn btn-default" data-type="province" data-id="370000">山东省</button>
                 </td>
               </tr>
-              <tr>
+              <tr data-node-lv=1>
                 <td>华南</td>
                 <td>
                     <button class="btn btn-default" data-type="province" data-id="440000">广东省</button>
@@ -71,7 +71,7 @@ tableHtml = '''
                     <button class="btn btn-default" data-type="province" data-id="460000">海南省</button>
                 </td>
               </tr>
-              <tr>
+              <tr data-node-lv=1>
                 <td>西南</td>
                 <td>
                     <button class="btn btn-default" data-type="province" data-id="500000">重庆市</button>
@@ -81,7 +81,7 @@ tableHtml = '''
                     <button class="btn btn-default" data-type="province" data-id="540000">西藏自治区</button>
                 </td>
               </tr>
-              <tr>
+              <tr data-node-lv=1>
                 <td>西北</td>
                 <td>
                     <button class="btn btn-default" data-type="province" data-id="610000">陕西省</button>
@@ -105,6 +105,7 @@ tableHtml = '''
             </div>
             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
             <button type="button" class="btn btn-primary chose" disabled="disabled">选定</button>
+            <button type="button" class="btn btn-default previous-button" disabled="disabled" style="display: none;">上一级</button>
             <button type="button" class="btn btn-default next-button" disabled="disabled">下一级</button>
           </div>
           <div class="setting-fee" style="display: none;">
@@ -123,6 +124,12 @@ class @DeliveryArea
     else 
       @$element = $($element)
 
+    @areaLevel = 1
+    @settingStatus = "code"
+    @settingSwither = 
+      fee: "code"
+      code: "fee"
+
     @$modal = $(tableHtml)
     @postUrl = @$element.data('url')
     @$element.closest('body').append(@$modal)
@@ -131,6 +138,8 @@ class @DeliveryArea
     @$modal.on 'click', '.chose', @choseArea
     @$modal.on 'keyup', '.fee', @enableSubmit
     @$modal.on 'click', '.submit', @submitFee
+    @$modal.on 'click', '.next-button', @nextLevelAreas
+    @$modal.on 'click', '.return-previous', @returnPrevious
 
     @$element.on 'click', @showModal
 
@@ -145,6 +154,7 @@ class @DeliveryArea
     @id = $target.data('id')
 
     @showSelectNotify(@text)
+    @$modal.find('button.active').removeClass('active')
     $target.addClass('active')
 
     if "province" == @type || "city" == @type
@@ -161,10 +171,11 @@ class @DeliveryArea
       .removeAttr('disabled')
 
   choseArea: (e) =>
+    @switchSettingView()
     # @showFeeModal()
     # @clearStatus()
-    @$modal.find('.setting-code').hide()
-    @$modal.find('.setting-fee').show()
+    # @$modal.find('.setting-code').hide()
+    # @$modal.find('.setting-fee').show()
   
   submitFee: (e) =>
     fee = @$modal.find('.fee').val()
@@ -182,3 +193,35 @@ class @DeliveryArea
       @$modal.find('.submit').removeAttr('disabled')
     else
       @$modal.find('.submit').attr('disabled', 'disabled')
+
+  returnPrevious: (e) =>
+    @switchSettingView()
+
+  switchSettingView: () ->
+    @settingStatus = @settingSwither[@settingStatus]
+    @$modal.find(".setting-#{@settingStatus}").show()
+    @$modal.find(".setting-#{@settingSwither[@settingStatus]}").hide()
+
+  nextLevelAreas: () =>
+    @areaLevel += 1
+    if 1 == @areaLevel
+      @$modal.find('.previous-button').hide()
+    else if 2 == @areaLevel
+      @$modal.find('.previous-button').show()
+    else if 3 == @areaLevel
+      @$modal.find('.next-button').hide()
+
+    $.get(@postUrl + '/next_nodes', {code: @id})
+      .done (data, status, xhr) =>
+        html = "
+          <tr  data-node-lv=#{@areaLevel}>
+            <td>#{@text}</td>
+            <td>
+        "
+        for node in data
+          html += "<button class='btn btn-default' data-type='' data-id=#{node[1]}>#{node[0]}</button>"
+
+        html += '</td></tr>'
+
+        @$modal.find("tr[data-node-lv=#{@areaLevel - 1}]").hide()
+        @$modal.find('tbody').append(html)

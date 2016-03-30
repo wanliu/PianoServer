@@ -7,7 +7,9 @@ class Shops::Admin::DeliveryFeesController < Shops::Admin::BaseController
     delivery_fee_settings = @shop.item_delivery_fee
 
     if delivery_fee_settings[params[:code]].present?
-      render error: "#{ChinaCity.get(params[:code])}地区的运费已经设置，无需再次设置", status: :unprocessable_entity
+      render json: {
+        error: "#{ChinaCity.get(params[:code])}地区的运费已经设置，无需再次设置"
+      }, status: :unprocessable_entity
     else
       @shop.item_delivery_fee[params[:code]] = params[:fee].to_f
       @shop.save
@@ -17,5 +19,10 @@ class Shops::Admin::DeliveryFeesController < Shops::Admin::BaseController
         fee: params[:fee].to_f
       }, status: :created
     end
+  end
+
+  def next_nodes
+    list = ChinaCity.list(params[:code])
+    render json: list
   end
 end
