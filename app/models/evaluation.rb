@@ -12,7 +12,7 @@ class Evaluation < ActiveRecord::Base
 
   attr_reader :pmo_grab_id
 
-  delegate :title, :avatar_urls, :image_urls, :cover_urls, 
+  delegate :title, :avatar_urls, :image_urls, :cover_urls,
     to: :evaluationable, allow_nil: true
 
   validates :user, presence: true
@@ -54,6 +54,10 @@ class Evaluation < ActiveRecord::Base
     pmo_grab = PmoGrab[grab_id]
     self.evaluationable = pmo_grab.pmo_item
     self.order = Order.find_by(pmo_grab_id: grab_id)
+  end
+
+  def author
+    user.try(:nickname)
   end
 
   private

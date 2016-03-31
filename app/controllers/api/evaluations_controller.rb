@@ -24,11 +24,7 @@ class Api::EvaluationsController < Api::BaseController
     @evaluations = @evaluations.page(params[:page])
       .per(params[:per])
 
-    render json: {
-      evaluations: @evaluations,
-      page: @evaluations.current_page,
-      total_page: @evaluations.total_pages
-    }
+    render :index
   end
 
   def aggregate

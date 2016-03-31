@@ -279,6 +279,12 @@ Rails.application.routes.draw do
     resources :cart_items, only: [:index, :create]
 
     concerns :evaluationable
+
+    resources :shops do
+      member do
+        get "favorite_count", to: "shops#favorite_count"
+      end
+    end
   end
 
   resources :promotions, concerns: [ :chatable ] do
