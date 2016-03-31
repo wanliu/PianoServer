@@ -12,11 +12,11 @@ export SECRET_KEY_BASE="XXX"
 export LIVE_KEY_BASE="XXX"
 export INSTANCE_ID=current_aws_id
 
-export DATABASE_HOST=aws_label $INSTANCE_ID "PostgresHost"
+export DATABASE_HOST=`aws_label $INSTANCE_ID "PostgresHost"`
 export DATABASE_PORT=5432
 export RAILS_ENV=production
 
-export ELASTICSEARCH_URL = aws_label $INSTANCE_ID "ElasticsearchUrl"
+export ELASTICSEARCH_URL =`aws_label $INSTANCE_ID "ElasticsearchUrl"`
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -24,7 +24,7 @@ echo "Database Host: $DATABASE_HOST"
 
 rbenv local 2.2.4
 
-sed -n '
+sed -i -e "
   /^elasticsearch:$/ {
     n
     :start
@@ -32,9 +32,9 @@ sed -n '
       N
       b start
     }
-    s/url: [a-zA-Z0-9\.\:\/]*/url: $ELASTICSEARCH_URL/p
+    s/url: [a-zA-Z0-9\.\:\/]*/url: `$ELASTICSEARCH_URL`/p
   }
-' config/settings.yml
+" config/settings.yml
 
 PREFIX="bundle exec"
 bundle install
