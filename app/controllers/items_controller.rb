@@ -24,7 +24,7 @@ class ItemsController < ApplicationController
       .per(params[:per])
       .records
 
-    render json: { items: @items, page: @items.current_page, total_page: @items.total_pages }
+    render json: { items: @items.as_json(methods: [:shop_name, :shop_realname]), page: @items.current_page, total_page: @items.total_pages }
   end
 
   def show
@@ -33,7 +33,7 @@ class ItemsController < ApplicationController
     @current_user = current_anonymous_or_user
 
     @cartitem = CartItem.new(cartable: @item, supplier: @shop, title: @item.title, image: @item.image.url(:cover))
-  
+
     if Settings.dev.feature.inventory_combination and @item.properties.present?
       @stocks_with_index = @item.stocks_with_index
     end

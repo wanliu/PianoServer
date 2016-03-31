@@ -2,13 +2,6 @@ Rails.application.routes.draw do
 
   resources :thumbs, except: [:new, :edit]
 
-  resources :evaluations, except: [:edit, :destroy, :update] do
-    member do
-      post :thumb
-      post :un_thumb
-    end
-  end
-
   resource :wechat, only: [:show, :create]
 
   resources :order_items, except: [:new, :edit]
@@ -26,6 +19,22 @@ Rails.application.routes.draw do
       get :status
     end
   end
+
+  concern :evaluationable do
+    resources :evaluations, except: [:edit, :destroy, :update] do
+      member do
+        post :thumb
+        post :un_thumb
+      end
+
+      collection do
+        get "aggregate", to: "evaluations#aggregate"
+        get "specified", to: "evaluations#specified"
+      end
+    end
+  end
+
+  concerns :evaluationable
 
   resources :industry, only: [ :show ] do
     member do
@@ -233,7 +242,16 @@ Rails.application.routes.draw do
 
   namespace :api do
     resources :user, only: [:index]
+
+    resources :favorites, except: [:new, :edit, :update] do
+      collection do
+        get 'favored'
+      end
+    end
+
     get "suggestion", :to => "suggestion#index"
+    get "/items/search_ly", :to => "items#search_ly"
+    get "/items/hots", :to => "items#hots"
 
     namespace :promotions do
       resources :one_money, except: [:index, :create, :update, :destroy]  do
@@ -259,6 +277,14 @@ Rails.application.routes.draw do
     # end
 
     resources :cart_items, only: [:index, :create]
+
+    concerns :evaluationable
+
+    resources :shops do
+      member do
+        get "favorite_count", to: "shops#favorite_count"
+      end
+    end
   end
 
   resources :promotions, concerns: [ :chatable ] do
@@ -305,6 +331,16 @@ Rails.application.routes.draw do
       post "confirmation"
       post "buy_now_create"
       post "buy_now_confirm"
+
+      # 为避免用户回退到立即购买的post页面，提供一个过期提示窗口
+      get "buy_now_confirm", to: Proc.new { |env|
+        [
+          200,
+          {"Content-Type" => "text/html"},
+          [File.read("public/expire.html")]
+        ]
+      }
+
       get "history"
       get "yiyuan_confirm"
       post "yiyuan_confirm", to: 'orders#create_yiyuan'
@@ -349,7 +385,7 @@ Rails.application.routes.draw do
 
 
     resources :shop_categories, path: "categories"
-    resources :items, key: :sid
+    resources :items, key: :sid, constraints: { id: /\d+/ }
 
     namespace :admin, module: 'shops/admin' do
       get "/", to: "dashboard#index", as: :index
