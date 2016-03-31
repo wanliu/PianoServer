@@ -37,6 +37,7 @@
  *= require_tree ./shop_category
  *= require_tree ./sign
  *= require_tree ./yiyuan
+ *= require_tree ./order
  *= require_self
  */
 html{
@@ -128,6 +129,13 @@ html{
     // -webkit-transition-timing-function: ease;
     // transition-timing-function: ease;
   }
+
+  // li.go-back {
+  //   padding-right: 0;
+  //   a {
+  //     padding-right: 0;
+  //   }
+  // }
 }
 
 .navbar-collapse .navbar-nav{

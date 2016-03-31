@@ -53,6 +53,11 @@ class Promotion < ActiveResource::Base
     Shop.where(id: shop_id).first
   end
 
+  def evaluations
+    Evaluation.where(evaluationable_type: 'Promotion', 
+      evaluationable_id: id)
+  end
+
   def deduct_stocks!(operator, options)
     source = options[:source]
 

@@ -26,6 +26,11 @@ Rails.application.routes.draw do
         post :thumb
         post :un_thumb
       end
+
+      collection do
+        get "aggregate", to: "evaluations#aggregate"
+        get "specified", to: "evaluations#specified"
+      end
     end
   end
 
@@ -246,6 +251,7 @@ Rails.application.routes.draw do
 
     get "suggestion", :to => "suggestion#index"
     get "/items/search_ly", :to => "items#search_ly"
+    get "/items/hots", :to => "items#hots"
 
     namespace :promotions do
       resources :one_money, except: [:index, :create, :update, :destroy]  do
@@ -273,6 +279,12 @@ Rails.application.routes.draw do
     resources :cart_items, only: [:index, :create]
 
     concerns :evaluationable
+
+    resources :shops do
+      member do
+        get "favorite_count", to: "shops#favorite_count"
+      end
+    end
   end
 
   resources :promotions, concerns: [ :chatable ] do
@@ -314,11 +326,20 @@ Rails.application.routes.draw do
   end
 
   resources :orders, only: [:index, :show, :destroy, :create, :update] do
-
     collection do
       post "confirmation"
       post "buy_now_create"
       post "buy_now_confirm"
+
+      # 为避免用户回退到立即购买的post页面，提供一个过期提示窗口
+      get "buy_now_confirm", to: Proc.new { |env|
+        [
+          200,
+          {"Content-Type" => "text/html"},
+          [File.read("public/expire.html")]
+        ]
+      }
+
       get "history"
       get "yiyuan_confirm"
       post "yiyuan_confirm", to: 'orders#create_yiyuan'
@@ -336,6 +357,16 @@ Rails.application.routes.draw do
       # post "set_wx_pay"
       post "wx_notify"
       post "wxpay_confirm"
+      get "evaluate"
+      patch "create_evaluations"
+
+      get "evaluate_items/:order_item_id", 
+        to: "orders#evaluate_item", 
+        as: :evaluate_items
+
+      post "evaluate_items/:order_item_id", 
+        to: "orders#evaluate_item_create",
+        as: :evaluate_items_create
     end
   end
 
@@ -363,7 +394,7 @@ Rails.application.routes.draw do
 
 
     resources :shop_categories, path: "categories"
-    resources :items, key: :sid
+    resources :items, key: :sid, constraints: { id: /\d+/ }
 
     namespace :admin, module: 'shops/admin' do
       get "/", to: "dashboard#index", as: :index

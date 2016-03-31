@@ -22,17 +22,17 @@ class CartItemsController < ApplicationController
       @item = exsited_item
       @item.quantity += params[:cart_item][:quantity].to_i
     else
-      sale_mode = current_anonymous_or_user.sale_mode
+      # sale_mode = current_anonymous_or_user.sale_mode
 
       @item = current_cart.items.new(cart_item_params) do |item|
         price =
           case item.cartable
           when Item
-            if sale_mode == "retail"
-              item.cartable.public_price
-            else
-              item.cartable.price
-            end
+            # if sale_mode == "retail"
+              # item.cartable.public_price
+            # else
+            item.cartable.price
+            # end
           when Promotion
             item.cartable.discount_price
           else

@@ -85,7 +85,7 @@ class AuthorizeController < ApplicationController
   end
 
   def after_sign_in_path(user)
-    if (session[:goto_one_money] || session[:goto_LeiyangStreet])
+    if (session[:goto_one_money] || session[:goto_leiyangstreet])
       path = callback_url
       clear_callback
 
