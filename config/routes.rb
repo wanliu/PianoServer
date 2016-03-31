@@ -423,5 +423,6 @@ Rails.application.routes.draw do
     end
   end
 
-  root to: "promotions#index"
+  # root to: "promotions#index"
+  root to: redirect('/html/%E8%80%92%E9%98%B3%E8%A1%97%E4%B8%8A')
 end
