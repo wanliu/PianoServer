@@ -166,4 +166,6 @@ group :development, :test do
   gem "table_print"
 end
 
+gem 'redis-session-store'
+
 # gem 'redis'

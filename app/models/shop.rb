@@ -21,6 +21,7 @@ class Shop < ActiveRecord::Base
   has_many :items
   has_many :members, class_name: "User", foreign_key: 'shop_id'
   has_many :orders, foreign_key: 'supplier_id'
+  has_many :favoritables, as: :favoritor, class_name: 'Favorite'
 
   validates :title, :phone, :name, presence: true
   validates :name, uniqueness: true

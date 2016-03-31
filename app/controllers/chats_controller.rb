@@ -5,6 +5,7 @@ class ChatsController < ApplicationController
   before_action :chat_variables, only: [:owner, :target, :channel]
   before_action :get_intention, only: [:owner, :target, :channel, :shop_items]
   before_action :authenticate_user!, only: [:match]
+  skip_before_filter :verify_authenticity_token, :only => [:create]
   # before_action :set_page_info, only: [:show]
 
   def index
