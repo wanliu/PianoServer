@@ -12,7 +12,10 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 echo "Database Host: $DATABASE_HOST"
 
+rbenv local 2.2.4
+
 PREFIX="bundle exec"
+bundle install
 
 $PREFIX rake db:migrate && rake assets:clean
 $PREFIX rake assets:precompile
