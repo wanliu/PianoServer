@@ -33,7 +33,7 @@ elasticsearch:
   url: http://192.168.0.131:9200
   index_name: products_production
   default_region_id: '421800'
-  item_min_score: 0.5
+  item_min_score: 0.2
 assets:
   host: http://wanliu-piano.b0.upaiyun.com
   gray_image: "data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
@@ -128,3 +128,6 @@ sms:
   host: sms.yunpian.com
   api_uri: /v1/sms/send.json
   token: '2ff4409770a685e7d3edabe1f80c92c1'
+
+config:
+  hots_compare_days: 30

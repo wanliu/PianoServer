@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160311065537) do
+ActiveRecord::Schema.define(version: 20160325014903) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -177,6 +177,18 @@ ActiveRecord::Schema.define(version: 20160311065537) do
   add_index "evaluations", ["order_id"], name: "index_evaluations_on_order_id", using: :btree
   add_index "evaluations", ["user_id"], name: "index_evaluations_on_user_id", using: :btree
 
+  create_table "favorites", force: :cascade do |t|
+    t.integer  "favoritor_id"
+    t.string   "favoritor_type"
+    t.integer  "favoritable_id"
+    t.string   "favoritable_type"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+  end
+
+  add_index "favorites", ["favoritable_type", "favoritable_id"], name: "index_favorites_on_favoritable_type_and_favoritable_id", using: :btree
+  add_index "favorites", ["favoritor_type", "favoritor_id"], name: "index_favorites_on_favoritor_type_and_favoritor_id", using: :btree
+
   create_table "feedbacks", force: :cascade do |t|
     t.string   "name"
     t.string   "mobile"
@@ -248,7 +260,12 @@ ActiveRecord::Schema.define(version: 20160311065537) do
     t.jsonb    "properties_setting",                          default: {}
   end
 
+  add_index "items", ["brand_id"], name: "index_items_on_brand_id", using: :btree
+  add_index "items", ["category_id"], name: "index_items_on_category_id", using: :btree
+  add_index "items", ["on_sale"], name: "index_items_on_on_sale", using: :btree
   add_index "items", ["shop_category_id"], name: "index_items_on_shop_category_id", using: :btree
+  add_index "items", ["shop_id"], name: "index_items_on_shop_id", using: :btree
+  add_index "items", ["sid"], name: "index_items_on_sid", using: :btree
 
   create_table "jobs", force: :cascade do |t|
     t.string   "status"
@@ -262,17 +279,6 @@ ActiveRecord::Schema.define(version: 20160311065537) do
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
   end
-
-  create_table "likes", force: :cascade do |t|
-    t.string   "liker_type"
-    t.integer  "liker_id"
-    t.string   "likeable_type"
-    t.integer  "likeable_id"
-    t.datetime "created_at"
-  end
-
-  add_index "likes", ["likeable_id", "likeable_type"], name: "fk_likeables", using: :btree
-  add_index "likes", ["liker_id", "liker_type"], name: "fk_likes", using: :btree
 
   create_table "line_items", force: :cascade do |t|
     t.integer  "itemable_id"
@@ -313,17 +319,6 @@ ActiveRecord::Schema.define(version: 20160311065537) do
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
   end
-
-  create_table "mentions", force: :cascade do |t|
-    t.string   "mentioner_type"
-    t.integer  "mentioner_id"
-    t.string   "mentionable_type"
-    t.integer  "mentionable_id"
-    t.datetime "created_at"
-  end
-
-  add_index "mentions", ["mentionable_id", "mentionable_type"], name: "fk_mentionables", using: :btree
-  add_index "mentions", ["mentioner_id", "mentioner_type"], name: "fk_mentions", using: :btree
 
   create_table "messages", force: :cascade do |t|
     t.integer  "messable_id"
@@ -387,7 +382,6 @@ ActiveRecord::Schema.define(version: 20160311065537) do
     t.boolean  "paid",                                       default: false
     t.string   "wx_prepay_id"
     t.string   "wx_noncestr"
-    t.boolean  "evaluated",                                  default: false
     t.string   "wx_transaction_id"
     t.decimal  "paid_total",        precision: 10, scale: 2
     t.string   "note"
@@ -479,8 +473,8 @@ ActiveRecord::Schema.define(version: 20160311065537) do
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
     t.string   "logo"
-    t.string   "address"
     t.jsonb    "settings",    default: {}
+    t.string   "address"
     t.integer  "shop_type",   default: 0
     t.float    "lat"
     t.float    "lon"

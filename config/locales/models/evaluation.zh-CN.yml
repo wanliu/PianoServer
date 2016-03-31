@@ -1,0 +1,10 @@
+zh-CN:
+  activerecord:
+    models:
+      evaluation: "评价"
+    attributes:
+      evaluation: 
+        good: 商品评分
+        delivery: 物流评分
+        customer_service: 客服评分
+        desc: 心得
