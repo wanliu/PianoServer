@@ -385,6 +385,7 @@ ActiveRecord::Schema.define(version: 20160325014903) do
     t.string   "wx_transaction_id"
     t.decimal  "paid_total",        precision: 10, scale: 2
     t.string   "note"
+    t.string   "receive_token"
   end
 
   add_index "orders", ["buyer_id"], name: "index_orders_on_buyer_id", using: :btree

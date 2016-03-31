@@ -31,7 +31,7 @@ class Order < ActiveRecord::Base
   validate :items_should_exist, on: :create
 
   before_save :set_modified, if: :total_changed?
-  before_create :caculate_total
+  before_create :caculate_total, :generate_receive_token
 
   after_commit :send_notify_to_seller, on: :create
 
@@ -62,6 +62,17 @@ class Order < ActiveRecord::Base
     self.delivery_address = location.delivery_address_without_phone
     self.receiver_name = location.contact
     self.receiver_phone = location.contact_phone
+  end
+
+  def receive_token
+    return unless persisted?
+    if super.blank?
+      generate_receive_token
+      save
+    end
+
+    # self.reload
+    super
   end
 
   def save_with_items(operator)
@@ -258,5 +269,16 @@ class Order < ActiveRecord::Base
     order_url = Rails.application.routes.url_helpers.shop_admin_order_path(supplier.name, self)
     # NotificationSender.delay.send_sms({mobile: seller_mobile, order_id: id, order_url: order_url, seller_id: seller_id})
     NotificationSender.delay.notify({mobile: seller_mobile, order_id: id, order_url: order_url, seller_id: seller_id})
+  end
+
+  def generate_receive_token
+    token = nil
+
+    loop do
+      token = Devise.friendly_token
+      break token unless Order.where(receive_token: token).first
+    end
+
+    self.receive_token = token
   end
 end
