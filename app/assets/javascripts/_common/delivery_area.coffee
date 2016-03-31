@@ -101,12 +101,12 @@ tableHtml = '''
         <div class="modal-footer">
           <div class="setting-code">
             <div class="notify pull-left">
-              已选定：<span class="select-notify">暂无选定地区，请在上方选定一个地区</span>
+              已选定：<span class="select-notify">暂无选定地区</span>
             </div>
             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
             <button type="button" class="btn btn-primary chose" disabled="disabled">选定</button>
-            <button type="button" class="btn btn-default previous-button" disabled="disabled" style="display: none;">上一级</button>
-            <button type="button" class="btn btn-default next-button" disabled="disabled">下一级</button>
+            <button type="button" class="btn btn-default previous-area" style="display: none;">上一级</button>
+            <button type="button" class="btn btn-default next-area" disabled="disabled">下一级</button>
           </div>
           <div class="setting-fee" style="display: none;">
             <button class="btn btn-default return-previous">重选地区</button>
@@ -125,6 +125,7 @@ class @DeliveryArea
       @$element = $($element)
 
     @areaLevel = 1
+
     @settingStatus = "code"
     @settingSwither = 
       fee: "code"
@@ -138,7 +139,8 @@ class @DeliveryArea
     @$modal.on 'click', '.chose', @choseArea
     @$modal.on 'keyup', '.fee', @enableSubmit
     @$modal.on 'click', '.submit', @submitFee
-    @$modal.on 'click', '.next-button', @nextLevelAreas
+    @$modal.on 'click', '.next-area', @nextLevelAreas
+    @$modal.on 'click', '.previous-area', @previousLevelAreas
     @$modal.on 'click', '.return-previous', @returnPrevious
 
     @$element.on 'click', @showModal
@@ -149,37 +151,50 @@ class @DeliveryArea
   clickArea: (e) =>
     $target = $(e.target || e.srcElement)
 
-    @type = $target.data('type')
-    @text = $target.text()
-    @id = $target.data('id')
+    @setArea $target.text()
 
-    @showSelectNotify(@text)
-    @$modal.find('button.active').removeClass('active')
+    @setCode $target.data('id')
+
+    @showSelectNotify()
+
+    @$modal.find("tr[data-node-lv=#{@areaLevel}]")
+      .find('button.active')
+      .removeClass('active')
     $target.addClass('active')
 
-    if "province" == @type || "city" == @type
-      @showNextButton()
-
     @$modal.find('.chose').removeAttr('disabled')
+    @$modal.find('.next-area').removeAttr('disabled')
 
-  showSelectNotify: (text) ->
-    @$modal.find('.select-notify').text(text)
-    @$modal.find('.chose-area').text(text)
+  setArea: (val) ->
+    @areas || (@areas= {})
+    @areas[@areaLevel] = val
+
+  area: () =>
+    @areas[@areaLevel]
+
+  setCode: (val) ->
+    @codes || (@codes= {})
+    @codes[@areaLevel] = val
+
+  code: () =>
+    @codes[@areaLevel]
+
+  showSelectNotify: () ->
+    area = _.values(@areas).join('')
+
+    @$modal.find('.select-notify').text(area || "暂无选定地区")
+    @$modal.find('.chose-area').text(area || "暂无选定地区")
 
   showNextButton: () ->
-    @$modal.find('.next-button')
-      .removeAttr('disabled')
+    # @$modal.find('.next-area')
+    #   .removeAttr('disabled')
 
   choseArea: (e) =>
     @switchSettingView()
-    # @showFeeModal()
-    # @clearStatus()
-    # @$modal.find('.setting-code').hide()
-    # @$modal.find('.setting-fee').show()
   
   submitFee: (e) =>
     fee = @$modal.find('.fee').val()
-    $.post(@postUrl, {code: @id, fee: fee})
+    $.post(@postUrl, {code: @code(), fee: fee})
       .done (data, status, xhr) ->
         debugger
       .fail (data, status, xhr) ->
@@ -203,21 +218,18 @@ class @DeliveryArea
     @$modal.find(".setting-#{@settingSwither[@settingStatus]}").hide()
 
   nextLevelAreas: () =>
-    @areaLevel += 1
-    if 1 == @areaLevel
-      @$modal.find('.previous-button').hide()
-    else if 2 == @areaLevel
-      @$modal.find('.previous-button').show()
-    else if 3 == @areaLevel
-      @$modal.find('.next-button').hide()
-
-    $.get(@postUrl + '/next_nodes', {code: @id})
+    $.get(@postUrl + '/next_nodes', {code: @code()})
       .done (data, status, xhr) =>
-        html = "
-          <tr  data-node-lv=#{@areaLevel}>
-            <td>#{@text}</td>
-            <td>
-        "
+        @areaLevel += 1
+        @rerenderButtons()
+
+        html = "<tr data-node-lv=#{@areaLevel}><td>"
+        
+        for level, area of @areas
+          html += "<div data-level=#{level} style='padding: 10px; border-bottom: 1px solid #ddd;'>#{area}</div>"
+
+        html += '</td><td>'
+        
         for node in data
           html += "<button class='btn btn-default' data-type='' data-id=#{node[1]}>#{node[0]}</button>"
 
@@ -225,3 +237,42 @@ class @DeliveryArea
 
         @$modal.find("tr[data-node-lv=#{@areaLevel - 1}]").hide()
         @$modal.find('tbody').append(html)
+
+  previousLevelAreas: (e) =>
+    @areaLevel -= 1
+    @rerenderButtons()
+    @clearHighLevel()
+
+  rerenderButtons: () ->
+    $previousAreaBtn = @$modal.find('.previous-area')
+    $nextAreaBtn = @$modal.find('.next-area')
+    $choseBtn = @$modal.find('.chose')
+
+    if @area()
+      $nextAreaBtn.removeAttr('disabled')
+      $choseBtn.removeAttr('disabled')
+    else
+      $nextAreaBtn.attr('disabled', 'disabled')
+      $choseBtn.attr('disabled', 'disabled')
+
+    if 1 == @areaLevel
+      $previousAreaBtn.hide()
+      $nextAreaBtn.show()
+    else if 2 == @areaLevel
+      $previousAreaBtn.show()
+      $nextAreaBtn.show()
+    else if 3 == @areaLevel
+      $previousAreaBtn.show()
+      $nextAreaBtn.hide()
+
+  clearHighLevel: () ->
+    highLevels = [1, 2, 3][@areaLevel..3]
+
+    for level in highLevels
+      delete @codes[level]
+      delete @areas[level]
+      @$modal.find("tr[data-node-lv=#{level}]").remove()
+
+    @showSelectNotify()
+    @rerenderButtons()
+    @$modal.find("tr[data-node-lv=#{@areaLevel}]").show()
