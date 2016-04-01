@@ -213,7 +213,6 @@ class @DeliveryArea
         @onCreatedCallback(data);
         @reset();
       .fail (data, status, xhr) ->
-        debugger
 
   enableSubmit: (e) =>
     $target = $(e.target || e.srcElement)
@@ -234,6 +233,11 @@ class @DeliveryArea
   rerenderSettingView: () ->
     @$modal.find(".setting-#{@settingStatus}").show()
     @$modal.find(".setting-#{@settingSwither[@settingStatus]}").hide()
+
+    if "fee" == @settingStatus
+      @$modal.find('input.fee')
+        .focus()
+        .select()
 
   nextLevelAreas: () =>
     $.get(@postUrl + '/next_nodes', {code: @code()})

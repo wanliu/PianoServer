@@ -3,10 +3,10 @@
     <thead>
       <tr>
         <th colspan='2'>
-          本店运费规则
+          运费规则
         </th>
         <th>
-          <button class='btn btn-default' id='set-shop-delivery' data-url='<%= shop_admin_delivery_fee_path(@shop.name) %>'>点击添加规则</button>
+          <button type='button' class='btn btn-default' id='set-item-delivery' data-url='<%= shop_admin_item_delivery_fee_path(@shop.name, @item) %>'>点击添加规则</button>
         </th>
       </tr>
       <tr>
@@ -17,17 +17,12 @@
     </thead>
     <tbody>
       <% if @delivery_fee_settings.blank? %>
-        <tr class='empty-notify'>
+        <tr>
           <td colspan='3' class='text-center'>
             暂未设置任何规则
           </td>
         </tr>
       <% else %>
-        <tr class='empty-notify' style='display: none;'>
-          <td colspan='3' class='text-center'>
-            暂未设置任何规则
-          </td>
-        </tr>
         <% @delivery_fee_settings.keys.sort.each do |area_code| %>
           <tr data-code=<%= area_code %>>
             <td class='area'>
@@ -39,8 +34,8 @@
               <%= @delivery_fee_settings[area_code][:fee] %>
             </td>
             <td>
-              <button class='btn btn-default edit-setting'>设置</button>
-              <button class='btn btn-danger destroy-setting'>删除</button>
+              <button type='button' class='btn btn-default edit-setting'>设置</button>
+              <button type='button' class='btn btn-danger destroy-setting'>删除</button>
             </td>
           </tr>
         <% end %>
@@ -109,9 +104,9 @@
 <script type="text/javascript">
   (function () {
     var settingCodes = <%= @delivery_fee_settings.keys.to_json.html_safe %>;
-    var postUrl = <%= shop_admin_delivery_fee_path(@shop.name).to_json.html_safe %>;
+    var postUrl = <%= shop_admin_item_delivery_fee_path(@shop.name, @item).to_json.html_safe %>;
 
-    var $deliveryElement = $('#set-shop-delivery');
+    var $deliveryElement = $('#set-item-delivery');
     var $tbody = $('.shop-delivery-settings tbody');
     var template = _.template($('#new-delivey-fee-tpl').html());
 

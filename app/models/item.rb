@@ -275,7 +275,7 @@ class Item < ActiveRecord::Base
     delivery_fee_setting[area_code] ||
       delivery_fee_setting[city_code] ||
       delivery_fee_setting[province_code] ||
-      delivery_fee_setting["default"]
+      delivery_fee_setting["default"] || 0
   end
 
   def pinyin

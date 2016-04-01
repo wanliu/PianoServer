@@ -418,6 +418,8 @@ Rails.application.routes.draw do
       end
 
       resources :items, key: :sid do
+        resource :delivery_fee, objective: "item"
+
         collection do
           # get "load_categories", to: "items#load_categories"
           get "/new/step1",  to: "items#new_step1"

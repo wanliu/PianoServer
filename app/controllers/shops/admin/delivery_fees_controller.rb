@@ -1,8 +1,11 @@
 class Shops::Admin::DeliveryFeesController < Shops::Admin::BaseController
+  include DeliveryAreaTitle
+
+  before_action :set_object
+
   def show
-    @delivery_fee_settings = @shop.item_delivery_fee
-    @delivery_fee_settings.each do |code, fee|
-      @delivery_fee_settings[code] = {
+    delivery_fee_settings.each do |code, fee|
+      delivery_fee_settings[code] = {
         fee: fee, 
         title: get_code_title(code)
       }
@@ -10,15 +13,13 @@ class Shops::Admin::DeliveryFeesController < Shops::Admin::BaseController
   end
 
   def create
-    delivery_fee_settings = @shop.item_delivery_fee
-
     if delivery_fee_settings[params[:code]].present?
       render json: {
-        error: "#{ChinaCity.get(params[:code])}地区的运费已经设置，无需再次设置"
+        error: "#{get_code_title(params[:code])}地区的运费已经设置，无需再次设置"
       }, status: :unprocessable_entity
     else
-      @shop.item_delivery_fee[params[:code]] = params[:fee].to_f
-      @shop.save
+      delivery_fee_settings[params[:code]] = params[:fee].to_f
+      @object.save
 
       render json: {
         code: params[:code], 
@@ -34,36 +35,43 @@ class Shops::Admin::DeliveryFeesController < Shops::Admin::BaseController
   end
 
   def update
-    @shop.item_delivery_fee[params[:code]] = params[:fee].to_f
-    @shop.save
+    delivery_fee_settings[params[:code]] = params[:fee].to_f
+    @object.save
 
-    render json: {code: params[:code], fee: @shop.item_delivery_fee[params[:code]]}
+    render json: {code: params[:code], fee: delivery_fee_settings[params[:code]]}
   end
 
   def destroy
-    @shop.item_delivery_fee.delete params[:code]
-    @shop.save
+    delivery_fee_settings.delete params[:code]
+    @object.save
 
     head :no_content
   end
 
   private
 
-  def get_code_title(code)
-    if "default" == code
-      "默认"
+  def set_object
+    @object = if "item" == params[:objective]
+      params[:id] = params[:item_id]
+      @shop.items.find_by_key(params)
     else
-      title = ChinaCity.get(code)
+      @shop
+    end
+  end
 
-      unless code == ChinaCity.city(code)
-        title = ChinaCity.get(ChinaCity.city(code)) + title
+  def delivery_fee_settings(reload=false)
+    if reload
+      @delivery_fee_settings = if "item" == params[:objective]
+        @object.delivery_fee
+      else
+        @object.item_delivery_fee
       end
-
-      unless code == ChinaCity.province(code)
-        title = ChinaCity.get(ChinaCity.province(code)) + title
+    else
+      @delivery_fee_settings ||= if "item" == params[:objective]
+        @object.delivery_fee
+      else
+        @object.item_delivery_fee
       end
-
-      title
     end
   end
 end
