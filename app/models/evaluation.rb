@@ -21,7 +21,7 @@ class Evaluation < ActiveRecord::Base
   validates :delivery, presence: true
   validates :customer_service, presence: true
 
-  validates :evaluationable, presence: true, 
+  validates :evaluationable, presence: true,
     unless: Proc.new { |ee| "Promotion" == ee.evaluationable_type }
 
   validates :user_id, uniqueness: {
@@ -58,6 +58,14 @@ class Evaluation < ActiveRecord::Base
 
   def author
     user.try(:nickname)
+  end
+
+  def author_avatar
+    user.try(:avatar_url)
+  end
+
+  def purchase_time
+    order.created_at
   end
 
   private
