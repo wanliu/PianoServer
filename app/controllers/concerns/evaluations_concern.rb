@@ -37,16 +37,11 @@ module EvaluationsConcern
   def create
     @evaluation = current_user.evaluations.build(evaluation_params)
 
-    if @evaluation.order.evaluated?
-      evaluation = @evaluation.order.evaluations.find_by(user_id: current_user.id)
-      render json: {errors: ["你已经评论过了！"], evaluation_id: evaluation.try(:id)}, status: :unprocessable_entity
+    if @evaluation.save
+      # render :show, status: :created
+      render json: {evaluation: @evaluation}, status: :created
     else
-      if @evaluation.save
-        # render :show, status: :created
-        render json: {evaluation: @evaluation}, status: :created
-      else
-        render json: {errors: @evaluation.errors.full_messages.join(',')}, status: :unprocessable_entity
-      end
+      render json: {errors: @evaluation.errors.full_messages.join(',')}, status: :unprocessable_entity
     end
   end
 
