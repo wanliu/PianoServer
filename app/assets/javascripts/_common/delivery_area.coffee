@@ -95,7 +95,7 @@ tableHtml = '''
           </table>
           <div style="display: none;" class="setting-fee">
             地区：<span class="chose-area"></span></br>
-            运送费用：<input class="fee" type="number" step=0.01>  
+            运送费用：<input class="fee" type="number" step=0.1>  
           </div>
         </div>
         <div class="modal-footer">
@@ -125,6 +125,7 @@ class @DeliveryArea
       @$element = $($element)
 
     @areaLevel = 1
+    @onCreatedCallback = () ->
 
     @settingStatus = "code"
     @settingSwither = 
@@ -144,6 +145,18 @@ class @DeliveryArea
     @$modal.on 'click', '.return-previous', @returnPrevious
 
     @$element.on 'click', @showModal
+
+  reset: () ->
+    @areaLevel = 1
+    @areas = {}
+    @codes = {}
+    @settingStatus = "code"
+
+    @rerenderSettingView();
+    @rerenderButtons();
+    @clearHighLevel();
+    @clearFeeInput();
+    @clearActiveAreas();
 
   showModal: (e) =>
     @$modal.modal('show')
@@ -195,8 +208,10 @@ class @DeliveryArea
   submitFee: (e) =>
     fee = @$modal.find('.fee').val()
     $.post(@postUrl, {code: @code(), fee: fee})
-      .done (data, status, xhr) ->
-        debugger
+      .done (data, status, xhr) =>
+        @$modal.modal('hide');
+        @onCreatedCallback(data);
+        @reset();
       .fail (data, status, xhr) ->
         debugger
 
@@ -214,6 +229,9 @@ class @DeliveryArea
 
   switchSettingView: () ->
     @settingStatus = @settingSwither[@settingStatus]
+    @rerenderSettingView()
+
+  rerenderSettingView: () ->
     @$modal.find(".setting-#{@settingStatus}").show()
     @$modal.find(".setting-#{@settingSwither[@settingStatus]}").hide()
 
@@ -276,3 +294,12 @@ class @DeliveryArea
     @showSelectNotify()
     @rerenderButtons()
     @$modal.find("tr[data-node-lv=#{@areaLevel}]").show()
+
+  onCreated: (callback) ->
+    @onCreatedCallback = callback;
+
+  clearFeeInput: () ->
+    @$modal.find('input.fee').val('')
+
+  clearActiveAreas: () ->
+    @$modal.find('button.active').removeClass('active')
