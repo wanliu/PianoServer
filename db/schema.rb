@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160325014903) do
+ActiveRecord::Schema.define(version: 20160329065702) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -258,6 +258,7 @@ ActiveRecord::Schema.define(version: 20160325014903) do
     t.decimal  "current_stock",      precision: 10, scale: 2
     t.boolean  "abandom",                                     default: false, null: false
     t.jsonb    "properties_setting",                          default: {}
+    t.jsonb    "delivery_fee",                                default: {}
   end
 
   add_index "items", ["brand_id"], name: "index_items_on_brand_id", using: :btree
@@ -470,16 +471,18 @@ ActiveRecord::Schema.define(version: 20160325014903) do
     t.integer  "industry_id"
     t.text     "description"
     t.string   "provider"
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.datetime "created_at",                                                  null: false
+    t.datetime "updated_at",                                                  null: false
     t.string   "logo"
-    t.jsonb    "settings",    default: {}
+    t.jsonb    "settings",                                      default: {}
     t.string   "address"
-    t.integer  "shop_type",   default: 0
+    t.integer  "shop_type",                                     default: 0
     t.float    "lat"
     t.float    "lon"
     t.integer  "location_id"
     t.string   "region_id"
+    t.decimal  "default_delivery_fee", precision: 10, scale: 2, default: 0.0
+    t.jsonb    "item_delivery_fee",                             default: {}
   end
 
   create_table "statuses", force: :cascade do |t|

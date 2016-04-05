@@ -76,9 +76,19 @@ class Order < ActiveRecord::Base
   end
 
   def save_with_items(operator)
-    self.transaction do 
+    delivry_region_id = Location.find(address_id).region_id
+
+    self.transaction do
       CartItem.destroy(cart_item_ids) if cart_item_ids.present?
       begin
+        self.express_fee = 0
+
+        items.each do |order_item|
+          if order_item.orderable_type == "Item"
+            self.express_fee += order_item.quantity * Item.find(order_item.orderable_id).delivery_fee_to(delivry_region_id)
+          end
+        end
+
         save!
 
         items.each do |item|

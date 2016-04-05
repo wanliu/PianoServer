@@ -71,6 +71,7 @@ class OrdersController < ApplicationController
   # GET /orders/1
   # GET /orders/1.json
   def show
+    # @order.items.includes(:orderable)
   end
 
   # POST /orders
