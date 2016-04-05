@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160318021812) do
+ActiveRecord::Schema.define(version: 20160329065702) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -258,7 +258,15 @@ ActiveRecord::Schema.define(version: 20160318021812) do
     t.decimal  "current_stock",      precision: 10, scale: 2
     t.boolean  "abandom",                                     default: false, null: false
     t.jsonb    "properties_setting",                          default: {}
+    t.jsonb    "delivery_fee",                                default: {}
   end
+
+  add_index "items", ["brand_id"], name: "index_items_on_brand_id", using: :btree
+  add_index "items", ["category_id"], name: "index_items_on_category_id", using: :btree
+  add_index "items", ["on_sale"], name: "index_items_on_on_sale", using: :btree
+  add_index "items", ["shop_category_id"], name: "index_items_on_shop_category_id", using: :btree
+  add_index "items", ["shop_id"], name: "index_items_on_shop_id", using: :btree
+  add_index "items", ["sid"], name: "index_items_on_sid", using: :btree
 
   create_table "jobs", force: :cascade do |t|
     t.string   "status"
@@ -375,10 +383,10 @@ ActiveRecord::Schema.define(version: 20160318021812) do
     t.boolean  "paid",                                       default: false
     t.string   "wx_prepay_id"
     t.string   "wx_noncestr"
-    t.boolean  "evaluated",                                  default: false
     t.string   "wx_transaction_id"
     t.decimal  "paid_total",        precision: 10, scale: 2
     t.string   "note"
+    t.string   "receive_token"
   end
 
   add_index "orders", ["buyer_id"], name: "index_orders_on_buyer_id", using: :btree
@@ -463,16 +471,18 @@ ActiveRecord::Schema.define(version: 20160318021812) do
     t.integer  "industry_id"
     t.text     "description"
     t.string   "provider"
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.datetime "created_at",                                                  null: false
+    t.datetime "updated_at",                                                  null: false
     t.string   "logo"
-    t.jsonb    "settings",    default: {}
+    t.jsonb    "settings",                                      default: {}
     t.string   "address"
-    t.integer  "shop_type",   default: 0
+    t.integer  "shop_type",                                     default: 0
     t.float    "lat"
     t.float    "lon"
     t.integer  "location_id"
     t.string   "region_id"
+    t.decimal  "default_delivery_fee", precision: 10, scale: 2, default: 0.0
+    t.jsonb    "item_delivery_fee",                             default: {}
   end
 
   create_table "statuses", force: :cascade do |t|

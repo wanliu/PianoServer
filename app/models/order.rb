@@ -12,6 +12,7 @@ class Order < ActiveRecord::Base
   accepts_nested_attributes_for :items
 
   has_many :evaluations
+  accepts_nested_attributes_for :evaluations
 
   attr_accessor :cart_item_ids
   attr_accessor :address_id, :request_ip
@@ -30,7 +31,7 @@ class Order < ActiveRecord::Base
   validate :items_should_exist, on: :create
 
   before_save :set_modified, if: :total_changed?
-  before_create :caculate_total
+  before_create :caculate_total, :generate_receive_token
 
   after_commit :send_notify_to_seller, on: :create
 
@@ -63,10 +64,31 @@ class Order < ActiveRecord::Base
     self.receiver_phone = location.contact_phone
   end
 
+  def receive_token
+    return unless persisted?
+    if super.blank?
+      generate_receive_token
+      save
+    end
+
+    # self.reload
+    super
+  end
+
   def save_with_items(operator)
-    self.transaction do 
+    delivry_region_id = Location.find(address_id).region_id
+
+    self.transaction do
       CartItem.destroy(cart_item_ids) if cart_item_ids.present?
       begin
+        self.express_fee = 0
+
+        items.each do |order_item|
+          if order_item.orderable_type == "Item"
+            self.express_fee += order_item.quantity * Item.find(order_item.orderable_id).delivery_fee_to(delivry_region_id)
+          end
+        end
+
         save!
 
         items.each do |item|
@@ -112,14 +134,58 @@ class Order < ActiveRecord::Base
     pmo_grab_id.present?
   end
 
-  def wait_for_yiyuan_evaluate?
+  def evaluatable?
+    finish?
+  end
+
+  def wait_for_evaluate?
     previous_changes["status"].present? &&
-    previous_changes["status"].last == "finish" &&
-    pmo_grab_id.present? && !evaluated?
+    previous_changes["status"].last == "finish"
+  end
+
+  def wait_for_yiyuan_evaluate?
+    wait_for_evaluate? && pmo_grab_id.present?
   end
 
   def yiyuan_fullfilled?
     delivery_address.present?
+  end
+
+  def evaluations_list
+    evaluations(true)
+
+    items.reduce({}) do |result, item|
+      evaluation = evaluations.find do |evan|
+        evan.evaluationable_type == item.orderable_type &&
+        evan.evaluationable_id == item.orderable_id
+      end
+
+      if evaluation.present?
+        result[item.id.to_s] = evaluation
+      end
+
+      result
+    end
+  end
+
+  def evaluations_list_with_build
+    # evans = evaluations.to_a
+    items.reduce({}) do |result, item|
+      evaluation = evaluations.find do |evan|
+        evan.evaluationable_type == item.orderable_type &&
+        evan.evaluationable_id == item.orderable_id
+      end
+
+      result[item.id.to_s] = if evaluation.present?
+        evaluation
+      else
+        evaluations.build(
+          evaluationable_id: item.orderable_id,
+          evaluationable_type: item.orderable_type)
+      end
+
+      result
+    end
   end
 
   def get_pmo_express_fee
@@ -213,5 +279,16 @@ class Order < ActiveRecord::Base
     order_url = Rails.application.routes.url_helpers.shop_admin_order_path(supplier.name, self)
     # NotificationSender.delay.send_sms({mobile: seller_mobile, order_id: id, order_url: order_url, seller_id: seller_id})
     NotificationSender.delay.notify({mobile: seller_mobile, order_id: id, order_url: order_url, seller_id: seller_id})
+  end
+
+  def generate_receive_token
+    token = nil
+
+    loop do
+      token = Devise.friendly_token
+      break token unless Order.where(receive_token: token).first
+    end
+
+    self.receive_token = token
   end
 end

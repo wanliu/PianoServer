@@ -38,6 +38,7 @@
 //= require _common/qrcode
 //= require _common/side_menu
 //= require _common/side_menu_manager
+//= require _common/delivery_area
 //= require bootsy
 //= require lib/tablesaw
 //= require jquery-ui/core

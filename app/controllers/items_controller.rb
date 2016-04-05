@@ -24,7 +24,7 @@ class ItemsController < ApplicationController
       .per(params[:per])
       .records
 
-    render json: { items: @items.as_json(methods: [:shop_name]), page: @items.current_page, total_page: @items.total_pages }
+    render json: { items: @items.as_json(methods: [:shop_name, :shop_realname]), page: @items.current_page, total_page: @items.total_pages }
   end
 
   def show
