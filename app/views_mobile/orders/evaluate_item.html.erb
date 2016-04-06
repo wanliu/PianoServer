@@ -1,9 +1,8 @@
-<div class='order-evaluation-mobile container'>
+<div class='order-evaluation-mobile container no-padding'>
   <div class='header'>
     评价
   </div>
   <div class='wrapper'>
-    <%= form_for @evaluation, url: evaluate_items_create_order_path(@order, @item) do |f| %>
       <div class='item-evaluation'>
         <div class='evaluationable'>
           <div class='row info'>
@@ -14,69 +13,126 @@
               <div class='item-name'>
                 <%= @item.orderable.title %>
               </div>
-              <div class='buy-time'>
-                购买时间：<%= @order.created_at.strftime("%Y年%m月%d日") %>
+              <div class='price pull-left'>
+                <%= number_to_currency @item.price %>
               </div>
               <div style='clear: both'></div>
             </div>
           </div>
         </div>
-        <div class='evaluation' data-item-id='<%= @item.id %>'>
-          <div class='stars'>
-            <div>
-              商品评分
+        <% if @evaluation.persisted? %>
+          <div class='evaluation'>
+            <div class='stars'>
+              <div>
+                商品评分
+              </div>
+              <div>
+                <% @evaluation.good.to_i.times do %>
+                  <span class="star evaluated glyphicon glyphicon-star full"></span>
+                <% end %>
+                <% (5 - @evaluation.good.to_i).times do %>
+                  <span class="star evaluated glyphicon glyphicon-star empty"></span>
+                <% end %>
+              </div>
             </div>
-            <div>
-              <%= f.hidden_field :good %>
-              <% (1..5).each do |i| %>
-                <% class_name = @evaluation.good.to_i >= i ? "full" : "empty" %>
-                <span data-id='<%= i %>' data-input-id='evaluation_good' class="star glyphicon glyphicon-star <%= class_name %>"></span>
-              <% end %>
+            <div class='stars'>
+              <div>
+                物流评分
+              </div>
+              <div>
+                <% @evaluation.delivery.to_i.times do %>
+                  <span class="star evaluated glyphicon glyphicon-star full"></span>
+                <% end %>
+                <% (5 - @evaluation.delivery.to_i).times do %>
+                  <span class="star evaluated glyphicon glyphicon-star empty"></span>
+                <% end %>
+              </div>
+            </div>
+            <div class='stars'>
+              <div>
+                客服评分
+              </div>
+              <div>
+                <% @evaluation.customer_service.to_i.times do %>
+                  <span class="star evaluated glyphicon glyphicon-star full"></span>
+                <% end %>
+                <% (5 - @evaluation.customer_service.to_i).times do %>
+                  <span class="star evaluated glyphicon glyphicon-star empty"></span>
+                <% end %>
+              </div>
+            </div>
+            <div class='desc'>
+              <div>
+                心得
+              </div>
+              <div>
+                <%= @evaluation.desc.present? ? @evaluation.desc : "暂无描述" %>
+              </div>
             </div>
           </div>
-          <div class='stars'>
-            <div>
-              物流评分
+        <% else %>
+          <%= form_for @evaluation, url: evaluate_items_create_order_path(@order, @item) do |f| %>
+            <div class='evaluation' data-item-id='<%= @item.id %>'>
+              <div class='stars'>
+                <div>
+                  商品评分
+                </div>
+                <div>
+                  <%= f.hidden_field :good %>
+                  <% (1..5).each do |i| %>
+                    <% class_name = @evaluation.good.to_i >= i ? "full" : "empty" %>
+                    <span data-id='<%= i %>' data-input-id='evaluation_good' class="star glyphicon glyphicon-star <%= class_name %>"></span>
+                  <% end %>
+                </div>
+              </div>
+              <div class='stars'>
+                <div>
+                  物流评分
+                </div>
+                <div>
+                  <%= f.hidden_field :delivery %>
+                  <% (1..5).each do |i| %>
+                    <% class_name = @evaluation.delivery.to_i >= i ? "full" : "empty" %>
+                    <span data-id='<%= i %>' data-input-id='evaluation_delivery' class="star glyphicon glyphicon-star <%= class_name %>"></span>
+                  <% end %>
+                </div>
+              </div>
+              <div class='stars'>
+                <div>
+                  客服评分
+                </div>
+                <div>
+                  <%= f.hidden_field :customer_service, data: {field: ''} %>
+                  <% (1..5).each do |i| %>
+                    <% class_name = @evaluation.customer_service.to_i >= i ? "full" : "empty" %>
+                    <span data-id='<%= i %>' data-input-id='evaluation_customer_service' class="star glyphicon glyphicon-star <%= class_name %>"></span>
+                  <% end %>
+                </div>
+              </div>
+              <div class='desc'>
+                <div>
+                  购物心得
+                </div>
+                <div>
+                  <%= f.text_area :desc %>
+                </div>
+              </div>
+              <nav class="navbar navbar-default navbar-fixed-bottom submit">
+                <%= f.submit "提交评价" %>
+              </nav>
             </div>
-            <div>
-              <%= f.hidden_field :delivery %>
-              <% (1..5).each do |i| %>
-                <% class_name = @evaluation.delivery.to_i >= i ? "full" : "empty" %>
-                <span data-id='<%= i %>' data-input-id='evaluation_delivery' class="star glyphicon glyphicon-star <%= class_name %>"></span>
-              <% end %>
-            </div>
-          </div>
-          <div class='stars'>
-            <div>
-              客服评分
-            </div>
-            <div>
-              <%= f.hidden_field :customer_service, data: {field: ''} %>
-              <% (1..5).each do |i| %>
-                <% class_name = @evaluation.customer_service.to_i >= i ? "full" : "empty" %>
-                <span data-id='<%= i %>' data-input-id='evaluation_customer_service' class="star glyphicon glyphicon-star <%= class_name %>"></span>
-              <% end %>
-            </div>
-          </div>
-          <div class='desc'>
-            <div>
-              心得
-            </div>
-            <div>
-              <%= f.text_area :desc %>
-            </div>
-          </div>
-        </div>
+          <% end %>
+        <% end %>
       </div>
-      <%= f.submit "提交评价", class: 'btn btn-default' %>
-      <%= link_to "跳过，查看订单", order_path(@order), class: 'btn btn-default pull-right' %>
-    <% end %>
+    </div>
   </div>
 </div>
 
 <script type="text/javascript">
   $(function() {
     $('.stars .star').click(function(event) {
+      if ($(this).is('.evaluated')) return;
+
       var id = $(this).data('id');
       var inputId = $(this).data('inputId');
 

@@ -1,6 +1,6 @@
 <div class='order-evaluation-mobile container no-padding'>
   <div class='header'>
-    评价
+    评 价
   </div>
   <div class='wrapper'>
     <% @order.items.each_with_index do |item, index| %>
@@ -17,77 +17,29 @@
               <div class='item-name'>
                 <%= item.orderable.title %>
               </div>
-              <div class='buy-time'>
-                购买时间：<%= @order.created_at.strftime("%Y年%m月%d日") %>
+              <div class='price pull-left'>
+                <%= number_to_currency item.price %>
               </div>
               <div style='clear: both'></div>
             </div>
           </div>
           <div class='evaluate'>
-            <% if evaluated %>
-              已评价
-              <button type="button" class='btn btn-default toggle-evaluation' data-item-id='<%= item.id %>'>查看</button>
-            <% else %>
-              <%= link_to '点击评价', evaluate_items_order_path(@order, item), class: 'btn btn-default' %>
-            <% end %>
+            <div class='buy-time pull-left'>
+              购买时间：<%= @order.created_at.strftime("%Y年%m月%d日") %>
+            </div>
+            <% text = evaluated ? "我的评价" : "我说几句" %>
+            <%= link_to text, evaluate_items_order_path(@order, item), class: "btn btn-default pull-right #{evaluated ? '' : 'go-evaluate'}" %>
+            <div style='clear: both;'></div>
           </div>
         </div>
-        <% if evaluated %>
-          <div class='evaluation' style='display: none;'>
-            <div class='stars'>
-              <div>
-                商品评分
-              </div>
-              <div>
-                <% evaluation.good.to_i.times do %>
-                  <span class="star glyphicon glyphicon-star full"></span>
-                <% end %>
-                <% (5 - evaluation.good.to_i).times do %>
-                  <span class="star glyphicon glyphicon-star empty"></span>
-                <% end %>
-              </div>
-            </div>
-            <div class='stars'>
-              <div>
-                物流评分
-              </div>
-              <div>
-                <% evaluation.delivery.to_i.times do %>
-                  <span class="star glyphicon glyphicon-star full"></span>
-                <% end %>
-                <% (5 - evaluation.delivery.to_i).times do %>
-                  <span class="star glyphicon glyphicon-star empty"></span>
-                <% end %>
-              </div>
-            </div>
-            <div class='stars'>
-              <div>
-                客服评分
-              </div>
-              <div>
-                <% evaluation.customer_service.to_i.times do %>
-                  <span class="star glyphicon glyphicon-star full"></span>
-                <% end %>
-                <% (5 - evaluation.customer_service.to_i).times do %>
-                  <span class="star glyphicon glyphicon-star empty"></span>
-                <% end %>
-              </div>
-            </div>
-            <div class='desc'>
-              <div>
-                心得
-              </div>
-              <div>
-                <%= evaluation.desc.present? ? evaluation.desc : "暂无描述" %>
-              </div>
-            </div>
-          </div>
-        <% end %>
       </div>
     <% end %>
-    <%= link_to "跳过，查看订单", order_path(@order), class: 'btn btn-default pull-right' %>
   </div>
 </div>
+
+<nav class="navbar navbar-default navbar-fixed-bottom skip-revaluation">
+  <%= link_to "跳过查看订单", order_path(@order) %>
+</nav>
 
 <script type="text/javascript">
   $(function (e) {
