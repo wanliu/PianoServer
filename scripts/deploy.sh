@@ -16,13 +16,18 @@ export DATABASE_HOST=`aws_label $INSTANCE_ID "PostgresHost"`
 export DATABASE_PORT=5432
 export RAILS_ENV=production
 
-export ELASTICSEARCH_URL =`aws_label $INSTANCE_ID "ElasticsearchUrl"`
+export ELASTICSEARCH_URL=`aws_label $INSTANCE_ID "ElasticsearchUrl"`
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 echo "Database Host: $DATABASE_HOST"
 
 rbenv local 2.2.4
+
+if [ ! -f config/settings.yml ]; then
+  cp config/settings.yml.example
+  echo "File not found!"
+fi
 
 sed -i -e "
   /^elasticsearch:$/ {
