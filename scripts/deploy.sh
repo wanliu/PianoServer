@@ -22,7 +22,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 echo "Database Host: $DATABASE_HOST"
 
-rbenv local 2.2.4
+# rbenv local 2.2.4
 
 # if [ ! -f config/settings.yml ]; then
 #   cp config/settings.yml.example
