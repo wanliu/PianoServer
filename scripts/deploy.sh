@@ -24,10 +24,10 @@ echo "Database Host: $DATABASE_HOST"
 
 rbenv local 2.2.4
 
-if [ ! -f config/settings.yml ]; then
-  cp config/settings.yml.example
-  echo "File not found!"
-fi
+# if [ ! -f config/settings.yml ]; then
+#   cp config/settings.yml.example
+#   echo "File not found!"
+# fi
 
 sed -i -e "
   /^elasticsearch:$/ {
