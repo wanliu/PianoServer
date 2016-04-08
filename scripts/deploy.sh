@@ -47,4 +47,6 @@ bundle install
 $PREFIX rake db:migrate && rake assets:clean
 $PREFIX rake assets:precompile
 
+mkdir -p tmp/pids
+
 $DIR/init.sh upgrade
