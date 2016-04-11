@@ -41,6 +41,8 @@ sed -i -e "
   }
 " config/settings.yml
 
+aws s3 cp s3://piano-server/config/settings.local.yml config/settings.local.yml
+
 PREFIX="bundle exec"
 bundle install
 
