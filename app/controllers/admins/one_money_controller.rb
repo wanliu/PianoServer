@@ -115,6 +115,11 @@ class Admins::OneMoneyController < Admins::BaseController
     @item.clear_overwrite(params[:name])
   end
 
+  def clean_expire_grabs
+    @item = PmoItem[params[:item_id].to_i]
+    @deletes = @item.grabs.select {|grb| grb.expired? }.map { |grb| grb.delete }
+  end
+
   def set_item_completes
     @item = PmoItem[params[:item_id].to_i]
     new_completes = parmas[:pmo_item][:completes].to_i

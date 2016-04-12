@@ -138,6 +138,10 @@ class PmoGrab < Ohm::Model
     # raise "pmo grab timeout"
   end
 
+  def expired?
+    timeout_at <= self.now && status == 'pending'
+  end
+
   alias_method_chain :callback, :fallback
 
   private

@@ -61,13 +61,13 @@ module RedisSubscribeManager
 
         meth = lambda do |model_name, id, field|
           if status == "expired"
-            semaphore.synchronize do
+            # semaphore.synchronize do
               instantialize(model_name, id) do |instance|
                 try_callback(instance, field) do |model|
                   Rails.logger.debug "Expire #{model_name}.#{id} events: #{field}"
                 end
               end
-            end
+            # end
           end
         end
 

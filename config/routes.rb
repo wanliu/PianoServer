@@ -180,6 +180,7 @@ Rails.application.routes.draw do
         put "overwrite_item/:item_id", action: :overwrite_item, as: :overwrite_item
         delete "clear_overwrite_item/:item_id", action: :clear_overwrite_item, as: :clear_overwrite_item
         delete "remove_item/:item_id", action: :remove_item, as: :remove_item
+        delete "clean_expire_grabs/:item_id", action: :clean_expire_grabs, as: :clean_expire_grabs
         post "upload_image/:item_id", action: :upload_image, as: :upload_image
         get :signups
         get "details/:item_id", action: :details, as: :details
