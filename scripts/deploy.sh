@@ -44,6 +44,8 @@ sed -i -e "
 aws s3 cp s3://piano-server/config/settings.local.yml config/settings.local.yml
 
 PREFIX="bundle exec"
+bin/spring stop
+
 bundle install
 
 $PREFIX rake db:migrate && rake assets:clean
