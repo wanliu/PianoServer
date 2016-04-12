@@ -76,8 +76,8 @@ class Admins::OneMoneyController < Admins::BaseController
     @item = PmoItem.from(item)
     @item.one_money = @one_money
     @item.save
-    @item.set_expire_time(:start_at, @item.start_at)
-    @item.set_expire_time(:end_at, @item.end_at)
+    # @item.set_expire_time(:start_at, @item.start_at)
+    # @item.set_expire_time(:end_at, @item.end_at)
   end
 
   def remove_item
@@ -131,11 +131,23 @@ class Admins::OneMoneyController < Admins::BaseController
     @item.save
   end
 
+  def state_item_all
+    OneMoney[parmas[:id].to_i].items.each do |pmo_item|
+      begin
+        @item.set_status params[:status] if params[:status]
+        @item.save
+
+      rescue Exception => e
+        puts e
+      end
+    end
+  end
+
   def fix_clock
     @item = PmoItem[params[:item_id].to_i]
 
-    @item.set_expire_time(:start_at, @item.start_at)
-    @item.set_expire_time(:end_at, @item.end_at)
+    # @item.set_expire_time(:start_at, @item.start_at)
+    # @item.set_expire_time(:end_at, @item.end_at)
     @item.save
   end
 
