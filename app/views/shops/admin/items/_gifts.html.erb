@@ -22,7 +22,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">添加礼品</h4>
+        <h4 class="modal-title">添加赠品</h4>
       </div>
       <div class="modal-body">
         赠品
@@ -45,17 +45,45 @@
   </div>
 </div>
 
+<div class="modal fade" tabindex="-1" role="dialog" id="modify-gift">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">编辑赠品</h4>
+      </div>
+      <div class="modal-body">
+        赠品
+        <div>
+          <img src='' style='max-height: 50px;' class='avatar'>
+          <span class='item-title'></span>
+        </div>
+        <div>
+          赠送数量<input type='number' step='1' class='quantity'>
+        </div>
+        <div>
+          赠送总数<input type='number' step='1' class='total'>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default cancel" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary save-gift">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script type="text/template" id='template-gift'>
-  <tr>
+  <tr data-gift-id={{ id }}>
     <td>
       <img src="{{cover_url}}" style='max-height: 50px;'>
-      {{ title }}
+      <span class='title'>{{ title }}</span>
     </td>
     <td>{{ quantity }}</td>
     <td>{{ total }}</td>
     <td>
-      <button type='button' class='btn btn-default' data-gift-id={{ id }}>修改</button>
-      <%= button_to "删除", shop_admin_item_gift_path(item.shop.name, item, 1008989), method: :delete, data: { confirm: "确定删除该礼品么?" }, class: 'btn btn-danger' %>
+      <button type='button' class='btn btn-default modify-gift' data-gift-id={{ id }}>修改</button>
+      <%= button_to "删除", shop_admin_item_gift_path(item.shop.name, item, 88888888), method: :delete, data: { confirm: "确定删除该赠品么?" }, class: 'btn btn-danger' %>
     </td>
   </tr>
 </script>
@@ -72,19 +100,21 @@
   var gifts = <%= item.gifts.order(id: :desc).to_json(methods: [:title, :cover_url]).html_safe %>;
   var giftSearchUrl = "<%= search_gift_shop_admin_item_path(item.shop.name, item) %>";
   var giftCreateUrl = "<%= shop_admin_item_gifts_path(item.shop.name, item) %>";
-  var itemShowUrl = "<%= shop_item_path(item.shop.name, 1008989) %>";
+  var giftUpdateUrl = "<%= shop_admin_item_gift_path(item.shop.name, item, 88888888) %>"
+  var itemShowUrl = "<%= shop_item_path(item.shop.name, 88888888) %>";
   var giftTemplate = _.template($('#template-gift').html());
   var itemTemplate = _.template($('#template-item').html());
   var $dropdown = $('.shop-items-dropdown');
   var $modalCreater = $('#create-gift');
-  var giftItemCreate;
+  var $modalModifier = $('#modify-gift');
+  var giftItemCreate, gitfItemModify;
 
   $dropdown.on('click', '.shop-item', function (event) {
     var itemId = $(this).data('itemId');
-    var url = itemShowUrl.replace('1008989', itemId);
+    var url = itemShowUrl.replace('88888888', itemId);
     $.getJSON(url)
       .done(function (data, status, xhr) {
-        setModalForItem(data);
+        setModalForCreate(data);
       })
   });
 
@@ -101,16 +131,50 @@
         total: total
       }
     }).done(function (data, status, xhr) {
+      gift.unshift(data);
       $modalCreater.modal('hide');
 
-      var html = giftTemplate(data).replace('1008989', data.id);
+      var html = giftTemplate(data).replace('88888888', data.id);
       $('table.gifts tbody').prepend(html);
     })
   });
 
+  $modalModifier.on('click', 'button.save-gift', function(event) {
+    var quantity = $modalModifier.find('input.quantity').val();
+    var total = $modalModifier.find('input.total').val();
+    var updateUrl = giftUpdateUrl.replace('88888888', gitfItemModify.id);
+
+    $.post(updateUrl, {
+      _method: 'PATCH',
+      gift: {
+        quantity: quantity,
+        total: total
+      }
+    }).done(function(data, status, xhr) {
+      gitfItemModify.quantity = data.quantity;
+      gitfItemModify.total = data.total;
+
+      var html = giftTemplate(data).replace('88888888', data.id);
+      $('table.gifts tbody').find('tr[data-gift-id=' + data.id + ']')
+        .replaceWith(html);
+
+      setModalForMofify();
+    })
+  });
+
+  $('table.gifts tbody')
+    .on('click', '.modify-gift', function (event) {
+      var giftId = $(this).data('giftId');
+      var gift = _.find(gifts, function(item) {
+        return item.id.toString() == giftId;
+      })
+
+      setModalForMofify(gift);
+  })
+
   $(function() {
     var html = _.reduce(gifts, function (str, gift) {
-      str += giftTemplate(gift).replace('1008989', gift.id);
+      str += giftTemplate(gift).replace('88888888', gift.id);
       return str;
     }, '');
     $('table.gifts tbody').html(html);
@@ -133,10 +197,10 @@
   });
 
   function clearModalCreater() {
-    setModalForItem();
+    setModalForCreate();
   }
 
-  function setModalForItem(data) {
+  function setModalForCreate(data) {
     giftItemCreate = data;
 
     if (data) {
@@ -147,6 +211,21 @@
     } else {
       $modalCreater.find('img.avatar').attr('src', '');
       $modalCreater.find('input').val('');
+    }
+  }
+
+  function setModalForMofify(data) {
+    gitfItemModify = data;
+
+    if (data) {
+      $modalModifier.find('img.avatar').attr('src', data.cover_url);
+      $modalModifier.find('input.quantity').val(data.quantity);
+      $modalModifier.find('input.total').val(data.total);
+      $modalModifier.modal('show');
+    } else {
+      $modalModifier.modal('hide');
+      $modalModifier.find('img.avatar').attr('src', '');
+      $modalModifier.find('input').val('');
     }
 
   }

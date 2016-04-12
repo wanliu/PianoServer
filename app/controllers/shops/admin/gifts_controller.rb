@@ -19,6 +19,11 @@ class Shops::Admin::GiftsController < Shops::Admin::BaseController
   end
 
   def update
+    if @gift.update(gift_params)
+      render json: @gift.as_json(methods: [:title, :cover_url])
+    else
+      render json: { error: @gift.errors }, status: :unprocessable_entity
+    end
   end
 
   def destroy

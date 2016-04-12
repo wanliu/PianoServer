@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160407092357) do
+ActiveRecord::Schema.define(version: 20160412074729) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -213,8 +213,9 @@ ActiveRecord::Schema.define(version: 20160407092357) do
     t.integer  "present_id"
     t.integer  "quantity"
     t.integer  "total"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.integer  "saled_counter", default: 0
   end
 
   add_index "gifts", ["item_id"], name: "index_gifts_on_item_id", using: :btree
@@ -372,6 +373,7 @@ ActiveRecord::Schema.define(version: 20160407092357) do
     t.jsonb    "properties",                              default: {}
     t.datetime "created_at",                                           null: false
     t.datetime "updated_at",                                           null: false
+    t.jsonb    "gifts",                                   default: {}
   end
 
   add_index "order_items", ["order_id"], name: "index_order_items_on_order_id", using: :btree
