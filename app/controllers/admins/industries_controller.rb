@@ -40,7 +40,7 @@ class Admins::IndustriesController < Admins::BaseController
 
   def categories
     render json: {
-      results: Category.search(params[:q].tr('/', '')).records.map {|category| {id: category.id, text: category.title }}
+      results: Category.search("*#{params[:q].tr('/', '')}").records.map {|category| {id: category.id, text: category.title }}
     }
   end
 
