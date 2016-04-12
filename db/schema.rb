@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160329065702) do
+ActiveRecord::Schema.define(version: 20160407092357) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -207,6 +207,18 @@ ActiveRecord::Schema.define(version: 20160329065702) do
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
   end
+
+  create_table "gifts", force: :cascade do |t|
+    t.integer  "item_id"
+    t.integer  "present_id"
+    t.integer  "quantity"
+    t.integer  "total"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "gifts", ["item_id"], name: "index_gifts_on_item_id", using: :btree
+  add_index "gifts", ["present_id"], name: "index_gifts_on_present_id", using: :btree
 
   create_table "industries", force: :cascade do |t|
     t.string   "name"
@@ -471,18 +483,17 @@ ActiveRecord::Schema.define(version: 20160329065702) do
     t.integer  "industry_id"
     t.text     "description"
     t.string   "provider"
-    t.datetime "created_at",                                                  null: false
-    t.datetime "updated_at",                                                  null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
     t.string   "logo"
-    t.jsonb    "settings",                                      default: {}
+    t.jsonb    "settings",          default: {}
     t.string   "address"
-    t.integer  "shop_type",                                     default: 0
+    t.integer  "shop_type",         default: 0
     t.float    "lat"
     t.float    "lon"
     t.integer  "location_id"
     t.string   "region_id"
-    t.decimal  "default_delivery_fee", precision: 10, scale: 2, default: 0.0
-    t.jsonb    "item_delivery_fee",                             default: {}
+    t.jsonb    "item_delivery_fee", default: {}
   end
 
   create_table "statuses", force: :cascade do |t|
@@ -623,6 +634,7 @@ ActiveRecord::Schema.define(version: 20160329065702) do
 
   add_index "variables", ["host_type", "host_id"], name: "index_variables_on_host_type_and_host_id", using: :btree
 
+  add_foreign_key "gifts", "items"
   add_foreign_key "order_items", "orders"
   add_foreign_key "orders", "shops", column: "supplier_id"
   add_foreign_key "orders", "users", column: "buyer_id"

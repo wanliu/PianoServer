@@ -1,0 +1,153 @@
+<div class="dropdown">
+  <input type='text' id='gift-search' class='dropdown-toggle' id="item-search-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+  <ul class="dropdown-menu shop-items-dropdown" aria-labelledby="item-search-dropdown">
+  </ul>
+</div>
+
+<table class='table gifts'>
+  <thead>
+    <tr>
+      <th width='40%'>赠品</th>
+      <th width='15%'>赠送数量</th>
+      <th width='15%'>赠送总数</th>
+      <th width='30%'></th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="create-gift">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">添加礼品</h4>
+      </div>
+      <div class="modal-body">
+        赠品
+        <div>
+          <img src='' style='max-height: 50px;' class='avatar'>
+          <span class='item-title'></span>
+        </div>
+        <div>
+          赠送数量<input type='number' step='1' class='quantity'>
+        </div>
+        <div>
+          赠送总数<input type='number' step='1' class='total'>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default cancel" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary create-gift">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/template" id='template-gift'>
+  <tr>
+    <td>
+      <img src="{{cover_url}}" style='max-height: 50px;'>
+      {{ title }}
+    </td>
+    <td>{{ quantity }}</td>
+    <td>{{ total }}</td>
+    <td>
+      <button type='button' class='btn btn-default' data-gift-id={{ id }}>修改</button>
+      <%= button_to "删除", shop_admin_item_gift_path(item.shop.name, item, 1008989), method: :delete, data: { confirm: "确定删除该礼品么?" }, class: 'btn btn-danger' %>
+    </td>
+  </tr>
+</script>
+
+<script type="text/template" id='template-item'>
+  <li class='shop-item' data-item-id="{{ id }}">
+    <img src="{{cover_url}}" style='width: 50px; height: 50px;'>
+    {{ title }}
+    {{ price }}
+  </li>
+</script>
+
+<script type="text/javascript">
+  var gifts = <%= item.gifts.order(id: :desc).to_json(methods: [:title, :cover_url]).html_safe %>;
+  var giftSearchUrl = "<%= search_gift_shop_admin_item_path(item.shop.name, item) %>";
+  var giftCreateUrl = "<%= shop_admin_item_gifts_path(item.shop.name, item) %>";
+  var itemShowUrl = "<%= shop_item_path(item.shop.name, 1008989) %>";
+  var giftTemplate = _.template($('#template-gift').html());
+  var itemTemplate = _.template($('#template-item').html());
+  var $dropdown = $('.shop-items-dropdown');
+  var $modalCreater = $('#create-gift');
+  var giftItemCreate;
+
+  $dropdown.on('click', '.shop-item', function (event) {
+    var itemId = $(this).data('itemId');
+    var url = itemShowUrl.replace('1008989', itemId);
+    $.getJSON(url)
+      .done(function (data, status, xhr) {
+        setModalForItem(data);
+      })
+  });
+
+  // $modalCreater.find('button.cancel').on('click', clearModalCreater);
+  $modalCreater.on('hidden.bs.modal', clearModalCreater);
+  $modalCreater.find('button.create-gift').on('click', function(event) {
+    var quantity = $modalCreater.find('input.quantity').val();
+    var total = $modalCreater.find('input.total').val();
+
+    $.post(giftCreateUrl, {
+      gift: {
+        present_id: giftItemCreate.id,
+        quantity: quantity,
+        total: total
+      }
+    }).done(function (data, status, xhr) {
+      $modalCreater.modal('hide');
+
+      var html = giftTemplate(data).replace('1008989', data.id);
+      $('table.gifts tbody').prepend(html);
+    })
+  });
+
+  $(function() {
+    var html = _.reduce(gifts, function (str, gift) {
+      str += giftTemplate(gift).replace('1008989', gift.id);
+      return str;
+    }, '');
+    $('table.gifts tbody').html(html);
+  });
+
+  $('#gift-search').keyup(function (event) {
+    if (!$(this).val()) return;
+
+    var query = $(this).val();
+
+    $.getJSON(giftSearchUrl, { q: query })
+      .done(function (data, status, xhr) {
+        $dropdown.html('');
+
+        _.each(data, function(item) {
+          var html = itemTemplate(item);
+          $dropdown.append(html);
+        })
+      })
+  });
+
+  function clearModalCreater() {
+    setModalForItem();
+  }
+
+  function setModalForItem(data) {
+    giftItemCreate = data;
+
+    if (data) {
+      if (data.images[0] && data.images[0].url)
+      $modalCreater.find('img.avatar').attr('src', data.images[0].url);
+
+      $modalCreater.modal('show');
+    } else {
+      $modalCreater.find('img.avatar').attr('src', '');
+      $modalCreater.find('input').val('');
+    }
+
+  }
+</script>

@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  # resources :gifts, except: [:new, :edit]
   resources :thumbs, except: [:new, :edit]
 
   resource :wechat, only: [:show, :create]
@@ -426,6 +427,8 @@ Rails.application.routes.draw do
       resources :items, key: :sid do
         resource :delivery_fee, objective: "item"
 
+        resources :gifts
+
         collection do
           # get "load_categories", to: "items#load_categories"
           get "/new/step1",  to: "items#new_step1"
@@ -440,6 +443,8 @@ Rails.application.routes.draw do
           post "/upload_image", to: "items#upload_image_file"
           put "/change_sale_state", to: "items#change_sale_state"
           put "/inventory_config", to: "items#inventory_config"
+          get :search_gift
+          # post :create_gift
         end
       end
 
