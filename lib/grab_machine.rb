@@ -200,8 +200,7 @@ class GrabMachine
   def condition_multiple?
     return true if @env[:skip_multiple]
 
-    multi_item = one_money.multi_item
-
+    multi_item = [one_money.multi_item, 1].max
     grabs = PmoGrab
       .find(user_id: current_user.id, one_money: one_money.id)
       .combine(pmo_item_id: one_money.items.ids)
