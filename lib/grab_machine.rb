@@ -97,7 +97,7 @@ class GrabMachine
       :condition_quantity?,
       :condition_price?,
       :condition_parent?,
-      :condition_winner?,
+      # :condition_winner?,
       :condition_multiple?,
       :condition_executies?,
       :condition_insufficient?

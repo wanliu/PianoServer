@@ -21,9 +21,13 @@ class OneMoney < Ohm::Model
   attribute :cover_url
   attribute :status
 
+  attribute :shares                      # 分享次数
+  attribute :share_seed                  # 分享种子数
+
   attribute :price, Type::Decimal
 
   collection :items, :PmoItem
+  collection :seeds, :PmoSeed
 
   set :signups, :PmoUser
   set :participants, :PmoUser
@@ -31,8 +35,8 @@ class OneMoney < Ohm::Model
 
   # list :grabs, :PmoGrab
 
-  expire :start_at, :expired_start_at
-  expire :end_at, :expired_end_at
+  # expire :start_at, :expired_start_at
+  # expire :end_at, :expired_end_at
 
   counter :hits
 
@@ -66,10 +70,10 @@ class OneMoney < Ohm::Model
         #   item.save
         # end
 
-        item.set_expire_time(:start_at, self.start_at.to_i)
-        Rails.logger.info "Set start_at Expire Time #{self.start_at}" if self.start_at && self.now < self.start_at
-        item.set_expire_time(:end_at, self.end_at.to_i)
-        Rails.logger.info "Set end_at Expire Time #{self.end_at}" if self.end_at && self.now < self.end_at
+        # item.set_expire_time(:start_at, self.start_at.to_i)
+        # Rails.logger.info "Set start_at Expire Time #{self.start_at}" if self.start_at && self.now < self.start_at
+        # item.set_expire_time(:end_at, self.end_at.to_i)
+        # Rails.logger.info "Set end_at Expire Time #{self.end_at}" if self.end_at && self.now < self.end_at
       end
     end
   end

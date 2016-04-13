@@ -1,5 +1,5 @@
 class PmoUser < Ohm::Model
-  ALIVE_TIMES = 180
+  ALIVE_TIMES = 1800
   # TEMP_USER_ALIVE_TIMES =
 
   include Ohm::Timestamps
