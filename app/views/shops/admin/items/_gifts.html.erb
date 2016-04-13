@@ -30,6 +30,8 @@
           <img src='' style='max-height: 50px;' class='avatar'>
           <span class='item-title'></span>
         </div>
+        <div class='properties-select'>
+        </div>
         <div>
           赠送数量<input type='number' step='1' class='quantity'>
         </div>
@@ -58,6 +60,8 @@
           <img src='' style='max-height: 50px;' class='avatar'>
           <span class='item-title'></span>
         </div>
+        <div class='properties-select'>
+        </div>
         <div>
           赠送数量<input type='number' step='1' class='quantity'>
         </div>
@@ -77,7 +81,7 @@
   <tr data-gift-id={{ id }}>
     <td>
       <img src="{{cover_url}}" style='max-height: 50px;'>
-      <span class='title'>{{ title }}</span>
+      <span class='title'>{{ title + " " + properties_title }}</span>
     </td>
     <td>{{ quantity }}</td>
     <td>{{ total }}</td>
@@ -97,136 +101,34 @@
 </script>
 
 <script type="text/javascript">
-  var gifts = <%= item.gifts.order(id: :desc).to_json(methods: [:title, :cover_url]).html_safe %>;
-  var giftSearchUrl = "<%= search_gift_shop_admin_item_path(item.shop.name, item) %>";
-  var giftCreateUrl = "<%= shop_admin_item_gifts_path(item.shop.name, item) %>";
-  var giftUpdateUrl = "<%= shop_admin_item_gift_path(item.shop.name, item, 88888888) %>"
-  var itemShowUrl = "<%= shop_item_path(item.shop.name, 88888888) %>";
-  var giftTemplate = _.template($('#template-gift').html());
-  var itemTemplate = _.template($('#template-item').html());
-  var $dropdown = $('.shop-items-dropdown');
-  var $modalCreater = $('#create-gift');
-  var $modalModifier = $('#modify-gift');
-  var giftItemCreate, gitfItemModify;
+  (function() {
+    var gifts = <%= item.gifts.order(id: :desc).to_json(methods: [:title, :cover_url, :properties_title]).html_safe %>;
 
-  $dropdown.on('click', '.shop-item', function (event) {
-    var itemId = $(this).data('itemId');
-    var url = itemShowUrl.replace('88888888', itemId);
-    $.getJSON(url)
-      .done(function (data, status, xhr) {
-        setModalForCreate(data);
-      })
-  });
+    var giftSearchUrl = "<%= search_gift_shop_admin_item_path(item.shop.name, item) %>";
 
-  // $modalCreater.find('button.cancel').on('click', clearModalCreater);
-  $modalCreater.on('hidden.bs.modal', clearModalCreater);
-  $modalCreater.find('button.create-gift').on('click', function(event) {
-    var quantity = $modalCreater.find('input.quantity').val();
-    var total = $modalCreater.find('input.total').val();
+    var giftCreateUrl = "<%= shop_admin_item_gifts_path(item.shop.name, item) %>";
 
-    $.post(giftCreateUrl, {
-      gift: {
-        present_id: giftItemCreate.id,
-        quantity: quantity,
-        total: total
-      }
-    }).done(function (data, status, xhr) {
-      gift.unshift(data);
-      $modalCreater.modal('hide');
+    var giftUpdateUrl = "<%= shop_admin_item_gift_path(item.shop.name, item, 88888888) %>";
 
-      var html = giftTemplate(data).replace('88888888', data.id);
-      $('table.gifts tbody').prepend(html);
-    })
-  });
+    var itemShowUrl = "<%= shop_item_path(item.shop.name, 88888888) %>";
 
-  $modalModifier.on('click', 'button.save-gift', function(event) {
-    var quantity = $modalModifier.find('input.quantity').val();
-    var total = $modalModifier.find('input.total').val();
-    var updateUrl = giftUpdateUrl.replace('88888888', gitfItemModify.id);
+    var giftTemplate = _.template($('#template-gift').html());
+    var itemTemplate = _.template($('#template-item').html());
+    var $dropdown = $('.shop-items-dropdown');
+    var $modalCreater = $('#create-gift');
+    var $modalModifier = $('#modify-gift');
 
-    $.post(updateUrl, {
-      _method: 'PATCH',
-      gift: {
-        quantity: quantity,
-        total: total
-      }
-    }).done(function(data, status, xhr) {
-      gitfItemModify.quantity = data.quantity;
-      gitfItemModify.total = data.total;
-
-      var html = giftTemplate(data).replace('88888888', data.id);
-      $('table.gifts tbody').find('tr[data-gift-id=' + data.id + ']')
-        .replaceWith(html);
-
-      setModalForMofify();
-    })
-  });
-
-  $('table.gifts tbody')
-    .on('click', '.modify-gift', function (event) {
-      var giftId = $(this).data('giftId');
-      var gift = _.find(gifts, function(item) {
-        return item.id.toString() == giftId;
-      })
-
-      setModalForMofify(gift);
-  })
-
-  $(function() {
-    var html = _.reduce(gifts, function (str, gift) {
-      str += giftTemplate(gift).replace('88888888', gift.id);
-      return str;
-    }, '');
-    $('table.gifts tbody').html(html);
-  });
-
-  $('#gift-search').keyup(function (event) {
-    if (!$(this).val()) return;
-
-    var query = $(this).val();
-
-    $.getJSON(giftSearchUrl, { q: query })
-      .done(function (data, status, xhr) {
-        $dropdown.html('');
-
-        _.each(data, function(item) {
-          var html = itemTemplate(item);
-          $dropdown.append(html);
-        })
-      })
-  });
-
-  function clearModalCreater() {
-    setModalForCreate();
-  }
-
-  function setModalForCreate(data) {
-    giftItemCreate = data;
-
-    if (data) {
-      if (data.images[0] && data.images[0].url)
-      $modalCreater.find('img.avatar').attr('src', data.images[0].url);
-
-      $modalCreater.modal('show');
-    } else {
-      $modalCreater.find('img.avatar').attr('src', '');
-      $modalCreater.find('input').val('');
-    }
-  }
-
-  function setModalForMofify(data) {
-    gitfItemModify = data;
-
-    if (data) {
-      $modalModifier.find('img.avatar').attr('src', data.cover_url);
-      $modalModifier.find('input.quantity').val(data.quantity);
-      $modalModifier.find('input.total').val(data.total);
-      $modalModifier.modal('show');
-    } else {
-      $modalModifier.modal('hide');
-      $modalModifier.find('img.avatar').attr('src', '');
-      $modalModifier.find('input').val('');
-    }
-
-  }
+    var giftCollection = new GiftCollection({
+      gifts: gifts,
+      giftSearchUrl: giftSearchUrl,
+      giftCreateUrl: giftCreateUrl,
+      giftUpdateUrl: giftUpdateUrl,
+      itemShowUrl: itemShowUrl,
+      giftTemplate: giftTemplate,
+      itemTemplate: itemTemplate,
+      $dropdown: $dropdown,
+      $modalCreater: $modalCreater,
+      $modalModifier: $modalModifier
+    });
+  })();
 </script>

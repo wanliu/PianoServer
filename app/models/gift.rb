@@ -6,13 +6,18 @@ class Gift < ActiveRecord::Base
 
   validates :item, presence: true
   validates :present, presence: true
-  validates :present, uniqueness: { scope: :item_id }
+  validates :present, uniqueness: { scope: [:item_id, :properties] }
 
   validate :item_and_present_shop
 
   delegate :title, to: :present, prefix: false
   delegate :avatar_url, to: :present, prefix: false
   delegate :cover_url, to: :present, prefix: false
+
+
+  def properties_title(props=properties)
+    item.properties_title(properties)
+  end
 
   private
 
