@@ -27,6 +27,7 @@ end
 RSpec.describe GrabController, :type => :controller do
 
   before :each do
+    PmoGrab.all.map &:delete
     # OneMoney.create({id: 1, name: "test", title: "test一元够"}) # merge(attributes))
     # PmoItem.create({id: 1, title: "测试商品", price: 1, ori_price: 99, shop_id: 1, shop_name: "测试商店"})
     # PmoUser.create(id: 1, username: '测试', title: '测试', user_id: 1)
@@ -91,7 +92,6 @@ RSpec.describe GrabController, :type => :controller do
     it "活动价格可以为 0 (商议)" do
       get :index, item: { total_amount: 10,  quantity: 1, price: 0 }
       expect(response.status).to eql(200)
-      # pp response.body
       # result = JSON.parse(response.body)
       # expect(result["status"]).to eql("quantity_zero")
     end
@@ -137,6 +137,7 @@ RSpec.describe GrabController, :type => :controller do
 
       it "用户已经赢得了奖励， 将返回 always 状态" do
         get :index, item: { total_amount: 10,  quantity: 1 }
+        pending("不再根据 winnner 判断用户是不是可以再抢")
 
         expect(response.status).to eql(400)
         result = JSON.parse(response.body)
