@@ -16,7 +16,7 @@ class Gift < ActiveRecord::Base
 
 
   def properties_title(props=properties)
-    item.properties_title(properties)
+    present.properties_title(props)
   end
 
   private

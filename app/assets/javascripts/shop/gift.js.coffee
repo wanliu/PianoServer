@@ -4,6 +4,7 @@ class @GiftCollection
 
     @gitfItemModify = null
     @giftItemCreate = null
+    @propertiesTotal = 0
 
     @fillInitialGifts()
     @bindEvents()
@@ -17,9 +18,13 @@ class @GiftCollection
 
   bindEvents: () ->
     @$dropdown.on 'click', '.shop-item', @selectItem
+
     @$modalCreater.on 'hidden.bs.modal', @clearModalCreater
+    @$modalCreater.on 'click', 'button.property',  @selectProperty
     @$modalCreater.find('button.create-gift').on 'click', @createGift
-    @$modalModifier.on 'click', 'button.save-gift', @saveGift 
+
+    @$modalModifier.on 'click', 'button.save-gift', @saveGift
+
     $('table.gifts tbody').on 'click', '.modify-gift', @modifyGift
     $('#gift-search').keyup @searchShopItem
 
@@ -30,6 +35,16 @@ class @GiftCollection
     $.getJSON(url)
       .done (data, status, xhr) =>
         @setModalForCreate(data)
+
+  selectProperty: (event) =>
+    target = event.target || event.srcElement
+    $properties = $(target).closest('.properties')
+    $properties.find('button').removeClass('active')
+    $(target).addClass('active')
+
+    if $properties.find('button.active').length == @propertiesTotal
+      @$modalCreater.find('input').removeAttr('disabled')
+
 
   setModalForCreate: (data) ->
     @giftItemCreate = data
@@ -124,13 +139,23 @@ class @GiftCollection
   renderItemStocks: (data) ->
     @$modalCreater.find('.properties-select').html('')
 
+    stocks_properties = _.filter data.properties_setting, (item) ->
+      "stock_map" == item.prop_type
+
+    @propertiesTotal = stocks_properties.length
+
     if _.keys(data.stocks).length > 1
-      _.each data.properties_setting, (prop) =>
-        return if prop.prop_type != "stock_map"
+      @$modalCreater.find('input').attr('disabled', 'disabled')
 
-        html = prop.title + ':' +
-          _.reduce(prop.data.map, (raw, key, value) ->
-            return raw + "<button type='button' class='btn btn-default'>" + value + "</button>"
-        , '')
+      _.each stocks_properties, (prop) =>
+        html = @propertyRowTemplate(prop);
+        $html = $(html)
 
-        @$modalCreater.find('.properties-select').append(html)
+        _.each prop.data.map, (key, value) =>
+          property_html = @propertyColumnTemplate({
+            key: key,
+            value: value})
+
+          $html.find('.properties').append(property_html)
+
+        @$modalCreater.find('.properties-select').append($html)

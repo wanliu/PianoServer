@@ -100,6 +100,19 @@
   </li>
 </script>
 
+<script type="text/template" id='template-property-row'>
+  <div class='property-row' data-property-key={{name}}>
+    <span class='title'>{{title}}: </span>
+    <span class='properties'></span>
+  </div>
+</script>
+
+<script type="text/template" id='template-property-column'>
+  <button data-property-value={{key}} class='btn btn-default property'>
+    {{ value }}
+  </button>
+</script>
+
 <script type="text/javascript">
   (function() {
     var gifts = <%= item.gifts.order(id: :desc).to_json(methods: [:title, :cover_url, :properties_title]).html_safe %>;
@@ -114,6 +127,8 @@
 
     var giftTemplate = _.template($('#template-gift').html());
     var itemTemplate = _.template($('#template-item').html());
+    var propertyRowTemplate = _.template($('#template-property-row').html());
+    var propertyColumnTemplate = _.template($('#template-property-column').html());
     var $dropdown = $('.shop-items-dropdown');
     var $modalCreater = $('#create-gift');
     var $modalModifier = $('#modify-gift');
@@ -128,7 +143,9 @@
       itemTemplate: itemTemplate,
       $dropdown: $dropdown,
       $modalCreater: $modalCreater,
-      $modalModifier: $modalModifier
+      $modalModifier: $modalModifier,
+      propertyRowTemplate: propertyRowTemplate,
+      propertyColumnTemplate: propertyColumnTemplate
     });
   })();
 </script>
