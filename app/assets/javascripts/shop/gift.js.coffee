@@ -45,7 +45,6 @@ class @GiftCollection
     if $properties.find('button.active').length == @propertiesTotal
       @$modalCreater.find('input').removeAttr('disabled')
 
-
   setModalForCreate: (data) ->
     @giftItemCreate = data
     @$modalCreater.find('.errors')
@@ -60,6 +59,8 @@ class @GiftCollection
       
       @$modalCreater.modal('show')
     else
+      @propertiesTotal = 0
+      @$modalCreater.find('properties').html('')
       @$modalCreater.find('img.avatar').attr('src', '')
       @$modalCreater.find('input').val('')
 
