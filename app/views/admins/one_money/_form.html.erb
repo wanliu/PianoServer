@@ -69,6 +69,7 @@
   <div class="form-group">
 
     <%= submit_tag '保存', class: 'btn btn-primary' %>
+    <%= button_to '发布', url: publish_admins_one_money_path(@one_money.id), class: 'btn btn-success btn-publish', remote: true %>
 
     <%= status_control_all @one_money unless @one_money.new? %>
   </div>
@@ -91,13 +92,25 @@
     }
   });
 
-  // $("#one_money_start_at #one_money_end_at").change(function() {
-  //   var start_at = moment($("#one_money_start_at").val());
-  //   var end_at = moment($("#one_money_end_at").val());
-  //
-  //   if (start_at > end_at) {
-  //
-  //   }
-  // })
+  $('.btn-publish').click(function(event) {
+    event.preventDefault();
+    var $target = $(event.currentTarget)
+    var url = $target.attr('url');
+
+    oldText = $target.val();
+    $target.addClass('disabled').val('正在发布....');
+
+    var reset = function() {
+      $target.removeClass('disabled').val(oldText);
+    };
+
+    $.ajax({url: url, method: 'put'}).then(function(json) {
+      reset();
+      if (confirm('打开活动页面?')) {
+        window.open(json.url);
+      }
+    }).fail(reset).always(reset);
+  })
+
 
 </script>

@@ -1,4 +1,6 @@
 class Admins::OneMoneyController < Admins::BaseController
+  include ActionController::Live
+
   before_action :set_one_money, except: [:index, :new, :create, :search]
 
   def index
@@ -28,6 +30,22 @@ class Admins::OneMoneyController < Admins::BaseController
   end
 
   def edit
+  end
+
+  def publish
+    # response.headers['Content-Type'] = 'text/event-stream'
+
+    start_at = @one_money.start_at
+    name = "%04d-%02d-%02d" % [start_at.year, start_at.month, start_at.day]
+    OneMoneyPublishJob.perform_now @one_money, name
+    render json: {
+      status: :success,
+      url: File.join(Settings.promotions.one_money.enter_url, name)
+    }
+  # rescue e
+  #   response.stream.write e.message
+  # ensure
+  #   response.stream.close
   end
 
   def upload_image
