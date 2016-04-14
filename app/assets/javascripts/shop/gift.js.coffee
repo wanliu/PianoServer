@@ -48,6 +48,9 @@ class @GiftCollection
 
   setModalForCreate: (data) ->
     @giftItemCreate = data
+    @$modalCreater.find('.errors')
+      .html('')
+      .hide()
 
     if data
       if data.images[0] && data.images[0].url
@@ -63,40 +66,71 @@ class @GiftCollection
   createGift: (event) =>
     quantity = @$modalCreater.find('input.quantity').val()
     total = @$modalCreater.find('input.total').val()
+    properties = @getGiftProperties()
 
-    $.post(@giftCreateUrl, {
+    request = $.post(@giftCreateUrl, {
       gift: {
         present_id: @giftItemCreate.id,
         quantity: quantity,
-        total: total
+        total: total,
+        properties: properties
       }
-    }).done (data, status, xhr) =>
-      @gifts.unshift(data)
-      @$modalCreater.modal('hide')
+    })
 
-      html = @giftTemplate(data).replace('88888888', data.id)
-      $('table.gifts tbody').prepend(html)
+    request.done @createdGiftCallback
+    request.fail @failCreateGiftCallback
+
+  createdGiftCallback: (data, status, xhr) =>
+    @gifts.unshift(data)
+    @$modalCreater.modal('hide')
+
+    html = @giftTemplate(data).replace('88888888', data.id)
+    $('table.gifts tbody').prepend(html)
+
+  failCreateGiftCallback: (data, status, xhr) =>
+    @$modalCreater.find('.errors')
+      .text(data.responseJSON.error)
+      .show()
+
+  getGiftProperties: () ->
+    selectedProps = @$modalCreater.find('.properties button.active')
+    _.reduce(selectedProps, (properties, btn) ->
+      key = $(btn).data('propertyKey')
+      value = $(btn).data('propertyValue')
+      properties[key] = value
+      properties
+    , {})
 
   saveGift: (event) =>
     quantity = @$modalModifier.find('input.quantity').val()
     total = @$modalModifier.find('input.total').val()
     updateUrl = @giftUpdateUrl.replace('88888888', @gitfItemModify.id)
 
-    $.post(updateUrl, {
+    request = $.post(updateUrl, {
       _method: 'PATCH',
       gift: {
         quantity: quantity,
         total: total
       }
-    }).done (data, status, xhr) =>
-      @gitfItemModify.quantity = data.quantity
-      @gitfItemModify.total = data.total
+    })
 
-      html = @giftTemplate(data).replace('88888888', data.id)
-      $('table.gifts tbody').find('tr[data-gift-id=' + data.id + ']')
-        .replaceWith(html)
+    request.done @updatedGiftCallback
+    request.fail @failUpdateGiftCallback
 
-      @setModalForMofify()
+  updatedGiftCallback: (data, status, xhr) =>
+    @gitfItemModify.quantity = data.quantity
+    @gitfItemModify.total = data.total
+
+    html = @giftTemplate(data).replace('88888888', data.id)
+    $('table.gifts tbody').find('tr[data-gift-id=' + data.id + ']')
+      .replaceWith(html)
+
+    @setModalForMofify()
+
+  failUpdateGiftCallback: (data, status, xhr) =>
+    @gitfItemModify.find('.errors')
+      .text(data.responseJSON.error)
+      .show()
 
   modifyGift: (event) =>
     target = event.target || event.srcElement
@@ -125,6 +159,9 @@ class @GiftCollection
 
   setModalForMofify: (data) ->
     @gitfItemModify = data
+    @$modalModifier.find('.errors')
+      .html('')
+      .hide()
 
     if data 
       @$modalModifier.find('img.avatar').attr('src', data.cover_url)
@@ -151,10 +188,11 @@ class @GiftCollection
         html = @propertyRowTemplate(prop);
         $html = $(html)
 
-        _.each prop.data.map, (key, value) =>
+        _.each prop.data.map, (value, title) =>
           property_html = @propertyColumnTemplate({
-            key: key,
-            value: value})
+            key: prop.name,
+            value: value,
+            title: title })
 
           $html.find('.properties').append(property_html)
 

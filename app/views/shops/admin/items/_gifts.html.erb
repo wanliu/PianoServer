@@ -25,6 +25,8 @@
         <h4 class="modal-title">添加赠品</h4>
       </div>
       <div class="modal-body">
+        <div class="alert alert-danger errors" role="alert" style='display: none;'>
+        </div>
         赠品
         <div>
           <img src='' style='max-height: 50px;' class='avatar'>
@@ -55,6 +57,8 @@
         <h4 class="modal-title">编辑赠品</h4>
       </div>
       <div class="modal-body">
+        <div class="alert alert-danger errors" role="alert" style='display: none;'>
+        </div>
         赠品
         <div>
           <img src='' style='max-height: 50px;' class='avatar'>
@@ -101,15 +105,15 @@
 </script>
 
 <script type="text/template" id='template-property-row'>
-  <div class='property-row' data-property-key={{name}}>
+  <div class='property-row' data-property-name={{name}}>
     <span class='title'>{{title}}: </span>
     <span class='properties'></span>
   </div>
 </script>
 
 <script type="text/template" id='template-property-column'>
-  <button data-property-value={{key}} class='btn btn-default property'>
-    {{ value }}
+  <button data-property-key={{key}} data-property-value={{value}} class='btn btn-default property'>
+    {{ title }}
   </button>
 </script>
 
