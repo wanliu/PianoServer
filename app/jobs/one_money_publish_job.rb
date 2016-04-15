@@ -25,7 +25,7 @@ class OneMoneyPublishJob < ActiveJob::Base
       key = $1.to_sym
       context[key]
     end
-    puts exec
+    Rails.logger.info exec
 
     `cd #{dir}; #{exec}`
   end
