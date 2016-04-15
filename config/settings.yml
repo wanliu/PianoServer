@@ -102,6 +102,8 @@ after_registers:
   after_sign_in: false
   after_sign_in_path: after_registers
 weixin:
+  app_id: wxeb6857cceb42541e
+  secret: d4624c36b6795d1d99dcf0547af5443d
   scope: snsapi_login
   after_sign_in: true
   after_sign_in_path: smart_fills

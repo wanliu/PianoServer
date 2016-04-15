@@ -1,10 +1,10 @@
 class OneMoneyPublishJob < ActiveJob::Base
   queue_as :default
 
-  def perform(one_money, target, options = { sign_url: Settings.app.website + '/authorize/weixin',
-                                             api_url: '/api/promotions/one_money',
-                                             qr_code: true,
-                                             winners_num: 50})
+  def perform(one_money, target, options = {sign_url: Settings.app.website + '/authorize/weixin',
+                                            api_url: '/api/promotions/one_money',
+                                            qr_code: true,
+                                            winners_num: 50})
     scripts = Settings.promotions.one_money.scripts.publish
 
     dir = scripts.dir
@@ -25,6 +25,7 @@ class OneMoneyPublishJob < ActiveJob::Base
       key = $1.to_sym
       context[key]
     end
+
     Rails.logger.info exec
 
     `cd #{dir}; #{exec}`
