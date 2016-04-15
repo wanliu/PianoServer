@@ -10,6 +10,7 @@ class OrderItem < ActiveRecord::Base
   validates :price, numericality: { greater_than: 0 }
 
   validate :orderable_saleable, on: :create
+  validate :gift_saleable, on: :create
 
   # before_save :set_title, on: :create
   before_save :set_properties
@@ -39,6 +40,10 @@ class OrderItem < ActiveRecord::Base
 
   def deduct_stocks!(operator)
     orderable.deduct_stocks!(operator, quantity: quantity, data: properties, source: self)
+    gifts.each do |gift_setting|
+      item = Item.find(gift_setting["item_id"])
+      item.deduct_stocks!(operator, quantity: gift_setting["quantity"], data: gift_setting["properties"], kind: :gift, source: self)
+    end
   end
 
   def avatar_url
@@ -65,6 +70,18 @@ class OrderItem < ActiveRecord::Base
         errors.add(:orderable_id, "已经下架")
       elsif !saleable
         errors.add(:orderable_id, "库存不足")
+      end
+    end
+  end
+
+  def gift_saleable
+    gifts.each do |gift_setting|
+      item_id = gift_setting["item_id"]
+      item = Item.find(item_id)
+      item.saleable?(gift_setting["quantity"].to_i, gift_setting["properties"]) do |on_sale, saleable, max|
+        if !saleable
+          errors.add(:gift, "库存不足或者设置变动，请刷新后再提交订单！")
+        end
       end
     end
   end

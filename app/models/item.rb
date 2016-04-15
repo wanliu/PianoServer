@@ -408,7 +408,8 @@ class Item < ActiveRecord::Base
   #   quantity: 1
   # }
   def deduct_stocks!(operator, options)
-    stock_changes.create!(data: options[:data], operator: operator, quantity: - options[:quantity], kind: :sale)
+    kind = options[:kind] || :sale
+    stock_changes.create!(data: options[:data], operator: operator, quantity: - options[:quantity], kind: kind)
   end
 
   def stocks

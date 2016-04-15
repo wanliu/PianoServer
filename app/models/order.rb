@@ -40,16 +40,38 @@ class Order < ActiveRecord::Base
   # create new order_items
   # delete relevant cart_items
   # inventory deducting
+  # ids: [
+  #   1,
+  #   {2: {gift_ids: [1, 2]}},
+  #   {3: {gift_ids: [3, 4]}},
+  #   4,
+  #   5
+  # ]
   def cart_item_ids=(ids)
-    @cart_item_ids = ids
+    @cart_item_ids = ids.map do |id_item|
+      if id_item.is_a? Hash
+        cart_item_id = id_item.keys[0]
+        item = CartItem.find_by(id: cart_item_id)
+        unless item.blank?
+          items.build(
+            price: item.price, 
+            quantity: item.quantity, 
+            title: item.title, 
+            orderable_type: item.cartable_type, 
+            orderable_id: item.cartable_id, 
+            gifts: item.gift_settings(id_item[cart_item_id], item.quantity),
+            properties: item.properties)
+        end
+      else
+        cart_item_id = id_item
+        item = CartItem.find_by(id: cart_item_id)
+        unless item.blank?
+          items.build(price: item.price, quantity: item.quantity, title: item.title, 
+            orderable_type: item.cartable_type, orderable_id: item.cartable_id, properties: item.properties)
+        end
+      end
 
-    ids.each do |cart_item_id|
-      item = CartItem.find_by(id: cart_item_id)
-
-      next if item.blank?
-
-      items.build(price: item.price, quantity: item.quantity, title: item.title, 
-        orderable_type: item.cartable_type, orderable_id: item.cartable_id, properties: item.properties)
+      cart_item_id
     end
   end
 

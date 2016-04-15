@@ -12,6 +12,7 @@ zh-CN:
         sub_total: "商品项小计"
         orderable_id: "商品"
         orderable_type: "商品"
+        gift: 赠品
       evaluations: 
         good: 商品评分
         delivery: 物流评分
