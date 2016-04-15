@@ -41,6 +41,33 @@ export DATABASE_HOST=`aws ec2 describe-tags --filters "Name=key,Values=PostgresH
 export DATABASE_PORT=5432
 export RAILS_ENV=production
 
+#!/bin/sh
+#
+# init.d script for single or multiple unicorn installations. Expects at least one .conf
+# file in /etc/unicorn
+#
+# Modified by jay@gooby.org http://github.com/jaygooby
+# based on http://gist.github.com/308216 by http://github.com/mguterl
+#
+## A sample /etc/unicorn/my_app.conf
+##
+## RAILS_ENV=production
+## RAILS_ROOT=/var/apps/www/my_app/current
+#
+# This configures a unicorn master for your app at /var/apps/www/my_app/current running in
+# production mode. It will read config/unicorn.rb for further set up.
+#
+# You should ensure different ports or sockets are set in each config/unicorn.rb if
+# you are running more than one master concurrently.
+#
+# If you call this script without any config parameters, it will attempt to run the
+# init command for all your unicorn configurations listed in /etc/unicorn/*.conf
+#
+# /etc/init.d/unicorn start # starts all unicorns
+#
+# If you specify a particular config, it will only operate on that one
+#
+# /etc/init.d/unicorn start /etc/unicorn/my_app.conf
 
 set -e
 
@@ -53,131 +80,71 @@ oldsig () {
 }
 
 cmd () {
+
   case $1 in
     start)
-      sig 0 && echo >&2 "Already running" && return
+      sig 0 && echo >&2 "Already running" && exit 0
       echo "Starting"
       $CMD
       ;;
     stop)
-      sig QUIT && echo "Stopping" && return
+      sig QUIT && echo "Stopping" && exit 0
       echo >&2 "Not running"
       ;;
     force-stop)
-      sig TERM && echo "Forcing a stop" && return
+      sig TERM && echo "Forcing a stop" && exit 0
       echo >&2 "Not running"
       ;;
     restart|reload)
-      sig USR2 && sleep $RESTART_SLEEP && oldsig QUIT && echo "Killing old master" `cat $OLD_PID` && return
+      sig USR2 && sleep 5 && oldsig QUIT && echo "Killing old master" `cat $OLD_PID` && exit 0
       echo >&2 "Couldn't reload, starting '$CMD' instead"
       $CMD
       ;;
     upgrade)
-      sig USR2 && echo Upgraded && return
+      sig USR2 && echo Upgraded && exit 0
       echo >&2 "Couldn't upgrade, starting '$CMD' instead"
       $CMD
       ;;
     rotate)
-      sig USR1 && echo rotated logs OK && return
-      echo >&2 "Couldn't rotate logs" && return
-      ;;
-    status)
-      sig 0 && echo >&2 "Already running" && return
-      echo >&2 "Not running" && return
-      ;;
+            sig USR1 && echo rotated logs OK && exit 0
+            echo >&2 "Couldn't rotate logs" && exit 1
+            ;;
     *)
-      echo >&2 "Usage: $0 <start|stop|restart|reload|status|upgrade|rotate|force-stop>"
-      return
+      echo >&2 "Usage: $0 <start|stop|restart|upgrade|rotate|force-stop>"
+      exit 1
       ;;
     esac
 }
 
 setup () {
+
   echo -n "$RAILS_ROOT: "
   cd $RAILS_ROOT || exit 1
-
-  if [ -z "$RAILS_ENV" ]; then
-    RAILS_ENV=development
-  fi
-
-  if [ -z "$PID" ]; then
-    PID=$RAILS_ROOT/tmp/pids/unicorn.pid
-  fi
-
-  if [ -z "$RESTART_SLEEP" ]; then
-    RESTART_SLEEP=5
-  fi
-
-  export PID
+  export PID=$RAILS_ROOT/tmp/pids/unicorn.pid
   export OLD_PID="$PID.oldbin"
-  export RAILS_ROOT
-  export RESTART_SLEEP
 
-  if [ -z "$START_CMD" ]; then
-    START_CMD="bundle exec unicorn_rails"
-  fi
-  CMD="$START_CMD -c $UNICORN_CONFIG -E $RAILS_ENV -D"
-
-  if [ "$USER" != `whoami` ]; then
-    CMD="sudo -u $USER -- env RAILS_ROOT=$RAILS_ROOT $CMD"
-  fi
-  export CMD
-  #echo $CMD
-}
-
-handle_delayed_job () {
-  # $1 contains command
-  if [ "$HANDLE_DELAYED_JOB" != "true" ]; then
-    return
-  fi
-
-  case $1 in
-    start|stop|restart|reload|status)
-      CMD="env RAILS_ENV=$RAILS_ENV bundle exec ./script/delayed_job $1"
-      if [ "$USER" != `whoami` ]; then
-        CMD="sudo -u $USER -- env $CMD"
-      fi
-      $CMD
-    ;;
-  esac
+  CMD="bundle exec unicorn_rails -c config/unicorn.rb -E $RAILS_ENV -D"
 }
 
 start_stop () {
+
   # either run the start/stop/reload/etc command for every config under /etc/unicorn
   # or just do it for a specific one
 
   # $1 contains the start/stop/etc command
   # $2 if it exists, should be the specific config we want to act on
-  if [ -n "$2" ]; then
-    if [ -f "/etc/unicorn/$2.conf" ]; then
-      . /etc/unicorn/$2.conf
-      export UNICORN_CONFIG="/etc/unicorn/$2.unicorn.rb"
-      setup
-      cmd $1
-      handle_delayed_job $1
-    else
-      echo >&2 "/etc/unicorn/$2.conf: not found"
-    fi
+  if [ $2 ]; then
+    . $2
+    setup
+    cmd $1
   else
-    for CONFIG in /etc/unicorn/*.conf; do
+    for CONFIG in config/unicorn.*.conf; do
       # import the variables
-      export UNICORN_CONFIG=`echo ${CONFIG} | sed 's/conf/unicorn.rb/'`
       . $CONFIG
       setup
 
       # run the start/stop/etc command
       cmd $1
-      handle_delayed_job $1
-
-      # clean enviroment
-      unset PID
-      unset OLD_PID
-      unset RAILS_ROOT
-      unset RAILS_ENV
-      unset CMD
-      unset USER
-      unset START_CMD
-      unset UNICORN_CONFIG
     done
    fi
 }
