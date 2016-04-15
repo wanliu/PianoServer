@@ -139,6 +139,21 @@ module Admins::OneMoneyHelper
     end
   end
 
+  def exists_one_money_dir?(one_money)
+    start_at = one_money.start_at
+    name = "%04d-%02d-%02d" % [start_at.year, start_at.month, start_at.day]
+
+    dir = File.join(Settings.promotions.one_money.scripts.publish.dir, name)
+    File.exist?(dir)
+  end
+
+  def one_money_publish_url(one_money)
+    start_at = one_money.start_at
+    name = "%04d-%02d-%02d" % [start_at.year, start_at.month, start_at.day]
+
+    File.join(Settings.promotions.one_money.enter_url, name)
+  end
+
   def best_in_place_item(item, *args)
     options = args.extract_options!
     options[:url] ||= update_item_admins_one_money_path(@one_money.id, item.id)
