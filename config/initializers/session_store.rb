@@ -14,7 +14,7 @@ options = {
 }
 
 if Rails.env.production?
-  options[:domain] = ".wanliu.biz"
+  # options[:domain] = ".wanliu.biz"
 end
 
 Rails.application.config.session_store :redis_session_store, options
