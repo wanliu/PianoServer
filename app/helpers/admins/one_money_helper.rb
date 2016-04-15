@@ -141,7 +141,7 @@ module Admins::OneMoneyHelper
 
   def exists_one_money_dir?(one_money)
     start_at = one_money.start_at
-    name = "%04d-%02d-%02d" % [start_at.year, start_at.month, start_at.day]
+    name = "release/%04d-%02d-%02d" % [start_at.year, start_at.month, start_at.day]
 
     dir = File.join(Settings.promotions.one_money.scripts.publish.dir, name)
     File.exist?(dir)
