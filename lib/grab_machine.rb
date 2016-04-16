@@ -1,77 +1,12 @@
-class GrabMachine
+require 'machine'
+
+class GrabMachine < Machine
   # include Singleton
 
-  attr_accessor :one_money, :item, :status, :code, :message, :current_user, :options
+  attr_accessor :one_money, :item, :current_user
 
-  attr_reader :context, :result, :env
-  cattr_reader :setup_options
-
-  def initialize(action_context, _options = {})
-    @context = action_context
-    @options = _options
-  end
-
-  def run(_one_money, _item, &block)
-    reset
-    @one_money = _one_money
-    @item = _item
-    @code = 200
-    @env = {}
-    @status = "success"
-
-    grab_conditions.each do |condition_method|
-      # @one_money = one_money
-      # @item = item
-
-      next_if = begin
-                  self.__send__(condition_method)
-                rescue => exception
-                  status "unknown"
-                  @result = result.merge({
-                    backtrace: exception.backtrace.join("\n")
-                  }) unless Rails.env.production?
-                  error exception.to_s
-                end
-      # pp condition_method, next_if, @code, status, error
-
-      break unless next_if
-    end
-
-    yield status, self if block_given?
-    self
-  end
-
-  def _run(_one_money, _item, &block)
-
-  end
-
-  def result(_result = nil)
-    if _result.nil?
-      @result ||= {}
-      @result[:error] = error[:error]
-      @result[:status] = status
-      @result
-    else
-      @result = _result
-    end
-  end
-
-  def self.run(context, one_money, item, &block)
-    machine = GrabMachine.new(context, self.setup_options)
-    machine.run(one_money, item, &block)
-  end
-
-  def self.finalize(machine)
-    proc { puts 'finalize'; machine.reset; machine.options = nil }
-  end
-
-  def self.setup(_options = {})
-    @setup_options = _options
-  end
-
-  def self.setup_options
-    @setup_options ||= {}
-  end
+  # attr_reader :context, :result, :env
+  # cattr_reader :setup_options
 
   protected
 
@@ -79,18 +14,7 @@ class GrabMachine
     @current_user ||= context.send(__user_method)
   end
 
-  def reset
-    # @one_money = nil
-    # @item = nil
-    # @current_user = nil
-    @status = nil
-    @code = nil
-    @message = nil
-    # @options = {}
-
-  end
-
-  def grab_conditions
+  def conditions
     [
       :condition_status?,
       :condition_total_amount?,
@@ -195,6 +119,7 @@ class GrabMachine
     end
   end
 
+
   # 判断是否支持多种 Item 抢购， 如果  multi_item 没有设置，那么此活动只能抢够一次一件商品
   # 只有 multi_item > 1 时才会触发多个 Item 的抢购次数的检查。
   def condition_multiple?
@@ -244,32 +169,6 @@ class GrabMachine
     else
       status "insufficient"
       error "Grap this OneMoney dont have inventory"
-    end
-  end
-
-  def error(message = nil, _code = 500)
-    if message.nil?
-      @error || {}
-    elsif message.is_a? String
-      @error = {
-        error:  message
-      }
-      @code = _code
-      false
-    elsif message.is_a? Hash
-      @error = message
-      @code = _code
-      false
-    else
-      false
-    end
-  end
-
-  def status(_status = nil)
-    if _status.nil?
-      @status
-    else
-      @status = _status
     end
   end
 end

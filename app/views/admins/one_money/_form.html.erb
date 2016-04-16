@@ -22,6 +22,16 @@
   </div>
 
   <div class="form-group">
+    <%= label_tag 'one_money_description', '分享数' %>
+    <%= text_field 'one_money', :shares, value: @one_money.shares, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= label_tag 'one_money_description', '分享种子' %>
+    <%= text_field 'one_money', :share_seed, value: @one_money.share_seed, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
     <%= label_tag 'one_money_fare', '运费' %>
     <%= text_field 'one_money', :fare, value: @one_money.fare || Settings.promotions.one_money.default.fare, class: 'form-control' %>
   </div>
