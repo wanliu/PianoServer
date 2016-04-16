@@ -516,7 +516,7 @@ RSpec.describe GrabController, :type => :controller do
             @grab.pmo_item = @item
             @grab.save
 
-            @seed = PmoSeed.generate(@grab, current_user)
+            @seed = seed(1, @grab, current_user, params[:seed || {})
             @seed.save
 
             @item.incr :completes, params[:completes] if params[:completes]
@@ -543,7 +543,7 @@ RSpec.describe GrabController, :type => :controller do
             @grab.pmo_item = @item
             @grab.save
 
-            @seed = PmoSeed.generate(@grab, current_user)
+            @seed = seed(1, @grab, current_user, params[:seed || {})
             @seed.give(friend_user)
             @seed.save
 
@@ -574,6 +574,11 @@ RSpec.describe GrabController, :type => :controller do
           def grab(id = 1, attributes ={})
             PmoGrab[id].try(:delete)
             PmoGrab.create({id: id, user_id: 1, title: '测试商品', price: 1, quantity: 1, one_money: 1}.merge(attributes))
+          end
+
+          def seed(id= 1, grab, user, attributes = {})
+            PmoSeed[id].try(:delete)
+            PmoSeed.generate(grab, user, attributes)
           end
         end
 
@@ -613,11 +618,31 @@ RSpec.describe GrabController, :type => :controller do
             expect(result["status"]).to eql("dont_send")
           end
 
-          it "分享种子的朋友，已经抢过"  do
+          it "得到分享种子的朋友已经抢过，那么可以开始抢了"  do
             routes.draw { get "index3" => "grab#index3" }
             get :index3, item: { total_amount: 10, quantity: 1, max_executies: 1 }, completes: 8
 
             expect(response.status).to eql(200)
+          end
+
+          it "如果种子已经使用过，则不能再使用" do
+
+          end
+
+          it "种子超过过期时间，也不能使用" do
+
+          end
+
+          it "种子过期时间为0，表示永不过期" do
+          end
+
+          it "使用的种子不是自己的，不能使用" do
+          end
+
+          it "超过分享周期数，不能使用" do
+          end
+
+          it "超过分享种子数据，不能使用" do
           end
         end
       end

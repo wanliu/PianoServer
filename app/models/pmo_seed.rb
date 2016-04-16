@@ -24,7 +24,7 @@ class PmoSeed < Ohm::Model
   index :one_money
   index :period
 
-  def self.generate(grab, pmo_user)
+  def self.generate(grab, pmo_user, attributes = {})
     pmo_item = grab.pmo_item
     one_money = pmo_item.one_money || OneMoney[grab.one_money.to_i]
 
@@ -33,7 +33,7 @@ class PmoSeed < Ohm::Model
       pmo_grab: grab,
       pmo_item: grab.pmo_item,
       owner: pmo_user
-    })
+    }.merge(attributes))
   end
 
   def self.last_period(pmo_user, one_money)
