@@ -122,6 +122,7 @@ gem "redis", ">= 3.2.0", :require => ["redis", "redis/connection/hiredis"]
 # gem 'em-redis'
 # gem 'em-hiredis'
 gem "redis-namespace", "~> 1.5.2"
+# gem "behavior_tree", github: 'jvoegele/behavior_tree'
 
 gem 'redis-objects'
 gem 'ohm'

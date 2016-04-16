@@ -1,6 +1,6 @@
 class Machine
 
-  attr_accessor  :status, :code, :message, :options
+  attr_accessor  :status, :code, :message, :options, :current_user
   attr_reader :context, :result, :env
   cattr_reader :setup_options
 
@@ -9,14 +9,10 @@ class Machine
     @options = _options
   end
 
-  def run(_one_money, _item, &block)
+  def run(options, &block)
     reset
 
-    @one_money = _one_money
-    @item = _item
-    @code = 200
-    @env = {}
-    @status = "success"
+    before_run(options)
 
     conditions.each do |condition_method|
       # @one_money = one_money
@@ -37,6 +33,7 @@ class Machine
     end
 
     yield status, self if block_given?
+    after_run
     self
   end
 
@@ -49,11 +46,6 @@ class Machine
     else
       @result = _result
     end
-  end
-
-  def self.run(context, one_money, item, &block)
-    machine = self.new(context, self.setup_options)
-    machine.run(one_money, item, &block)
   end
 
   def self.finalize(machine)
@@ -69,6 +61,25 @@ class Machine
   end
 
   protected
+
+  def before_run(options)
+    # @one_money = _one_money
+    # @item = _item
+    @code = 200
+    @env = {}
+    @status = "success"
+  end
+
+  def after_run
+  end
+
+  def current_user
+    @current_user ||= context.send(__user_method)
+  end
+
+  def __user_method
+    @options[:user_method] || :current_user
+  end
 
   def reset
     # @one_money = nil

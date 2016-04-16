@@ -3,7 +3,7 @@ require 'machine'
 class SeedMachine < Machine
   # include Singleton
 
-  attr_accessor :one_money, :item, :status, :code, :message, :current_user, :options
+  attr_accessor :one_money, :item, :seed, :status, :code, :message, :options
   attr_reader :context, :result, :env
   cattr_reader :setup_options
 

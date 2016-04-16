@@ -3,6 +3,7 @@ class PmoSeed < Ohm::Model
   include Ohm::Timestamps
   include Ohm::DataTypes
   include Ohm::Callbacks
+  include ExpiredEvents
 
   attribute :seed_id                            # 种子唯一 ID
   attribute :time_out, Type::Integer            # 过期时间
@@ -40,11 +41,16 @@ class PmoSeed < Ohm::Model
     seed.try(:period) || 0
   end
 
+  def before_create
+    self.time_out = Settings.promotions.one_money.seed_timeout.minutes.minutes
+    self.timeout_at = self.now + self.time_out
+  end
+
   def give(pmo_user)
     self.given = pmo_user
   end
 
   def expired?
-    self.timeout_at >= self.now
+    self.timeout_at <= self.now
   end
 end

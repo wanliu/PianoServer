@@ -3,15 +3,27 @@ require 'machine'
 class GrabMachine < Machine
   # include Singleton
 
-  attr_accessor :one_money, :item, :current_user
+  attr_accessor :one_money, :item
 
   # attr_reader :context, :result, :env
   # cattr_reader :setup_options
 
+  def self.run(context, one_money, item, options = {}, &block)
+    machine = self.new(context, self.setup_options)
+    machine.run({
+      one_money: one_money,
+      item: item
+    }.merge(options), &block)
+  end
+
   protected
 
-  def current_user
-    @current_user ||= context.send(__user_method)
+  def before_run(options)
+    super
+
+    @one_money = options[:one_money]
+    @item = options[:item]
+    @seed = options[:seed] if options[:seed]
   end
 
   def conditions
@@ -22,14 +34,16 @@ class GrabMachine < Machine
       :condition_price?,
       :condition_parent?,
       # :condition_winner?,
-      :condition_multiple?,
+      :condition_share_seed?, # if
+      :condition_available_seed?,
+      :condition_in_period?,
+      :condition_seed_valid?,
+      :condition_remind_seed?,
+
+      :condition_multiple?, # or
       :condition_executies?,
       :condition_insufficient?
     ]
-  end
-
-  def __user_method
-    @options[:user_method] || :current_user
   end
 
   # 判断状态是不是开始，只在生产模式
@@ -119,6 +133,73 @@ class GrabMachine < Machine
     end
   end
 
+  # 判断本活动是不是可以分享购买
+  def condition_share_seed?
+    @env[:skip_seed] = true unless one_money.shares > 0
+    true
+  end
+
+  def condition_available_seed?
+    return true if @env[:skip_seed]
+
+    if @seed
+      true
+    else
+      @env[:skip_seed] = true
+      true
+      # status "dont_have_seed"
+      # error "you dont have seed of share,so cant grab again %d" % [item.id], 400
+    end
+  end
+
+  # 判断是否在有效分享期内
+  def condition_in_period?
+    return true if @env[:skip_seed]
+
+    if PmoSeed.last_period(current_user, one_money) < one_money.shares
+      true
+    else
+      status "limit_shares"
+      error "you cant over shares number %d" % [one_money.shares], 400
+    end
+  end
+
+  # 是否种子被使用过
+  def condition_seed_valid?
+    return true if @env[:skip_seed]
+
+    if @seed.used
+      status "used_seed"
+      error "you seed %d must be not used" % [seed.id], 400
+    elsif @seed.expired? # 是否过期
+      status "seed_expired"
+      error "seed is expired", 400
+    elsif not @seed.given
+      status "dont_send"
+      error "seed must given another to be work", 400
+    elsif @seed.owner && @seed.owner.id != current_user.id # 是否给用户的种子
+      status "seed_invalid_owner"
+      error "is not your seed %d" % [seed.id], 400
+    else
+      true
+    end
+  end
+
+  # 是否超过了种子数
+  def condition_remind_seed?
+    return true if @env[:skip_seed]
+
+    seeds = PmoSeed.find(one_money: one_money.id, period: @seed.period, owner_id: current_user.id)
+    seed_count = seeds.select{ |seed| seed.used }.length
+
+    if seed_count >= one_money.share_seed
+      status "limit_seed"
+      error "more than %d limit of seeds" % one_money.share_seed, 400
+    else
+      @env[:skip_multiple] = true
+      true
+    end
+  end
 
   # 判断是否支持多种 Item 抢购， 如果  multi_item 没有设置，那么此活动只能抢够一次一件商品
   # 只有 multi_item > 1 时才会触发多个 Item 的抢购次数的检查。
