@@ -18,7 +18,7 @@ class PmoSeed < Ohm::Model
   reference :pmo_grab, :PmoGrab
 
   reference :given, :PmoUser                    # 给于用户
-  reference :owner, :PmoUser                    # 来源用户
+  # reference :owner, :PmoUser                    # 来源用户
 
   index :owner_id
   index :one_money
@@ -32,18 +32,19 @@ class PmoSeed < Ohm::Model
       seed_id: SecureRandom.uuid,
       pmo_grab: grab,
       pmo_item: grab.pmo_item,
-      owner: pmo_user
+      owner_id: pmo_user.id,
+      one_money: one_money.id,
     }.merge(attributes))
   end
 
   def self.last_period(pmo_user, one_money)
-    seed = PmoSeed.find(owner_id: pmo_user.id, one_money: one_money).max { |a, b | a.period - b.period }
+    seed = PmoSeed.find(owner_id: pmo_user.id, one_money: one_money.id).max_by { |a| a.period }
     seed.try(:period) || 0
   end
 
   def before_create
     self.time_out = Settings.promotions.one_money.seed_timeout.minutes.minutes
-    self.timeout_at = self.now + self.time_out
+    self.timeout_at ||= self.now + self.time_out
   end
 
   def give(pmo_user)

@@ -170,16 +170,16 @@ class GrabMachine < Machine
 
     if @seed.used
       status "used_seed"
-      error "you seed %d must be not used" % [seed.id], 400
+      error "you seed %d must be not used" % [@seed.id], 400
     elsif @seed.expired? # 是否过期
       status "seed_expired"
       error "seed is expired", 400
     elsif not @seed.given
       status "dont_send"
       error "seed must given another to be work", 400
-    elsif @seed.owner && @seed.owner.id != current_user.id # 是否给用户的种子
+    elsif @seed.owner_id != current_user.id # 是否给用户的种子
       status "seed_invalid_owner"
-      error "is not your seed %d" % [seed.id], 400
+      error "is not your seed %d" % [@seed.id], 400
     else
       true
     end

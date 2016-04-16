@@ -476,6 +476,7 @@ RSpec.describe GrabController, :type => :controller do
       describe GrabController, :type => :controller do
         before :each do
           PmoGrab.all.map &:delete
+          PmoSeed.all.map &:delete
         end
 
         controller do
@@ -516,7 +517,7 @@ RSpec.describe GrabController, :type => :controller do
             @grab.pmo_item = @item
             @grab.save
 
-            @seed = seed(1, @grab, current_user, params[:seed || {})
+            @seed = seed(@grab, current_user, 1, params[:seed] || {})
             @seed.save
 
             @item.incr :completes, params[:completes] if params[:completes]
@@ -543,7 +544,7 @@ RSpec.describe GrabController, :type => :controller do
             @grab.pmo_item = @item
             @grab.save
 
-            @seed = seed(1, @grab, current_user, params[:seed || {})
+            @seed = seed(@grab, current_user, 1, params[:seed] || {})
             @seed.give(friend_user)
             @seed.save
 
@@ -562,8 +563,99 @@ RSpec.describe GrabController, :type => :controller do
             end
           end
 
-          def friend_user
-            PmoUser.exists?(2) ? PmoUser[2] : PmoUser.create(id: 2, username: '朋友测试', title: '测试朋友', user_id: 2)
+          # 超时
+          def index4
+            @one_money = one_money(1, params[:one_money] || {})
+            @item = item(1, params[:item] || {})
+            @item.one_money = @one_money
+            @item.save
+
+            @grab = grab
+            @grab.pmo_item = @item
+            @grab.save
+
+            @seed = seed(@grab, current_user, 1, params[:seed] || {})
+            @seed.give(friend_user)
+            @seed.timeout_at = @seed.now + params[:timeout].to_i if params[:timeout]
+            # pp @seed.expired?, @seed.timeout_at, @seed.now
+            @seed.save
+
+            @grab2 = grab 2, user_id: friend_user.id
+            @grab2.pmo_item = @item
+            @grab2.save
+
+            @item.incr :completes, params[:completes] if params[:completes]
+
+            GrabMachine.run(self, @one_money, @item, seed: @seed) do |status, context|
+              if status == "success"
+                render nothing: true
+              else
+                render json: context.result, status: context.code
+              end
+            end
+          end
+
+          def index5
+            base_index do
+
+              @seed = seed(@grab, friend_user, 1, params[:seed] || {})
+              @seed.give(friend_user)
+              @seed.timeout_at = @seed.now + params[:timeout].to_i if params[:timeout]
+              @seed.save
+              @grab2 = grab 2, user_id: friend_user.id
+              @grab2.pmo_item = @item
+              @grab2.save
+            end
+          end
+
+          def index6
+            base_index do
+              @seed = seed(@grab, current_user, 1, params[:seed] || {})
+              @seed.give(friend_user)
+              @seed.timeout_at = @seed.now + params[:timeout].to_i if params[:timeout]
+              @seed.save
+
+              @user2 = friend_user(3)
+              @grab2 = grab 2, user_id: @user2.id
+              @grab2.pmo_item = @item
+              @grab2.save
+
+              @seed2 = seed(@grab2, current_user, 2, {used: true})
+              @seed2.give(friend_user(4))
+              # @seed2.timeout_at = @seed2.now + params[:timeout].to_i if params[:timeout]
+              @seed2.save
+
+              # @grab2 = grab 2, user_id: friend_user.id
+              # @grab2.pmo_item = @item
+              # @grab2.save
+            end
+          end
+
+          def base_index(&block)
+            @one_money = one_money(1, params[:one_money] || {})
+            @item = item(1, params[:item] || {})
+            @item.one_money = @one_money
+            @item.save
+
+            @grab = grab
+            @grab.pmo_item = @item
+            @grab.save
+
+            yield
+
+            @item.incr :completes, params[:completes] if params[:completes]
+
+            GrabMachine.run(self, @one_money, @item, seed: @seed) do |status, context|
+              if status == "success"
+                render nothing: true
+              else
+                render json: context.result, status: context.code
+              end
+            end
+          end
+
+          def friend_user(id = 2, attributes = {})
+            PmoUser.exists?(2) ? PmoUser[2] : PmoUser.create({id: 2, username: '朋友测试', title: '测试朋友', user_id: 2}.merge(attributes))
           end
 
           def one_money(id = 1, attributes = {})
@@ -576,7 +668,7 @@ RSpec.describe GrabController, :type => :controller do
             PmoGrab.create({id: id, user_id: 1, title: '测试商品', price: 1, quantity: 1, one_money: 1}.merge(attributes))
           end
 
-          def seed(id= 1, grab, user, attributes = {})
+          def seed(grab, user, id = 1 , attributes = {})
             PmoSeed[id].try(:delete)
             PmoSeed.generate(grab, user, attributes)
           end
@@ -611,7 +703,7 @@ RSpec.describe GrabController, :type => :controller do
 
           it "产生种子，还没有分享成功给他人, 那么不能再抢"  do
             routes.draw { get "index2" => "grab#index2" }
-            get :index2, item: { total_amount: 10, quantity: 1, max_executies: 1 }, completes: 8, seed: true
+            get :index2, item: { total_amount: 10, quantity: 1, max_executies: 1 }, completes: 8, seed: {used: false}
 
             expect(response.status).to eql(400)
             result = JSON.parse(response.body)
@@ -621,28 +713,63 @@ RSpec.describe GrabController, :type => :controller do
           it "得到分享种子的朋友已经抢过，那么可以开始抢了"  do
             routes.draw { get "index3" => "grab#index3" }
             get :index3, item: { total_amount: 10, quantity: 1, max_executies: 1 }, completes: 8
-
+            # pp response.body
             expect(response.status).to eql(200)
           end
 
           it "如果种子已经使用过，则不能再使用" do
+            routes.draw { get "index3" => "grab#index3" }
+            get :index3, item: { total_amount: 10, quantity: 1, max_executies: 1 }, completes: 8, seed: {used: true}
 
+            expect(response.status).to eql(400)
+            result = JSON.parse(response.body)
+            expect(result["status"]).to eql("used_seed")
           end
 
           it "种子超过过期时间，也不能使用" do
+            routes.draw { get "index4" => "grab#index4" }
+            get :index4, item: { total_amount: 10, quantity: 1, max_executies: 1 }, completes: 8, seed: {used: false}, timeout: -10000
 
+            expect(response.status).to eql(400)
+            result = JSON.parse(response.body)
+            expect(result["status"]).to eql("seed_expired")
           end
 
           it "种子过期时间为0，表示永不过期" do
           end
 
           it "使用的种子不是自己的，不能使用" do
+            routes.draw { get "index5" => "grab#index5" }
+            get :index5, item: { total_amount: 10, quantity: 1, max_executies: 1 }, completes: 8, seed: {used: false}
+
+            expect(response.status).to eql(400)
+            result = JSON.parse(response.body)
+            expect(result["status"]).to eql("seed_invalid_owner")
           end
 
           it "超过分享周期数，不能使用" do
+            routes.draw { get "index3" => "grab#index3" }
+            get :index3, item: { total_amount: 10, quantity: 1, max_executies: 1 }, completes: 8, seed: {period: 1}
+            # pp assigns :seed
+            expect(response.status).to eql(400)
+            result = JSON.parse(response.body)
+            expect(result["status"]).to eql("limit_shares")
           end
 
           it "超过分享种子数据，不能使用" do
+            routes.draw { get "index6" => "grab#index6" }
+            get :index6, one_money: { share_seed: 1}, item: { total_amount: 10, quantity: 1, max_executies: 1 }, completes: 8, seed: {used: false}
+
+            expect(response.status).to eql(400)
+            result = JSON.parse(response.body)
+            expect(result["status"]).to eql("limit_seed")
+          end
+
+          it "share_seed =2, 分享种子数据可以超过一" do
+            routes.draw { get "index6" => "grab#index6" }
+            get :index6, one_money: { share_seed: 2}, item: { total_amount: 10, quantity: 1, max_executies: 1 }, completes: 8, seed: {used: false}
+
+            expect(response.status).to eql(200)
           end
         end
       end
