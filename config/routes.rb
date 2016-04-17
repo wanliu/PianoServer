@@ -270,6 +270,8 @@ Rails.application.routes.draw do
 
           get "callback/:item_id", action: :callback
           get "ensure/:grab_id", action: :ensure, via: Rails.env.production? ? [:put] : [:put, :get]
+
+          get "user_seeds/:user_id", action: :user_seeds
         end
       end
     end

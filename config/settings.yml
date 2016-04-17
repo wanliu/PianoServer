@@ -117,7 +117,7 @@ promotions:
     timeout:
       minutes: 15
     seed_timeout:
-      minutes: 15
+      minutes: 720
 
     ensure_url: http://m.wanliu.com/api/promotions/one_money/:id/ensure/:grab_id
     discharge_express_fee_on: 64

@@ -11,6 +11,7 @@ class PmoSeed < Ohm::Model
   attribute :used, Type::Boolean                # 使用过？
   attribute :used_at, OhmTime::ISO8601
   attribute :owner_id
+  attribute :status
   attribute :period, Type::Integer
   attribute :one_money
 
@@ -20,9 +21,12 @@ class PmoSeed < Ohm::Model
   reference :given, :PmoUser                    # 给于用户
   # reference :owner, :PmoUser                    # 来源用户
 
+  expire :time_out, :expired_time_out
+
   index :owner_id
   index :one_money
   index :period
+  index :seed_id
 
   def self.generate(grab, pmo_user, attributes = {})
     pmo_item = grab.pmo_item
@@ -53,5 +57,29 @@ class PmoSeed < Ohm::Model
 
   def expired?
     self.timeout_at <= self.now
+  end
+
+  def to_hash
+    super.merge(attributes.merge(status: status))
+  end
+
+  def status
+    if owner_id.nil?
+      return 'invalid'
+    elsif given.nil?
+      return 'pending'
+    elsif given && !used
+      return 'active'
+    elsif given && used
+      return 'used'
+    elsif expired?
+      return 'timeout'
+    else
+      return 'invalid'
+    end
+  end
+
+  def expired_time_out
+    self.delete unless self.given
   end
 end

@@ -42,6 +42,7 @@ class PmoItem < Ohm::Model
   set :winners, :PmoUser
 
   collection :grabs, :PmoGrab
+  collection :seeds, :PmoSeed
   reference :one_money, :OneMoney
 
   # list :logs, :PmoLog

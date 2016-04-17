@@ -749,7 +749,7 @@ RSpec.describe GrabController, :type => :controller do
 
           it "超过分享周期数，不能使用" do
             routes.draw { get "index3" => "grab#index3" }
-            get :index3, item: { total_amount: 10, quantity: 1, max_executies: 1 }, completes: 8, seed: {period: 1}
+            get :index3, item: { total_amount: 10, quantity: 1, max_executies: 1 }, completes: 8, seed: {period: 2}
             # pp assigns :seed
             expect(response.status).to eql(400)
             result = JSON.parse(response.body)

@@ -156,7 +156,7 @@ class GrabMachine < Machine
   def condition_in_period?
     return true if @env[:skip_seed]
 
-    if PmoSeed.last_period(current_user, one_money) < one_money.shares
+    if PmoSeed.last_period(current_user, one_money) <= one_money.shares
       true
     else
       status "limit_shares"
