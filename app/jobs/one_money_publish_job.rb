@@ -7,8 +7,6 @@ class OneMoneyPublishJob < ActiveJob::Base
                                             winners_num: 50})
     scripts = Settings.promotions.one_money.scripts.publish
 
-
-    pp target
     dir = scripts.dir
     exec = scripts.exec
 
