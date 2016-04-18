@@ -19,6 +19,22 @@ class Gift < ActiveRecord::Base
     present.properties_title(props)
   end
 
+  def composed_title
+    "#{title} #{properties_title}"
+  end
+
+  def available_quantity(item_quantity)
+    current_stock = present.stocks.find {|stock| stock.data == properties }.try(:quantity) || 0
+    quantity_send = (item_quantity * quantity).floor
+    result = [left_quantity, current_stock, quantity_send].min
+
+    result > 0 ? result : 0
+  end
+
+  def left_quantity
+    total - saled_counter
+  end
+
   private
 
   def item_and_present_shop

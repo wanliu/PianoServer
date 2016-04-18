@@ -47,3 +47,17 @@
     </td>
   <% end %>
 </tr>
+<% if item.gifts.present? %>
+  <tr>
+    <td colspan='5'>
+      <% item.gifts.each do |gift| %>
+        <span>
+          <%= gift["title"] %>
+        </span>
+        <span>
+          ×<%= gift["quantity"] %>
+        </span>
+      <% end %>
+    </td>
+  <tr>
+<% end %>

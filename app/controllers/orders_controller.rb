@@ -280,7 +280,7 @@ class OrdersController < ApplicationController
   end
 
   def set_feed_back
-    @order_items = current_user.cart.items.find(params[:order][:cart_item_ids] || [])
+    @order_items = current_user.cart.items.find(@order.cart_item_ids || [])
 
     @supplier = Shop.find(params[:order][:supplier_id])
 
@@ -304,7 +304,19 @@ class OrdersController < ApplicationController
 
   def order_params
     params.require(:order)
-      .permit(:supplier_id, :address_id, :pmo_grab_id, :one_money_id, :note, cart_item_ids: [])
+      .permit(:supplier_id, 
+        :address_id, 
+        :pmo_grab_id, 
+        :one_money_id, 
+        :note).tap do |white_list|
+      if params[:order][:cart_item_ids].present?
+        white_list[:cart_item_ids] = params[:order][:cart_item_ids]
+      end
+
+      if params[:order][:cart_item_gifts].present?
+        white_list[:cart_item_gifts] = params[:order][:cart_item_gifts]
+      end
+    end
   end
 
   def location_params

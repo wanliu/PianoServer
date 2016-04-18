@@ -76,12 +76,18 @@ class OrderItem < ActiveRecord::Base
 
   def gift_saleable
     gifts.each do |gift_setting|
-      item_id = gift_setting["item_id"]
-      item = Item.find(item_id)
-      item.saleable?(gift_setting["quantity"].to_i, gift_setting["properties"]) do |on_sale, saleable, max|
-        if !saleable
-          errors.add(:gift, "库存不足或者设置变动，请刷新后再提交订单！")
-        end
+      # item_id = gift_setting["item_id"]
+      # item = Item.find(item_id)
+      # item.saleable?(gift_setting["quantity"].to_i, gift_setting["properties"]) do |on_sale, saleable, max|
+      #   if !saleable
+      #     errors.add(:gift, "库存不足或者设置变动，请重新提交订单！")
+      #   end
+      # end
+
+      # 检查库存是否充足，以及防止用户篡改赠品数量
+      gift = Gift.find_by(id: gift_setting["gift_id"])
+      if gift_setting["quantity"].to_i > gift.available_quantity(gift_setting["quantity"].to_i)
+        errors.add(:gift, "库存不足或者设置变动，请重新提交订单！")
       end
     end
   end
