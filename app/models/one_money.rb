@@ -21,8 +21,8 @@ class OneMoney < Ohm::Model
   attribute :cover_url
   attribute :status
 
-  attribute :shares                      # 分享次数
-  attribute :share_seed                  # 分享种子数
+  attribute :shares, Type::Integer        # 分享次数
+  attribute :share_seed, Type::Integer    # 分享种子数
 
   attribute :price, Type::Decimal
 
