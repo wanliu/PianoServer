@@ -74,8 +74,10 @@ class Api::Promotions::OneMoneyController < Api::BaseController
     status = @one_money.signups.add(pmo_current_user)
     @one_money.save
     if @from_seed
-      @from_seed.given = pmo_current_user
-      @from_seed.save
+      if PmoGrab.find(one_money: @one_money.id, user_id: pmo_current_user.id).count == 0
+        @from_seed.given = pmo_current_user
+        @from_seed.save
+      end
     end
     render json: {user_id: pmo_current_user.id, user_user_id: pmo_current_user.user_id, status: status > 0 ? "success" : "always" }
   end
@@ -172,6 +174,8 @@ class Api::Promotions::OneMoneyController < Api::BaseController
         end
 
         if @seed
+          @grab.used_seed = @seed.seed_id
+          @grab.save
           @seed.used = true
           @seed.save
         end

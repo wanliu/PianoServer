@@ -56,7 +56,11 @@ class PmoSeed < Ohm::Model
   end
 
   def expired?
-    self.timeout_at <= self.now
+    if used
+      return false
+    else
+      self.timeout_at <= self.now
+    end
   end
 
   def to_hash
@@ -66,14 +70,14 @@ class PmoSeed < Ohm::Model
   def status
     if owner_id.nil?
       return 'invalid'
-    elsif given.nil?
-      return 'pending'
-    elsif given && !used
-      return 'active'
-    elsif given && used
-      return 'used'
     elsif expired?
       return 'timeout'
+    elsif given.nil?
+      return 'pending'
+    elsif given && used
+      return 'used'
+    elsif given && !used
+      return 'active'
     else
       return 'invalid'
     end

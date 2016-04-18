@@ -23,6 +23,8 @@ class PmoGrab < Ohm::Model
   attribute :callback
   attribute :status
 
+  attribute :used_seed
+
   attribute :avatar_urls, Type::Array
   attribute :timeout_at, OhmTime::ISO8601
   attribute :one_money  # 活动的 id , etc OneMoney
@@ -66,6 +68,15 @@ class PmoGrab < Ohm::Model
     end
 
     seeds.map(&:delete)
+    unused_seed!
+  end
+
+  def unused_seed!
+    if used_seed
+      @seed = PmoSeed.find(seed_id: used_seed)
+      @seed.used = true
+      @seed.save
+    end
   end
 
   def after_delete
