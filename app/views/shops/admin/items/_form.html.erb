@@ -125,6 +125,14 @@
         <%= f.bootsy_area :description, class: "form-control", rows: 12, value: @item.description_lookup %>
       <% end %>
 
+      <!-- 运费设置 -->
+      <% if @item.persisted? %>
+        <fieldset >
+          <legend >运费设置</legend>
+          <%= render partial: "delivery_fee", locals: { item: @item } %>
+        </fieldset>
+      <% end %>
+
       <!-- 隐藏字段 -->
       <%= f.hidden_field :category_id %>
   </div>

@@ -12,7 +12,9 @@ class OrdersController < ApplicationController
       :pay_kind, 
       :wxpay, 
       :wxpay_confirm, 
-      :wx_paid
+      :wx_paid,
+      :receive,
+      :qrcode_receive
     ]
 
   before_action :set_evaluatable_order, 
@@ -34,11 +36,12 @@ class OrdersController < ApplicationController
       :evaluate, 
       :evaluate_item, 
       :create_evaluations,
-      :evaluate_item_create
+      :evaluate_item_create, 
+      :receive, 
+      :qrcode_receive
     ]
 
   before_action :set_order_item, only: [:evaluate_item, :evaluate_item_create]
-
   skip_before_filter :verify_authenticity_token, :only => [:buy_now_confirm]
 
   include ParamsCallback
@@ -68,6 +71,7 @@ class OrdersController < ApplicationController
   # GET /orders/1
   # GET /orders/1.json
   def show
+    # @order.items.includes(:orderable)
   end
 
   # POST /orders
