@@ -53,7 +53,24 @@
 
   <div class="form-group">
     <%= label_tag 'one_money_cover_url', '封面 url' %>
-    <%= text_field 'one_money', :cover_url, value: @one_money.cover_url, class: 'form-control' %>
+    <div class="input-group">
+
+      <%= text_field 'one_money', :cover_url, value: @one_money.cover_url, class: 'form-control' %>
+      <span class="input-group-btn">
+        <div class="upload-button-cover"></div>
+      </span>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= label_tag 'one_money_head_url', '头部 url' %>
+
+    <div class="input-group">
+      <%= text_field 'one_money', :head_url, value: @one_money.head_url, class: 'form-control' %>
+      <span class="input-group-btn">
+        <div class="upload-button-head"></div>
+      </span>
+    </div>
   </div>
 
   <div class="form-group">
@@ -123,5 +140,40 @@
     }).fail(reset).always(reset);
   })
 
+
+</script>
+
+
+<script type="text/javascript">
+  var html = [ "<div class=\"qq-uploader\">",
+                 "<div class=\"qq-upload-drop-area\"><span>{dragText}</span></div>",
+                 "<div class=\"qq-upload-button btn\">",
+                  "上传",
+                 "</div>",
+                 "<ul class=\"qq-upload-list hide\"></ul>",
+               "</div>"
+             ].join('\n');
+
+  var $element = $(".upload-button-head")[0];
+  var actionUrl = "<%= upload_one_money_image_admins_one_money_path(@one_money.id, field: :head_url) %>";
+  var token = $('meta[name=csrf-token]').attr('content');
+
+  function uploaderImage(element, friendInput, url) {
+    new qq.FileUploader({
+      element: element,
+      customHeaders: { "X-CSRF-TOKEN": token },
+      template: html,
+      action:  url + "&authenticity_token=" + encodeURIComponent(token),
+      multiple: false,
+      onComplete: function (id, filename, responseJSON) {
+        var url = responseJSON.url;
+        $(friendInput).val(url);
+      }
+    });
+  }
+
+  uploaderImage($(".upload-button-head")[0], "#one_money_head_url", "<%= upload_one_money_image_admins_one_money_path(@one_money.id, field: :head_url) %>" );
+
+  uploaderImage($(".upload-button-cover")[0], "#one_money_cover_url", "<%= upload_one_money_image_admins_one_money_path(@one_money.id, field: :cover_url) %>" )
 
 </script>
