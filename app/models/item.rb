@@ -22,6 +22,7 @@ class Item < ActiveRecord::Base
   has_many :favoritors, as: :favoritable, class_name: 'Favorite'
 
   has_many :stock_changes, autosave: true
+  has_many :evaluations, as: :evaluationable
 
   mount_uploaders :images, ItemImageUploader
 
@@ -264,6 +265,19 @@ class Item < ActiveRecord::Base
     self.as_json(methods: [:shop_region_id, :shop_name])
   end
 
+  def delivery_fee_to(area_code)
+    delivery_fee_setting = shop.item_delivery_fee.merge delivery_fee
+
+    area_code = area_code.to_s
+    city_code = ChinaCity.city(area_code)
+    province_code = ChinaCity.province(area_code)
+
+    delivery_fee_setting[area_code] ||
+      delivery_fee_setting[city_code] ||
+      delivery_fee_setting[province_code] ||
+      delivery_fee_setting["default"] || 0
+  end
+
   def pinyin
     Pinyin.t title
   end
@@ -327,6 +341,10 @@ class Item < ActiveRecord::Base
 
   def shop_name
     shop.try(:title)
+  end
+
+  def shop_realname
+    shop.try(:name)
   end
 
   # options: {
