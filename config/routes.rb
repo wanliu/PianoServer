@@ -290,6 +290,14 @@ Rails.application.routes.draw do
         get "favorite_count", to: "shops#favorite_count"
       end
     end
+
+    resources :locations do
+      collection do
+        get "provinces", to: "locations#provinces"
+        get "cities", to: "locations#cities"
+        get "regions", to: "locations#regions"
+      end
+    end
   end
 
   resources :promotions, concerns: [ :chatable ] do
@@ -470,6 +478,6 @@ Rails.application.routes.draw do
     end
   end
 
-  # root to: "promotions#index"
-  root to: redirect('/html/%E8%80%92%E9%98%B3%E8%A1%97%E4%B8%8A')
+  root to: "promotions#index"
+  # root to: redirect('/html/%E8%80%92%E9%98%B3%E8%A1%97%E4%B8%8A')
 end

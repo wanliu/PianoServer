@@ -45,10 +45,10 @@
                 </div>
                 <div class='col-xs-10'>
                   <% evaluation.good.to_i.times do %>
-                    <span class="star glyphicon glyphicon-star full"></span>
+                    <span class="star evaluated glyphicon glyphicon-star full"></span>
                   <% end %>
                   <% (5 - evaluation.good.to_i).times do %>
-                    <span class="star glyphicon glyphicon-star empty"></span>
+                    <span class="star evaluated glyphicon glyphicon-star empty"></span>
                   <% end %>
                 </div>
               </div>
@@ -58,10 +58,10 @@
                 </div>
                 <div class='col-xs-10'>
                   <% evaluation.delivery.to_i.times do %>
-                    <span class="star glyphicon glyphicon-star full"></span>
+                    <span class="star evaluated glyphicon glyphicon-star full"></span>
                   <% end %>
                   <% (5 - evaluation.delivery.to_i).times do %>
-                    <span class="star glyphicon glyphicon-star empty"></span>
+                    <span class="star evaluated glyphicon glyphicon-star empty"></span>
                   <% end %>
                 </div>
               </div>
@@ -71,10 +71,10 @@
                 </div>
                 <div class='col-xs-10'>
                   <% evaluation.customer_service.to_i.times do %>
-                    <span class="star glyphicon glyphicon-star full"></span>
+                    <span class="star evaluated glyphicon glyphicon-star full"></span>
                   <% end %>
                   <% (5 - evaluation.customer_service.to_i).times do %>
-                    <span class="star glyphicon glyphicon-star empty"></span>
+                    <span class="star evaluated glyphicon glyphicon-star empty"></span>
                   <% end %>
                 </div>
               </div>
@@ -165,6 +165,8 @@
     });
 
     $('.stars .star').click(function(event) {
+      if ($(this).is('.evaluated')) return;
+
       var id = $(this).data('id');
       var inputId = $(this).data('inputId');
 
