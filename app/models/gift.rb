@@ -10,6 +10,8 @@ class Gift < ActiveRecord::Base
 
   validate :item_and_present_shop
 
+  validate :saled_counter_with_total
+
   delegate :title, to: :present, prefix: false
   delegate :avatar_url, to: :present, prefix: false
   delegate :cover_url, to: :present, prefix: false
@@ -40,6 +42,12 @@ class Gift < ActiveRecord::Base
   def item_and_present_shop
     if item.shop_id != present.shop_id
       errors.add(:present_id, "必须是同一个商店的商品")
+    end
+  end
+
+  def saled_counter_with_total
+    if saled_counter > total
+      errors.add(:saled_counter, '赠品可赠送量不足或者赠品变更，请重新提交订单')
     end
   end
 end
