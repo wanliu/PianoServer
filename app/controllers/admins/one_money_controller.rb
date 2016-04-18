@@ -63,6 +63,18 @@ class Admins::OneMoneyController < Admins::BaseController
     render json: { success: true, url: uploader.url(:cover) }
   end
 
+  def upload_one_money_image
+    @field = params[:field]
+
+    uploader = NativeUploader.new(@one_money, @field)
+    uploader.store! params[:file]
+
+    # @one_money.send(@field, uploader.url)
+    # @one_money.save
+
+    render json: { success: true, field: params[:field], url: uploader.url }
+  end
+
   def update
     @one_money.update_attributes one_money_params
     @one_money.save

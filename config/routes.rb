@@ -182,6 +182,8 @@ Rails.application.routes.draw do
         delete "remove_item/:item_id", action: :remove_item, as: :remove_item
         delete "clean_expire_grabs/:item_id", action: :clean_expire_grabs, as: :clean_expire_grabs
         post "upload_image/:item_id", action: :upload_image, as: :upload_image
+        post "upload_one_money_image", action: :upload_one_money_image, as: :upload_one_money_image
+
         get :signups
         get "details/:item_id", action: :details, as: :details
         get "churn_stastic"
