@@ -392,7 +392,6 @@ Rails.application.routes.draw do
       get "/about", to: "shops#about"
     end
 
-
     resources :shop_categories, path: "categories"
     resources :items, key: :sid, constraints: { id: /\d+/ }
 
@@ -400,6 +399,12 @@ Rails.application.routes.draw do
       get "/", to: "dashboard#index", as: :index
       resource :profile do
         post :upload_shop_logo
+      end
+
+      resource :delivery_fee do
+        collection do
+          get "next_nodes"
+        end
       end
 
       resources :dashboard
@@ -419,6 +424,8 @@ Rails.application.routes.draw do
       end
 
       resources :items, key: :sid do
+        resource :delivery_fee, objective: "item"
+
         collection do
           # get "load_categories", to: "items#load_categories"
           get "/new/step1",  to: "items#new_step1"
@@ -441,6 +448,10 @@ Rails.application.routes.draw do
           get 'export_excel'
           get 'history'
         end
+
+        member do
+          get 'qr', to: "orders#qrcode_receive"
+        end
       end
 
       resources :settings do
@@ -454,5 +465,6 @@ Rails.application.routes.draw do
     end
   end
 
-  root to: "promotions#index"
+  # root to: "promotions#index"
+  root to: redirect('/html/%E8%80%92%E9%98%B3%E8%A1%97%E4%B8%8A')
 end

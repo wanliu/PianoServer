@@ -129,8 +129,8 @@
 
   .avatar {
     img {
-      width: 80px;
-      height: 80px;
+      width: 60px;
+      height: 60px;
       float: left;
       margin-right: 10px;
     }
@@ -140,6 +140,49 @@
       color: black;
       display: inline-block;
       float: left;
+    }
+  }
+
+  .info-head {
+    background-color: red;
+    color: white;
+    position: relative;
+    padding: 10px;
+
+    .status {
+      height: 100px;
+      position: absolute;
+      top: 20px;
+      right: 0;
+    }
+  }
+
+  .receiver-info, .details {
+    font-size: 13px;
+    padding: 10px;
+
+    div {
+      padding: 5px 0;
+    }
+  }
+
+  .details {
+    border-top: 1px solid #ddd;
+  }
+
+  .operation {
+    padding: 5px 10px;
+  }
+
+  .center {
+    margin-left: auto;
+    margin-right: auto;
+    width: 150px;
+    height: 150px;
+
+    img {
+      width: 150px;
+      height: 150px;          
     }
   }
   
@@ -155,36 +198,82 @@
       color: #d9534f;
     }
   }
-
-  .info-head {
+  
+  .wrap-zone {
     background-color: red;
-    color: white;
-    position: relative;
-    padding: 10px 20px;
+    padding: 0 20px 20px 20px;
+    
+    .info-head {
+      // background-color: white;
+      color: white;
+      position: relative;
+      padding: 10px 0;
 
-    .status {
-      height: 120px;
-      position: absolute;
-      top: 20px;
-      right: 20px;
+      .status {
+        height: 100px;
+        position: absolute;
+        top: 20px;
+        right: 0;
+      }
     }
-  }
 
-  .receiver-info, .details {
-    font-size: 16px;
-    padding: 20px;
 
-    div {
-      padding: 5px 0;
+    .show-zone {
+      background-color: white;
+      min-height: 300px;
+
+      &>.qrcode-receive, &>.receive {
+        border-top: 1px solid #ddd;
+        padding: 20px 0;
+        text-align: center;
+      }
+
+      .receiver-info, .details {
+        font-size: 13px;
+        padding: 10px;
+
+        div {
+          padding: 5px 0;
+        }
+      }
+
+      .details {
+        border-top: 1px solid #ddd;
+      }
+
+      .operation {
+        padding: 5px 10px;
+      }
+
+      .center {
+        margin-left: auto;
+        margin-right: auto;
+        width: 150px;
+        height: 150px;
+
+        img {
+          width: 150px;
+          height: 150px;          
+        }
+      }
     }
-  }
 
-  .details {
-    border-top: 1px solid #ddd;
-  }
+    .receive-operation {
+      padding-top: 20px;
+    }
 
-  .operation {
-    padding: 5px 10px;
+    .receive-operation, .receive-operation>a {
+      color: #ddd;
+
+      .active {
+        color: white;
+      }
+
+      .glyphicon {
+        padding-left: 13px;
+        font-size: 30px;
+      }
+    }
   }
 
   .shop {
@@ -202,6 +291,8 @@
   }
 
   .list-group.order-items {
+    font-size: 13px;
+
     .list-group-item:not(:first-child) {
       background: transparent;
     }
@@ -220,7 +311,7 @@
 .order-detail {
   .title {
     padding: 10px 0;
-    font-size: 16px;
+    font-size: 13px;
     position: relative;
 
     img {

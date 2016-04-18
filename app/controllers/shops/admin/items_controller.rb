@@ -4,6 +4,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
   include Shops::Admin::ItemHelper
   include ActionView::Helpers::SanitizeHelper
   include CombinationHash
+  include DeliveryAreaTitle
 
   respond_to :json, :html
 
@@ -206,6 +207,14 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     end
 
     @stock = @item.stock_changes.sum(:quantity)
+
+    @delivery_fee_settings = @item.delivery_fee
+    @delivery_fee_settings.each do |code, fee|
+      @delivery_fee_settings[code] = {
+        fee: fee,
+        title: get_code_title(code)
+      }
+    end
   end
 
   def inventory_config
