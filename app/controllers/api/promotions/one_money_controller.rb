@@ -151,6 +151,7 @@ class Api::Promotions::OneMoneyController < Api::BaseController
 
     hash[:participant_count] = @item.participants.count
     hash[:winner_count] = @item.winners.count
+    hash[:seed_count] = @item.seeds.count
     hash[:total_amount] = @item.total_amount
     hash[:completes] = @item.completes
 
