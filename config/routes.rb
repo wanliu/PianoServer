@@ -173,16 +173,19 @@ Rails.application.routes.draw do
       member do
         put "state", action: :state, as: :state
         patch "state_item/:item_id", action: :state_item, as: :state_item
+        patch "state_item_all", action: :state_item_all, as: :state_item_all
         patch "fix_clock/:item_id", action: :fix_clock, as: :fix_clock
         patch "add_item/:item_id", action: :add_item, as: :add_item
         put "update_item/:item_id", action: :update_item, as: :update_item
         put "overwrite_item/:item_id", action: :overwrite_item, as: :overwrite_item
         delete "clear_overwrite_item/:item_id", action: :clear_overwrite_item, as: :clear_overwrite_item
         delete "remove_item/:item_id", action: :remove_item, as: :remove_item
+        delete "clean_expire_grabs/:item_id", action: :clean_expire_grabs, as: :clean_expire_grabs
         post "upload_image/:item_id", action: :upload_image, as: :upload_image
         get :signups
         get "details/:item_id", action: :details, as: :details
         get "churn_stastic"
+        put "publish", action: :publish, as: :publish
       end
     end
     resources :attachments
@@ -267,6 +270,8 @@ Rails.application.routes.draw do
 
           get "callback/:item_id", action: :callback
           get "ensure/:grab_id", action: :ensure, via: Rails.env.production? ? [:put] : [:put, :get]
+
+          get "user_seeds/:user_id", action: :user_seeds
         end
       end
     end

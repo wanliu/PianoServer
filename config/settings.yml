@@ -102,6 +102,8 @@ after_registers:
   after_sign_in: false
   after_sign_in_path: after_registers
 weixin:
+  app_id: wxeb6857cceb42541e
+  secret: d4624c36b6795d1d99dcf0547af5443d
   scope: snsapi_login
   after_sign_in: true
   after_sign_in_path: smart_fills
@@ -114,6 +116,9 @@ promotions:
   one_money:
     timeout:
       minutes: 15
+    seed_timeout:
+      minutes: 720
+
     ensure_url: http://m.wanliu.com/api/promotions/one_money/:id/ensure/:grab_id
     discharge_express_fee_on: 64
     default:
@@ -124,6 +129,11 @@ promotions:
     sms_to_supplier: true
     sms_to_supplier_template: '【万流网】你的商店有一个新的一元购订单，订单号：#o_id#，请及时查看！'
     wx_pay_discount: 5
+    enter_url: /one_money
+    scripts:
+      publish:
+        dir: /var/www/OneMoney
+        exec: make clean; make release NAME=$name ONE_MONEY=$one_money_id DR_CODE=$qrcode HOME_IMG=$home_img LIST_IMG=$list_img SIGN_URL=$sign_url WINNERS_NUM=$winners API_URL=$api_url
 sms:
   host: sms.yunpian.com
   api_uri: /v1/sms/send.json

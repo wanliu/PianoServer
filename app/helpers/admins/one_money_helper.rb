@@ -87,6 +87,73 @@ module Admins::OneMoneyHelper
     end
   end
 
+  def status_control_all(one_money)
+    status_action = proc do |status|
+      state_item_all_admins_one_money_path(one_money.id, status: status)
+    end
+
+    btn = proc do |icon, status, options = {} |
+      disabled = options[:disabled]
+
+      classes = %w(btn btn-default btn-xs)
+      classes.push "disabled" if disabled
+      default_options = {
+        class: classes,
+        remote: true,
+        method: 'patch'
+      }
+
+      link_to status_action.call(status), default_options.merge(options || {}) do
+        icon icon
+      end
+    end
+
+    content_tag :span, class: 'btn-group' do
+      case one_money.status
+      when nil, "", 'invalid'
+        btn.call(:play, :started) +
+        btn.call(:pause, :suspend, disabled: true) +
+        btn.call(:stop, :end, disabled: true) +
+        btn.call(:record, :timing, disabled: true)
+      when "started"
+        btn.call(:play, :started, disabled: true) +
+        btn.call(:pause, :suspend) +
+        btn.call(:stop, :end) +
+        btn.call(:record, :timing, disabled: true)
+      when "suspend"
+        btn.call(:play, :started) +
+        btn.call(:pause, :suspend, disabled: true) +
+        btn.call(:stop, :end) +
+        btn.call(:record, :timing, disabled: true)
+      when "end"
+        btn.call(:play, :started) +
+        btn.call(:pause, :suspend, disabled: true) +
+        btn.call(:stop, :end, disabled: true) +
+        btn.call(:record, :timing, disabled: false)
+      when "timing"
+        btn.call(:play, :started) +
+        btn.call(:pause, :suspend, disabled: true) +
+        btn.call(:stop, :end, disabled: true) +
+        btn.call(:record, :timing, disabled: true)
+      end
+    end
+  end
+
+  def exists_one_money_dir?(one_money)
+    start_at = one_money.start_at
+    name = "release/%04d-%02d-%02d" % [start_at.year, start_at.month, start_at.day]
+
+    dir = File.join(Settings.promotions.one_money.scripts.publish.dir, name)
+    File.exist?(dir)
+  end
+
+  def one_money_publish_url(one_money)
+    start_at = one_money.start_at
+    name = "%04d-%02d-%02d" % [start_at.year, start_at.month, start_at.day]
+
+    File.join(Settings.promotions.one_money.enter_url, name)
+  end
+
   def best_in_place_item(item, *args)
     options = args.extract_options!
     options[:url] ||= update_item_admins_one_money_path(@one_money.id, item.id)

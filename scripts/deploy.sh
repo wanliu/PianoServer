@@ -16,13 +16,18 @@ export DATABASE_HOST=`aws_label $INSTANCE_ID "PostgresHost"`
 export DATABASE_PORT=5432
 export RAILS_ENV=production
 
-export ELASTICSEARCH_URL =`aws_label $INSTANCE_ID "ElasticsearchUrl"`
+export ELASTICSEARCH_URL=`aws_label $INSTANCE_ID "ElasticsearchUrl"`
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 echo "Database Host: $DATABASE_HOST"
 
-rbenv local 2.2.4
+# rbenv local 2.2.4
+
+# if [ ! -f config/settings.yml ]; then
+#   cp config/settings.yml.example
+#   echo "File not found!"
+# fi
 
 sed -i -e "
   /^elasticsearch:$/ {
@@ -36,10 +41,16 @@ sed -i -e "
   }
 " config/settings.yml
 
+aws s3 cp s3://piano-server/config/settings.local.yml config/settings.local.yml
+
 PREFIX="bundle exec"
+bin/spring stop
+
 bundle install
 
 $PREFIX rake db:migrate && rake assets:clean
 $PREFIX rake assets:precompile
 
-$DIR/init.sh upgrade
+mkdir -p tmp/pids
+
+. $DIR/init.sh upgrade

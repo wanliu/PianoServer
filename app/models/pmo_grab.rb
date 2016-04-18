@@ -23,11 +23,15 @@ class PmoGrab < Ohm::Model
   attribute :callback
   attribute :status
 
+  attribute :used_seed
+
   attribute :avatar_urls, Type::Array
   attribute :timeout_at, OhmTime::ISO8601
   attribute :one_money  # 活动的 id , etc OneMoney
 
   reference :pmo_item, :PmoItem
+
+  collection :seeds, :PmoSeed
 
   expire :time_out, :expired_time_out
   # expire :end_at, :expired_end_at
@@ -61,6 +65,17 @@ class PmoGrab < Ohm::Model
           end
         end
       end
+    end
+
+    seeds.map(&:delete)
+    unused_seed!
+  end
+
+  def unused_seed!
+    if used_seed
+      @seed = PmoSeed.find(seed_id: used_seed)
+      @seed.used = true
+      @seed.save
     end
   end
 
@@ -133,9 +148,42 @@ class PmoGrab < Ohm::Model
     self.status = 'created'
     save
     cancel_expire(:timeout)
+    generate_seeds!
   # rescue => e
     # raise ActiveRecord::RecordInvalid.new(self)
     # raise "pmo grab timeout"
+  end
+
+  def has_shares?
+    return false unless self.one_money
+
+    @one_money = OneMoney[self.one_money]
+
+    return @one_money.shares > 0
+  end
+
+  def in_periods?
+    @one_money = OneMoney[self.one_money]
+    @user = PmoUser[self.user_id]
+
+    return PmoSeed.last_period(@user, @one_money) + 1 <= @one_money.shares
+  end
+
+  def generate_seeds!
+
+    if has_shares? && in_periods?
+      @one_money = OneMoney[self.one_money]
+      @user = PmoUser[self.user_id]
+      last_period = PmoSeed.last_period(@user, @one_money)
+      @one_money.share_seed.times do |i|
+        @seed = PmoSeed.generate self, @user, period: last_period + 1
+        @seed.save
+      end
+    end
+  end
+
+  def expired?
+    timeout_at <= self.now && status == 'pending'
   end
 
   alias_method_chain :callback, :fallback

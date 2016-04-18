@@ -42,11 +42,12 @@ class PmoItem < Ohm::Model
   set :winners, :PmoUser
 
   collection :grabs, :PmoGrab
+  collection :seeds, :PmoSeed
   reference :one_money, :OneMoney
 
   # list :logs, :PmoLog
-  expire :start_at, :expired_start_at
-  expire :end_at, :expired_end_at
+  # expire :start_at, :expired_start_at
+  # expire :end_at, :expired_end_at
 
   counter :completes
 

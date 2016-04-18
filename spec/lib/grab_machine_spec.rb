@@ -27,6 +27,7 @@ end
 RSpec.describe GrabController, :type => :controller do
 
   before :each do
+    PmoGrab.all.map &:delete
     # OneMoney.create({id: 1, name: "test", title: "test一元够"}) # merge(attributes))
     # PmoItem.create({id: 1, title: "测试商品", price: 1, ori_price: 99, shop_id: 1, shop_name: "测试商店"})
     # PmoUser.create(id: 1, username: '测试', title: '测试', user_id: 1)
@@ -91,7 +92,6 @@ RSpec.describe GrabController, :type => :controller do
     it "活动价格可以为 0 (商议)" do
       get :index, item: { total_amount: 10,  quantity: 1, price: 0 }
       expect(response.status).to eql(200)
-      # pp response.body
       # result = JSON.parse(response.body)
       # expect(result["status"]).to eql("quantity_zero")
     end
@@ -137,6 +137,7 @@ RSpec.describe GrabController, :type => :controller do
 
       it "用户已经赢得了奖励， 将返回 always 状态" do
         get :index, item: { total_amount: 10,  quantity: 1 }
+        pending("不再根据 winnner 判断用户是不是可以再抢")
 
         expect(response.status).to eql(400)
         result = JSON.parse(response.body)
@@ -466,6 +467,309 @@ RSpec.describe GrabController, :type => :controller do
             expect(response.status).to eql(500)
             result = JSON.parse(response.body)
             expect(result["status"]).to eql("no-executies")
+          end
+        end
+      end
+    end
+
+    describe "带有分享种子的抢购" do
+      describe GrabController, :type => :controller do
+        before :each do
+          PmoGrab.all.map &:delete
+          PmoSeed.all.map &:delete
+        end
+
+        controller do
+
+          # 一个活动，两个商品，其中 Item 1 已经被抢了一次，用户在抢 Item 2
+          def index
+
+            @one_money = one_money(1, params[:one_money] || {})
+            @item = item(1, params[:item] || {})
+            @item.one_money = @one_money
+            @item.save
+
+            @item.incr :completes, params[:completes] if params[:completes]
+
+            # @grab = grab
+            # @grab.pmo_item = @item
+            # @grab.save
+
+            # @seed = PmoSeed.generate(@grab, current_user)
+
+            GrabMachine.run(self, @one_money, @item) do |status, context|
+              if status == "success"
+                render nothing: true
+              else
+                render json: context.result, status: context.code
+              end
+            end
+            # raise ApplicationController::AccessDenied
+          end
+
+          def index2
+            @one_money = one_money(1, params[:one_money] || {})
+            @item = item(1, params[:item] || {})
+            @item.one_money = @one_money
+            @item.save
+
+            @grab = grab
+            @grab.pmo_item = @item
+            @grab.save
+
+            @seed = seed(@grab, current_user, 1, params[:seed] || {})
+            @seed.save
+
+            @item.incr :completes, params[:completes] if params[:completes]
+
+            options = {}
+            options = options.merge seed: @seed if params[:seed]
+
+            GrabMachine.run(self, @one_money, @item, options) do |status, context|
+              if status == "success"
+                render nothing: true
+              else
+                render json: context.result, status: context.code
+              end
+            end
+          end
+
+          def index3
+            @one_money = one_money(1, params[:one_money] || {})
+            @item = item(1, params[:item] || {})
+            @item.one_money = @one_money
+            @item.save
+
+            @grab = grab
+            @grab.pmo_item = @item
+            @grab.save
+
+            @seed = seed(@grab, current_user, 1, params[:seed] || {})
+            @seed.give(friend_user)
+            @seed.save
+
+            @grab2 = grab 2, user_id: friend_user.id
+            @grab2.pmo_item = @item
+            @grab2.save
+
+            @item.incr :completes, params[:completes] if params[:completes]
+
+            GrabMachine.run(self, @one_money, @item, seed: @seed) do |status, context|
+              if status == "success"
+                render nothing: true
+              else
+                render json: context.result, status: context.code
+              end
+            end
+          end
+
+          # 超时
+          def index4
+            @one_money = one_money(1, params[:one_money] || {})
+            @item = item(1, params[:item] || {})
+            @item.one_money = @one_money
+            @item.save
+
+            @grab = grab
+            @grab.pmo_item = @item
+            @grab.save
+
+            @seed = seed(@grab, current_user, 1, params[:seed] || {})
+            @seed.give(friend_user)
+            @seed.timeout_at = @seed.now + params[:timeout].to_i if params[:timeout]
+            # pp @seed.expired?, @seed.timeout_at, @seed.now
+            @seed.save
+
+            @grab2 = grab 2, user_id: friend_user.id
+            @grab2.pmo_item = @item
+            @grab2.save
+
+            @item.incr :completes, params[:completes] if params[:completes]
+
+            GrabMachine.run(self, @one_money, @item, seed: @seed) do |status, context|
+              if status == "success"
+                render nothing: true
+              else
+                render json: context.result, status: context.code
+              end
+            end
+          end
+
+          def index5
+            base_index do
+
+              @seed = seed(@grab, friend_user, 1, params[:seed] || {})
+              @seed.give(friend_user)
+              @seed.timeout_at = @seed.now + params[:timeout].to_i if params[:timeout]
+              @seed.save
+              @grab2 = grab 2, user_id: friend_user.id
+              @grab2.pmo_item = @item
+              @grab2.save
+            end
+          end
+
+          def index6
+            base_index do
+              @seed = seed(@grab, current_user, 1, params[:seed] || {})
+              @seed.give(friend_user)
+              @seed.timeout_at = @seed.now + params[:timeout].to_i if params[:timeout]
+              @seed.save
+
+              @user2 = friend_user(3)
+              @grab2 = grab 2, user_id: @user2.id
+              @grab2.pmo_item = @item
+              @grab2.save
+
+              @seed2 = seed(@grab2, current_user, 2, {used: true})
+              @seed2.give(friend_user(4))
+              # @seed2.timeout_at = @seed2.now + params[:timeout].to_i if params[:timeout]
+              @seed2.save
+
+              # @grab2 = grab 2, user_id: friend_user.id
+              # @grab2.pmo_item = @item
+              # @grab2.save
+            end
+          end
+
+          def base_index(&block)
+            @one_money = one_money(1, params[:one_money] || {})
+            @item = item(1, params[:item] || {})
+            @item.one_money = @one_money
+            @item.save
+
+            @grab = grab
+            @grab.pmo_item = @item
+            @grab.save
+
+            yield
+
+            @item.incr :completes, params[:completes] if params[:completes]
+
+            GrabMachine.run(self, @one_money, @item, seed: @seed) do |status, context|
+              if status == "success"
+                render nothing: true
+              else
+                render json: context.result, status: context.code
+              end
+            end
+          end
+
+          def friend_user(id = 2, attributes = {})
+            PmoUser.exists?(2) ? PmoUser[2] : PmoUser.create({id: 2, username: '朋友测试', title: '测试朋友', user_id: 2}.merge(attributes))
+          end
+
+          def one_money(id = 1, attributes = {})
+            OneMoney[id].try(:delete)
+            OneMoney.create({id: id, name: "test", title: "test一元够", multi_item: 1, shares: 1, share_seed: 1}.merge(attributes))
+          end
+
+          def grab(id = 1, attributes ={})
+            PmoGrab[id].try(:delete)
+            PmoGrab.create({id: id, user_id: 1, title: '测试商品', price: 1, quantity: 1, one_money: 1}.merge(attributes))
+          end
+
+          def seed(grab, user, id = 1 , attributes = {})
+            PmoSeed[id].try(:delete)
+            PmoSeed.generate(grab, user, attributes)
+          end
+        end
+
+        describe "如果设置 shares = 1" do
+          it "但是没有传递 seed ，那么工作依然 正常" do
+            routes.draw { get "index" => "grab#index" }
+
+            get :index, item: { total_amount: 20, quantity: 1, max_executies: 1 }, completes: 10
+            # pp response.body
+            expect(response.status).to eql(200)
+          end
+
+          it "库存不足依然会出错" do
+            routes.draw { get "index" => "grab#index" }
+            get :index, item: { total_amount: 10, quantity: 1, max_executies: 1 }, completes: 10
+
+            expect(response.status).to eql(500)
+            result = JSON.parse(response.body)
+            expect(result["status"]).to eql("insufficient")
+          end
+
+          it "已经抢过一次了, 不带种子不能再抢" do
+            routes.draw { get "index2" => "grab#index2" }
+            get :index2, item: { total_amount: 10, quantity: 1, max_executies: 1 }, completes: 8
+
+            expect(response.status).to eql(500)
+            result = JSON.parse(response.body)
+            expect(result["status"]).to eql("no-executies")
+          end
+
+          it "产生种子，还没有分享成功给他人, 那么不能再抢"  do
+            routes.draw { get "index2" => "grab#index2" }
+            get :index2, item: { total_amount: 10, quantity: 1, max_executies: 1 }, completes: 8, seed: {used: false}
+
+            expect(response.status).to eql(400)
+            result = JSON.parse(response.body)
+            expect(result["status"]).to eql("dont_send")
+          end
+
+          it "得到分享种子的朋友已经抢过，那么可以开始抢了"  do
+            routes.draw { get "index3" => "grab#index3" }
+            get :index3, item: { total_amount: 10, quantity: 1, max_executies: 1 }, completes: 8
+            # pp response.body
+            expect(response.status).to eql(200)
+          end
+
+          it "如果种子已经使用过，则不能再使用" do
+            routes.draw { get "index3" => "grab#index3" }
+            get :index3, item: { total_amount: 10, quantity: 1, max_executies: 1 }, completes: 8, seed: {used: true}
+
+            expect(response.status).to eql(400)
+            result = JSON.parse(response.body)
+            expect(result["status"]).to eql("used_seed")
+          end
+
+          it "种子超过过期时间，也不能使用" do
+            routes.draw { get "index4" => "grab#index4" }
+            get :index4, item: { total_amount: 10, quantity: 1, max_executies: 1 }, completes: 8, seed: {used: false}, timeout: -10000
+
+            expect(response.status).to eql(400)
+            result = JSON.parse(response.body)
+            expect(result["status"]).to eql("seed_expired")
+          end
+
+          it "种子过期时间为0，表示永不过期" do
+          end
+
+          it "使用的种子不是自己的，不能使用" do
+            routes.draw { get "index5" => "grab#index5" }
+            get :index5, item: { total_amount: 10, quantity: 1, max_executies: 1 }, completes: 8, seed: {used: false}
+
+            expect(response.status).to eql(400)
+            result = JSON.parse(response.body)
+            expect(result["status"]).to eql("seed_invalid_owner")
+          end
+
+          it "超过分享周期数，不能使用" do
+            routes.draw { get "index3" => "grab#index3" }
+            get :index3, item: { total_amount: 10, quantity: 1, max_executies: 1 }, completes: 8, seed: {period: 2}
+            # pp assigns :seed
+            expect(response.status).to eql(400)
+            result = JSON.parse(response.body)
+            expect(result["status"]).to eql("limit_shares")
+          end
+
+          it "超过分享种子数据，不能使用" do
+            routes.draw { get "index6" => "grab#index6" }
+            get :index6, one_money: { share_seed: 1}, item: { total_amount: 10, quantity: 1, max_executies: 1 }, completes: 8, seed: {used: false}
+
+            expect(response.status).to eql(400)
+            result = JSON.parse(response.body)
+            expect(result["status"]).to eql("limit_seed")
+          end
+
+          it "share_seed =2, 分享种子数据可以超过一" do
+            routes.draw { get "index6" => "grab#index6" }
+            get :index6, one_money: { share_seed: 2}, item: { total_amount: 10, quantity: 1, max_executies: 1 }, completes: 8, seed: {used: false}
+
+            expect(response.status).to eql(200)
           end
         end
       end

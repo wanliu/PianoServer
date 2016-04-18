@@ -210,10 +210,7 @@ class OrdersController < ApplicationController
       evaluationable_type: @item.orderable_type,
       evaluationable_id: @item.orderable_id)
 
-    if @evaluation.present?
-      flash.alert = "你已经评价过这个商品！"
-      redirect_to evaluate_order_path(@order)
-    else
+    unless @evaluation.present?
       @evaluation = @order.evaluations.build
     end
   end

@@ -1,4 +1,6 @@
 class Admins::OneMoneyController < Admins::BaseController
+  include ActionController::Live
+
   before_action :set_one_money, except: [:index, :new, :create, :search]
 
   def index
@@ -28,6 +30,22 @@ class Admins::OneMoneyController < Admins::BaseController
   end
 
   def edit
+  end
+
+  def publish
+    # response.headers['Content-Type'] = 'text/event-stream'
+
+    start_at = @one_money.start_at
+    name = "%04d-%02d-%02d" % [start_at.year, start_at.month, start_at.day]
+    OneMoneyPublishJob.perform_now @one_money, name
+    render json: {
+      status: :success,
+      url: File.join(Settings.promotions.one_money.enter_url, name)
+    }
+  # rescue e
+  #   response.stream.write e.message
+  # ensure
+  #   response.stream.close
   end
 
   def upload_image
@@ -76,8 +94,8 @@ class Admins::OneMoneyController < Admins::BaseController
     @item = PmoItem.from(item)
     @item.one_money = @one_money
     @item.save
-    @item.set_expire_time(:start_at, @item.start_at)
-    @item.set_expire_time(:end_at, @item.end_at)
+    # @item.set_expire_time(:start_at, @item.start_at)
+    # @item.set_expire_time(:end_at, @item.end_at)
   end
 
   def remove_item
@@ -115,6 +133,11 @@ class Admins::OneMoneyController < Admins::BaseController
     @item.clear_overwrite(params[:name])
   end
 
+  def clean_expire_grabs
+    @item = PmoItem[params[:item_id].to_i]
+    @deletes = @item.grabs.select {|grb| grb.expired? }.map { |grb| grb.delete }
+  end
+
   def set_item_completes
     @item = PmoItem[params[:item_id].to_i]
     new_completes = parmas[:pmo_item][:completes].to_i
@@ -131,11 +154,23 @@ class Admins::OneMoneyController < Admins::BaseController
     @item.save
   end
 
+  def state_item_all
+    OneMoney[parmas[:id].to_i].items.each do |pmo_item|
+      begin
+        @item.set_status params[:status] if params[:status]
+        @item.save
+
+      rescue Exception => e
+        puts e
+      end
+    end
+  end
+
   def fix_clock
     @item = PmoItem[params[:item_id].to_i]
 
-    @item.set_expire_time(:start_at, @item.start_at)
-    @item.set_expire_time(:end_at, @item.end_at)
+    # @item.set_expire_time(:start_at, @item.start_at)
+    # @item.set_expire_time(:end_at, @item.end_at)
     @item.save
   end
 
