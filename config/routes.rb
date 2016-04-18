@@ -285,6 +285,14 @@ Rails.application.routes.draw do
         get "favorite_count", to: "shops#favorite_count"
       end
     end
+
+    resources :locations do
+      collection do
+        get "provinces", to: "locations#provinces"
+        get "cities", to: "locations#cities"
+        get "regions", to: "locations#regions"
+      end
+    end
   end
 
   resources :promotions, concerns: [ :chatable ] do
@@ -360,11 +368,11 @@ Rails.application.routes.draw do
       get "evaluate"
       patch "create_evaluations"
 
-      get "evaluate_items/:order_item_id", 
-        to: "orders#evaluate_item", 
+      get "evaluate_items/:order_item_id",
+        to: "orders#evaluate_item",
         as: :evaluate_items
 
-      post "evaluate_items/:order_item_id", 
+      post "evaluate_items/:order_item_id",
         to: "orders#evaluate_item_create",
         as: :evaluate_items_create
     end
