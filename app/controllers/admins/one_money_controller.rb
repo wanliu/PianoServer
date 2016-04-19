@@ -1,5 +1,4 @@
 class Admins::OneMoneyController < Admins::BaseController
-  include ActionController::Live
 
   before_action :set_one_money, except: [:index, :new, :create, :search]
 

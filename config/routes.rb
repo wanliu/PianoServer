@@ -274,6 +274,7 @@ Rails.application.routes.draw do
           get "ensure/:grab_id", action: :ensure, via: Rails.env.production? ? [:put] : [:put, :get]
 
           get "user_seeds/:user_id", action: :user_seeds
+          get "seeds/:seed_id", action: :seed
         end
       end
     end
@@ -290,6 +291,14 @@ Rails.application.routes.draw do
     resources :shops do
       member do
         get "favorite_count", to: "shops#favorite_count"
+      end
+    end
+
+    resources :locations do
+      collection do
+        get "provinces", to: "locations#provinces"
+        get "cities", to: "locations#cities"
+        get "regions", to: "locations#regions"
       end
     end
   end
@@ -472,6 +481,6 @@ Rails.application.routes.draw do
     end
   end
 
-  # root to: "promotions#index"
-  root to: redirect('/html/%E8%80%92%E9%98%B3%E8%A1%97%E4%B8%8A')
+  root to: "promotions#index"
+  # root to: redirect('/html/%E8%80%92%E9%98%B3%E8%A1%97%E4%B8%8A')
 end

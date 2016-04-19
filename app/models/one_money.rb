@@ -20,6 +20,7 @@ class OneMoney < Ohm::Model
 
   attribute :cover_url
   attribute :head_url
+  attribute :publish_url
   attribute :status
 
   attribute :shares, Type::Integer        # 分享次数
