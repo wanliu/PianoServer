@@ -37,7 +37,7 @@ timeout 180
 stderr_path APP_PATH + "/log/unicorn.stderr.log"
 stdout_path APP_PATH + "/log/unicorn.stdout.log"
 
-FileUtils.rm('tmp/pids/subscribe.pid', force: true)
+FileUtils.rm(APP_PATH + '/tmp/pids/subscribe.pid', force: true)
 
 preload_app true
 
