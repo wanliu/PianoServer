@@ -141,14 +141,14 @@ end
 
 
 
-if Rails.env.production?
-  unless File.exist?('tmp/pids/subscribe.pid')
-    File.write('tmp/pids/subscribe.pid', Process.pid)
-    RedisSubscribeManager.launch
-  end
-  # if ENV['SUBSCRIBE_MASTER']
+# if Rails.env.production?
+#   unless File.exist?('tmp/pids/subscribe.pid')
+#     File.write('tmp/pids/subscribe.pid', Process.pid)
+#     RedisSubscribeManager.launch
+#   end
+#   # if ENV['SUBSCRIBE_MASTER']
 
-  # end
-elsif Rails.env.development?
-  RedisSubscribeManager.launch
-end
+#   # end
+# elsif Rails.env.development?
+#   RedisSubscribeManager.launch
+# end
