@@ -8,8 +8,9 @@
   <thead>
     <tr>
       <th width='40%'>赠品</th>
-      <th width='15%'>赠送数量</th>
-      <th width='15%'>赠送总数</th>
+      <th width='10%'>赠送数量</th>
+      <th width='10%'>赠送总数</th>
+      <th width='10%'>已赠送数</th>
       <th width='30%'></th>
     </tr>
   </thead>
@@ -89,6 +90,7 @@
     </td>
     <td>{{ quantity }}</td>
     <td>{{ total }}</td>
+    <td>{{ saled_counter }}</td>
     <td>
       <button type='button' class='btn btn-default modify-gift' data-gift-id={{ id }}>修改</button>
       <%= button_to "删除", shop_admin_item_gift_path(item.shop.name, item, 88888888), method: :delete, data: { confirm: "确定删除该赠品么?" }, class: 'btn btn-danger' %>
