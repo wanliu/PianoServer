@@ -46,6 +46,11 @@
     <%= text_field 'one_money', :callback, value: @one_money.callback || Settings.promotions.one_money.default.callback, class: 'form-control' %>
   </div>
 
+  <div class="form-group">
+    <%= label_tag 'one_money_publish_url', '发布地址' %>
+    <%= text_field 'one_money', :publish_url, value: @one_money.publish_url, class: 'form-control' %>
+  </div>
+
   <!-- <div class="form-group">
     <%#= label_tag 'one_money_auto_expire', :auto_expire %>
     <%#= check_box 'one_money', :auto_expire, value: @one_money.auto_expire %>
@@ -74,6 +79,8 @@
     </div>
   </div>
   <% end %>
+
+
 
   <div class="form-group">
     <%= label_tag 'one_money_start_at', '开始时间'%>
