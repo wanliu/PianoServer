@@ -14,6 +14,6 @@ files:
     destination: /etc/nginx/conf.d
 hooks:
   Install:
-    - location: scripts/deploy.sh >> log/deploy.log
-      timeout: 300
+    - location: scripts/deploy.sh
+      timeout: 500
       runas: root
