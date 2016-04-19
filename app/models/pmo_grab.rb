@@ -147,8 +147,8 @@ class PmoGrab < Ohm::Model
   def ensure!
     self.status = 'created'
     save
-    cancel_expire(:timeout)
     generate_seeds!
+    cancel_expire(:timeout)
   # rescue => e
     # raise ActiveRecord::RecordInvalid.new(self)
     # raise "pmo grab timeout"
