@@ -53,4 +53,5 @@ $PREFIX rake assets:precompile
 
 mkdir -p tmp/pids
 
+echo $DIR
 . $DIR/init.sh upgrade
