@@ -6,6 +6,8 @@ tableHtml = '''
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title">选择范围</h4>
         </div>
+        <div class="alert alert-danger errors" role="alert" style="display: none;">
+        </div>
         <div class="modal-body" style="max-height: 350px; overflow-y: scroll; background-color: #fff;">
           <table class="table setting-code">
             <thead>
@@ -211,8 +213,11 @@ class @DeliveryArea
       .done (data, status, xhr) =>
         @$modal.modal('hide');
         @onCreatedCallback(data);
-        @reset();
-      .fail (data, status, xhr) ->
+        @reset()
+      .fail (data, status, xhr) =>
+        @$modal.find('.errors')
+          .text(data.responseJSON.error)
+          .show()
 
   enableSubmit: (e) =>
     $target = $(e.target || e.srcElement)
@@ -229,6 +234,7 @@ class @DeliveryArea
   switchSettingView: () ->
     @settingStatus = @settingSwither[@settingStatus]
     @rerenderSettingView()
+    @$modal.find('.errors').html('').hide()
 
   rerenderSettingView: () ->
     @$modal.find(".setting-#{@settingStatus}").show()
