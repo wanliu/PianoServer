@@ -15,7 +15,7 @@ class OneMoneyPublishJob < ActiveJob::Base
       one_money_id: one_money.id,
       qrcode: options[:qr_code],
       home_img: one_money.cover_url,
-      list_img: one_money.cover_url,
+      list_img: one_money.head_url,
       api_url: options[:api_url],
       winners: options[:winners_num],
       sign_url: options[:sign_url],
