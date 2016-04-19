@@ -109,6 +109,10 @@ class PmoItem < Ohm::Model
     false
   end
 
+  # def completes
+  #   grabs.select {|g| !g.expired? }.count
+  # end
+
   # def suspend_at_with_fallback
   #   if self.independence
   #     suspend_at_without_fallback
