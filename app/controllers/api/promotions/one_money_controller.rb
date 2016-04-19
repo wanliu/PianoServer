@@ -261,6 +261,17 @@ class Api::Promotions::OneMoneyController < Api::BaseController
     render json: hash
   end
 
+  def seed
+    @seed = PmoSeed.find(one_money: @one_money.id, seed_id: params[:seed_id]).first
+    render json: {
+      status: "success",
+      seed: @seed
+    }
+  end
+
+
+  protected
+
   def from_seed
     if params[:from_seed]
       @from_seed = PmoSeed.find(seed_id: params[:from_seed]).first
@@ -290,7 +301,6 @@ class Api::Promotions::OneMoneyController < Api::BaseController
       msg: e.message
     }
   end
-
   private
 
   def set_one_money

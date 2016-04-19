@@ -1,5 +1,4 @@
 class Admins::OneMoneyController < Admins::BaseController
-  include ActionController::Live
 
   before_action :set_one_money, except: [:index, :new, :create, :search]
 
@@ -61,6 +60,18 @@ class Admins::OneMoneyController < Admins::BaseController
     @item.save
 
     render json: { success: true, url: uploader.url(:cover) }
+  end
+
+  def upload_one_money_image
+    @field = params[:field]
+
+    uploader = NativeUploader.new(@one_money, @field)
+    uploader.store! params[:file]
+
+    # @one_money.send(@field, uploader.url)
+    # @one_money.save
+
+    render json: { success: true, field: params[:field], url: uploader.url }
   end
 
   def update
