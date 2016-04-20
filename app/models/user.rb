@@ -32,6 +32,9 @@ class User < ActiveRecord::Base
   has_many :evaluations
   has_many :thumbs, foreign_key: :thumber_id
 
+  has_many :shop_delivers, foreign_key: :deliver_id
+  has_many :deliverable_shops, through: :shop_delivers, source: :shop
+
   validates :username, presence: true, uniqueness: true
   validates :mobile, presence: true, uniqueness: true
 

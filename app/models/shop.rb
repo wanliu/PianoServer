@@ -23,6 +23,9 @@ class Shop < ActiveRecord::Base
   has_many :orders, foreign_key: 'supplier_id'
   has_many :favoritables, as: :favoritor, class_name: 'Favorite'
 
+  has_many :shop_delivers
+  has_many :delivers, through: :shop_delivers, source: :deliver
+
   validates :title, :phone, :name, presence: true
   validates :name, uniqueness: true
   validates :location, presence: { message: '请选择有效城市' }, unless: :skip_validates_or_location
