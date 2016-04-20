@@ -4,6 +4,7 @@
 # http://en.wikipedia.org/wiki/Cron
 
 set :output, {:error => 'error.log', :standard => 'cron.log'}
+job_type :rake, "cd :path && :environment_variable=:environment SECRET_KEY_BASE=XXX bundle exec rake :task --silent :output"
 
 # Example:
 #
