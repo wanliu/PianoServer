@@ -1,0 +1,8 @@
+$(".item[data-deliver-id=<%= @deliver.id %>]").remove();
+$(".infors.alert").html("删除成功！").show();
+
+setTimeout(function() {
+  $(".infors.alert").fadeOut(function() {
+    $(".infors.alert").html("");
+  });
+}, 5000);

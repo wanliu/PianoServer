@@ -54,6 +54,12 @@ class Shop < ActiveRecord::Base
     end
   end
 
+  def self.name_and_deliverable_by(options)
+    joins(:shop_delivers)
+      .where("shops.name = :shop_name AND (shop_delivers.deliver_id = :user_id OR shops.owner_id = :user_id)", options)
+      .first
+  end
+
   def skip_validates_or_location
     skip_validates || skip_location
   end
