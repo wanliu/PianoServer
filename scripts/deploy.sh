@@ -50,6 +50,7 @@ bundle install
 
 $PREFIX rake db:migrate && rake assets:clean
 $PREFIX rake assets:precompile
+bundle exec whenever -iw
 
 mkdir -p tmp/pids
 
