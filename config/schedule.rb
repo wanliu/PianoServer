@@ -5,6 +5,7 @@
 
 set :output, {:error => 'error.log', :standard => 'cron.log'}
 job_type :rake, "cd :path && :environment_variable=:environment SECRET_KEY_BASE=XXX bundle exec rake :task --silent :output"
+job_type :runner,  "cd :path && SECRET_KEY_BASE=XXX bin/rails runner -e :environment ':task' :output"
 
 # Example:
 #
