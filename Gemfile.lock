@@ -144,6 +144,7 @@ GEM
       jquery-rails
       rails (>= 3.1.0)
     chinese_pinyin (1.0.0)
+    chronic (0.10.2)
     coderay (1.1.0)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
@@ -538,6 +539,8 @@ GEM
       http (~> 1.0, >= 1.0.1)
       nokogiri (>= 1.6.0)
       thor
+    whenever (0.9.4)
+      chronic (>= 0.6.3)
     wx_pay (0.4.1)
       activesupport (>= 3.2)
       rest-client (>= 1.7)
@@ -639,4 +642,8 @@ DEPENDENCIES
   web-console (~> 2.0)
   wechat
   weixin_authorize!
+  whenever
   wx_pay
+
+BUNDLED WITH
+   1.10.6

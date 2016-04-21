@@ -116,7 +116,7 @@ gem 'carrierwave-upyun', "0.2.1"
 
 gem 'hiredis', "~> 0.5.0"
 gem "redis", ">= 3.2.0", :require => ["redis", "redis/connection/hiredis"]
-
+gem 'whenever', :require => false
 # gem "em-synchrony"
 # gem 'em-hiredis', '~> 0.3.0'
 # gem 'em-redis'

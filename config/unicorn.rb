@@ -11,7 +11,6 @@ APP_PATH = path.to_s
 
 # worker 数
 worker_processes Etc.respond_to?(:nprocessors) ?  Etc.nprocessors + 1 : 4
-
 # 项目目录，部署后的项目指向 current，如：/srv/project_name/current
 working_directory APP_PATH
 
@@ -32,27 +31,26 @@ timeout 180
 
 # unicorn master pid
 # unicorn pid 存放路径
-pid APP_PATH + "/tmp/pids/unicorn.pid"
+# pid APP_PATH + "/tmp/pids/unicorn.pid"
 
 # unicorn 日志
 stderr_path APP_PATH + "/log/unicorn.stderr.log"
 stdout_path APP_PATH + "/log/unicorn.stdout.log"
+
+FileUtils.rm(APP_PATH + '/tmp/pids/subscribe.pid', force: true)
 
 preload_app true
 
 run_once = true
 
 before_fork do |server, worker|
-  if run_once
-    ENV['SUBSCRIBE_MASTER'] = "true"
-    run_once = false
-  end
-
+  # File.write('tmp/pids/subscribe.pid', Process.id) unless File.exists?('tmp/pids/subscribe.pid')
   defined?(ActiveRecord::Base) and
     ActiveRecord::Base.connection.disconnect!
 end
 
 after_fork do |server, worker|
+  # FileUtils.rm('tmp/pids/subscribe.pid')
   defined?(ActiveRecord::Base) and
     ActiveRecord::Base.establish_connection
 end

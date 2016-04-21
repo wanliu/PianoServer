@@ -23,6 +23,9 @@ class Shop < ActiveRecord::Base
   has_many :orders, foreign_key: 'supplier_id'
   has_many :favoritables, as: :favoritor, class_name: 'Favorite'
 
+  has_many :shop_delivers
+  has_many :delivers, through: :shop_delivers, source: :deliver
+
   validates :title, :phone, :name, presence: true
   validates :name, uniqueness: true
   validates :location, presence: { message: '请选择有效城市' }, unless: :skip_validates_or_location
@@ -49,6 +52,12 @@ class Shop < ActiveRecord::Base
     unless ids.blank?
       where("items.brand_id in (?)", ids)
     end
+  end
+
+  def self.name_and_deliverable_by(options)
+    joins(:shop_delivers)
+      .where("shops.name = :shop_name AND (shop_delivers.deliver_id = :user_id OR shops.owner_id = :user_id)", options)
+      .first
   end
 
   def skip_validates_or_location

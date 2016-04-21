@@ -423,6 +423,12 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :delivers, only: [:index, :show, :create, :destroy] do
+        collection do
+          get :search_new_delivers, as: :search
+        end
+      end
+
       resources :dashboard
       resources :shop_categories,  path: "categories", constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do
         member do
