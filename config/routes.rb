@@ -257,7 +257,6 @@ Rails.application.routes.draw do
     get "suggestion", :to => "suggestion#index"
     get "/items/search_ly", :to => "items#search_ly"
     get "/items/hots", :to => "items#hots"
-    get "/users/search", :to => "users#search"
 
     namespace :promotions do
       resources :one_money, except: [:index, :create, :update, :destroy]  do
@@ -424,7 +423,11 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :delivers, only: [:index, :show, :create, :destroy]
+      resources :delivers, only: [:index, :show, :create, :destroy] do
+        collection do
+          get :search_new_delivers, as: :search
+        end
+      end
 
       resources :dashboard
       resources :shop_categories,  path: "categories", constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do

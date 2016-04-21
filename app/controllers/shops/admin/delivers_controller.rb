@@ -9,11 +9,10 @@ class Shops::Admin::DeliversController < Shops::Admin::BaseController
   end
 
   def create
-    @deliver = current_shop.shop_delivers.build(user_id: params[:deliver][:user_id])
+    @deliver = current_shop.shop_delivers.build(deliver_id: params[:deliver][:user_id])
+    @deliver.save
     respond_to do |format|
-      if @deliver.save
-      else
-      end
+      format.js
     end
   end
 
@@ -23,8 +22,13 @@ class Shops::Admin::DeliversController < Shops::Admin::BaseController
 
     respond_to do |format|
       format.json { head :no_content }
-      format.html { head :no_content }
       format.js
     end
+  end
+
+  def search_new_delivers
+    except_ids = current_shop.deliver_ids.concat([current_shop.owner_id])
+    users = User.where("username LIKE ? AND id NOT IN (?)", "%#{params[:q]}%", except_ids).limit(10)
+    render json: users.to_json(only: [:id], methods: [:avatar_url, :username])
   end
 end
