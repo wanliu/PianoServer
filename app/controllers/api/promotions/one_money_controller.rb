@@ -82,6 +82,33 @@ class Api::Promotions::OneMoneyController < Api::BaseController
     render json: {user_id: pmo_current_user.id, user_user_id: pmo_current_user.user_id, status: status > 0 ? "success" : "always" }
   end
 
+  def retrieve_seed
+    @user = User.find(params[:user_id])
+    @callback = URI(params[:callback])
+    @pmo_user = PmoUser.find(user_id: @user.id).first
+    result = {
+      status: "success",
+      seed: nil,
+    }
+
+    if @pmo_user
+      @options = {one_money: @one_money.id, owner_id: @pmo_user.id}
+      @options.merge!(period: params[:period]) if params[:period]
+      @seed = PmoSeed.find(@options).select {|s| s.status == 'pending' }.first
+      if @seed
+        query = Hash[URI.decode_www_form(@callback.query || '')]
+        @callback.query = URI.encode_www_form(query.merge(fromSeed: @seed.seed_id))
+
+        result[:callback_url] = @callback.to_s
+      end
+
+      result[:seed] = @seed
+    end
+
+    redirect_to @callback.to_s
+    # render json: result
+  end
+
   def status
     hash = @one_money.attributes
     hash[:signup_count] = @one_money.signups.count

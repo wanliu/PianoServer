@@ -274,6 +274,7 @@ Rails.application.routes.draw do
           get "ensure/:grab_id", action: :ensure, via: Rails.env.production? ? [:put] : [:put, :get]
 
           get "user_seeds/:user_id", action: :user_seeds
+          get "retrieve_seed/:user_id", action: :retrieve_seed
           get "seeds/:seed_id", action: :seed
         end
       end
