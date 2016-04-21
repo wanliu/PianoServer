@@ -8,7 +8,7 @@ class Api::Promotions::OneMoneyController < Api::BaseController
   class InvalidSeedOwner < RuntimeError; end
 
   include FastUsers
-  skip_before_action :authenticate_user!, only: [:show, :item, :items, :status, :item_status]
+  skip_before_action :authenticate_user!, only: [:show, :item, :items, :status, :item_status, :retrieve_seed]
   skip_before_action :authenticate_user!, only: [:signup] unless Rails.env.production?
   skip_before_action :authenticate_user!, only: [:signup, :grab, :callback] if ENV['TEST_PERFORMANCE']
 
@@ -282,7 +282,10 @@ class Api::Promotions::OneMoneyController < Api::BaseController
   end
 
   def user_seeds
-    @options = {one_money: @one_money.id, owner_id: pmo_current_user.id}
+    user = User.find(params[:user_id])
+    pmo_user = PmoUser.find(user_id: user.id).first || PmoUser.from(user)
+    pmo_user.save if pmo_user.new?
+    @options = {one_money: @one_money.id, owner_id: pmo_user.id}
     @options.merge!(period: params[:period]) if params[:period]
     @seeds = PmoSeed.find(@options)
     hash ={

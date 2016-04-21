@@ -64,7 +64,30 @@ class PmoSeed < Ohm::Model
   end
 
   def to_hash
-    super.merge(attributes.merge(status: status))
+    owner_hash = if owner
+                   {
+                     owner_avatar_url: owner.avatar_url,
+                     owner_name: owner.title || owner.name
+                   }
+                 else
+                   {}
+                 end
+
+
+    given_hash = if given
+                   {
+                     given_avatar_url: given.avatar_url,
+                     given_name: given.title || given.title
+                   }
+                 else
+                   {}
+                 end
+
+    super.merge(attributes.merge(status: status).merge(owner_hash).merge(given_hash))
+  end
+
+  def owner
+    PmoUser[owner_id]
   end
 
   def status
