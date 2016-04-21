@@ -94,10 +94,15 @@ class Api::Promotions::OneMoneyController < Api::BaseController
     if @pmo_user
       @options = {one_money: @one_money.id, owner_id: @pmo_user.id}
       @options.merge!(period: params[:period]) if params[:period]
+      to_key = params[:to] == "query" ? :query : :fragment
       @seed = PmoSeed.find(@options).select {|s| s.status == 'pending' }.first
       if @seed
-        query = Hash[URI.decode_www_form(@callback.query || '')]
-        @callback.query = URI.encode_www_form(query.merge(fromSeed: @seed.seed_id))
+        hash = Hash[URI.decode_www_form(@callback.send(to_key) || '')]
+        if to_key == :fragment
+          @callback.fragment = '/?'+ URI.encode_www_form(hash.merge(fromSeed: @seed.seed_id))
+        else
+          @callback.query = URI.encode_www_form(hash.merge(fromSeed: @seed.seed_id))
+        end
 
         result[:callback_url] = @callback.to_s
       end
