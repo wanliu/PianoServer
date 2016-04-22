@@ -142,7 +142,11 @@
         </div>
       </div>
     <% end %>
+    <% if @one_more_time %>
+      <%= link_to "点击可再次获得抢购机会", @redirect_url, class: 'btn btn-warning btn-large btn-block', id: 'pmo-once-more' %>
+    <% end %>
   </div>
+
 </div>
 
 <% unless @order.finish? %>
