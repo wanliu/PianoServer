@@ -71,6 +71,17 @@ class OrdersController < ApplicationController
   # GET /orders/1
   # GET /orders/1.json
   def show
+    if @order.pmo_grab_id.present?
+      pmo_grab = PmoGrab[@order.pmo_grab_id]
+      pmo_item = PmoItem[pmo_grab.pmo_item_id]
+
+      if "started" == pmo_item.status
+        one_money = OneMoney[@order.one_money_id]
+        @one_more_time = pmo_grab.seeds.any? { |seed| "pending" == seed.status }
+        redirect_url = one_money.try(:publish_url) || "/one_money/#{ one_money.start_at.strftime('%Y-%m-%d') }/index.html"
+        @redirect_url = "#{redirect_url}#/detail/#{ pmo_grab.pmo_item_id }"
+      end
+    end
     # @order.items.includes(:orderable)
   end
 
