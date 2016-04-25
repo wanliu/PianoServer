@@ -102,6 +102,7 @@ gem 'rest-client'
 gem 'meta-tags'
 
 gem 'sidekiq'
+gem 'sidekiq-status'
 
 gem 'china_city'
 gem 'table_cloth'

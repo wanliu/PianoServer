@@ -36,15 +36,11 @@ class Admins::OneMoneyController < Admins::BaseController
 
     start_at = @one_money.start_at
     name = "%04d-%02d-%02d" % [start_at.year, start_at.month, start_at.day]
-    OneMoneyPublishJob.perform_now @one_money, name
+    job_id = OneMoneyPublishWorker.perform_async @one_money.id, name
     render json: {
       status: :success,
-      url: File.join(Settings.promotions.one_money.enter_url, name)
+      job_id: job_id
     }
-  # rescue e
-  #   response.stream.write e.message
-  # ensure
-  #   response.stream.close
   end
 
   def upload_image
