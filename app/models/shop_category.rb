@@ -30,7 +30,7 @@ class ShopCategory < ActiveRecord::Base
   # alias_method :cover_url, :avatar_url
   # alias_method :logo_url, :avatar_url
   scope :last_iid, -> (shop) do
-    where(shop: shop).maximum(:iid) || 0
+    where(shop_id: shop.id).maximum(:iid) || 0
   end
 
   validate :out_of_depth
