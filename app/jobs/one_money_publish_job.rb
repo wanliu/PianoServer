@@ -1,10 +1,12 @@
 class OneMoneyPublishJob < ActiveJob::Base
-  queue_as :default
+  queue_as :one_moeny
 
-  def perform(one_money, target, options = {sign_url: Settings.app.website + '/authorize/weixin',
+  def perform(one_money_id, target, options = {sign_url: Settings.app.website + '/authorize/weixin',
                                             api_url: '/api/promotions/one_money',
                                             qr_code: true,
                                             winners_num: 50})
+
+    @one_money = OneMoney[one_money_id]
     scripts = Settings.promotions.one_money.scripts.publish
 
     dir = scripts.dir
@@ -12,10 +14,10 @@ class OneMoneyPublishJob < ActiveJob::Base
 
     context = {
       name: target,
-      one_money_id: one_money.id,
-      qrcode: options[:qr_code],
-      home_img: one_money.cover_url,
-      list_img: one_money.head_url,
+      one_money_id: @one_money.id,
+      qrcode: @one_money[:qr_code],
+      home_img: @one_money.cover_url,
+      list_img: @one_money.head_url,
       api_url: options[:api_url],
       winners: options[:winners_num],
       sign_url: options[:sign_url],

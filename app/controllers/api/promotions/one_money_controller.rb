@@ -149,8 +149,7 @@ class Api::Promotions::OneMoneyController < Api::BaseController
         item_hash[:winner_count] = item.winners.count
         item_hash[:total_amount] = item.total_amount
         item_hash[:completes] = item.completes
-        item_hash[:seed_count] = item.seeds.count
-
+        item_hash[:seed_count] = item.seeds.map {|s| s.status == "used" }.count if params[:used].present?
         # items.status
         item_hash
       end
