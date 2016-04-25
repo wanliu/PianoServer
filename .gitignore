@@ -28,6 +28,8 @@ config/wechat.yml
 /public/assets
 /public/uploads
 /public/deploy
+/public/generatings
+
 .gitver
 .powenv
 .ruby-version
