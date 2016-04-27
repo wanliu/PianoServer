@@ -150,7 +150,13 @@ class Api::Promotions::OneMoneyController < Api::BaseController
         item_hash[:winner_count] = item.winners.count
         item_hash[:total_amount] = item.total_amount
         item_hash[:completes] = item.completes
-        item_hash[:seed_count] = item.seeds.map {|s| s.status == "used" }.count if params[:used].present?
+
+        if params[:used].present?
+          used_seeds = item.seeds.select {|s| s.status == "used" }
+          item_hash[:seed_count] = used_seeds.count
+          item_hash[:own_seed_count] = used_seeds.select{ |s| s.owner_id == pmo_current_user.id }.count
+        end
+
         # items.status
         item_hash
       end
@@ -185,6 +191,13 @@ class Api::Promotions::OneMoneyController < Api::BaseController
 
     hash[:participant_count] = @item.participants.count
     hash[:winner_count] = @item.winners.count
+
+    if params[:used].present?
+      used_seeds = @item.seeds.select {|s| s.status == "used" }
+      hash[:seed_count] = used_seeds.count
+      hash[:own_seed_count] = used_seeds.select { |s| s.owner_id == pmo_current_user.id }.count
+    end
+
     hash[:seed_count] = @item.seeds.map {|s| s.status == "used" }.count if params[:used].present?
     hash[:total_amount] = @item.total_amount
     hash[:completes] = @item.completes
