@@ -9,3 +9,9 @@ rails_app=bundle exec unicorn_rails -E production -c $(UNICORN_CONFIG) -p $(PORT
 
 quick_start:
 	$(rails_app)
+
+stop:
+	kill -TERM $(shell cat tmp/pids/unicorn.pid)
+
+restart: stop quick_start
+

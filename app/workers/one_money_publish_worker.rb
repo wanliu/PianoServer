@@ -9,7 +9,7 @@ class OneMoneyPublishWorker
                                             api_url: '/api/promotions/one_money',
                                             qr_code: true,
                                             winners_num: 50})
-    pp 'perform'
+
     @one_money = OneMoney[one_money_id]
     scripts = Settings.promotions.one_money.scripts.publish
     dir = scripts.dir

@@ -6,7 +6,7 @@ end
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.0'
+gem 'rails', '4.2.1'
 gem "rails-api"
 
 # Use sqlite3 as the database for Active Record
@@ -64,7 +64,7 @@ gem "punching_bag"
 gem "loofah-activerecord"
 gem 'public_activity', github: 'pokonski/public_activity'
 gem 'rails-observers', git: 'https://github.com/rails/rails-observers.git'
-gem 'composite_primary_keys'
+gem 'composite_primary_keys' #, '~> 7.0.13'
 
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'

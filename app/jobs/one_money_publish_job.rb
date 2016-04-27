@@ -1,4 +1,4 @@
-class OneMoneyPublishJob < StateJob
+class OneMoneyPublishJob < ActiveJob::Base
   queue_as :one_money
 
   def perform(one_money_id, target, options = {sign_url: Settings.app.website + '/authorize/weixin',
