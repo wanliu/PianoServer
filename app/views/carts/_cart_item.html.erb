@@ -73,9 +73,12 @@
                 <%= image_tag gift.avatar_url %>
               </div>
               <div class='title-quantity'>
-                <div class='title'><%= "#{gift.present.title} #{gift.properties_title}" %></div>
+                <div class='title'>
+                  <span>
+                    <%= "#{gift.present.title} #{gift.properties_title}" %></div>
+                  </span>
                 <div class='quantity'>
-                  数量：<%= quantity %>
+                  <span>数量：<%= quantity %></span>
                 </div>
               </div>
             </div>

@@ -142,6 +142,8 @@
 
     .cart-gift {
       padding: 8px;
+      width: 33.3333%;
+
       float: left;
       div {
         // height: 60px;
@@ -173,9 +175,9 @@
 
         .title-quantity {
           float: left;
-          padding: 10px;
+
           div {
-            height: 20px;
+            padding: 5px 20px;
           }
 
           .title {
