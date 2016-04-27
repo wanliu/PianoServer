@@ -60,17 +60,26 @@
   </td>
 </tr>
 <% if item.cartable.try(:gifts).present? %>
-  <tr>
+  <tr class='cart-gifts'>
     <td colspan='5'>
       <% item.cartable.gifts.each do |gift| %>
         <% quantity = gift.available_quantity(item.quantity) %>
         <% if quantity > 0 %>
-          <span>
-            <%= "#{gift.present.title} #{gift.properties_title}" %>
-          </span>
-          <span>
-            ×<%= quantity %>
-          </span>
+          <div class='cart-gift'>
+            <div class='head'>
+            </div>
+            <div class='desc'>
+              <div class='avatar'>
+                <%= image_tag gift.avatar_url %>
+              </div>
+              <div class='title-quantity'>
+                <div class='title'><%= "#{gift.present.title} #{gift.properties_title}" %></div>
+                <div class='quantity'>
+                  数量：<%= quantity %>
+                </div>
+              </div>
+            </div>
+          </div>
         <% end %>
       <% end %>
     </td>
