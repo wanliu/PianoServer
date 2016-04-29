@@ -1,6 +1,6 @@
 <% saleable = item.cartable.saleable?(item.quantity, item.properties) %>
 
-<tr class="cart-item <%= saleable ? 'saleable' : 'unsaleable' %>" data-cart-item-id="<%= item.id %>">
+<tr class="cart-item <%= saleable ? 'saleable' : 'unsaleable' %>" data-cart-item-id="<%= item.id %>" data-total="<%= item.price * item.quantity %>">
   <td class='avatar'>
     <div class='media'>
       <div class='media-left'>
@@ -21,7 +21,7 @@
     </div>
   </td>
   <td  class="price">
-    <%= number_to_currency item.price %>
+    <%= number_with_precision(item.price, precision: 2) %>
   </td>
   <td>
     <% if saleable %>
@@ -53,19 +53,21 @@
     <% end %>
   </td>
   <td class="subtotal">
-    <%= number_to_currency item.price * item.quantity %>
+    <%= number_with_precision(item.price * item.quantity, precision: 2) %>
   </td>
   <td class="operations">
     <%= link_to "移出购物车", item, method: :delete, data: { confirm: '确定删除这个商品么？' } %>
   </td>
 </tr>
-<% if item.cartable.try(:gifts).present? %>
-  <tr class='cart-gifts'>
-    <td colspan='5'>
+
+<% has_gifts = item.cartable.try(:gifts).present? %>
+<tr class='cart-gifts' data-cart-item-id="<%= item.id %>" style="<%= has_gifts ? '' : 'display: none' %>">
+  <td colspan='5'>
+    <% if has_gifts %>
       <% item.cartable.gifts.each do |gift| %>
         <% quantity = gift.available_quantity(item.quantity) %>
         <% if quantity > 0 %>
-          <div class='cart-gift'>
+          <div class='cart-gift'  data-gift-id="<%= gift.id %>">
             <div class='head'>
             </div>
             <div class='desc'>
@@ -86,6 +88,6 @@
           </div>
         <% end %>
       <% end %>
-    </td>
-  <tr>
-<% end %>
+    <% end %>
+  </td>
+<tr>

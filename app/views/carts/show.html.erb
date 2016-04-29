@@ -35,8 +35,31 @@
   </div>
 </div>
 
+<script type="text/template" id="cart-item-gifts-template">
+    <div class='cart-gift' data-gift-id="{{= id }}">
+      <div class='head'>
+      </div>
+      <div class='desc'>
+        <div class='avatar'>
+          <img src="{{= avatar_url }}" >
+        </div>
+        <div class='title-quantity'>
+          <div class='title'>
+            <span>
+              {{= composed_title }}
+            </span>
+          </div>
+          <div class='quantity'>
+            <span>数量：{{= quantity }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+</script>
+
 <script type="text/javascript">
   (function (argument) {
+    var giftTemplate = _.template($("#cart-item-gifts-template").html());
     // 点击全部选中时，将下属项全部选中
     $('.select-all').change(function (event) {
       var checked = $(this).prop('checked');
@@ -139,12 +162,16 @@
           quantity: quantity,
         }
       }).done(function (data, xhr, status) {
-        $subTotal.text(data.sub_total);
+        $subTotal.text(parseFloat(data.sub_total).toFixed(2));
+        $cartItem.data('total', data.sub_total);
+
         $('.cart-item-count').text(data.ccount);
 
         $(document).trigger('cart_quantity_changed', [ data.ccount ])
 
         calculateGroupTotal($group);
+        rerenderGifts({gifts: data.gifts, el: $cartItem});
+
         if (!reflect) $alert.hide();
       }).fail(function (data, xhr, status) {
         // usually caused by the lack of inventory
@@ -171,7 +198,7 @@
 
       var totals = _.reduce(saleableSelected, function(mem, item) {
         var quantity = parseInt($(item).find('.quantity input').val(), 10);
-        var total = parseFloat($(item).find('.subtotal').text().replace('¥', ''), 10);
+        var total = parseFloat($(item).data('total'), 10);
 
         mem.quantity || (mem.quantity = 0);
         mem.total || (mem.total = 0);
@@ -181,15 +208,29 @@
 
         return mem;
       }, {});
-
       $group.find('.footer .total-quantity').text(totals.quantity || 0);
-      $group.find('.footer .total-total').text(totals.total || 0);
+      $group.find('.footer .total-total').text((totals.total || 0).toFixed(2));
 
       if (isNaN(totals.quantity) || totals.quantity == 0) {
         $group.find('.cart-submit').attr('type','button').css('opacity', 0.5);
       } else {
         $group.find('.cart-submit').attr('type','submit').css('opacity', 1);
       }
+    }
+
+    function rerenderGifts(options) {
+      var itemId = options.el.data('cartItemId');
+      var $giftTr = options.el.siblings('tr[data-cart-item-id=' + itemId + ']');
+      var gifts = options.gifts;
+      if (!gifts) return;
+
+      var html = _.reduce(gifts, function (htm, gift) {
+        htm += giftTemplate(gift);
+        return htm;
+      }, '');
+
+      $giftTr.find('td').html(html);
+      $giftTr.show();
     }
 
     _.each($('.cart .cart-group'), calculateGroupTotal);
