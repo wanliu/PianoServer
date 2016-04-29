@@ -198,7 +198,6 @@ class Api::Promotions::OneMoneyController < Api::BaseController
       hash[:own_seed_count] = used_seeds.select { |s| s.owner_id == pmo_current_user.id }.count
     end
 
-    hash[:seed_count] = @item.seeds.map {|s| s.status == "used" }.count if params[:used].present?
     hash[:total_amount] = @item.total_amount
     hash[:completes] = @item.completes
 
