@@ -1,6 +1,6 @@
 <%= form_for Order.new, url: confirmation_orders_path do |f| %>
   <%= f.hidden_field :supplier_id, value: supplier.id %>
-  <div class='cart-group'>
+  <div class='cart-group' data-supplier-id='<%= supplier.id %>'>
     <div class='header media'>
       <div class='media-left check-all'>
         <label for="cart-groups-<%= index %>">
@@ -19,6 +19,40 @@
 
     <%= render partial: "cart_item", collection: items.sort_by(&:id), as: :item, locals: { supplier: supplier, f: f } %>
 
+    <div class='mobile-gifts'>
+      <div class='head'></div>
+      <% items.each do |item| %>
+        <% has_gifts = item.cartable.try(:gifts).present? %>
+        <div class='mobile-cart-gifts' data-cart-item-id="<%= item.id %>" style="<%= has_gifts ? '' : 'display: none' %>">
+          <% if has_gifts %>
+            <% item.cartable.gifts.each do |gift| %>
+              <% quantity = gift.available_quantity(item.quantity) %>
+              <% if quantity > 0 %>
+                <div class='cart-gift' data-gift-id="<%= gift.id %>">
+                  <div class='desc'>
+                    <div class='avatar'>
+                      <%= image_tag gift.avatar_url %>
+                    </div>
+                    <div class='title-quantity'>
+                      <div class='title'>
+                        <span>
+                          <%= "#{gift.present.title} #{gift.properties_title}" %>
+                        </span>
+                      </div>
+                      <div class='quantity'>
+                        <span>数量：<%= quantity %></span>
+                      </div>
+                    </div>
+                    <div style='clear: both;'></div>
+                  </div>
+                </div>
+              <% end %>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
     <div class='footer'>
       <span>
         已选择<span class='total-quantity'><%= items.map(&:quantity).reduce(:+) %></span> 件商品&emsp;合计<span class='total-total'><%= items.map { |item| item.price * item.quantity }.reduce(:+)  %></span>元
@@ -27,3 +61,11 @@
     </div>
   </div>
 <% end %>
+
+<script type="text/javascript">
+  if (typeof cart_group_gifts == "undefined") {
+    var cart_group_gifts = {};
+  }
+
+  cart_group_gifts[<%= supplier.id %>] = <%= gift_json(items) %>;
+</script>

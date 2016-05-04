@@ -42,7 +42,7 @@
 }
 
 // 购物车礼品样式
-tr.cart-gifts {
+tr.cart-gifts, div.cart-gifts {
   td {
     padding: 0 !important;
   }
@@ -68,6 +68,46 @@ tr.cart-gifts {
       margin: 11px 0 11px 11px;
       margin-left: 20px;
       float: left;
+
+      .avatar {
+        float: left;
+        border: 1px solid #ddd;
+        padding: 10px;
+
+        img {
+          max-height: 40px;
+          width: auto;
+        }
+      }
+
+      .title-quantity {
+        float: left;
+
+        div {
+          padding: 5px 20px;
+        }
+
+        .title {
+          text-align: left;
+        }
+      }    
+    }
+  }
+}
+
+// 手机版购物车样式
+.mobile-gifts {
+  & > .head {
+    height: 40px;
+    width: 100%;
+    background-color: red;
+  }
+
+  .cart-gift {
+    border-bottom: 1px solid white;
+
+    .desc {
+      margin: 11px 0 11px 11px;
 
       .avatar {
         float: left;

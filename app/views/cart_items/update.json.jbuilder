@@ -1,3 +1,4 @@
+json.supper_id @item.supplier_id
 json.sub_total @item.price * @item.quantity
 json.ccount @item.cart.items_count
 if @item.cartable.gifts.present?

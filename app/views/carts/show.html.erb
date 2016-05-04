@@ -59,14 +59,13 @@
 
 <script type="text/javascript">
   (function (argument) {
-    var giftTemplate = _.template($("#cart-item-gifts-template").html());
     // 点击全部选中时，将下属项全部选中
     $('.select-all').change(function (event) {
       var checked = $(this).prop('checked');
       $(this).parents('form').find(':checkbox').prop('checked', checked);
 
       var $group = $(this).parents('.cart-group');
-      calculateGroupTotal($group);
+      CartGroup.calculateGroupTotal($group);
 
       // if (checked) {
       //   $(this).parents('.cart').find('.confirm-order').removeAttr('disabled');
@@ -81,7 +80,7 @@
       var allCheckbox = $(this).parents('form').find('.cart-item input:checkbox');
 
       var $group = $(this).parents('.cart-group');
-      calculateGroupTotal($group);
+      CartGroup.calculateGroupTotal($group);
 
       if (!checked) {
         $(this).parents('form').find('.select-all').prop('checked', false);
@@ -115,124 +114,33 @@
       }
 
       var newQuantity = 1 * quantity;
+      $(this).val(newQuantity);
 
-      changeQuantity(this, newQuantity);
+      CartGroup.changeQuantity(this, newQuantity);
     });
 
     // 通过减少按钮，修改所购商品数量
     $('.cart-item').on('click', '.btn-minus', function (event) {
-      var quantityInput = $(this).parents('.quantity').find('input');
-      var quantity = 1 * $(quantityInput).val();
+      var $quantityInput = $(this).parents('.quantity').find('input');
+      var quantity = 1 * $quantityInput.val();
 
       if (quantity > 1) {
         var newQuantity = quantity - 1;
-        changeQuantity(quantityInput, newQuantity);
+        $quantityInput.val(newQuantity);
+        CartGroup.changeQuantity($quantityInput, newQuantity);
       }
     });
 
     // 通过增加按钮，修改所购商品数量
     $('.cart-item').on('click', '.btn-plus', function (event) {
-      var quantityInput = $(this).parents('.quantity').find('input');
-      var quantity = 1 * $(quantityInput).val();
+      var $quantityInput = $(this).parents('.quantity').find('input');
+      var quantity = 1 * $quantityInput.val();
       var newQuantity = quantity + 1;
 
-      changeQuantity(quantityInput, newQuantity);
+      $quantityInput.val(newQuantity);
+      CartGroup.changeQuantity($quantityInput, newQuantity);
     });
 
-    function changeQuantity(quantityInput, quantity, reflect) {
-      var $cartItem = $(quantityInput).parents('.cart-item:first'),
-          cartItemId = $cartItem.data('cartItemId'),
-          $quantity = $cartItem.find('input[name=quantity]'),
-          $subTotal = $cartItem.find('.subtotal');
-          $btnMinus = $cartItem.find('.btn-minus span'),
-          $alert = $cartItem.find('.alert'),
-          $group = $(quantityInput).parents('.cart-group');
-
-      $quantity.val(quantity);
-
-      if (+quantity > 1) {
-        $btnMinus.addClass('glyphicon-minus');
-      } else {
-        $btnMinus.removeClass('glyphicon-minus');
-      }
-
-      $.post('/cart_items/' + cartItemId, {
-        _method: 'PATCH',
-        cart_item: {
-          quantity: quantity,
-        }
-      }).done(function (data, xhr, status) {
-        $subTotal.text(parseFloat(data.sub_total).toFixed(2));
-        $cartItem.data('total', data.sub_total);
-
-        $('.cart-item-count').text(data.ccount);
-
-        $(document).trigger('cart_quantity_changed', [ data.ccount ])
-
-        calculateGroupTotal($group);
-        rerenderGifts({gifts: data.gifts, el: $cartItem});
-
-        if (!reflect) $alert.hide();
-      }).fail(function (data, xhr, status) {
-        // usually caused by the lack of inventory
-        var quanOpt = data.responseJSON && data.responseJSON.quantity;
-
-        if (quanOpt) {
-          var maxQuan = quanOpt[0];
-          $alert.find('.max-quantity').text(maxQuan)
-          $alert.show();
-
-          changeQuantity(quantityInput, maxQuan, true);
-        }
-      });
-    }
-
-    function calculateGroupTotal($group) {
-      if (!($group instanceof jQuery)) {
-        $group = $($group);
-      }
-
-      var saleableSelected = _.filter($group.find('.cart-item.saleable'), function(item) {
-        return $(item).find('.avatar :checkbox').prop('checked');
-      });
-
-      var totals = _.reduce(saleableSelected, function(mem, item) {
-        var quantity = parseInt($(item).find('.quantity input').val(), 10);
-        var total = parseFloat($(item).data('total'), 10);
-
-        mem.quantity || (mem.quantity = 0);
-        mem.total || (mem.total = 0);
-
-        mem.quantity += quantity;
-        mem.total += total;
-
-        return mem;
-      }, {});
-      $group.find('.footer .total-quantity').text(totals.quantity || 0);
-      $group.find('.footer .total-total').text((totals.total || 0).toFixed(2));
-
-      if (isNaN(totals.quantity) || totals.quantity == 0) {
-        $group.find('.cart-submit').attr('type','button').css('opacity', 0.5);
-      } else {
-        $group.find('.cart-submit').attr('type','submit').css('opacity', 1);
-      }
-    }
-
-    function rerenderGifts(options) {
-      var itemId = options.el.data('cartItemId');
-      var $giftTr = options.el.siblings('tr[data-cart-item-id=' + itemId + ']');
-      var gifts = options.gifts;
-      if (!gifts) return;
-
-      var html = _.reduce(gifts, function (htm, gift) {
-        htm += giftTemplate(gift);
-        return htm;
-      }, '');
-
-      $giftTr.find('td').html(html);
-      $giftTr.show();
-    }
-
-    _.each($('.cart .cart-group'), calculateGroupTotal);
+    _.each($('.cart .cart-group'), CartGroup.calculateGroupTotal);
   })();
 </script>
