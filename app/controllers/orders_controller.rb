@@ -3,41 +3,41 @@ require 'weixin_api'
 class OrdersController < ApplicationController
   before_action :authenticate_user!
 
-  before_action :set_order, 
+  before_action :set_order,
     only: [
-      :show, 
-      :destroy, 
-      :update, 
-      :set_wx_pay, 
-      :pay_kind, 
-      :wxpay, 
-      :wxpay_confirm, 
+      :show,
+      :destroy,
+      :update,
+      :set_wx_pay,
+      :pay_kind,
+      :wxpay,
+      :wxpay_confirm,
       :wx_paid,
       :receive,
       :qrcode_receive
     ]
 
-  before_action :set_evaluatable_order, 
+  before_action :set_evaluatable_order,
     only: [
-      :evaluate, 
-      :evaluate_item, 
-      :create_evaluations, 
+      :evaluate,
+      :evaluate_item,
+      :create_evaluations,
       :evaluate_item_create
     ]
 
-  before_action :check_for_mobile, 
+  before_action :check_for_mobile,
     only: [
-      :index, 
-      :show, 
-      :history, 
-      :confirmation, 
-      :buy_now_confirm, 
-      :buy_now_create, 
-      :evaluate, 
-      :evaluate_item, 
+      :index,
+      :show,
+      :history,
+      :confirmation,
+      :buy_now_confirm,
+      :buy_now_create,
+      :evaluate,
+      :evaluate_item,
       :create_evaluations,
-      :evaluate_item_create, 
-      :receive, 
+      :evaluate_item_create,
+      :receive,
       :qrcode_receive
     ]
 
@@ -75,12 +75,10 @@ class OrdersController < ApplicationController
       pmo_grab = PmoGrab[@order.pmo_grab_id]
       pmo_item = PmoItem[pmo_grab.pmo_item_id]
 
-      if "started" == pmo_item.status
-        one_money = OneMoney[@order.one_money_id]
-        @one_more_time = pmo_grab.seeds.any? { |seed| "pending" == seed.status }
-        redirect_url = one_money.try(:publish_url) || "/one_money/#{ one_money.start_at.strftime('%Y-%m-%d') }/index.html"
-        @redirect_url = "#{redirect_url}#/detail/#{ pmo_grab.pmo_item_id }"
-      end
+      one_money = OneMoney[@order.one_money_id]
+      @one_more_time = pmo_grab.seeds.any? { |seed| "pending" == seed.status }
+      redirect_url = one_money.try(:publish_url) || "/one_money/#{ one_money.start_at.strftime('%Y-%m-%d') }/index.html"
+      @redirect_url = "#{redirect_url}#/detail/#{ pmo_grab.pmo_item_id }"
     end
     # @order.items.includes(:orderable)
   end
@@ -335,8 +333,8 @@ class OrdersController < ApplicationController
       :customer_service
     ]).tap do |white_list|
       white_list[:evaluations_attributes].each do |key, value|
-        if value[:good].blank? && 
-           value[:delivery].blank? && 
+        if value[:good].blank? &&
+           value[:delivery].blank? &&
            value[:customer_service].blank?
 
           white_list[:evaluations_attributes].delete(key)
