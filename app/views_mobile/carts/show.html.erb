@@ -9,7 +9,7 @@
     </li>
   </ul>
 
-  <div>
+  <div class="cart-groups">
     <% if current_cart.items.blank? %>
       <h2>你的购物车是空的</h2>
     <% else %>
@@ -23,29 +23,44 @@
   </div>
 </div>
 
-<script type="text/template" id="cart-item-gifts-template">
-    <div class='cart-gift' data-gift-id="{{= id }}">
-      <div class='head'>
+<script type="text/template" id="mobile-gift-template">
+  <div class='cart-gift' data-gift-id="{{= id }}">
+    <div class='desc'>
+      <div class='avatar'>
+        <img src='{{= avatar_url }}'>
       </div>
-      <div class='desc'>
-        <div class='avatar'>
-          <img src="{{= avatar_url }}" >
+      <div class='title-quantity'>
+        <div class='title'>
+          <span>
+            {{= title }}
+          </span>
         </div>
-        <div class='title-quantity'>
-          <div class='title'>
-            <span>
-              {{= composed_title }}
-            </span>
-          </div>
-          <div class='quantity'>
-            <span>数量：{{= quantity }}</span>
-          </div>
+        <div class='quantity'>
+          <span>数量：{{= quantity }}</span>
         </div>
       </div>
+      <div style='clear: both;'></div>
     </div>
+  </div>
 </script>
 
 <script type="text/javascript">
+  if (typeof cartGroupGifts == "undefined") {
+    var cartGroupGifts = {};
+  }
+
+  (function() {
+    var giftTemplate =  _.template($("#mobile-gift-template").html());
+
+    var giftRender = new GiftsRender({
+      el: $('div.cart-groups'),
+      cartGroupGifts: cartGroupGifts,
+      giftTemplate: giftTemplate
+    });
+
+    giftRender.render();
+  })();
+
   (function (argument) {
     // 点击全部选中时，将下属项全部选中
     $('.select-all').change(function (event) {

@@ -7,11 +7,16 @@ module GiftHelper
           quantity = gift.available_quantity(item.quantity)
 
           if quantity > 0
-            gs_inner[gift.id] = {
-              avatar_url: gift.avatar_url,
-              title: "#{gift.present.title} #{gift.properties_title}",
-              quantity: quantity
-            }
+            if gs_inner[gift.id].present?
+              gs_inner[gift.id][:quantity] += quantity 
+            else
+              gs_inner[gift.id] = {
+                avatar_url: gift.avatar_url,
+                title: "#{gift.present.title} #{gift.properties_title}",
+                quantity: quantity,
+                id: gift.id
+              }
+            end
           end
           gs_inner
         end
