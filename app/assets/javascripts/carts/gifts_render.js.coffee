@@ -33,9 +33,8 @@ class @GiftsRender
   constructor: (options) ->
     @maped = false
 
-    @cartGroupGifts = options.cartGroupGifts
-    @el = options.el
-    @template = options.giftTemplate
+    { @cartGroupGifts, @el, @giftTemplate } = options
+
     @mapGifts()
 
   # 将同一个supplier下面的赠品合并数量，以方便渲染
@@ -98,12 +97,14 @@ class @GiftsRender
     gifts = _.sortBy gifts, (gift) ->
       return gift.id
 
+    return unless @el
+
     $supplierGroup = @el.find('.cart-group[data-supplier-id=' + supplierId + ']')
     $gifts = $supplierGroup.find('.mobile-cart-gifts')
     $gifts.html('')
 
     _.each gifts, (gift) =>
-      html = @template(gift)
+      html = @giftTemplate(gift)
       $gifts.append(html)
 
     $gifts.parent('.mobile-gifts').show()
@@ -136,13 +137,90 @@ class @GiftsRender
     supplierId &&
       itemId && 
       @cartGroupGifts[supplierId][itemId] &&
-      options.gifts({
-        supplier_id: supplierId,
-        item_id: itemId
-      })
+      options.gifts
 
-# class @GiftsRenderTrigger
-#   constructor: (options) ->
-#     @giftRender = options.giftRender
 
-#   onGiftChange: (options) ->
+
+# # datastructure transform tests here
+# cartGroupGifts = {
+#   1: {
+#     10: {
+#       33: { avatar_url: 'avatar_url', present_id: 123, quantity: 1},
+#       55: { avatar_url: 'avatar_url', present_id: 156, quantity: 2}
+#     },
+#     11: {
+#       78: { avatar_url: 'avatar_url', present_id: 123, quantity: 1},
+#       98: { avatar_url: 'avatar_url', present_id: 188, quantity: 2}
+#     }
+#   }
+#   2: {
+#     12: {
+#       33: { avatar_url: 'avatar_url', present_id: 123, quantity: 1},
+#       55: { avatar_url: 'avatar_url', present_id: 156, quantity: 2}
+#     },
+#     13: {
+#       78: { avatar_url: 'avatar_url', present_id: 123, quantity: 1},
+#       98: { avatar_url: 'avatar_url', present_id: 188, quantity: 2}
+#     }
+#   }
+# }
+
+
+# mapStructure = {
+#   1: {
+#     123: {avatar_url: 'avatar_url', present_id: 123, quantity: 2},
+#     156: {avatar_url: 'avatar_url', present_id: 156, quantity: 2},
+#     188: {avatar_url: 'avatar_url', present_id: 188, quantity: 2}
+#   }
+#   2: {
+#     123: {avatar_url: 'avatar_url', present_id: 123, quantity: 2},
+#     156: {avatar_url: 'avatar_url', present_id: 156, quantity: 2},
+#     188: {avatar_url: 'avatar_url', present_id: 188, quantity: 2}
+#   }
+# }
+
+# newComingGift = {
+#   supplier_id: 1
+#   cart_item_id: 10,
+#   gifts: [
+#     { avatar_url: 'avatar_url', present_id: 123, quantity: 5, id: 33}, 
+#     { avatar_url: 'avatar_url', present_id: 156, quantity: 10, id: 55}
+#   ]
+# }
+
+# cartGroupGiftsChanged = {
+#   1: {
+#     10: {
+#       33: { avatar_url: 'avatar_url', present_id: 123, quantity: 5},
+#       55: { avatar_url: 'avatar_url', present_id: 156, quantity: 10}
+#     },
+#     11: {
+#       78: { avatar_url: 'avatar_url', present_id: 123, quantity: 1},
+#       98: { avatar_url: 'avatar_url', present_id: 188, quantity: 2}
+#     }
+#   }
+#   2: {
+#     12: {
+#       33: { avatar_url: 'avatar_url', present_id: 123, quantity: 1},
+#       55: { avatar_url: 'avatar_url', present_id: 156, quantity: 2}
+#     },
+#     13: {
+#       78: { avatar_url: 'avatar_url', present_id: 123, quantity: 1},
+#       98: { avatar_url: 'avatar_url', present_id: 188, quantity: 2}
+#     }
+#   }
+# }
+
+
+# render = new @GiftsRender({
+#   cartGroupGifts: cartGroupGifts,
+#   el: null,
+#   giftTemplate: () -> "template"
+# })
+
+# console.assert _.isEqual(render.mapStructure, mapStructure), 
+#   '....mapGifts failed test....'
+
+# render.changeItemGifts(newComingGift)
+# console.assert _.isEqual(render.cartGroupGifts, cartGroupGiftsChanged),
+#  '.....changeItemGifts failed test......'
