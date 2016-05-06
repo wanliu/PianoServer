@@ -12,7 +12,7 @@ module GiftHelper
             else
               gs_inner[gift.id] = {
                 avatar_url: gift.avatar_url,
-                title: "#{gift.present.title} #{gift.properties_title}",
+                composed_title: "#{gift.present.title} #{gift.properties_title}",
                 quantity: quantity,
                 id: gift.id,
                 item_id: gift.item_id,

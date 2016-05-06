@@ -32,7 +32,7 @@
       <div class='title-quantity'>
         <div class='title'>
           <span>
-            {{= title }}
+            {{= composed_title }}
           </span>
         </div>
         <div class='quantity'>
@@ -67,6 +67,12 @@
       var $group = $(this).parents('.cart-group');
       CartGroup.calculateGroupTotal($group);
 
+      var supplierId = $group.data('supplierId');
+      giftRender.changeCartItemCheckStatus({
+        supplierId: supplierId,
+        status: checked
+      });
+
       // if (checked) {
       //   $(this).parents('.cart').find('.confirm-order').removeAttr('disabled');
       // } else {
@@ -81,6 +87,14 @@
 
       var $group = $(this).parents('.cart-group');
       CartGroup.calculateGroupTotal($group);
+
+      var supplierId = $group.data('supplierId');
+      var cartItemId = $(this).val();
+      giftRender.changeCartItemCheckStatus({
+        supplierId: supplierId,
+        cartItemIds: [cartItemId],
+        status: checked
+      });
 
       if (!checked) {
         $(this).parents('form').find('.select-all').prop('checked', false);

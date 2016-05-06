@@ -7,7 +7,10 @@ class @CartGroup
       $(item).find('.avatar :checkbox').prop('checked')
 
     totals = _.reduce(saleableSelected, (mem, item) ->
-      $quantity = $(item).find('.quantity')
+      $quantity = $(item).find('input[name=quantity]')
+
+      if 0 == $quantity.length
+        $quantity = $(item).find('.quantity')
 
       quantityVal = $quantity.val() || $quantity.text()
       quantity = parseInt(quantityVal, 10)
@@ -76,6 +79,7 @@ class @CartGroup
         giftRender.changeItemGifts(data)
       else
         CartGroup.rerenderItemGifts({gifts: data.gifts, el: $cartItem});
+
       CartGroup.calculateGroupTotal($group)
 
       if !reflect
