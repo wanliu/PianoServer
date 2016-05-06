@@ -116,7 +116,10 @@
       var newQuantity = 1 * quantity;
       $(this).val(newQuantity);
 
-      CartGroup.changeQuantity(this, newQuantity);
+      CartGroup.changeQuantity({
+        quantityInput: this, 
+        newQuantity: newQuantity
+      });
     });
 
     // 通过减少按钮，修改所购商品数量
@@ -127,7 +130,10 @@
       if (quantity > 1) {
         var newQuantity = quantity - 1;
         $quantityInput.val(newQuantity);
-        CartGroup.changeQuantity($quantityInput, newQuantity);
+        CartGroup.changeQuantity({
+          quantityInput: $quantityInput, 
+          newQuantity: newQuantity
+        });
       }
     });
 
@@ -138,7 +144,10 @@
       var newQuantity = quantity + 1;
 
       $quantityInput.val(newQuantity);
-      CartGroup.changeQuantity($quantityInput, newQuantity);
+      CartGroup.changeQuantity({
+        quantityInput: $quantityInput, 
+        newQuantity: newQuantity
+      });
     });
 
     _.each($('.cart .cart-group'), CartGroup.calculateGroupTotal);

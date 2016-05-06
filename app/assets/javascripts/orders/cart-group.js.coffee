@@ -37,9 +37,11 @@ class @CartGroup
         .attr('type','submit')
         .css('opacity', 1)
 
-  @changeQuantity: (quantityInput, quantity, reflect) ->
-    $cartItem = $(quantityInput)
-      .closest('.cart-item')
+  @changeQuantity: (options) ->
+    {quantityInput, newQuantity, giftRender, reflect} = options
+    quantity = newQuantity
+
+    $cartItem = $(quantityInput).closest('.cart-item')
 
     # // ===========================================
     # // ============/===============================
@@ -70,7 +72,10 @@ class @CartGroup
 
       $(document).trigger('cart_quantity_changed', [ data.ccount ])
 
-      CartGroup.rerenderGifts({gifts: data.gifts, el: $cartItem});
+      if giftRender
+        giftRender.changeItemGifts(data)
+      else
+        CartGroup.rerenderItemGifts({gifts: data.gifts, el: $cartItem});
       CartGroup.calculateGroupTotal($group)
 
       if !reflect
@@ -90,9 +95,15 @@ class @CartGroup
         else
           quantityInput.text(maxQuan)
 
-        CartGroup.changeQuantity(quantityInput, maxQuan, true)
+        CartGroup.changeQuantity({
+          quantityInput: quantityInput,
+          newQuantity: maxQuan, 
+          giftRender: giftRender, 
+          reflect: true
+        })
 
-  @rerenderGifts: (options) ->
+  # on laptop client, gifts resides on items 
+  @rerenderItemGifts: (options) ->
     itemId = options.el.data('cartItemId')
     $giftTr = options.el.siblings('[data-cart-item-id=' + itemId + ']')
     gifts = options.gifts

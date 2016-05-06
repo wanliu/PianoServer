@@ -40,9 +40,14 @@ class @GiftsRender
 
   # 将同一个supplier下面的赠品合并数量，以方便渲染
   mapGifts: (options) ->
-    supplierIds = _.keys @cartGroupGifts
+    supplierIds = if options && options.supplierIds
+      options.supplierIds
+    else
+      _.keys @cartGroupGifts
 
-    @mapStructure = _.reduce(supplierIds, (mapStructure, supplierId) =>
+    @mapStructure || (@mapStructure = {})
+
+    newMapStructure = _.reduce(supplierIds, (mapStructure, supplierId) =>
       groupGifts = @cartGroupGifts[supplierId]
 
       if !_.isEmpty groupGifts
@@ -50,6 +55,8 @@ class @GiftsRender
 
       mapStructure
     , {})
+
+    _.extend @mapStructure, newMapStructure
 
     @maped = true
 
@@ -81,20 +88,57 @@ class @GiftsRender
       return if _.isEmpty(groupGifts)
 
       @renderSingleGroupGifts({
-        supplierId: supplierId,
-        gifts: groupGifts
+        supplierId: supplierId
       })
 
   renderSingleGroupGifts: (options) ->
     supplierId = options.supplierId
-    gifts = _.sortBy options.gifts, (gift) ->
+    gifts = @mapStructure[supplierId]
+    gifts = _.sortBy gifts, (gift) ->
       return gift.id
 
     $supplierGroup = @el.find('.cart-group[data-supplier-id=' + supplierId + ']')
     $gifts = $supplierGroup.find('.mobile-cart-gifts')
+    $gifts.html('')
 
     _.each gifts, (gift) =>
       html = @template(gift)
       $gifts.append(html)
 
     $gifts.parent('.mobile-gifts').show()
+
+  # if new gifts data coming
+  # modify @cartGroupGifts structure
+  # modify @mapStructure based on the changes on @cartGroupGifts
+  # rerender specific group gifts
+  changeItemGifts: (options) ->
+    supplierId = options["supplier_id"]
+    itemId = options["item_id"]
+    gifts = options.gifts
+    itemGifts = @cartGroupGifts[supplierId][itemId]
+
+    _.each gifts, (gift) ->
+      giftItem = itemGifts[gift.id.toString()] || itemGifts[gift.id]
+      if giftItem
+        giftItem["quantity"] = gift.quantity
+
+    @mapGifts({ supplierIds: [supplierId] })
+    @renderSingleGroupGifts({ supplierId: supplierId })
+
+  giftsExisted: (options) ->
+    supplierId = options["supplier_id"]
+    itemId = options["item_id"]
+
+    supplierId &&
+      itemId && 
+      @cartGroupGifts[supplierId][itemId] &&
+      options.gifts({
+        supplier_id: supplierId,
+        item_id: itemId
+      })
+
+# class @GiftsRenderTrigger
+#   constructor: (options) ->
+#     @giftRender = options.giftRender
+
+#   onGiftChange: (options) ->
