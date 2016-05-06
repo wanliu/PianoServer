@@ -14,7 +14,9 @@ module GiftHelper
                 avatar_url: gift.avatar_url,
                 title: "#{gift.present.title} #{gift.properties_title}",
                 quantity: quantity,
-                id: gift.id
+                id: gift.id,
+                item_id: gift.item_id,
+                present_id: gift.present_id
               }
             end
           end

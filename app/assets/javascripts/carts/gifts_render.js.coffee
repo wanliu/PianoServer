@@ -2,25 +2,25 @@
 # 第一层为商店，不同的商店对应的Group不同。第二层为商品。第三层为赠品。
 # {
 #   "1":  #shop(supplier) id
-#   { "45": #item id
+#   { "45": #car_item id
 #     { # gift_id: gift properties 
 #       "3": {avatar_url: 'xxx', title: 'xxxx', quantity: '1'},
 #       "4": {avatar_url: 'xxx', title: 'xxxx', quantity: '2'}
 #     },
-#   "46": #item id
+#   "46": #cart_item id
 #     { # gift_id: gift properties 
 #       "3": {avatar_url: 'xxx', title: 'xxxx', quantity: '1'},
 #       "4": {avatar_url: 'xxx', title: 'xxxx', quantity: '2'}
 #     },
 #   },
 #   "2":  #shop(supplier) id
-#   { "47": #item id
+#   { "47": #cart_item id
 #     { # gift_id: gift properties 
 #       "3": {avatar_url: 'xxx', title: 'xxxx', quantity: '1'},
 #       "4": {avatar_url: 'xxx', title: 'xxxx', quantity: '2'}
 #     },
 #   },
-#   { "48": #item id
+#   { "48": #cart_item id
 #     { # gift_id: gift properties 
 #       "3": {avatar_url: 'xxx', title: 'xxxx', quantity: '1'},
 #       "4": {avatar_url: 'xxx', title: 'xxxx', quantity: '2'}
@@ -68,11 +68,12 @@ class @GiftsRender
 
       _.each gifts, (gift, giftId) ->
         return if _.isEmpty(gift)
+        presentId = gift.present_id
 
-        if result[giftId]
-          result[giftId]["quantity"] += gift["quantity"]
+        if result[presentId]
+          result[presentId]["quantity"] += gift["quantity"]
         else
-          result[giftId] = gift
+          result[presentId] = _.clone gift
 
       result
     , {})
@@ -113,14 +114,17 @@ class @GiftsRender
   # rerender specific group gifts
   changeItemGifts: (options) ->
     supplierId = options["supplier_id"]
-    itemId = options["item_id"]
+    itemId = options["cart_item_id"]
     gifts = options.gifts
     itemGifts = @cartGroupGifts[supplierId][itemId]
 
     _.each gifts, (gift) ->
       giftItem = itemGifts[gift.id.toString()] || itemGifts[gift.id]
+
       if giftItem
         giftItem["quantity"] = gift.quantity
+      else
+        itemGifts[gift.id.toString()] = _.clone gift
 
     @mapGifts({ supplierIds: [supplierId] })
     @renderSingleGroupGifts({ supplierId: supplierId })
