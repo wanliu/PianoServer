@@ -1,5 +1,9 @@
-class OneMoneyPublishJob < ActiveJob::Base
-  queue_as :one_money
+require 'sidekiq'
+require 'sidekiq-status'
+
+class OneMoneyPublishWorker
+  include Sidekiq::Worker
+  include Sidekiq::Status::Worker
 
   def perform(one_money_id, target, options = {sign_url: Settings.app.website + '/authorize/weixin',
                                             api_url: '/api/promotions/one_money',
@@ -8,7 +12,6 @@ class OneMoneyPublishJob < ActiveJob::Base
 
     @one_money = OneMoney[one_money_id]
     scripts = Settings.promotions.one_money.scripts.publish
-
     dir = scripts.dir
     exec = scripts.exec
 
@@ -31,5 +34,6 @@ class OneMoneyPublishJob < ActiveJob::Base
     Rails.logger.info exec
 
     `cd #{dir}; #{exec}`
+    store url: File.join(Settings.promotions.one_money.enter_url, target)
   end
 end

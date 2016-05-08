@@ -302,6 +302,12 @@ Rails.application.routes.draw do
         get "regions", to: "locations#regions"
       end
     end
+
+    resources :jobs, only: [:show] do
+      # member do
+      #   get 'stream'
+      # end
+    end
   end
 
   resources :promotions, concerns: [ :chatable ] do

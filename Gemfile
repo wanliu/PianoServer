@@ -64,7 +64,7 @@ gem "punching_bag"
 gem "loofah-activerecord"
 gem 'public_activity', github: 'pokonski/public_activity'
 gem 'rails-observers', git: 'https://github.com/rails/rails-observers.git'
-gem 'composite_primary_keys'
+gem 'composite_primary_keys' #, '~> 7.0.13'
 
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'
@@ -102,6 +102,7 @@ gem 'rest-client'
 gem 'meta-tags'
 
 gem 'sidekiq'
+gem 'sidekiq-status'
 
 gem 'china_city'
 gem 'table_cloth'
