@@ -28,7 +28,7 @@ class Gift < ActiveRecord::Base
   def available_quantity(item_quantity)
     current_stock = present.stocks.find {|stock| stock.data == properties }.try(:quantity) || 0
     quantity_send = (item_quantity * quantity).floor
-    result = [left_quantity, current_stock, quantity_send].min
+    result = [left_quantity, current_stock, quantity_send].min.to_i
 
     result > 0 ? result : 0
   end

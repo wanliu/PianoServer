@@ -30,7 +30,14 @@
             <%= item_form.hidden_field "properties[#{key}]", value: value %>
           <% end %>
           <%= render partial: "buy_now_item", locals: { item: @order_item, supplier: @supplier, f: item_form, props: @props } %>
-        <% end %>
+
+          <% if @order_item.orderable.try(:gifts).blank? %>
+            <%= hidden_field_tag "order[item_gifts][#{@order_item.orderable.id}][undefined]", nil, { multiple: true } %>
+          <% else %>
+            <% @order_item.orderable.gifts.each do |gift| %>
+              <%= hidden_field_tag "order[item_gifts][#{@order_item.orderable.id}][#{gift.id}]", gift.available_quantity(@order_item.quantity), { multiple: true } %>
+            <% end %>
+          <% end %>
       
         <tr class='footer'>
           <td colspan='5' class='text-right'>

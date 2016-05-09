@@ -22,7 +22,47 @@
           <%= item_form.hidden_field "properties[#{key}]", value: value %>
         <% end %>
         <%= render partial: "buy_now_item", locals: { item: @order_item, supplier: @supplier, f: item_form, props: @props } %>
+
+        <% if @order_item.orderable.try(:gifts).blank? %>
+          <%= hidden_field_tag "order[item_gifts][#{@order_item.orderable.id}][undefined]", nil, { multiple: true } %>
+        <% else %>
+          <% @order_item.orderable.gifts.each do |gift| %>
+            <%= hidden_field_tag "order[item_gifts][#{@order_item.orderable.id}][#{gift.id}]", gift.available_quantity(@order_item.quantity), { multiple: true } %>
+          <% end %>
+        <% end %>
       <% end %>
+
+      <% has_gifts = @order_item.orderable.try(:gifts).present? %>
+      <div class='mobile-gifts' style="<%= has_gifts ? '' : 'display: none' %>">
+        <div class='head'></div>
+        <div class='mobile-cart-gifts'>
+          <% if has_gifts %>
+            <% @order_item.orderable.gifts.each do |gift| %>
+              <% quantity = gift.available_quantity(@order_item.quantity) %>
+              <% if quantity > 0 %>
+                <div class='cart-gift' data-gift-id="<%= gift.id %>">
+                  <div class='desc'>
+                    <div class='avatar'>
+                      <%= image_tag gift.avatar_url %>
+                    </div>
+                    <div class='title-quantity'>
+                      <div class='title'>
+                        <span>
+                          <%= "#{gift.present.title} #{gift.properties_title}" %>
+                        </span>
+                      </div>
+                      <div class='quantity'>
+                        <span>数量：<%= quantity %></span>
+                      </div>
+                    </div>
+                    <div style='clear: both;'></div>
+                  </div>
+                </div>
+              <% end %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
 
       <div class='footer'>
         <span>
@@ -34,9 +74,32 @@
   <% end %>
 </div>
 
-<script type="text/javascript">
+<script type="text/template" id="mobile-gift-template">
+  <div class='cart-gift' data-gift-id="{{= id }}">
+    <div class='desc'>
+      <div class='avatar'>
+        <img src='{{= avatar_url }}'>
+      </div>
+      <div class='title-quantity'>
+        <div class='title'>
+          <span>
+            {{= composed_title }}
+          </span>
+        </div>
+        <div class='quantity'>
+          <span>数量：{{= quantity }}</span>
+        </div>
+      </div>
+      <div style='clear: both;'></div>
+    </div>
+  </div>
+</script>
 
- // 通过减少按钮，修改所购商品数量
+<script type="text/javascript">
+(function () {
+  var giftTpl = _.template($('#mobile-gift-template').html());
+
+  // 通过减少按钮，修改所购商品数量
   $('.cart-item').on('click', '.btn-minus', function (event) {
     var quantityInput = $(this).parents('tr:first').find('.quantity');
     var quantity = parseInt($(quantityInput).text(), 10);
@@ -80,5 +143,29 @@
     } else {
       $btnMinus.removeClass('glyphicon-minus');
     }
+
+    <% if @order_item.orderable.is_a? (Item) %>
+      $.getJSON('/order_items/buy_now_gifts', {
+        item_id: <%= @order_item.orderable.id %>,
+        quantity: quantity
+      }).done(function(data) {
+        var $gifts = $('.mobile-gifts');
+        var $container = $gifts.find('.mobile-cart-gifts');
+
+        $container.html('');
+
+        if (data.gifts.length > 0) {
+          _.each(data.gifts, function(gift) {
+            var html = giftTpl(gift);
+            var $hiddenInput = $("#order_item_gifts_" + <%= @order_item.orderable.id %> + "_" + gift.id);
+            $hiddenInput.val(gift.quantity);
+            $container.append(html);
+          });
+        } else {
+          $gifts.hide();
+        }
+      })
+    <% end %>
   }
+})();
 </script>

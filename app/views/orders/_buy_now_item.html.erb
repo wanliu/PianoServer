@@ -22,14 +22,6 @@
   </td>
 </tr>
 
-<% if item.orderable.try(:gifts).blank? %>
-  <%= hidden_field_tag "order[item_gifts][#{item.orderable.id}][undefined]", nil, { multiple: true } %>
-<% else %>
-  <% item.orderable.gifts.each do |gift| %>
-    <%= hidden_field_tag "order[item_gifts][#{item.orderable.id}][#{gift.id}]", gift.available_quantity(item.quantity), { multiple: true } %>
-  <% end %>
-<% end %>
-
 <% has_gifts = item.orderable.try(:gifts).present? %>
 <tr class='cart-gifts' data-cart-item-id="buy-now-item" style="<%= has_gifts ? '' : 'display: none' %>">
   <td colspan='5'>
