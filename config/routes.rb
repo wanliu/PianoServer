@@ -5,7 +5,11 @@ Rails.application.routes.draw do
 
   resource :wechat, only: [:show, :create]
 
-  resources :order_items, except: [:new, :edit]
+  resources :order_items, except: [:new, :edit] do
+    collection do
+      get "buy_now_gifts"
+    end
+  end
 
   concern :messable do
     resources :messages
