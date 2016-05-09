@@ -23,10 +23,10 @@
 </tr>
 
 <% if item.orderable.try(:gifts).blank? %>
-  <%= hidden_field_tag "order[cart_item_gifts][#{item.id}][undefined]", nil, { multiple: true } %>
+  <%= hidden_field_tag "order[item_gifts][#{item.orderable.id}][undefined]", nil, { multiple: true } %>
 <% else %>
   <% item.orderable.gifts.each do |gift| %>
-    <%= hidden_field_tag "order[cart_item_gifts][#{item.id}][#{gift.id}]", gift.available_quantity(item.quantity), { multiple: true } %>
+    <%= hidden_field_tag "order[item_gifts][#{item.orderable.id}][#{gift.id}]", gift.available_quantity(item.quantity), { multiple: true } %>
   <% end %>
 <% end %>
 

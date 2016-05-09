@@ -17,8 +17,7 @@
       <%= f.fields_for :items do |item_form| %>
         <%= item_form.hidden_field :orderable_type %>
         <%= item_form.hidden_field :orderable_id %>
-        <%= item_form.hidden_field :title %>
-        <%= item_form.hidden_field :price %>
+
         <% @order_item.properties.each do |key, value| %>
           <%= item_form.hidden_field "properties[#{key}]", value: value %>
         <% end %>

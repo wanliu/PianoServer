@@ -37,6 +37,7 @@ class Order < ActiveRecord::Base
 
   paginates_per 5
 
+  # 购物车礼品
   # create new order_items
   # delete relevant cart_items
   # inventory deducting
@@ -76,6 +77,35 @@ class Order < ActiveRecord::Base
       end
 
       cart_item_id
+    end
+  end
+
+  # 立即购买的礼品
+  # create new order_items
+  # delete relevant cart_items
+  # inventory deducting
+  # 与cart_item_gifts不同的是，这里的key是商品item的id, 而cart_item_gifts的key是cart_item的id
+  # "options"=>{
+  #   "13"=>{"16"=>"2", "14"=>"1"}, 
+  #   "12"=>{"17"=>"-1.0", "19"=>"2", "22"=>"2"}, 
+  #   "15"=>{"undefined"=>""}
+  # }
+  def item_gifts=(options)
+    options.each do |item_id, gift_setting|
+      unless gift_setting.has_key?("undefined")
+        item = Item.find_by(id: item_id)
+
+        unless item.blank?
+          order_item = items.find do |item|
+            item.orderable_type == "Item" &&
+              item.orderable_id.to_s == item_id
+          end
+
+          unless order_item.blank?
+            order_item.gifts = order_item.gift_settings(gift_setting)
+          end
+        end
+      end
     end
   end
 

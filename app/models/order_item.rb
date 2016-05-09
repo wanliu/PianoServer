@@ -38,6 +38,31 @@ class OrderItem < ActiveRecord::Base
     end
   end
 
+  # input:
+  #   options: {"17"=>"-1.0", "19"=>"2", "22"=>"2"}
+  # output:
+  # [ {gift_id: 19, item_id: 2, quantity: 2, title: 'xxx', avatar_url: 'cvxxx.jpg'},
+  #   {gift_id: 22, item_id: 3, quantity: 2, title: 'xxx', avatar_url: 'cvxxx.jpg'} ]
+  def gift_settings(options)
+    if orderable.respond_to?(:gifts)
+      orderable.gifts.where(id: options.keys).reduce([]) do |settings, gift|
+        quantity = options[gift.id.to_s].try(:to_i) || 0
+        if quantity > 0
+          settings.push({
+            gift_id: gift.id,
+            item_id: gift.present_id,
+            properties: gift.properties,
+            quantity: quantity,
+            title: gift.composed_title,
+            avatar_url: gift.avatar_url
+          })
+        end
+
+        settings
+      end 
+    end
+  end
+
   def deduct_stocks!(operator)
     orderable.deduct_stocks!(operator, quantity: quantity, data: properties, source: self)
     gifts.each do |gift_setting|
@@ -88,7 +113,7 @@ class OrderItem < ActiveRecord::Base
 
       # 检查库存是否充足，以及防止用户篡改赠品数量
       gift = Gift.find_by(id: gift_setting["gift_id"])
-      if gift_setting["quantity"].to_i > gift.available_quantity(gift_setting["quantity"].to_i)
+      if gift_setting["quantity"].to_i > gift.available_quantity(quantity)
         errors.add(:gift, "库存不足或者设置变动，请重新提交订单！")
       end
     end

@@ -145,6 +145,23 @@ class OrdersController < ApplicationController
   def buy_now_create
     @order = current_user.orders.build(buy_now_order_params)
 
+    @order.items.each do |item|
+      item.title = item.orderable.title
+      item.price =
+        case item.orderable
+        when Item
+          # if sale_mode == "retail"
+            # @order_item.orderable.public_price
+          # else
+          item.orderable.price
+          # end
+        when Promotion
+          item.orderable.discount_price
+        else
+          0
+        end
+    end
+
     respond_to do |format|
       if @order.save_with_items(current_user)
         format.html { redirect_to @order }
@@ -265,10 +282,14 @@ class OrdersController < ApplicationController
 
   def buy_now_order_params
     params.require(:order)
-      .permit(:supplier_id, :address_id, :note, items_attributes: [:orderable_type, :orderable_id, :quantity, :price, :title])
+      .permit(:supplier_id, :address_id, :note, items_attributes: [:orderable_type, :orderable_id, :quantity])
       .tap do |white_list|
         white_list[:items_attributes].each do |key, attributes|
           attributes[:properties] = params[:order][:items_attributes][key][:properties] || {}
+        end
+
+        if params[:order][:item_gifts].present?
+          white_list[:item_gifts] = params[:order][:item_gifts]
         end
       end
   end
