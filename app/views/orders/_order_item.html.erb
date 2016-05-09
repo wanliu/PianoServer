@@ -48,20 +48,6 @@
   <% end %>
 </tr>
 <% if item.gifts.present? %>
-  <tr>
-    <td colspan='5'>
-      <% item.gifts.each do |gift| %>
-        <span>
-          <%= gift["title"] %>
-        </span>
-        <span>
-          ×<%= gift["quantity"] %>
-        </span>
-      <% end %>
-    </td>
-  <tr>
-<% end %>
-<% if item.gifts.present? %>
   <tr class='order-gifts'>
     <td colspan='5'>
       <% item.gifts.each do |gift| %>
