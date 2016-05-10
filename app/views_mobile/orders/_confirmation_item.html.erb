@@ -27,16 +27,32 @@
 
   <% if order_item.cartable.is_a? Item %>
     <% order_item.cartable.eval_available_gifts(order_item.quantity) %>
+    <% gifts_length = order_item.cartable.available_gifts.length %>
     <% if order_item.cartable.available_gifts.present? %>
       <div class='item-gifts row'>
-        <div class='head col-xs-2'></div>
-        <div class='gifts col-xs-10 row'>
-          <% order_item.cartable.available_gifts.each do |gift| %>
-            <div class='gift col-xs-3'>
-              <%= image_tag gift.avatar_url %> X <span><%= gift.available_quantity %></span>
-            </div>
-          <% end %>
+        <div class='head col-xs-2'>
+          <div class='flag'>
+            <%= image_tag "gift-white.png" %>
+          </div>
         </div>
+        <% if gifts_length > 4 %>
+          <div class='gifts col-xs-8 row toggle-more-gifts'>
+            <% order_item.cartable.available_gifts.each do |gift| %>
+              <div class='gift col-xs-4'>
+                <%= image_tag gift.avatar_url %> X <span><%= gift.available_quantity %></span>
+              </div>
+            <% end %>
+          </div>
+          <div class='more col-xs-2'>●●●</div>
+        <% else %>
+          <div class='gifts col-xs-10 row'>
+            <% order_item.cartable.available_gifts.each do |gift| %>
+              <div class='gift col-xs-3'>
+                <%= image_tag gift.avatar_url %> X <span><%= gift.available_quantity %></span>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
         <div style='clear: both;'></div>
       </div>
     <% end %>

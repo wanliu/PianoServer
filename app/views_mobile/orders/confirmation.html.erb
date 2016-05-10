@@ -49,3 +49,12 @@
     </div>
   <% end %>
 </div>
+
+<script type="text/javascript">
+  (function(){
+    $('.more').click(function(event) {
+      $(this).siblings('.gifts')
+        .toggleClass('toggle-more-gifts');
+    })
+  })();
+</script>

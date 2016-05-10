@@ -53,14 +53,24 @@
         border-top: 1px solid #ddd;
 
         .head {
-          width: 40px;
-          height: 60px;
-          // float: left;
-          background-color: red;
+          .flag {        
+            width: 25px;
+            height: 60px;
+            background-color: red;
+
+            img {
+              height: 40px;
+              margin: 10px 5px;
+            }
+          }
         }
         
         .gifts {
           // float: left;
+          &.toggle-more-gifts {
+            height: 60px;
+            overflow-y: hidden;
+          }
 
           .gift {
             padding: 10px 5px;
@@ -69,6 +79,13 @@
               height: 40px;
             }
           }
+        }
+
+        .more {
+          padding: 15px 0;
+          font-size: 18px;
+          color: #aaa;
+          text-align: center;
         }
       }
     }

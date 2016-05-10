@@ -11,6 +11,11 @@
       float: left;
       background-color: red;
       width: 30px;
+
+      img {
+        height: 40px;
+        margin: 10px 5px;
+      }
     }
 
     .desc {
@@ -21,7 +26,7 @@
         padding: 10px;
 
         img {
-          max-height: 40px;
+          height: 40px;
           width: auto;
         }
       }
@@ -62,6 +67,12 @@ tr.cart-gifts, div.cart-gifts {
       float: left;
       background-color: red;
       width: 30px;
+      border-bottom: 1px solid white;
+
+      img {
+        height: 40px;
+        margin: 30px 5px;
+      }
     }
 
     .desc {
@@ -75,7 +86,7 @@ tr.cart-gifts, div.cart-gifts {
         padding: 10px;
 
         img {
-          max-height: 40px;
+          height: 40px;
           width: auto;
         }
       }
@@ -115,7 +126,7 @@ tr.cart-gifts, div.cart-gifts {
         padding: 10px;
 
         img {
-          max-height: 40px;
+          height: 40px;
           width: auto;
         }
       }
