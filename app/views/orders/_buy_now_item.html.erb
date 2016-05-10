@@ -22,34 +22,32 @@
   </td>
 </tr>
 
-<% has_gifts = item.orderable.try(:gifts).present? %>
-<tr class='cart-gifts' data-cart-item-id="buy-now-item" style="<%= has_gifts ? '' : 'display: none' %>">
-  <td colspan='5'>
-    <% if has_gifts %>
-      <% item.orderable.gifts.each do |gift| %>
-        <% quantity = gift.available_quantity(item.quantity) %>
-        <% if quantity > 0 %>
-          <div class='cart-gift'  data-gift-id="<%= gift.id %>">
-            <div class='head'>
+<% if item.orderable.is_a? Item %>
+  <% item.orderable.eval_available_gifts(item.quantity) %>
+  <% has_available_gifts = item.orderable.available_gifts.present? %>
+  <tr class='cart-gifts' data-cart-item-id="buy-now-item" style="<%= has_available_gifts ? '' : 'display: none' %>">
+    <td colspan='5'>
+      <% item.orderable.available_gifts.each do |gift| %>
+        <div class='cart-gift' data-gift-id="<%= gift.id %>">
+          <div class='head'>
+          </div>
+          <div class='desc'>
+            <div class='avatar'>
+              <%= image_tag gift.avatar_url %>
             </div>
-            <div class='desc'>
-              <div class='avatar'>
-                <%= image_tag gift.avatar_url %>
+            <div class='title-quantity'>
+              <div class='title'>
+                <span>
+                  <%= "#{gift.present.title} #{gift.properties_title}" %>
+                </span>
               </div>
-              <div class='title-quantity'>
-                <div class='title'>
-                  <span>
-                    <%= "#{gift.present.title} #{gift.properties_title}" %>
-                  </span>
-                </div>
-                <div class='quantity'>
-                  <span>数量：<%= quantity %></span>
-                </div>
+              <div class='quantity'>
+                <span>数量：<%= gift.available_quantity %></span>
               </div>
             </div>
           </div>
-        <% end %>
+        </div>
       <% end %>
-    <% end %>
-  </td>
-<tr>
+    </td>
+  </tr>
+<% end %>

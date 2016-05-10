@@ -124,6 +124,8 @@
           <% cache ["footer", @subject ] do %>
             <%= render "footer", with: @subject %>
           <% end %>
+        <% when "no_footer" %>
+          <!-- do nothing 手机端不需要footer -->
         <% else %>
           <% cache "footer" do %>
             <%= render "application/footer" %>

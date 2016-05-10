@@ -35,9 +35,10 @@
             <%= hidden_field_tag "order[item_gifts][#{@order_item.orderable.id}][undefined]", nil, { multiple: true } %>
           <% else %>
             <% @order_item.orderable.gifts.each do |gift| %>
-              <%= hidden_field_tag "order[item_gifts][#{@order_item.orderable.id}][#{gift.id}]", gift.available_quantity(@order_item.quantity), { multiple: true } %>
+              <%= hidden_field_tag "order[item_gifts][#{@order_item.orderable.id}][#{gift.id}]", gift.eval_available_quantity(@order_item.quantity), { multiple: true } %>
             <% end %>
           <% end %>
+        <% end %>
       
         <tr class='footer'>
           <td colspan='5' class='text-right'>
@@ -105,7 +106,7 @@
       $subtotal.text("¥ " + subTotal);
       $total.text(subTotal);
 
-      <% if @order_item.orderable.is_a? (Item) %>
+      <% if @order_item.orderable.is_a?(Item) %>
         $.getJSON('/order_items/buy_now_gifts', {
           item_id: <%= @order_item.orderable.id %>,
           quantity: quantity

@@ -2,6 +2,8 @@ class Gift < ActiveRecord::Base
   belongs_to :item
   belongs_to :present, class_name: 'Item'
 
+  attr_accessor :available_quantity
+
   enum status: { active: 1, deactive: 2 }
 
   validates :item, presence: true
@@ -25,12 +27,10 @@ class Gift < ActiveRecord::Base
     "#{title} #{properties_title}"
   end
 
-  def available_quantity(item_quantity)
+  def eval_available_quantity(item_quantity)
     current_stock = present.stocks.find {|stock| stock.data == properties }.try(:quantity) || 0
     quantity_send = (item_quantity * quantity).floor
-    result = [left_quantity, current_stock, quantity_send].min.to_i
-
-    result > 0 ? result : 0
+    self.available_quantity = [left_quantity, current_stock, quantity_send].min.to_i
   end
 
   def left_quantity

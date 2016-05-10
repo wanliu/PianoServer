@@ -22,12 +22,12 @@
   </td>
 </tr>
 
-<% if item.cartable.try(:gifts).present? %>
-  <tr class='order-gifts'>
-    <td colspan='5'>
-      <% item.cartable.gifts.each do |gift| %>
-        <% quantity = gift.available_quantity(item.quantity) %>
-        <% if quantity > 0 %>
+<% if item.cartable.is_a? Item %>
+  <% item.cartable.eval_available_gifts(item.quantity) %>
+  <% if item.cartable.available_gifts.present? %>
+    <tr class='order-gifts'>
+      <td colspan='5'>
+        <% item.cartable.available_gifts.each do |gift| %>
           <div class='order-gift'>
             <div class='head'>
             </div>
@@ -42,13 +42,13 @@
                   </span>
                 </div>
                 <div class='quantity'>
-                  <span>数量：<%= quantity %></span>
+                  <span>数量：<%= gift.available_quantity %></span>
                 </div>
               </div>
             </div>
           </div>
         <% end %>
-      <% end %>
-    </td>
-  <tr>
+      </td>
+    </tr>
+  <% end %>
 <% end %>

@@ -1,26 +1,25 @@
 module GiftHelper
   def gift_json(items)
     gifts = items.reduce({}) do |gs, item|
-      gs[item.id] = 
-      if item.cartable.try(:gifts).present?
-        item.cartable.gifts.reduce({}) do |gs_inner, gift|
-          quantity = gift.available_quantity(item.quantity)
+      shop_item = item.cartable
 
-          if quantity > 0
-            if gs_inner[gift.id].present?
-              gs_inner[gift.id][:quantity] += quantity 
-            else
-              gs_inner[gift.id] = {
-                avatar_url: gift.avatar_url,
-                composed_title: "#{gift.present.title} #{gift.properties_title}",
-                quantity: quantity,
-                id: gift.id,
-                item_id: gift.item_id,
-                present_id: gift.present_id
-              }
-            end
+      gs[item.id] = if shop_item.is_a? Item
+        shop_item.eval_available_gifts(item.quantity)
+
+        shop_item.available_gifts.reduce({}) do |inner_gifts, gift|
+          if inner_gifts[gift.id].present?
+            inner_gifts[gift.id][:quantity] += gift.available_quantity 
+          else
+            inner_gifts[gift.id] = {
+              avatar_url: gift.avatar_url,
+              composed_title: "#{gift.present.title} #{gift.properties_title}",
+              quantity: gift.available_quantity,
+              id: gift.id,
+              item_id: gift.item_id,
+              present_id: gift.present_id
+            }
           end
-          gs_inner
+          inner_gifts
         end
       else
         {}

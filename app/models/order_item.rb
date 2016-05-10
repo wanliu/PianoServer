@@ -113,7 +113,7 @@ class OrderItem < ActiveRecord::Base
 
       # 检查库存是否充足，以及防止用户篡改赠品数量
       gift = Gift.find_by(id: gift_setting["gift_id"])
-      if gift_setting["quantity"].to_i > gift.available_quantity(quantity)
+      if gift_setting["quantity"].to_i > gift.eval_available_quantity(quantity)
         errors.add(:gift, "库存不足或者设置变动，请重新提交订单！")
       end
     end

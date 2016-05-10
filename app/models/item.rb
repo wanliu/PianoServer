@@ -14,6 +14,9 @@ class Item < ActiveRecord::Base
 
   acts_as_punchable
 
+  attr_reader :available_gifts
+  # attr_accessor :available_gifts_evaled
+
   belongs_to :shop_category
   belongs_to :category
   belongs_to :brand
@@ -501,5 +504,17 @@ class Item < ActiveRecord::Base
       keys = Property.attribute_names - ["id"]
       Property.new property.slice(*keys)
     end
+  end
+
+  def eval_available_gifts(sale_quantity)
+    @available_gifts = gifts.reduce([]) do |availables, gift|
+      gift.eval_available_quantity(sale_quantity)
+      if gift.available_quantity > 0
+        availables << gift
+      end
+      availables
+    end
+
+    # self.available_gifts_evaled = true
   end
 end

@@ -27,42 +27,40 @@
           <%= hidden_field_tag "order[item_gifts][#{@order_item.orderable.id}][undefined]", nil, { multiple: true } %>
         <% else %>
           <% @order_item.orderable.gifts.each do |gift| %>
-            <%= hidden_field_tag "order[item_gifts][#{@order_item.orderable.id}][#{gift.id}]", gift.available_quantity(@order_item.quantity), { multiple: true } %>
+            <%= hidden_field_tag "order[item_gifts][#{@order_item.orderable.id}][#{gift.id}]", gift.eval_available_quantity(@order_item.quantity), { multiple: true } %>
           <% end %>
         <% end %>
       <% end %>
 
-      <% has_gifts = @order_item.orderable.try(:gifts).present? %>
-      <div class='mobile-gifts' style="<%= has_gifts ? '' : 'display: none' %>">
-        <div class='head'></div>
-        <div class='mobile-cart-gifts'>
-          <% if has_gifts %>
-            <% @order_item.orderable.gifts.each do |gift| %>
-              <% quantity = gift.available_quantity(@order_item.quantity) %>
-              <% if quantity > 0 %>
-                <div class='cart-gift' data-gift-id="<%= gift.id %>">
-                  <div class='desc'>
-                    <div class='avatar'>
-                      <%= image_tag gift.avatar_url %>
-                    </div>
-                    <div class='title-quantity'>
-                      <div class='title'>
-                        <span>
-                          <%= "#{gift.present.title} #{gift.properties_title}" %>
-                        </span>
-                      </div>
-                      <div class='quantity'>
-                        <span>数量：<%= quantity %></span>
-                      </div>
-                    </div>
-                    <div style='clear: both;'></div>
+      <% if @order_item.orderable.is_a? Item %>
+        <% @order_item.orderable.eval_available_gifts(@order_item.quantity) %>
+        <% has_available_gifts = @order_item.orderable.available_gifts.present? %>
+        <div class='mobile-gifts' style="<%= has_available_gifts ? '' : 'display: none' %>">
+          <div class='head'></div>
+          <div class='mobile-cart-gifts'>
+            <% @order_item.orderable.available_gifts.each do |gift| %>
+              <div class='cart-gift' data-gift-id="<%= gift.id %>">
+                <div class='desc'>
+                  <div class='avatar'>
+                    <%= image_tag gift.avatar_url %>
                   </div>
+                  <div class='title-quantity'>
+                    <div class='title'>
+                      <span>
+                        <%= "#{gift.present.title} #{gift.properties_title}" %>
+                      </span>
+                    </div>
+                    <div class='quantity'>
+                      <span>数量：<%= gift.available_quantity %></span>
+                    </div>
+                  </div>
+                  <div style='clear: both;'></div>
                 </div>
-              <% end %>
+              </div>
             <% end %>
-          <% end %>
+          </div>
         </div>
-      </div>
+      <% end %>
 
       <div class='footer'>
         <span>
