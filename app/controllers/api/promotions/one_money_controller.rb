@@ -3,13 +3,20 @@ require 'encryptor'
 
 GrabMachine.setup(user_method: :pmo_current_user)
 
+
 class Api::Promotions::OneMoneyController < Api::BaseController
+  class InvalidSeedOwner < RuntimeError; end
+
   include FastUsers
   skip_before_action :authenticate_user!, only: [:show, :item, :items, :status, :item_status]
   skip_before_action :authenticate_user!, only: [:signup] unless Rails.env.production?
   skip_before_action :authenticate_user!, only: [:signup, :grab, :callback] if ENV['TEST_PERFORMANCE']
 
   before_action :set_one_money #, except: [:, :update, :status, :item]
+  before_action :from_or_got_seed, only: [:item, :grab, :callback]
+  before_action :from_seed, only: [:signup]
+
+  rescue_from InvalidSeedOwner, with: :invalid_seed_owner
 
   def show
     hash = @one_money.to_hash
@@ -26,7 +33,7 @@ class Api::Promotions::OneMoneyController < Api::BaseController
     @item = PmoItem[params[:item_id].to_i]
 
     now = @item.now.to_f * 1000
-    GrabMachine.run self, @one_money, @item do |status, context|
+    GrabMachine.run self, @one_money, @item, @options do |status, context|
       # @one_money.participants.add(pmo_current_user)
       if status == "success"
         hash = @item.to_hash
@@ -66,6 +73,12 @@ class Api::Promotions::OneMoneyController < Api::BaseController
   def signup
     status = @one_money.signups.add(pmo_current_user)
     @one_money.save
+    if @from_seed
+      if PmoGrab.find(one_money: @one_money.id, user_id: pmo_current_user.id).count == 0
+        @from_seed.given = pmo_current_user
+        @from_seed.save
+      end
+    end
     render json: {user_id: pmo_current_user.id, user_user_id: pmo_current_user.user_id, status: status > 0 ? "success" : "always" }
   end
 
@@ -102,6 +115,8 @@ class Api::Promotions::OneMoneyController < Api::BaseController
         item_hash[:winner_count] = item.winners.count
         item_hash[:total_amount] = item.total_amount
         item_hash[:completes] = item.completes
+        item_hash[:seed_count] = item.seeds.count
+
         # items.status
         item_hash
       end
@@ -136,6 +151,7 @@ class Api::Promotions::OneMoneyController < Api::BaseController
 
     hash[:participant_count] = @item.participants.count
     hash[:winner_count] = @item.winners.count
+    hash[:seed_count] = @item.seeds.count
     hash[:total_amount] = @item.total_amount
     hash[:completes] = @item.completes
 
@@ -144,7 +160,7 @@ class Api::Promotions::OneMoneyController < Api::BaseController
 
   def grab
     @item = PmoItem[params[:item_id].to_i]
-    GrabMachine.run self, @one_money, @item do |status, context|
+    GrabMachine.run self, @one_money, @item, @options do |status, context|
       if status == "success"
         id = @one_money.winners.add(pmo_current_user)
         id = @item.winners.add(pmo_current_user)
@@ -153,6 +169,17 @@ class Api::Promotions::OneMoneyController < Api::BaseController
         @grab = PmoGrab.from(@item, @one_money, pmo_current_user)
         @grab.save
 
+        if @from_seed
+          @from_seed.given = pmo_current_user
+          @from_seed.save
+        end
+
+        if @seed
+          @grab.used_seed = @seed.seed_id
+          @grab.save
+          @seed.used = true
+          @seed.save
+        end
 
         Rails.logger.debug "Increment Completes + #{@item.quantity}"
         @item.incr :completes, @item.quantity
@@ -189,7 +216,7 @@ class Api::Promotions::OneMoneyController < Api::BaseController
 
   def callback
     @item = PmoItem[params[:item_id].to_i]
-    GrabMachine.run self, @one_money, @item do |status, context|
+    GrabMachine.run self, @one_money, @item, @options do |status, context|
       grabs = PmoGrab.find(pmo_item_id: @item.id, one_money: @one_money.id, user_id: pmo_current_user.id)
 
       hash ={
@@ -222,6 +249,58 @@ class Api::Promotions::OneMoneyController < Api::BaseController
     render json: hash
   end
 
+  def user_seeds
+    @options = {one_money: @one_money.id, owner_id: pmo_current_user.id}
+    @options.merge!(period: params[:period]) if params[:period]
+    @seeds = PmoSeed.find(@options)
+    hash ={
+      status: "success",
+      seeds: @seeds
+    }
+
+    render json: hash
+  end
+
+  def seed
+    @seed = PmoSeed.find(one_money: @one_money.id, seed_id: params[:seed_id]).first
+    render json: {
+      status: "success",
+      seed: @seed
+    }
+  end
+
+
+  protected
+
+  def from_seed
+    if params[:from_seed]
+      @from_seed = PmoSeed.find(seed_id: params[:from_seed]).first
+    end
+  end
+
+  def from_or_got_seed
+    @options = {}
+
+    if params[:from_seed]
+      @from_seed = PmoSeed.find(seed_id: params[:from_seed]).first
+    end
+
+    if params[:seed]
+      @seed = PmoSeed.find(seed_id: params[:seed]).first
+      if @seed && @seed.owner_id == pmo_current_user.id
+        @options[:seed] = @seed
+      else
+        raise InvalidSeedOwner.new('Invalid owner_id of seed')
+      end
+    end
+  end
+
+  def invalid_seed_owner(e)
+    render json: {
+      status: "invalid_seed_owner",
+      msg: e.message
+    }
+  end
   private
 
   def set_one_money

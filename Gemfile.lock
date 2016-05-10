@@ -144,6 +144,7 @@ GEM
       jquery-rails
       rails (>= 3.1.0)
     chinese_pinyin (1.0.0)
+    chronic (0.10.2)
     coderay (1.1.0)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
@@ -196,13 +197,6 @@ GEM
       multi_json
     element_factory (0.1.4)
       activesupport (>= 3.1, < 5.0)
-    em-hiredis (0.3.0)
-      eventmachine (~> 1.0)
-      hiredis (~> 0.5.0)
-    em-redis (0.3.0)
-      eventmachine
-    em-synchrony (1.0.4)
-      eventmachine (>= 1.0.0.beta.1)
     equalizer (0.0.11)
     erubis (2.7.0)
     eventmachine (1.0.8)
@@ -545,6 +539,8 @@ GEM
       http (~> 1.0, >= 1.0.1)
       nokogiri (>= 1.6.0)
       thor
+    whenever (0.9.4)
+      chronic (>= 0.6.3)
     wx_pay (0.4.1)
       activesupport (>= 3.2)
       rest-client (>= 1.7)
@@ -579,9 +575,6 @@ DEPENDENCIES
   elasticsearch-model
   elasticsearch-persistence
   elasticsearch-rails
-  em-hiredis
-  em-redis
-  em-synchrony
   factory_girl_rails
   google-analytics-rails
   guard-rails
@@ -649,4 +642,8 @@ DEPENDENCIES
   web-console (~> 2.0)
   wechat
   weixin_authorize!
+  whenever
   wx_pay
+
+BUNDLED WITH
+   1.10.6

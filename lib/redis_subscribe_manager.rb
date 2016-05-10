@@ -34,6 +34,9 @@ module RedisSubscribeManager
     end
 
     def monitor_model(model, db = 0, pattern = "$keyspace:$model:$id:__expires:$field")
+
+      semaphore = Mutex.new
+
       parse_method = lambda do |template|
         parts = {}
 
@@ -58,11 +61,13 @@ module RedisSubscribeManager
 
         meth = lambda do |model_name, id, field|
           if status == "expired"
-            instantialize(model_name, id) do |instance|
-              try_callback(instance, field) do |model|
-                Rails.logger.debug "Expire #{model_name}.#{id} events: #{field}"
+            # semaphore.synchronize do
+              instantialize(model_name, id) do |instance|
+                try_callback(instance, field) do |model|
+                  Rails.logger.debug "Expire #{model_name}.#{id} events: #{field}"
+                end
               end
-            end
+            # end
           end
         end
 
@@ -134,8 +139,16 @@ module RedisSubscribeManager
   end
 end
 
-if Rails.env.production? && ENV['SUBSCRIBE_MASTER']
-  RedisSubscribeManager.launch
-elsif Rails.env.development?
-  RedisSubscribeManager.launch
-end
+
+
+# if Rails.env.production?
+#   unless File.exist?('tmp/pids/subscribe.pid')
+#     File.write('tmp/pids/subscribe.pid', Process.pid)
+#     RedisSubscribeManager.launch
+#   end
+#   # if ENV['SUBSCRIBE_MASTER']
+
+#   # end
+# elsif Rails.env.development?
+#   RedisSubscribeManager.launch
+# end

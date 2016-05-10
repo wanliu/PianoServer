@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160413075823) do
+ActiveRecord::Schema.define(version: 20160420072132) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -475,6 +475,16 @@ ActiveRecord::Schema.define(version: 20160413075823) do
   add_index "shop_categories", ["rgt"], name: "index_shop_categories_on_rgt", using: :btree
   add_index "shop_categories", ["shop_id"], name: "index_shop_categories_on_shop_id", using: :btree
 
+  create_table "shop_delivers", force: :cascade do |t|
+    t.integer  "shop_id"
+    t.integer  "deliver_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "shop_delivers", ["deliver_id"], name: "index_shop_delivers_on_deliver_id", using: :btree
+  add_index "shop_delivers", ["shop_id"], name: "index_shop_delivers_on_shop_id", using: :btree
+
   create_table "shops", force: :cascade do |t|
     t.integer  "owner_id"
     t.string   "name"
@@ -642,6 +652,8 @@ ActiveRecord::Schema.define(version: 20160413075823) do
   add_foreign_key "orders", "shops", column: "supplier_id"
   add_foreign_key "orders", "users", column: "buyer_id"
   add_foreign_key "shop_categories", "shops"
+  add_foreign_key "shop_delivers", "shops"
+  add_foreign_key "shop_delivers", "users", column: "deliver_id"
   add_foreign_key "stock_changes", "items"
   add_foreign_key "stock_changes", "units"
   add_foreign_key "stock_changes", "users", column: "operator_id"

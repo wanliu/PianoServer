@@ -22,6 +22,16 @@
   </div>
 
   <div class="form-group">
+    <%= label_tag 'one_money_description', '分享数' %>
+    <%= text_field 'one_money', :shares, value: @one_money.shares, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= label_tag 'one_money_description', '分享种子' %>
+    <%= text_field 'one_money', :share_seed, value: @one_money.share_seed, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
     <%= label_tag 'one_money_fare', '运费' %>
     <%= text_field 'one_money', :fare, value: @one_money.fare || Settings.promotions.one_money.default.fare, class: 'form-control' %>
   </div>
@@ -36,15 +46,41 @@
     <%= text_field 'one_money', :callback, value: @one_money.callback || Settings.promotions.one_money.default.callback, class: 'form-control' %>
   </div>
 
+  <div class="form-group">
+    <%= label_tag 'one_money_publish_url', '发布地址' %>
+    <%= text_field 'one_money', :publish_url, value: @one_money.publish_url, class: 'form-control' %>
+  </div>
+
   <!-- <div class="form-group">
     <%#= label_tag 'one_money_auto_expire', :auto_expire %>
     <%#= check_box 'one_money', :auto_expire, value: @one_money.auto_expire %>
   </div> -->
+  <% unless @one_money.new? %>
 
   <div class="form-group">
     <%= label_tag 'one_money_cover_url', '封面 url' %>
-    <%= text_field 'one_money', :cover_url, value: @one_money.cover_url, class: 'form-control' %>
+    <div class="input-group">
+
+      <%= text_field 'one_money', :cover_url, value: @one_money.cover_url, class: 'form-control' %>
+      <span class="input-group-btn">
+        <div class="upload-button-cover"></div>
+      </span>
+    </div>
   </div>
+
+  <div class="form-group">
+    <%= label_tag 'one_money_head_url', '头部 url' %>
+
+    <div class="input-group">
+      <%= text_field 'one_money', :head_url, value: @one_money.head_url, class: 'form-control' %>
+      <span class="input-group-btn">
+        <div class="upload-button-head"></div>
+      </span>
+    </div>
+  </div>
+  <% end %>
+
+
 
   <div class="form-group">
     <%= label_tag 'one_money_start_at', '开始时间'%>
@@ -69,8 +105,12 @@
   <div class="form-group">
 
     <%= submit_tag '保存', class: 'btn btn-primary' %>
+    <% unless @one_money.new? %>
+      <%= button_to '发布', url: publish_admins_one_money_path(@one_money.id), class: 'btn btn-success btn-publish', remote: true %>
 
-    <%= status_control @one_money unless @one_money.new? %>
+      <%= link_to_if exists_one_money_dir?(@one_money), '活动网址', one_money_publish_url(@one_money), class: 'btn btn-link' %>
+    <% end %>
+    <%= status_control_all @one_money unless @one_money.new? %>
   </div>
 
 <% end %>
@@ -91,13 +131,63 @@
     }
   });
 
-  // $("#one_money_start_at #one_money_end_at").change(function() {
-  //   var start_at = moment($("#one_money_start_at").val());
-  //   var end_at = moment($("#one_money_end_at").val());
-  //
-  //   if (start_at > end_at) {
-  //
-  //   }
-  // })
+  $('.btn-publish').click(function(event) {
+    event.preventDefault();
+    var $target = $(event.currentTarget)
+    var url = $target.attr('url');
 
+    oldText = $target.val();
+    $target.addClass('disabled').val('正在发布....');
+
+    var reset = function() {
+      $target.removeClass('disabled').val(oldText);
+    };
+
+    $.ajax({url: url, method: 'put'}).then(function(json) {
+      reset();
+      if (confirm('打开活动页面?')) {
+        window.open(json.url);
+      }
+    }).fail(reset).always(reset);
+  })
+
+
+</script>
+
+
+<script type="text/javascript">
+  var html = [ "<div class=\"qq-uploader\">",
+                 "<div class=\"qq-upload-drop-area\"><span>{dragText}</span></div>",
+                 "<div class=\"qq-upload-button btn\">",
+                  "上传",
+                 "</div>",
+                 "<ul class=\"qq-upload-list hide\"></ul>",
+               "</div>"
+             ].join('\n');
+  <% unless @one_money.new? %>
+
+  var $element = $(".upload-button-head")[0];
+  var actionUrl = "<%= upload_one_money_image_admins_one_money_path(@one_money.id, field: :head_url) %>";
+  var token = $('meta[name=csrf-token]').attr('content');
+
+  function uploaderImage(element, friendInput, url) {
+    new qq.FileUploader({
+      element: element,
+      customHeaders: { "X-CSRF-TOKEN": token },
+      template: html,
+      action:  url + "&authenticity_token=" + encodeURIComponent(token),
+      multiple: false,
+      onComplete: function (id, filename, responseJSON) {
+        var url = responseJSON.url;
+        $(friendInput).val(url);
+      }
+    });
+  }
+
+
+  uploaderImage($(".upload-button-head")[0], "#one_money_head_url", "<%= upload_one_money_image_admins_one_money_path(@one_money.id, field: :head_url) %>" );
+
+  uploaderImage($(".upload-button-cover")[0], "#one_money_cover_url", "<%= upload_one_money_image_admins_one_money_path(@one_money.id, field: :cover_url) %>" )
+
+  <% end %>
 </script>

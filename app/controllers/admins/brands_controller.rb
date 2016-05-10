@@ -5,7 +5,7 @@ class Admins::BrandsController < Admins::BaseController
 
     @brands =
       (if params[:q].present?
-        Brand.search(params[:q]).records.page(params[:page]).per(100)
+        Brand.search("*#{params[:q]}*").records.page(params[:page]).per(100)
       else
         Brand.top
       end)

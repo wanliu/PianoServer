@@ -57,6 +57,9 @@
         <%= icon :wrench unless item.valid_status? %>
       <% end %>
       <%= status_control item %>
+      <%= link_to clean_expire_grabs_admins_one_money_path(@one_money.id, item.id), class: "btn btn-default btn-xs", remote: true, method: :delete do %>
+        <%= icon :fire %>
+      <% end %>
     </p>
     <p class="processes">
       <span class="processage"

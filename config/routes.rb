@@ -178,16 +178,21 @@ Rails.application.routes.draw do
       member do
         put "state", action: :state, as: :state
         patch "state_item/:item_id", action: :state_item, as: :state_item
+        patch "state_item_all", action: :state_item_all, as: :state_item_all
         patch "fix_clock/:item_id", action: :fix_clock, as: :fix_clock
         patch "add_item/:item_id", action: :add_item, as: :add_item
         put "update_item/:item_id", action: :update_item, as: :update_item
         put "overwrite_item/:item_id", action: :overwrite_item, as: :overwrite_item
         delete "clear_overwrite_item/:item_id", action: :clear_overwrite_item, as: :clear_overwrite_item
         delete "remove_item/:item_id", action: :remove_item, as: :remove_item
+        delete "clean_expire_grabs/:item_id", action: :clean_expire_grabs, as: :clean_expire_grabs
         post "upload_image/:item_id", action: :upload_image, as: :upload_image
+        post "upload_one_money_image", action: :upload_one_money_image, as: :upload_one_money_image
+
         get :signups
         get "details/:item_id", action: :details, as: :details
         get "churn_stastic"
+        put "publish", action: :publish, as: :publish
       end
     end
     resources :attachments
@@ -272,6 +277,9 @@ Rails.application.routes.draw do
 
           get "callback/:item_id", action: :callback
           get "ensure/:grab_id", action: :ensure, via: Rails.env.production? ? [:put] : [:put, :get]
+
+          get "user_seeds/:user_id", action: :user_seeds
+          get "seeds/:seed_id", action: :seed
         end
       end
     end
@@ -288,6 +296,14 @@ Rails.application.routes.draw do
     resources :shops do
       member do
         get "favorite_count", to: "shops#favorite_count"
+      end
+    end
+
+    resources :locations do
+      collection do
+        get "provinces", to: "locations#provinces"
+        get "cities", to: "locations#cities"
+        get "regions", to: "locations#regions"
       end
     end
   end
@@ -365,11 +381,11 @@ Rails.application.routes.draw do
       get "evaluate"
       patch "create_evaluations"
 
-      get "evaluate_items/:order_item_id", 
-        to: "orders#evaluate_item", 
+      get "evaluate_items/:order_item_id",
+        to: "orders#evaluate_item",
         as: :evaluate_items
 
-      post "evaluate_items/:order_item_id", 
+      post "evaluate_items/:order_item_id",
         to: "orders#evaluate_item_create",
         as: :evaluate_items_create
     end
@@ -409,6 +425,12 @@ Rails.application.routes.draw do
       resource :delivery_fee do
         collection do
           get "next_nodes"
+        end
+      end
+
+      resources :delivers, only: [:index, :show, :create, :destroy] do
+        collection do
+          get :search_new_delivers, as: :search
         end
       end
 
@@ -474,6 +496,6 @@ Rails.application.routes.draw do
     end
   end
 
-  # root to: "promotions#index"
-  root to: redirect('/html/%E8%80%92%E9%98%B3%E8%A1%97%E4%B8%8A')
+  root to: "promotions#index"
+  # root to: redirect('/html/%E8%80%92%E9%98%B3%E8%A1%97%E4%B8%8A')
 end

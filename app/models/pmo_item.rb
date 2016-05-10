@@ -42,11 +42,12 @@ class PmoItem < Ohm::Model
   set :winners, :PmoUser
 
   collection :grabs, :PmoGrab
+  collection :seeds, :PmoSeed
   reference :one_money, :OneMoney
 
   # list :logs, :PmoLog
-  expire :start_at, :expired_start_at
-  expire :end_at, :expired_end_at
+  # expire :start_at, :expired_start_at
+  # expire :end_at, :expired_end_at
 
   counter :completes
 
@@ -107,6 +108,10 @@ class PmoItem < Ohm::Model
   def marked_for_destruction?
     false
   end
+
+  # def completes
+  #   grabs.select {|g| !g.expired? }.count
+  # end
 
   # def suspend_at_with_fallback
   #   if self.independence
