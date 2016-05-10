@@ -14,6 +14,9 @@ class Item < ActiveRecord::Base
 
   acts_as_punchable
 
+  attr_reader :available_gifts
+  # attr_accessor :available_gifts_evaled
+
   belongs_to :shop_category
   belongs_to :category
   belongs_to :brand
@@ -23,6 +26,10 @@ class Item < ActiveRecord::Base
 
   has_many :stock_changes, autosave: true
   has_many :evaluations, as: :evaluationable
+
+  has_many :gifts
+  has_many :items, through: :gifts
+  has_many :presents, through: :gifts
 
   mount_uploaders :images, ItemImageUploader
 
@@ -186,16 +193,6 @@ class Item < ActiveRecord::Base
     query_params = {
       query: {
         filtered: {
-          # query: {
-          #   bool: {
-          #     should: [
-                # { match: {title: params[:q]} }
-                # { match: {"title.first_lt" => params[:q]} },
-                # { match: {"title.pinyin" => params[:q]} }
-              # ],
-          #     minimum_should_match: 1
-          #   }
-          # },
           filter: [
             {
               term: {
@@ -236,6 +233,68 @@ class Item < ActiveRecord::Base
           minimum_should_match: 1
         }
       }
+
+      if /[a-z]+/.match params[:q]
+        if /[(a|o|e|i|u|ü|v)]/.match params[:q]
+          pinyin = params[:q].gsub /[(b|p|m|f|d|t|n|l|g|k|h|j|q|x|zh|ch|sh|r|z|c|s|w|y)]/ do |i|
+            " #{i}"
+          end
+          pinyin = pinyin.gsub(" z ", " z")
+            .gsub(" c ", " c")
+            .gsub(" s ", " s")
+            .gsub(" n ", "n ")
+            .gsub(" g ", "g ")
+            .gsub(/\W+g\z/, "g")
+            .gsub(/\W+n\z/, "n")
+            .strip
+
+          query_params[:query][:filtered][:query][:bool][:should].push({ match: {"title.pinyin" => pinyin} })
+        else
+          query_params[:query][:filtered][:query][:bool][:should].push({ match: {"title.first_lt" => params[:q]} })
+        end
+      end
+    end
+
+    Item.search(query_params)
+  end
+
+  scope :search_shop_items, ->(params) do
+    query_params = {
+      query: {
+        filtered: {
+          filter: [
+            {
+              term: {
+                shop_id: params[:shop_id]
+              }
+            }
+          ]
+        }
+      }
+    }
+
+    if params[:except].present?
+      query_params[:query][:filtered][:query] ||= {}
+      query_params[:query][:filtered][:query].deep_merge!({
+        bool: {
+          must_not: {
+            match: { id: params[:except] }
+          }
+        }
+      })
+    end
+
+    # 搜索内容只有字母的时候
+    # ①只有声母
+    # ②声母韵母都有
+    if params[:q].present?
+      query_params[:query][:filtered][:query] ||= {}
+      query_params[:query][:filtered][:query].deep_merge!({
+        bool: {
+          should: [{ match: {title: params[:q]} }],
+          minimum_should_match: 1
+        }
+      })
 
       if /[a-z]+/.match params[:q]
         if /[(a|o|e|i|u|ü|v)]/.match params[:q]
@@ -352,7 +411,8 @@ class Item < ActiveRecord::Base
   #   quantity: 1
   # }
   def deduct_stocks!(operator, options)
-    stock_changes.create!(data: options[:data], operator: operator, quantity: - options[:quantity], kind: :sale)
+    kind = options[:kind] || :sale
+    stock_changes.create!(data: options[:data], operator: operator, quantity: - options[:quantity], kind: kind)
   end
 
   def stocks
@@ -444,5 +504,17 @@ class Item < ActiveRecord::Base
       keys = Property.attribute_names - ["id"]
       Property.new property.slice(*keys)
     end
+  end
+
+  def eval_available_gifts(sale_quantity)
+    @available_gifts = gifts.reduce([]) do |availables, gift|
+      gift.eval_available_quantity(sale_quantity)
+      if gift.available_quantity > 0
+        availables << gift
+      end
+      availables
+    end
+
+    # self.available_gifts_evaled = true
   end
 end

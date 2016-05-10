@@ -1,6 +1,6 @@
 <% saleable = item.cartable.saleable?(item.quantity, item.properties) %>
 
-<div class="cart-item <%= saleable ? 'saleable' : 'unsaleable' %>" data-cart-item-id="<%= item.id %>">
+<div class="cart-item <%= saleable ? 'saleable' : 'unsaleable' %>" data-cart-item-id="<%= item.id %>" data-total="<%= item.price * item.quantity %>">
   <div class='row'>
     <div class='col-xs-9 avatar'>
       <div class='media'>

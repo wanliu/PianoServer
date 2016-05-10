@@ -1,0 +1,157 @@
+<div class="dropdown">
+  <input type='text' id='gift-search' class='dropdown-toggle' id="item-search-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+  <ul class="dropdown-menu shop-items-dropdown" aria-labelledby="item-search-dropdown">
+  </ul>
+</div>
+
+<table class='table gifts'>
+  <thead>
+    <tr>
+      <th width='40%'>赠品</th>
+      <th width='10%'>赠送数量</th>
+      <th width='10%'>赠送总数</th>
+      <th width='10%'>已赠送数</th>
+      <th width='30%'></th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="create-gift">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">添加赠品</h4>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-danger errors" role="alert" style='display: none;'>
+        </div>
+        赠品
+        <div>
+          <img src='' style='max-height: 50px;' class='avatar'>
+          <span class='item-title'></span>
+        </div>
+        <div class='properties-select'>
+        </div>
+        <div>
+          赠送数量<input type='number' step='1' class='quantity'>
+        </div>
+        <div>
+          赠送总数<input type='number' step='1' class='total'>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default cancel" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary create-gift">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modify-gift">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">编辑赠品</h4>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-danger errors" role="alert" style='display: none;'>
+        </div>
+        赠品
+        <div>
+          <img src='' style='max-height: 50px;' class='avatar'>
+          <span class='item-title'></span>
+        </div>
+        <div class='properties-select'>
+        </div>
+        <div>
+          赠送数量<input type='number' step='1' class='quantity'>
+        </div>
+        <div>
+          赠送总数<input type='number' step='1' class='total'>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default cancel" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary save-gift">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/template" id='template-gift'>
+  <tr data-gift-id={{ id }}>
+    <td>
+      <img src="{{cover_url}}" style='max-height: 50px;'>
+      <span class='title'>{{ title + " " + properties_title }}</span>
+    </td>
+    <td>{{ quantity }}</td>
+    <td>{{ total }}</td>
+    <td>{{ saled_counter }}</td>
+    <td>
+      <button type='button' class='btn btn-default modify-gift' data-gift-id={{ id }}>修改</button>
+      <%= button_to "删除", shop_admin_item_gift_path(item.shop.name, item, 88888888), method: :delete, data: { confirm: "确定删除该赠品么?" }, class: 'btn btn-danger' %>
+    </td>
+  </tr>
+</script>
+
+<script type="text/template" id='template-item'>
+  <li class='shop-item' data-item-id="{{ id }}">
+    <img src="{{cover_url}}" style='width: 50px; height: 50px;'>
+    {{ title }}
+    {{ price }}
+  </li>
+</script>
+
+<script type="text/template" id='template-property-row'>
+  <div class='property-row' data-property-name={{name}}>
+    <span class='title'>{{title}}: </span>
+    <span class='properties'></span>
+  </div>
+</script>
+
+<script type="text/template" id='template-property-column'>
+  <button data-property-key={{key}} data-property-value={{value}} class='btn btn-default property'>
+    {{ title }}
+  </button>
+</script>
+
+<script type="text/javascript">
+  (function() {
+    var gifts = <%= item.gifts.order(id: :desc).to_json(methods: [:title, :cover_url, :properties_title]).html_safe %>;
+
+    var giftSearchUrl = "<%= search_gift_shop_admin_item_path(item.shop.name, item) %>";
+
+    var giftCreateUrl = "<%= shop_admin_item_gifts_path(item.shop.name, item) %>";
+
+    var giftUpdateUrl = "<%= shop_admin_item_gift_path(item.shop.name, item, 88888888) %>";
+
+    var itemShowUrl = "<%= shop_item_path(item.shop.name, 88888888) %>";
+
+    var giftTemplate = _.template($('#template-gift').html());
+    var itemTemplate = _.template($('#template-item').html());
+    var propertyRowTemplate = _.template($('#template-property-row').html());
+    var propertyColumnTemplate = _.template($('#template-property-column').html());
+    var $dropdown = $('.shop-items-dropdown');
+    var $modalCreater = $('#create-gift');
+    var $modalModifier = $('#modify-gift');
+
+    var giftCollection = new GiftCollection({
+      gifts: gifts,
+      giftSearchUrl: giftSearchUrl,
+      giftCreateUrl: giftCreateUrl,
+      giftUpdateUrl: giftUpdateUrl,
+      itemShowUrl: itemShowUrl,
+      giftTemplate: giftTemplate,
+      itemTemplate: itemTemplate,
+      $dropdown: $dropdown,
+      $modalCreater: $modalCreater,
+      $modalModifier: $modalModifier,
+      propertyRowTemplate: propertyRowTemplate,
+      propertyColumnTemplate: propertyColumnTemplate
+    });
+  })();
+</script>

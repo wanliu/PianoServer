@@ -56,6 +56,32 @@ class CartItem < ActiveRecord::Base
     end
   end
 
+  # input:
+  #   options: {"17"=>"-1.0", "19"=>"2", "22"=>"2"}
+  # output:
+  # [ {gift_id: 17, item_id: 1, quantity: 0, title: 'xxx', avatar_url: 'cvxxx.jpg'},
+  #   {gift_id: 19, item_id: 2, quantity: 1, title: 'xxx', avatar_url: 'cvxxx.jpg'},
+  #   {gift_id: 22, item_id: 3, quantity: 2, title: 'xxx', avatar_url: 'cvxxx.jpg'} ]
+  def gift_settings(options)
+    if cartable.respond_to?(:gifts)
+      cartable.gifts.where(id: options.keys).reduce([]) do |settings, gift|
+        quantity = options[gift.id.to_s].try(:to_i) || 0
+        if quantity > 0
+          settings.push({
+            gift_id: gift.id,
+            item_id: gift.present_id,
+            properties: gift.properties,
+            quantity: quantity,
+            title: gift.composed_title,
+            avatar_url: gift.avatar_url
+          })
+        end
+
+        settings
+      end 
+    end
+  end
+
   private
 
   def avoid_from_shop_owner

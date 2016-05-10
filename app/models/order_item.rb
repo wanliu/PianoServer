@@ -10,6 +10,7 @@ class OrderItem < ActiveRecord::Base
   validates :price, numericality: { greater_than: 0 }
 
   validate :orderable_saleable, on: :create
+  validate :gift_saleable, on: :create
 
   # before_save :set_title, on: :create
   before_save :set_properties
@@ -37,8 +38,39 @@ class OrderItem < ActiveRecord::Base
     end
   end
 
+  # input:
+  #   options: {"17"=>"-1.0", "19"=>"2", "22"=>"2"}
+  # output:
+  # [ {gift_id: 19, item_id: 2, quantity: 2, title: 'xxx', avatar_url: 'cvxxx.jpg'},
+  #   {gift_id: 22, item_id: 3, quantity: 2, title: 'xxx', avatar_url: 'cvxxx.jpg'} ]
+  def gift_settings(options)
+    if orderable.respond_to?(:gifts)
+      orderable.gifts.where(id: options.keys).reduce([]) do |settings, gift|
+        quantity = options[gift.id.to_s].try(:to_i) || 0
+        if quantity > 0
+          settings.push({
+            gift_id: gift.id,
+            item_id: gift.present_id,
+            properties: gift.properties,
+            quantity: quantity,
+            title: gift.composed_title,
+            avatar_url: gift.avatar_url
+          })
+        end
+
+        settings
+      end 
+    end
+  end
+
   def deduct_stocks!(operator)
     orderable.deduct_stocks!(operator, quantity: quantity, data: properties, source: self)
+    gifts.each do |gift_setting|
+      item = Item.find(gift_setting["item_id"])
+      gift = Gift.find(gift_setting["gift_id"])
+      item.deduct_stocks!(operator, quantity: gift_setting["quantity"], data: gift_setting["properties"], kind: :gift, source: self)
+      gift.increment!('saled_counter', gift_setting["quantity"].to_i)
+    end
   end
 
   def avatar_url
@@ -65,6 +97,24 @@ class OrderItem < ActiveRecord::Base
         errors.add(:orderable_id, "已经下架")
       elsif !saleable
         errors.add(:orderable_id, "库存不足")
+      end
+    end
+  end
+
+  def gift_saleable
+    gifts.each do |gift_setting|
+      # item_id = gift_setting["item_id"]
+      # item = Item.find(item_id)
+      # item.saleable?(gift_setting["quantity"].to_i, gift_setting["properties"]) do |on_sale, saleable, max|
+      #   if !saleable
+      #     errors.add(:gift, "库存不足或者设置变动，请重新提交订单！")
+      #   end
+      # end
+
+      # 检查库存是否充足，以及防止用户篡改赠品数量
+      gift = Gift.find_by(id: gift_setting["gift_id"])
+      if gift_setting["quantity"].to_i > gift.eval_available_quantity(quantity)
+        errors.add(:gift, "库存不足或者设置变动，请重新提交订单！")
       end
     end
   end

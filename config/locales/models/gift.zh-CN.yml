@@ -1,0 +1,8 @@
+zh-CN:
+  activerecord:
+    models:
+      gift: 赠品
+    attributes:
+      gift: 
+        present: 赠品
+        item: 商品

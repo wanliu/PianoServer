@@ -208,6 +208,20 @@ ActiveRecord::Schema.define(version: 20160420072132) do
     t.datetime "updated_at",      null: false
   end
 
+  create_table "gifts", force: :cascade do |t|
+    t.integer  "item_id"
+    t.integer  "present_id"
+    t.integer  "quantity"
+    t.integer  "total"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.integer  "saled_counter", default: 0
+    t.jsonb    "properties",    default: {}
+  end
+
+  add_index "gifts", ["item_id"], name: "index_gifts_on_item_id", using: :btree
+  add_index "gifts", ["present_id"], name: "index_gifts_on_present_id", using: :btree
+
   create_table "industries", force: :cascade do |t|
     t.string   "name"
     t.string   "title"
@@ -360,6 +374,7 @@ ActiveRecord::Schema.define(version: 20160420072132) do
     t.jsonb    "properties",                              default: {}
     t.datetime "created_at",                                           null: false
     t.datetime "updated_at",                                           null: false
+    t.jsonb    "gifts",                                   default: {}
   end
 
   add_index "order_items", ["order_id"], name: "index_order_items_on_order_id", using: :btree
@@ -632,6 +647,7 @@ ActiveRecord::Schema.define(version: 20160420072132) do
 
   add_index "variables", ["host_type", "host_id"], name: "index_variables_on_host_type_and_host_id", using: :btree
 
+  add_foreign_key "gifts", "items"
   add_foreign_key "order_items", "orders"
   add_foreign_key "orders", "shops", column: "supplier_id"
   add_foreign_key "orders", "users", column: "buyer_id"

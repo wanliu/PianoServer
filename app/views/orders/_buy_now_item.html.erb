@@ -1,4 +1,4 @@
-<tr class="cart-item" data-cart-item-id="<%= item.id %>">
+<tr class="cart-item" data-cart-item-id="buy-now-item">
   <td class='avatar'>
     <div class='media'>
       <div class='media-left'>
@@ -11,13 +11,44 @@
       </div>
     </div>
   </td>
-  <td  class="price">
+  <td class="price">
     <%= number_to_currency item.price %>
   </td>
-  <td>
+  <td class="quantity">
     <%= minus_plus_button_field "order[items_attributes][0]", :quantity, value: item.quantity, placeholder: "数量", class: 'form-control cart_item_quantity' %>
   </td>
   <td class="subtotal">
     <%= number_to_currency item.price * item.quantity %>
   </td>
 </tr>
+
+<% if item.orderable.is_a? Item %>
+  <% item.orderable.eval_available_gifts(item.quantity) %>
+  <% has_available_gifts = item.orderable.available_gifts.present? %>
+  <tr class='cart-gifts' data-cart-item-id="buy-now-item" style="<%= has_available_gifts ? '' : 'display: none' %>">
+    <td colspan='5'>
+      <% item.orderable.available_gifts.each do |gift| %>
+        <div class='cart-gift' data-gift-id="<%= gift.id %>">
+          <div class='head'>
+            <%= image_tag "gift-white.png" %>
+          </div>
+          <div class='desc'>
+            <div class='avatar'>
+              <%= image_tag gift.avatar_url %>
+            </div>
+            <div class='title-quantity'>
+              <div class='title'>
+                <span>
+                  <%= "#{gift.present.title} #{gift.properties_title}" %>
+                </span>
+              </div>
+              <div class='quantity'>
+                <span>数量：<%= gift.available_quantity %></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </td>
+  </tr>
+<% end %>

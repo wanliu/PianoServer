@@ -21,3 +21,35 @@
     <%= number_to_currency item.price * item.quantity %>
   </td>
 </tr>
+
+<% if item.cartable.is_a? Item %>
+  <% item.cartable.eval_available_gifts(item.quantity) %>
+  <% if item.cartable.available_gifts.present? %>
+    <tr class='order-gifts'>
+      <td colspan='5'>
+        <% item.cartable.available_gifts.each do |gift| %>
+          <div class='order-gift'>
+            <div class='head'>
+              <%= image_tag "gift-white.png" %>
+            </div>
+            <div class='desc'>
+              <div class='avatar'>
+                <%= image_tag gift.avatar_url %>
+              </div>
+              <div class='title-quantity'>
+                <div class='title'>
+                  <span>
+                    <%= "#{gift.present.title} #{gift.properties_title}" %>
+                  </span>
+                </div>
+                <div class='quantity'>
+                  <span>数量：<%= gift.available_quantity %></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+<% end %>

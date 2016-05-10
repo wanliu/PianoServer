@@ -1,0 +1,138 @@
+.yiyuan-confirm {
+  color: #777777;
+
+  label {
+    > * {
+      pointer-events: none;
+    }
+    display: inline-block;
+    margin: 0;
+
+    input[type=checkbox] {
+      display: none;
+    }
+
+    input[type=checkbox]{
+      + .checkbox-simulator {
+        width: 16px;
+        height: 16px;
+        border: 1px solid #ff7c1c;
+
+        .check {
+          display: none;
+        }
+      }
+      &:checked + .checkbox-simulator {
+        width: 16px;
+        height: 16px;
+        border: 1px solid #ff7c1c;
+
+        .check {
+          display: block;
+          width: 10px;
+          height: 10px;
+          margin: 2px;
+          background-color: #ff7c1c;
+          box-shadow: none;
+        }
+      }
+    }
+
+    .checkbox-simulator {
+      width: 16px;
+      height: 16px;
+      border: 1px solid #c4c4c4;
+    }
+  }
+
+  li.header-show a {
+    color: #777777;
+    padding: 10px 15px;
+  }
+
+  .cart-group {
+    .check-item, .check-all {
+      display: table-cell;
+      vertical-align: middle;
+    }
+
+    .header {
+      background-color: white;
+      padding: 10px 10px;
+
+      img {
+        width: 30px;
+        height: 30px;
+      }
+    }
+
+    .cart-item {
+      .row {
+        margin-left: 0;
+        margin-right: 0;
+      }
+
+      .avatar {
+        padding-left: 10px;
+
+        img {
+          width: 70px;
+          height: 70px;
+        }
+      }
+
+      .row {
+        display: table;
+
+        .avatar {
+          display: table-cell;
+          float: none;
+          padding-top: 10px;
+          padding-bottom: 10px;
+        }
+
+        .remove-item {
+          text-decoration: none;
+          vertical-align: middle;
+          background-color: #ff7c1c;
+          display: table-cell;
+          float: none;
+          color: white;
+          height: 80px;
+        }
+      }
+
+      table {
+        margin-bottom: 0;
+
+        tbody td{
+          border-color: white;
+        }
+
+        tr.error {
+          display: none;
+        }
+      }
+    }
+
+    .footer {
+      padding: 0;
+      text-align: right;
+
+      .total-total {
+        color: red;
+      }
+
+      .submit {
+        // height: 100%;
+        border-radius: 0;
+        border: none;
+        background-color: red;
+        padding: 10px 30px;
+        color: white;
+        font-size: 16px;
+        margin-left: 20px;
+      }
+    }
+  }
+}

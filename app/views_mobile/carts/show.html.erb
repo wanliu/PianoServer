@@ -9,7 +9,7 @@
     </li>
   </ul>
 
-  <div>
+  <div class="cart-groups">
     <% if current_cart.items.blank? %>
       <h2>你的购物车是空的</h2>
     <% else %>
@@ -23,15 +23,55 @@
   </div>
 </div>
 
+<script type="text/template" id="mobile-gift-template">
+  <div class='cart-gift' data-gift-id="{{= id }}">
+    <div class='desc'>
+      <div class='avatar'>
+        <img src='{{= avatar_url }}'>
+      </div>
+      <div class='title-quantity'>
+        <div class='title'>
+          <span>
+            {{= composed_title }}
+          </span>
+        </div>
+        <div class='quantity'>
+          <span>数量：{{= quantity }}</span>
+        </div>
+      </div>
+      <div style='clear: both;'></div>
+    </div>
+  </div>
+</script>
+
 <script type="text/javascript">
-  (function (argument) {
+  if (typeof cartGroupGifts == "undefined") {
+    var cartGroupGifts = {};
+  }
+
+  (function() {
+    var giftTemplate =  _.template($("#mobile-gift-template").html());
+
+    var giftRender = new GiftsRender({
+      el: $('div.cart-groups'),
+      cartGroupGifts: cartGroupGifts,
+      giftTemplate: giftTemplate
+    });
+    giftRender.render();
+
     // 点击全部选中时，将下属项全部选中
     $('.select-all').change(function (event) {
       var checked = $(this).prop('checked');
       $(this).parents('form').find(':checkbox').prop('checked', checked);
 
       var $group = $(this).parents('.cart-group');
-      calculateGroupTotal($group);
+      CartGroup.calculateGroupTotal($group);
+
+      var supplierId = $group.data('supplierId');
+      giftRender.changeCartItemCheckStatus({
+        supplierId: supplierId,
+        status: checked
+      });
 
       // if (checked) {
       //   $(this).parents('.cart').find('.confirm-order').removeAttr('disabled');
@@ -46,7 +86,15 @@
       var allCheckbox = $(this).parents('form').find('.cart-item input:checkbox');
 
       var $group = $(this).parents('.cart-group');
-      calculateGroupTotal($group);
+      CartGroup.calculateGroupTotal($group);
+
+      var supplierId = $group.data('supplierId');
+      var cartItemId = $(this).val();
+      giftRender.changeCartItemCheckStatus({
+        supplierId: supplierId,
+        cartItemIds: [cartItemId],
+        status: checked
+      });
 
       if (!checked) {
         $(this).parents('form').find('.select-all').prop('checked', false);
@@ -73,100 +121,34 @@
 
     // 通过减少按钮，修改所购商品数量
     $('.cart-item').on('click', '.btn-minus', function (event) {
-      var quantityInput = $(this).parents('tr:first').find('.quantity');
-      var quantity = parseInt($(quantityInput).text(), 10);
+      var $quantityInput = $(this).parents('tr:first').find('.quantity');
+      var quantity = parseInt($quantityInput.text(), 10);
 
       if (quantity > 1) {
         var newQuantity = quantity - 1;
-        changeQuantity(quantityInput, newQuantity);
+        $quantityInput.text(newQuantity);
+        CartGroup.changeQuantity({
+          quantityInput: $quantityInput,
+          newQuantity: newQuantity,
+          giftRender: giftRender
+        });
       }
     });
 
     // 通过增加按钮，修改所购商品数量
     $('.cart-item').on('click', '.btn-plus', function (event) {
-      var quantityInput = $(this).parents('tr:first').find('.quantity');
-      var quantity = parseInt($(quantityInput).text(), 10);
+      var $quantityInput = $(this).parents('tr:first').find('.quantity');
+      var quantity = parseInt($quantityInput.text(), 10);
       var newQuantity = quantity + 1;
 
-      changeQuantity(quantityInput, newQuantity);
+      $quantityInput.text(newQuantity);
+      CartGroup.changeQuantity({
+        quantityInput: $quantityInput,
+        newQuantity: newQuantity,
+        giftRender: giftRender
+      });
     });
 
-    function changeQuantity(quantityInput, quantity, reflect) {
-      var $cartItem = $(quantityInput).parents('.cart-item:first'),
-          cartItemId = $cartItem.data('cartItemId'),
-          $quantity = $cartItem.find('.quantity'),
-          $subTotal = $cartItem.find('.subtotal');
-          $btnMinus = $cartItem.find('span.btn-minus'),
-          $alert = $cartItem.find('tr.error'),
-          $group = $(quantityInput).parents('.cart-group');
-
-      $quantity.text(quantity);
-
-      if (+quantity > 1) {
-        $btnMinus.addClass('glyphicon-minus');
-      } else {
-        $btnMinus.removeClass('glyphicon-minus');
-      }
-
-      $.post('/cart_items/' + cartItemId, {
-        _method: 'PATCH',
-        cart_item: {
-          quantity: quantity,
-        }
-      }).done(function (data, xhr, status) {
-        $subTotal.text(data.sub_total);
-        $('.cart-item-count').text(data.ccount);
-
-        $(document).trigger('cart_quantity_changed', [ data.ccount ])
-
-        calculateGroupTotal($group);
-        if (!reflect) $alert.hide();
-      }).fail(function (data, xhr, status) {
-        // usually caused by the lack of inventory
-        var quanOpt = data.responseJSON && data.responseJSON.quantity;
-
-        if (quanOpt) {
-          var maxQuan = quanOpt[0];
-          $alert.find('.max-quantity').text(maxQuan)
-          $alert.show();
-
-          changeQuantity(quantityInput, maxQuan, true);
-        }
-      });
-    }
-
-    function calculateGroupTotal($group) {
-      if (!($group instanceof jQuery)) {
-        $group = $($group);
-      }
-
-      var saleableSelected = _.filter($group.find('.cart-item.saleable'), function(item) {
-        return $(item).find('.avatar :checkbox').prop('checked');
-      });
-
-      var totals = _.reduce(saleableSelected, function(mem, item) {
-        var quantity = parseInt($(item).find('.quantity').text(), 10);
-        var total = parseFloat($(item).find('.subtotal').text().replace('¥', ''), 10);
-
-        mem.quantity || (mem.quantity = 0);
-        mem.total || (mem.total = 0);
-
-        mem.quantity += quantity;
-        mem.total += total;
-
-        return mem;
-      }, {});
-
-      $group.find('.footer .total-quantity').text(totals.quantity || 0);
-      $group.find('.footer .total-total').text(totals.total || 0);
-      
-      if (isNaN(totals.quantity) || totals.quantity == 0) {
-        $group.find('.cart-submit').attr('type','button').css('opacity', 0.5);
-      } else {
-        $group.find('.cart-submit').attr('type','submit').css('opacity', 1);
-      }
-    }
-
-    _.each($('.cart .cart-group'), calculateGroupTotal);
+    _.each($('.cart .cart-group'), CartGroup.calculateGroupTotal);
   })();
 </script>

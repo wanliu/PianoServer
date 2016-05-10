@@ -1,1 +1,14 @@
 <%= render "form" %>
+
+<!-- 运费设置 -->
+<% if @item.persisted? %>
+  <fieldset >
+    <legend >运费设置</legend>
+    <%= render partial: "delivery_fee", locals: { item: @item } %>
+  </fieldset>
+
+  <fieldset >
+    <legend >礼品设置</legend>
+    <%= render partial: "gifts", locals: { item: @item } %>
+  </fieldset>
+<% end %>

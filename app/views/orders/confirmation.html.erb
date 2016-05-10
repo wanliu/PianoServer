@@ -5,8 +5,14 @@
     <%= f.hidden_field :address_id %>
     <%= f.hidden_field :supplier_id %>
 
-    <% @order_items.each do |item| %>
-      <%= f.hidden_field :cart_item_ids, { multiple: true, value: item.id } %>
+    <% @order_items.each do |cart_item| %>
+      <% if cart_item.cartable.try(:gifts).blank? %>
+        <%= hidden_field_tag "order[cart_item_gifts][#{cart_item.id}][undefined]", nil, { multiple: true } %>
+      <% else %>
+        <% cart_item.cartable.gifts.each do |gift| %>
+          <%= hidden_field_tag "order[cart_item_gifts][#{cart_item.id}][#{gift.id}]", gift.eval_available_quantity(cart_item.quantity), { multiple: true } %>
+        <% end %>
+      <% end %>
     <% end %>
 
     <div class='cart-group'>

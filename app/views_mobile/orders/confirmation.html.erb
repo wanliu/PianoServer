@@ -1,3 +1,5 @@
+<% content_for :module do "no_footer" end %>
+
 <div class='order-confirm order-confirm-mobile'>
   <%= render "order_address", locals: { delivery_addresses: @delivery_addresses, order: @order } %>
 
@@ -5,11 +7,17 @@
     <%= f.hidden_field :address_id %>
     <%= f.hidden_field :supplier_id %>
 
-    <% @order_items.each do |item| %>
-      <%= f.hidden_field :cart_item_ids, { multiple: true, value: item.id } %>
+    <% @order_items.each do |cart_item| %>
+      <% if cart_item.cartable.try(:gifts).blank? %>
+        <%= hidden_field_tag "order[cart_item_gifts][#{cart_item.id}][undefined]", nil, { multiple: true } %>
+      <% else %>
+        <% cart_item.cartable.gifts.each do |gift| %>
+          <%= hidden_field_tag "order[cart_item_gifts][#{cart_item.id}][#{gift.id}]", gift.eval_available_quantity(cart_item.quantity), { multiple: true } %>
+        <% end %>
+      <% end %>
     <% end %>
 
-    <div class='cart-group'>
+    <div class='items-container'>
       <div class='header'>
         <span class='shop'>
           <%= link_to shop_site_path(@supplier.name) do %>
@@ -18,7 +26,19 @@
         </span>
       </div>
 
-      <%= render partial: "confirmation_item", collection: @order_items.sort_by(&:id), as: :item, locals: { supplier: @supplier, f: f } %>
+      <%= render partial: "confirmation_item", collection: @order_items.sort_by(&:id), as: :order_item, locals: { supplier: @supplier, f: f } %>
+
+      <div class='footer'>
+        <div class='text-right'>
+          共<%= @order_items.map(&:quantity).reduce(:+) %>件商品 <%= @order_items.map { |item| item.price * item.quantity }.reduce(:+)  %>元 
+        </div>
+        <div class='text-right'>
+          运送费用 <%= express_render @order %>
+        </div>
+        <div  class='text-right total'>
+          合计 <span class='amount'><%= number_to_currency @order.express_fee + @order_items.map { |item| item.price * item.quantity }.reduce(:+) %></span>
+        </div>
+      </div>
 
       <div class='footer'>
         <td colspan='5' class='text-right'>
@@ -29,3 +49,12 @@
     </div>
   <% end %>
 </div>
+
+<script type="text/javascript">
+  (function(){
+    $('.more').click(function(event) {
+      $(this).siblings('.gifts')
+        .toggleClass('toggle-more-gifts');
+    })
+  })();
+</script>

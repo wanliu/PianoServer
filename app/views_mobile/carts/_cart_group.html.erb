@@ -1,6 +1,6 @@
 <%= form_for Order.new, url: confirmation_orders_path do |f| %>
   <%= f.hidden_field :supplier_id, value: supplier.id %>
-  <div class='cart-group'>
+  <div class='cart-group' data-supplier-id='<%= supplier.id %>'>
     <div class='header media'>
       <div class='media-left check-all'>
         <label for="cart-groups-<%= index %>">
@@ -19,6 +19,12 @@
 
     <%= render partial: "cart_item", collection: items.sort_by(&:id), as: :item, locals: { supplier: supplier, f: f } %>
 
+    <div class='mobile-gifts' style='display: none;'>
+      <div class='head'></div>
+      <div class='mobile-cart-gifts'>
+      </div>
+    </div>
+
     <div class='footer'>
       <span>
         已选择<span class='total-quantity'><%= items.map(&:quantity).reduce(:+) %></span> 件商品&emsp;合计<span class='total-total'><%= items.map { |item| item.price * item.quantity }.reduce(:+)  %></span>元
@@ -27,3 +33,11 @@
     </div>
   </div>
 <% end %>
+
+<script type="text/javascript">
+  if (typeof cartGroupGifts == "undefined") {
+    var cartGroupGifts = {};
+  }
+
+  cartGroupGifts[<%= supplier.id %>] = <%= gift_json(items) %>;
+</script>

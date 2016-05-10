@@ -1,5 +1,5 @@
 <li class="list-group-item order-item"  id="order-item-<%= item.id %>">
-  <div class='row'>
+  <div class='row item-desc'>
     <div class='col-xs-8'>
       <div class="avatar">
         <%= link_to orderable_url(item) do %>
@@ -26,4 +26,34 @@
       </div>
     </div>
   </div>
+
+  <% if item.gifts.present? %>
+    <% gifts_length = item.gifts.length %>
+    <div class='item-gifts row'>
+      <div class='head col-xs-1'>
+        <div class='flag'>
+          <%= image_tag "gift.png" %>
+        </div>
+      </div>
+      <% if gifts_length > 4 %>
+        <div class='gifts col-xs-10 row toggle-more-gifts'>
+          <% item.gifts.each do |gift| %>
+            <div class='gift col-xs-4'>
+              <%= image_tag gift["avatar_url"] %> X <span><%= gift["quantity"] %></span>
+            </div>
+          <% end %>
+        </div>
+        <div class='more col-xs-1'>●●●</div>
+      <% else %>
+        <div class='gifts col-xs-11 row'>
+          <% item.gifts.each do |gift| %>
+            <div class='gift col-xs-3'>
+              <%= image_tag gift["avatar_url"] %> X <span><%= gift["quantity"] %></span>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+      <div style='clear: both;'></div>
+    </div>
+  <% end %>
 </li>

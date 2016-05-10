@@ -10,7 +10,12 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
 
   before_action :set_category, only: [:new_step2, :create]
   before_action :set_breadcrumb, only: [:new_step2, :create]
-  before_action :set_item, only: [:edit, :update, :destroy, :change_sale_state]
+  before_action :set_item, only: [
+    :edit, 
+    :update, 
+    :destroy, 
+    :search_gift,
+    :change_sale_state]
 
   def index
     # page = params[:page].presence || 1
@@ -260,6 +265,15 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     expire_page shop_shop_category_path(@shop.name, @item.shop_category.try(:id))
 
     render :destroy, formats: [:js]
+  end
+
+  def search_gift
+    items = Item.search_shop_items(q: params[:q], shop_id: @shop.id, except: @item.id)
+      .records
+      .page(params[:page])
+      .per(params[:per])
+
+    render json: items.as_json(methods: [:title, :cover_url])
   end
 
   protected
