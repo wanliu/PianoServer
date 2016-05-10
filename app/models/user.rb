@@ -176,8 +176,9 @@ class User < ActiveRecord::Base
 
     begin
       RestClient.post pusher_url, options
-    rescue Errno::ECONNREFUSED => e
-    # TODO what to do when sync fails?
+    rescue Errno::ECONNREFUSED, RestClient::RequestTimeout => e
+      logger.fatal "连接通讯服务器失败!"
+      # TODO what to do when sync fails?
     end
   end
 
