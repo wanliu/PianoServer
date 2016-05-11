@@ -174,12 +174,19 @@ class User < ActiveRecord::Base
        options.merge! shop_name: owner_shop.title
     end
 
-    # begin
-    #   RestClient.post pusher_url, options
-    # rescue Errno::ECONNREFUSED, RestClient::RequestTimeout => e
-    #   logger.fatal "连接通讯服务器失败!"
-    #   # TODO what to do when sync fails?
-    # end
+    begin
+      # RestClient::Request.execute(method: :post, 
+      #   url: pusher_url,
+      #   payload: options,
+      #   headers: {},
+      #   timeout: 2,
+      #   open_timeout: 2)
+
+      # RestClient.post pusher_url, options
+    rescue Errno::ECONNREFUSED, RestClient::RequestTimeout => e
+      logger.fatal "连接通讯服务器失败!"
+      # TODO what to do when sync fails?
+    end
   end
 
   alias_method :name, :nickname
