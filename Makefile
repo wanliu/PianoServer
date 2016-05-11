@@ -1,4 +1,4 @@
-
+NAME=PianoServer
 export SECRET_KEY_BASE=xxx
 export LIVE_KEY_BASE=gawgewaqgegag456t4jt1re56j46rk5r1mw1hg65r46t3w1her1w56t4z1v4g44rt4re445aaa
 export RAILS_SERVE_STATIC_FILES=true
@@ -6,7 +6,7 @@ export RAILS_SERVE_STATIC_FILES=true
 PORT=6000
 UNICORN_CONFIG=config/unicorn.rb
 rails_app=bundle exec unicorn_rails -E production -c $(UNICORN_CONFIG) -p $(PORT) -D
-LOG=$(shell date +'%s')
+LOG:=$(shell date +'%s')
 PROFILE=
 
 ifdef profile
@@ -14,15 +14,17 @@ ifdef profile
 endif
 
 quick_start:
-	$(rails_app)
+	@echo 'launch unicorn_rails $(NAME)...'
+	@$(rails_app)
 
 stop:
-	kill -TERM $(shell cat tmp/pids/unicorn.pid)
+	@echo 'stop unicorn_rails $(NAME)'
+	-@kill -TERM $(shell cat tmp/pids/unicorn.pid)
 
 restart: stop quick_start
 
 sync_config:
-	@aws s3 cp s3://wanliu/config/settings.local.yml config/settings.local.yml
+	@aws s3 cp s3://wanliu/config/piano/settings.local.yml config/settings.local.yml $(PROFILE)
 
 bundle:
 	@bundle install
@@ -30,7 +32,7 @@ bundle:
 migrate:
 	@bundle exec rake db:migrate
 
-launch: bundle migrate restart
+launch: sync_config bundle migrate restart
 
 clearasset:
 	@echo 'clean all assets'
@@ -41,10 +43,12 @@ precompile: clearasset
 	@bundle exec rake assets:clean
 	@bundle exec rake assets:precompile
 
-package: precompile
+package:
 	@echo 'package all files to /tmp/deploy-piano-server-$(LOG).tar.gz'
 	@tar --exclude=tmp/ --exclude=.git --exclude=log/ --exclude=.sites/ --exclude public/uploads/ --exclude public/one_money/ -czf /tmp/deploy-piano-server-$(LOG).tar.gz .
 
 upload: package
-	# Created /tmp/deploy-piano-server-$(LOG).tar.gz
+	@echo 'Created /tmp/deploy-piano-server-$(LOG).tar.gz'
 	aws s3 cp /tmp/deploy-piano-server-$(LOG).tar.gz s3://wxapps $(PROFILE)
+
+deploy: precompile package upload
