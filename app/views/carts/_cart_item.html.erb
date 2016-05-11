@@ -77,7 +77,7 @@
             <div class='title-quantity'>
               <div class='title'>
                 <span>
-                  <%= "#{gift.present.title} #{gift.properties_title}" %>
+                  <%= truncate("#{gift.present.title} #{gift.properties_title}", length: 10) %>
                 </span>
               </div>
               <div class='quantity'>

@@ -33,13 +33,10 @@
 
       .title-quantity {
         float: left;
+        text-align: left;
 
         div {
           padding: 5px 5px;
-        }
-
-        .title {
-          text-align: left;
         }
       }    
     }
@@ -54,7 +51,7 @@ tr.cart-gifts, div.cart-gifts {
 
   .cart-gift {
     padding: 8px;
-    width: 33.3333%;
+    // width: 33.3333%;
 
     float: left;
     div {
@@ -93,13 +90,10 @@ tr.cart-gifts, div.cart-gifts {
 
       .title-quantity {
         float: left;
+        text-align: left;
 
         div {
           padding: 5px 20px;
-        }
-
-        .title {
-          text-align: left;
         }
       }    
     }
