@@ -70,6 +70,37 @@
     </div>
   </div>
 
+  <% if @item.is_a? Item %>
+    <% @item.eval_available_gifts(1) %>
+    <% if @item.available_gifts.present? %>
+      <div class='item-gifts hidden-xs'>
+        <div class='gifts-title'>
+          <div class='notify'>赠送礼品</div>购买一件本商品即可获赠以下礼品
+        </div>
+        <div class='gifts'>
+          <% @item.available_gifts.each do |gift| %>
+            <div class='gift' data-gift-id="<%= gift.id %>">
+              <div class='avatar'>
+                <%= link_to shop_item_path(gift.present.shop.try(:name), gift.present.sid) do %>
+                  <%= image_tag gift.cover_url %>
+                <% end %>
+              </div>
+              <div class='desc'>
+                <div class='title'>
+                  <div class='gift-notify'>礼</div><%= truncate("#{gift.present.title} #{gift.properties_title}", length: 10) %>
+                </div>
+                <div class='quantity'>
+                  <span>数量：<%= gift.available_quantity %></span>
+                </div>
+              </div>
+            </div>
+          <% end %>
+          <div style='clear: both;'></div>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+
   <a href="<%= shop_site_path(@shop.name, format: 'html') %>" class='item-shop-infos visible-xs'> <!-- 下方info -->
     <div class="media ">
       <div class="media-left media-middle">

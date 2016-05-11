@@ -102,6 +102,48 @@
     }
   }
 
+  .item-gifts {
+    padding: 10px;
+    color: #333333;
+
+    .gifts-title {
+      font-size: 16px;
+
+      .notify {
+        display: inline-block;
+        padding: 5px;
+        margin-right: 5px;
+        color: white;
+        background-color: red;
+      }
+    }
+
+    .gifts {
+      .gift {
+        padding: 10px;
+        float: left;
+
+        .gift-notify {
+          display: inline-block;
+          padding: 1px;
+          background-color: red;
+          color: white;
+        }
+
+        // .quantity {
+        //   text-align: center;
+        // }
+
+        .avatar {
+          padding-bottom: 5px;
+          img {
+            height: 120px;
+          }
+        }
+      }
+    }
+  }
+
   .wholesale-group {
     line-height: 1.5
   }
