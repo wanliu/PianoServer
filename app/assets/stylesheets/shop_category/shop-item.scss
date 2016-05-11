@@ -114,7 +114,7 @@
         padding: 5px;
         margin-right: 5px;
         color: white;
-        background-color: red;
+        background-color: #F12A39;
       }
     }
 
@@ -126,7 +126,7 @@
         .gift-notify {
           display: inline-block;
           padding: 1px;
-          background-color: red;
+          background-color: #F12A39;
           color: white;
         }
 
@@ -136,10 +136,86 @@
 
         .avatar {
           padding-bottom: 5px;
+
           img {
             height: 120px;
           }
         }
+      }
+    }
+  }
+
+  .item-gifts-mobile {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+
+    .gifts-title {
+      .notify {
+        display: inline-block;
+        padding: 5px;
+        margin-right: 5px;
+        color: white;
+        background-color: #F12A39;
+      }
+    }
+    .array {
+      padding: 5px 20px;
+    }
+  }
+
+  .gifts-toggler {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+
+    #gifts-show-zone {
+      background: #555;
+      filter: alpha(opacity=60);
+      /* IE */
+      -moz-opacity: 0.6;
+      /* Mozilla */
+      opacity: 0.6;
+      /* CSS3 */
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      z-index: 1550;
+    }
+
+    .gifts {
+      padding: 0 10px 10px 10px;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      background-color: white;
+      z-index: 1551;
+
+      .gift {
+        .avatar {
+          float: left;
+          img {
+            height: 60px;
+          }
+        }
+
+        .desc {
+          float: left;
+
+          .gift-notify {
+            display: inline-block;
+            padding: 1px;
+            background-color: #F12A39;
+            color: white;
+          }
+        }
+      }
+
+      button.hide-mobile-gifts {
+        background-color: #F12A39;
       }
     }
   }

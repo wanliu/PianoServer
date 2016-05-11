@@ -98,6 +98,45 @@
           <div style='clear: both;'></div>
         </div>
       </div>
+
+      <div class='item-gifts-mobile visible-xs-block show-gifts '>
+        <div class='gifts-title pull-left'>
+          <div class='notify'>赠送礼品</div>购买一件本商品即可获赠礼品
+        </div>
+        <div class='array pull-right'>
+          <span class="glyphicon glyphicon-menu-right glyphicon-next pull-right"></span>
+        </div>
+        <div style='clear: both;'></div>
+      </div>
+
+      <div class='gifts-toggler' style='display: none;'>
+        <div id="gifts-show-zone" class="fade">
+        </div>
+
+        <div class="gifts">
+          <ul class="list-group">
+            <% @item.available_gifts.each do |gift| %>
+              <li class='gift row'>
+                <div class='avatar col-xs-2'>
+                  <%= link_to shop_item_path(gift.present.shop.try(:name), gift.present.sid) do %>
+                    <%= image_tag gift.cover_url %>
+                  <% end %>
+                </div>
+                <div class='desc col-xs-10'>
+                  <div class='title'>
+                    <div class='gift-notify'>礼</div><%= "#{gift.present.title} #{gift.properties_title}" %>
+                  </div>
+                  <div class='quantity'>
+                    <span>数量：<%= gift.available_quantity %></span>
+                  </div>
+                </div>
+                <div style='clear: both;'></div>
+              </li>
+            <% end %>
+          </ul>
+          <button type="button" class="btn btn-danger btn-lg btn-block hide-mobile-gifts">返 回</button>
+        </div>
+      </div>
     <% end %>
   <% end %>
 
@@ -120,3 +159,15 @@
 
   <%#= render partial: "sale_options", with: @item.category %>
 </div>
+
+<script type="text/javascript">
+  (function() {
+    $('.show-gifts').click(function() {
+      $('.gifts-toggler').show();
+    });
+
+    $('#gifts-show-zone, .hide-mobile-gifts').click(function() {
+      $('.gifts-toggler').hide();
+    })
+  })();
+</script>
