@@ -12,7 +12,7 @@ class Shops::Admin::GiftsController < Shops::Admin::BaseController
     @gift = @item.gifts.build(gift_params)
 
     if @gift.save
-      render json: @gift.as_json(methods: [:title, :cover_url, :properties_title]), status: :created
+      render json: @gift.as_json(methods: [:title, :cover_url, :properties_title, :current_stock]), status: :created
     else
       render json: {error: @gift.errors.full_messages.join(', ')}, status: :unprocessable_entity
     end

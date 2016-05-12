@@ -6,7 +6,7 @@
           <%= image_tag item.avatar_url, class: 'media-object', alt: "商品图片" %>
         <% end %>
       </div>
-      <div class='media-body'>
+      <div class='media-body item-title'>
         <%= "#{item.title} #{item.properties_title}" %>
       </div>
     </div>
@@ -39,10 +39,10 @@
             <div class='title-quantity'>
               <div class='title'>
                 <span>
-                  <%= "#{gift.present.title} #{gift.properties_title}" %>
+                  <%= truncate("#{gift.present.title} #{gift.properties_title}", length: 15) %>
                 </span>
               </div>
-              <div class='quantity'>
+              <div class='gift-quantity'>
                 <span>数量：<%= gift.available_quantity %></span>
               </div>
             </div>

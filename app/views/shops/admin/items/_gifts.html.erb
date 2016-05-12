@@ -7,10 +7,11 @@
 <table class='table gifts'>
   <thead>
     <tr>
-      <th width='40%'>赠品</th>
+      <th width='30%'>赠品</th>
       <th width='10%'>赠送数量</th>
       <th width='10%'>赠送总数</th>
       <th width='10%'>已赠送数</th>
+      <th width='10%'>剩余库存</th>
       <th width='30%'></th>
     </tr>
   </thead>
@@ -85,12 +86,13 @@
 <script type="text/template" id='template-gift'>
   <tr data-gift-id={{ id }}>
     <td>
-      <img src="{{cover_url}}" style='max-height: 50px;'>
+      <img src="{{cover_url}}" style='height: 50px;'>
       <span class='title'>{{ title + " " + properties_title }}</span>
     </td>
     <td>{{ quantity }}</td>
     <td>{{ total }}</td>
     <td>{{ saled_counter }}</td>
+    <td>{{ current_stock }}</td>
     <td>
       <button type='button' class='btn btn-default modify-gift' data-gift-id={{ id }}>修改</button>
       <%= button_to "删除", shop_admin_item_gift_path(item.shop.name, item, 88888888), method: :delete, data: { confirm: "确定删除该赠品么?" }, class: 'btn btn-danger' %>
@@ -121,7 +123,7 @@
 
 <script type="text/javascript">
   (function() {
-    var gifts = <%= item.gifts.order(id: :desc).to_json(methods: [:title, :cover_url, :properties_title]).html_safe %>;
+    var gifts = <%= item.gifts.order(id: :desc).to_json(methods: [:title, :cover_url, :properties_title, :current_stock]).html_safe %>;
 
     var giftSearchUrl = "<%= search_gift_shop_admin_item_path(item.shop.name, item) %>";
 

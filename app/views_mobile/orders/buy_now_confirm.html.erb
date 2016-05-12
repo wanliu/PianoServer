@@ -47,10 +47,10 @@
                   <div class='title-quantity'>
                     <div class='title'>
                       <span>
-                        <%= "#{gift.present.title} #{gift.properties_title}" %>
+                        <%= truncate("#{gift.present.title} #{gift.properties_title}", length: 15) %>
                       </span>
                     </div>
-                    <div class='quantity'>
+                    <div class='gift-quantity'>
                       <span>数量：<%= gift.available_quantity %></span>
                     </div>
                   </div>
@@ -63,9 +63,9 @@
       <% end %>
 
       <div class='footer'>
-        <span>
-          已选择<span class='total-quantity'><%= @order_item.quantity %></span> 件商品&emsp;合计<span class='total-total'><%= @order_item.price * @order_item.quantity %></span>元
-        </span>
+        <div class="confirmation-total">
+          <%= render "confirmation_total" %>
+        </div>
         <%= f.submit "结  算", class: 'submit' %>
       </div>
     </div>
@@ -84,7 +84,7 @@
             {{= composed_title }}
           </span>
         </div>
-        <div class='quantity'>
+        <div class='gift-quantity'>
           <span>数量：{{= quantity }}</span>
         </div>
       </div>
@@ -122,19 +122,10 @@
         $quantity = $cartItem.find('.quantity'),
         $subTotal = $cartItem.find('.subtotal'),
         $btnMinus = $cartItem.find('span.btn-minus'),
-        $formQuanInput = $cartItem.find('#order_items_attributes_0_quantity'),
-        $group = $(quantityInput).parents('.cart-group'),
-        $totalQuan = $group.find('.total-quantity'),
-        $totalTotal = $group.find('.total-total'),
-        price = parseFloat($cartItem.find('span.price').text().replace('¥', ''));
-
-    var total = price * quantity;
+        $formQuanInput = $cartItem.find('#order_items_attributes_0_quantity');
 
     $quantity.text(quantity);
-    $totalQuan.text(quantity);
     $formQuanInput.val(quantity);
-    $subTotal.text('¥' + total);
-    $totalTotal.text('¥' + total)
 
     if (+quantity > 1) {
       $btnMinus.addClass('glyphicon-minus');
@@ -147,13 +138,26 @@
         item_id: <%= @order_item.orderable.id %>,
         quantity: quantity
       }).done(function(data) {
+        renderGifts(data.gifts);
+        revaluateTotal();
+      })
+
+      function revaluateTotal () {
+        var formData = $('#new_order').serialize()
+        $.post('/orders/express_fee?' + formData)
+          .done(function(html) {
+            $('.confirmation-total').html(html);
+          })
+      }
+
+      function renderGifts(gifts) {
         var $gifts = $('.mobile-gifts');
         var $container = $gifts.find('.mobile-cart-gifts');
 
         $container.html('');
 
-        if (data.gifts.length > 0) {
-          _.each(data.gifts, function(gift) {
+        if (gifts.length > 0) {
+          _.each(gifts, function(gift) {
             var html = giftTpl(gift);
             var $hiddenInput = $("#order_item_gifts_" + <%= @order_item.orderable.id %> + "_" + gift.id);
             $hiddenInput.val(gift.quantity);
@@ -162,7 +166,7 @@
         } else {
           $gifts.hide();
         }
-      })
+      }
     <% end %>
   }
 })();

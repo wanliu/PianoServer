@@ -351,6 +351,7 @@ Rails.application.routes.draw do
       post "confirmation"
       post "buy_now_create"
       post "buy_now_confirm"
+      post 'express_fee'
 
       # 为避免用户回退到立即购买的post页面，提供一个过期提示窗口
       get "buy_now_confirm", to: Proc.new { |env|

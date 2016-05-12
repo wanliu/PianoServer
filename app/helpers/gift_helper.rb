@@ -12,7 +12,7 @@ module GiftHelper
           else
             inner_gifts[gift.id] = {
               avatar_url: gift.avatar_url,
-              composed_title: "#{gift.present.title} #{gift.properties_title}",
+              composed_title: truncate("#{gift.present.title} #{gift.properties_title}", length: 15),
               quantity: gift.available_quantity,
               id: gift.id,
               item_id: gift.item_id,
