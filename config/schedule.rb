@@ -22,14 +22,14 @@ job_type :runner,  "cd :path && SECRET_KEY_BASE=XXX bin/rails runner -e :environ
 # end
 
 # Learn more: http://github.com/javan/whenever
-every 3.minutes, :at => '10:30' do
+every '30-59/5 10-23 * * *' do
   runner "Rails.logger.info 'Whenever start clear_expired_grabs'"
   # .info 'Every Task start clear_expired_grabs'
   rake "clear_expired_grabs"
 end
 
 
-every :day, :at => '2:30' do
+every :day, :at => '2:30 am' do
   code = <<-RUBY
     tomorrow = DateTime.now + 1.day
     title = I18n.l(tomorrow) + ' 天天惠'

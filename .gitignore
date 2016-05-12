@@ -36,3 +36,4 @@ config/wechat.yml
 .git-hooks/post_checkout/.read
 
 node_modules
+error.log
