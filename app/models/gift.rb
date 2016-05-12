@@ -17,6 +17,7 @@ class Gift < ActiveRecord::Base
   delegate :title, to: :present, prefix: false
   delegate :avatar_url, to: :present, prefix: false
   delegate :cover_url, to: :present, prefix: false
+  delegate :current_stock, to: :present, prefix: false
 
 
   def properties_title(props=properties)
