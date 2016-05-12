@@ -235,7 +235,11 @@ class OrdersController < ApplicationController
         end
     end
 
-    render partial: "confirmation_total"
+    # if params[:order][:items_attributes].present?
+    #   render partial: "buy_now_confirmation_total"
+    # else
+      render partial: "confirmation_total"
+    # end
   end
 
   # 批量评价
