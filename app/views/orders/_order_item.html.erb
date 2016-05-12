@@ -62,7 +62,7 @@
             <div class='title-quantity'>
               <div class='title'>
                 <span>
-                  <%= "#{gift["title"]} #{gift["properties_title"]}" %>
+                  <%= truncate("#{gift["title"]} #{gift["properties_title"]}", length: 15) %>
                 </span>
               </div>
               <div class='quantity'>

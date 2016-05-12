@@ -42,9 +42,10 @@
       
         <tr class='footer'>
           <td colspan='5' class='text-right'>
-            <span>
-              已选择<span class='total-quantity'><%= @order_item.quantity %></span> 件商品&emsp;合计<span class='total-total'><%= @order_item.price * @order_item.quantity %></span>元
-            </span>
+            <div class='confirmation-total'>
+              <%= render "confirmation_total" %>
+            </div>
+
             <%= f.submit "提交订单", class: 'submit'%>
           </td>
         </tr>
@@ -94,18 +95,7 @@
     });
 
     function changeQuantity(quantityDom, quantity) {
-      var attrId = $(quantityDom).attr('id');
-      var priceAttrId = attrId.replace('quantity', 'price');
-      var $price = $('#' + priceAttrId);
-      var price = 1 * $price.val();
-      var $subtotal = $(quantityDom).parents('.quantity').siblings('.subtotal');
-      var $total = $('.total-total');
-
       quantity = 1 * quantity;
-
-      var subTotal = (price * quantity).toFixed(2);
-      $subtotal.text("¥ " + subTotal);
-      $total.text(subTotal);
 
       <% if @order_item.orderable.is_a?(Item) %>
         $.getJSON('/order_items/buy_now_gifts', {
@@ -114,6 +104,12 @@
         }).done(function(data) {
           var $cartItem = $(quantityDom).closest('.cart-item')
           CartGroup.rerenderItemGifts({gifts: data.gifts, el: $cartItem});
+
+          var formData = $('#new_order').serialize()
+          $.post('/orders/express_fee?' + formData)
+            .done(function(html) {
+              $('.confirmation-total').html(html);
+            })
         })
       <% end %>
     }

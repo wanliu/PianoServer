@@ -115,5 +115,11 @@
 
     var addressId = $(this).data('addressId');
     $('input#order_address_id').val(addressId);
+
+    var formData = $('#new_order').serialize()
+    $.post('/orders/express_fee?' + formData)
+      .done(function(html) {
+        $('.confirmation-total').html(html);
+      })
   });
 </script>

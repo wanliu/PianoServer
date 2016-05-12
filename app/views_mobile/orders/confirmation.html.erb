@@ -28,16 +28,8 @@
 
       <%= render partial: "confirmation_item", collection: @order_items.sort_by(&:id), as: :order_item, locals: { supplier: @supplier, f: f } %>
 
-      <div class='footer'>
-        <div class='text-right'>
-          共<%= @order_items.map(&:quantity).reduce(:+) %>件商品 <%= @order_items.map { |item| item.price * item.quantity }.reduce(:+)  %>元 
-        </div>
-        <div class='text-right'>
-          运送费用 <%= express_render @order %>
-        </div>
-        <div  class='text-right total'>
-          合计 <span class='amount'><%= number_to_currency @order.express_fee + @order_items.map { |item| item.price * item.quantity }.reduce(:+) %></span>
-        </div>
+      <div class='footer confirmation-total'> 
+        <%= render "confirmation_total" %>
       </div>
 
       <div class='footer'>

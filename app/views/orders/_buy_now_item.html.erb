@@ -39,10 +39,10 @@
             <div class='title-quantity'>
               <div class='title'>
                 <span>
-                  <%= "#{gift.present.title} #{gift.properties_title}" %>
+                  <%= truncate("#{gift.present.title} #{gift.properties_title}", length: 15) %>
                 </span>
               </div>
-              <div class='quantity'>
+              <div class='gift-quantity'>
                 <span>数量：<%= gift.available_quantity %></span>
               </div>
             </div>

@@ -38,7 +38,8 @@ class OrdersController < ApplicationController
       :create_evaluations,
       :evaluate_item_create, 
       :receive, 
-      :qrcode_receive
+      :qrcode_receive,
+      :express_fee
     ]
 
   before_action :set_order_item, only: [:evaluate_item, :evaluate_item_create]
@@ -86,7 +87,7 @@ class OrdersController < ApplicationController
       else
         format.any(:html, :mobile) do
           set_feed_back
-          set_addresses
+          set_addresses_add_express_fee
           flash.now[:error] = @order.errors.full_messages.join(', ')
 
           render :confirmation, status: :unprocessable_entity
@@ -103,7 +104,7 @@ class OrdersController < ApplicationController
 
     set_feed_back
 
-    set_addresses
+    set_addresses_add_express_fee
   end
 
   # 直接购买
@@ -132,7 +133,7 @@ class OrdersController < ApplicationController
         0
       end
 
-    set_addresses
+    set_addresses_add_express_fee
 
     @supplier = @order.supplier
 
@@ -215,6 +216,26 @@ class OrdersController < ApplicationController
     @order.destroy
 
     head :no_content
+  end
+
+  # 用户切换收货地址时，计算新地址的运送费用
+  def express_fee
+    @order = current_user.orders.build(express_fee_params)
+    @order.set_express_fee
+
+    @order.items.each do |item|
+      item.price ||=
+        case item.orderable
+        when Item
+          item.orderable.price
+        when Promotion
+          item.orderable.discount_price
+        else
+          0
+        end
+    end
+
+    render partial: "confirmation_total"
   end
 
   # 批量评价
@@ -309,7 +330,7 @@ class OrdersController < ApplicationController
     @total = @order_items.reduce(0) { |total, item| total += item.price * item.quantity }
   end
 
-  def set_addresses
+  def set_addresses_add_express_fee
     shop_address = current_user.owner_shop.try(:location)
     @delivery_addresses = [shop_address].concat current_user.locations.order(id: :asc)
     @delivery_addresses.compact!
@@ -322,6 +343,8 @@ class OrdersController < ApplicationController
       elsif @delivery_addresses.present?
         @delivery_addresses.first.id
       end
+
+    @order.set_express_fee
   end
 
   def order_params
@@ -337,6 +360,14 @@ class OrdersController < ApplicationController
 
       if params[:order][:cart_item_gifts].present?
         white_list[:cart_item_gifts] = params[:order][:cart_item_gifts]
+      end
+    end
+  end
+
+  def express_fee_params
+    order_params.tap do |white_list|
+      if params[:order][:items_attributes].present?
+        white_list[:items_attributes] = params[:order][:items_attributes]
       end
     end
   end
