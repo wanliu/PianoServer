@@ -3,7 +3,12 @@ class Admins::OneMoneyController < Admins::BaseController
   before_action :set_one_money, except: [:index, :new, :create, :search]
 
   def index
-    @one_moneies = OneMoney.all
+    @one_moneies =
+      if params[:type]
+        OneMoney.find(type: params[:type])
+      else
+        OneMoney.all.select {|o| o.type != 'daily_cheap'}
+      end
   end
 
   def new

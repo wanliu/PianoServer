@@ -1,0 +1,3 @@
+---
+target: /usr/src/app/PianoServer
+script: scripts/install.sh

@@ -133,7 +133,16 @@ promotions:
     scripts:
       publish:
         dir: /var/www/OneMoney
-        exec: make clean; make release NAME=$name ONE_MONEY=$one_money_id DR_CODE=$qrcode HOME_IMG=$home_img LIST_IMG=$list_img SIGN_URL=$sign_url WINNERS_NUM=$winners API_URL=$api_url
+        exec: make clean; make release NAME=$name ONE_MONEY=$one_money_id DR_CODE=$qrcode HOME_IMG=$home_img LIST_IMG=$list_img SIGN_URL=$sign_url WINNERS_NUM=$winners API_URL=$api_url PREFIX=$prefix
+  daily_cheap:
+    start_hour: 10
+    end_hour: 22
+    default_callback: http://m.wanliu.biz/orders/yiyuan_confirm
+    scripts:
+      publish:
+        dir: /var/www/DailyCheap
+        exec: make clean; make release NAME=$name ONE_MONEY=$one_money_id DR_CODE=$qrcode HOME_IMG=$home_img LIST_IMG=$list_img SIGN_URL=$sign_url WINNERS_NUM=$winners API_URL=$api_url PREFIX=$prefix
+
 sms:
   host: sms.yunpian.com
   api_uri: /v1/sms/send.json

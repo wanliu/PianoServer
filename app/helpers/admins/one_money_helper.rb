@@ -1,5 +1,9 @@
 module Admins::OneMoneyHelper
 
+  def one_money_type
+    params[:type] == :daily_cheap ? '天天惠' : '一元购'
+  end
+
   def status_label_full(status, title = nil)
     classes =
       case status
