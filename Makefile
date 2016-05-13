@@ -2,6 +2,7 @@ NAME=PianoServer
 export SECRET_KEY_BASE=xxx
 export LIVE_KEY_BASE=gawgewaqgegag456t4jt1re56j46rk5r1mw1hg65r46t3w1her1w56t4z1v4g44rt4re445aaa
 export RAILS_SERVE_STATIC_FILES=true
+export RAILS_ENV=production
 
 PORT=6000
 UNICORN_CONFIG=config/unicorn.rb
@@ -32,7 +33,14 @@ bundle:
 migrate:
 	@bundle exec rake db:migrate
 
-launch: sync_config bundle migrate restart
+launch: sync_config bundle migrate restart sidekiq schedule
+
+sidekiq:
+	@-test -s tmp/pids/sidekiq.pid && kill -TERM `cat tmp/pids/sidekiq.pid`
+	@bundle exec sidekiq -d
+
+schedule:
+	@bundle exec whenever -iw
 
 clearasset:
 	@echo 'clean all assets'

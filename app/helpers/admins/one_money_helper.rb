@@ -147,15 +147,33 @@ module Admins::OneMoneyHelper
     start_at = one_money.start_at
     name = "release/%04d-%02d-%02d" % [start_at.year, start_at.month, start_at.day]
 
-    dir = File.join(Settings.promotions.one_money.scripts.publish.dir, name)
+    scripts =
+      case one_money.type
+      when :one_money, "one_money", ""
+        Settings.promotions.one_money.scripts
+      when :daily_cheap, "daily_cheap"
+        Settings.promotions.daily_cheap.scripts
+      else
+        Settings.promotions.one_money.scripts
+      end
+    dir = File.join(scripts.publish.dir, name)
     File.exist?(dir)
   end
 
   def one_money_publish_url(one_money)
     start_at = one_money.start_at
     name = "%04d-%02d-%02d" % [start_at.year, start_at.month, start_at.day]
+    enter_url =
+      case one_money.type
+      when :one_money, "one_money", ""
+        Settings.promotions.one_money.enter_url
+      when :daily_cheap, "daily_cheap"
+        Settings.promotions.daily_cheap.enter_url
+      else
+        Settings.promotions.one_money.enter_url
+      end
 
-    File.join(Settings.promotions.one_money.enter_url, name)
+    File.join(enter_url, name)
   end
 
   def best_in_place_item(item, *args)

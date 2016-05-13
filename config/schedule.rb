@@ -29,21 +29,6 @@ every '30-59/5 10-23 * * *' do
 end
 
 
-every :day, :at => '2:30 am' do
-  code = <<-RUBY
-    tomorrow = DateTime.now + 1.day
-    title = I18n.l(tomorrow) + ' 天天惠'
-    start_hour = Settings.promotions.daily_cheap.start_hour || 10
-    end_hour =  Settings.promotions.daily_cheap.end_hour || 22
-    start_at = tomorrow.change(hour: start_hour, min: 0, sec: 0)
-    end_at = tomorrow.change(hour: end_hour, min: 0, sec: 0)
-    options = {
-      multi_item: Settings.promotions.daily_cheap.multi_item || 1,
-      fare: Settings.promotions.daily_cheap.fare || 10,
-      max_free_fare: Settings.promotions.daily_cheap.max_free_fare || 58.0,
-      callback: Settings.promotions.daily_cheap.default_callback || "http://m.wanliu.biz/orders/yiyuan_confirm"
-    }
-    OneMoney.create({:title => title, :type => :daily_cheap, :start_at => start_at, :end_at => end_at}.merge(options))
-  RUBY
-  runner code
+every '30 2 * * 1-5' do
+  rake "daily_cheap:create_tomorrow"
 end
