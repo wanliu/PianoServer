@@ -1,40 +1,45 @@
-<table class='table express-templates'>
-  <thead>
-    <tr>
-      <th colspan='2'>
-        本店运费模板
-      </th>
-      <th>
-        <%= link_to "点击添加运费模板", new_shop_admin_express_template_path, class: 'btn btn-default' %>
-      </th>
-    </tr>
-    <tr>
-      <th width='20%'>名称</th>
-      <th width='60%'>运费描述</th>
-      <th width='20%'>操作</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% if @express_templates.blank? %>
-      <tr>
-        <td colspan='3' class='text-center'>
-          暂无运费模板
-          <%= link_to "点击添加运费模板", new_shop_admin_express_template_path, class: 'btn btn-default' %>
-        </td>
-      </tr>
-    <% else %>
-      <% @express_templates.each do |template| %>
+<div class="panel panel-default">
+  <div class="panel-heading">运费模板管理</div>
+  <div class="panel-body">
+    <table class='table express-templates'>
+      <thead>
         <tr>
-          <td><%= template.name %></td>
-          <td>
-            <%= render_express_template_desc template %>
-          </td>
-          <td>
-            <%= link_to "编辑", edit_shop_admin_express_template_path(current_shop.name, template), class: 'btn btn-default' %>
-            <%= button_to "删除", shop_admin_express_template_path(current_shop.name, template), method: :delete, data: { confrim: "确定删除这个模板么?" }, class: 'btn btn-danger' %>
-          </td>
+          <th colspan='2'>
+            本店运费模板
+          </th>
+          <th>
+            <%= link_to "点击添加运费模板", new_shop_admin_express_template_path, class: 'btn btn-default' %>
+          </th>
         </tr>
-      <% end %>
-    <% end %>
-  </tbody>
-</table>
+        <tr>
+          <th width='20%'>名称</th>
+          <th width='60%'>运费描述</th>
+          <th width='20%'>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if @express_templates.blank? %>
+          <tr>
+            <td colspan='3' class='text-center'>
+              暂无运费模板
+              <%= link_to "点击添加运费模板", new_shop_admin_express_template_path, class: 'btn btn-default' %>
+            </td>
+          </tr>
+        <% else %>
+          <% @express_templates.each do |template| %>
+            <tr>
+              <td><%= template.name %></td>
+              <td>
+                <%= render_express_template_desc template %>
+              </td>
+              <td>
+                <%= link_to "编辑", edit_shop_admin_express_template_path(current_shop.name, template), class: 'btn btn-default' %>
+                <%= button_to "删除", shop_admin_express_template_path(current_shop.name, template), method: :delete, data: { confirm: "确定删除模板\"#{template.name}\"么?" }, class: 'btn btn-danger' %>
+              </td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
