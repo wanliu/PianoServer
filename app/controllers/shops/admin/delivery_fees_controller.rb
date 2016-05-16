@@ -1,13 +1,11 @@
 # class Shops::Admin::DeliveryFeesController < Shops::Admin::BaseController
-#   include DeliveryAreaTitle
-
 #   before_action :set_object
 
 #   def show
 #     delivery_fee_settings.each do |code, fee|
 #       delivery_fee_settings[code] = {
 #         fee: fee, 
-#         title: get_code_title(code)
+#         title: ChinaCity.get(code, prepend_parent: true)
 #       }
 #     end
 #   end
@@ -15,7 +13,7 @@
 #   def create
 #     if delivery_fee_settings[params[:code]].present?
 #       render json: {
-#         error: "#{get_code_title(params[:code])}地区的运费已经设置，无需再次设置"
+#         error: "#{ChinaCity.get(params[:code], prepend_parent: true)}地区的运费已经设置，无需再次设置"
 #       }, status: :unprocessable_entity
 #     else
 #       delivery_fee_settings[params[:code]] = params[:fee].to_f
@@ -23,7 +21,7 @@
 
 #       render json: {
 #         code: params[:code], 
-#         title: get_code_title(params[:code]),
+#         title: ChinaCity.get(params[:code], prepend_parent: true),
 #         fee: params[:fee]
 #       }, status: :created
 #     end
