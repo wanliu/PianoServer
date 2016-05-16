@@ -4,7 +4,6 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
   include Shops::Admin::ItemHelper
   include ActionView::Helpers::SanitizeHelper
   include CombinationHash
-  include DeliveryAreaTitle
 
   respond_to :json, :html
 
@@ -15,6 +14,8 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     :update, 
     :destroy, 
     :search_gift,
+    :express_template,
+    :chose_express_template,
     :change_sale_state]
 
   def index
@@ -212,14 +213,6 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     end
 
     @stock = @item.stock_changes.sum(:quantity)
-
-    @delivery_fee_settings = @item.delivery_fee
-    @delivery_fee_settings.each do |code, fee|
-      @delivery_fee_settings[code] = {
-        fee: fee,
-        title: get_code_title(code)
-      }
-    end
   end
 
   def inventory_config
@@ -274,6 +267,14 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
       .per(params[:per])
 
     render json: items.as_json(methods: [:title, :cover_url])
+  end
+
+  def express_template
+  end
+
+  def chose_express_template
+    @origin_template_id = @item.express_template_id
+    @item.update(express_template_id: params[:template_id])
   end
 
   protected

@@ -26,6 +26,8 @@ class Shop < ActiveRecord::Base
   has_many :shop_delivers
   has_many :delivers, through: :shop_delivers, source: :deliver
 
+  has_many :express_templates, dependent: :destroy
+
   validates :title, :phone, :name, presence: true
   validates :name, uniqueness: true
   validates :location, presence: { message: '请选择有效城市' }, unless: :skip_validates_or_location

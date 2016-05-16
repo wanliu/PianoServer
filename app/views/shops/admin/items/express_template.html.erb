@@ -1,0 +1,70 @@
+<div class="item-express-templates">
+  <div class='header'>
+    <div class="alert alert-success infors" role="alert" style='display: none;'>
+    </div>
+    <div class="alert alert-danger errors" role="alert" style='display: none;'>
+    </div>
+  </div>
+
+  商品：<%= @item.title %>
+
+  <table class='table table-hover '>
+    <thead>
+      <tr>
+        <th>
+          本店运费模板
+        </th>
+      </tr>
+      <tr>
+        <th>名称</th>
+        <th>描述</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if current_shop.express_templates.blank? %>
+        <tr>
+          <td colspan='3' class='text-center'>
+            暂无运费模板
+            <%= link_to "点击添加运费模板", new_shop_admin_express_template_path, class: 'btn btn-default' %>
+          </td>
+        </tr>
+      <% else %>
+        <% current_shop.express_templates.each do |template| %>
+          <% chosen = @item.express_template_id == template.id %>
+          <tr class="<%= chosen ? 'info' : '' %>" data-template-id="<%= template.id %>">
+            <td><%= template.name %></td>
+            <td><%= template.name %></td>
+            <td>
+              <% if chosen %>
+                <span class='chosen'>已选定</span>
+                <%= button_to "使用模板", chose_express_template_shop_admin_item_path(current_shop.name, @item.sid, template_id: template.id), remote: true, format: 'js', class: 'btn btn-default chose', style: 'display: none;' %>
+              <% else %>
+                <span class='chosen' style='display: none;' >已选定</span>
+                <%= button_to "使用模板", chose_express_template_shop_admin_item_path(current_shop.name, @item.sid, template_id: template.id), remote: true, format: 'js', class: ' btn btn-default chose' %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%= link_to "管理运费模板", shop_admin_express_templates_path(current_shop.name), class:'btn btn-default' %>
+  <%= link_to "添加运费模板", new_shop_admin_express_template_path(current_shop.name), class: 'btn btn-default' %>
+</div>
+
+<script type="text/javascript">
+  (function() {
+    $('.chose-template').click(function(event) {
+      var templateId = $(this).closest('td').data("templateId");
+
+      var postUrl = "<%= chose_express_template_shop_admin_item_path(current_shop.name, @item.sid) %>";
+      var request = $.post(postUrl, { template_id: templateId });
+
+      request.done(function(data) {
+        debugger
+      })
+    })
+  })();
+</script>

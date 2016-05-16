@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160420072132) do
+ActiveRecord::Schema.define(version: 20160513075516) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -177,6 +177,17 @@ ActiveRecord::Schema.define(version: 20160420072132) do
   add_index "evaluations", ["order_id"], name: "index_evaluations_on_order_id", using: :btree
   add_index "evaluations", ["user_id"], name: "index_evaluations_on_user_id", using: :btree
 
+  create_table "express_templates", force: :cascade do |t|
+    t.integer  "shop_id"
+    t.string   "name"
+    t.boolean  "free_shipping", default: false
+    t.jsonb    "template",      default: {}
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+  end
+
+  add_index "express_templates", ["shop_id"], name: "index_express_templates_on_shop_id", using: :btree
+
   create_table "favorites", force: :cascade do |t|
     t.integer  "favoritor_id"
     t.string   "favoritor_type"
@@ -255,24 +266,24 @@ ActiveRecord::Schema.define(version: 20160420072132) do
     t.integer  "shop_category_id"
     t.integer  "shop_id"
     t.integer  "product_id"
-    t.decimal  "price",              precision: 10, scale: 2
+    t.decimal  "price",               precision: 10, scale: 2
     t.integer  "inventory"
-    t.boolean  "on_sale",                                     default: true
-    t.datetime "created_at",                                                  null: false
-    t.datetime "updated_at",                                                  null: false
+    t.boolean  "on_sale",                                      default: true
+    t.datetime "created_at",                                                   null: false
+    t.datetime "updated_at",                                                   null: false
     t.integer  "sid"
     t.string   "title"
     t.integer  "category_id"
-    t.decimal  "public_price",       precision: 10, scale: 2
-    t.decimal  "income_price",       precision: 10, scale: 2
-    t.jsonb    "images",                                      default: []
+    t.decimal  "public_price",        precision: 10, scale: 2
+    t.decimal  "income_price",        precision: 10, scale: 2
+    t.jsonb    "images",                                       default: []
     t.integer  "brand_id"
-    t.jsonb    "properties",                                  default: {}
+    t.jsonb    "properties",                                   default: {}
     t.text     "description"
-    t.decimal  "current_stock",      precision: 10, scale: 2
-    t.boolean  "abandom",                                     default: false, null: false
-    t.jsonb    "properties_setting",                          default: {}
-    t.jsonb    "delivery_fee",                                default: {}
+    t.decimal  "current_stock",       precision: 10, scale: 2
+    t.boolean  "abandom",                                      default: false, null: false
+    t.jsonb    "properties_setting",                           default: {}
+    t.integer  "express_template_id"
   end
 
   add_index "items", ["brand_id"], name: "index_items_on_brand_id", using: :btree
@@ -496,17 +507,16 @@ ActiveRecord::Schema.define(version: 20160420072132) do
     t.integer  "industry_id"
     t.text     "description"
     t.string   "provider"
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
     t.string   "logo"
-    t.jsonb    "settings",          default: {}
+    t.jsonb    "settings",    default: {}
     t.string   "address"
-    t.integer  "shop_type",         default: 0
+    t.integer  "shop_type",   default: 0
     t.float    "lat"
     t.float    "lon"
     t.integer  "location_id"
     t.string   "region_id"
-    t.jsonb    "item_delivery_fee", default: {}
   end
 
   create_table "statuses", force: :cascade do |t|

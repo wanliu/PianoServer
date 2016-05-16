@@ -1,0 +1,38 @@
+<table class='table express-templates'>
+  <thead>
+    <tr>
+      <th colspan='2'>
+        本店运费模板
+      </th>
+      <th>
+        <%= link_to "点击添加运费模板", new_shop_admin_express_template_path, class: 'btn btn-default' %>
+      </th>
+    </tr>
+    <tr>
+      <th width='33%'>名称</th>
+      <th width='33%'>运费</th>
+      <th width='34%'>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if @express_templates.blank? %>
+      <tr>
+        <td colspan='3' class='text-center'>
+          暂无运费模板
+          <%= link_to "点击添加运费模板", new_shop_admin_express_template_path, class: 'btn btn-default' %>
+        </td>
+      </tr>
+    <% else %>
+      <% @express_templates.each do |template| %>
+        <tr>
+          <td><%= template.name %></td>
+          <td></td>
+          <td>
+            <%= link_to "编辑", edit_shop_admin_express_template_path(current_shop.name, template), class: 'btn btn-default' %>
+            <%= button_to "删除", shop_admin_express_template_path(current_shop.name, template), method: :delete, data: { confrim: "确定删除这个模板么?" }, class: 'btn btn-danger' %>
+          </td>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>

@@ -21,6 +21,7 @@ class Item < ActiveRecord::Base
   belongs_to :category
   belongs_to :brand
   belongs_to :shop
+  belongs_to :express_template
 
   has_many :favoritors, as: :favoritable, class_name: 'Favorite'
 
@@ -43,6 +44,7 @@ class Item < ActiveRecord::Base
   validates :public_price, numericality: true
   validates :income_price, :price, numericality: true, unless: :skip_batch
   validates :description, length: { minimum: 4 }, unless: :skip_batch
+  validate :express_template_from_shop
 
   delegate :region_id, to: :shop, prefix: true
 
@@ -516,5 +518,11 @@ class Item < ActiveRecord::Base
     end
 
     # self.available_gifts_evaled = true
+  end
+
+  def express_template_from_shop
+    if express_template.present? && express_template.shop_id != shop_id
+      errors.add(:express_template_id, "只能使用本商店的运费模板")
+    end
   end
 end
