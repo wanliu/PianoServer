@@ -326,17 +326,25 @@ class Item < ActiveRecord::Base
     self.as_json(methods: [:shop_region_id, :shop_name])
   end
 
-  def delivery_fee_to(area_code)
-    delivery_fee_setting = shop.item_delivery_fee.merge delivery_fee
+  # def delivery_fee_to(area_code)
+  #   delivery_fee_setting = shop.item_delivery_fee.merge delivery_fee
 
-    area_code = area_code.to_s
-    city_code = ChinaCity.city(area_code)
-    province_code = ChinaCity.province(area_code)
+  #   area_code = area_code.to_s
+  #   city_code = ChinaCity.city(area_code)
+  #   province_code = ChinaCity.province(area_code)
 
-    delivery_fee_setting[area_code] ||
-      delivery_fee_setting[city_code] ||
-      delivery_fee_setting[province_code] ||
-      delivery_fee_setting["default"] || 0
+  #   delivery_fee_setting[area_code] ||
+  #     delivery_fee_setting[city_code] ||
+  #     delivery_fee_setting[province_code] ||
+  #     delivery_fee_setting["default"] || 0
+  # end
+
+  # def express_template
+  #   super || shop.default_express_template
+  # end
+
+  def express_fee(options)
+    express_template.apply(options)
   end
 
   def pinyin

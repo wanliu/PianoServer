@@ -9,9 +9,9 @@
       </th>
     </tr>
     <tr>
-      <th width='33%'>名称</th>
-      <th width='33%'>运费</th>
-      <th width='34%'>操作</th>
+      <th width='20%'>名称</th>
+      <th width='60%'>运费描述</th>
+      <th width='20%'>操作</th>
     </tr>
   </thead>
   <tbody>
@@ -26,7 +26,9 @@
       <% @express_templates.each do |template| %>
         <tr>
           <td><%= template.name %></td>
-          <td></td>
+          <td>
+            <%= render_express_template_desc template %>
+          </td>
           <td>
             <%= link_to "编辑", edit_shop_admin_express_template_path(current_shop.name, template), class: 'btn btn-default' %>
             <%= button_to "删除", shop_admin_express_template_path(current_shop.name, template), method: :delete, data: { confrim: "确定删除这个模板么?" }, class: 'btn btn-danger' %>

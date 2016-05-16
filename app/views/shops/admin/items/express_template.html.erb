@@ -34,7 +34,7 @@
           <% chosen = @item.express_template_id == template.id %>
           <tr class="<%= chosen ? 'info' : '' %>" data-template-id="<%= template.id %>">
             <td><%= template.name %></td>
-            <td><%= template.name %></td>
+            <td><%= render_express_template_desc template %></td>
             <td>
               <% if chosen %>
                 <span class='chosen'>已选定</span>

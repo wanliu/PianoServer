@@ -24,13 +24,13 @@
   <div class='shipping-setting' style='<%= @express_template.free_shipping ? "display: none;" : "" %>'>
     <div class='default'>
       默认运费: 
-      <%= number_field_tag "[express_template][template][default][first_quantity]", @express_template.template["default"].try(:[], "first_quantity"), class: 'short-input' %>
+      <%= number_field_tag "[express_template][template][default][first_quantity]", @express_template.template["default"].try(:[], "first_quantity"), class: 'short-input', min: 1, step: 1 %>
       件内
-      <%= number_field_tag "[express_template][template][default][first_fee]", @express_template.template["default"].try(:[], "first_fee"), class: 'short-input' %>
+      <%= number_field_tag "[express_template][template][default][first_fee]", @express_template.template["default"].try(:[], "first_fee"), class: 'short-input', min: 0, step: 1 %>
       元，每增加
-      <%= number_field_tag "[express_template][template][default][next_quantity]", @express_template.template["default"].try(:[], "next_quantity"), class: 'short-input' %>
+      <%= number_field_tag "[express_template][template][default][next_quantity]", @express_template.template["default"].try(:[], "next_quantity"), class: 'short-input', min: 0, step: 1 %>
       件，运费增加
-      <%= number_field_tag "[express_template][template][default][next_fee]", @express_template.template["default"].try(:[], "next_fee"), class: 'short-input' %>
+      <%= number_field_tag "[express_template][template][default][next_fee]", @express_template.template["default"].try(:[], "next_fee"), class: 'short-input', min: 0, step: 1 %>
       元
     </div>
 
@@ -54,25 +54,25 @@
               <%= ChinaCity.get(code, prepend_parent: true) %>
             </td>
             <td>
-              <span class='for-show title'><%= setting["first_quantity"] %></span>
-              <%= text_field_tag "[express_template][template][#{code}][first_quantity]", @express_template.template["#{code}"].try(:[], "first_quantity"), class: 'for-hidden hidden short-input' %>
+              <!-- <span class='for-show title'><%= setting["first_quantity"] %></span> -->
+              <%= number_field_tag "[express_template][template][#{code}][first_quantity]", @express_template.template["#{code}"].try(:[], "first_quantity"), class: 'for-hidden short-input', min: 1, step: 1 %>
             </td>
             <td>
-              <span class='for-show title'><%= setting["first_fee"] %></span>
-              <%= text_field_tag "[express_template][template][#{code}][first_fee]", @express_template.template["#{code}"].try(:[], "first_fee"), class: 'for-hidden hidden short-input' %>
+              <!-- <span class='for-show title'><%= setting["first_fee"] %></span> -->
+              <%= number_field_tag "[express_template][template][#{code}][first_fee]", @express_template.template["#{code}"].try(:[], "first_fee"), class: 'for-hidden short-input', min: 0, step: 1 %>
             </td>
             <td>
-              <span class='for-show title'><%= setting["next_quantity"] %></span>
-              <%= text_field_tag "[express_template][template][#{code}][next_quantity]", @express_template.template["#{code}"].try(:[], "next_quantity"), class: 'for-hidden hidden short-input' %>
+              <!-- <span class='for-show title'><%= setting["next_quantity"] %></span> -->
+              <%= number_field_tag "[express_template][template][#{code}][next_quantity]", @express_template.template["#{code}"].try(:[], "next_quantity"), class: 'for-hidden short-input', min: 0, step: 1 %>
             </td>
             <td>
-              <span class='for-show title'><%= setting["next_fee"] %></span>
-              <%= text_field_tag "[express_template][template][#{code}][next_fee]", @express_template.template["#{code}"].try(:[], "next_fee"), class: 'for-hidden hidden short-input' %>
+              <!-- <span class='for-show title'><%= setting["next_fee"] %></span> -->
+              <%= number_field_tag "[express_template][template][#{code}][next_fee]", @express_template.template["#{code}"].try(:[], "next_fee"), class: 'for-hidden short-input', min: 0, step: 1 %>
             </td>
             <td>
-              <%= link_to "编辑", "javascript: void(0);", class: 'btn btn-default edit-special-area for-show' %>
-              <%= link_to "删除", "javascript: void(0);", class: 'btn btn-default delete-special-area for-show' %>
-              <%= link_to "保存", "javascript: void(0);", class: 'btn btn-default save-special-area for-hidden hidden' %>
+              <%#= link_to "编辑", "javascript: void(0);", class: 'btn btn-default edit-special-area for-show' %>
+              <%= link_to "删除", "javascript: void(0);", class: 'btn btn-danger delete-special-area for-show' %>
+              <%#= link_to "保存", "javascript: void(0);", class: 'btn btn-default save-special-area for-hidden hidden' %>
             </td>
           </tr>
         <% end %>
@@ -91,25 +91,25 @@
       {{ title }}
     </td>
     <td>
-      <span class='for-show title'>{{ first_quantity }}</span>
-      <input type="number" name="[express_template][template][{{ code }}][first_quantity]" id="_express_template_template_default_first_quantity" value="{{ first_quantity }}" class='for-hidden hidden short-input'>
+      <!-- <span class='for-show title'>{{ first_quantity }}</span> -->
+      <input type="number" name="[express_template][template][{{ code }}][first_quantity]" id="_express_template_template_default_first_quantity" value="{{ first_quantity }}" class='for-hidden short-input' min=1 step=1>
     </td>
     <td>
-      <span class='for-show title'>{{ first_fee }}</span>
-      <input type="number" name="[express_template][template][{{ code }}][first_fee]" id="_express_template_template_default_first_quantity" value="{{ first_fee }}" class='for-hidden hidden short-input'>
+      <!-- <span class='for-show title'>{{ first_fee }}</span> -->
+      <input type="number" name="[express_template][template][{{ code }}][first_fee]" id="_express_template_template_default_first_quantity" value="{{ first_fee }}" class='for-hidden short-input' min=0 step=1>
     </td>
     <td>
-      <span class='for-show title'>{{ next_quantity }}</span>
-      <input type="number" name="[express_template][template][{{ code }}][next_quantity]" id="_express_template_template_default_first_quantity" value="{{ next_quantity }}" class='for-hidden hidden short-input'>
+      <!-- <span class='for-show title'>{{ next_quantity }}</span> -->
+      <input type="number" name="[express_template][template][{{ code }}][next_quantity]" id="_express_template_template_default_first_quantity" value="{{ next_quantity }}" class='for-hidden short-input' min=0 step=1>
     </td>
     <td>
-      <span class='for-show title'>{{ next_fee }}</span>
-      <input type="number" name="[express_template][template][{{ code }}][next_fee]" id="_express_template_template_default_first_quantity" value="{{ next_fee }}" class='for-hidden hidden short-input'>
+      <!-- <span class='for-show title'>{{ next_fee }}</span> -->
+      <input type="number" name="[express_template][template][{{ code }}][next_fee]" id="_express_template_template_default_first_quantity" value="{{ next_fee }}" class='for-hidden short-input' min=0 step=1>
     </td>
     <td>
-      <%= link_to "编辑", "javascript: void(0);", class: 'btn btn-default edit-special-area for-show' %>
-      <%= link_to "删除", "javascript: void(0);", class: 'btn btn-default delete-special-area for-show' %>
-      <%= link_to "保存", "javascript: void(0);", class: 'btn btn-default save-special-area for-hidden hidden' %>
+      <%#= link_to "编辑", "javascript: void(0);", class: 'btn btn-default edit-special-area for-show' %>
+      <%= link_to "删除", "javascript: void(0);", class: 'btn btn-danger delete-special-area for-show' %>
+      <%#= link_to "保存", "javascript: void(0);", class: 'btn btn-default save-special-area for-hidden hidden' %>
     </td>
   </tr>
 </script>
@@ -126,24 +126,32 @@
       $tbody.append(html);
     });
 
-    $('.edit-special-area').click(function(event) {
-      var $tr = $(this).closest('tr');
-      $tr.find('.for-show').hide();
-      $tr.find('.for-hidden').removeClass('hidden');
-    });
-
-    $('.save-special-area').click(function(event) {
+    $(".delete-special-area").click(function(event) {
       var $tr = $(this).closest('tr');
 
-      _.each($tr.find('.title'), function(title) {
-        var $title = $(title);
-        var value = $title.siblings('input').val();
-        $title.text(value);
+      $tr.fadeOut(500).fadeIn(500, function() {
+        $tr.remove();
       });
-
-      $tr.find('.for-show').show();
-      $tr.find('.for-hidden').addClass('hidden');
     });
+
+    // $('.edit-special-area').click(function(event) {
+    //   var $tr = $(this).closest('tr');
+    //   $tr.find('.for-show').hide();
+    //   $tr.find('.for-hidden').removeClass('hidden');
+    // });
+
+    // $('.save-special-area').click(function(event) {
+    //   var $tr = $(this).closest('tr');
+
+    //   _.each($tr.find('.title'), function(title) {
+    //     var $title = $(title);
+    //     var value = $title.siblings('input').val();
+    //     $title.text(value);
+    //   });
+
+    //   $tr.find('.for-show').show();
+    //   $tr.find('.for-hidden').addClass('hidden');
+    // });
 
     $('#express_template_free_shipping_false').click(function() {
       $('.shipping-setting').show();

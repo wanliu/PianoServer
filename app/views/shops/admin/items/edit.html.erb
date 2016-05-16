@@ -1,14 +1,20 @@
-<%= render "form" %>
+<div class="edit-item">
+  <%= render "form" %>
 
-<!-- 运费设置 -->
-<% if @item.persisted? %>
-  <fieldset >
-    <legend >运费模板设置</legend>
-    <%= render partial: "express_template", locals: { item: @item } %>
-  </fieldset>
+  <!-- 运费设置 -->
+  <% if @item.persisted? %>
+    <div class="panel panel-default item-settings">
+      <div class="panel-heading">运费模板设置</div>
+      <div class="panel-body">
+        <%= render partial: "express_template", locals: { item: @item } %>
+      </div>
+    </div>
 
-  <fieldset >
-    <legend >礼品设置</legend>
-    <%= render partial: "gifts", locals: { item: @item } %>
-  </fieldset>
-<% end %>
+    <div class="panel panel-default item-settings">
+      <div class="panel-heading">礼品设置</div>
+      <div class="panel-body">
+        <%= render partial: "gifts", locals: { item: @item } %>
+      </div>
+    </div>
+  <% end %>
+</div>

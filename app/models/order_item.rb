@@ -91,7 +91,7 @@ class OrderItem < ActiveRecord::Base
 
   def express_fee(delivery_region_id)
     if orderable_type == "Item"
-      quantity * Item.find(orderable_id).delivery_fee_to(delivery_region_id)
+      orderable.express_fee(to: delivery_region_id, quantity: quantity)
     else
       0
     end

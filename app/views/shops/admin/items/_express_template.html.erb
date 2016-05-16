@@ -1,5 +1,6 @@
 <% if item.express_template.present? %>
   运费模板: <%= item.express_template.name %>
+  <%= link_to "点击设置", express_template_shop_admin_item_path(current_shop.name, item) %>
 <% else %>
   未设置运费模板 <%= link_to "点击设置", express_template_shop_admin_item_path(current_shop.name, item) %>
 <% end %>
