@@ -16,14 +16,10 @@
     $alert.html("设置默认运费模板成功！").show();
 
     var $originTr = $("tr.info");
-    $originTr.removeClass('info');
-    $originTr.find('.chosen').hide();
-    $originTr.find('.chose').show();
+    $originTr.removeClass('info').addClass('no-info');
 
     var $tr = $("tr[data-template-id=<%= current_shop.default_express_template_id %>]");
-    $tr.addClass('info');
-    $tr.find('.chose').hide();
-    $tr.find('.chosen').show();
+    $tr.removeClass('no-info').addClass('info');
 
     setTimeout(function() {
       $alert.fadeOut(function() {
