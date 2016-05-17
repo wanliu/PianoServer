@@ -339,12 +339,16 @@ class Item < ActiveRecord::Base
   #     delivery_fee_setting["default"] || 0
   # end
 
-  # def express_template
-  #   super || shop.default_express_template
-  # end
+  def express_template
+    super || shop.default_express_template
+  end
 
   def express_fee(options)
-    express_template.apply(options)
+    if express_template.present?
+      express_template.apply(options)
+    else
+      0
+    end
   end
 
   def pinyin
