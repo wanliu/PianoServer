@@ -1,12 +1,8 @@
 <% isDefault = current_shop.default_express_template_id == template.id %>
-<tr class="<%= isDefault ? 'info' : '' %>" data-template-id="<%= template.id %>">
+<tr class="<%= isDefault ? 'info' : 'no-info' %>" data-template-id="<%= template.id %>">
   <td>
     <%= template.name %>
-    <% if isDefault %>
-      <span class="label label-info chosen">默认</span>
-    <% else %>
-      <span class="label label-info chosen" style='display: none;'>默认</span>
-    <% end %>
+    <span class="label label-info chosen">默认</span>
   </td>
   <td>
     <%= render_express_template_desc template %>
@@ -20,16 +16,14 @@
       remote: true,
       method: :post,
       format: 'js',
-      style: "#{isDefault ?  'display: none;' : ''}",
       class: 'btn btn-default chose', 
       data: { confirm: "<span class='label label-warning'>*注意</span>如果设置了商店的默认运费模板，则所有没有设置运费模板的商品都会自动应用该模板。确定设置\"#{template.name}\"为本店默认模板么？"}  
     %>
 
-    <%= button_to "取消默认", cancel_default_shop_admin_express_templates_path(current_shop.name), 
+    <%= button_to "取消默认", cancel_default_shop_admin_express_templates_path(current_shop.name),
       remote: true,
       method: :post,
       format: 'js',
-      style: "#{isDefault ?  '' : 'display: none;'}",
       class: 'btn btn-warning chosen', 
       data: { confirm: "<span class='label label-warning'>*注意</span>如果取消默认商店的默认运费模板，则所有没有设置运费模板的商品运费都会为0。确定取消默认模板么？"}  
     %>

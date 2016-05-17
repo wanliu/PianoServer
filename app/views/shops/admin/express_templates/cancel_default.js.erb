@@ -16,9 +16,7 @@
     $alert.html("取消默认运费模板成功！").show();
 
     var $originTr = $("tr.info");
-    $originTr.removeClass('info');
-    $originTr.find('.chosen').hide();
-    $originTr.find('.chose').show();
+    $originTr.removeClass('info').addClass('no-info');
 
     setTimeout(function() {
       $alert.fadeOut(function() {
