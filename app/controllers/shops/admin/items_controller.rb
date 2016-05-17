@@ -208,7 +208,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
 
     @stock = @item.stock_changes.sum(:quantity)
 
-    @delivery_fee_settings = @item.delivery_fee
+    @delivery_fee_settings = @item.delivery_fee || {}
     @delivery_fee_settings.each do |code, fee|
       @delivery_fee_settings[code] = {
         fee: fee,
