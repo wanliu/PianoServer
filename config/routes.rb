@@ -190,6 +190,9 @@ Rails.application.routes.draw do
         put "publish", action: :publish, as: :publish
       end
     end
+
+    resources :one_money, path: :daily_cheap, as: :daily_cheap, :defaults => { type: :daily_cheap } do
+    end
     resources :attachments
     resources :industries do
       concerns :templable, templable_type: 'Industry', parent_type: 'Industry'

@@ -3,7 +3,12 @@ class Admins::OneMoneyController < Admins::BaseController
   before_action :set_one_money, except: [:index, :new, :create, :search]
 
   def index
-    @one_moneies = OneMoney.all
+    @one_moneies =
+      if params[:type]
+        OneMoney.find(type: params[:type])
+      else
+        OneMoney.all.select {|o| o.type != 'daily_cheap'}
+      end
   end
 
   def new
@@ -33,10 +38,14 @@ class Admins::OneMoneyController < Admins::BaseController
 
   def publish
     # response.headers['Content-Type'] = 'text/event-stream'
-
     start_at = @one_money.start_at
     name = "%04d-%02d-%02d" % [start_at.year, start_at.month, start_at.day]
-    job_id = OneMoneyPublishWorker.perform_async @one_money.id, name
+
+    logger.info start_at
+    logger.info @one_money.id
+    logger.info name
+
+    job_id = OneMoneyPublishWorker.perform_async @one_money.id, name, {type: @one_money.type}
     render json: {
       status: :success,
       job_id: job_id
