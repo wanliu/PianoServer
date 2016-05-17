@@ -12,7 +12,7 @@
 
     <%= button_to "删除", shop_admin_express_template_path(current_shop.name, template), method: :delete, data: { confirm: "确定删除模板\"#{template.name}\"么?" }, class: 'btn btn-danger' %>
 
-    <%= button_to "设置为默认", set_default_shop_admin_express_templates_path(current_shop.name, template_id: template.id), 
+    <%= button_to "设为默认", set_default_shop_admin_express_templates_path(current_shop.name, template_id: template.id), 
       remote: true,
       method: :post,
       format: 'js',
