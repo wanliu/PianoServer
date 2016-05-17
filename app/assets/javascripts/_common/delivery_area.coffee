@@ -144,6 +144,9 @@ class @DeliveryArea
     @$modal.on 'click', 'td button', @clickArea
     @$modal.on 'click', '.chose', @choseArea
     @$modal.on 'keyup', 'input[name=first_fee]', @enableSubmit
+    @$modal.on 'change', 'input[name=first_fee]', @enableSubmit
+    @$modal.on 'keyup', 'input[name=first_quantity]', @enableSubmit
+    @$modal.on 'change', 'input[name=first_quantity]', @enableSubmit
     @$modal.on 'click', '.submit', @submitFee
     @$modal.on 'click', '.next-area', @nextLevelAreas
     @$modal.on 'click', '.previous-area', @previousLevelAreas
