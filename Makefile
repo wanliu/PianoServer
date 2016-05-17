@@ -60,6 +60,7 @@ restart: stop quick_start
 
 sync_config:
 	@aws s3 cp s3://wanliu/config/piano/settings.local.yml config/settings.local.yml $(PROFILE)
+	@aws s3 cp s3://wanliu/config/piano/wechat.yml config/wechat.yml $(PROFILE)
 
 bundle:
 	@bundle install
