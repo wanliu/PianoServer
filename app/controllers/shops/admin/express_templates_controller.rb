@@ -86,6 +86,10 @@ class Shops::Admin::ExpressTemplatesController < Shops::Admin::BaseController
     current_shop.update(default_express_template_id: params[:template_id])
   end
 
+  def cancel_default
+    current_shop.update(default_express_template_id: nil)
+  end
+
   private
 
     def set_express_template

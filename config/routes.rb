@@ -432,6 +432,7 @@ Rails.application.routes.draw do
         collection do
           get "next_nodes"
           post "set_default"
+          post "cancel_default"
         end
       end
 
