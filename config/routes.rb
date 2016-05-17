@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-
   # resources :gifts, except: [:new, :edit]
   resources :thumbs, except: [:new, :edit]
 
@@ -423,9 +422,17 @@ Rails.application.routes.draw do
         post :upload_shop_logo
       end
 
-      resource :delivery_fee do
+      # resource :delivery_fee do
+      #   collection do
+      #     get "next_nodes"
+      #   end
+      # end
+
+      resources :express_templates do
         collection do
           get "next_nodes"
+          post "set_default"
+          post "cancel_default"
         end
       end
 
@@ -471,6 +478,8 @@ Rails.application.routes.draw do
           put "/change_sale_state", to: "items#change_sale_state"
           put "/inventory_config", to: "items#inventory_config"
           get :search_gift
+          get :express_template
+          post :chose_express_template
           # post :create_gift
         end
       end

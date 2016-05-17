@@ -26,9 +26,14 @@ class Shop < ActiveRecord::Base
   has_many :shop_delivers
   has_many :delivers, through: :shop_delivers, source: :deliver
 
+  has_many :express_templates, dependent: :destroy
+  belongs_to :default_express_template, class_name: 'ExpressTemplate'
+
   validates :title, :phone, :name, presence: true
   validates :name, uniqueness: true
   validates :location, presence: { message: '请选择有效城市' }, unless: :skip_validates_or_location
+
+  validate :default_express_template_source
 
   if Settings.after_registers.shop.validates == "strict"
     validates :description, length: { minimum: 4 }, unless: :skip_validates
@@ -109,6 +114,12 @@ class Shop < ActiveRecord::Base
   def sync_elasticsearch_items
     if persisted? && previous_changes.include?("region_id")
       ElasticsearchImport.perform_async({class: Item.to_s, ids: item_ids})
+    end
+  end
+
+  def default_express_template_source
+    if default_express_template.present? && default_express_template.shop_id != id
+      errors.add(:default_express_template, "必须市本店的运费模板！")
     end
   end
 end

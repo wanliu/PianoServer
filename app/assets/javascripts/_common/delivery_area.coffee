@@ -97,7 +97,10 @@ tableHtml = '''
           </table>
           <div style="display: none;" class="setting-fee">
             地区：<span class="chose-area"></span></br>
-            运送费用：<input class="fee" type="number" step=0.1>  
+            运费:<input type="number" class='short-input' step=1 name="first_quantity" value='1'>件内
+                <input type="number" class='short-input' step=1 name="first_fee">元，每增加
+                <input type="number" class='short-input' step=1 name="next_quantity" value='1'>件，运费增加
+                <input type="number" class='short-input' step=1 name="next_fee" value='0'>元
           </div>
         </div>
         <div class="modal-footer">
@@ -140,7 +143,7 @@ class @DeliveryArea
 
     @$modal.on 'click', 'td button', @clickArea
     @$modal.on 'click', '.chose', @choseArea
-    @$modal.on 'keyup', '.fee', @enableSubmit
+    @$modal.on 'keyup', 'input[name=first_fee]', @enableSubmit
     @$modal.on 'click', '.submit', @submitFee
     @$modal.on 'click', '.next-area', @nextLevelAreas
     @$modal.on 'click', '.previous-area', @previousLevelAreas
@@ -208,22 +211,26 @@ class @DeliveryArea
     @switchSettingView()
   
   submitFee: (e) =>
-    fee = @$modal.find('.fee').val()
-    $.post(@postUrl, {code: @code(), fee: fee})
-      .done (data, status, xhr) =>
-        @$modal.modal('hide');
-        @onCreatedCallback(data);
-        @reset()
-      .fail (data, status, xhr) =>
-        @$modal.find('.errors')
-          .text(data.responseJSON.error)
-          .show()
+    options =
+      code: @code()
+      title: _.values(@areas).join('')
+      first_quantity: @$modal.find('input[name=first_quantity]').val()
+      first_fee: @$modal.find('input[name=first_fee]').val()
+      next_quantity: @$modal.find('input[name=next_quantity]').val()
+      next_fee: @$modal.find('input[name=next_fee]').val()
+
+    @$modal.modal('hide')
+    @onCreatedCallback(options)
+    @reset()
 
   enableSubmit: (e) =>
     $target = $(e.target || e.srcElement)
-    fee = $target.val()
+    firstFee = $target.val()
 
-    if fee.match(/^\d+(\.\d+)?$/)
+    $firstQuantity = $target.siblings('input[name=first_quantity]')
+    firstQuantity = $firstQuantity.val()
+
+    if firstFee.match(/^\d+(\.\d+)?$/) && firstQuantity.match(/^\d+(\.\d+)?$/)
       @$modal.find('.submit').removeAttr('disabled')
     else
       @$modal.find('.submit').attr('disabled', 'disabled')

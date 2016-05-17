@@ -1,0 +1,34 @@
+<% if @item.errors.present? %>
+  (function() {
+    var $alert = $(".errors.alert");
+    $alert .html("选择运费模板失败！<%= @item.errors.full_messages.join(', ') %>")
+      .show();
+
+    setTimeout(function() {
+      $alert.fadeOut(function() {
+        $alert.html("");
+      });
+    }, 5000);
+  })();
+<% else %>
+  (function() {
+    var $alert = $(".infors.alert");
+    $alert.html("选择运费模板成功！").show();
+
+    var $originTr = $("tr.info");
+    $originTr.removeClass('info');
+    $originTr.find('.chosen').hide();
+    $originTr.find('.chose').show();
+
+    var $tr = $("tr[data-template-id=<%= @item.express_template_id %>]");
+    $tr.addClass('info');
+    $tr.find('.chose').hide();
+    $tr.find('.chosen').show();
+
+    setTimeout(function() {
+      $alert.fadeOut(function() {
+        $alert.html("");
+      });
+    }, 5000);
+  })();
+<% end %>

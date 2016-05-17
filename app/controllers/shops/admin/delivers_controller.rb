@@ -1,6 +1,4 @@
 class Shops::Admin::DeliversController < Shops::Admin::BaseController
-  include DeliveryAreaTitle
-
   def index
     @delivers = current_shop.shop_delivers.includes(:deliver)
   end

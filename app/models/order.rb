@@ -187,6 +187,8 @@ class Order < ActiveRecord::Base
   end
 
   def set_express_fee
+    return 0 if address_id.blank?
+
     delivery_region_id = Location.find(address_id).region_id
 
     self.express_fee = items.reduce(0) do |sum, item|
