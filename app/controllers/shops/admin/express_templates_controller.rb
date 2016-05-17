@@ -82,6 +82,10 @@ class Shops::Admin::ExpressTemplatesController < Shops::Admin::BaseController
     render json: list
   end
 
+  def set_default
+    current_shop.update(default_express_template_id: params[:template_id])
+  end
+
   private
 
     def set_express_template

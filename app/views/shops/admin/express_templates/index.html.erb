@@ -1,7 +1,14 @@
+<div class='alert-header no-bottom-border'>
+  <div class="alert alert-success infors" role="alert" style='display: none;'>
+  </div>
+  <div class="alert alert-danger errors" role="alert" style='display: none;'>
+  </div>
+</div>
+
 <div class="panel panel-default">
   <div class="panel-heading">运费模板管理</div>
   <div class="panel-body">
-    <table class='table express-templates'>
+    <table class='table express-templates table-hover'>
       <thead>
         <tr>
           <th colspan='2'>
@@ -27,14 +34,32 @@
           </tr>
         <% else %>
           <% @express_templates.each do |template| %>
-            <tr>
-              <td><%= template.name %></td>
+            <% isDefault = current_shop.default_express_template_id == template.id %>
+            <tr class="<%= isDefault ? 'info' : '' %>" data-template-id="<%= template.id %>">
+              <td>
+                <%= template.name %>
+                <% if isDefault %>
+                  <span class="label label-info chosen">默认</span>
+                <% else %>
+                  <span class="label label-info chosen" style='display: none;'>默认</span>
+                <% end %>
+              </td>
               <td>
                 <%= render_express_template_desc template %>
               </td>
               <td>
                 <%= link_to "编辑", edit_shop_admin_express_template_path(current_shop.name, template), class: 'btn btn-default' %>
+
                 <%= button_to "删除", shop_admin_express_template_path(current_shop.name, template), method: :delete, data: { confirm: "确定删除模板\"#{template.name}\"么?" }, class: 'btn btn-danger' %>
+
+                <%= button_to "设置为默认", set_default_shop_admin_express_templates_path(current_shop.name, template_id: template.id), 
+                  remote: true,
+                  method: :post,
+                  format: 'js',
+                  style: "#{isDefault ?  'display: none;' : ''}",
+                  class: 'btn btn-default chose', 
+                  data: { confirm: "<span class='label label-warning'>*注意</span>如果设置了商店的默认运费模板，则所有没有设置运费模板的商品都会自动应用该模板。确定设置\"#{template.name}\"为本店默认模板么？"}  
+                %> 
               </td>
             </tr>
           <% end %>
@@ -42,4 +67,6 @@
       </tbody>
     </table>
   </div>
+  <div class="panel-footer">
+    <span class="label label-warning">*注意</span>如果设置了商店的默认运费模板，则所有没有设置运费模板的商品都会自动应用该模板。如果没有设置商店的默认模板，也没有设置商品自身的模板，则运费计算总是为０元。</div>
 </div>

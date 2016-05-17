@@ -3,12 +3,17 @@ class ExpressTemplate < ActiveRecord::Base
 
   has_many :applied_items, class_name: 'Item', dependent: :nullify
 
+  has_many :default_applied_shops, 
+    class_name: 'Shop',
+    dependent: :nullify,
+    foreign_key: 'default_express_template_id'
+
   validates :name, presence: true, uniqueness: { scope: :shop_id }
   validates :shop, presence: true
 
   validate :validate_template_format
 
-  VALIDE_SETTING_KEYS = {
+  TEMPLATE_SCHEMA = {
     "first_quantity" => "首件",
     "first_fee" => "首费",
     "next_quantity" => "续件",
@@ -75,12 +80,12 @@ class ExpressTemplate < ActiveRecord::Base
       setting.each do |setting_key, quantity_or_fee|
         quantity_or_fee = quantity_or_fee.to_i
 
-        unless VALIDE_SETTING_KEYS.keys.include? setting_key
+        unless TEMPLATE_SCHEMA.keys.include? setting_key
           errors.add(:base, "不正确的设置选项：#{setting_key}")
         end
 
         if quantity_or_fee < 0
-          setting_key_name = VALIDE_SETTING_KEYS[setting_key]
+          setting_key_name = TEMPLATE_SCHEMA[setting_key]
           errors.add(:base, "#{ChinaCity.get(code, prepend_parent: true)}地区的运费 #{setting_key_name} 不能小于０")
         end
       end

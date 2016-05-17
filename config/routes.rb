@@ -431,6 +431,7 @@ Rails.application.routes.draw do
       resources :express_templates do
         collection do
           get "next_nodes"
+          post "set_default"
         end
       end
 
