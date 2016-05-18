@@ -13,7 +13,7 @@ WATCH=
 PIPE=$(pipe)
 
 ifeq ($(PIPE),1)
-	LOGNAME:=$(NAME)
+	LOGNAME:=$(NAME)Log
 endif
 
 ifeq ($(PIPE),2)
@@ -21,7 +21,7 @@ ifeq ($(PIPE),2)
 endif
 
 ifndef pipe
-	LOGNAME:=$(NAME)
+	LOGNAME:=$(NAME)Log
 endif
 
 ifdef profile
