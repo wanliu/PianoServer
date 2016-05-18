@@ -172,7 +172,7 @@ class Item < ActiveRecord::Base
         })
       else
         query[:query][:bool][:should].push({
-          "query_string" => {"default_field" => "title","query" => product }
+          "query_string" => {"default_field" => "title","query" => "*#{product}*" }
         })
       end
     end
