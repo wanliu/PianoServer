@@ -112,14 +112,57 @@ RSpec.describe Order, type: :model do
 
         gift_setting = order_item.gifts.first
 
-        expect(gift_setting["gift_id"]).to eq(gift.id.to_s)
-        expect(gift_setting["item_id"]).to eq(present.id.to_s)
-        expect(gift_setting["quantity"]).to eq('1')
+        expect(gift_setting["gift_id"]).to eq(gift.id)
+        expect(gift_setting["item_id"]).to eq(present.id)
+        expect(gift_setting["quantity"]).to eq(1)
       end
     end
 
-    describe "item_gifts= method 用于实现立即购买" do
+    describe "item_gifts= and items_attributes= method 用于实现立即购买的礼品提交" do
+      let(:shop) { FactoryGirl.create(:shop) }
+      let(:solo_order) { FactoryGirl.build(:solo_order) }
+      let(:present) { FactoryGirl.create(:item, shop: shop) }
+      let(:item) { FactoryGirl.create(:item, shop: shop) }
+      let(:gift) { FactoryGirl.create(:gift, item: item, present: present) }
 
+      # "items_attributes"=>{"0"=>{"orderable_type"=>"Item", "orderable_id"=>"19", "quantity"=>"2"}}, 
+      # "item_gifts"=>{"19"=>{"1"=>"1"}}
+      it "asign order's order_items, and gifts to order's item gifts attrbute" do
+
+        solo_order.items_attributes = {
+          "0" => {orderable_id: item.id, orderable_type: "Item", quantity: 1}
+        }
+
+        solo_order.item_gifts = {item.id.to_s => {gift.id.to_s => 1}}
+
+        expect(solo_order.items).to be_present
+
+        order_item = solo_order.items.first
+        expect(order_item.gifts).to be_present
+
+        gift_setting = order_item.gifts.first
+        expect(gift_setting["gift_id"]).to eq(gift.id)
+        expect(gift_setting["item_id"]).to eq(present.id)
+        expect(gift_setting["quantity"]).to eq(1)
+      end
+    end
+
+    describe "address_id= 用于拷贝送货地址" do
+      let(:location) { FactoryGirl.create(:location) }
+      let(:solo_order) { FactoryGirl.build(:solo_order) }
+      before { solo_order.address_id = location.id }
+
+      it "copy location's address to order's delivery_address" do
+        expect(solo_order.delivery_address).to eq(location.delivery_address_without_phone)
+      end
+
+      it "copy location's contact to order's receiver_name" do
+        expect(solo_order.receiver_name).to eq(location.contact)
+      end
+
+      it "copy location's contact_phone to order's receiver_phone" do
+        expect(solo_order.receiver_phone).to eq(location.contact_phone)
+      end
     end
   end
 end
