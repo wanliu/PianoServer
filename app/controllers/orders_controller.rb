@@ -85,7 +85,7 @@ class OrdersController < ApplicationController
         format.json { render json: @order, status: :created }
         format.html { redirect_to @order }
       else
-        format.any(:html, :mobile) do
+        format.html do
           set_feed_back
           set_addresses_add_express_fee
           flash.now[:error] = @order.errors.full_messages.join(', ')
@@ -143,7 +143,7 @@ class OrdersController < ApplicationController
         format.mobile { redirect_to @order }
         format.json { render json: @order, status: :created }
       else
-        format.any(:html, :mobile) do
+        format.html do
           @order_item = @order.items.first
           @delivery_addresses = current_user.locations.order(id: :asc)
           @supplier = @order.supplier
