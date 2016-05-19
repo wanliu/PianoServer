@@ -22,12 +22,11 @@
   </td>
 </tr>
 
-<% if item.orderable.is_a? Item %>
-  <% item.orderable.eval_available_gifts(item.quantity) %>
-  <% has_available_gifts = item.orderable.available_gifts.present? %>
+<% if orderable.is_a? Item %>
+  <% has_available_gifts = orderable.available_gifts.present? %>
   <tr class='cart-gifts' data-cart-item-id="buy-now-item" style="<%= has_available_gifts ? '' : 'display: none' %>">
     <td colspan='5'>
-      <% item.orderable.available_gifts.each do |gift| %>
+      <% orderable.available_gifts.each do |gift| %>
         <div class='cart-gift' data-gift-id="<%= gift.id %>">
           <div class='head'>
             <%= image_tag "gift-white.png" %>

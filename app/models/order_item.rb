@@ -38,11 +38,19 @@ class OrderItem < ActiveRecord::Base
     end
   end
 
+  def set_initial_attributes
+    self.quantity ||= 1
+    self.title = orderable.title
+    self.price = caculate_price
+  end
+
   # input:
-  #   options: {"17"=>"-1.0", "19"=>"2", "22"=>"2"}
-  # output:
+  #   结构：{ gift_id: quantity }
+  #   options: {"17"=>"-1.0", "19"=>"2", "22"=>"2"} 
+  # output: 
   # [ {gift_id: 19, item_id: 2, quantity: 2, title: 'xxx', avatar_url: 'cvxxx.jpg'},
   #   {gift_id: 22, item_id: 3, quantity: 2, title: 'xxx', avatar_url: 'cvxxx.jpg'} ]
+  # gift_id为17的因为quantity小于0，被忽略掉
   def gift_settings(options)
     if orderable.respond_to?(:gifts)
       orderable.gifts.where(id: options.keys).reduce([]) do |settings, gift|
@@ -124,17 +132,9 @@ class OrderItem < ActiveRecord::Base
     end
   end
 
+  # 检查赠品库存是否充足/符合设定，以及防止用户篡改赠品数量
   def gift_saleable
     gifts.each do |gift_setting|
-      # item_id = gift_setting["item_id"]
-      # item = Item.find(item_id)
-      # item.saleable?(gift_setting["quantity"].to_i, gift_setting["properties"]) do |on_sale, saleable, max|
-      #   if !saleable
-      #     errors.add(:gift, "库存不足或者设置变动，请重新提交订单！")
-      #   end
-      # end
-
-      # 检查库存是否充足，以及防止用户篡改赠品数量
       gift = Gift.find_by(id: gift_setting["gift_id"])
       if gift_setting["quantity"].to_i > gift.eval_available_quantity(quantity)
         errors.add(:gift, "库存不足或者设置变动，请重新提交订单！")

@@ -29,13 +29,13 @@
           <% @order_item.properties.each do |key, value| %>
             <%= item_form.hidden_field "properties[#{key}]", value: value %>
           <% end %>
-          <%= render partial: "buy_now_item", locals: { item: @order_item, supplier: @supplier, f: item_form, props: @props } %>
+          <%= render partial: "buy_now_item", locals: { item: @order_item, supplier: @supplier, f: item_form, props: @props, orderable: @orderable } %>
 
-          <% if @order_item.orderable.try(:gifts).blank? %>
-            <%= hidden_field_tag "order[item_gifts][#{@order_item.orderable.id}][undefined]", nil, { multiple: true } %>
+          <% if @orderable.try(:gifts).blank? %>
+            <%= hidden_field_tag "order[item_gifts][#{@orderable.id}][undefined]", nil, { multiple: true } %>
           <% else %>
-            <% @order_item.orderable.gifts.each do |gift| %>
-              <%= hidden_field_tag "order[item_gifts][#{@order_item.orderable.id}][#{gift.id}]", gift.eval_available_quantity(@order_item.quantity), { multiple: true } %>
+            <% @orderable.gifts.each do |gift| %>
+              <%= hidden_field_tag "order[item_gifts][#{@orderable.id}][#{gift.id}]", gift.eval_available_quantity(@order_item.quantity), { multiple: true } %>
             <% end %>
           <% end %>
         <% end %>
@@ -97,16 +97,16 @@
     function changeQuantity(quantityDom, quantity) {
       quantity = 1 * quantity;
 
-      <% if @order_item.orderable.is_a?(Item) %>
+      <% if @orderable.is_a?(Item) %>
         $.getJSON('/order_items/buy_now_gifts', {
-          item_id: <%= @order_item.orderable.id %>,
+          item_id: <%= @orderable.id %>,
           quantity: quantity
         }).done(function(data) {
           var $cartItem = $(quantityDom).closest('.cart-item')
           CartGroup.rerenderItemGifts({gifts: data.gifts, el: $cartItem});
 
           _.each(data.gifts, function(gift) {
-            var $hiddenInput = $("#order_item_gifts_" + <%= @order_item.orderable.id %> + "_" + gift.id);
+            var $hiddenInput = $("#order_item_gifts_" + <%= @orderable.id %> + "_" + gift.id);
             $hiddenInput.val(gift.quantity);
           });
 
