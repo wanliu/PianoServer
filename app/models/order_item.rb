@@ -97,6 +97,21 @@ class OrderItem < ActiveRecord::Base
     end
   end
 
+  def caculate_price
+    case orderable
+    when Item
+      # if sale_mode == "retail"
+        # @order_item.orderable.public_price
+      # else
+      orderable.price
+      # end
+    when Promotion
+      orderable.discount_price
+    else
+      0
+    end
+  end
+
   private
 
   def orderable_saleable
