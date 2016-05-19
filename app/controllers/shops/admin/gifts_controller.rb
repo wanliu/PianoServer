@@ -20,7 +20,7 @@ class Shops::Admin::GiftsController < Shops::Admin::BaseController
 
   def update
     if @gift.update(gift_update_params)
-      render json: @gift.as_json(methods: [:title, :cover_url, :properties_title])
+      render json: @gift.as_json(methods: [:title, :cover_url, :properties_title, :current_stock])
     else
       render json: { error: @gift.errors.full_messages.join(', ') }, status: :unprocessable_entity
     end

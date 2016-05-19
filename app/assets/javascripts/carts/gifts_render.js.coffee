@@ -94,7 +94,10 @@ class @GiftsRender
       html = @giftTemplate(gift)
       $gifts.append(html)
 
-    $gifts.parent('.mobile-gifts').show()
+    if gifts.length > 0
+      $gifts.parent('.mobile-gifts').show()
+    else
+      $gifts.parent('.mobile-gifts').hide()
 
   # if new gifts data coming
   # modify @cartGroupGifts structure
