@@ -165,4 +165,50 @@ RSpec.describe Order, type: :model do
       end
     end
   end
+
+  describe "Order Create methods" do
+    describe "save_with_items" do
+      let(:cart_item) { FactoryGirl.create(:cart_item) }
+      let(:operator) { FactoryGirl.create(:user) }
+      let(:order) { FactoryGirl.build(:order) }
+      let(:present) { FactoryGirl.create(:item, shop: cart_item.cartable.shop) }
+      let(:gift) { FactoryGirl.create(:gift, item: cart_item.cartable, present: present) }
+      let(:location) { FactoryGirl.create(:location) }
+
+      it "destroy cart items from order's cart_item_ids, if cart_item_ids exists" do
+        order.cart_item_ids = [cart_item.id]
+
+        expect {
+          order.save_with_items(operator)
+        }.to change { CartItem.count }.by(-1)
+      end
+
+      it "caculate express fee of the order and assign it to order's express_fee attribute if address_id present" do 
+        order.cart_item_ids = [cart_item.id]
+        order.address_id = location.id
+
+        expect_any_instance_of(Item).to receive(:express_fee).and_return(10)
+        order.save_with_items(operator)
+      end
+
+      it "deduct inventory of the gifts and items sold in order" do
+        order.cart_item_ids = [cart_item.id]
+
+        expect {
+          order.save_with_items(operator)
+        }.to change { StockChange.count }.by(1)
+      end
+
+      it "deduct inventory of the gifts" do
+        cart_item_gifts = {}
+        cart_item_gifts[cart_item.id] = {gift.id.to_s => 1}
+
+        order.cart_item_gifts = cart_item_gifts
+
+        expect {
+          order.save_with_items(operator)
+        }.to change { StockChange.count }.by(2)
+      end
+    end
+  end
 end
