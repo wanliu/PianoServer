@@ -105,6 +105,11 @@
           var $cartItem = $(quantityDom).closest('.cart-item')
           CartGroup.rerenderItemGifts({gifts: data.gifts, el: $cartItem});
 
+          _.each(data.gifts, function(gift) {
+            var $hiddenInput = $("#order_item_gifts_" + <%= @order_item.orderable.id %> + "_" + gift.id);
+            $hiddenInput.val(gift.quantity);
+          });
+
           var formData = $('#new_order').serialize()
           $.post('/orders/express_fee?' + formData)
             .done(function(html) {
