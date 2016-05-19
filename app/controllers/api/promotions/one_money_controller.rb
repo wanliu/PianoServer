@@ -8,7 +8,7 @@ class Api::Promotions::OneMoneyController < Api::BaseController
   class InvalidSeedOwner < RuntimeError; end
 
   include FastUsers
-  skip_before_action :authenticate_user!, only: [:show, :item, :items, :status, :item_status, :retrieve_seed, :seed]
+  skip_before_action :authenticate_user!, only: [:show, :item, :items, :status, :item_status, :retrieve_seed, :seed, :signup_count]
   skip_before_action :authenticate_user!, only: [:signup, :user_seeds] unless Rails.env.production?
   skip_before_action :authenticate_user!, only: [:signup, :grab, :callback] if ENV['TEST_PERFORMANCE']
 
@@ -82,6 +82,12 @@ class Api::Promotions::OneMoneyController < Api::BaseController
       end
     end
     render json: {user_id: pmo_current_user.id, user_user_id: pmo_current_user.user_id, status: status > 0 ? "success" : "always" }
+  end
+
+  def signup_count
+    count = @one_money.signups.count
+
+    render json: { count: count }
   end
 
   def retrieve_seed
