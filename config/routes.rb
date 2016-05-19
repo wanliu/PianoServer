@@ -267,6 +267,7 @@ Rails.application.routes.draw do
           get "items", action: :items
           get "items/:item_id", action: :item
           match "signup", action: :signup, via: Rails.env.production? ? [:put] : [:put, :get]
+          get "signup_count", action: :signup_count
 
           get "status", action: :status
           get "status/:item_id", action: :item_status
