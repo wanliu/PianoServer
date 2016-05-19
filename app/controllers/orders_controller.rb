@@ -117,21 +117,7 @@ class OrdersController < ApplicationController
     @order.supplier_id = @order_item.orderable.try(:shop_id)
     @order_item.quantity ||= 1
     @order_item.title = @order_item.orderable.title
-
-    # sale_mode = current_anonymous_or_user.sale_mode
-    @order_item.price =
-      case @order_item.orderable
-      when Item
-        # if sale_mode == "retail"
-          # @order_item.orderable.public_price
-        # else
-        @order_item.orderable.price
-        # end
-      when Promotion
-        @order_item.orderable.discount_price
-      else
-        0
-      end
+    @order_item.price = @order_item.caculate_price
 
     set_addresses_add_express_fee
 
@@ -148,19 +134,7 @@ class OrdersController < ApplicationController
 
     @order.items.each do |item|
       item.title = item.orderable.title
-      item.price =
-        case item.orderable
-        when Item
-          # if sale_mode == "retail"
-            # @order_item.orderable.public_price
-          # else
-          item.orderable.price
-          # end
-        when Promotion
-          item.orderable.discount_price
-        else
-          0
-        end
+      item.price = item.caculate_price
     end
 
     respond_to do |format|
@@ -224,15 +198,7 @@ class OrdersController < ApplicationController
     @order.set_express_fee
 
     @order.items.each do |item|
-      item.price ||=
-        case item.orderable
-        when Item
-          item.orderable.price
-        when Promotion
-          item.orderable.discount_price
-        else
-          0
-        end
+      item.price = item.caculate_price
     end
 
     # if params[:order][:items_attributes].present?

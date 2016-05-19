@@ -32,6 +32,21 @@ class CartItem < ActiveRecord::Base
     super || default_quantity
   end
 
+  def caculate_price
+    case cartable
+    when Item
+      # if sale_mode == "retail"
+        # item.cartable.public_price
+      # else
+      cartable.price
+      # end
+    when Promotion
+      cartable.discount_price
+    else
+      0
+    end
+  end
+
   def default_quantity
     if cartable && cartable.respond_to?(:default_quantity)
       cartable.default_quantity || 1
