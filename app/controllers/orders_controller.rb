@@ -111,13 +111,16 @@ class OrdersController < ApplicationController
   def buy_now_confirm
     @order = current_user.orders.build
 
-    # @cart_item = CartItem.new(order_item_params)
     @order_item = @order.items.build(order_item_params)
 
     @order.supplier_id = @order_item.orderable.try(:shop_id)
-    @order_item.quantity ||= 1
-    @order_item.title = @order_item.orderable.title
-    @order_item.price = @order_item.caculate_price
+
+    @order_item.set_initial_attributes
+
+    @orderable = @order_item.orderable
+    if @orderable.is_a? Item
+      @orderable.eval_available_gifts(@order_item.quantity)
+    end
 
     set_addresses_add_express_fee
 
@@ -132,10 +135,7 @@ class OrdersController < ApplicationController
   def buy_now_create
     @order = current_user.orders.build(buy_now_order_params)
 
-    @order.items.each do |item|
-      item.title = item.orderable.title
-      item.price = item.caculate_price
-    end
+    @order.items.each(&:set_initial_attributes)
 
     respond_to do |format|
       if @order.save_with_items(current_user)
