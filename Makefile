@@ -11,6 +11,7 @@ LOG:=$(shell date +'%s')
 PROFILE=
 WATCH=
 PIPE=$(pipe)
+S3_STORAGE=s3://wxtest
 
 ifeq ($(PIPE),1)
 	LOGNAME:=$(NAME)Log
@@ -94,6 +95,6 @@ package:
 
 upload: package
 	@echo 'Created /tmp/deploy-piano-server-$(LOG).tar.gz'
-	aws s3 cp /tmp/deploy-piano-server-$(LOG).tar.gz s3://wxapps $(PROFILE)
+	aws s3 cp /tmp/deploy-piano-server-$(LOG).tar.gz $(S3_STORAGE) $(PROFILE)
 
 deploy: precompile package upload
