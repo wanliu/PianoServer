@@ -23,7 +23,6 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     # per = params[:per].presence || 25
 
     @items = Item.with_shop(@shop.id)
-                 .where(abandom: false)
                  .with_category(query_params[:category_id])
                  .with_query(query_params[:q])
                  .page(query_params[:page])
@@ -139,7 +138,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     properties_setting = @item.properties_setting
     @properties = normal_properties(properties_setting)
     @inventory_properties = inventory_properties(properties_setting)
-    
+
     @category_groups = @shop.shop_category.leaves
       .group_by {|category| category.parent }
       .map {|group, items| [ group.self_and_ancestors.map{ |parent| parent.title }.join(' » '), items.map {|i| [i.title, i.id]}]}
@@ -175,6 +174,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     else
       flash.now[:error] = "库存设置错误，请正确填写"
       set_stocks_for_feedback
+      set_express_fee
 
       render :edit
       return
@@ -190,6 +190,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     else
       flash.now[:error] = t(:update, scope: "flash.error.controllers.items")
       set_stocks_for_feedback
+      set_express_fee
 
       render :edit, status: :unprocessable_entity
     end
@@ -213,6 +214,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     end
 
     @stock = @item.stock_changes.sum(:quantity)
+    set_express_fee
   end
 
   def inventory_config
@@ -359,6 +361,16 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
   def set_stocks_for_feedback
     if params[:inventories].present?
       @stocks_with_index = StockChange.extract_stocks_with_index(params[:inventories])
+    end
+  end
+
+  def set_express_fee
+    @delivery_fee_settings = @item.delivery_fee || {}
+    @delivery_fee_settings.each do |code, fee|
+      @delivery_fee_settings[code] = {
+        fee: fee,
+        title: get_code_title(code)
+      }
     end
   end
 end

@@ -167,7 +167,7 @@ class Item < ActiveRecord::Base
         bool: {
           should: [
             {
-              query_string: {"default_field" => "item.shop_name","query" => shop_name }
+              query_string: {"default_field" => "shop_name","query" => shop_name }
             }
           ]
         }
@@ -177,11 +177,11 @@ class Item < ActiveRecord::Base
     if product.present?
       if product.to_i > 0
         query[:query][:bool][:should].push({
-          "range" => {"item.sid" => {"from" => product,"to" => product }}
+          "range" => {"sid" => {"from" => product,"to" => product }}
         })
       else
         query[:query][:bool][:should].push({
-          "query_string" => {"default_field" => "item.title","query" => product }
+          "query_string" => {"default_field" => "title","query" => "*#{product}*" }
         })
       end
     end
