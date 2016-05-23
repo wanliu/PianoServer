@@ -1,0 +1,18 @@
+<div>
+  购物券管理
+</div>
+
+<table class='table'>
+  <thead>
+    <th>名称</th>
+    <th>种类</th>
+    <th>发行数量</th>
+    <th>已领取数量</th>
+    <th>操作</th>
+  </thead>
+  <tbody>
+    <% @coupon_templates.each do |coupon_template| %>
+      <%= render coupon_template %>
+    <% end %>
+  </tbody>
+</table>

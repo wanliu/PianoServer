@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160516085123) do
+ActiveRecord::Schema.define(version: 20160523063151) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -160,6 +160,22 @@ ActiveRecord::Schema.define(version: 20160516085123) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  create_table "coupon_templates", force: :cascade do |t|
+    t.integer  "issuer_id"
+    t.string   "issuer_type"
+    t.string   "name"
+    t.decimal  "par",                 precision: 10, scale: 2
+    t.integer  "apply_items"
+    t.decimal  "apply_minimal_total", precision: 10, scale: 2
+    t.integer  "apply_shops"
+    t.integer  "apply_time"
+    t.boolean  "overlap"
+    t.datetime "created_at",                                   null: false
+    t.datetime "updated_at",                                   null: false
+  end
+
+  add_index "coupon_templates", ["issuer_type", "issuer_id"], name: "index_coupon_templates_on_issuer_type_and_issuer_id", using: :btree
 
   create_table "evaluations", force: :cascade do |t|
     t.integer  "evaluationable_id"

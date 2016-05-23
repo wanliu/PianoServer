@@ -1,0 +1,27 @@
+<% if @coupon_template.errors.any? %>
+  <div id="error_explanation" class="alert alert-danger">
+    <ul>
+    <% @coupon_template.errors.full_messages.each do |message| %>
+      <li><%= message %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<%= form_for [:admins, @coupon_template] do |f| %>
+  名称：<%= f.text_field :name %>
+  <br>
+  面值（元）：<%= f.number_field :par %>
+  <br>
+  应用最低金额（元）：<%= f.number_field :apply_minimal_total %>
+  <br>
+  是否能够叠加使用：<%= f.collection_select(:overlap, [[true, "yes"], [false, "no"]], :first, :last) %>
+  <br>
+  适用的商品范围：<%= f.collection_select(:apply_items, CouponTemplate.apply_items, :first, :first) %>
+  <br>
+  适用的商店范围：<%= f.collection_select(:apply_shops, CouponTemplate.apply_shops, :first, :first) %>
+  <br>
+  适用的时间方式：<%= f.collection_select(:apply_time, CouponTemplate.apply_times, :first, :first) %>
+  <br>
+  <%= f.submit "保存" %>
+<% end %>

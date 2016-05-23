@@ -24,6 +24,10 @@ Rails.application.routes.draw do
     end
   end
 
+  concern :coupon_manage do
+    resources :coupon_templates
+  end
+
   concern :evaluationable do
     resources :evaluations, except: [:edit, :destroy, :update] do
       member do
@@ -146,6 +150,8 @@ Rails.application.routes.draw do
   match "admins", to: "admins/dashboards#index", via: :get
 
   namespace :admins do
+    concerns :coupon_manage
+
     resources :settings, path: 'settings/key', only: [:show, :update], constraints: {id: /[\S]+/}
     resources :dashboards
     resources :accounts, except: [:new, :edit] do
