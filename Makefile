@@ -11,6 +11,7 @@ LOG:=$(shell date +'%s')
 PROFILE=
 WATCH=
 PIPE=$(pipe)
+S3_STORAGE=s3://wxtest
 
 ifeq ($(PIPE),1)
 	LOGNAME:=$(NAME)Log
@@ -32,6 +33,9 @@ ifdef watch
 	WATCH:=--watch
 endif
 
+ifdef online
+	S3_STORAGE:=s3://wxapps
+endif
 
 AWSLOGS:=$(shell awslogs -h 2> /dev/null)
 
@@ -94,6 +98,10 @@ package:
 
 upload: package
 	@echo 'Created /tmp/deploy-piano-server-$(LOG).tar.gz'
-	aws s3 cp /tmp/deploy-piano-server-$(LOG).tar.gz s3://wxapps $(PROFILE)
+	aws s3 cp /tmp/deploy-piano-server-$(LOG).tar.gz $(S3_STORAGE) $(PROFILE)
+
+ssh:
+	@aws s3 cp s3://wanliu/test.pem ~/.ssh/test.pem $(PROFILE)
+	@ssh -i ~/.ssh/test.pem ec2-user@test.wanliu.biz
 
 deploy: precompile package upload
