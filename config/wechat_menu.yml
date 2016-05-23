@@ -1,0 +1,40 @@
+---
+button:
+- name: "一元狂欢"
+  sub_button:
+  - type: view
+    name: "往期"
+    url: http://koudaitong.com/v2/x/r08qjn6y
+    sub_button: []
+  - type: view
+    name: "第十四期"
+    url: http://koudaitong.com/v2/x/5fprh5tj
+    sub_button: []
+  - type: view
+    name: "六一大"
+    url: http://test.wanliu.biz/html
+    sub_button: []
+- name: "耒阳商城"
+  sub_button:
+  - type: click
+    name: "耒阳商城"
+    key: gycpfoez
+    sub_button: []
+- name: "我的订单"
+  sub_button:
+  - type: view
+    name: "关于我们"
+    url: http://koudaitong.com/v2/x/4a128w21
+    sub_button: []
+  - type: view
+    name: "意见反馈"
+    url: http://koudaitong.com/v2/x/dq0wg3ob
+    sub_button: []
+  - type: view
+    name: "我的订单"
+    url: http://koudaitong.com/v2/x/mqdq3pd1
+    sub_button: []
+  - type: view
+    name: "常见问题"
+    url: http://koudaitong.com/v2/x/uvztpoqt
+    sub_button: []

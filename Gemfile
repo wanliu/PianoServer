@@ -6,7 +6,7 @@ end
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.0'
+gem 'rails', '4.2.1'
 gem "rails-api"
 
 # Use sqlite3 as the database for Active Record
@@ -64,7 +64,7 @@ gem "punching_bag"
 gem "loofah-activerecord"
 gem 'public_activity', github: 'pokonski/public_activity'
 gem 'rails-observers', git: 'https://github.com/rails/rails-observers.git'
-gem 'composite_primary_keys'
+gem 'composite_primary_keys' #, '~> 7.0.13'
 
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'
@@ -102,6 +102,7 @@ gem 'rest-client'
 gem 'meta-tags'
 
 gem 'sidekiq'
+gem 'sidekiq-status'
 
 gem 'china_city'
 gem 'table_cloth'
@@ -143,6 +144,7 @@ gem 'wechat'
 gem 'spreadsheet'
 
 gem 'wx_pay'
+gem 'web-console', group: :development
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -151,7 +153,6 @@ group :development, :test do
   gem 'guard-rspec', require: false
   gem 'guard-sidekiq'
   # Access an IRB console on exception pages or by using <%= console %> in views
-  gem 'web-console', '~> 2.0'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
 

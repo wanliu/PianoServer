@@ -23,7 +23,6 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     # per = params[:per].presence || 25
 
     @items = Item.with_shop(@shop.id)
-                 .where(abandom: false)
                  .with_category(query_params[:category_id])
                  .with_query(query_params[:q])
                  .page(query_params[:page])
@@ -139,7 +138,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     properties_setting = @item.properties_setting
     @properties = normal_properties(properties_setting)
     @inventory_properties = inventory_properties(properties_setting)
-    
+
     @category_groups = @shop.shop_category.leaves
       .group_by {|category| category.parent }
       .map {|group, items| [ group.self_and_ancestors.map{ |parent| parent.title }.join(' » '), items.map {|i| [i.title, i.id]}]}

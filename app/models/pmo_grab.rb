@@ -73,9 +73,11 @@ class PmoGrab < Ohm::Model
 
   def unused_seed!
     if used_seed
-      @seed = PmoSeed.find(seed_id: used_seed)
-      @seed.used = true
-      @seed.save
+      @seed = PmoSeed.find(seed_id: used_seed).first
+      if @seed
+        @seed.used = true
+        @seed.save
+      end
     end
   end
 
