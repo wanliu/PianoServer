@@ -33,6 +33,9 @@ ifdef watch
 	WATCH:=--watch
 endif
 
+ifdef online
+	S3_STORAGE:=s3://wxapps
+endif
 
 AWSLOGS:=$(shell awslogs -h 2> /dev/null)
 
