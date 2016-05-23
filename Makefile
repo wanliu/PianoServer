@@ -100,4 +100,8 @@ upload: package
 	@echo 'Created /tmp/deploy-piano-server-$(LOG).tar.gz'
 	aws s3 cp /tmp/deploy-piano-server-$(LOG).tar.gz $(S3_STORAGE) $(PROFILE)
 
+ssh:
+	@aws s3 cp s3://wanliu/test.pem ~/.ssh/test.pem $(PROFILE)
+	@ssh -i ~/.ssh/test.pem ec2-user@test.wanliu.biz
+
 deploy: precompile package upload
