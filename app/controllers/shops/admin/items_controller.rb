@@ -174,7 +174,6 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     else
       flash.now[:error] = "库存设置错误，请正确填写"
       set_stocks_for_feedback
-      set_express_fee
 
       render :edit
       return
@@ -190,7 +189,6 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     else
       flash.now[:error] = t(:update, scope: "flash.error.controllers.items")
       set_stocks_for_feedback
-      set_express_fee
 
       render :edit, status: :unprocessable_entity
     end
@@ -214,7 +212,6 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     end
 
     @stock = @item.stock_changes.sum(:quantity)
-    set_express_fee
   end
 
   def inventory_config
@@ -361,16 +358,6 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
   def set_stocks_for_feedback
     if params[:inventories].present?
       @stocks_with_index = StockChange.extract_stocks_with_index(params[:inventories])
-    end
-  end
-
-  def set_express_fee
-    @delivery_fee_settings = @item.delivery_fee || {}
-    @delivery_fee_settings.each do |code, fee|
-      @delivery_fee_settings[code] = {
-        fee: fee,
-        title: get_code_title(code)
-      }
     end
   end
 end
