@@ -282,6 +282,8 @@ Rails.application.routes.draw do
           get "seeds/:seed_id", action: :seed
         end
       end
+
+      resources :daily_cheap
     end
     # resources :business, concerns: :roomable do
     #   member do
