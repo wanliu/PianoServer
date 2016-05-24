@@ -1,9 +1,8 @@
 class CouponTemplate < ActiveRecord::Base
+  default_scope { order(id: :desc) }
+
   SYSTEM_MARKER = "System"
-
   scope :system_templates, -> () { where(issuer_type: SYSTEM_MARKER) }
-
-  default_scope -> { order(id: :desc) }
 
   SYSTEM_ISSUER = OpenStruct.new(
     name: "system_issuer",
@@ -12,9 +11,7 @@ class CouponTemplate < ActiveRecord::Base
     coupon_templates: CouponTemplate.system_templates
   ).freeze
 
-  belongs_to :issuer, polymorphic: true
-
-  enum apply_items: { 
+  enum apply_items: {
     all_items: 0, 
     include_category: 1,
     exclude_category: 2,
@@ -35,13 +32,39 @@ class CouponTemplate < ActiveRecord::Base
     from_draw: 1
   }
 
+  attr_reader :issue_quantity
+
+  belongs_to :issuer, polymorphic: true
+
+  has_many :coupons
+  has_many :drawed_coupons, -> { where "customer_id IS NOT NULL" }, class_name: 'Coupon'
+  has_many :applied_coupons, -> { where status: Coupon.statuses[:applied] }, class_name: 'Coupon'
+
+  has_one :coupon_template_time, dependent: :nullify
+  accepts_nested_attributes_for :coupon_template_time
+
   validates :issuer, presence: true, unless: :system_template?
   validates :name, presence: true, uniqueness: { scope: [:issuer_type, :issuer_id] }
   validates :par, presence: true
   validates :apply_items, presence: true
   validates :apply_minimal_total, presence: true
-  validates :overlap, presence: true
   validates :apply_shops, presence: true
+  validates :issue_quantity, numericality: { only_integer: true, greater_than: 0 }
+  validates :overlap, inclusion: { in: [true, false] }
+  validates :issued, inclusion:  { in: [true, false] }
+
+  class << self
+    def translate_enum_label(enum_name)
+      Proc.new do |enum_option|
+        i18n_scope = "activerecord.attributes.coupon_template.#{enum_name}"
+        I18n.t(enum_option.first, scope: i18n_scope)
+      end
+    end
+  end
+
+  def issue_quantity=(quantity)
+    @issue_quantity = quantity.try(:to_i)
+  end
 
   def issuer
     if system_template?
@@ -50,6 +73,16 @@ class CouponTemplate < ActiveRecord::Base
       super
     end
   end
+
+  def create_coupons
+    transaction do
+      issue_quantity.times { coupons.create }
+
+      update(issued: true)
+    end
+  end
+
+  private
 
   def system_template?
     SYSTEM_MARKER == issuer_type

@@ -1,0 +1,16 @@
+<div>
+  <div class="fixed">
+    <%= f.fields_for :coupon_template_time do |tf| %>
+      起效时间: 
+      <%= tf.datetime_select :from, include_seconds: true %>
+      <br>
+      终止时间:
+      <%= tf.datetime_select :to, include_seconds: true %>
+    <% end %>
+  </div>
+  <div class="from-draw">
+    <%= f.fields_for :coupon_template_time do |tf| %>
+      <%= tf.datetime_select :expire_duration, discard_year: true %>
+    <% end %>
+  </div>
+</div>

@@ -1,8 +1,16 @@
 <tr>
   <td><%= coupon_template.name %></td>
   <td>全站购物卷</td>
-  <td>0</td>
-  <td>0</td>
+  <td>
+    <%= coupon_template.coupons_count || 0 %>
+    <%= link_to (coupon_template.issued? ? "增加发行" : "发行"), [:issue, :admins, coupon_template] %>
+  </td>
+  <td>
+    <%= coupon_template.drawed_coupons.count %>
+  </td>
+  <td>
+    <%= coupon_template.applied_coupons.count %>
+  </td>
   <td>
     <%= link_to "点击查看详情", [:admins, coupon_template] %>
   </td>

@@ -1,5 +1,6 @@
 <div>
   购物券管理
+  <%= link_to "创建购物券", [:new, :admins, :coupon_template] %>
 </div>
 
 <table class='table'>
@@ -8,6 +9,7 @@
     <th>种类</th>
     <th>发行数量</th>
     <th>已领取数量</th>
+    <th>已回收数量</th>
     <th>操作</th>
   </thead>
   <tbody>

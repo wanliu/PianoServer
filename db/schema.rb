@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160523063151) do
+ActiveRecord::Schema.define(version: 20160524065326) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -161,6 +161,18 @@ ActiveRecord::Schema.define(version: 20160523063151) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "coupon_template_times", force: :cascade do |t|
+    t.integer  "coupon_template_id"
+    t.integer  "type"
+    t.datetime "from"
+    t.datetime "to"
+    t.string   "expire_duration"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
+
+  add_index "coupon_template_times", ["coupon_template_id"], name: "index_coupon_template_times_on_coupon_template_id", using: :btree
+
   create_table "coupon_templates", force: :cascade do |t|
     t.integer  "issuer_id"
     t.string   "issuer_type"
@@ -171,11 +183,33 @@ ActiveRecord::Schema.define(version: 20160523063151) do
     t.integer  "apply_shops"
     t.integer  "apply_time"
     t.boolean  "overlap"
-    t.datetime "created_at",                                   null: false
-    t.datetime "updated_at",                                   null: false
+    t.datetime "created_at",                                                   null: false
+    t.datetime "updated_at",                                                   null: false
+    t.integer  "coupons_count"
+    t.text     "desc"
+    t.boolean  "issued",                                       default: false
   end
 
   add_index "coupon_templates", ["issuer_type", "issuer_id"], name: "index_coupon_templates_on_issuer_type_and_issuer_id", using: :btree
+
+  create_table "coupons", force: :cascade do |t|
+    t.integer  "coupon_template_id"
+    t.integer  "receiver_shop_id"
+    t.datetime "receiv_time"
+    t.integer  "receive_taget_id"
+    t.string   "receive_taget_type"
+    t.integer  "customer_id"
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.integer  "status",             default: 0
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+  end
+
+  add_index "coupons", ["coupon_template_id"], name: "index_coupons_on_coupon_template_id", using: :btree
+  add_index "coupons", ["customer_id"], name: "index_coupons_on_customer_id", using: :btree
+  add_index "coupons", ["receive_taget_type", "receive_taget_id"], name: "index_coupons_on_receive_taget_type_and_receive_taget_id", using: :btree
+  add_index "coupons", ["receiver_shop_id"], name: "index_coupons_on_receiver_shop_id", using: :btree
 
   create_table "evaluations", force: :cascade do |t|
     t.integer  "evaluationable_id"

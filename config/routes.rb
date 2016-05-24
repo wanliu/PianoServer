@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :coupons, except: [:new, :edit]
   # resources :gifts, except: [:new, :edit]
   resources :thumbs, except: [:new, :edit]
 
@@ -25,7 +26,12 @@ Rails.application.routes.draw do
   end
 
   concern :coupon_manage do
-    resources :coupon_templates
+    resources :coupon_templates, except: [:edit, :update, :destroy] do
+      member do
+        get "issue", to: "coupon_templates#issue_form"
+        patch "issue"
+      end
+    end
   end
 
   concern :evaluationable do

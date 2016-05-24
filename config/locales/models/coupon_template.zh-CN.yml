@@ -1,0 +1,22 @@
+zh-CN:
+  activerecord:
+    models:
+      coupon_template: 购物券
+    attributes:
+      coupon_template:
+        apply_items:
+          all_items: 所有商品
+          include_category: 指定分类
+          exclude_category: 指定分类之外
+          include_shop_category: 指定商店分类
+          exclude_shop_category: 除指定商店分类之外
+          include_items: 指定商品
+          exclude_items: 除指定商品之外
+        apply_shops:
+          all_shops: 所有商店
+          include_shops: 指定商店
+          exclude_shops: 除指定商店外
+        apply_time:
+          fixed: 固定时间
+          from_draw: 从领券时起计算
+        issue_quantity: 发行数量

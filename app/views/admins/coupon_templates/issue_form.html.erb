@@ -1,0 +1,6 @@
+<%= form_for [:issue, :admins, @coupon_template] do |f| %>
+  发行数量：<%= f.number_field :issue_quantity %>
+
+  <br>
+  <%= f.submit "发行" %>
+<% end %>

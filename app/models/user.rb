@@ -35,6 +35,10 @@ class User < ActiveRecord::Base
   has_many :shop_delivers, foreign_key: :deliver_id
   has_many :deliverable_shops, through: :shop_delivers, source: :shop
 
+  has_many :coupons, -> { where(status: "active") }
+  has_many :used_coupons, -> { where(status: "applied") }, class_name: 'Coupon'
+  has_many :expired_coupons, -> { where(status: "expired") }, class_name: 'Coupon'
+
   validates :username, presence: true, uniqueness: true
   validates :mobile, presence: true, uniqueness: true
 
