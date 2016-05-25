@@ -3,7 +3,7 @@ class CreateCoupons < ActiveRecord::Migration
     create_table :coupons do |t|
       t.references :coupon_template, index: true
       t.references :receiver_shop, index: true
-      t.datetime :receiv_time
+      t.datetime :receive_time
       t.references :receive_taget, polymorphic: true, index: true
       t.references :customer, index: true
       t.datetime :start_time

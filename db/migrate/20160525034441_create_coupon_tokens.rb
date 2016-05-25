@@ -4,7 +4,7 @@ class CreateCouponTokens < ActiveRecord::Migration
       t.references :coupon_template, index: true
       t.references :customer, index: true
       t.string :token, index: true
-      t.integer :lock_version
+      t.integer :lock_version, default: 0
 
       t.timestamps null: false
     end

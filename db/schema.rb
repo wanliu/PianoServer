@@ -166,9 +166,9 @@ ActiveRecord::Schema.define(version: 20160525034441) do
     t.integer  "type"
     t.datetime "from"
     t.datetime "to"
-    t.string   "expire_duration"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.jsonb    "expire_duration",    default: {}
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
   end
 
   add_index "coupon_template_times", ["coupon_template_id"], name: "index_coupon_template_times_on_coupon_template_id", using: :btree
@@ -196,9 +196,9 @@ ActiveRecord::Schema.define(version: 20160525034441) do
     t.integer  "coupon_template_id"
     t.integer  "customer_id"
     t.string   "token"
-    t.integer  "lock_version"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.integer  "lock_version",       default: 0
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
   end
 
   add_index "coupon_tokens", ["coupon_template_id"], name: "index_coupon_tokens_on_coupon_template_id", using: :btree
@@ -208,7 +208,7 @@ ActiveRecord::Schema.define(version: 20160525034441) do
   create_table "coupons", force: :cascade do |t|
     t.integer  "coupon_template_id"
     t.integer  "receiver_shop_id"
-    t.datetime "receiv_time"
+    t.datetime "receive_time"
     t.integer  "receive_taget_id"
     t.string   "receive_taget_type"
     t.integer  "customer_id"
@@ -217,7 +217,7 @@ ActiveRecord::Schema.define(version: 20160525034441) do
     t.integer  "status",             default: 0
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
-    t.integer  "lock_version"
+    t.integer  "lock_version",       default: 0
   end
 
   add_index "coupons", ["coupon_template_id"], name: "index_coupons_on_coupon_template_id", using: :btree

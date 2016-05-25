@@ -5,7 +5,7 @@ class CreateCouponTemplateTimes < ActiveRecord::Migration
       t.integer :type
       t.datetime :from
       t.datetime :to
-      t.string :expire_duration
+      t.jsonb :expire_duration, default: {}
 
       t.timestamps null: false
     end

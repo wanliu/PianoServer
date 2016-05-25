@@ -118,10 +118,12 @@ class CouponTemplate < ActiveRecord::Base
     coupon = coupons.where("customer_id IS NULL").order("RANDOM()").limit(1).first
 
     if coupon.present?
-      coupon.update(customer_id: customer.id)
+      coupon.assign_attributes(customer_id: customer.id, receive_time: Time.now)
+      coupon.save(validate: false)
     end
+
     coupon
   rescue ActiveRecord::StaleObjectError => e
-    allocate(customer)
+    retry
   end
 end

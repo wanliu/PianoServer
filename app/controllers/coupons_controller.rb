@@ -28,9 +28,9 @@ class CouponsController < ApplicationController
       @coupon_template = @coupon_token.coupon_template
 
       if @coupon_template.present?
-        @coupon = @coupon_template.allocate_coupon_to(current_user)
+        @coupon = @coupon_template.allocate_coupon(current_user, @coupon_token)
         if @coupon.present?
-          flash.info = "恭喜你成功领到购物卷！"
+          flash.notice = "恭喜你成功领到购物卷！"
           redirect_to coupon_path(@coupon)
         else
           flash.alert = "很遗憾！你迟到了一步，下次在来吧。"
