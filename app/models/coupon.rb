@@ -7,6 +7,7 @@ class Coupon < ActiveRecord::Base
   belongs_to :receive_taget, polymorphic: true
 
   validates :coupon_template, presence: true
+  # validate :freeze_customer_id, on: :update
 
   enum status: {
     active: 0,

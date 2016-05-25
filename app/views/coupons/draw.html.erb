@@ -1,0 +1,6 @@
+Total: <%= @coupon_template.coupons_count %>
+Draw: <%= @drawed_counter %>
+LEFT: <%= @coupon_template.coupons_count - @drawed_counter %>
+<botton>Draw</botton>
+
+<%= render "form" %>

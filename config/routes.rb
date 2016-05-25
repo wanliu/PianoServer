@@ -1,5 +1,10 @@
 Rails.application.routes.draw do
-  resources :coupons, except: [:new, :edit]
+  resources :coupons, except: [:new, :edit] do
+    collection do
+      get "draw/:coupon_template_id", to: "coupons#draw", as: "draw"
+    end
+  end
+
   # resources :gifts, except: [:new, :edit]
   resources :thumbs, except: [:new, :edit]
 

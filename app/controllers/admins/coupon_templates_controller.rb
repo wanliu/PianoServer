@@ -1,3 +1,5 @@
+require "./lib/coupon_time_duration"
+
 class Admins::CouponTemplatesController < Admins::BaseController
   before_action :set_coupon_template, only: [:show, :edit, :issue_form, :issue]
 
@@ -51,7 +53,7 @@ class Admins::CouponTemplatesController < Admins::BaseController
         format.json { render json: {} }
         format.html do
           flash.notice = "发行成功！"
-          redirect_to [:issue, :admins, @coupon_template]
+          redirect_to [:admins, @coupon_template]
         end
       else
         format.json { render json: { error: @coupon_template.errors }, status: :unprocessable_entity }
@@ -92,7 +94,19 @@ class Admins::CouponTemplatesController < Admins::BaseController
 
     def coupon_template_params
       params.require(:coupon_template)
-        .permit(:issuer_id, :issuer_type, :name, :par, :apply_items, :apply_minimal_total, :apply_shops, :apply_time, :overlap, :desc)
+        .permit(
+          :issuer_id, 
+          :issuer_type, 
+          :name, 
+          :par, 
+          :apply_items, 
+          :apply_minimal_total, 
+          :apply_shops, 
+          :apply_time, 
+          :overlap, 
+          :desc,
+          coupon_template_time_attributes: CouponTemplateTime.permit_attributes
+        )
     end
 
     def issue_params

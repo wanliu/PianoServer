@@ -10,7 +10,8 @@
   </div>
   <div class="from-draw">
     <%= f.fields_for :coupon_template_time do |tf| %>
-      <%= tf.datetime_select :expire_duration, discard_year: true %>
+      <%= tf.number_field :expire_duration_day %>天
+      <%= tf.number_field :expire_duration_hour %>小时
     <% end %>
   </div>
 </div>

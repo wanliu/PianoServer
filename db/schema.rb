@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160524065326) do
+ActiveRecord::Schema.define(version: 20160525034441) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -192,6 +192,19 @@ ActiveRecord::Schema.define(version: 20160524065326) do
 
   add_index "coupon_templates", ["issuer_type", "issuer_id"], name: "index_coupon_templates_on_issuer_type_and_issuer_id", using: :btree
 
+  create_table "coupon_tokens", force: :cascade do |t|
+    t.integer  "coupon_template_id"
+    t.integer  "customer_id"
+    t.string   "token"
+    t.integer  "lock_version"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
+
+  add_index "coupon_tokens", ["coupon_template_id"], name: "index_coupon_tokens_on_coupon_template_id", using: :btree
+  add_index "coupon_tokens", ["customer_id"], name: "index_coupon_tokens_on_customer_id", using: :btree
+  add_index "coupon_tokens", ["token"], name: "index_coupon_tokens_on_token", using: :btree
+
   create_table "coupons", force: :cascade do |t|
     t.integer  "coupon_template_id"
     t.integer  "receiver_shop_id"
@@ -204,6 +217,7 @@ ActiveRecord::Schema.define(version: 20160524065326) do
     t.integer  "status",             default: 0
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
+    t.integer  "lock_version"
   end
 
   add_index "coupons", ["coupon_template_id"], name: "index_coupons_on_coupon_template_id", using: :btree

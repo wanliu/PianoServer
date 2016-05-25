@@ -40,7 +40,9 @@ class CouponTemplate < ActiveRecord::Base
   has_many :drawed_coupons, -> { where "customer_id IS NOT NULL" }, class_name: 'Coupon'
   has_many :applied_coupons, -> { where status: Coupon.statuses[:applied] }, class_name: 'Coupon'
 
-  has_one :coupon_template_time, dependent: :nullify
+  has_many :coupon_tokens
+
+  has_one :coupon_template_time, dependent: :nullify, inverse_of: :coupon_template
   accepts_nested_attributes_for :coupon_template_time
 
   validates :issuer, presence: true, unless: :system_template?
@@ -49,7 +51,7 @@ class CouponTemplate < ActiveRecord::Base
   validates :apply_items, presence: true
   validates :apply_minimal_total, presence: true
   validates :apply_shops, presence: true
-  validates :issue_quantity, numericality: { only_integer: true, greater_than: 0 }
+  validates :issue_quantity, numericality: { only_integer: true, greater_than: 0 }, on: :update
   validates :overlap, inclusion: { in: [true, false] }
   validates :issued, inclusion:  { in: [true, false] }
 
@@ -76,15 +78,50 @@ class CouponTemplate < ActiveRecord::Base
 
   def create_coupons
     transaction do
-      issue_quantity.times { coupons.create }
+      issue_quantity.times { create_coupon }
 
       update(issued: true)
     end
   end
 
+  # 使用乐观锁来对coupon进行更新和删除coupon_token，避免竞态条件
+  def allocate_coupon(customer, coupon_token)
+    coupon = allocate(customer)
+    if coupon.present? && !coupon.changed?
+      coupon_token.destroy
+      coupon
+    else
+      false
+    end
+  rescue ActiveRecord::StaleObjectError => e
+    coupon.update_attribute("customer_id", nil)
+    false
+  end
+
   private
+
+  def create_coupon
+    options = if "fixed" == apply_time
+      { start_time: coupon_template_time.from, end_time: coupon_template_time.to }
+    else
+      {}
+    end
+
+    coupons.create options
+  end
 
   def system_template?
     SYSTEM_MARKER == issuer_type
+  end
+
+  def allocate(customer)
+    coupon = coupons.where("customer_id IS NULL").order("RANDOM()").limit(1).first
+
+    if coupon.present?
+      coupon.update(customer_id: customer.id)
+    end
+    coupon
+  rescue ActiveRecord::StaleObjectError => e
+    allocate(customer)
   end
 end

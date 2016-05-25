@@ -2,26 +2,26 @@ class CouponTimeDuration
   ATTRS = {
     year: { name: "年" }, 
     month: { name: "月", max: 12 }, 
-    day: { name: "日", max: 31 },
+    # day: { name: "日", max: 31 },
+    day: { name: "日" },
     hour: { name: "时", max: 24 },
     min: { name: "分", max: 60 },
     sec: { name: "秒", max: 60 }
   }
 
-  ATTRS_NAMES = ATTRS.keys
-  attr_accessor *ATTRS_NAMES
+  ATTR_NAMES = ATTRS.keys
+  attr_accessor *ATTR_NAMES
 
   attr_accessor :errors
 
   # 1/2/3/4/5/6 => 一年两个月三天四个小时五分六秒
   def initialize(duration)
-    @origin_duration = duration
+    duration ||= {}
 
-    if @origin_duration.present?
-      arr = (@origin_duration.scan /(\d+)\/{0,1}/).flatten.map(&:to_i)
-      (6 - arr.length).times { arr.unshift(0) }
+    @origin_duration = duration.symbolize_keys
 
-      @year, @month, @day, @hour, @min, @sec = arr 
+    ATTR_NAMES.each do |attr|
+      instance_variable_set("@#{attr}", @origin_duration[attr] || 0)
     end
   end
 
@@ -35,13 +35,13 @@ class CouponTimeDuration
   alias validate? validate
 
   def duration
-    ATTRS_NAMES.map { |attr| send(attr.to_sym) }.compact.join('/')
+    ATTR_NAMES.map { |attr| send(attr.to_sym) }.compact.join('/')
   end
 
   private
 
   def validate_mins
-    invalid_attrs = ATTRS_NAMES.find_all do |attr|
+    invalid_attrs = ATTR_NAMES.find_all do |attr|
       send(attr.to_sym) < 0
     end
 
@@ -49,7 +49,7 @@ class CouponTimeDuration
   end
 
   def vaidate_maxs
-    invalid_attrs = ATTRS_NAMES.find_all do |attr|
+    invalid_attrs = ATTR_NAMES.find_all do |attr|
       max = ATTRS[attr][:max]
       max.present? && send(attr.to_sym) >= max
     end

@@ -1,0 +1,11 @@
+<%= form_for @coupon do |f| %>
+  <%= hidden_field_tag "token", nil, id: 'coupon_token' %>
+  <%= f.submit "领取" %>
+<% end %>
+
+<script type="text/javascript">
+  (function () {
+    var token = "<%= @coupon_token.token %>";
+    $('#coupon_token').val(token);
+  })();
+</script>
