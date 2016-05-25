@@ -6,10 +6,13 @@ class Coupon < ActiveRecord::Base
   paginates_per 10
 
   enum status: {
-    active: 0,
+    appliable: 0,
     applied: 1,
-    expired: 2
+    # expired: 2
   }
+
+  scope :active, -> { where("start_time <= :now AND end_time > :now", now: Time.now) }
+  scope :expired, -> { where("end_time < :now", now: Time.now) }
 
   belongs_to :coupon_template, counter_cache: true
   belongs_to :receiver_shop, class_name: 'Shop'

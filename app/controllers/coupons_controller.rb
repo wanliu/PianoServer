@@ -7,11 +7,26 @@ class CouponsController < ApplicationController
   def index
     @coupons = current_user.coupons
       .includes(:coupon_template)
+      .appliable
       .active
       .page(params[:page])
       .per(params[:per])
 
     # render json: @coupons
+  end
+
+
+  def expired
+    @coupons = current_user.coupons
+      .includes(:coupon_template)
+      .appliable
+      .expired
+      .page(params[:page])
+      .per(params[:per])
+  end
+
+  def expired
+
   end
 
   # GET /coupons/1
