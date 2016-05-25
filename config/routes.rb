@@ -211,6 +211,9 @@ Rails.application.routes.draw do
         put "publish", action: :publish, as: :publish
       end
     end
+
+    resources :one_money, path: :daily_cheap, as: :daily_cheap, :defaults => { type: :daily_cheap } do
+    end
     resources :attachments
     resources :industries do
       concerns :templable, templable_type: 'Industry', parent_type: 'Industry'
@@ -285,6 +288,7 @@ Rails.application.routes.draw do
           get "items", action: :items
           get "items/:item_id", action: :item
           match "signup", action: :signup, via: Rails.env.production? ? [:put] : [:put, :get]
+          get "signup_count", action: :signup_count
 
           get "status", action: :status
           get "status/:item_id", action: :item_status
@@ -295,6 +299,7 @@ Rails.application.routes.draw do
           get "ensure/:grab_id", action: :ensure, via: Rails.env.production? ? [:put] : [:put, :get]
 
           get "user_seeds/:user_id", action: :user_seeds
+          get "retrieve_seed/:user_id", action: :retrieve_seed
           get "seeds/:seed_id", action: :seed
         end
       end
@@ -321,6 +326,12 @@ Rails.application.routes.draw do
         get "cities", to: "locations#cities"
         get "regions", to: "locations#regions"
       end
+    end
+
+    resources :jobs, only: [:show] do
+      # member do
+      #   get 'stream'
+      # end
     end
   end
 

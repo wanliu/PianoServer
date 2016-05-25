@@ -17,6 +17,12 @@
   </div>
 
   <div class="form-group">
+    <%= label_tag 'one_money_description', '活动类型' %>
+    <%= select 'one_money', :type, [ ['一元购', 'one_money'], ['天天惠', 'daily_cheap']] %>
+  </div>
+
+
+  <div class="form-group">
     <%= label_tag 'one_money_description', '抢购商品种类' %>
     <%= text_field 'one_money', :multi_item, value: @one_money.multi_item, class: 'form-control' %>
   </div>
@@ -135,20 +141,78 @@
     event.preventDefault();
     var $target = $(event.currentTarget)
     var url = $target.attr('url');
+    var publishId;
+    var eventTick = 0;
 
     oldText = $target.val();
-    $target.addClass('disabled').val('正在发布....');
-
     var reset = function() {
       $target.removeClass('disabled').val(oldText);
+      clearInterval(publishId);
+      eventTick = 0;
     };
 
+    reset();
+    $target.addClass('disabled').val('正在发布....');
+
+    var MAX_RETRY_COUNTER = 25;
+
     $.ajax({url: url, method: 'put'}).then(function(json) {
-      reset();
-      if (confirm('打开活动页面?')) {
-        window.open(json.url);
+      // reset();
+      var job_id = json.job_id;
+
+      publishId = setInterval(function() {
+        eventTick++;
+
+        $.ajax({url: '/api/jobs/' + job_id }).then(function(json) {
+          var status = json.status;
+          if (status == 'complete' || status == 'failed' || status == 'interrupted') {
+            onMessage(status, json);
+          }
+
+          console.log(status);
+        }).fail(reset)
+
+        if (eventTick > MAX_RETRY_COUNTER) {
+          alert('timeout');
+          reset();
+        }
+      }, 4000);
+
+
+      function onMessage(status, json) {
+        switch(status) {
+        case 'complete':
+          reset();
+          if (confirm('任务完成，是否打开网页')) {
+            window.open(json.data.url);
+          }
+          break;
+        case 'failed':
+        case 'interrupted':
+          reset();
+          alert('任务错误' + json.message)
+          break;
+        default: break;
+        }
       }
-    }).fail(reset).always(reset);
+      // var job_sse = $.SSE('/api/jobs/' + job_id + '/stream', {
+      //   onMessage: function(e) {
+      //     console.log(e)
+      //   },
+      //   onEnd: function (e) {
+      //     reset();
+
+      //   },
+      //   onError: function(e) {
+      //     reset();
+      //     alert(e.message);
+      //   }
+      // });
+
+      // job_sse.start();
+
+    }).fail(reset);
+    // .always(reset);
   })
 
 

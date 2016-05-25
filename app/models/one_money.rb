@@ -22,6 +22,7 @@ class OneMoney < Ohm::Model
   attribute :head_url
   attribute :publish_url
   attribute :status
+  attribute :type
 
   attribute :shares, Type::Integer        # 分享次数
   attribute :share_seed, Type::Integer    # 分享种子数
@@ -43,6 +44,7 @@ class OneMoney < Ohm::Model
   counter :hits
 
   index :name
+  index :type
 
   attr_accessor :query
 
