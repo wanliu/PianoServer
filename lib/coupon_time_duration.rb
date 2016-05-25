@@ -21,7 +21,7 @@ class CouponTimeDuration
     @origin_duration = duration.symbolize_keys
 
     ATTR_NAMES.each do |attr|
-      instance_variable_set("@#{attr}", @origin_duration[attr] || 0)
+      instance_variable_set("@#{attr}", (@origin_duration[attr] || 0).to_i)
     end
   end
 
@@ -34,8 +34,12 @@ class CouponTimeDuration
   end
   alias validate? validate
 
+  def to_h
+    { year: year, month: month, day: day, hour: hour, min: min, sec: sec }
+  end
+
   def duration
-    ATTR_NAMES.map { |attr| send(attr.to_sym) }.compact.join('/')
+    year.years + month.months + day.days + hour.hours + min.minutes + sec.seconds
   end
 
   private

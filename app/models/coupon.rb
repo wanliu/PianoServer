@@ -14,4 +14,13 @@ class Coupon < ActiveRecord::Base
     applied: 1,
     expired: 2
   }
+
+  def evaluate_duration_time
+    if "from_draw" == coupon_template.apply_time
+      now = Time.now
+
+      self.start_time = now
+      self.end_time = now + coupon_template.coupon_template_time.duration
+    end
+  end
 end

@@ -119,6 +119,7 @@ class CouponTemplate < ActiveRecord::Base
 
     if coupon.present?
       coupon.assign_attributes(customer_id: customer.id, receive_time: Time.now)
+      coupon.evaluate_duration_time
       coupon.save(validate: false)
     end
 

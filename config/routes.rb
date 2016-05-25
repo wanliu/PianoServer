@@ -2,6 +2,15 @@ Rails.application.routes.draw do
   resources :coupons, except: [:new, :edit] do
     collection do
       get "draw/:coupon_template_id", to: "coupons#draw", as: "draw"
+
+      # token 已经被领取过
+      get "draw_expired", to: Proc.new { |env|
+        [
+          200,
+          {"Content-Type" => "text/html"},
+          [File.read("public/expire.html")]
+        ]
+      }, as: "expired"
     end
   end
 

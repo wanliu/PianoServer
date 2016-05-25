@@ -41,8 +41,8 @@ class CouponsController < ApplicationController
         redirect_to draw_coupons_path(coupon_template_id: @coupon_template.id)
       end
     else
-      flash.alert = "领取失败，再试一次吧！"
-      redirect_to draw_coupons_path(coupon_template_id: @coupon_template.id)
+      flash.alert = "领取失败，本页面已过期！"
+      redirect_to expired_coupons_path
     end
   end
 
