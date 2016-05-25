@@ -1,4 +1,16 @@
 class Coupon < ActiveRecord::Base
+  default_scope { order(id: :desc) }
+
+  acts_as_paranoid
+
+  paginates_per 10
+
+  enum status: {
+    active: 0,
+    applied: 1,
+    expired: 2
+  }
+
   belongs_to :coupon_template, counter_cache: true
   belongs_to :receiver_shop, class_name: 'Shop'
   belongs_to :customer, class_name: 'User'
@@ -8,12 +20,6 @@ class Coupon < ActiveRecord::Base
 
   validates :coupon_template, presence: true
   # validate :freeze_customer_id, on: :update
-
-  enum status: {
-    active: 0,
-    applied: 1,
-    expired: 2
-  }
 
   def evaluate_duration_time
     if "from_draw" == coupon_template.apply_time

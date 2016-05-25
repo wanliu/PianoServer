@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160525034441) do
+ActiveRecord::Schema.define(version: 20160525090457) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -218,10 +218,12 @@ ActiveRecord::Schema.define(version: 20160525034441) do
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
     t.integer  "lock_version",       default: 0
+    t.datetime "deleted_at"
   end
 
   add_index "coupons", ["coupon_template_id"], name: "index_coupons_on_coupon_template_id", using: :btree
   add_index "coupons", ["customer_id"], name: "index_coupons_on_customer_id", using: :btree
+  add_index "coupons", ["deleted_at"], name: "index_coupons_on_deleted_at", using: :btree
   add_index "coupons", ["receive_taget_type", "receive_taget_id"], name: "index_coupons_on_receive_taget_type_and_receive_taget_id", using: :btree
   add_index "coupons", ["receiver_shop_id"], name: "index_coupons_on_receiver_shop_id", using: :btree
 

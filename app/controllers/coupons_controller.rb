@@ -5,9 +5,13 @@ class CouponsController < ApplicationController
   # GET /coupons
   # GET /coupons.json
   def index
-    @coupons = Coupon.all
+    @coupons = current_user.coupons
+      .includes(:coupon_template)
+      .active
+      .page(params[:page])
+      .per(params[:per])
 
-    render json: @coupons
+    # render json: @coupons
   end
 
   # GET /coupons/1
@@ -63,7 +67,13 @@ class CouponsController < ApplicationController
   def destroy
     @coupon.destroy
 
-    head :no_content
+    respond_to do |format|
+      format.json { head :no_content }
+      format.html do
+        flash.notice = "删除购物卷成功！"
+        redirect_to coupons_path
+      end
+    end
   end
 
   def draw

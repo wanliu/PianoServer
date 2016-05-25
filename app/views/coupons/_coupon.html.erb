@@ -1,0 +1,19 @@
+<tr>
+  <td><%= coupon.coupon_template.name %></td>
+  <td>全站购物卷</td>
+  <td>
+    <%= number_to_currency coupon.coupon_template.par %>
+  </td>
+  <td>
+    <%= coupon.coupon_template.desc %>
+  </td>
+  <td>
+    <%= coupon.start_time.strftime("%Y年%m月%d日 %H:%M:%S") %>
+  </td>
+  <td>
+    <%= coupon.end_time.strftime("%Y年%m月%d日 %H:%M:%S") %>
+  </td>
+  <td>
+    <%= button_to "删除", coupon, method: :delete, data: {confirm: "确定删除这张购物卷么？"}, class: 'btn btn-default' %>
+  </td>
+</tr>

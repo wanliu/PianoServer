@@ -1,0 +1,26 @@
+<div class='container'>
+  <div>
+    我的购物卷
+  </div>
+
+  <table class='table'>
+    <thead>
+      <tr>
+        <th>名称　</th>
+        <th>类型　</th>
+        <th>面值　</th>
+        <th>描述　</th>
+        <th>起效时间　</th>
+        <th>过期时间　</th>
+        <th>操作  </th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @coupons.each do |coupon| %>
+        <%= render coupon %>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%= paginate @coupons %>
+</div>
