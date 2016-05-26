@@ -9,28 +9,74 @@
 <% end %>
 
 <%= form_for [:admins, @coupon_template] do |f| %>
-  名称：<%= f.text_field :name %>
-  <br>
-  面值（元）：<%= f.number_field :par %>
-  <br>
-  应用最低金额（元）：<%= f.number_field :apply_minimal_total %>
-  <br>
-  是否能够叠加使用：<%= f.collection_select(:overlap, [[true, "叠加使用"], [false, "不能叠加使用"]], :first, :last) %>
-  <br>
-  适用的商品范围：<%= f.collection_select(:apply_items, CouponTemplate.apply_items, :first, CouponTemplate.translate_enum_label(:apply_items)) %>
+  <div class="form-group">
+    名称：<%= f.text_field :name %>
+  </div>
+
+  <div class="form-group">
+    面值（元）：<%= f.number_field :par %>
+  </div>
+
+  <div class="form-group">
+    应用最低金额（元）：<%= f.number_field :apply_minimal_total %>
+  </div>
+
+  <div class="form-group">
+    是否能够叠加使用：<%= f.collection_select(:overlap, [[true, "叠加使用"], [false, "不能叠加使用"]], :first, :last) %>
+  </div>
+
+  <div class="form-group">
+    适用的商品范围：<%= f.collection_select(:apply_items, CouponTemplate.apply_items, :first, CouponTemplate.translate_enum_label(:apply_items)) %>
   <%= render "admins/coupon_templates/apply_select/items", locals: { f: f } %>
-  <br>
-  适用的商店范围：<%= f.collection_select(:apply_shops, CouponTemplate.apply_shops, :first, CouponTemplate.translate_enum_label(:apply_shops)) %>
-  <%= render "admins/coupon_templates/apply_select/shops", locals: { f: f } %>
-  <br>
-  适用的时间方式：<%= f.collection_select(:apply_time, CouponTemplate.apply_times, :first, CouponTemplate.translate_enum_label(:apply_time)) %>
-  <%= render "admins/coupon_templates/apply_select/time", locals: { f: f } %>
-  <br>
+  </div>
 
-  购物券描述
-  <br>
-  <%= f.text_area :desc, style: "height:200px; width: 500px;" %>
+  <div class="form-group">
+    适用的商店范围：<%= f.collection_select(:apply_shops, CouponTemplate.apply_shops, :first, CouponTemplate.translate_enum_label(:apply_shops)) %>
+    <%= render "admins/coupon_templates/apply_select/shops", locals: { f: f } %>
+  </div>
 
-  <br>
+  <div class="form-group">
+    适用的时间方式：<%= f.collection_select(:apply_time, CouponTemplate.apply_times, :first, CouponTemplate.translate_enum_label(:apply_time)) %>
+    <%= render "admins/coupon_templates/apply_select/time_fixed", locals: { f: f } %>
+    <%= render "admins/coupon_templates/apply_select/time_from_draw", locals: { f: f } %>
+  </div>
+
+  <div class="form-group">
+    购物券描述 <br>
+    <%= f.text_area :desc, style: "height:200px; width: 500px;" %>
+  </div>
+
   <%= f.submit "下一步" %>
 <% end %>
+
+<script type="text/javascript">
+  (function() {
+    $('#coupon_template_apply_shops').change(function(event) {
+      var value = $(this).val();
+
+      if ("all_shops" == value) {
+        $('.shops-select').hide();
+        $('.shops-select').find('input').prop('disabled', true);
+      } else {
+        $('.shops-select').find('input').prop('disabled', false);
+        $('.shops-select').show();
+      }
+    });
+
+    $('#coupon_template_apply_time').change(function(event) {
+      var value = $(this).val();
+
+      if ("fixed" == value) {
+        $('.from-draw').hide();
+        $('.from-draw').find('input').prop('disabled', true);
+        $('.fixed').find('input').prop('disabled', false);
+        $('.fixed').show();
+      } else {
+        $('.fixed').hide();
+        $('.fixed').find('input').prop('disabled', true);
+        $('.from-draw').find('input').prop('disabled', false);
+        $('.from-draw').show();
+      }
+    });
+  })();
+</script>

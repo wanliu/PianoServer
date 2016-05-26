@@ -327,6 +327,10 @@ Rails.application.routes.draw do
       member do
         get "favorite_count", to: "shops#favorite_count"
       end
+
+      collection do
+        get "search"
+      end
     end
 
     resources :locations do

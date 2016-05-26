@@ -14,9 +14,20 @@ class Admins::CouponTemplatesController < Admins::BaseController
   end
 
   def new
-    @coupon_template = CouponTemplate.new(apply_minimal_total: 0, overlap: false)
+    initial_options = {
+      overlap: false, 
+      apply_time: 'fixed', 
+      apply_minimal_total: 0, 
+      apply_shops: 'all_shops',
+      apply_items: 'all_items'
+    }
+
+    @coupon_template = CouponTemplate.new(initial_options)
+
     now = Time.now.beginning_of_hour
     @coupon_template.build_coupon_template_time(from: now, to: now + 1.month )
+
+    @coupon_template.coupon_template_shops.build
   end
 
   # GET /coupon_templates/1
@@ -30,7 +41,6 @@ class Admins::CouponTemplatesController < Admins::BaseController
   # POST /coupon_templates.json
   def create
     @coupon_template = CouponTemplate.system_templates.new(coupon_template_params)
-
     respond_to do |format|
       if @coupon_template.save
         format.html { redirect_to issue_admins_coupon_template_path(@coupon_template) }
@@ -105,6 +115,7 @@ class Admins::CouponTemplatesController < Admins::BaseController
           :apply_time, 
           :overlap, 
           :desc,
+          coupon_template_shops_attributes: [:shop_id],
           coupon_template_time_attributes: CouponTemplateTime.permit_attributes
         )
     end

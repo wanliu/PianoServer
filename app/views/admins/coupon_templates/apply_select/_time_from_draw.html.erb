@@ -1,0 +1,5 @@
+<% disabled = !f.object.from_draw? %>
+<div class="from-draw" style='<%= disabled ? "display: none;" : "" %>'>
+  <%= number_field_tag "coupon_template[coupon_template_time_attributes][expire_duration_attributes][day]", f.object.coupon_template_time.try(:expire_duration).try(:day).to_i, disabled: disabled %>天
+  <%= number_field_tag "coupon_template[coupon_template_time_attributes][expire_duration_attributes][hour]", f.object.coupon_template_time.try(:expire_duration).try(:hour).to_i, disabled: disabled %>小时
+</div>

@@ -1,6 +1,13 @@
-Total: <%= @coupon_template.coupons_count %>
-Draw: <%= @drawed_counter %>
-LEFT: <%= @coupon_template.coupons_count - @drawed_counter %>
-<botton>Draw</botton>
+<div class="container">
+  Total: <%= @coupon_template.coupons_count %>
+  Draw: <%= @drawed_counter %>
+  LEFT: <%= @coupon_template.coupons_count - @drawed_counter %>
+  <botton>Draw</botton>
 
-<%= render "form" %>
+  <% if @coupon_template.coupons_count > @drawed_counter %>
+    <%= render "form" %>
+  <% else %>
+    <br>
+    很遗憾！你迟到了一步，购物券已经领完，下次再来吧
+  <% end %>
+</div>

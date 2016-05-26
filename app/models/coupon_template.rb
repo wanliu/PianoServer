@@ -42,8 +42,11 @@ class CouponTemplate < ActiveRecord::Base
 
   has_many :coupon_tokens
 
-  has_one :coupon_template_time, dependent: :nullify, inverse_of: :coupon_template
+  has_one :coupon_template_time, inverse_of: :coupon_template
   accepts_nested_attributes_for :coupon_template_time
+
+  has_many :coupon_template_shops, inverse_of: :coupon_template
+  accepts_nested_attributes_for :coupon_template_shops
 
   validates :issuer, presence: true, unless: :system_template?
   validates :name, presence: true, uniqueness: { scope: [:issuer_type, :issuer_id] }

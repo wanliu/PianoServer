@@ -1,4 +1,95 @@
-<div>
-  <div class="include-shops">include-shops</div>
-  <div class="exclude-shops">exclude-shops</div>
+<div class='shops-select' style='<%= f.object.all_shops? ? "display: none;" : "" %>'>
+  <div class="dropdown">
+    <input type='text' id='search-shops' data-toggle="dropdown" autocomplete='off' placeholder='搜索商店'>
+    <ul class="dropdown-menu search-result" aria-labelledby="search-shops">
+    </ul>
+  </div>
+
+  <div class='shops-list'>
+    <%= f.fields_for :coupon_template_shops do |shop_f| %>
+      <% if shop_f.object.shop_id.present? %>
+        <div>
+          <a href='javascript: void(0);' data-shop-id='<%= shop_f.object.id %>' class='shop'>
+            <%= shop_f.object.shop.title %>
+          </a>
+          <%= shop_f.hidden_field :shop_id %>
+          <button class='btn btn-default btn-sm'>
+            <span class='glyphicon glyphicon-remove'></span>
+          </button>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
 </div>
+
+<script type="text/template" id='search-shop'>
+  <li>
+    <a href='javascript: void(0);' data-shop-id='{{ id }}' class='shop'>{{ title }}</a>
+  </li>
+</script>
+
+<script type="text/template" id='chosen-shop'>
+  <div>
+    <a href='javascript: void(0);' data-shop-id='{{ id }}' class='shop'>{{ title }}</a>
+    <%= f.fields_for :coupon_template_shops do |shop_f| %>
+      <%= shop_f.hidden_field :shop_id, value: '88888888' %>
+    <% end %>
+    <button class='btn btn-default btn-sm'>
+      <span class='glyphicon glyphicon-remove'></span>
+    </button>
+  </div>
+</script>
+
+<script type="text/javascript">
+  (function() {
+    var chosenShops = {}
+      , searchShopTpl = _.template($('#search-shop').html())
+      , searchedShops;
+
+    var chosenShopTpl = _.template($('#chosen-shop').html()
+          .replace("[0]", "[{{ id }}]")
+          .replace('88888888', "{{ id }}"));
+
+    $('#search-shops').change(searchShops);
+    $('#search-shops').keyup(searchShops);
+
+    $('.search-result').on('click', '.shop', addConponShop);
+
+    function searchShops(event) {
+      var value = $(this).val();
+
+      if(value.length == 0) return;
+
+      var query = $.get('/api/shops/search', {
+        q: value
+      });
+
+      query.done(function(data) {
+        $('.search-result').html('');
+        searchedShops = data;
+
+        _.each(data, function(shop) {
+          var html = searchShopTpl(shop);
+          $('.search-result').append(html);
+        });
+
+        // $('.search-result').show();
+      });
+    }
+
+    function addConponShop (event) {
+      var shopId = $(this).data("shopId");
+      var chosenShop = _.find(searchedShops, function(shop) {
+        if (shop.id.toString() == shopId) {
+          return shop;
+        }
+      });
+
+      var $html = $(chosenShopTpl(chosenShop));
+      $html.find('input').val(chosenShop.id);
+      chosenShops[shopId] = chosenShop;
+      debugger
+      $('.shops-list').append($html);
+    }
+  })();
+</script>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160525090457) do
+ActiveRecord::Schema.define(version: 20160526063413) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -160,6 +160,18 @@ ActiveRecord::Schema.define(version: 20160525090457) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  create_table "coupon_template_shops", force: :cascade do |t|
+    t.integer  "coupon_template_id"
+    t.integer  "shop_id"
+    t.integer  "kind"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
+
+  add_index "coupon_template_shops", ["coupon_template_id"], name: "index_coupon_template_shops_on_coupon_template_id", using: :btree
+  add_index "coupon_template_shops", ["kind"], name: "index_coupon_template_shops_on_kind", using: :btree
+  add_index "coupon_template_shops", ["shop_id"], name: "index_coupon_template_shops_on_shop_id", using: :btree
 
   create_table "coupon_template_times", force: :cascade do |t|
     t.integer  "coupon_template_id"
@@ -585,6 +597,10 @@ ActiveRecord::Schema.define(version: 20160525090457) do
     t.string   "region_id"
     t.integer  "default_express_template_id"
   end
+
+  add_index "shops", ["name"], name: "index_shops_on_name", using: :btree
+  add_index "shops", ["owner_id"], name: "index_shops_on_owner_id", using: :btree
+  add_index "shops", ["title"], name: "index_shops_on_title", using: :btree
 
   create_table "statuses", force: :cascade do |t|
     t.integer  "stateable_id"

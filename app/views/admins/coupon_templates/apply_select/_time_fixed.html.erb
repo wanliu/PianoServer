@@ -1,0 +1,10 @@
+<% disabled = !f.object.fixed? %>
+<div class="fixed" style='<%= disabled ? "display: none;" : "" %>'>
+  <%= f.fields_for :coupon_template_time do |coupon_form| %>
+    起效时间: 
+    <%= coupon_form.datetime_select :from, include_seconds: true, disabled: disabled %>
+    <br>
+    终止时间:
+    <%= coupon_form.datetime_select :to, include_seconds: true, disabled: disabled %>
+  <% end %>
+</div>

@@ -52,15 +52,15 @@ class CouponsController < ApplicationController
           flash.notice = "恭喜你成功领到购物卷！"
           redirect_to coupon_path(@coupon)
         else
-          flash.alert = "很遗憾！你迟到了一步，下次在来吧。"
+          flash.alert = "很遗憾！你迟到了一步，下次再来吧。"
           redirect_to draw_coupons_path(coupon_template_id: @coupon_template.id)
         end
       else
-        flash.alert = "领取失败，再试一次吧！"
-        redirect_to draw_coupons_path(coupon_template_id: @coupon_template.id)
+        # flash.alert = "领取失败，本页面已过期！"
+        redirect_to expired_coupons_path
       end
     else
-      flash.alert = "领取失败，本页面已过期！"
+      # flash.alert = "领取失败，本页面已过期！"
       redirect_to expired_coupons_path
     end
   end
