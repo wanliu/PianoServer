@@ -58,6 +58,8 @@ class CouponTemplate < ActiveRecord::Base
   validates :overlap, inclusion: { in: [true, false] }
   validates :issued, inclusion:  { in: [true, false] }
 
+  validate :coupon_template_shops_should_present, on: :create, unless: :all_shops?
+
   class << self
     def translate_enum_label(enum_name)
       Proc.new do |enum_option|
@@ -129,5 +131,12 @@ class CouponTemplate < ActiveRecord::Base
     coupon
   rescue ActiveRecord::StaleObjectError => e
     retry
+  end
+
+
+  def coupon_template_shops_should_present
+    if coupon_template_shops.blank?
+      errors.add(:coupon_template_shops, "不能为空的集合")
+    end
   end
 end

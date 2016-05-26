@@ -46,9 +46,7 @@
       , searchShopTpl = _.template($('#search-shop').html())
       , searchedShops;
 
-    var chosenShopTpl = _.template($('#chosen-shop').html()
-          .replace("[0]", "[{{ id }}]")
-          .replace('88888888', "{{ id }}"));
+    var chosenShopTpl = _.template($('#chosen-shop').html().replace("[0]", "[{{ id }}]").replace('88888888', "{{ id }}"));
 
     $('#search-shops').change(searchShops);
     $('#search-shops').keyup(searchShops);
@@ -88,7 +86,6 @@
       var $html = $(chosenShopTpl(chosenShop));
       $html.find('input').val(chosenShop.id);
       chosenShops[shopId] = chosenShop;
-      debugger
       $('.shops-list').append($html);
     }
   })();
