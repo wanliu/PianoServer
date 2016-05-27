@@ -139,6 +139,7 @@ promotions:
     end_hour: 22
     default_callback: http://m.wanliu.biz/orders/yiyuan_confirm
     enter_url: /daily_cheap
+    title_template: $year-$month-$day $weekday $start_hour:$start_minute 天天惠
     scripts:
       publish:
         dir: /var/www/DailyCheap
