@@ -120,6 +120,10 @@ class OrderItem < ActiveRecord::Base
     end
   end
 
+  def total
+    price * quantity
+  end
+
   private
 
   def orderable_saleable
