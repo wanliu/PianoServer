@@ -9,8 +9,9 @@ class Coupon < ActiveRecord::Base
     joins(:coupon_template).where("coupon_templates.overlap = :overlap", overlap: true)
   end
 
-  scope :active, -> { where("start_time <= :now AND end_time > :now", now: Time.now) }
-  scope :expired, -> { where("end_time < :now", now: Time.now) }
+  scope :active, -> { where("coupons.start_time <= :now AND coupons.end_time > :now", now: Time.now) }
+  scope :expired, -> { where("coupons.end_time < :now", now: Time.now) }
+
   scope :available_with_total, -> (amount) do
     where("coupon_templates.apply_minimal_total <= :amount", amount: amount)
   end
