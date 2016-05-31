@@ -37,7 +37,7 @@ class Shops::Admin::GiftsController < Shops::Admin::BaseController
   private
 
   def set_item
-    @item = @shop.items.find(params[:item_id])
+    @item = @shop.items.find_by(sid: params[:item_id])
   end
 
   def set_gift
