@@ -31,12 +31,12 @@
 </div>
 
 <script type="text/template" id='deliver-template'>
-  <div class='item text-center' data-deliver-id='{{ id }}'>
+  <div class='item text-center' data-deliver-id='{{ id }}' data-toggle="tooltip" data-placement="right" title="{{ username }}">
     <div class='avatar deliver-avatar'>
       <img src={{ avatar_url }}>
     </div>
     <div class='username'>
-      {{ username }}
+      {{ username.length > 16 ? username.substring(0, 12) + "..." : username }}
     </div>
     <div class='operations'>
       <%= button_to shop_admin_deliver_path(@shop.name, 88888888), method: :delete, remote: true, class: 'btn btn-danger', data: {confirm: '确定删除该运送员？'} do %>
@@ -47,12 +47,12 @@
 </script>
 
 <script type="text/template" id='new-deliver-template'>
-  <div class='item' data-deliver-id='{{ id }}'>
+  <div class='item' data-deliver-id='{{ id }}' data-toggle="tooltip" data-placement="right" title="{{ username }}">
     <div class='avatar'>
       <img src={{ avatar_url }}>
     </div>
     <div class='username'>
-      {{ username }}
+      {{ username.length > 16 ? username.substring(0, 12) + "..." : username }}
     </div>
     <div class='operations'>
       <%= button_to shop_admin_delivers_path(@shop.name, deliver: {user_id: 88888888}), method: :post, remote: true, class: 'btn btn-primary' do %>
