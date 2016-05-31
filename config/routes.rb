@@ -262,8 +262,19 @@ Rails.application.routes.draw do
     end
 
     get "suggestion", :to => "suggestion#index"
-    get "/items/search_ly", :to => "items#search_ly"
-    get "/items/hots", :to => "items#hots"
+
+    resources :items, only: [] do
+      # get "/items/search_ly", :to => "items#search_ly"
+      # get "/items/hots", :to => "items#hots"
+      collection do
+        get "search_ly"
+        get "hots"
+      end
+
+      member do
+        get "saled_count"
+      end
+    end
 
     namespace :promotions do
       resources :one_money, except: [:index, :create, :update, :destroy]  do
@@ -286,6 +297,8 @@ Rails.application.routes.draw do
           get "seeds/:seed_id", action: :seed
         end
       end
+
+      resources :daily_cheap
     end
     # resources :business, concerns: :roomable do
     #   member do

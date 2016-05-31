@@ -32,4 +32,20 @@ class Api::ItemsController < Api::BaseController
       total_page: hots.total_pages
     }
   end
+
+  def saled_count
+    item = Item.find(params[:id])
+    since = case params[:since]
+      when "month", "m"
+        1.month.ago
+      when "week", "w"
+        1.week.ago
+      else
+        1.month.ago
+      end
+
+    count = item.order_items.where("created_at > :since", since: since).count
+
+    render json: { saled_count: count }
+  end
 end
