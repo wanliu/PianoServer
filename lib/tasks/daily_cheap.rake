@@ -5,11 +5,30 @@ namespace :daily_cheap do
   end
 
   def create_daily_cheap(date)
-    title = I18n.l(date) + ' 天天惠'
+    title_template = Settings.promotions.daily_cheap.title_template.dup
+
+    # title = I18n.l(date) + ' 天天惠'
     start_hour = Settings.promotions.daily_cheap.start_hour || 10
     end_hour =  Settings.promotions.daily_cheap.end_hour || 22
     start_at = date.change(hour: start_hour, min: 0, sec: 0)
     end_at = date.change(hour: end_hour, min: 0, sec: 0)
+
+    context = {
+      year: date.year,
+      month: "%02d" % date.month,
+      day: "%02d" % date.day,
+      weekday: I18n.l(date, :format => '%A'),
+      start_hour: "%02d" % start_hour,
+      start_minute: "%02d" % start_at.minute,
+      end_hour: "%02d" % end_hour,
+      end_minute: "%02d" %  end_at.minute
+    }
+
+    title = title_template.gsub /\$(\w+)/ do |m|
+      key = $1.to_sym
+      context[key]
+    end
+
     options = {
       multi_item: Settings.promotions.daily_cheap.multi_item || 1,
       fare: Settings.promotions.daily_cheap.fare || 10,
