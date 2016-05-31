@@ -3,7 +3,7 @@ class Api::ShopsController < Api::BaseController
   skip_before_action :authenticate_user!
 
   def favorite_count
-    favorites = @shop.favoritables
+    favorites = @shop.favorites
     count = favorites.count
 
     render json: { count: count }
