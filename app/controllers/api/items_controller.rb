@@ -34,7 +34,7 @@ class Api::ItemsController < Api::BaseController
   end
 
   def saled_count
-    item = Item.find(params[:item_id])
+    item = Item.find(params[:id])
     since = case params[:since]
       when "month", "m"
         1.month.ago
