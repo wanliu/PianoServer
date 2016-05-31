@@ -16,7 +16,8 @@
 
     <li><%= link_to '商品', shop_admin_items_path(@shop.name) %></li>
 <!--     <li><%= link_to '关于', about_shop_path(@shop.name) %></li>-->
-    <li><%= link_to '运费设置', shop_admin_delivery_fee_path(@shop.name) %></li>
+    <li><%= link_to '运费设置', shop_admin_express_templates_path(@shop.name) %></li>
+    <li><%= link_to '运送员设置', shop_admin_delivers_path(@shop.name) %></li>
     <li>
       <%= link_to '订单', 'javascript: void(0)' %>
       <ul class="nav">

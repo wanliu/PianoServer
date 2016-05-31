@@ -13,8 +13,8 @@
   <td> 小计：<%= number_to_currency item.price * item.quantity %> </td>
 
   <% if controller.action_name != 'show' %>
-    <td rowspan='<%= order.items.count %>' class='operation'>
-      <% if item == order.items.first && !order.finish? %>
+    <% if item == order.items.first && !order.finish? %>
+      <td rowspan='<%= order.items.count %>' class='operation'>
         <div class='finish-order text-center'>
           <button type="button" class="order-finish btn btn-danger" data-toggle="modal" data-target="#finish-order-<%= order.id %>">
             确认收货
@@ -39,11 +39,39 @@
             </div>
           </div>
         </div>
-      <% end %>
 
-      <div class='detail text-center'>
-        <span><%= link_to "订单详情", order_path(order) %></span>
-      </div>
-    </td>
+        <div class='detail text-center'>
+          <span><%= link_to "订单详情", order_path(order) %></span>
+        </div>
+      </td>
+    <% end %>
   <% end %>
 </tr>
+<% if item.gifts.present? %>
+  <tr class='order-gifts'>
+    <td colspan='5'>
+      <% item.gifts.each do |gift| %>
+        <div class='order-gift'>
+          <div class='head'>
+            <%= image_tag "gift-white.png" %>
+          </div>
+          <div class='desc'>
+            <div class='avatar'>
+              <%= image_tag gift["avatar_url"] %>
+            </div>
+            <div class='title-quantity'>
+              <div class='title'>
+                <span>
+                  <%= truncate("#{gift["title"]} #{gift["properties_title"]}", length: 15) %>
+                </span>
+              </div>
+              <div class='quantity'>
+                <span>数量：<%= gift["quantity"] %></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </td>
+  <tr>
+<% end %>

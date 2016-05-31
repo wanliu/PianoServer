@@ -101,3 +101,23 @@
     }
   }
 }
+
+
+.item-express-templates {
+  position: relative;
+
+  .header {
+    position: absolute;
+    width: 100%
+
+    // .alert {
+    //   width: 100%;
+    // }
+  }
+}
+
+.edit-item {
+  .item-settings {
+    margin-bottom: 20px;
+  }
+}

@@ -1,10 +1,14 @@
 Rails.application.routes.draw do
-
+  # resources :gifts, except: [:new, :edit]
   resources :thumbs, except: [:new, :edit]
 
   resource :wechat, only: [:show, :create]
 
-  resources :order_items, except: [:new, :edit]
+  resources :order_items, except: [:new, :edit] do
+    collection do
+      get "buy_now_gifts"
+    end
+  end
 
   concern :messable do
     resources :messages
@@ -370,6 +374,7 @@ Rails.application.routes.draw do
       post "confirmation"
       post "buy_now_create"
       post "buy_now_confirm"
+      post 'express_fee'
 
       # 为避免用户回退到立即购买的post页面，提供一个过期提示窗口
       get "buy_now_confirm", to: Proc.new { |env|
@@ -441,9 +446,23 @@ Rails.application.routes.draw do
         post :upload_shop_logo
       end
 
-      resource :delivery_fee do
+      # resource :delivery_fee do
+      #   collection do
+      #     get "next_nodes"
+      #   end
+      # end
+
+      resources :express_templates do
         collection do
           get "next_nodes"
+          post "set_default"
+          post "cancel_default"
+        end
+      end
+
+      resources :delivers, only: [:index, :show, :create, :destroy] do
+        collection do
+          get :search_new_delivers, as: :search
         end
       end
 
@@ -466,6 +485,8 @@ Rails.application.routes.draw do
       resources :items, key: :sid do
         resource :delivery_fee, objective: "item"
 
+        resources :gifts
+
         collection do
           # get "load_categories", to: "items#load_categories"
           get "/new/step1",  to: "items#new_step1"
@@ -480,6 +501,10 @@ Rails.application.routes.draw do
           post "/upload_image", to: "items#upload_image_file"
           put "/change_sale_state", to: "items#change_sale_state"
           put "/inventory_config", to: "items#inventory_config"
+          get :search_gift
+          get :express_template
+          post :chose_express_template
+          # post :create_gift
         end
       end
 

@@ -1,9 +1,9 @@
 <% if 'yes' == @receive %>
   <div class='header'>完成收货</div>
-  <div class='desc'>第号订单确认完成收货！</div>
+  <div class='desc'>第<%= @order.id %>号订单确认完成收货！</div>
 <% elsif 'no' == @receive %>
   <div class='header'>收货失败</div>
-  <div class='desc'>第号订单收货失败！</div>
+  <div class='desc'>第<%= @order.id %>号订单收货失败！</div>
 <% end %>
 
-<%= link_to '查看订单', shop_admin_order_path(@order.supplier.name, @order) %>
+<%#= link_to '查看订单', shop_admin_order_path(@order.supplier.name, @order) %>

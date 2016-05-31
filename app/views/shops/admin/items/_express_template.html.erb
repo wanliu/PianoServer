@@ -1,0 +1,13 @@
+<% if item.express_template_id.present? %>
+  本商品指定运费模板: <%= item.express_template.name %>
+  <br>
+  <%= link_to "点击设置", express_template_shop_admin_item_path(current_shop.name, item) %>
+<% else %>
+  未设置本商品指定运费模板
+  <br>
+  <% if current_shop.default_express_template.present? %>
+    使用商店默认运费模板："<%= current_shop.default_express_template.name %>"
+  <% end %>
+  <br>
+  <%= link_to "点击设置", express_template_shop_admin_item_path(current_shop.name, item) %>
+<% end %>

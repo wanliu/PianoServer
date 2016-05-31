@@ -57,7 +57,7 @@
 
 dataConfirmModal.setDefaults({
   title: '确认执行此操作？',
-  commit: '删除',
+  commit: '确定',
   cancel: '取消'
 });
 

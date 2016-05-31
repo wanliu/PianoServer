@@ -1,0 +1,45 @@
+<div class='alert-header no-bottom-border'>
+  <div class="alert alert-success infors" role="alert" style='display: none;'>
+  </div>
+  <div class="alert alert-danger errors" role="alert" style='display: none;'>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">运费模板管理</div>
+  <div class="panel-body">
+    <table class='table express-templates table-hover'>
+      <thead>
+        <tr>
+          <th colspan='2'>
+            本店运费模板
+          </th>
+          <th>
+            <%= link_to "点击添加运费模板", new_shop_admin_express_template_path, class: 'btn btn-default' %>
+          </th>
+        </tr>
+        <tr>
+          <th width='15%'>名称</th>
+          <th width='50%'>运费描述</th>
+          <th width='35%'>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if @express_templates.blank? %>
+          <tr>
+            <td colspan='3' class='text-center'>
+              暂无运费模板
+              <%= link_to "点击添加运费模板", new_shop_admin_express_template_path, class: 'btn btn-default' %>
+            </td>
+          </tr>
+        <% else %>
+          <% @express_templates.each do |template| %>
+            <%= render "template", locals: { template: template } %>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <div class="panel-footer">
+    <span class="label label-warning">*注意</span>如果设置了商店的默认运费模板，则所有没有设置运费模板的商品都会自动应用该模板。如果没有设置商店的默认模板，也没有设置商品自身的模板，则运费计算总是为０元。</div>
+</div>

@@ -8,4 +8,5 @@ zh-CN:
         quantity: 库存
   attributes:
     stock_changes:
-        quantity: 库存
+      quantity: 库存
+    gift: 赠品

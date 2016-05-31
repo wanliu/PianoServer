@@ -7,7 +7,14 @@ class StockChange < ActiveRecord::Base
   validates :quantity, numericality: true
   validates :item, presence: true
 
-  enum kind: { purchase: 0, sale: 1, sale_refund: 2, stock_refund: 3, adjust: 4 }
+  enum kind: { 
+    purchase: 0, 
+    sale: 1, 
+    sale_refund: 2, 
+    stock_refund: 3, 
+    adjust: 4,
+    gift: 5
+  }
 
   validate :quantity_check
 
