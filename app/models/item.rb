@@ -26,10 +26,6 @@ class Item < ActiveRecord::Base
 
   has_many :order_items, as: :orderable
 
-  has_many :gifts
-  has_many :items, through: :gifts
-  has_many :presents, through: :gifts
-
   mount_uploaders :images, ItemImageUploader
 
   store_accessor :properties, :default_quantity
