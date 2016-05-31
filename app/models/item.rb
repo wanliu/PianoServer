@@ -24,6 +24,8 @@ class Item < ActiveRecord::Base
   has_many :stock_changes, autosave: true
   has_many :evaluations, as: :evaluationable
 
+  has_many :order_items, as: :orderable
+
   mount_uploaders :images, ItemImageUploader
 
   store_accessor :properties, :default_quantity
