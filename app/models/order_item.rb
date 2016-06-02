@@ -1,4 +1,9 @@
 class OrderItem < ActiveRecord::Base
+
+  # 购物卷抵消后的剩余金额，用于计算购物卷
+  attr_accessor :offseted
+  attr_writer :offset_remain
+
   belongs_to :order
   belongs_to :orderable, polymorphic: true
 
@@ -122,6 +127,14 @@ class OrderItem < ActiveRecord::Base
 
   def total
     price * quantity
+  end
+
+  def offset_remain
+    @offset_remain || total
+  end
+
+  def reset_offset_remain
+    @offset_remain = nil
   end
 
   private

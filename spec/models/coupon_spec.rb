@@ -13,7 +13,7 @@ RSpec.describe Coupon, type: :model do
       let(:coupon_template_shop_include2) { FactoryGirl.build(:coupon_template_shop, shop_id: shop_include2.id) }
       let(:coupon_template_shop_exclude) { FactoryGirl.build(:coupon_template_shop, shop_id: shop_exclude.id) }
 
-      let(:coupon_template_all_shop) { FactoryGirl.create(:coupon_template, issuer_type: 'System', apply_shops: CouponTemplate.apply_shops["all_shops"], coupon_template_shops: [coupon_template_shop]) } 
+      let(:coupon_template_all_shop) { FactoryGirl.create(:coupon_template, issuer_type: 'System', apply_shops: CouponTemplate.apply_shops["all_shops"]) } 
       let(:coupon_template_include_shop) { FactoryGirl.create(:coupon_template, issuer_type: 'System', apply_shops: CouponTemplate.apply_shops["include_shops"], coupon_template_shops: [coupon_template_shop_include]) } 
       let(:coupon_template_include_shop2) { FactoryGirl.create(:coupon_template, issuer_type: 'System', apply_shops: CouponTemplate.apply_shops["include_shops"], coupon_template_shops: [coupon_template_shop_include2]) } 
       let(:coupon_template_exclude_shop) { FactoryGirl.create(:coupon_template, issuer_type: 'System', apply_shops: CouponTemplate.apply_shops["exclude_shops"], coupon_template_shops: [coupon_template_shop_exclude]) } 

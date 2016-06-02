@@ -26,6 +26,8 @@ class Coupon < ActiveRecord::Base
 
   paginates_per 10
 
+  delegate :overlap, :par, :apply_minimal_total, to: :coupon_template
+
   belongs_to :coupon_template, counter_cache: true
   belongs_to :receiver_shop, class_name: 'Shop'
   belongs_to :customer, class_name: 'User'
@@ -71,7 +73,14 @@ class Coupon < ActiveRecord::Base
           AND :shop_id NOT IN (SELECT coupon_template_shops.shop_id))
       SQL
 
-      joins(coupon_template: [:coupon_template_shops]).where(sql, sql_options)
+      join_sql = <<-SQL
+        INNER JOIN "coupon_templates"
+        ON "coupon_templates"."id" = "coupons"."coupon_template_id"
+        LEFT JOIN "coupon_template_shops" 
+        ON "coupon_template_shops"."coupon_template_id" = "coupon_templates"."id"
+      SQL
+
+      joins(join_sql).where(sql, sql_options)
     end
   end
 

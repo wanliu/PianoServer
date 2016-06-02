@@ -14,8 +14,8 @@ class Order < ActiveRecord::Base
   has_many :evaluations
   accepts_nested_attributes_for :evaluations
 
-  attr_accessor :cart_item_ids
-  attr_accessor :address_id, :request_ip
+  attr_accessor :cart_item_ids, :address_id, :request_ip
+  # attr_reader :coupon_ids
 
   enum status: { initiated: 0, finish: 1 }
 
@@ -300,7 +300,70 @@ class Order < ActiveRecord::Base
     items.reduce(0) { |total, item| total += item.price * item.quantity }
   end
 
+  # what coupons can I use?
+  def available_coupons(options={})
+    if options[:coupon_ids].blank?
+      initiate_coupons
+    else
+      coupons = buyer.coupons.includes(:coupon_template).where(id: options[:coupon_ids]).to_a
+
+      if coupons.all?(&:overlap)
+        unselectd_coupons = initiate_coupons.find_all(&:overlap) - coupons
+
+        if unselectd_coupons.blank?
+          []
+        else
+          next_avaliable_coupons(selected: coupons, unselectd_coupons: unselectd_coupons)
+        end
+      else
+        []
+      end
+    end
+  end
+
   private
+
+  # 根据选定条件，穷举所有可能的组合，使得购物卷的选择组合不依赖于客户的选择次序
+  # TODO 优化计算方法
+  def next_avaliable_coupons(options)
+    unselectd_coupons = options[:unselectd_coupons]
+    unselectd_coupons.find_all do |coupon|
+      coupons = options[:selected] | [coupon]
+      coupons_available?(coupons)
+    end
+  end
+
+  # 验证一个组合是否合法
+  # 验证配对的循序按照从面额从大到小
+  def coupons_available?(coupons)
+    coupons_copy = coupons.sort_by(&:par).reverse
+
+    left_items = items.each(&:reset_offset_remain).sort_by(&:offset_remain).reverse
+
+    # multiple = options[:multiple] || false
+
+    coupons_copy.each do |coupon|
+      left_items.sort_by(&:offset_remain).reverse.each do |item|
+        # if coupon.avalible_for(item)
+        #   item.apply_coupon(coupon, multiple)
+        next if item.offseted
+
+        if coupon.apply_minimal_total <= item.total
+          item.offset_remain = item.offset_remain - coupon.par
+          if item.offset_remain <= 0
+            item.offseted = true
+          end
+          coupons.delete coupon
+          break
+        else
+          next
+        end
+      end
+    end
+
+    # 配对完毕之后，coupons数组应该是空的
+    coupons.blank?
+  end
 
   def caculate_total
     self.origin_total = self.total = items_total + (express_fee || 0)
@@ -360,5 +423,13 @@ class Order < ActiveRecord::Base
     end
 
     self.receive_token = token
+  end
+
+  def initiate_coupons
+    items.map do |item|
+      if "Item" == item.orderable_type
+        buyer.coupons.includes(:coupon_template).available_with_item(item.orderable, item.offset_remain).to_a
+      end
+    end.flatten.compact.uniq
   end
 end
