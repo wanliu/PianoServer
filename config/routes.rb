@@ -298,7 +298,15 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :daily_cheap
+      resources :daily_cheap do
+        collection do
+          get "latest", action: :latest
+        end
+
+        member do
+          post "toggle_open", action: :toggle_open
+        end
+      end
     end
     # resources :business, concerns: :roomable do
     #   member do

@@ -87,6 +87,13 @@ class Admins::OneMoneyController < Admins::BaseController
     # params[]
   end
 
+  def toggle_open
+    @one_money.update_attribute('is_open', params[:is_open])
+    @one_money.save
+
+    redirect_to action: :edit
+  end
+
   def search
     q = params[:q]
     if q.to_i == 0
@@ -225,7 +232,12 @@ class Admins::OneMoneyController < Admins::BaseController
     hash = {}
     params[:one_money].each do |k, v|
       hash[k] = v unless v.blank?
+
+      if k == :is_open or k == 'is_open'
+        hash[k] = v == 'true'
+      end
     end
+
     hash
   end
 
