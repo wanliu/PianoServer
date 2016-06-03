@@ -1,6 +1,10 @@
 class Shops::Admin::OrdersController < Shops::Admin::BaseController
+  before_action :set_delivery_shop_and_order, only: :qrcode_receive
   before_action :set_order, only: [:show, :update, :destroy, :qrcode_receive]
   before_action :check_for_mobile, only: [:index, :history, :show, :qrcode_receive]
+
+  skip_before_action :shop_page_info, only: :qrcode_receive
+  skip_before_action :set_shop, only: :qrcode_receive
 
   # GET /shops/admin/orders
   # GET /shops/admin/orders.json
@@ -108,8 +112,14 @@ class Shops::Admin::OrdersController < Shops::Admin::BaseController
 
   private
 
+    def set_delivery_shop_and_order
+      @shop = Shop.name_and_deliverable_by(shop_name: params[:shop_id], user_id: current_user.id)
+      raise ActiveRecord::RecordNotFound if @shop.blank?
+      content_for :module, :shop_admin
+    end
+
     def set_order
-      @order = current_shop.orders.find(params[:id])
+      @order = @shop.orders.find(params[:id])
     end
 
     def order_params

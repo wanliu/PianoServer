@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160329065702) do
+ActiveRecord::Schema.define(version: 20160516085123) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -177,6 +177,17 @@ ActiveRecord::Schema.define(version: 20160329065702) do
   add_index "evaluations", ["order_id"], name: "index_evaluations_on_order_id", using: :btree
   add_index "evaluations", ["user_id"], name: "index_evaluations_on_user_id", using: :btree
 
+  create_table "express_templates", force: :cascade do |t|
+    t.integer  "shop_id"
+    t.string   "name"
+    t.boolean  "free_shipping", default: false
+    t.jsonb    "template",      default: {}
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+  end
+
+  add_index "express_templates", ["shop_id"], name: "index_express_templates_on_shop_id", using: :btree
+
   create_table "favorites", force: :cascade do |t|
     t.integer  "favoritor_id"
     t.string   "favoritor_type"
@@ -207,6 +218,20 @@ ActiveRecord::Schema.define(version: 20160329065702) do
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
   end
+
+  create_table "gifts", force: :cascade do |t|
+    t.integer  "item_id"
+    t.integer  "present_id"
+    t.integer  "quantity"
+    t.integer  "total"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.integer  "saled_counter", default: 0
+    t.jsonb    "properties",    default: {}
+  end
+
+  add_index "gifts", ["item_id"], name: "index_gifts_on_item_id", using: :btree
+  add_index "gifts", ["present_id"], name: "index_gifts_on_present_id", using: :btree
 
   create_table "industries", force: :cascade do |t|
     t.string   "name"
@@ -241,24 +266,24 @@ ActiveRecord::Schema.define(version: 20160329065702) do
     t.integer  "shop_category_id"
     t.integer  "shop_id"
     t.integer  "product_id"
-    t.decimal  "price",              precision: 10, scale: 2
+    t.decimal  "price",               precision: 10, scale: 2
     t.integer  "inventory"
-    t.boolean  "on_sale",                                     default: true
-    t.datetime "created_at",                                                  null: false
-    t.datetime "updated_at",                                                  null: false
+    t.boolean  "on_sale",                                      default: true
+    t.datetime "created_at",                                                   null: false
+    t.datetime "updated_at",                                                   null: false
     t.integer  "sid"
     t.string   "title"
     t.integer  "category_id"
-    t.decimal  "public_price",       precision: 10, scale: 2
-    t.decimal  "income_price",       precision: 10, scale: 2
-    t.jsonb    "images",                                      default: []
+    t.decimal  "public_price",        precision: 10, scale: 2
+    t.decimal  "income_price",        precision: 10, scale: 2
+    t.jsonb    "images",                                       default: []
     t.integer  "brand_id"
-    t.jsonb    "properties",                                  default: {}
+    t.jsonb    "properties",                                   default: {}
     t.text     "description"
-    t.decimal  "current_stock",      precision: 10, scale: 2
-    t.boolean  "abandom",                                     default: false, null: false
-    t.jsonb    "properties_setting",                          default: {}
-    t.jsonb    "delivery_fee",                                default: {}
+    t.decimal  "current_stock",       precision: 10, scale: 2
+    t.boolean  "abandom",                                      default: false, null: false
+    t.jsonb    "properties_setting",                           default: {}
+    t.integer  "express_template_id"
   end
 
   add_index "items", ["brand_id"], name: "index_items_on_brand_id", using: :btree
@@ -280,17 +305,6 @@ ActiveRecord::Schema.define(version: 20160329065702) do
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
   end
-
-  create_table "likes", force: :cascade do |t|
-    t.string   "liker_type"
-    t.integer  "liker_id"
-    t.string   "likeable_type"
-    t.integer  "likeable_id"
-    t.datetime "created_at"
-  end
-
-  add_index "likes", ["likeable_id", "likeable_type"], name: "fk_likeables", using: :btree
-  add_index "likes", ["liker_id", "liker_type"], name: "fk_likes", using: :btree
 
   create_table "line_items", force: :cascade do |t|
     t.integer  "itemable_id"
@@ -332,17 +346,6 @@ ActiveRecord::Schema.define(version: 20160329065702) do
     t.datetime "updated_at",                 null: false
   end
 
-  create_table "mentions", force: :cascade do |t|
-    t.string   "mentioner_type"
-    t.integer  "mentioner_id"
-    t.string   "mentionable_type"
-    t.integer  "mentionable_id"
-    t.datetime "created_at"
-  end
-
-  add_index "mentions", ["mentionable_id", "mentionable_type"], name: "fk_mentionables", using: :btree
-  add_index "mentions", ["mentioner_id", "mentioner_type"], name: "fk_mentions", using: :btree
-
   create_table "messages", force: :cascade do |t|
     t.integer  "messable_id"
     t.string   "messable_type"
@@ -382,6 +385,7 @@ ActiveRecord::Schema.define(version: 20160329065702) do
     t.jsonb    "properties",                              default: {}
     t.datetime "created_at",                                           null: false
     t.datetime "updated_at",                                           null: false
+    t.jsonb    "gifts",                                   default: {}
   end
 
   add_index "order_items", ["order_id"], name: "index_order_items_on_order_id", using: :btree
@@ -482,6 +486,16 @@ ActiveRecord::Schema.define(version: 20160329065702) do
   add_index "shop_categories", ["rgt"], name: "index_shop_categories_on_rgt", using: :btree
   add_index "shop_categories", ["shop_id"], name: "index_shop_categories_on_shop_id", using: :btree
 
+  create_table "shop_delivers", force: :cascade do |t|
+    t.integer  "shop_id"
+    t.integer  "deliver_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "shop_delivers", ["deliver_id"], name: "index_shop_delivers_on_deliver_id", using: :btree
+  add_index "shop_delivers", ["shop_id"], name: "index_shop_delivers_on_shop_id", using: :btree
+
   create_table "shops", force: :cascade do |t|
     t.integer  "owner_id"
     t.string   "name"
@@ -493,17 +507,17 @@ ActiveRecord::Schema.define(version: 20160329065702) do
     t.integer  "industry_id"
     t.text     "description"
     t.string   "provider"
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
     t.string   "logo"
+    t.jsonb    "settings",                    default: {}
     t.string   "address"
-    t.jsonb    "settings",          default: {}
-    t.integer  "shop_type",         default: 0
+    t.integer  "shop_type",                   default: 0
     t.float    "lat"
     t.float    "lon"
     t.integer  "location_id"
     t.string   "region_id"
-    t.jsonb    "item_delivery_fee", default: {}
+    t.integer  "default_express_template_id"
   end
 
   create_table "statuses", force: :cascade do |t|
@@ -644,10 +658,13 @@ ActiveRecord::Schema.define(version: 20160329065702) do
 
   add_index "variables", ["host_type", "host_id"], name: "index_variables_on_host_type_and_host_id", using: :btree
 
+  add_foreign_key "gifts", "items"
   add_foreign_key "order_items", "orders"
   add_foreign_key "orders", "shops", column: "supplier_id"
   add_foreign_key "orders", "users", column: "buyer_id"
   add_foreign_key "shop_categories", "shops"
+  add_foreign_key "shop_delivers", "shops"
+  add_foreign_key "shop_delivers", "users", column: "deliver_id"
   add_foreign_key "stock_changes", "items"
   add_foreign_key "stock_changes", "units"
   add_foreign_key "stock_changes", "users", column: "operator_id"

@@ -10,7 +10,7 @@ class Api::Promotions::DailyCheapController < Api::BaseController
     tail = page * per
 
     total = OneMoney.find(type: 'daily_cheap').count
-    items = OneMoney.find(type: 'daily_cheap').sort(by: :id, :limit => [start, tail], :order => "DESC ALPHA")
+    items = OneMoney.find(type: 'daily_cheap').sort_by(:start_at, :limit => [start, tail], :order => "DESC ALPHA")
     total_page = (total.to_f / per).ceil
 
     render json: {

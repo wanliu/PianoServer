@@ -4,13 +4,19 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
   include Shops::Admin::ItemHelper
   include ActionView::Helpers::SanitizeHelper
   include CombinationHash
-  include DeliveryAreaTitle
 
   respond_to :json, :html
 
   before_action :set_category, only: [:new_step2, :create]
   before_action :set_breadcrumb, only: [:new_step2, :create]
-  before_action :set_item, only: [:edit, :update, :destroy, :change_sale_state]
+  before_action :set_item, only: [
+    :edit, 
+    :update, 
+    :destroy, 
+    :search_gift,
+    :express_template,
+    :chose_express_template,
+    :change_sale_state]
 
   def index
     # page = params[:page].presence || 1
@@ -168,7 +174,6 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     else
       flash.now[:error] = "库存设置错误，请正确填写"
       set_stocks_for_feedback
-      set_express_fee
 
       render :edit
       return
@@ -184,7 +189,6 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     else
       flash.now[:error] = t(:update, scope: "flash.error.controllers.items")
       set_stocks_for_feedback
-      set_express_fee
 
       render :edit, status: :unprocessable_entity
     end
@@ -208,8 +212,6 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     end
 
     @stock = @item.stock_changes.sum(:quantity)
-
-    set_express_fee
   end
 
   def inventory_config
@@ -255,6 +257,23 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
     expire_page shop_shop_category_path(@shop.name, @item.shop_category.try(:id))
 
     render :destroy, formats: [:js]
+  end
+
+  def search_gift
+    items = Item.search_shop_items(q: params[:q], shop_id: @shop.id, except: @item.id)
+      .records
+      .page(params[:page])
+      .per(params[:per])
+
+    render json: items.as_json(methods: [:title, :cover_url])
+  end
+
+  def express_template
+  end
+
+  def chose_express_template
+    @origin_template_id = @item.express_template_id
+    @item.update(express_template_id: params[:template_id])
   end
 
   protected
@@ -339,16 +358,6 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
   def set_stocks_for_feedback
     if params[:inventories].present?
       @stocks_with_index = StockChange.extract_stocks_with_index(params[:inventories])
-    end
-  end
-
-  def set_express_fee
-    @delivery_fee_settings = @item.delivery_fee || {}
-    @delivery_fee_settings.each do |code, fee|
-      @delivery_fee_settings[code] = {
-        fee: fee,
-        title: get_code_title(code)
-      }
     end
   end
 end

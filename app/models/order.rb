@@ -37,12 +37,80 @@ class Order < ActiveRecord::Base
 
   paginates_per 5
 
+  # 购物车礼品
   # create new order_items
   # delete relevant cart_items
   # inventory deducting
+  # "options"=>{
+  #   "13"=>{"16"=>"2", "14"=>"1"}, 
+  #   "12"=>{"17"=>"-1.0", "19"=>"2", "22"=>"2"}, 
+  #   "15"=>{"undefined"=>""}
+  # }
+  def cart_item_gifts=(options)
+    @cart_item_ids = options.keys
+
+    options.each do |cart_item_id, gift_setting|
+      if gift_setting.has_key?("undefined")
+        cart_item = CartItem.find_by(id: cart_item_id)
+        unless cart_item.blank?
+          items.build(
+            price: cart_item.price, 
+            quantity: cart_item.quantity, 
+            title: cart_item.title, 
+            orderable_type: cart_item.cartable_type, 
+            orderable_id: cart_item.cartable_id, 
+            properties: cart_item.properties)
+        end
+      else
+        cart_item = CartItem.find_by(id: cart_item_id)
+
+        unless cart_item.blank?
+          items.build(
+            price: cart_item.price, 
+            quantity: cart_item.quantity, 
+            title: cart_item.title, 
+            orderable_type: cart_item.cartable_type, 
+            orderable_id: cart_item.cartable_id,
+            gifts: cart_item.gift_settings(gift_setting),
+            properties: cart_item.properties)
+        end
+      end
+
+      cart_item_id
+    end
+  end
+
+  # 立即购买的礼品
+  # create new order_items
+  # delete relevant cart_items
+  # inventory deducting
+  # 与cart_item_gifts不同的是，这里的key是商品item的id, 而cart_item_gifts的key是cart_item的id
+  # "options"=>{
+  #   "13"=>{"16"=>"2", "14"=>"1"}, 
+  #   "12"=>{"17"=>"-1.0", "19"=>"2", "22"=>"2"}, 
+  #   "15"=>{"undefined"=>""}
+  # }
+  def item_gifts=(options)
+    options.each do |item_id, gift_setting|
+      unless gift_setting.has_key?("undefined")
+        item = Item.find_by(id: item_id)
+
+        unless item.blank?
+          order_item = items.find do |item|
+            item.orderable_type == "Item" &&
+              item.orderable_id.to_s == item_id
+          end
+
+          unless order_item.blank?
+            order_item.gifts = order_item.gift_settings(gift_setting)
+          end
+        end
+      end
+    end
+  end
+
   def cart_item_ids=(ids)
     @cart_item_ids = ids
-
     ids.each do |cart_item_id|
       item = CartItem.find_by(id: cart_item_id)
 
@@ -76,18 +144,10 @@ class Order < ActiveRecord::Base
   end
 
   def save_with_items(operator)
-    delivry_region_id = Location.find(address_id).region_id
-
     self.transaction do
       CartItem.destroy(cart_item_ids) if cart_item_ids.present?
       begin
-        self.express_fee = 0
-
-        items.each do |order_item|
-          if order_item.orderable_type == "Item"
-            self.express_fee += order_item.quantity * Item.find(order_item.orderable_id).delivery_fee_to(delivry_region_id)
-          end
-        end
+        set_express_fee
 
         save!
 
@@ -123,6 +183,16 @@ class Order < ActiveRecord::Base
         raise ActiveRecord::Rollback
         false
       end
+    end
+  end
+
+  def set_express_fee
+    return 0 if address_id.blank?
+
+    delivery_region_id = Location.find(address_id).region_id
+
+    self.express_fee = items.reduce(0) do |sum, item|
+      sum += item.express_fee(delivery_region_id)
     end
   end
 

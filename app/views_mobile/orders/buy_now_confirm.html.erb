@@ -17,27 +17,86 @@
       <%= f.fields_for :items do |item_form| %>
         <%= item_form.hidden_field :orderable_type %>
         <%= item_form.hidden_field :orderable_id %>
-        <%= item_form.hidden_field :title %>
-        <%= item_form.hidden_field :price %>
+
         <% @order_item.properties.each do |key, value| %>
           <%= item_form.hidden_field "properties[#{key}]", value: value %>
         <% end %>
         <%= render partial: "buy_now_item", locals: { item: @order_item, supplier: @supplier, f: item_form, props: @props } %>
+
+        <% if @orderable.try(:gifts).blank? %>
+          <%= hidden_field_tag "order[item_gifts][#{@orderable.id}][undefined]", nil, { multiple: true } %>
+        <% else %>
+          <% @orderable.gifts.each do |gift| %>
+            <%= hidden_field_tag "order[item_gifts][#{@orderable.id}][#{gift.id}]", gift.eval_available_quantity(@order_item.quantity), { multiple: true } %>
+          <% end %>
+        <% end %>
+      <% end %>
+
+      <% if @orderable.is_a? Item %>
+        <% has_available_gifts = @orderable.available_gifts.present? %>
+        <div class='mobile-gifts' style="<%= has_available_gifts ? '' : 'display: none' %>">
+          <div class='head'></div>
+          <div class='mobile-cart-gifts'>
+            <% @orderable.available_gifts.each do |gift| %>
+              <div class='cart-gift' data-gift-id="<%= gift.id %>">
+                <div class='desc'>
+                  <div class='avatar'>
+                    <%= image_tag gift.avatar_url %>
+                  </div>
+                  <div class='title-quantity'>
+                    <div class='title'>
+                      <span>
+                        <%= truncate("#{gift.present.title} #{gift.properties_title}", length: 15) %>
+                      </span>
+                    </div>
+                    <div class='gift-quantity'>
+                      <span>数量：<%= gift.available_quantity %></span>
+                    </div>
+                  </div>
+                  <div style='clear: both;'></div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
       <% end %>
 
       <div class='footer'>
-        <span>
-          已选择<span class='total-quantity'><%= @order_item.quantity %></span> 件商品&emsp;合计<span class='total-total'><%= @order_item.price * @order_item.quantity %></span>元
-        </span>
+        <div class="confirmation-total">
+          <%= render "confirmation_total" %>
+        </div>
         <%= f.submit "结  算", class: 'submit' %>
       </div>
     </div>
   <% end %>
 </div>
 
-<script type="text/javascript">
+<script type="text/template" id="mobile-gift-template">
+  <div class='cart-gift' data-gift-id="{{= id }}">
+    <div class='desc'>
+      <div class='avatar'>
+        <img src='{{= avatar_url }}'>
+      </div>
+      <div class='title-quantity'>
+        <div class='title'>
+          <span>
+            {{= composed_title }}
+          </span>
+        </div>
+        <div class='gift-quantity'>
+          <span>数量：{{= quantity }}</span>
+        </div>
+      </div>
+      <div style='clear: both;'></div>
+    </div>
+  </div>
+</script>
 
- // 通过减少按钮，修改所购商品数量
+<script type="text/javascript">
+(function () {
+  var giftTpl = _.template($('#mobile-gift-template').html());
+
+  // 通过减少按钮，修改所购商品数量
   $('.cart-item').on('click', '.btn-minus', function (event) {
     var quantityInput = $(this).parents('tr:first').find('.quantity');
     var quantity = parseInt($(quantityInput).text(), 10);
@@ -62,24 +121,52 @@
         $quantity = $cartItem.find('.quantity'),
         $subTotal = $cartItem.find('.subtotal'),
         $btnMinus = $cartItem.find('span.btn-minus'),
-        $formQuanInput = $cartItem.find('#order_items_attributes_0_quantity'),
-        $group = $(quantityInput).parents('.cart-group'),
-        $totalQuan = $group.find('.total-quantity'),
-        $totalTotal = $group.find('.total-total'),
-        price = parseFloat($cartItem.find('span.price').text().replace('¥', ''));
-
-    var total = price * quantity;
+        $formQuanInput = $cartItem.find('#order_items_attributes_0_quantity');
 
     $quantity.text(quantity);
-    $totalQuan.text(quantity);
     $formQuanInput.val(quantity);
-    $subTotal.text('¥' + total);
-    $totalTotal.text('¥' + total)
 
     if (+quantity > 1) {
       $btnMinus.addClass('glyphicon-minus');
     } else {
       $btnMinus.removeClass('glyphicon-minus');
     }
+
+    <% if @orderable.is_a? (Item) %>
+      $.getJSON('/order_items/buy_now_gifts', {
+        item_id: <%= @orderable.id %>,
+        quantity: quantity
+      }).done(function(data) {
+        renderGifts(data.gifts);
+        revaluateTotal();
+      })
+
+      function revaluateTotal () {
+        var formData = $('#new_order').serialize()
+        $.post('/orders/express_fee?' + formData)
+          .done(function(html) {
+            $('.confirmation-total').html(html);
+          })
+      }
+
+      function renderGifts(gifts) {
+        var $gifts = $('.mobile-gifts');
+        var $container = $gifts.find('.mobile-cart-gifts');
+
+        $container.html('');
+
+        if (gifts.length > 0) {
+          _.each(gifts, function(gift) {
+            var html = giftTpl(gift);
+            var $hiddenInput = $("#order_item_gifts_" + <%= @orderable.id %> + "_" + gift.id);
+            $hiddenInput.val(gift.quantity);
+            $container.append(html);
+          });
+        } else {
+          $gifts.hide();
+        }
+      }
+    <% end %>
   }
+})();
 </script>

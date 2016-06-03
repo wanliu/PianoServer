@@ -1,0 +1,6 @@
+zh-CN:
+  activerecord:
+    models:
+      shop: 商店
+    attributes:
+      dafault_express_template: 默认运费模板

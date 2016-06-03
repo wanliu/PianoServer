@@ -45,6 +45,7 @@ class OneMoney < Ohm::Model
 
   index :name
   index :type
+  index :start_at
 
   attr_accessor :query
 

@@ -7,10 +7,10 @@ class Api::ItemsController < Api::BaseController
       .per(params[:per])
       .records
 
-    render json: { 
-      items: @items.as_json(except: [:income_price], methods: [:shop_name, :shop_realname]), 
-      page: @items.current_page, 
-      total_page: @items.total_pages 
+    render json: {
+      items: @items.as_json(except: [:income_price], methods: [:shop_name, :shop_realname]),
+      page: @items.current_page,
+      total_page: @items.total_pages
     }
   end
 
@@ -27,8 +27,8 @@ class Api::ItemsController < Api::BaseController
     @items = Item.where(id: item_ids)
 
     render json: {
-      items: @items.as_json(except: [:income_price], methods: [:shop_name, :shop_realname]), 
-      page: hots.current_page, 
+      items: @items.as_json(except: [:income_price], methods: [:shop_name, :shop_realname]),
+      page: hots.current_page,
       total_page: hots.total_pages
     }
   end
@@ -45,7 +45,8 @@ class Api::ItemsController < Api::BaseController
       end
 
     count = item.order_items.where("created_at > :since", since: since).count
+    current_stock = item.current_stock
 
-    render json: { saled_count: count }
+    render json: { saled_count: count, stock: current_stock }
   end
 end
