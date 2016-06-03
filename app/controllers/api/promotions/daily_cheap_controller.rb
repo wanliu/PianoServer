@@ -10,7 +10,7 @@ class Api::Promotions::DailyCheapController < Api::BaseController
     tail = page * per
 
     total = OneMoney.find(type: 'daily_cheap').count
-    items = OneMoney.find(type: 'daily_cheap').sort_by(:start_at, :limit => [start, tail], :order => "DESC ALPHA")
+    items = OneMoney.find(type: 'daily_cheap', is_open: true).sort_by(:start_at, :limit => [start, tail], :order => "DESC ALPHA")
     total_page = (total.to_f / per).ceil
 
     render json: {
@@ -18,5 +18,19 @@ class Api::Promotions::DailyCheapController < Api::BaseController
       page: page,
       total_page: total_page
     }
+  end
+
+  def latest
+    daily_cheaps = OneMoney.find(type: 'daily_cheap', is_open: true).sort_by(:start_at, :limit => [0, 1], :order => "DESC ALPHA")
+
+    if daily_cheaps.length > 0
+      daily_cheap = daily_cheaps[0]
+      hash = daily_cheap.to_hash
+      hash[:items] = daily_cheap.items
+
+      render json: hash
+    else
+      render json: {}
+    end
   end
 end
