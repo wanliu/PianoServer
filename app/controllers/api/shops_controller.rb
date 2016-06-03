@@ -14,7 +14,7 @@ class Api::ShopsController < Api::BaseController
   end
 
   def favorite_count
-    favorites = @shop.favoritables
+    favorites = @shop.favorites
     count = favorites.count
 
     render json: { count: count }

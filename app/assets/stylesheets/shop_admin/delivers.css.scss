@@ -34,12 +34,16 @@
       .item {
         float: left; 
         margin: 10px; 
-        width:100px; 
+        width:120px; 
         height: 100px;
 
         &.empty {
           width: 100%;
           padding: 20px;
+        }
+
+        img {
+          height: 50px;
         }
 
         .username {
@@ -53,8 +57,12 @@
     .item {
       float: left; 
       margin: 10px; 
-      width:100px; 
+      width:120px; 
       height: 100px;
+
+      img {
+        height: 50px;
+      }
 
       .username {
         word-break: break-word;

@@ -28,6 +28,7 @@ class Item < ActiveRecord::Base
   has_many :stock_changes, autosave: true
   has_many :evaluations, as: :evaluationable
 
+  has_many :order_items, as: :orderable
   has_many :gifts
   has_many :items, through: :gifts
   has_many :presents, through: :gifts
