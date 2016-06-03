@@ -24,7 +24,7 @@
         </span>
       </div>
 
-      <table class='table table-bordered' style='background-color: white;'>
+      <table class='table table-bordered'>
         <colgroup>
           <col width='35%' />
           <col width='15%' />
@@ -43,6 +43,47 @@
           </td>
         </tr>
       </table>
+
+      <div class="coupons">
+        <div class="selectable-coupons">
+          <ul class="list-group">
+            <% @order.available_coupons(coupon_ids: @order.coupon_ids).each do |coupon| %>
+              <li class="list-group-item coupon" data-coupon-id="<%= coupon.id %>">
+                <%= coupon.name %> 减<%= coupon.par %>元
+                <button class='btn btn-default use-coupon'>使用</button>
+                <%= hidden_field_tag "order[coupon_ids][]", coupon.id, disabled: true %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+
+        <div class="selected-coupons">
+          <% @order.coupons.each do |coupon| %>
+            <div class="coupon" data-coupon-id="<%= coupon.id %>">
+              <%= coupon.name %> 减<%= coupon.par %>元
+              <%= hidden_field_tag "order[coupon_ids][]", coupon.id %>
+              <button class='btn btn-default delete-coupon'>删除</button>
+            </div>
+          <% end %>
+        </div>
+      </div>
     </div>
   <% end %>
 </div>
+
+<script type="text/javascript">
+  (function() {
+    $('.use-coupon').click(function() {
+      var $el = $(this);
+      $(this).closest("ul").find('.use-coupon').attr("disabled", "disabled");
+      $(this).closest(".coupon").find('input').removeAttr("disabled");
+
+      var data = $(this).closest('form').serialize();
+      $.post('/orders/select_coupon?' + data)
+        .done(function(data) {
+          $el.parent('.coupon').remove();
+          // $el.closest("ul").find('.use-coupon').attr("disabled", "disabled");
+        })
+    });
+  })();
+</script>

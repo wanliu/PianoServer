@@ -26,7 +26,7 @@ class Coupon < ActiveRecord::Base
 
   paginates_per 10
 
-  delegate :overlap, :par, :apply_minimal_total, to: :coupon_template
+  delegate :overlap, :par, :apply_minimal_total, :name, to: :coupon_template
 
   belongs_to :coupon_template, counter_cache: true
   belongs_to :receiver_shop, class_name: 'Shop'

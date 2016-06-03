@@ -116,6 +116,19 @@ class OrdersController < ApplicationController
     set_addresses_add_express_fee
   end
 
+  def select_coupon
+    order = current_user.orders.build(order_params)
+    
+    render_coupons(order)
+  end
+
+  def buy_now_select_coupon
+    order = current_user.orders.build(buy_now_order_params)
+    order.items.each(&:set_initial_attributes)
+
+    render_coupons(order)
+  end
+
   # 直接购买
   def buy_now_confirm
     @order = current_user.orders.build
@@ -283,7 +296,11 @@ class OrdersController < ApplicationController
 
   def buy_now_order_params
     params.require(:order)
-      .permit(:supplier_id, :address_id, :note, items_attributes: [:orderable_type, :orderable_id, :quantity])
+      .permit(:supplier_id,
+        :address_id, 
+        :note, 
+        items_attributes: [:orderable_type, :orderable_id, :quantity],
+        coupon_ids: [])
       .tap do |white_list|
         white_list[:items_attributes].each do |key, attributes|
           attributes[:properties] = params[:order][:items_attributes][key][:properties] || {}
@@ -331,8 +348,9 @@ class OrdersController < ApplicationController
       .permit(:supplier_id, 
         :address_id, 
         :pmo_grab_id, 
-        :one_money_id, 
-        :note).tap do |white_list|
+        :one_money_id,
+        :note,
+        coupon_ids: []).tap do |white_list|
       if params[:order][:cart_item_ids].present?
         white_list[:cart_item_ids] = params[:order][:cart_item_ids]
       end
@@ -387,5 +405,20 @@ class OrdersController < ApplicationController
         white_list[:evaluationable_id] = @item.orderable_id
         white_list[:user_id] = current_user.id
       end
+  end
+
+  def render_coupons(order)
+    coupons = order.coupons
+    avaliables = order.available_coupons(coupon_ids: order.coupon_ids)
+
+    serialize_options = {
+      only: [:id, :start_time, :end_time], 
+      methods: [:name, :par, :apply_minimal_total, :overlap]
+    }
+
+    render json: {
+      coupons: coupons.as_json(serialize_options),
+      avaliable: avaliables.as_json(serialize_options)
+    }
   end
 end

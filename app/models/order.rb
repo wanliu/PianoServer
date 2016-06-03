@@ -14,7 +14,7 @@ class Order < ActiveRecord::Base
   has_many :evaluations
   accepts_nested_attributes_for :evaluations
 
-  attr_accessor :cart_item_ids, :address_id, :request_ip
+  attr_accessor :cart_item_ids, :address_id, :request_ip, :coupon_ids
   # attr_reader :coupon_ids
 
   enum status: { initiated: 0, finish: 1 }
@@ -298,6 +298,10 @@ class Order < ActiveRecord::Base
 
   def items_total
     items.reduce(0) { |total, item| total += item.price * item.quantity }
+  end
+
+  def coupons
+    buyer.coupons.joins(:coupon_template).where(id: coupon_ids)
   end
 
   # what coupons can I use?

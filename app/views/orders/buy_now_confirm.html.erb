@@ -50,6 +50,30 @@
           </td>
         </tr>
       </table>
+
+      <div class="coupons">
+        <div class="selectable-coupons">
+          <ul class="list-group">
+            <% @order.available_coupons(coupon_ids: @order.coupon_ids).each do |coupon| %>
+              <li class="list-group-item coupon" data-coupon-id="<%= coupon.id %>">
+                <%= coupon.name %> 减<%= coupon.par %>元
+                <button class='btn btn-default use-coupon' type='button' role='button'>使用</button>
+                <%= hidden_field_tag "order[coupon_ids][]", coupon.id, disabled: true %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+
+        <div class="selected-coupons">
+          <% @order.coupons.each do |coupon| %>
+            <div class="coupon" data-coupon-id="<%= coupon.id %>">
+              <%= coupon.name %> 减<%= coupon.par %>元
+              <%= hidden_field_tag "order[coupon_ids][]", coupon.id %>
+              <button class='btn btn-default delete-coupon' type='button' role='button'>删除</button>
+            </div>
+          <% end %>
+        </div>
+      </div>
     </div>
   <% end %>
 </div>
@@ -92,6 +116,19 @@
       if (!quantity) return;
 
       changeQuantity(this, quantity);
+    });
+
+    $('.use-coupon').click(function() {
+      var $el = $(this);
+      $(this).closest("ul").find('.use-coupon').attr("disabled", "disabled");
+      $(this).closest(".coupon").find('input').removeAttr("disabled");
+
+      var data = $(this).closest('form').serialize();
+      $.post('/orders/buy_now_select_coupon?' + data)
+        .done(function(data) {
+          $el.parent('.coupon').remove();
+          // $el.closest("ul").find('.use-coupon').attr("disabled", "disabled");
+        })
     });
 
     function changeQuantity(quantityDom, quantity) {
