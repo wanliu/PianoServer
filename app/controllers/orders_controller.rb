@@ -36,9 +36,10 @@ class OrdersController < ApplicationController
       :evaluate,
       :evaluate_item,
       :create_evaluations,
-      :evaluate_item_create,
-      :receive,
-      :qrcode_receive
+      :evaluate_item_create, 
+      :receive, 
+      :qrcode_receive,
+      :express_fee
     ]
 
   before_action :set_order_item, only: [:evaluate_item, :evaluate_item_create]
@@ -93,9 +94,9 @@ class OrdersController < ApplicationController
         format.json { render json: @order, status: :created }
         format.html { redirect_to @order }
       else
-        format.any(:html, :mobile) do
+        format.html do
           set_feed_back
-          set_addresses
+          set_addresses_add_express_fee
           flash.now[:error] = @order.errors.full_messages.join(', ')
 
           render :confirmation, status: :unprocessable_entity
@@ -112,36 +113,25 @@ class OrdersController < ApplicationController
 
     set_feed_back
 
-    set_addresses
+    set_addresses_add_express_fee
   end
 
   # 直接购买
   def buy_now_confirm
     @order = current_user.orders.build
 
-    # @cart_item = CartItem.new(order_item_params)
     @order_item = @order.items.build(order_item_params)
 
     @order.supplier_id = @order_item.orderable.try(:shop_id)
-    @order_item.quantity ||= 1
-    @order_item.title = @order_item.orderable.title
 
-    # sale_mode = current_anonymous_or_user.sale_mode
-    @order_item.price =
-      case @order_item.orderable
-      when Item
-        # if sale_mode == "retail"
-          # @order_item.orderable.public_price
-        # else
-        @order_item.orderable.price
-        # end
-      when Promotion
-        @order_item.orderable.discount_price
-      else
-        0
-      end
+    @order_item.set_initial_attributes
 
-    set_addresses
+    @orderable = @order_item.orderable
+    if @orderable.is_a? Item
+      @orderable.eval_available_gifts(@order_item.quantity)
+    end
+
+    set_addresses_add_express_fee
 
     @supplier = @order.supplier
 
@@ -154,13 +144,15 @@ class OrdersController < ApplicationController
   def buy_now_create
     @order = current_user.orders.build(buy_now_order_params)
 
+    @order.items.each(&:set_initial_attributes)
+
     respond_to do |format|
       if @order.save_with_items(current_user)
         format.html { redirect_to @order }
         format.mobile { redirect_to @order }
         format.json { render json: @order, status: :created }
       else
-        format.any(:html, :mobile) do
+        format.html do
           @order_item = @order.items.first
           @delivery_addresses = current_user.locations.order(id: :asc)
           @supplier = @order.supplier
@@ -207,6 +199,22 @@ class OrdersController < ApplicationController
     @order.destroy
 
     head :no_content
+  end
+
+  # 用户切换收货地址时，计算新地址的运送费用
+  def express_fee
+    @order = current_user.orders.build(express_fee_params)
+    @order.set_express_fee
+
+    @order.items.each do |item|
+      item.price = item.caculate_price
+    end
+
+    # if params[:order][:items_attributes].present?
+    #   render partial: "buy_now_confirmation_total"
+    # else
+      render partial: "confirmation_total"
+    # end
   end
 
   # 批量评价
@@ -275,10 +283,14 @@ class OrdersController < ApplicationController
 
   def buy_now_order_params
     params.require(:order)
-      .permit(:supplier_id, :address_id, :note, items_attributes: [:orderable_type, :orderable_id, :quantity, :price, :title])
+      .permit(:supplier_id, :address_id, :note, items_attributes: [:orderable_type, :orderable_id, :quantity])
       .tap do |white_list|
         white_list[:items_attributes].each do |key, attributes|
           attributes[:properties] = params[:order][:items_attributes][key][:properties] || {}
+        end
+
+        if params[:order][:item_gifts].present?
+          white_list[:item_gifts] = params[:order][:item_gifts]
         end
       end
   end
@@ -290,14 +302,14 @@ class OrdersController < ApplicationController
   end
 
   def set_feed_back
-    @order_items = current_user.cart.items.find(params[:order][:cart_item_ids] || [])
+    @order_items = current_user.cart.items.find(@order.cart_item_ids || [])
 
     @supplier = Shop.find(params[:order][:supplier_id])
 
     @total = @order_items.reduce(0) { |total, item| total += item.price * item.quantity }
   end
 
-  def set_addresses
+  def set_addresses_add_express_fee
     shop_address = current_user.owner_shop.try(:location)
     @delivery_addresses = [shop_address].concat current_user.locations.order(id: :asc)
     @delivery_addresses.compact!
@@ -310,11 +322,33 @@ class OrdersController < ApplicationController
       elsif @delivery_addresses.present?
         @delivery_addresses.first.id
       end
+
+    @order.set_express_fee
   end
 
   def order_params
     params.require(:order)
-      .permit(:supplier_id, :address_id, :pmo_grab_id, :one_money_id, :note, cart_item_ids: [])
+      .permit(:supplier_id, 
+        :address_id, 
+        :pmo_grab_id, 
+        :one_money_id, 
+        :note).tap do |white_list|
+      if params[:order][:cart_item_ids].present?
+        white_list[:cart_item_ids] = params[:order][:cart_item_ids]
+      end
+
+      if params[:order][:cart_item_gifts].present?
+        white_list[:cart_item_gifts] = params[:order][:cart_item_gifts]
+      end
+    end
+  end
+
+  def express_fee_params
+    order_params.tap do |white_list|
+      if params[:order][:items_attributes].present?
+        white_list[:items_attributes] = params[:order][:items_attributes]
+      end
+    end
   end
 
   def location_params

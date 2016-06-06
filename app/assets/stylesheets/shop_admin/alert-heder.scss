@@ -1,0 +1,16 @@
+.alert-header {
+  position: relative;
+  padding: 20px 0 10px 0;
+  margin: 10px 0;
+  border-bottom: 1px solid #ddd;
+
+  &.no-bottom-border {
+    border-bottom: none;
+  }
+
+  .alert {
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+}

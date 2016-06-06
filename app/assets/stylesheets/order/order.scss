@@ -1,0 +1,104 @@
+.order {
+  td {
+    vertical-align: middle!important;
+  }
+
+  .item td {
+    text-align: center;
+
+    .modal {
+      text-align: left;
+    }
+  }
+
+  li.header-show a {
+    color: #777777;
+    padding: 10px 15px;
+  }
+
+  .head {
+    font-size: 16px;
+
+    .shop {
+      display: inline-block;
+      margin-right: 10px;
+
+      img {
+        width: 25px;
+        height: 25px;
+      }
+    }
+  }
+
+  .avatar {
+    img {
+      width: 60px;
+      height: 60px;
+      float: left;
+      margin-right: 10px;
+    }
+
+    .title {
+      font-size: 16px;
+      color: black;
+      display: inline-block;
+      float: left;
+    }
+  }
+
+  .info-head {
+    background-color: red;
+    color: white;
+    position: relative;
+    padding: 10px;
+
+    .status {
+      height: 100px;
+      position: absolute;
+      top: 20px;
+      right: 0;
+    }
+  }
+
+  .receiver-info, .details {
+    font-size: 13px;
+    padding: 10px;
+
+    div {
+      padding: 5px 0;
+    }
+  }
+
+  .details {
+    border-top: 1px solid #ddd;
+  }
+
+  .operation {
+    padding: 5px 10px;
+  }
+
+  .center {
+    margin-left: auto;
+    margin-right: auto;
+    width: 150px;
+    height: 150px;
+
+    img {
+      width: 150px;
+      height: 150px;          
+    }
+  }
+  
+  .operation {
+    vertical-align: top;
+
+    .finish-order {
+      margin-top: 15px;
+      margin-bottom: 10px;
+    }
+
+    .detail a {
+      color: #d9534f;
+    }
+  }
+}

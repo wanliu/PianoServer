@@ -47,6 +47,12 @@ class OrderItemsController < ApplicationController
     head :no_content
   end
 
+  # 计算赠品数量
+  def buy_now_gifts
+    @item = Item.find(params[:item_id])
+    @quantity = params[:quantity].to_i
+  end
+
   private
 
     def set_order_item

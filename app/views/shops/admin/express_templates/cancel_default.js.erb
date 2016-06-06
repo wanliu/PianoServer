@@ -1,0 +1,27 @@
+<% if current_shop.errors.present? %>
+  (function() {
+    var $alert = $(".errors.alert");
+    $alert .html("取消默认运费模板失败！<%= current_shop.errors.full_messages.join(', ') %>")
+      .show();
+
+    setTimeout(function() {
+      $alert.fadeOut(function() {
+        $alert.html("");
+      });
+    }, 5000);
+  })();
+<% else %>
+  (function() {
+    var $alert = $(".infors.alert");
+    $alert.html("取消默认运费模板成功！").show();
+
+    var $originTr = $("tr.info");
+    $originTr.removeClass('info').addClass('no-info');
+
+    setTimeout(function() {
+      $alert.fadeOut(function() {
+        $alert.html("");
+      });
+    }, 5000);
+  })();
+<% end %>

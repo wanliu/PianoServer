@@ -25,19 +25,27 @@
         <%= f.fields_for :items do |item_form| %>
           <%= item_form.hidden_field :orderable_type %>
           <%= item_form.hidden_field :orderable_id %>
-          <%= item_form.hidden_field :title %>
-          <%= item_form.hidden_field :price %>
+
           <% @order_item.properties.each do |key, value| %>
             <%= item_form.hidden_field "properties[#{key}]", value: value %>
           <% end %>
-          <%= render partial: "buy_now_item", locals: { item: @order_item, supplier: @supplier, f: item_form, props: @props } %>
+          <%= render partial: "buy_now_item", locals: { item: @order_item, supplier: @supplier, f: item_form, props: @props, orderable: @orderable } %>
+
+          <% if @orderable.try(:gifts).blank? %>
+            <%= hidden_field_tag "order[item_gifts][#{@orderable.id}][undefined]", nil, { multiple: true } %>
+          <% else %>
+            <% @orderable.gifts.each do |gift| %>
+              <%= hidden_field_tag "order[item_gifts][#{@orderable.id}][#{gift.id}]", gift.eval_available_quantity(@order_item.quantity), { multiple: true } %>
+            <% end %>
+          <% end %>
         <% end %>
       
         <tr class='footer'>
           <td colspan='5' class='text-right'>
-            <span>
-              已选择<span class='total-quantity'><%= @order_item.quantity %></span> 件商品&emsp;合计<span class='total-total'><%= @order_item.price * @order_item.quantity %></span>元
-            </span>
+            <div class='confirmation-total'>
+              <%= render "confirmation_total" %>
+            </div>
+
             <%= f.submit "提交订单", class: 'submit'%>
           </td>
         </tr>
@@ -46,33 +54,69 @@
   <% end %>
 </div>
 
+<script type="text/template" id="cart-item-gifts-template">
+    <div class='cart-gift' data-gift-id="{{= id }}">
+      <div class='head'>
+        <%= image_tag "gift-white.png" %>
+      </div>
+      <div class='desc'>
+        <div class='avatar'>
+          <img src="{{= avatar_url }}" >
+        </div>
+        <div class='title-quantity'>
+          <div class='title'>
+            <span>
+              {{= composed_title }}
+            </span>
+          </div>
+          <div class='gift-quantity'>
+            <span>数量：{{= quantity }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+</script>
+
 <script type="text/javascript">
-  // TODO backed calculating
-  $('.cart_item_quantity').change(function(event, value) {
-    var quantity = value ? value : (1 * $(this).val());
+  (function() {
 
-    changeQuantity(this, quantity);
-  });
+    // TODO backed calculating
+    $('.cart_item_quantity').change(function(event, value) {
+      var quantity = value ? value : (1 * $(this).val());
 
-  $('.cart_item_quantity').keyup(function(event) {
-    var quantity = $(this).val();
-    if (!quantity) return;
+      changeQuantity(this, quantity);
+    });
 
-    changeQuantity(this, quantity);
-  });
+    $('.cart_item_quantity').keyup(function(event) {
+      var quantity = $(this).val();
+      if (!quantity) return;
 
-  function changeQuantity(quantityDom, quantity) {
-    var attrId = $(quantityDom).attr('id');
-    var priceAttrId = attrId.replace('quantity', 'price');
-    var $price = $('#' + priceAttrId);
-    var price = 1 * $price.val();
-    var $subtotal = $(quantityDom).parents('.quantity').siblings('.subtotal');
-    var $total = $('.js-buy-now-total');
+      changeQuantity(this, quantity);
+    });
 
-    quantity = 1 * quantity;
+    function changeQuantity(quantityDom, quantity) {
+      quantity = 1 * quantity;
 
-    var subTotal = (price * quantity).toFixed(2);
-    $subtotal.text("¥ " + subTotal);
-    $total.text(subTotal);
-  }
+      <% if @orderable.is_a?(Item) %>
+        $.getJSON('/order_items/buy_now_gifts', {
+          item_id: <%= @orderable.id %>,
+          quantity: quantity
+        }).done(function(data) {
+          var $cartItem = $(quantityDom).closest('.cart-item')
+          CartGroup.rerenderItemGifts({gifts: data.gifts, el: $cartItem});
+
+          _.each(data.gifts, function(gift) {
+            var $hiddenInput = $("#order_item_gifts_" + <%= @orderable.id %> + "_" + gift.id);
+            $hiddenInput.val(gift.quantity);
+          });
+
+          var formData = $('#new_order').serialize()
+          $.post('/orders/express_fee?' + formData)
+            .done(function(html) {
+              $('.confirmation-total').html(html);
+            })
+        })
+      <% end %>
+    }
+  })();
 </script>

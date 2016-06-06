@@ -1,0 +1,265 @@
+.buy-now-confirm {
+  color: #777777;
+
+  // .cart-group {
+  //   .shop a {
+  //     color: #555;
+  //     font-size: 16px;
+  //     text-decoration: none;
+  //   }
+  // }
+
+  // .header {
+  //   padding: 10px 10px;
+
+  //   img {
+  //     width: 40px;
+  //     height: 40px;
+  //     margin-right: 10px;
+  //   }
+  // }
+
+  // .avatar {
+  //   img {
+  //     width: 80px;
+  //     height: 80px;
+  //   }
+  // }
+
+  table {
+    tr.footer td {
+      padding: 0;
+      text-align: right;
+
+      .submit {
+        border: none;
+        background-color: red;
+        padding: 10px 30px;
+        color: white;
+        font-size: 16px;
+        margin-left: 20px;
+      }
+
+      .cancel {
+        display: inline-block;
+        border: none;
+        background-color: #ff7c1c;;
+        padding: 10px 30px;
+        margin-right: -25px;
+        color: white;
+        font-size: 16px;
+      }
+    }
+
+    td {
+      vertical-align: middle!important;
+      text-align: center;
+    }
+  }
+
+
+  .quantity {
+    max-width: 161px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+
+    .btn-minus {
+      color: #707070;
+      background: #EEEEEE;
+      outline: none;
+      height: 34px;
+      border: 1px solid #CCCCCC;
+      border-right: none;
+      min-width: 40px;
+    }
+
+    .btn-plus {
+      color: #707070;
+      background: #EEEEEE;
+      outline: none;
+      height: 34px;
+      border: 1px solid #CCCCCC;      
+    }
+
+    input {
+      width: 100%;
+      text-align: center;
+      // border-width: 1px 0;
+    }
+
+    .alert {
+      position: absolute;
+      height: 30px;
+      bottom: -30px;
+      padding: 5px;
+      font-size: 10px;
+      border-radius: none;
+      margin-bottom: 0;
+      width: 100%;
+
+      p {
+        text-align: center;
+      }
+    }
+  }
+
+  label {
+    > * {
+      pointer-events: none;
+    }
+    display: inline-block;
+    margin: 0;
+
+    input[type=checkbox] {
+      display: none;
+    }
+
+    input[type=checkbox]{
+      + .checkbox-simulator {
+        width: 16px;
+        height: 16px;
+        border: 1px solid #ff7c1c;
+
+        .check {
+          display: none;
+        }
+      }
+      &:checked + .checkbox-simulator {
+        width: 16px;
+        height: 16px;
+        border: 1px solid #ff7c1c;
+
+        .check {
+          display: block;
+          width: 10px;
+          height: 10px;
+          margin: 2px;
+          background-color: #ff7c1c;
+          box-shadow: none;
+        }
+      }
+    }
+
+    .checkbox-simulator {
+      width: 16px;
+      height: 16px;
+      border: 1px solid #c4c4c4;
+    }
+  }
+
+  li.header-show a {
+    color: #777777;
+    padding: 10px 15px;
+  }
+
+  .cart-group {
+    .check-item, .check-all {
+      display: table-cell;
+      vertical-align: middle;
+    }
+
+    .shop a {
+      color: #555;
+      font-size: 16px;
+      text-decoration: none;
+    }
+
+    .header {
+      background-color: white;
+      padding: 10px 10px;
+
+      img {
+        width: 30px;
+        height: 30px;
+      }
+    }
+
+    .cart-item {
+      &.unsaleable {
+        color: #ccc;
+
+        .unsaleable {
+          background: #dadada;
+          color: #5f5f5f;
+        }
+
+        .subtotal {
+          color: #ccc;
+        }
+      }
+
+      .item-title {
+        text-align: left;
+      }
+
+      .row {
+        margin-left: 0;
+        margin-right: 0;
+      }
+
+      .avatar {
+        padding-left: 10px;
+
+        img {
+          width: 70px;
+          height: 70px;
+        }
+      }
+
+      .row {
+        display: table;
+
+        .avatar {
+          display: table-cell;
+          float: none;
+          padding-top: 10px;
+          padding-bottom: 10px;
+        }
+
+        .remove-item {
+          text-decoration: none;
+          vertical-align: middle;
+          background-color: #ff7c1c;
+          display: table-cell;
+          float: none;
+          color: white;
+          height: 80px;
+        }
+      }
+
+      table {
+        margin-bottom: 0;
+
+        tbody td{
+          border-color: white;
+          vertical-align: middle;
+        }
+
+        tr.error {
+          display: none;
+        }
+      }
+    }
+
+    .footer {
+      padding: 0;
+      text-align: right;
+
+      .total-total {
+        color: red;
+      }
+
+      .submit {
+        // height: 100%;
+        border-radius: 0;
+        border: none;
+        background-color: red;
+        padding: 10px 30px;
+        color: white;
+        font-size: 16px;
+        margin-left: 20px;
+      }
+    }
+  }
+}

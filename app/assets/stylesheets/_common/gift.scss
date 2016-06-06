@@ -1,0 +1,141 @@
+// 订单礼品样式
+.order-gifts {
+  .order-gift {
+    width: 33.3333%;
+    border: 1px solid #ddd;
+    float: left;
+    // margin-right: 20px;
+
+    .head {
+      height: 60px;
+      float: left;
+      background-color: red;
+      width: 30px;
+
+      img {
+        height: 40px;
+        margin: 10px 5px;
+      }
+    }
+
+    .desc {
+      float: left;
+
+      .avatar {
+        float: left;
+        padding: 10px;
+
+        img {
+          height: 40px;
+          width: auto;
+        }
+      }
+
+      .title-quantity {
+        float: left;
+        text-align: left;
+
+        div {
+          padding: 5px 5px;
+        }
+      }    
+    }
+  }
+}
+
+// 购物车礼品样式
+tr.cart-gifts, div.cart-gifts {
+  td {
+    padding: 0 !important;
+  }
+
+  .cart-gift {
+    padding: 8px;
+    // width: 33.3333%;
+
+    float: left;
+    div {
+      // height: 60px;
+    }
+
+    .head {
+      margin: -8px 0 -8px -8px;
+      height: 100px;
+      float: left;
+      background-color: red;
+      width: 30px;
+      border-bottom: 1px solid white;
+
+      img {
+        height: 40px;
+        margin: 30px 5px;
+      }
+    }
+
+    .desc {
+      margin: 11px 0 11px 11px;
+      margin-left: 20px;
+      float: left;
+
+      .avatar {
+        float: left;
+        border: 1px solid #ddd;
+        padding: 10px;
+
+        img {
+          height: 40px;
+          width: auto;
+        }
+      }
+
+      .title-quantity {
+        float: left;
+        text-align: left;
+
+        div {
+          padding: 5px 20px;
+        }
+      }    
+    }
+  }
+}
+
+// 手机版购物车样式
+.mobile-gifts {
+  & > .head {
+    height: 40px;
+    width: 100%;
+    background-color: red;
+  }
+
+  .cart-gift {
+    border-bottom: 1px solid white;
+
+    .desc {
+      margin: 11px 0 11px 11px;
+
+      .avatar {
+        float: left;
+        border: 1px solid #ddd;
+        padding: 10px;
+
+        img {
+          height: 40px;
+          width: auto;
+        }
+      }
+
+      .title-quantity {
+        float: left;
+
+        div {
+          padding: 5px 20px;
+        }
+
+        .title {
+          text-align: left;
+        }
+      }    
+    }
+  }
+}

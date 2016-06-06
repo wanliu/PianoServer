@@ -13,24 +13,39 @@
         </div>
       </div>
     <% end %>
+
     <div class='divider' style='clear: both'></div>
+
     <% if current_user.reach_location_limit? %>
       <span class='reach-limit'>地址数量已达上限，请选择地址</span>
       <%= link_to "管理收货地址", locations_path, class: 'pull-right manage-locations' %>
     <% else %>
       <span class='reach-limit' style='display: none;'>地址数量已达上限，请选择地址</span>
-      <%= link_to "添加一个新的收货地址", 'javascript: void(0)', class: 'add-another-location' %>
+      <%= link_to 'javascript: void(0)', class: 'add-another-location pull-left' do %>
+        <span class='glyphicon glyphicon-plus'></span>添加一个新的收货地址
+      <% end %>
       <%= link_to "管理收货地址", locations_path, class: 'pull-right manage-locations' %>
     <% end %>
+
+    <div style='clear: both;'></div>
   <% else %>
     <div class="panel-heading">
       <div class='empty-notify'>你还没有收货地址，现在创建一个吧</div>
     </div>
+
     <div class='divider' style='clear: both; display: none;'></div>
+
     <span class='reach-limit' style='display: none;'>地址数量已达上限，请选择地址</span>
-    <%= link_to "添加一个新的收货地址", 'javascript: void(0)', class: 'add-another-location', style: 'display: none;' %>
+
+    <%= link_to 'javascript: void(0)', class: 'add-another-location pull-left', style: 'display: none;' do %>
+      <span class='glyphicon glyphicon-plus'></span>添加一个新的收货地址
+    <% end %>
+
     <%= link_to "管理收货地址", locations_path, class: 'pull-right manage-locations' %>
+
+    <div style='clear: both;'></div>
   <% end %>
+
   <div class='add-new-location' style='display: <%= delivery_addresses.present? ? "none" : "block" %>'>
     <%= render 'locations/form', locals: { location: current_user.locations.build } %>
   </div>
@@ -100,5 +115,11 @@
 
     var addressId = $(this).data('addressId');
     $('input#order_address_id').val(addressId);
+
+    var formData = $('#new_order').serialize()
+    $.post('/orders/express_fee?' + formData)
+      .done(function(html) {
+        $('.confirmation-total').html(html);
+      })
   });
 </script>

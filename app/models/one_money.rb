@@ -28,6 +28,7 @@ class OneMoney < Ohm::Model
   attribute :share_seed, Type::Integer    # 分享种子数
 
   attribute :price, Type::Decimal
+  attribute :is_open, Type::Boolean       # 是否打开
 
   collection :items, :PmoItem
   collection :seeds, :PmoSeed
@@ -45,6 +46,8 @@ class OneMoney < Ohm::Model
 
   index :name
   index :type
+  index :start_at
+  index :is_open
 
   attr_accessor :query
 

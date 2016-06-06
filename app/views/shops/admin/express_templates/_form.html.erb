@@ -1,0 +1,138 @@
+<% if @express_template.errors.any? %>
+  <div id="error_explanation" class="alert alert-danger">
+    <ul>
+    <% @express_template.errors.full_messages.each do |message| %>
+      <li><%= message %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<% url = @express_template.new_record? ? shop_admin_express_templates_path(current_shop.name) : shop_admin_express_template_path(current_shop.name, @express_template) %>
+<%= form_for @express_template, url: url do |f| %>
+  <%= f.label :name, '模板名称' %>
+  <%= f.text_field :name %>
+  </br>
+
+  是否包邮
+  <%= f.radio_button :free_shipping, false %>
+  <%= label :free_shipping_sms, '买家承担运费' %>
+  <%= f.radio_button :free_shipping, true %> 
+  <%= label :free_shipping_yes, '卖家承担运费' %>
+
+  <!-- style='display: none;' -->
+  <div class='shipping-setting' style='<%= @express_template.free_shipping ? "display: none;" : "" %>'>
+    <div class='default'>
+      默认运费: 
+      <%= number_field_tag "[express_template][template][default][first_quantity]", @express_template.template["default"].try(:[], "first_quantity"), class: 'short-input', min: 1, step: 1 %>
+      件内
+      <%= number_field_tag "[express_template][template][default][first_fee]", @express_template.template["default"].try(:[], "first_fee"), class: 'short-input', min: 0, step: 1 %>
+      元，每增加
+      <%= number_field_tag "[express_template][template][default][next_quantity]", @express_template.template["default"].try(:[], "next_quantity"), class: 'short-input', min: 0, step: 1 %>
+      件，运费增加
+      <%= number_field_tag "[express_template][template][default][next_fee]", @express_template.template["default"].try(:[], "next_fee"), class: 'short-input', min: 0, step: 1 %>
+      元
+    </div>
+
+    <div class="special-area-express-list">
+      <%= link_to "javascript: void(0)", id: 'special-area-express', data: { url: shop_admin_express_templates_path(current_shop.name) } do %>
+        <span class='glyphicon glyphicon-plus'></span>为制定地区设置运费
+      <% end %>
+
+      <table class='table'>
+        <thead>
+          <tr>
+            <th>运送到</th>
+            <th>首件（件）</th>
+            <th>首费（元）</th>
+            <th>续件（件）</th>
+            <th>续费（元）</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody class='express-fee-special'>
+          <% @express_template.template.except("default").each do |code, setting| %>
+            <tr>
+              <td>
+                <%= ChinaCity.get(code, prepend_parent: true) %>
+              </td>
+              <td>
+                <%= number_field_tag "[express_template][template][#{code}][first_quantity]", @express_template.template["#{code}"].try(:[], "first_quantity"), class: 'for-hidden short-input', min: 1, step: 1 %>
+              </td>
+              <td>
+                <%= number_field_tag "[express_template][template][#{code}][first_fee]", @express_template.template["#{code}"].try(:[], "first_fee"), class: 'for-hidden short-input', min: 0, step: 1 %>
+              </td>
+              <td>
+                <%= number_field_tag "[express_template][template][#{code}][next_quantity]", @express_template.template["#{code}"].try(:[], "next_quantity"), class: 'for-hidden short-input', min: 0, step: 1 %>
+              </td>
+              <td>
+                <%= number_field_tag "[express_template][template][#{code}][next_fee]", @express_template.template["#{code}"].try(:[], "next_fee"), class: 'for-hidden short-input', min: 0, step: 1 %>
+              </td>
+              <td>
+                <%= link_to "删除", "javascript: void(0);", class: 'btn btn-danger delete-special-area for-show' %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <p>
+  <%= f.submit "保存", class: 'btn btn-primary' %>
+  <%= link_to "返回模板列表", shop_admin_express_templates_path(current_shop.name), class: 'pull-right' %>
+
+<% end %>
+
+<script type="text/template" id="express-fee-special">
+  <tr>
+    <td>
+      {{ title }}
+    </td>
+    <td>
+      <input type="number" name="[express_template][template][{{ code }}][first_quantity]" id="_express_template_template_default_first_quantity" value="{{ first_quantity }}" class='for-hidden short-input' min=1 step=1>
+    </td>
+    <td>
+      <input type="number" name="[express_template][template][{{ code }}][first_fee]" id="_express_template_template_default_first_quantity" value="{{ first_fee }}" class='for-hidden short-input' min=0 step=1>
+    </td>
+    <td>
+      <input type="number" name="[express_template][template][{{ code }}][next_quantity]" id="_express_template_template_default_first_quantity" value="{{ next_quantity }}" class='for-hidden short-input' min=0 step=1>
+    </td>
+    <td>
+      <input type="number" name="[express_template][template][{{ code }}][next_fee]" id="_express_template_template_default_first_quantity" value="{{ next_fee }}" class='for-hidden short-input' min=0 step=1>
+    </td>
+    <td>
+      <%= link_to "删除", "javascript: void(0);", class: 'btn btn-danger delete-special-area for-show' %>
+    </td>
+  </tr>
+</script>
+
+<script type="text/javascript">
+  (function() {
+    var $expressElement = $('#special-area-express');
+    var deliverySetter = new DeliveryArea($expressElement);
+    var $tbody = $('.express-fee-special');
+    var expressFeeSpecialTpl = _.template($('#express-fee-special').html());
+
+    deliverySetter.onCreated(function(options) {
+      var html = expressFeeSpecialTpl(options);
+      $tbody.append(html);
+    });
+
+    $(".delete-special-area").click(function(event) {
+      var $tr = $(this).closest('tr');
+
+      $tr.fadeOut(500).fadeIn(500, function() {
+        $tr.remove();
+      });
+    });
+
+    $('#express_template_free_shipping_false').click(function() {
+      $('.shipping-setting').show();
+    });
+
+    $('#express_template_free_shipping_true').click(function() {
+      $('.shipping-setting').hide();
+    });
+  })();
+</script>

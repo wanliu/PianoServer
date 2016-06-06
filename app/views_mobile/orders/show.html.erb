@@ -1,4 +1,4 @@
-<div class='order'>
+<div class='mobile-order'>
   <ul class="nav nav-pills">
     <li role="presentation" class="header-show">
       <a href="javascript: void(0)">
@@ -80,7 +80,7 @@
         </div>
 
         <div class='order-note row show mobile'>
-          <div class='content col-xs-9'>
+          <div class='content note col-xs-9'>
             <div>备注：</div>
             <div class='note'>
               <%= @order.note.present? ? @order.note : "暂无备注" %>
@@ -94,7 +94,7 @@
         </div>
 
         <ul class="list-group order-items">
-          <li class="list-group-item order-item">
+          <li class="list-group-item">
             <span class='shop'>
               <%= link_to shop_site_path(@order.supplier.name) do %>
                 <%= image_tag @order.supplier.avatar_url %><%= @order.supplier.title %>
@@ -177,6 +177,12 @@
 
 <script type="text/javascript">
   $(function () {
+
+    $('.more').click(function(event) {
+      $(this).siblings('.gifts')
+        .toggleClass('toggle-more-gifts');
+    });
+
     $('.add-note-ok').click(function (event) {
       var $modal = $(this).closest('.modal');
       var note = $modal.find('textarea.new-order-note').val();
