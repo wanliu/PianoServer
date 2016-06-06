@@ -461,10 +461,10 @@ class Order < ActiveRecord::Base
     return if coupon_ids.blank?
     if buyer.coupons.appliable.active.exists?(id: coupon_ids)
       unless coupons_available?(coupons)
-        errors.add(:coupon_ids, "使用了无效的购物卷，请重新选择购物卷！")
+        errors.add(:base, "使用了无效的购物卷，请重新选择购物卷！")
       end
     else
-      errors.add(:coupon_ids, "使用了无效的购物卷，请重新选择购物卷！")
+      errors.add(:base, "使用了无效的购物卷，请重新选择购物卷！")
     end
   end
 end
