@@ -6,7 +6,7 @@ options = {
   key: '_PianoServer_session',
   redis: {
     db: 2,
-    expire_after: 3.days,
+    expire_after: 3.months,
     key_prefix: 'piano:session:',
     host: Rails.application.config.redis_config["host"], # Redis host name, default is localhost
     port: Rails.application.config.redis_config["port"]   # Redis port, default is 6379
