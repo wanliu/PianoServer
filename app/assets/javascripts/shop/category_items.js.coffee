@@ -128,7 +128,7 @@ class @CategoryItems extends @HuEvent
         success: () =>
       })
     else
-      modalConfirm '切换后该商品将不能在销售，确定切换商品的可售状态吗？', () ->
+      modalConfirm '切换后该商品将不能再销售，确定切换商品的可售状态吗？', () ->
         $.ajax({
           url: url,
           type: 'PUT',
