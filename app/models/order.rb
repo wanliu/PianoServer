@@ -336,23 +336,15 @@ class Order < ActiveRecord::Base
     end
   end
 
-  private
-
-  # 根据选定条件，穷举所有可能的组合，使得购物卷的选择组合不依赖于客户的选择次序
-  # TODO 优化计算方法
-  def next_avaliable_coupons(options)
-    unselectd_coupons = options[:unselectd_coupons]
-    unselectd_coupons.find_all do |coupon|
-      coupons = options[:selected] | [coupon]
-      coupons_available?(coupons)
-    end
-  end
-
   # 验证一个组合是否合法
   # 验证配对的循序按照从面额从大到小
-  def coupons_available?(coupons)
-    coupons_exam = coupons.clone
-    coupons_enum = coupons.sort_by(&:par).reverse
+  def coupons_available?(coups=coupons)
+    if coupons.length > 1 && !coupons.all?(&:overlap)
+      return false
+    end
+
+    coupons_exam = coups.clone
+    coupons_enum = coups.sort_by(&:par).reverse
 
     left_items = items.each(&:reset_offset_remain).sort_by(&:offset_remain).reverse
 
@@ -385,6 +377,18 @@ class Order < ActiveRecord::Base
 
     # 配对完毕之后，coupons数组应该是空的
     coupons_exam.blank?
+  end
+
+  private
+
+  # 根据选定条件，穷举所有可能的组合，使得购物卷的选择组合不依赖于客户的选择次序
+  # TODO 优化计算方法
+  def next_avaliable_coupons(options)
+    unselectd_coupons = options[:unselectd_coupons]
+    unselectd_coupons.find_all do |coupon|
+      coupons = options[:selected] | [coupon]
+      coupons_available?(coupons)
+    end
   end
 
   def caculate_total

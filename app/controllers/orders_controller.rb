@@ -117,16 +117,16 @@ class OrdersController < ApplicationController
   end
 
   def select_coupon
-    order = current_user.orders.build(order_params)
+    @order = current_user.orders.build(order_params)
     
-    render_coupons(order)
+    render_coupons
   end
 
   def buy_now_select_coupon
-    order = current_user.orders.build(buy_now_order_params)
-    order.items.each(&:set_initial_attributes)
+    @order = current_user.orders.build(buy_now_order_params)
+    @order.items.each(&:set_initial_attributes)
 
-    render_coupons(order)
+    render_coupons
   end
 
   # 直接购买
@@ -222,6 +222,8 @@ class OrdersController < ApplicationController
     @order.items.each do |item|
       item.price = item.caculate_price
     end
+
+    @coupons_avaliable = @order.coupons_available?
 
     # if params[:order][:items_attributes].present?
     #   render partial: "buy_now_confirmation_total"
@@ -407,18 +409,23 @@ class OrdersController < ApplicationController
       end
   end
 
-  def render_coupons(order)
-    coupons = order.coupons
-    avaliables = order.available_coupons(coupon_ids: order.coupon_ids)
+  def render_coupons
+    coupons = @order.coupons
+    avaliables = @order.available_coupons(coupon_ids: @order.coupon_ids)
+
+    @coupons_avaliable = @order.coupons_available?
 
     serialize_options = {
       only: [:id, :start_time, :end_time], 
       methods: [:name, :par, :apply_minimal_total, :overlap]
     }
 
+    total_html = render_to_string partial: "/orders/confirmation_total"
+
     render json: {
       coupons: coupons.as_json(serialize_options),
-      avaliable: avaliables.as_json(serialize_options)
+      avaliable: avaliables.as_json(serialize_options),
+      total_html: total_html
     }
   end
 end

@@ -126,7 +126,11 @@ class OrderItem < ActiveRecord::Base
   end
 
   def total
-    price * quantity
+    if price.nil?
+      caculate_price * quantity
+    else
+      price * quantity
+    end
   end
 
   def offset_remain

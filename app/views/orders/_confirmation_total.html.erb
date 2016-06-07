@@ -2,7 +2,7 @@
 <span class='total-quantity'>
   <%= @order.items.map(&:quantity).reduce(:+) %>
 </span>
-件商品 <%= number_to_currency @order.items.map { |item| item.price * item.quantity }.reduce(:+) %>元
+件商品 <%= number_to_currency @order.items.map(&:total).reduce(:+) %>元
 
 <div class='text-right'>
   运送费用 <%= number_to_currency @order.express_fee %>元
@@ -10,6 +10,16 @@
 
 合计
 <span class='total-total'>
-  <%= number_to_currency @order.items.map { |item| item.price * item.quantity }.reduce(:+) + @order.express_fee %>
+  <%= number_to_currency @order.items.map(&:total).reduce(:+) + @order.express_fee %>
 </span>
 元
+
+<% if @order.coupons.present? %>
+  <div>
+    <% if @coupons_avaliable %>
+      优惠卷×<%= @order.coupons.length %> 节省<%= @order.coupons.map(&:offset_par).reduce(&:+) %>元
+    <% else %>
+      无效的优惠卷<%= "组合" if @order.coupons.length > 1 %>
+    <% end %>
+  </div>
+<% end %>
