@@ -1,24 +1,16 @@
 ---
 button:
-- name: "一元狂欢"
+- name: "天天惠"
   sub_button:
   - type: view
-    name: "往期"
-    url: http://koudaitong.com/v2/x/r08qjn6y
-    sub_button: []
-  - type: view
-    name: "第十四期"
-    url: http://koudaitong.com/v2/x/5fprh5tj
-    sub_button: []
-  - type: view
-    name: "六一大"
-    url: http://test.wanliu.biz/html
+    name: "天天惠"
+    url: http://m.wanliu.biz/daily_cheap/
     sub_button: []
 - name: "耒阳商城"
   sub_button:
-  - type: click
+  - type: view
     name: "耒阳商城"
-    key: gycpfoez
+    url: http://m.wanliu.biz/html/%E8%80%92%E9%98%B3%E8%A1%97%E4%B8%8A/
     sub_button: []
 - name: "我的订单"
   sub_button:
