@@ -1,4 +1,6 @@
 @modalConfirm = (text, execute, cancel) ->
+  confirmed = false
+
   modalHtml = """
     <div class="modal fade" tabindex="-1" role="dialog">
       <div class="modal-dialog">
@@ -22,6 +24,7 @@
   $('body').append($modal)
 
   $modal.on 'click', '.execute', (event) ->
+    confirmed = true
     execute() if execute
     $modal.modal('hide')
 
@@ -30,6 +33,7 @@
     $modal.modal('hide')
 
   $modal.on 'hidden.bs.modal', (event) ->
+    cancel() if !confirmed && cancel
     $modal.remove()
 
   $modal.modal('show')
