@@ -115,16 +115,30 @@ class @CategoryItems extends @HuEvent
     sid = $tr.data('itemSid')
     url = @options.url.replace(/\$(\w+)/, (match, m) => item[m]) + 'change_sale_state'
 
-    $.ajax({
-      url: url,
-      type: 'PUT',
-      data: {
-        item: {
-          on_sale: on_sale
-        }
-      },
-      dataType: 'json',
-      success: () =>
-    })
-
-
+    if on_sale
+      $.ajax({
+        url: url,
+        type: 'PUT',
+        data: {
+          item: {
+            on_sale: on_sale
+          }
+        },
+        dataType: 'json',
+        success: () =>
+      })
+    else
+      modalConfirm '切换后该商品将不能在销售，确定切换商品的可售状态吗？', () ->
+        $.ajax({
+          url: url,
+          type: 'PUT',
+          data: {
+            item: {
+              on_sale: on_sale
+            }
+          },
+          dataType: 'json',
+          success: () =>
+        })
+      , () ->
+        $target.prop('checked', !on_sale)
