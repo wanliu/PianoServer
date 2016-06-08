@@ -95,7 +95,7 @@ class OneMoney < Ohm::Model
       status.push "包含已下架商品！"
     end
 
-    unless shop_items.all? { |item| item.current_stock && item.current_stock > 0 }
+    unless shop_items.all? { |item| item.current_stock.to_i > 0 }
       status.push "包含库存不足商品！"
     end
 

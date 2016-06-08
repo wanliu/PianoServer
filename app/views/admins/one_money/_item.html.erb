@@ -79,7 +79,7 @@
           <br><span style='color: red' class='glyphicon glyphicon-exclamation-sign'>已经下架，请检查！</span>
         <% end %>
 
-        <% unless shop_item.current_stock > 0 %>
+        <% unless shop_item.current_stock.to_i > 0 %>
           <br><span style='color: red' class='glyphicon glyphicon-exclamation-sign'>库存不足，请检查！</span>
         <% end %>
       <% end %>
