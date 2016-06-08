@@ -85,6 +85,23 @@ class OneMoney < Ohm::Model
     end
   end
 
+  def item_status
+    status = []
+
+    shop_item_ids = items.map(&:item_id)
+    shop_items = Item.where(id: shop_item_ids)
+
+    unless shop_items.all?(&:on_sale)
+      status.push "包含已下架商品！"
+    end
+
+    unless shop_items.all? { |item| item.current_stock > 0 }
+      status.push "包含库存不足商品！"
+    end
+
+    "<span style='color:red'>#{status.join('<br>')}</span>".html_safe
+  end
+
   private
 
   def expired_start_at
