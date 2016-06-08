@@ -1,6 +1,6 @@
 class Admins::OneMoneyController < Admins::BaseController
 
-  before_action :set_one_money, except: [:index, :new, :create, :search]
+  before_action :set_one_money, except: [:index, :new, :create, :search, :toggle_open]
 
   def index
     @one_moneies =
@@ -34,6 +34,14 @@ class Admins::OneMoneyController < Admins::BaseController
   end
 
   def edit
+    items_with_gifts = @one_money.items_with_gifts;
+    item_ids = items_with_gifts.split(',')
+
+    @gift_items = if item_ids.length > 0 then item_ids.map do |id|
+      Item.find(id)
+    end else
+      []
+    end
   end
 
   def publish
@@ -89,7 +97,6 @@ class Admins::OneMoneyController < Admins::BaseController
 
   def toggle_open
     @one_money.update_attribute('is_open', params[:is_open])
-    @one_money.save
 
     redirect_to action: :edit
   end
@@ -109,7 +116,8 @@ class Admins::OneMoneyController < Admins::BaseController
                                                  shop_name: item.shop.title,
                                                  sid: item.sid,
                                                  price: item.price,
-                                                 inventory: item.current_stock }} }
+                                                 inventory: item.current_stock,
+                                                 gifts: item.gifts.as_json(methods: [:title, :avatar_url]) }} }
   end
 
   def add_item
@@ -224,6 +232,13 @@ class Admins::OneMoneyController < Admins::BaseController
     end
 
     @stastics
+  end
+
+  def update_items_with_gifts
+    @one_money.items_with_gifts = params[:items_with_gifts]
+    @one_money.save
+
+    head :no_content
   end
 
   private

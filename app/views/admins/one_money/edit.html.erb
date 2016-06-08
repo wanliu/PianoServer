@@ -11,10 +11,123 @@
 </div>
 
 <br />
+
+<div class="row">
+  <div class="col-xs-12">
+    <label for="">礼品购商品</label>
+    <div class="form-group">
+      <%= text_field_tag :items_with_gifts, @one_money.items_with_gifts, readonly: 'readonly', class: 'form-control' %>
+    </div>
+    <div class="form-group">
+      <span>已选择的商品</span>
+      <div class="gift-item-list">
+        <% @gift_items.each do |item| %>
+          <div class="gift-item">
+            <div class="item-title"><%= item.title %></div>
+            <div class="remove-icon" gift-id="<%= item.id %>">
+              <span class="glyphicon glyphicon-remove"></span>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <div class="form-group">
+      <script type="text/javascript">
+        function showGifts(gifts) {
+          var _template = _.template(['<div class="gift-brief">',
+            '<div class="media">',
+            '<div class="media-left media-middle"><img class="media-object" src="{{ avatar_url }}"></div>',
+            '<div class="media-body media-middle">',
+            '<div class="gift-title">{{title}}</div>',
+            '<div class="gift-amount">赠送数量:{{quantity}} 赠品总数:{{total}}</div>',
+            '</div></div>'].join(""));
+
+          return _.map(gifts, function(gift) {
+            return _template(gift);
+          });
+        }
+      </script>
+      <% item_template = <<-HTML
+        <div class="media" item-id="{{id}}" item-price="{{price}}" item-inventory="{{inventory}}">
+          <div class="media-left media-middle">
+            <img class="media-object" src="{{ avatar_url }}" alt="{{text}}">
+          </div>
+          <div class="media-body media-middle">
+            <h4 class="media-heading">{{text}} <small>{{sid}}</small></h4>
+            <p>
+              <span class="shop_name"> {{shop_name}}</span>
+              <span class="right-side">
+                <span class="price">价格 {{price}}</span>
+                <span class="inventory">库存 {{inventory}}</span>
+              </span>
+            </p>
+          </div>
+
+          <div class="media-right">
+            {{ gifts.length == 0 ? '<div class="no-gifts">此商品无赠品</div>' : showGifts(gifts) }}
+          </div>
+        </div>
+      HTML
+      %>
+      <% add_item = <<-JAVASCRIPT
+      function(e) {
+        data = $(this).select2('data')[0];
+        gifts = data.gifts;
+
+        if (!gifts || gifts.length == 0) return;
+
+        $input = $('input#items_with_gifts');
+        $list = $('.gift-item-list');
+        itemId = data.id;
+        itemTitle = data.text;
+        val = $input.val();
+        fragment = ['<div class="gift-item"><div class="item-title">', itemTitle,
+          '</div><div class="remove-icon" gift-id="', itemId,
+          '"><span class="glyphicon glyphicon-remove"></span></div></div>'].join('');
+        shouldQuery = false;
+        ids = '';
+
+        if (val.length == 0) {
+          ids = itemId;
+          shouldQuery = true;
+        } else if (val.indexOf(itemId) == -1) {
+          ids = [val, itemId].join(',');
+          shouldQuery = true;
+        }
+
+        if (shouldQuery) {
+          $input.val(ids);
+          $list.append(fragment);
+
+          var url = "#{admins_one_money_path(@one_money.id)}";
+          $.ajax({
+            url: url + "/update_items_with_gifts",
+            type: 'PUT',
+            dataType: 'json',
+            data: {
+              'items_with_gifts': ids
+            }
+          });
+        }
+      }
+    JAVASCRIPT
+    %>
+    <%= select2_url_template "one_money",
+      "items_with_gifts",
+      search_admins_one_money_index_path,
+      [],
+      placeholder: '输入礼品购商品的id',
+      template: item_template,
+      on_change: add_item,
+      class: 'form-control',
+      style: 'width: 100%' %>
+    </div>
+  </div>
+</div>
+
 <div class="row">
   <div class="col-xs-12">
     <label for="">查找商品</label>
-
     <% template = <<-HTML
       <div class="media" item-id="{{id}}" item-price="{{price}}" item-inventory="{{inventory}}">
         <div class="media-left">
@@ -40,8 +153,8 @@
 
         $.ajax({
           url: url + "/add_item/" + data.id,
-          type: 'PATCH',
-          dataType: 'script'
+          type: 'PUT',
+          dataType: 'json'
         });
       }
     JAVASCRIPT
@@ -66,15 +179,15 @@
   $(".select2").width('100%');
   $(".best_in_place").best_in_place();
 
+
+
   $('#one_money_query').on('select2:selecting', function(e) {
     try {
-
       var data = e.params.args.data,
         id = data.id,
         price = parseFloat(data.price),
         inventory = parseInt(data.inventory),
         text = data.text;
-
 
       if (price > 0 && inventory > 0) {
         return true;
@@ -83,6 +196,34 @@
       }
     } catch(e) {
       alert('因为错误，这个商品没办法添加进来');
+    }
+  });
+
+  $('.gift-item-list').on('click', '.remove-icon', function(e) {
+    var $target = $(e.currentTarget);
+    var itemId = $target.attr('gift-id');
+    var $input = $('input#items_with_gifts');
+    var ids = $input.val();
+    var ary = ids.split(',');
+    var index = ary.indexOf(itemId);
+
+    $target.parent().remove();
+
+    if (index > -1) {
+      ary.splice(index, 1);
+      ids = ary.length > 0 ? ary.join(',') : '';
+      $input.val(ids);
+
+      var url = "<%= admins_one_money_path(@one_money.id) %>";
+
+      $.ajax({
+        url: url + "/update_items_with_gifts",
+        type: 'PUT',
+        dataType: 'json',
+        data: {
+          'items_with_gifts': ids
+        }
+      });
     }
   });
 </script>
