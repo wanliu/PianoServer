@@ -109,6 +109,7 @@ class Admins::OneMoneyController < Admins::BaseController
                                                  shop_name: item.shop.title,
                                                  sid: item.sid,
                                                  price: item.price,
+                                                 on_sale: item.on_sale,
                                                  inventory: item.current_stock }} }
   end
 
