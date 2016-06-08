@@ -12,13 +12,13 @@
     </div>
   </td>
   <td  class="price">
-    <%= number_to_currency item.price %>
+    <%= number_to_currency item.price %>元
   </td>
   <td>
-    <span><%= number_with_delimiter item.quantity %></span>
+    <span>数量:<%= number_with_delimiter item.quantity %></span>
   </td>
   <td class="subtotal">
-    <%= number_to_currency item.price * item.quantity %>
+    <%= number_to_currency item.price * item.quantity %>元
   </td>
 </tr>
 

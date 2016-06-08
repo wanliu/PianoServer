@@ -14,17 +14,22 @@
         <% end %>
       <% end %>
     <% end %>
-
+    <div class='panel panel-default'>
     <div class='cart-group'>
-      <div class='header'>
-        <span class='shop'>
-          <%= link_to shop_site_path(@supplier.name) do %>
-            <%= image_tag @supplier.avatar_url %><%= @supplier.title %>
+      <div class='panel-heading'>
+          <span>商品信息</span>
+          <div class="shop pull-right">
+          <%= link_to shop_site_path(@supplier.name) do  %>
+            <%= image_tag @supplier.avatar_url %>
+                      <% end %>
+                 <%= link_to shop_site_path(@supplier.name) do  %>
+            <%= @supplier.title %>
           <% end %>
-        </span>
+
+        </div>
       </div>
 
-      <table class='table table-bordered'>
+      <table class='table '>
         <colgroup>
           <col width='35%' />
           <col width='15%' />
@@ -37,9 +42,9 @@
             <div class='confirmation-total'>
               <%= render "confirmation_total" %>
             </div>
-
             <%= link_to "返回购物车", cart_path, class: 'cancel' %>
             <%= f.submit "提交订单", class: 'submit'%>
+            
           </td>
         </tr>
       </table>
@@ -67,6 +72,7 @@
           <% end %>
         </div>
       </div>
+    </div>
     </div>
   <% end %>
 </div>

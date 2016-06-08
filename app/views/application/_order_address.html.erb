@@ -1,16 +1,26 @@
 <div class='delivery-addresses panel panel-default'>
   <% if delivery_addresses.present? %>
     <div class="panel-heading">
-      选择收货地址
+      <span>选择收货地址</span>
+        <%= link_to "管理收货地址", locations_path, class: 'pull-right  color-red' %>
     </div>
+
     <% delivery_addresses.each_with_index do |address, index| %>
-      <div class='delivery-address <%= "active" if order.address_id == address.id %>' data-address-id=<%= address.id %>>
+      <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+      <div class='delivery-address 
+      <%= "active" if order.address_id == address.id %>
+      <%= "default" if address.is_default? %>' data-address-id=<%= address.id %>>
         <div class='title'>
           <%= address.contact %>
         </div>
         <div class='detail'>
           <%= address.delivery_address %>
         </div>
+        <div class="default-addr" >
+          <span class="def-addr def-addr-label" style="display: none;">默认地址</span>
+          <span class="def-addr def-addr-btn glyphicon glyphicon-ok" style="display: none;"></span>
+        </div>
+      </div>
       </div>
     <% end %>
 
@@ -18,13 +28,18 @@
 
     <% if current_user.reach_location_limit? %>
       <span class='reach-limit'>地址数量已达上限，请选择地址</span>
-      <%= link_to "管理收货地址", locations_path, class: 'pull-right manage-locations' %>
     <% else %>
       <span class='reach-limit' style='display: none;'>地址数量已达上限，请选择地址</span>
       <%= link_to 'javascript: void(0)', class: 'add-another-location pull-left' do %>
-        <span class='glyphicon glyphicon-plus'></span>添加一个新的收货地址
+      <span class='glyphicon glyphicon-plus color-red'></span>
+      <span class="color-red">新增地址</span>
       <% end %>
-      <%= link_to "管理收货地址", locations_path, class: 'pull-right manage-locations' %>
+
+        <a class="pull-right manage-locations" href="javascript:void(0)">
+        <span class="glyphicon glyphicon-forward dropdown-transform color-red"></span>
+        <span id="showAll" class="color-red">显示全部地址</span>
+        </a>
+
     <% end %>
 
     <div style='clear: both;'></div>
@@ -38,11 +53,12 @@
     <span class='reach-limit' style='display: none;'>地址数量已达上限，请选择地址</span>
 
     <%= link_to 'javascript: void(0)', class: 'add-another-location pull-left', style: 'display: none;' do %>
-      <span class='glyphicon glyphicon-plus'></span>添加一个新的收货地址
+      <span class='glyphicon glyphicon-plus'></span>新增地址
     <% end %>
-
-    <%= link_to "管理收货地址", locations_path, class: 'pull-right manage-locations' %>
-
+        <a class="pull-right manage-locations" href="javascript:void(0)">
+        <span class="glyphicon glyphicon-forward dropdown-transform color-red"></span>
+        <span id="showAll" class="color-red">显示全部地址</span>
+        </a>
     <div style='clear: both;'></div>
   <% end %>
 
@@ -52,6 +68,7 @@
 </div>
 
 <script type="text/template" id='delivery-address'>
+
   <div class='delivery-address' data-address-id={{= address.id }}>
     <div class='title'>
       {{= address.contact }}
@@ -64,6 +81,21 @@
 
 <script type="text/javascript">
   var addTemplate = _.template($('#delivery-address').html());
+  
+  window.onload=function () {
+      pageInit();
+  }
+
+  function pageInit() {
+      // set default address tags style
+      showDefaultAddrStyle();
+  }
+
+  function showDefaultAddrStyle() {
+    $('.default').find('.def-addr-label').show();
+    $('.delivery-address').not('.default').find('.def-addr-btn').show();
+  }
+
 
   $('form.new_location').submit(function (event) {
     event.preventDefault();
@@ -81,10 +113,10 @@
 
       $('div.divider').before(html);
       $('div.add-new-location').hide();
-
       if (!$('.delivery-address.active').length) {
         $($('.delivery-address')[0]).addClass('active');
         $($('.delivery-address')[0]).click();
+        $($('.default-addr')[0]).css('display','block');
       }
 
       $('.add-another-location').show();
@@ -107,7 +139,7 @@
   $('a.add-another-location').click(function (event) {
     $('div.add-new-location').toggle();
   });
-
+  
   $('.delivery-addresses').on('click', '.delivery-address', function(event) {
     var $address = $(this).is('.delivery-address') ? $(this) : $(this).parents.find('.delivery-address');
     $('.delivery-addresses .delivery-address').removeClass('active');
@@ -121,5 +153,20 @@
       .done(function(html) {
         $('.confirmation-total').html(html);
       })
+  });
+
+  $('.delivery-addresses').on('click','.def-addr-btn',function (e) {
+      // todo  
+      //lack of interface for set default address
+      $('.def-addr-label').hide();
+      $(this).siblings('.def-addr-label').show();
+      $('.def-addr-btn').show();
+      $(this).hide();
+
+  });
+
+  // show all address
+  $('.delivery-addresses').on('click','#showAll',function () {
+    $(this).parent().hide();
   });
 </script>

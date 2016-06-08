@@ -9,7 +9,7 @@ app:
 admin:
   title: 万流工作平台
   register:
-    open: false
+    open: true
 system:
   agent:
     id: 0
