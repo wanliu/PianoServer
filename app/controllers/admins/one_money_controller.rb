@@ -34,8 +34,8 @@ class Admins::OneMoneyController < Admins::BaseController
   end
 
   def edit
-    items_with_gifts = @one_money.items_with_gifts;
-    item_ids = if items_with_gifts.nil? then '' else items_with_gifts.split(',')
+    items_with_gifts = @one_money.items_with_gifts
+    item_ids = if items_with_gifts.nil? then '' else items_with_gifts.split(',') end
 
     @gift_items = if item_ids.length > 0 then item_ids.map do |id|
       Item.find(id)

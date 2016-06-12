@@ -26,7 +26,17 @@ class Api::Promotions::DailyCheapController < Api::BaseController
     if daily_cheaps.length > 0
       daily_cheap = daily_cheaps[0]
       hash = daily_cheap.to_hash
-      hash[:items] = daily_cheap.items
+      items_with_gifts = daily_cheap.items_with_gifts
+      items = daily_cheap.items
+      item_ids = if items_with_gifts.nil? then '' else items_with_gifts.split(',') end
+      gift_items = if item_ids.length > 0 then item_ids.map do |id|
+        Item.find(id)
+      end else
+        []
+      end
+
+      hash[:items] = items;
+      hash[:gift_items] = gift_items.as_json(methods: [:cover_url])
 
       render json: hash
     else
