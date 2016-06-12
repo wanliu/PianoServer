@@ -9,7 +9,7 @@ class Api::Promotions::DailyCheapController < Api::BaseController
     start = (page - 1) * per
     tail = page * per
 
-    total = OneMoney.find(type: 'daily_cheap').count
+    total = OneMoney.find(type: 'daily_cheap', is_open: true).count
     items = OneMoney.find(type: 'daily_cheap', is_open: true).sort_by(:start_at, :limit => [start, tail], :order => "DESC ALPHA")
     total_page = (total.to_f / per).ceil
 
