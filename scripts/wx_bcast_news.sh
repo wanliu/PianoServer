@@ -14,7 +14,11 @@ news = ARGF.argv[0]
 
 # producer = Thread.new do
 output = `wechat users`
-code = eval(output[('Using rails project config/wechat.yml default setting...'.length..-1)])
+
+slice_start = output.index('Using rails project config/wechat.yml default setting...') == 0 ? 'Using rails project config/wechat.yml default setting...'.length : 0
+
+
+code = eval(output[slice_start..-1])
 openids = code["data"]["openid"]
 # openids = ["oKev-v4GiZS5ayocmIQVKKACK89k", "oKev-vxY1nr3oUsbbhdOP3zvRE88" ]
 
