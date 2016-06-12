@@ -82,6 +82,8 @@
         <% unless shop_item.current_stock.to_i > 0 %>
           <br><span style='color: red' class='glyphicon glyphicon-exclamation-sign'>库存不足，请检查！</span>
         <% end %>
+      <% else %>
+        <br><span style='color: red' class='glyphicon glyphicon-exclamation-sign'>对应的商品不存在，请检查！</span>
       <% end %>
     </p>
     <!-- <p class="time">
