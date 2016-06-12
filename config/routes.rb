@@ -180,6 +180,7 @@ Rails.application.routes.draw do
         patch "state_item_all", action: :state_item_all, as: :state_item_all
         patch "fix_clock/:item_id", action: :fix_clock, as: :fix_clock
         patch "add_item/:item_id", action: :add_item, as: :add_item
+        put "update_items_with_gifts", action: :update_items_with_gifts, as: :update_items_with_gifts
         put "update_item/:item_id", action: :update_item, as: :update_item
         put "overwrite_item/:item_id", action: :overwrite_item, as: :overwrite_item
         delete "clear_overwrite_item/:item_id", action: :clear_overwrite_item, as: :clear_overwrite_item
@@ -273,6 +274,7 @@ Rails.application.routes.draw do
 
       member do
         get "saled_count"
+        get "gift_item_info"
       end
     end
 
@@ -295,10 +297,19 @@ Rails.application.routes.draw do
           get "user_seeds/:user_id", action: :user_seeds
           get "retrieve_seed/:user_id", action: :retrieve_seed
           get "seeds/:seed_id", action: :seed
+          get "items_with_gifts", action: :items_with_gifts
         end
       end
 
-      resources :daily_cheap
+      resources :daily_cheap do
+        collection do
+          get "latest", action: :latest
+        end
+
+        member do
+          post "toggle_open", action: :toggle_open
+        end
+      end
     end
     # resources :business, concerns: :roomable do
     #   member do

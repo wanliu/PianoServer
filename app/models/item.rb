@@ -421,6 +421,14 @@ class Item < ActiveRecord::Base
     shop.try(:name)
   end
 
+  def shop_address
+    shop.try(:address)
+  end
+
+  def shop_avatar
+    shop.try(:avatar_url)
+  end
+
   # options: {
   #   data: {size: 'l', color: 'red'},
   #   quantity: 1

@@ -8,7 +8,7 @@ class Api::Promotions::OneMoneyController < Api::BaseController
   class InvalidSeedOwner < RuntimeError; end
 
   include FastUsers
-  skip_before_action :authenticate_user!, only: [:show, :item, :items, :status, :item_status, :retrieve_seed, :seed, :signup_count]
+  skip_before_action :authenticate_user!, only: [:show, :item, :items, :status, :item_status, :retrieve_seed, :seed, :signup_count, :items_with_gifts]
   skip_before_action :authenticate_user!, only: [:signup, :user_seeds] unless Rails.env.production?
   skip_before_action :authenticate_user!, only: [:signup, :grab, :callback] if ENV['TEST_PERFORMANCE']
 
@@ -324,6 +324,26 @@ class Api::Promotions::OneMoneyController < Api::BaseController
     }
   end
 
+  def items_with_gifts
+    items_with_gifts = @one_money.items_with_gifts
+
+    gift_items = if items_with_gifts.length > 0 then items_with_gifts.split(',').map do |id|
+      item = Item.find(id)
+
+      gifts = item.gifts.as_json(methods: [:title, :avatar_url, :inventory, :cover_url])
+      json = item.as_json(except: [:income_price, :public_price], methods: [:shop_name, :shop_realname])
+      json['avatar_urls'] = [item.avatar_url]
+      json['cover_urls'] = [item.cover_url]
+      json['gifts'] = gifts
+      json['ori_price'] = item.public_price
+
+      json
+    end else
+      []
+    end
+
+    render json: gift_items
+  end
 
   protected
 

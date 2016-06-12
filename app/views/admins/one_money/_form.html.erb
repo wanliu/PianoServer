@@ -21,7 +21,6 @@
     <%= select 'one_money', :type, [ ['一元购', 'one_money'], ['天天惠', 'daily_cheap']] %>
   </div>
 
-
   <div class="form-group">
     <%= label_tag 'one_money_description', '抢购商品种类' %>
     <%= text_field 'one_money', :multi_item, value: @one_money.multi_item, class: 'form-control' %>
@@ -86,8 +85,6 @@
   </div>
   <% end %>
 
-
-
   <div class="form-group">
     <%= label_tag 'one_money_start_at', '开始时间'%>
     <div class="input-group date">
@@ -109,7 +106,16 @@
   </div>
 
   <div class="form-group">
+    <%= label_tag 'one_money_is_open', '是否打开' %>
+    <label class="toggle-box">
+      <%= check_box 'one_money', :is_open, {checked: @one_money.is_open, class: 'toggle-checkbox'}, "true", "false" %>
+      <div class="track">
+        <div class="handle"></div>
+      </div>
+    </label>
+  </div>
 
+  <div class="form-group">
     <%= submit_tag '保存', class: 'btn btn-primary' %>
     <% unless @one_money.new? %>
       <%= button_to '发布', url: publish_admins_one_money_path(@one_money.id), class: 'btn btn-success btn-publish', remote: true %>
