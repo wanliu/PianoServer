@@ -168,9 +168,10 @@ class Item < ActiveRecord::Base
         bool: {
           should: [
             {
-              query_string: {"default_field" => "shop_name","query" => shop_name }
+              term: {shop_name: shop_name }
             }
-          ]
+          ],
+          minimum_should_match: 1
         }
       }
     }
@@ -180,9 +181,13 @@ class Item < ActiveRecord::Base
         query[:query][:bool][:should].push({
           "range" => {"sid" => {"from" => product,"to" => product }}
         })
-      else
+      elsif 1 == product.length
         query[:query][:bool][:should].push({
           "query_string" => {"default_field" => "title","query" => "*#{product}*" }
+        })
+      else
+        query[:query][:bool][:should].push({
+          match: { title: product }
         })
       end
     end
