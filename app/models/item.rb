@@ -166,11 +166,12 @@ class Item < ActiveRecord::Base
     query = {
       query: {
         bool: {
-          should: [
+          must: [
             {
               term: {shop_name: shop_name }
             }
           ],
+          should: [],
           minimum_should_match: 1
         }
       }
