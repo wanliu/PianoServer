@@ -29,6 +29,7 @@ class OneMoney < Ohm::Model
 
   attribute :price, Type::Decimal
   attribute :is_open, Type::Boolean       # 是否打开
+  attribute :items_with_gifts             # 礼品购的商品
 
   collection :items, :PmoItem
   collection :seeds, :PmoSeed

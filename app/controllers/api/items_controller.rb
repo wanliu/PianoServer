@@ -49,4 +49,31 @@ class Api::ItemsController < Api::BaseController
 
     render json: { saled_count: count, stock: current_stock }
   end
+
+  def gift_item_info
+    item = Item.find(params[:id])
+    since = case params[:since]
+      when "month", "m"
+        1.month.ago
+      when "week", "w"
+        1.week.ago
+      else
+        1.month.ago
+      end
+
+    count = item.order_items.where("created_at > :since", since: since).count
+    current_stock = item.current_stock
+
+    gifts = item.gifts.as_json(methods: [:title, :avatar_url, :inventory, :cover_url])
+
+    hash = item.as_json(except: [:income_price, :public_price], methods: [:shop_name, :shop_realname, :shop_address, :shop_avatar])
+    hash['avatar_urls'] = [item.avatar_url]
+    hash['cover_urls'] = [item.cover_url]
+    hash['gifts'] = gifts
+    hash['ori_price'] = item.public_price
+    hash['saled_count'] = count
+    hash['stock'] = current_stock
+
+    render json: hash
+  end
 end

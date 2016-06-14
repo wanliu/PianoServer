@@ -79,11 +79,11 @@ module Select2Helper
     html = <<-HTML
       #{select object_name, method, choices, options, html_options.merge(_html_options), &block}
       <script type="text/javascript">
-        var _tpl = _.template("#{j options[:template]}");
+        var _tpl_#{obj_id} = _.template("#{j options[:template]}");
 
         function formatState(state) {
           if (!state.id) { return state.text; }
-          return $(_tpl(state));
+          return $(_tpl_#{obj_id}(state));
         }
 
         $('[select2-id="#{obj_id}"]').select2($.extend({
