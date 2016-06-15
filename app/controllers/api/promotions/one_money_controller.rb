@@ -325,7 +325,7 @@ class Api::Promotions::OneMoneyController < Api::BaseController
   end
 
   def items_with_gifts
-    items_with_gifts = @one_money.items_with_gifts
+    items_with_gifts = @one_money.items_with_gifts || ''
 
     gift_items = if items_with_gifts.length > 0 then items_with_gifts.split(',').map do |id|
       item = Item.find(id)
@@ -342,7 +342,7 @@ class Api::Promotions::OneMoneyController < Api::BaseController
       count = item.order_items.where("created_at > :since", since: since).count
       current_stock = item.current_stock
 
-      gifts = item.gifts.as_json(methods: [:title, :avatar_url, :inventory, :cover_url])
+      gifts = item.gifts.as_json(methods: [:title, :avatar_url, :inventory, :cover_url, :sid])
       json = item.as_json(except: [:income_price, :public_price], methods: [:shop_name, :shop_realname])
       json['avatar_urls'] = [item.avatar_url]
       json['cover_urls'] = [item.cover_url]
