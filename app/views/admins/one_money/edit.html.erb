@@ -192,10 +192,15 @@
         id = data.id,
         price = parseFloat(data.price),
         inventory = parseInt(data.inventory),
+        onSale = data.on_sale,
         text = data.text;
 
       if (price > 0 && inventory > 0) {
-        return true;
+        if (!onSale) {
+          return confirm(text + "已经下架，确定需要添加进入活动？");
+        } else {
+          return true;
+        }
       } else {
         return confirm(text + "商品库存或价格为零，确定需要添加进入活动？");
       }
