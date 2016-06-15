@@ -12,7 +12,7 @@ PROFILE=
 WATCH=
 PIPE=$(pipe)
 S3_STORAGE=s3://wxtest
-SETTIGNS_FILE=s3://wanliu/config/piano/settings.local.yml
+SETTIGNS_FILE=s3://wanliu/config/piano/settings.local.test.yml
 
 ifeq ($(PIPE),1)
 	LOGNAME:=$(NAME)Log
@@ -36,7 +36,7 @@ endif
 
 ifdef online
 	S3_STORAGE:=s3://wxapps
-	SETTIGNS_FILE=s3://wanliu/config/piano/settings.local.test.yml
+	SETTIGNS_FILE=s3://wanliu/config/piano/settings.local.yml
 endif
 
 AWSLOGS:=$(shell awslogs -h 2> /dev/null)
@@ -64,7 +64,19 @@ stop:
 
 restart: stop quick_start
 
-sync_config:
+prepare_config:
+	@echo $(SETTIGNS_FILE) > Settingfile
+
+after_config:
+	@rm Settingfile
+
+try_config:
+ifneq ("$(wildcard Settingfile)","")
+	$(eval SETTIGNS_FILE=$(shell cat Settingfile))
+endif
+	@echo $(SETTIGNS_FILE)	
+
+sync_config: try_config
 	@aws s3 cp $(SETTIGNS_FILE) config/settings.local.yml $(PROFILE)
 	@aws s3 cp s3://wanliu/config/piano/wechat_access_token /var/tmp/wechat_access_token $(PROFILE)
 	@aws s3 cp s3://wanliu/config/piano/wechat_jsapi_ticket /var/tmp/wechat_jsapi_ticket $(PROFILE)
@@ -94,9 +106,10 @@ precompile: clearasset
 	@bundle exec rake assets:clean
 	@bundle exec rake assets:precompile
 
-package:
+package: prepare_config
 	@echo 'package all files to /tmp/deploy-piano-server-$(LOG).tar.gz'
 	@tar --exclude=tmp/ --exclude=.git --exclude=log/ --exclude=.sites/ --exclude public/uploads/ --exclude public/one_money/ -czf /tmp/deploy-piano-server-$(LOG).tar.gz .
+	$(MAKE) after_config
 
 upload: package
 	@echo 'Created /tmp/deploy-piano-server-$(LOG).tar.gz'
