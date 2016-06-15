@@ -71,8 +71,20 @@
             <%= time_str %>
           <% end %>
         <% end %>
-
       </span>
+
+      <% shop_item = Item.find_by(id: item.item_id) %>
+      <% if shop_item.present? %>
+        <% unless shop_item.on_sale? %>
+          <br><span style='color: red' class='glyphicon glyphicon-exclamation-sign'>已经下架，请检查！</span>
+        <% end %>
+
+        <% unless shop_item.current_stock.to_i > 0 %>
+          <br><span style='color: red' class='glyphicon glyphicon-exclamation-sign'>库存不足，请检查！</span>
+        <% end %>
+      <% else %>
+        <br><span style='color: red' class='glyphicon glyphicon-exclamation-sign'>对应的商品不存在，请检查！</span>
+      <% end %>
     </p>
     <!-- <p class="time">
     </p> -->

@@ -38,3 +38,5 @@ config/wechat.yml
 node_modules
 error.log
 cron.log
+
+dump.rdb
