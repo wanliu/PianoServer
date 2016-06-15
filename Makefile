@@ -12,6 +12,7 @@ PROFILE=
 WATCH=
 PIPE=$(pipe)
 S3_STORAGE=s3://wxtest
+SETTIGNS_FILE=s3://wanliu/config/piano/settings.local.yml
 
 ifeq ($(PIPE),1)
 	LOGNAME:=$(NAME)Log
@@ -35,6 +36,7 @@ endif
 
 ifdef online
 	S3_STORAGE:=s3://wxapps
+	SETTIGNS_FILE=s3://wanliu/config/piano/settings.local.test.yml
 endif
 
 AWSLOGS:=$(shell awslogs -h 2> /dev/null)
@@ -63,7 +65,7 @@ stop:
 restart: stop quick_start
 
 sync_config:
-	@aws s3 cp s3://wanliu/config/piano/settings.local.yml config/settings.local.yml $(PROFILE)
+	@aws s3 cp $(SETTIGNS_FILE) config/settings.local.yml $(PROFILE)
 	@aws s3 cp s3://wanliu/config/piano/wechat_access_token /var/tmp/wechat_access_token $(PROFILE)
 	@aws s3 cp s3://wanliu/config/piano/wechat_jsapi_ticket /var/tmp/wechat_jsapi_ticket $(PROFILE)
 	@aws s3 cp s3://wanliu/config/piano/wechat.yml config/wechat.yml $(PROFILE)
