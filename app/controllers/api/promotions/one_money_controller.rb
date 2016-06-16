@@ -342,7 +342,7 @@ class Api::Promotions::OneMoneyController < Api::BaseController
       count = item.order_items.where("created_at > :since", since: since).count
       current_stock = item.current_stock
 
-      gifts = item.gifts.as_json(methods: [:title, :avatar_url, :inventory, :cover_url, :sid])
+      gifts = item.gifts.as_json(methods: [:title, :avatar_url, :inventory, :cover_url, :sid, :public_price])
       json = item.as_json(except: [:income_price, :public_price], methods: [:shop_name, :shop_realname])
       json['avatar_urls'] = [item.avatar_url]
       json['cover_urls'] = [item.cover_url]
