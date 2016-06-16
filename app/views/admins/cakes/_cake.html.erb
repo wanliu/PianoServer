@@ -1,0 +1,10 @@
+<%= content_tag_for :tr, cake do %>
+  <td><%= image_tag cake.avatar_url %><%= cake.title %></td>
+  <td><%= cake.shop_name %></td>
+  <td><%= cake.hearts_limit %></td>
+  <td>
+    <button class='btn btn-default'>编辑</button>
+    <!-- <button class='btn btn-danger'>Delete</button> -->
+    <%= button_to "删除", [:admins, cake], method: :delete, remote: true, format: :js, class: 'btn btn-danger', data: {confirm: 'sure'} %>
+  </td>
+<% end %>

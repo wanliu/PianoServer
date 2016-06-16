@@ -1,0 +1,65 @@
+.alert-header {
+  position: relative;
+  padding: 20px 0 10px 0;
+  margin: 10px 0;
+  border-bottom: 1px solid #ddd;
+
+  &.no-bottom-border {
+    border-bottom: none;
+  }
+
+  .alert {
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+}
+
+#search-cake-items {
+  width: 320px;
+}
+
+.cake-items-dropdown {
+  min-width: 320px;
+  max-height: 300px;
+  overflow-y: scroll;
+
+  li {
+    padding-right: 20px;
+    padding-left: 5px;
+    margin-bottom: 2px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #dff0d8;
+    }
+  }
+}
+
+.cakes {
+  form.button_to {
+    display: inline-block;
+  }
+
+  .cake {
+    img {
+      height: 80px;
+    }
+  }
+}
+
+div.new-cake {
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ddd;
+}
+
+form#new_cake {
+  .selected-item {
+    padding: 10px;
+  }
+
+  #cake_hearts_limit {
+    width: 320px;
+  }
+}

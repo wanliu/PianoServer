@@ -198,6 +198,11 @@ Rails.application.routes.draw do
 
     resources :one_money, path: :daily_cheap, as: :daily_cheap, :defaults => { type: :daily_cheap } do
     end
+
+    resources :cakes do
+      get "search_items", on: :collection
+    end
+
     resources :attachments
     resources :industries do
       concerns :templable, templable_type: 'Industry', parent_type: 'Industry'

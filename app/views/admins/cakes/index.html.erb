@@ -1,0 +1,85 @@
+<div class='alert-header'>
+  <div class="alert alert-success infors" role="alert" style='display: none;'>
+  </div>
+  <div class="alert alert-danger errors" role="alert" style='display: none;'>
+  </div>
+  <div class='title'>
+    <h3>生日趴蛋糕</h3>
+    <button class='btn btn-default new-cake-btn'>新建</button>
+  </div>
+</div>
+
+<div class='new-cake' style='display: none;'>
+  <%= render 'form' %>
+</div>
+
+<table class='table cakes'>
+  <thead>
+    <tr>
+      <th>名称　</th>
+      <th>所属商店　</th>
+      <th>限制红心数量　</th>
+      <th>操作 </th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @cakes.each do |cake| %>
+      <%= render cake %>
+    <% end %>
+  </tbody>
+</table>
+
+<%= paginate @cakes %>
+
+<script type="text/javascript">
+(function (event) {
+  var cateItemTpl = _.template($('#cake-item').html());
+  var selectedItemTpl = _.template($('#selected-item').html());
+  var $dropdown = $('.cake-items-dropdown');
+  var $itemSearcher = $('#search-cake-items');
+  var $cakeFormContainer = $('.new-cake');
+  var $newCakeBtn = $('.new-cake-btn');
+  var $selectedItem = $('.selected-item');
+
+  var items = [];
+
+  $itemSearcher.keyup(function(event) {
+    var value = $(this).val();
+    if (value.length == 0) return;
+
+    $.getJSON('/admins/cakes/search_items?q=' + value)
+      .done(reflashCakeItems); 
+  });
+
+  $dropdown.on('click', 'li', function(event) {
+    var itemId = $(this).data('itemId');
+    $('input#cake_item_id').val(itemId);
+
+    $('#new_cake [name=commit]').removeAttr('disabled');
+
+    var item = _.find(items, function(item) {
+      return item.id.toString() == itemId.toString();
+    })
+    var html = selectedItemTpl(item);
+    $selectedItem.html(html);
+  });
+
+  $newCakeBtn.click(function() {
+    $cakeFormContainer.toggle();
+  });
+
+  function reflashCakeItems(data, status, xhr) {
+    items = data;
+    $dropdown.html('');
+
+    _.each(data, function(item) {
+      var html = cateItemTpl(item);
+      $dropdown.append(html);
+    })
+
+    if ('false' == $itemSearcher.attr('aria-expanded')) {
+      $itemSearcher.dropdown('toggle');
+    }
+  }
+})();
+</script>
