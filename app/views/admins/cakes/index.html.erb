@@ -1,35 +1,37 @@
-<div class='alert-header'>
-  <div class="alert alert-success infors" role="alert" style='display: none;'>
+<div class='cakes-container'>
+  <div class='alert-header'>
+    <div class="alert alert-success infors" role="alert" style='display: none;'>
+    </div>
+    <div class="alert alert-danger errors" role="alert" style='display: none;'>
+    </div>
+    <div class='title'>
+      <h3>生日趴蛋糕</h3>
+      <button class='btn btn-default new-cake-btn'>
+        <span class='glyphicon glyphicon-plus'>新建</span>
+      </button>
+    </div>
   </div>
-  <div class="alert alert-danger errors" role="alert" style='display: none;'>
-  </div>
-  <div class='title'>
-    <h3>生日趴蛋糕</h3>
-    <button class='btn btn-default new-cake-btn'>新建</button>
-  </div>
-</div>
 
-<div class='new-cake' style='display: none;'>
   <%= render 'form' %>
+
+  <table class='table cakes'>
+    <thead>
+      <tr>
+        <th>名称　</th>
+        <th>所属商店　</th>
+        <th>限制红心数量　</th>
+        <th>操作 </th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @cakes.each do |cake| %>
+        <%= render cake %>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%= paginate @cakes %>
 </div>
-
-<table class='table cakes'>
-  <thead>
-    <tr>
-      <th>名称　</th>
-      <th>所属商店　</th>
-      <th>限制红心数量　</th>
-      <th>操作 </th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @cakes.each do |cake| %>
-      <%= render cake %>
-    <% end %>
-  </tbody>
-</table>
-
-<%= paginate @cakes %>
 
 <script type="text/javascript">
 (function (event) {
@@ -68,6 +70,12 @@
     $cakeFormContainer.toggle();
   });
 
+  $('.cakes').on('click', 'tr .edit-btn', toggleCakeEdit);
+
+  $('form#new_cake button.cancel').click(function(event) {
+    $cakeFormContainer.hide();
+  });
+
   function reflashCakeItems(data, status, xhr) {
     items = data;
     $dropdown.html('');
@@ -80,6 +88,11 @@
     if ('false' == $itemSearcher.attr('aria-expanded')) {
       $itemSearcher.dropdown('toggle');
     }
+  }
+
+  function toggleCakeEdit(event) {
+    var cakeId = $(this).closest('tr').attr('id').replace('cake_', '');
+    $('tr.cake-eidt-form[data-cake-id=' + cakeId + ']').toggle();
   }
 })();
 </script>

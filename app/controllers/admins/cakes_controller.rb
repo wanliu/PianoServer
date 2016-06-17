@@ -66,12 +66,16 @@ class Admins::CakesController < Admins::BaseController
   # PATCH/PUT /cakes/1
   # PATCH/PUT /cakes/1.json
   def update
-    @cake = Cake.find(params[:id])
-
-    if @cake.update(cake_params)
-      head :no_content
-    else
-      render json: @cake.errors, status: :unprocessable_entity
+    respond_to do |format|
+      if @cake.update(cake_update_params)
+        format.js
+        format.html { head :no_content }
+        format.json { render json: {} }
+      else
+        format.js
+        format.json { render json: @cake.errors, status: :unprocessable_entity }
+        format.html { head :no_content }
+      end
     end
   end
 
@@ -94,6 +98,10 @@ class Admins::CakesController < Admins::BaseController
     end
 
     def cake_params
+      params.require(:cake).permit(:item_id, :hearts_limit)
+    end
+
+    def cake_update_params
       params.require(:cake).permit(:item_id, :hearts_limit)
     end
 end
