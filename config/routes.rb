@@ -315,6 +315,8 @@ Rails.application.routes.draw do
           post "toggle_open", action: :toggle_open
         end
       end
+
+      resources :cakes, only: [:index, :show]
     end
     # resources :business, concerns: :roomable do
     #   member do
