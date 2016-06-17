@@ -15,7 +15,6 @@ class Order < ActiveRecord::Base
   accepts_nested_attributes_for :evaluations
 
   attr_accessor :cart_item_ids, :address_id, :request_ip, :coupon_ids
-  # attr_reader :coupon_ids
 
   enum status: { initiated: 0, finish: 1 }
 
@@ -29,6 +28,7 @@ class Order < ActiveRecord::Base
   validate :status_transfer, on: :update
   validate :change_total_on_initiated, on: :update
   validate :items_should_exist, on: :create
+  validate :coupons_owner_and_offset, on: :create
 
   before_save :set_modified, if: :total_changed?
   before_create :caculate_total, :generate_receive_token
@@ -154,6 +154,9 @@ class Order < ActiveRecord::Base
         items.each do |item|
           item.deduct_stocks!(operator)
         end
+
+        coupons.each(&:save!)
+
       rescue ActiveRecord::RecordInvalid => e
         raise ActiveRecord::Rollback
         false
@@ -176,6 +179,10 @@ class Order < ActiveRecord::Base
 
         items.each do |item|
           item.deduct_stocks!(operator)
+        end
+
+        coupons.each do |coupon|
+          coupon.save!
         end
 
         pmo_grab.ensure!
@@ -300,8 +307,12 @@ class Order < ActiveRecord::Base
     items.reduce(0) { |total, item| total += item.price * item.quantity }
   end
 
+  def coupons_offseted_total
+    coupons.reduce(0) { |total, coupon| total += coupon.offset_par }
+  end
+
   def coupons
-    buyer.coupons.joins(:coupon_template).where(id: coupon_ids)
+    @coupons ||= buyer.coupons.joins(:coupon_template).where(id: coupon_ids).to_a
   end
 
   # what coupons can I use?
@@ -325,6 +336,49 @@ class Order < ActiveRecord::Base
     end
   end
 
+  # 验证一个组合是否合法
+  # 验证配对的循序按照从面额从大到小
+  def coupons_available?(coups=coupons)
+    if coupons.length > 1 && !coupons.all?(&:overlap)
+      return false
+    end
+
+    coupons_exam = coups.clone
+    coupons_enum = coups.sort_by(&:par).reverse
+
+    left_items = items.each(&:reset_offset_remain).sort_by(&:offset_remain).reverse
+
+    # multiple = options[:multiple] || false
+
+    coupons_enum.each do |coupon|
+      left_items.sort_by(&:offset_remain).reverse.each do |item|
+        # if coupon.avalible_for(item)
+        #   item.apply_coupon(coupon, multiple)
+        next if item.offseted
+
+        if coupon.apply_minimal_total <= item.total
+          coupon.offset_par = [item.offset_remain, coupon.par].min
+          item.offset_remain = item.offset_remain - coupon.par
+
+          if item.offset_remain <= 0
+            item.offset_remain = 0
+            item.offseted = true
+          end
+
+          coupon.assign_attributes(receive_taget: item, status: 'applied')
+          coupons_exam.delete coupon
+
+          break
+        else
+          next
+        end
+      end
+    end
+
+    # 配对完毕之后，coupons数组应该是空的
+    coupons_exam.blank?
+  end
+
   private
 
   # 根据选定条件，穷举所有可能的组合，使得购物卷的选择组合不依赖于客户的选择次序
@@ -337,40 +391,10 @@ class Order < ActiveRecord::Base
     end
   end
 
-  # 验证一个组合是否合法
-  # 验证配对的循序按照从面额从大到小
-  def coupons_available?(coupons)
-    coupons_copy = coupons.sort_by(&:par).reverse
-
-    left_items = items.each(&:reset_offset_remain).sort_by(&:offset_remain).reverse
-
-    # multiple = options[:multiple] || false
-
-    coupons_copy.each do |coupon|
-      left_items.sort_by(&:offset_remain).reverse.each do |item|
-        # if coupon.avalible_for(item)
-        #   item.apply_coupon(coupon, multiple)
-        next if item.offseted
-
-        if coupon.apply_minimal_total <= item.total
-          item.offset_remain = item.offset_remain - coupon.par
-          if item.offset_remain <= 0
-            item.offseted = true
-          end
-          coupons.delete coupon
-          break
-        else
-          next
-        end
-      end
-    end
-
-    # 配对完毕之后，coupons数组应该是空的
-    coupons.blank?
-  end
-
   def caculate_total
-    self.origin_total = self.total = items_total + (express_fee || 0)
+    self.origin_total = items_total + (express_fee || 0)
+    self.offseted_total = coupons_offseted_total
+    self.total = origin_total - offseted_total
   end
 
   def avoid_from_shop_owner
@@ -435,5 +459,16 @@ class Order < ActiveRecord::Base
         buyer.coupons.includes(:coupon_template).available_with_item(item.orderable, item.offset_remain).to_a
       end
     end.flatten.compact.uniq
+  end
+
+  def coupons_owner_and_offset
+    return if coupon_ids.blank?
+    if buyer.coupons.appliable.active.exists?(id: coupon_ids)
+      unless coupons_available?(coupons)
+        errors.add(:base, "使用了无效的购物卷，请重新选择购物卷！")
+      end
+    else
+      errors.add(:base, "使用了无效的购物卷，请重新选择购物卷！")
+    end
   end
 end

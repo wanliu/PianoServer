@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160601033130) do
+ActiveRecord::Schema.define(version: 20160606020208) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -227,11 +227,11 @@ ActiveRecord::Schema.define(version: 20160601033130) do
     t.datetime "start_time"
     t.datetime "end_time"
     t.integer  "status",                                      default: 0
-    t.datetime "created_at",                                              null: false
-    t.datetime "updated_at",                                              null: false
+    t.datetime "created_at",                                                null: false
+    t.datetime "updated_at",                                                null: false
     t.integer  "lock_version",                                default: 0
     t.datetime "deleted_at"
-    t.decimal  "offset_par",         precision: 10, scale: 2
+    t.decimal  "offset_par",         precision: 10, scale: 2, default: 0.0
   end
 
   add_index "coupons", ["coupon_template_id"], name: "index_coupons_on_coupon_template_id", using: :btree
@@ -492,6 +492,7 @@ ActiveRecord::Schema.define(version: 20160601033130) do
     t.decimal  "paid_total",        precision: 10, scale: 2
     t.string   "note"
     t.string   "receive_token"
+    t.decimal  "offseted_total",    precision: 10, scale: 2, default: 0.0
   end
 
   add_index "orders", ["buyer_id"], name: "index_orders_on_buyer_id", using: :btree

@@ -90,8 +90,9 @@ class Location < ActiveRecord::Base
   end
 
   def is_default?
-    id == user.latest_location_id
+    id.present? && id == user.try(:latest_location_id)
   end
+  alias :default? :is_default? 
 
   # 默认收货地址被删除后，重置用户的默认地址字段
   def reset_user_default_address
