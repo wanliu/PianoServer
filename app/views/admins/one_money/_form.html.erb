@@ -119,8 +119,9 @@
     <%= submit_tag '保存', class: 'btn btn-primary' %>
     <% unless @one_money.new? %>
       <%= button_to '发布', url: publish_admins_one_money_path(@one_money.id), class: 'btn btn-success btn-publish', remote: true %>
-
-      <%= link_to_if exists_one_money_dir?(@one_money), '活动网址', one_money_publish_url(@one_money), class: 'btn btn-link' %>
+      <% if @one_money.start_at %>
+        <%= link_to_if exists_one_money_dir?(@one_money), '活动网址', one_money_publish_url(@one_money), class: 'btn btn-link' %>
+      <% end %>
     <% end %>
     <%= status_control_all @one_money unless @one_money.new? %>
   </div>
