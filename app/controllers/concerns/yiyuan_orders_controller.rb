@@ -55,7 +55,12 @@ module YiyuanOrdersController
     @location.skip_limit_validation = true
 
     if @location.save
-      redirect_to callback_url.split('&address_id=').first + "&address_id=#{@location.id}"
+      redirect_url = if callback_url.include?('?')
+        callback_url.split('&address_id=').first + "&address_id=#{@location.id}"
+      else
+        callback_url + "?address_id=#{@location.id}"
+      end
+      redirect_to redirect_url
     else
       render "orders/new_yiyuan_address"
     end

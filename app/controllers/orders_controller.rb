@@ -109,6 +109,16 @@ class OrdersController < ApplicationController
 
   # 购物车结算
   def confirmation
+    if params[:address_id].present?
+      @location = current_user.locations.find(params[:address_id])
+    elsif current_user.locations.present?
+      # redirect_to chose_yiyuan_address_orders_path(callback: request.fullpath)
+      @location = current_user.latest_location || current_user.locations.last
+    else
+      redirect_to new_yiyuan_address_orders_path(callback: request.fullpath)
+      return
+    end
+
     @order = current_user.orders.build(order_params)
 
     set_feed_back
