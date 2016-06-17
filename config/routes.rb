@@ -203,6 +203,8 @@ Rails.application.routes.draw do
       get "search_items", on: :collection
     end
 
+    resources :virtual_presents, except: [:new, :edit]
+
     resources :attachments
     resources :industries do
       concerns :templable, templable_type: 'Industry', parent_type: 'Industry'
@@ -283,6 +285,8 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :blesses, except: [:new, :edit]
+
     namespace :promotions do
       resources :one_money, except: [:index, :create, :update, :destroy]  do
         member do
@@ -317,6 +321,7 @@ Rails.application.routes.draw do
       end
 
       resources :cakes, only: [:index, :show]
+      resources :birthday_parties, only: [:index, :show]
     end
     # resources :business, concerns: :roomable do
     #   member do

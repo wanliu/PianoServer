@@ -14,6 +14,9 @@ class Order < ActiveRecord::Base
   has_many :evaluations
   accepts_nested_attributes_for :evaluations
 
+  has_one :birthday_party
+  accepts_nested_attributes_for :birthday_party
+
   attr_accessor :cart_item_ids
   attr_accessor :address_id, :request_ip
 

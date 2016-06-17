@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160616064003) do
+ActiveRecord::Schema.define(version: 20160617063600) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -62,6 +62,36 @@ ActiveRecord::Schema.define(version: 20160616064003) do
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
   end
+
+  create_table "birthday_parties", force: :cascade do |t|
+    t.integer  "cake_id"
+    t.integer  "user_id"
+    t.integer  "order_id"
+    t.integer  "hearts_limit"
+    t.date     "birth_day"
+    t.string   "birthday_person"
+    t.string   "person_avatar"
+    t.text     "message"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "birthday_parties", ["cake_id"], name: "index_birthday_parties_on_cake_id", using: :btree
+  add_index "birthday_parties", ["order_id"], name: "index_birthday_parties_on_order_id", using: :btree
+  add_index "birthday_parties", ["user_id"], name: "index_birthday_parties_on_user_id", using: :btree
+
+  create_table "blesses", force: :cascade do |t|
+    t.integer  "sender_id"
+    t.integer  "virtual_present_id"
+    t.text     "message"
+    t.integer  "birthday_party_id"
+    t.boolean  "paid"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
+
+  add_index "blesses", ["birthday_party_id"], name: "index_blesses_on_birthday_party_id", using: :btree
+  add_index "blesses", ["virtual_present_id"], name: "index_blesses_on_virtual_present_id", using: :btree
 
   create_table "bootsy_image_galleries", force: :cascade do |t|
     t.integer  "bootsy_resource_id"
@@ -750,6 +780,13 @@ ActiveRecord::Schema.define(version: 20160616064003) do
   end
 
   add_index "variables", ["host_type", "host_id"], name: "index_variables_on_host_type_and_host_id", using: :btree
+
+  create_table "virtual_presents", force: :cascade do |t|
+    t.decimal  "price",      precision: 10, scale: 2
+    t.string   "name"
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+  end
 
   add_foreign_key "gifts", "items"
   add_foreign_key "order_items", "orders"
