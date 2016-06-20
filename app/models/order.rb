@@ -300,6 +300,12 @@ class Order < ActiveRecord::Base
     items.reduce(0) { |total, item| total += item.price * item.quantity }
   end
 
+  def items_and_gifts_count
+    items_count + items.reduce(0) do |sum, item|
+      sum += item.gifts.reduce(0) { |s, g| s += g["quantity"] }
+    end
+  end
+
   private
 
   def caculate_total

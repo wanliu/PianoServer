@@ -29,11 +29,7 @@
         <div class="input-group">
           <span class="input-group-btn">
             <button type="button" class="btn btn-minus">
-              <% if item.quantity > 1 %>
-                <span class="glyphicon glyphicon-minus"></span>
-              <% else %>
-                <span class="glyphicon"></span>
-              <% end %>
+              <span class="glyphicon glyphicon-minus"></span>
             </button>
           </span>
           <input type="text" name="quantity" class="form-control input-number" value=<%= number_with_delimiter item.quantity %> autocomplete="off">
