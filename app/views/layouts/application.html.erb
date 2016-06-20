@@ -96,7 +96,12 @@
 
   <body class="<%= yield :module %>">
     <%# cache ["navbar", current_anonymous_or_user ] do %>
+    <% navbar_partial = content_for :hide_navbar %>
+    <% if navbar_partial.present? %>
+      <%= render navbar_partial %>
+    <% else %>
       <%= render "shards/navbar" %>
+    <% end %>
     <%# end %>
 
     <%= yield :fixed_bottom %>

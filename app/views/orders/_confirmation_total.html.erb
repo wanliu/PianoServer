@@ -7,20 +7,13 @@
 <div class='text-right'>
   运送费用 <%= number_to_currency @order.express_fee %>元
 </div>
-<div>使用优惠券*<span>2</span>
-   减免<span class='total-privilege'>20</span>元
-</div>
 
-合计
-<span class='total-total'>
-  <%= number_to_currency @order.items.map(&:total).reduce(:+) + @order.express_fee %>
-</span>
-元
 
 <% if @order.coupons.present? %>
   <div>
     <% if @coupons_avaliable %>
-      优惠卷×<%= @order.coupons.length %> 节省<%= @order.coupons.map(&:offset_par).reduce(&:+) %>元
+    使用优惠券*<span><%= @order.coupons.length %></span>
+    减免<span class='total-privilege'><%= @order.coupons.map(&:offset_par).reduce(&:+) %></span>元
     <% else %>
       无效的优惠卷<%= "组合" if @order.coupons.length > 1 %>
     <% end %>

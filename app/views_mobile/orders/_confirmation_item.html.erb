@@ -1,18 +1,21 @@
 <div class="list-group-item item">
   <div class='row item-desc'>
-    <div class='col-xs-8'>
+    <div class="item-img">
       <div class="avatar">
         <%= image_tag order_item.avatar_url, class: 'media-object', alt: "商品图片" %>
       </div>
 
-      <div class="title">
+
+    </div>
+    <div class="item-title">
+     <div class="title">
         <%= "#{order_item.title} #{order_item.properties_title}" %>
       </div>
     </div>
 
-    <div class='subtotal col-xs-4'>
+    <div class='subtotal'>
       <div class="text-right">
-        <%= number_to_currency order_item.price %>
+        <%= number_to_currency order_item.price %>元
       </div>
 
       <div class="text-right">
@@ -20,7 +23,7 @@
       </div>
 
       <div class="text-right">
-        <%= number_to_currency order_item.price * order_item.quantity %>
+        <%= number_to_currency order_item.price * order_item.quantity %>元 
       </div>
     </div>
   </div>
