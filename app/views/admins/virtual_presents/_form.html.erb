@@ -1,0 +1,14 @@
+<div class='new-virtual_present' style='display: none;'>
+  <%= form_for [:admins, @virtual_present], remote: true do |f| %>
+    名称：<%= f.text_field :name %>
+
+    <br>
+    价格：<%= f.number_field :price %>
+
+    <br>
+    <div class='btn-groups'>
+      <button type='button' class='btn btn-default cancel'>取消</button>
+      <%= f.submit '保存', class: 'btn btn-primary' %>
+    </div>
+  <% end %>
+</div>

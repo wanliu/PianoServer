@@ -784,9 +784,12 @@ ActiveRecord::Schema.define(version: 20160617063600) do
   create_table "virtual_presents", force: :cascade do |t|
     t.decimal  "price",      precision: 10, scale: 2
     t.string   "name"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.boolean  "show",                                default: true
+    t.datetime "created_at",                                         null: false
+    t.datetime "updated_at",                                         null: false
   end
+
+  add_index "virtual_presents", ["show"], name: "index_virtual_presents_on_show", using: :btree
 
   add_foreign_key "gifts", "items"
   add_foreign_key "order_items", "orders"
