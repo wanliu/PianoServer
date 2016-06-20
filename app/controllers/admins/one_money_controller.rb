@@ -242,6 +242,22 @@ class Admins::OneMoneyController < Admins::BaseController
     head :no_content
   end
 
+  def replace_items_with_gifts
+    items_with_gifts = params[:items_with_gifts]
+    @one_money.items_with_gifts = items_with_gifts
+    @one_money.save
+
+    item_ids = if items_with_gifts.nil? then '' else items_with_gifts.split(',') end
+
+    @gift_items = if item_ids.length > 0 then item_ids.map do |id|
+      Item.find(id)
+    end else
+      []
+    end
+
+    render json: @gift_items
+  end
+
   private
 
   def one_money_params

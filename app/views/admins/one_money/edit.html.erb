@@ -21,7 +21,12 @@
   <div class="col-xs-12">
     <label for="">礼品购商品</label>
     <div class="form-group">
-      <%= text_field_tag :items_with_gifts, @one_money.items_with_gifts, readonly: 'readonly', class: 'form-control' %>
+      <div class="input-group">
+        <%= text_field_tag :items_with_gifts, @one_money.items_with_gifts, readonly: 'readonly', class: 'form-control' %>
+        <span class="input-group-addon item-edit">
+          <span class="glyphicon glyphicon-pencil"></span>
+        </span>
+      </div>
     </div>
     <div class="form-group">
       <span>已选择的商品</span>
@@ -235,5 +240,56 @@
         }
       });
     }
+  });
+
+  $(".item-edit").on('click', function(e) {
+    var $input = $(e.currentTarget).siblings('input');
+    var readonly = $input.prop('readonly');
+
+    $input.prop('readonly', !readonly);
+
+    // if ($input.attr('readonly') == 'readonly') {
+    //   $input.removeAttr('readonly');
+    // } else {
+    //   $input.attr('readonly', 'readonly');
+    // }
+  });
+
+  $('#items_with_gifts').on('paste', function(e) {
+    var $this = $(this);
+    var last_ids = $(this).val();
+
+    setTimeout(function() {
+      var ids = $this.val();
+
+      if (!/^\d+(,\d+)*$/.test(ids)) {
+        return $this.val(last_ids);
+      }
+
+      var url = "<%= admins_one_money_path(@one_money.id) %>";
+
+      $.ajax({
+        url: url + "/replace_items_with_gifts",
+        type: 'PUT',
+        dataType: 'json',
+        data: {
+          'items_with_gifts': ids
+        }
+      }).done(function(items) {
+        $("input.item-edit").prop('readonly', true);
+        var $list = $('.gift-item-list').html('');
+
+        for (var i=0; i<items.length; i++) {
+          var item = items[i];
+          var itemId = item.id;
+          var itemTitle = item.title;
+          var fragment = ['<div class="gift-item"><div class="item-title">', itemTitle,
+            '</div><div class="remove-icon" gift-id="', itemId,
+            '"><span class="glyphicon glyphicon-remove"></span></div></div>'].join('');
+
+          $list.append(fragment);
+        }
+      });
+    }, 10);
   });
 </script>

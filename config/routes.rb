@@ -181,6 +181,7 @@ Rails.application.routes.draw do
         patch "fix_clock/:item_id", action: :fix_clock, as: :fix_clock
         patch "add_item/:item_id", action: :add_item, as: :add_item
         put "update_items_with_gifts", action: :update_items_with_gifts, as: :update_items_with_gifts
+        put "replace_items_with_gifts", action: :replace_items_with_gifts
         put "update_item/:item_id", action: :update_item, as: :update_item
         put "overwrite_item/:item_id", action: :overwrite_item, as: :overwrite_item
         delete "clear_overwrite_item/:item_id", action: :clear_overwrite_item, as: :clear_overwrite_item
