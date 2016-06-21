@@ -325,10 +325,10 @@ class OrdersController < ApplicationController
     @delivery_addresses = [shop_address].concat current_user.locations.order(id: :asc)
     @delivery_addresses.compact!
 
-    if @orderable_id.present?
+    if @order.address_id.present?
       @order.address_id = @order.address_id.to_i
     else
-      @order.address_id ||=
+      @order.address_id =
         if current_user.latest_location_id.present?
           current_user.latest_location_id
         elsif shop_address.present?
