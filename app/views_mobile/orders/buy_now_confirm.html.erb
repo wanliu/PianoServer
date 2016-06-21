@@ -1,17 +1,31 @@
-<div class='buy-now-confirm'>
-  <%= render "order_address", locals: { delivery_addresses: @delivery_addresses, order: @order } %>
-
+<% content_for :module do "no_footer" end %>
+<div class='buy-now-confirm-mobile order-confirm order-confirm-mobile'>
+  <section class="mobile-delivery-address">
+    <a>
+    <div class="address-content">
+      <h4><span>陈治文 </span><span>18682348768</span></h4>
+      <p>
+        <span>湖南省</span>
+        <span>长沙市</span>
+        <span>雨花区</span>
+        <span>香樟路万科金域华府</span>
+      </p>
+      <i class="glyphicon glyphicon-map-marker before"></i>
+      <i class="glyphicon glyphicon-menu-right after"></i>
+    </div>
+    </a>
+  </section>
   <%= form_for @order, url: "/orders/buy_now_create" do |f| %>
     <%= f.hidden_field :address_id %>
     <%= f.hidden_field :supplier_id %>
 
-    <div class='cart-group'>
-      <div class='header media'>
-        <div class='shop media-left'>
+    <div class='items-container'>
+     <div class='header'>
+        <span class='shop'>
           <%= link_to shop_site_path(@supplier.name) do %>
             <%= image_tag @supplier.avatar_url %><%= @supplier.title %>
           <% end %>
-        </div>
+        </span>
       </div>
 
       <%= f.fields_for :items do |item_form| %>
@@ -60,16 +74,40 @@
           </div>
         </div>
       <% end %>
+      
+      <section class="mobile-coupon-link">
+        <ul class="list-group">
+          <li class="list-group-item link-to-list">
+            <span class="item-label">优惠券</span>
+            <span class="favorable-price">已节省 -¥ 70.00元</span>
+            <i class="glyphicon glyphicon-menu-right"></i>
+          </li>
 
-      <div class='footer'>
-        <div class="confirmation-total">
-          <%= render "confirmation_total" %>
+        </ul>
+
+      </section>
+
+      <section class='mobile-footer'>
+        <div class='confirmation-total'> 
+        <%= render "confirmation_total" %>
         </div>
-        <%= f.submit "结  算", class: 'submit' %>
-      </div>
+          <%= f.submit "提交订单", class: 'submit'%>
+      </section>
     </div>
   <% end %>
 </div>
+
+<section class="coupon-list-container">
+  <ul>
+     <% @order.available_coupons(coupon_ids: @order.coupon_ids).each do |coupon| %>
+        <%= render "orders/coupon", locals: {coupon: coupon} %>
+      <% end %>
+  </ul>
+
+  <div class="mobile-coupon-footer">
+    <input id='confirm' type="button" value='确认选择' />
+  </div>
+</section>
 
 <script type="text/template" id="mobile-gift-template">
   <div class='cart-gift' data-gift-id="{{= id }}">
@@ -168,5 +206,50 @@
       }
     <% end %>
   }
+
+
+  $('.link-to-list').click(function(){
+    $('.order-confirm-mobile').hide();
+    $('.coupon-list-container').fadeIn();
+  });
+
+  $('#confirm').click(function(){
+    $('.coupon-list-container').hide();
+    $('.order-confirm-mobile').fadeIn();
+  });
+
+  $('.coupon-list-container li').click(function(){
+    var $this = $(this),
+        className = $this.attr('class'),
+        data_id = $(this).attr('data-coupon-id');
+
+        if (className === 'unuseful') {
+          return 
+        }
+        else {
+          if (className) {
+            $('#order_coupon_ids_').each(function(){
+              var match_id = $(this).attr('data-coupon-id');
+              if (match_id === data_id) {
+                $(this).prop('disabled','disabled');
+              }
+            });
+            var data = $('form').serialize();
+            $.post('/orders/select_coupon?' + data);
+            $this.removeClass('selected');
+          }
+          else{
+            $('#order_coupon_ids_').each(function(){
+              var match_id = $(this).attr('data-coupon-id');
+              if (match_id === data_id) {
+                $(this).prop('disabled','');
+              }
+            });
+            var data = $('form').serialize();
+            $.post('/orders/select_coupon?' + data);
+            $this.addClass('selected');
+          }
+        }
+  });
 })();
 </script>

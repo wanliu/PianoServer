@@ -1,0 +1,40 @@
+.buy-now-confirm-mobile{
+  .cart-item{
+   background:#fff;
+   border-top:1px solid #ddd;
+   border-bottom:1px solid #ddd;
+
+    .avatar{
+    margin-left: 15px;
+    
+      .media{
+        padding:10px;
+      }
+
+      img{
+        width:70px;
+        height:70px;
+      }
+  }
+} 
+  .table{
+    margin-bottom: 0;
+  }
+  table tr td{
+    background:#fff;
+    padding:10px 0;
+    font-size: 12px;
+    
+    .glyphicon{
+      font-size: 17px;
+      display: block;
+    }
+  }
+
+  .mobile-coupon-link{
+    margin-top:15px;
+  }
+  .mobile-gifts{
+    background:#fff;
+  }
+}
