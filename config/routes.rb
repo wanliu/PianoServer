@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   # resources :gifts, except: [:new, :edit]
+  resources :birthday_parties, only: [:show]
+
   resources :thumbs, except: [:new, :edit]
 
   resource :wechat, only: [:show, :create]
@@ -321,6 +323,8 @@ Rails.application.routes.draw do
       resources :cakes, only: [:index, :show]
       resources :birthday_parties, only: [:index, :show] do
         resources :blesses, except: [:new, :edit], shallow: true
+
+        patch :upload_avatar, on: :member
       end
     end
     # resources :business, concerns: :roomable do

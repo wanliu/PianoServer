@@ -36,6 +36,7 @@ class User < ActiveRecord::Base
   has_many :deliverable_shops, through: :shop_delivers, source: :shop
 
   has_many :blesses, foreign_key: 'sender_id'
+  has_many :birthday_parties
 
   validates :username, presence: true, uniqueness: true
   validates :mobile, presence: true, uniqueness: true

@@ -1,4 +1,7 @@
 class BirthdayParty < ActiveRecord::Base
+
+  mount_uploader :person_avatar, ItemImageUploader
+
   belongs_to :cake
   belongs_to :user
   belongs_to :order
