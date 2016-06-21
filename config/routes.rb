@@ -400,13 +400,13 @@ Rails.application.routes.draw do
       post 'express_fee'
 
       # 为避免用户回退到立即购买的post页面，提供一个过期提示窗口
-      get "buy_now_confirm", to: Proc.new { |env|
-        [
-          200,
-          {"Content-Type" => "text/html"},
-          [File.read("public/expire.html")]
-        ]
-      }
+      get "buy_now_confirm"#, to: Proc.new { |env|
+      #   [
+      #     200,
+      #     {"Content-Type" => "text/html"},
+      #     [File.read("public/expire.html")]
+      #   ]
+      # }
 
       get "history"
       get "yiyuan_confirm"

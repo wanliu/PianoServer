@@ -9,5 +9,5 @@ class BirthdayParty < ActiveRecord::Base
   validates :user, presence: true
   validates :order, presence: true
   validates :message, presence: true
-  validates :birthday_pserson, presence: true
+  validates :birthday_person, presence: true
 end

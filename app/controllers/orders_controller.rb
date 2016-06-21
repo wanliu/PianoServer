@@ -118,9 +118,17 @@ class OrdersController < ApplicationController
 
   # 直接购买
   def buy_now_confirm
-    @order = current_user.orders.build
+    if params[:order].present?
+      @order = current_user.orders.build(buy_now_confirm_params)
 
-    @order_item = @order.items.build(order_item_params)
+      cake = Cake.find(@order.cake_id)
+      item = cake.item
+
+      @order_item = @order.items.build(orderable: item)
+    else
+      @order = current_user.orders.build
+      @order_item = @order.items.build(order_item_params)
+    end
 
     @order.supplier_id = @order_item.orderable.try(:shop_id)
 
@@ -137,13 +145,19 @@ class OrdersController < ApplicationController
 
     @total = @order_item.price * @order_item.quantity
 
-    @props = params[:cart_item][:properties]
+    @props = @order_item.properties || {}
   end
 
   # 直接购买生成订单
   def buy_now_create
     @order = current_user.orders.build(buy_now_order_params)
 
+    birthday_party = @order.birthday_party
+    if birthday_party.present?
+      birthday_party.user = current_user
+      birthday_party.cake_id = @order.cake_id
+    end
+    debugger
     @order.items.each(&:set_initial_attributes)
 
     respond_to do |format|
@@ -294,7 +308,13 @@ class OrdersController < ApplicationController
 
   def buy_now_order_params
     params.require(:order)
-      .permit(:supplier_id, :address_id, :note, items_attributes: [:orderable_type, :orderable_id, :quantity])
+      .permit(
+        :supplier_id, 
+        :address_id, 
+        :note, 
+        :cake_id,
+        items_attributes: [:orderable_type, :orderable_id, :quantity],
+        birthday_party_attributes: [:message, :birthday_person, :birth_day])
       .tap do |white_list|
         white_list[:items_attributes].each do |key, attributes|
           attributes[:properties] = params[:order][:items_attributes][key][:properties] || {}
@@ -304,6 +324,10 @@ class OrdersController < ApplicationController
           white_list[:item_gifts] = params[:order][:item_gifts]
         end
       end
+  end
+
+  def buy_now_confirm_params
+    params.require(:order).permit(:cake_id, birthday_party_attributes: [:message, :birthday_person, :birth_day])
   end
 
   def order_item_params
