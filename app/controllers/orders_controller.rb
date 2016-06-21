@@ -154,9 +154,20 @@ class OrdersController < ApplicationController
       else
         format.html do
           @order_item = @order.items.first
-          @delivery_addresses = current_user.locations.order(id: :asc)
+          @order_item.set_initial_attributes
+
+          @orderable = @order_item.orderable
+          if @orderable.is_a? Item
+            @orderable.eval_available_gifts(@order_item.quantity)
+          end
+
+          set_addresses_add_express_fee
+
+          @order.supplier_id = @order_item.orderable.try(:shop_id)
+
           @supplier = @order.supplier
           @total = @order_item.price * @order_item.quantity
+          @props = @order_item.properties
 
           flash.now[:error] = @order.errors.full_messages.join(', ')
 
@@ -314,14 +325,18 @@ class OrdersController < ApplicationController
     @delivery_addresses = [shop_address].concat current_user.locations.order(id: :asc)
     @delivery_addresses.compact!
 
-    @order.address_id =
-      if current_user.latest_location_id.present?
-        current_user.latest_location_id
-      elsif shop_address.present?
-        shop_address.id
-      elsif @delivery_addresses.present?
-        @delivery_addresses.first.id
-      end
+    if @orderable_id.present?
+      @order.address_id = @order.address_id.to_i
+    else
+      @order.address_id ||=
+        if current_user.latest_location_id.present?
+          current_user.latest_location_id
+        elsif shop_address.present?
+          shop_address.id
+        elsif @delivery_addresses.present?
+          @delivery_addresses.first.id
+        end
+    end
 
     @order.set_express_fee
   end

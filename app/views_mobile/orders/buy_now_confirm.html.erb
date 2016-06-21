@@ -116,6 +116,10 @@
     changeQuantity(quantityInput, newQuantity);
   });
 
+  $('form#new_order').on('submit', function(event) {
+    $(this).find('input[type=submit]').attr('disabled', 'disabled');
+  });
+
   function changeQuantity(quantityInput, quantity, reflect) {
     var $cartItem = $(quantityInput).parents('.cart-item:first'),
         $quantity = $cartItem.find('.quantity'),
