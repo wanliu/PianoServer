@@ -12,7 +12,10 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
   # GET /birthday_parties/1
   # GET /birthday_parties/1.json
   def show
-    render json: @birthday_party
+    @blesses = @birthday_party.blesses
+      .includes(:sender, :virtual_present)
+      .order(id: :desc)
+      .paid
   end
 
   # POST /birthday_parties

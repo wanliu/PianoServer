@@ -1,4 +1,6 @@
 class Bless < ActiveRecord::Base
+  scope :paid, -> { where(paid: true) }
+
   belongs_to :virtual_present
   belongs_to :birthday_party
   belongs_to :sender, class_name: 'User'
