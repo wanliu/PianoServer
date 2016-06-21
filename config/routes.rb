@@ -285,8 +285,6 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :blesses, except: [:new, :edit]
-
     namespace :promotions do
       resources :one_money, except: [:index, :create, :update, :destroy]  do
         member do
@@ -321,7 +319,9 @@ Rails.application.routes.draw do
       end
 
       resources :cakes, only: [:index, :show]
-      resources :birthday_parties, only: [:index, :show]
+      resources :birthday_parties, only: [:index, :show] do
+        resources :blesses, except: [:new, :edit], shallow: true
+      end
     end
     # resources :business, concerns: :roomable do
     #   member do
