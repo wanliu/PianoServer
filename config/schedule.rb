@@ -29,6 +29,6 @@ every '30-59/5 10-23 * * *' do
 end
 
 
-every '30 2 * * 0-4' do
+every '30 2 * * 0-5' do
   rake "daily_cheap:create_tomorrow"
 end

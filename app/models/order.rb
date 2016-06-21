@@ -203,6 +203,16 @@ class Order < ActiveRecord::Base
     items.pluck(:quantity).reduce(:+) || 0
   end
 
+  def gifts_count
+    items.reduce(0) do |sum, item|
+      sum += item.gifts.reduce(0) { |s, g| s += g["quantity"] }
+    end
+  end
+
+  def items_and_gifts_count
+    items_count + gifts_count
+  end
+
   def yiyuan_promotion?
     pmo_grab_id.present?
   end

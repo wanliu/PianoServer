@@ -5,7 +5,7 @@ class CartsController < ApplicationController
   before_action :check_for_mobile, only: [:show]
 
   def show
-    @items = current_cart.items.includes(:cartable)
+    @items = current_cart.items
   end
 
   # def add

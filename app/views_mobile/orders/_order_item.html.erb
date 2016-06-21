@@ -47,7 +47,7 @@
       <% else %>
         <div class='gifts col-xs-11 row'>
           <% item.gifts.each do |gift| %>
-            <div class='gift col-xs-3'>
+            <div class='gift col-xs-4'>
               <%= image_tag gift["avatar_url"] %> X <span><%= gift["quantity"] %></span>
             </div>
           <% end %>

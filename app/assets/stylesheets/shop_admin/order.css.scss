@@ -18,3 +18,47 @@
     border-top: 1px solid #ddd;
   }
 }
+
+.order-gifts {
+  .order-gift {
+    min-width: 33.3333%;
+    border: 1px solid #ddd;
+    float: left;
+    // margin-right: 20px;
+
+    .head {
+      height: 60px;
+      float: left;
+      background-color: red;
+      width: 30px;
+
+      img {
+        height: 40px;
+        margin: 10px 5px;
+      }
+    }
+
+    .desc {
+      float: left;
+
+      .avatar {
+        float: left;
+        padding: 10px;
+
+        img {
+          height: 40px;
+          width: auto;
+        }
+      }
+
+      .title-quantity {
+        float: left;
+        text-align: left;
+
+        div {
+          padding: 5px 5px;
+        }
+      }    
+    }
+  }
+}

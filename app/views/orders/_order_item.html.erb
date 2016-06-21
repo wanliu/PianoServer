@@ -14,7 +14,7 @@
 
   <% if controller.action_name != 'show' %>
     <% if item == order.items.first && !order.finish? %>
-      <td rowspan='<%= order.items.count %>' class='operation'>
+      <td rowspan='<%= order.items.count + order.items.find_all {|item| item.gifts.present? }.length %>' class='operation'>
         <div class='finish-order text-center'>
           <button type="button" class="order-finish btn btn-danger" data-toggle="modal" data-target="#finish-order-<%= order.id %>">
             确认收货
@@ -73,5 +73,5 @@
         </div>
       <% end %>
     </td>
-  <tr>
+  </tr>
 <% end %>

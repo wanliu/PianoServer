@@ -94,6 +94,10 @@
       changeQuantity(this, quantity);
     });
 
+    $('form#new_order').on('submit', function(event) {
+      $(this).find('input[type=submit]').attr('disabled', 'disabled');
+    });
+
     function changeQuantity(quantityDom, quantity) {
       quantity = 1 * quantity;
 

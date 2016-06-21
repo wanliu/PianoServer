@@ -69,7 +69,7 @@
             <tr>
               <td colspan='5'>
                 <div class='text-right'>
-                  一共<%= @order.items_count %>件商品&emsp;合计：<%= number_to_currency @order.items_total %>元<br>
+                  一共<%= @order.items_and_gifts_count %>件商品&emsp;合计：<%= number_to_currency @order.items_total %>元<br>
                   运送费用：<%= number_to_currency(@order.express_fee || 0) %>元<br>
                   <% if @order.paid_total && @order.paid_total != @order.origin_total %>
                     <span class='reduce'>已优惠：<%= number_to_currency @order.origin_total - @order.paid_total %>元</span><br>
