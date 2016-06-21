@@ -28,9 +28,14 @@ module OrdersCollectionSpreadsheet
       # sheet.row(row += 1).concat ["商品", "价格(元)", "数量(件)", "小计(元)"]
       order.items.each do |item|
         sheet.row(row += 1).concat ["#{item.title}#{item.properties_title}", "#{item.price.round(2)}元", "#{item.quantity}件", "#{(item.quantity * item.price).round(2)}元"]
+        if item.gifts.present?
+          item.gifts.each do |gift|
+            sheet.row(row += 1).concat ["[赠品]#{gift["title"]}#{gift["properties_title"]}", "赠品", "#{gift["quantity"]}件"]
+          end
+        end
       end
 
-      row_content = [nil, "共#{order.items_count}件商品#{order.items_total.round(2)}元",
+      row_content = [nil, "共#{order.items_and_gifts_count}件商品#{order.items_total.round(2)}元",
         "运费：#{(order.express_fee || 0).round(2)}元"]
 
       discount = if order.paid_total && order.paid_total != order.origin_total
