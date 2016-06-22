@@ -341,6 +341,8 @@ Rails.application.routes.draw do
     concerns :evaluationable
 
     resources :shops do
+      get "/:shop_name", to: "shops#show_by_name"
+
       member do
         get "favorite_count", to: "shops#favorite_count"
       end
