@@ -17,6 +17,10 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
       .includes(:sender, :virtual_present)
       .order(id: :desc)
       .paid
+      .page(params[:page])
+      .per(params[:per])
+    @blesses_page = @blesses.current_page
+    @blesses_total_page = @blesses.total_pages
   end
 
   def upload_avatar

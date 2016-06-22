@@ -8,4 +8,8 @@ class Bless < ActiveRecord::Base
   validates :birthday_party, presence: true
   validates :virtual_present, presence: true
   validates :sender, presence: true
+
+  def number
+    id.to_s.rjust(10, '0')
+  end
 end

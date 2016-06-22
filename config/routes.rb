@@ -321,6 +321,9 @@ Rails.application.routes.draw do
       end
 
       resources :cakes, only: [:index, :show]
+
+      resources :virtual_presents, only: :index
+
       resources :birthday_parties, only: [:index, :show] do
         resources :blesses, except: [:new, :edit], shallow: true
 
