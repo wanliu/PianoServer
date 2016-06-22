@@ -121,6 +121,8 @@ class OrdersController < ApplicationController
     if params[:order].present?
       @order = current_user.orders.build(buy_now_confirm_params)
 
+      set_birthday_location
+
       cake = Cake.find(@order.cake_id)
       item = cake.item
 
@@ -157,7 +159,7 @@ class OrdersController < ApplicationController
       birthday_party.user = current_user
       birthday_party.cake_id = @order.cake_id
     end
-    debugger
+
     @order.items.each(&:set_initial_attributes)
 
     respond_to do |format|
@@ -327,7 +329,9 @@ class OrdersController < ApplicationController
   end
 
   def buy_now_confirm_params
-    params.require(:order).permit(:cake_id, birthday_party_attributes: [:message, :birthday_person, :birth_day])
+    params.require(:order).permit(
+      :cake_id, 
+      birthday_party_attributes: [:message, :birthday_person, :birth_day])
   end
 
   def order_item_params
@@ -426,5 +430,28 @@ class OrdersController < ApplicationController
         white_list[:evaluationable_id] = @item.orderable_id
         white_list[:user_id] = current_user.id
       end
+  end
+
+  def set_birthday_location
+    location = current_user.locations.find_by(cake_location_params)
+
+    unless location.present?
+      location = current_user.locations.create cake_location_params.merge(skip_limit_validation: true)
+    end
+
+    if location.persisted?
+      current_user.update_attribute('latest_location_id', location.id)
+    end
+  end
+
+  def cake_location_params
+    @cake_location_params ||= {
+      contact: params[:order][:birthday_party_attributes][:birthday_person], 
+      road: params[:order][:road],
+      contact_phone: params[:order][:contact_phone],
+      province_id: '430000',
+      city_id:  '430400',
+      region_id: '430481'
+    }
   end
 end
