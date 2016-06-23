@@ -12,7 +12,7 @@ class Redpack < ActiveRecord::Base
   validates :amount, numericality: { greater_than_or_equal_to: 1 }
   validates :wx_order_no, presence: true
 
-  before_validate :set_wx_order_no
+  before_validation :set_wx_order_no
 
   def wx_order_no
     super || "1#{id.to_s.rjust(9, '0')}"

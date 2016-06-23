@@ -6,6 +6,9 @@
     价格：<%= f.number_field :price %>
 
     <br>
+    兑换现金：<%= f.number_field :value %>
+
+    <br>
     <div class='btn-groups'>
       <button type='button' class='btn btn-default cancel'>取消</button>
       <%= f.submit '保存', class: 'btn btn-primary' %>

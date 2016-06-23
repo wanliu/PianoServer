@@ -1,6 +1,8 @@
 class BirthdayParty < ActiveRecord::Base
 
-  WithdrawStatus = Struct.new(:withdrew, :error_message)
+  WithdrawStatus = Struct.new(:success, :error_message) do
+    alias :success? :success
+  end
 
   mount_uploader :person_avatar, ItemImageUploader
 
@@ -9,7 +11,7 @@ class BirthdayParty < ActiveRecord::Base
   belongs_to :order
 
   has_many :blesses
-  has_many :redpacks, auto_save: true
+  has_one :redpack, autosave: true
 
   validates :cake, presence: true
   validates :user, presence: true
@@ -19,14 +21,18 @@ class BirthdayParty < ActiveRecord::Base
 
   def withdraw
     if withdrew > 0
-      WithdrawStatus.new(false, "已经领取过了")
+      if redpack.sent?
+        WithdrawStatus.new(false, "已经发放过了")
+      else
+        redpack.send_redpack
+      end
     else
       self.withdrew = blesses(true).paid.reduce(0) do |sum, bless|
-        sum += bless.price
+        sum += bless.virtual_present.value
       end
 
-      if withdrew > 1
-        redpacks.build(user: user, amount: withdrew)
+      if withdrew >= 1
+        build_redpack(user: user, amount: withdrew)
 
         WithdrawStatus.new(save, errors.full_messages.join(', '))
       else

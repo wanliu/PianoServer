@@ -4,7 +4,7 @@ class Admins::VirtualPresentsController < Admins::BaseController
   # GET /virtual_presents
   # GET /virtual_presents.json
   def index
-    @virtual_presents = VirtualPresent.page(params[:page]).per(params[:per])
+    @virtual_presents = VirtualPresent.order(id: :desc).page(params[:page]).per(params[:per])
     @virtual_present  = VirtualPresent.new(price: 0)
     # render json: @virtual_presents
   end
@@ -69,6 +69,6 @@ class Admins::VirtualPresentsController < Admins::BaseController
     end
 
     def virtual_present_params
-      params.require(:virtual_present).permit(:name, :price)
+      params.require(:virtual_present).permit(:name, :price, :value)
     end
 end
