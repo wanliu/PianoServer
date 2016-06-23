@@ -55,7 +55,7 @@ class User < ActiveRecord::Base
   mount_uploader :image, AvatarUploader
   enum sex: {'保密' => 0, '男' => 1, '女' => 2 }
   store_accessor :data,
-                 :weixin_openid, :weixin_privilege, :language, :city, :province, :country
+                 :weixin_openid, :weixin_privilege, :language, :city, :province, :country, :weixin_unionid
 
   JWT_TOKEN = Rails.application.secrets.live_key_base
 

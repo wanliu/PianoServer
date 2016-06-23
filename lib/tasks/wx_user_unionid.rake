@@ -13,8 +13,9 @@ namespace :wechat do
       return
     end
 
-    frash_token_url = %Q(https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=#{appid}&secret=#{secret})
-
+    # frash_token_url = %Q(https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=#{appid}&secret=#{secret})
+    frash_token_url = %Q(https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code)
+    # frash_token_url = %Q(https://api.weixin.qq.com/sns/oauth2/refresh_token?appid=#{appid}&grant_type=refresh_token&refresh_token=REFRESH_TOKEN
     puts "正在刷新微信token..."
 
     r = RestClient::Request.execute({ method: :get, url:frash_token_url })
