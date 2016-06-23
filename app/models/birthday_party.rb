@@ -18,6 +18,9 @@ class BirthdayParty < ActiveRecord::Base
   validates :order, presence: true
   validates :message, presence: true
   validates :birthday_person, presence: true
+  validates :hearts_limit, numericality: { greater_than_or_equal_to: 1 }
+
+  before_validation :set_hearts_limit_from_cake, on: :create
 
   def withdraw
     if withdrew > 0
@@ -39,5 +42,11 @@ class BirthdayParty < ActiveRecord::Base
         WithdrawStatus.new(false, "低于一元钱的红包无法领取！")
       end
     end 
+  end
+
+  private
+
+  def set_hearts_limit_from_cake
+    self.hearts_limit = cake.hearts_limit
   end
 end
