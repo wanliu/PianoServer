@@ -1,6 +1,6 @@
 class VirtualPresent < ActiveRecord::Base
 
-  NAMES = %w(heart car house flower)
+  NAMES = Settings.virtual_presents.names
 
   validates :title, presence: true
   validates :name, inclusion: { in: NAMES }

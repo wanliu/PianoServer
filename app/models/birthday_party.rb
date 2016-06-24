@@ -31,7 +31,7 @@ class BirthdayParty < ActiveRecord::Base
       end
     else
       self.withdrew = blesses(true).paid.reduce(0) do |sum, bless|
-        sum += bless.virtual_present.value
+        sum += bless.virtual_present_infor["value"].to_f
       end
 
       if withdrew >= 1

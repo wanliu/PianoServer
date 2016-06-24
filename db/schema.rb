@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160624023212) do
+ActiveRecord::Schema.define(version: 20160624031518) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -88,8 +88,9 @@ ActiveRecord::Schema.define(version: 20160624023212) do
     t.text     "message"
     t.integer  "birthday_party_id"
     t.boolean  "paid"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
+    t.jsonb    "virtual_present_infor"
   end
 
   add_index "blesses", ["birthday_party_id"], name: "index_blesses_on_birthday_party_id", using: :btree
@@ -809,7 +810,7 @@ ActiveRecord::Schema.define(version: 20160624023212) do
     t.boolean  "show",                                default: true
     t.datetime "created_at",                                         null: false
     t.datetime "updated_at",                                         null: false
-    t.decimal  "value",                               default: 0.0
+    t.decimal  "value",      precision: 10, scale: 2, default: 0.0
     t.string   "title"
   end
 
