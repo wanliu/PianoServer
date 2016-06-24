@@ -324,8 +324,8 @@ Rails.application.routes.draw do
 
       resources :virtual_presents, only: :index
 
-      resources :birthday_parties, only: [:index, :show] do
-        resources :blesses, except: [:new, :edit], shallow: true
+      resources :birthday_parties, only: [:index, :show, :update] do
+        resources :blesses, except: [:new, :edit, :index], shallow: true
 
         patch :upload_avatar, on: :member
       end

@@ -27,8 +27,8 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
     @birthday_party = current_user.birthday_parties.find(params[:id])
     if @birthday_party.update(upload_avatar_params)
       render json: {
-        success: true, 
-        url: @birthday_party.person_avatar.url(:cover), 
+        success: true,
+        url: @birthday_party.person_avatar.url(:cover),
         filename: @birthday_party.person_avatar.filename }
     else
       render json: {errors: @birthday_party.errors}, status: :unprocessable_entity
@@ -49,15 +49,15 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
 
   # PATCH/PUT /birthday_parties/1
   # PATCH/PUT /birthday_parties/1.json
-  # def update
-  #   @birthday_party = BirthdayParty.find(params[:id])
+  def update
+    @birthday_party = BirthdayParty.find(params[:id])
 
-  #   if @birthday_party.update(birthday_party_params)
-  #     head :no_content
-  #   else
-  #     render json: @birthday_party.errors, status: :unprocessable_entity
-  #   end
-  # end
+    if @birthday_party.update(birethday_party_update_params)
+      render json: {}
+    else
+      render json: @birthday_party.errors, status: :unprocessable_entity
+    end
+  end
 
   # DELETE /birthday_parties/1
   # DELETE /birthday_parties/1.json
@@ -71,6 +71,10 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
 
     def set_birthday_party
       @birthday_party = BirthdayParty.find(params[:id])
+    end
+
+    def birethday_party_update_params
+      params.require(:birthday_party).permit(:message)
     end
 
     def birthday_party_params
