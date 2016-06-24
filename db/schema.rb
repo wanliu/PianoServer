@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160623021743) do
+ActiveRecord::Schema.define(version: 20160624023212) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -810,6 +810,7 @@ ActiveRecord::Schema.define(version: 20160623021743) do
     t.datetime "created_at",                                         null: false
     t.datetime "updated_at",                                         null: false
     t.decimal  "value",                               default: 0.0
+    t.string   "title"
   end
 
   add_index "virtual_presents", ["show"], name: "index_virtual_presents_on_show", using: :btree

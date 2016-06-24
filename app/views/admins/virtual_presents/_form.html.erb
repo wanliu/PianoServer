@@ -1,6 +1,9 @@
 <div class='new-virtual_present' style='display: none;'>
   <%= form_for [:admins, @virtual_present], remote: true do |f| %>
-    名称：<%= f.text_field :name %>
+    名称：<%= f.text_field :title %>
+
+    <br>
+    类型: <%= f.collection_select :name, VirtualPresent::NAMES, :to_s, :to_s %>
 
     <br>
     价格：<%= f.number_field :price %>

@@ -1,4 +1,5 @@
 <%= content_tag_for :tr, virtual_present do %>
+  <td><%= virtual_present.title %></td>
   <td><%= virtual_present.name %></td>
   <td><%= virtual_present.price %></td>
   <td><%= virtual_present.value %>元</td>
@@ -11,7 +12,7 @@
 <tr class='virtual_present-eidt-form' style='display:none;' data-virtual_present-id="<%= virtual_present.id %>">
   <td colspan='4'>
     <%= form_for [:admins, virtual_present], remote: true do |f| %>
-      名称：<%= f.text_field :name %>
+      名称：<%= f.text_field :title %>
       价格：<%= f.number_field :price %>
       兑换现金：<%= f.number_field :value %>
       <%= f.submit "保存" %>

@@ -39,7 +39,7 @@ class Admins::VirtualPresentsController < Admins::BaseController
     @virtual_present = VirtualPresent.find(params[:id])
 
     respond_to do |format|
-      if @virtual_present.update(virtual_present_params)
+      if @virtual_present.update(virtual_present_update_params)
         format.js
         format.html { head :no_content }
         format.json { render json: {} }
@@ -69,6 +69,10 @@ class Admins::VirtualPresentsController < Admins::BaseController
     end
 
     def virtual_present_params
-      params.require(:virtual_present).permit(:name, :price, :value)
+      params.require(:virtual_present).permit(:name, :price, :value, :title)
+    end
+
+    def virtual_present_update_params
+      params.require(:virtual_present).permit(:price, :value, :title)
     end
 end
