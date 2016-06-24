@@ -633,3 +633,6 @@ DEPENDENCIES
   weixin_authorize!
   whenever
   wx_pay
+
+BUNDLED WITH
+   1.10.6
