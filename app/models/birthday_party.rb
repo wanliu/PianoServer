@@ -11,7 +11,7 @@ class BirthdayParty < ActiveRecord::Base
   belongs_to :order
 
   has_many :blesses
-  has_one :redpack, autosave: true
+  has_one :redpack, autosave: true, inverse_of: :birthday_party
 
   validates :cake, presence: true
   validates :user, presence: true
