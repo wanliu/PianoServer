@@ -6,7 +6,9 @@ class CreateRedpacks < ActiveRecord::Migration
       t.references :birthday_party, index: true#, foreign_key: true
       t.string :nonce_str
       t.string :wx_order_no, index: true
-      t.boolean :withdrew, index: true
+      t.boolean :sent, index: true
+      t.boolean :withdrew, index: true, default: false
+      t.string :wx_user_openid, index: true
 
       t.timestamps null: false
     end

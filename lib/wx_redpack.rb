@@ -2,19 +2,31 @@ module WxRedpack
   WX_REDPACK_REQUEST_URL = %q(https://api.mch.weixin.qq.com/mmpaymkttransfers/sendredpack)
   WECHAT_CONFIG = Rails.application.config_for(:wechat)
 
-  def send_redpack
-    if user.data["weixin_openid"].present?
-      response = RestClient::Request.execute(
-        {
-          method: :post,
-          url: WX_REDPACK_REQUEST_URL,
-          payload: payload,
-          headers: { content_type: 'application/xml' }
-        }
-      )
-    else
-      false
+  class WxPackSendResponse
+    def initialize(response_string)
+      @response = JSON.parse(response_string)
     end
+
+    def success
+      "SUCCESS" == @response["result_code"]
+    end
+    alias :success?, :success
+
+    def fail
+      !success
+    end
+    alias :fail? :fail
+  end
+
+  def send_redpack
+    response = RestClient::Request.execute({
+      method: :post,
+      url: WX_REDPACK_REQUEST_URL,
+      payload: payload,
+      headers: { content_type: 'application/xml' }
+    })
+
+    WxPackSendResponse.new(response)
   end
 
   def check_redpack
@@ -43,7 +55,8 @@ module WxRedpack
       mch_id: mch_id,
       wxappid: appid,
       send_name: '耒阳街上',
-      re_openid: user.data["weixin_openid"],
+      # re_openid: user.data["weixin_openid"],
+      re_openid: wx_user_openid,
       total_amount: (amount * 100).to_i,
       total_num: 1,
       wishing: '生日趴红包',

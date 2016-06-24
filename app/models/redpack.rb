@@ -18,6 +18,21 @@ class Redpack < ActiveRecord::Base
     super || "1#{id.to_s.rjust(9, '0')}"
   end
 
+  # TODO async using sidekiq
+  def send_pack
+    if wx_user_opendid.present?
+      response = super
+
+      if response.success?
+        update_attribute("sent", true)
+      end
+
+      response.success?
+    else
+      false
+    end
+  end
+
   private
 
   def set_wx_order_no

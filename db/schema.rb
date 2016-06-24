@@ -569,15 +569,19 @@ ActiveRecord::Schema.define(version: 20160623021743) do
     t.integer  "birthday_party_id"
     t.string   "nonce_str"
     t.string   "wx_order_no"
-    t.boolean  "withdrew"
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
+    t.boolean  "sent"
+    t.boolean  "withdrew",                                   default: false
+    t.string   "wx_user_openid"
+    t.datetime "created_at",                                                 null: false
+    t.datetime "updated_at",                                                 null: false
   end
 
   add_index "redpacks", ["birthday_party_id"], name: "index_redpacks_on_birthday_party_id", using: :btree
+  add_index "redpacks", ["sent"], name: "index_redpacks_on_sent", using: :btree
   add_index "redpacks", ["user_id"], name: "index_redpacks_on_user_id", using: :btree
   add_index "redpacks", ["withdrew"], name: "index_redpacks_on_withdrew", using: :btree
   add_index "redpacks", ["wx_order_no"], name: "index_redpacks_on_wx_order_no", using: :btree
+  add_index "redpacks", ["wx_user_openid"], name: "index_redpacks_on_wx_user_openid", using: :btree
 
   create_table "regions", force: :cascade do |t|
     t.string   "name"
