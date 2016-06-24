@@ -30,9 +30,7 @@ class BirthdayParty < ActiveRecord::Base
         redpack.send_redpack
       end
     else
-      self.withdrew = blesses(true).paid.reduce(0) do |sum, bless|
-        sum += bless.virtual_present_infor["value"].to_f
-      end
+      self.withdrew = withdrawable
 
       if withdrew >= 1
         build_redpack(user: user, amount: withdrew)
@@ -42,6 +40,12 @@ class BirthdayParty < ActiveRecord::Base
         WithdrawStatus.new(false, "低于一元钱的红包无法领取！")
       end
     end 
+  end
+
+  def withdrawable
+    blesses(true).paid.reduce(0) do |sum, bless|
+      sum += bless.virtual_present_infor["value"].to_f
+    end
   end
 
   private

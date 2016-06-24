@@ -1,4 +1,4 @@
-json.extract! @birthday_party, *@birthday_party.attribute_names
+json.extract! @birthday_party, *(@birthday_party.attribute_names.concat(["withdrawable"]))
 json.blesses @blesses do |bless|
   json.extract! bless, :message
   json.sender bless.sender, :login, :avatar_url, :id
