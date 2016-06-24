@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160624031518) do
+ActiveRecord::Schema.define(version: 20160624093227) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -95,6 +95,7 @@ ActiveRecord::Schema.define(version: 20160624031518) do
 
   add_index "blesses", ["birthday_party_id"], name: "index_blesses_on_birthday_party_id", using: :btree
   add_index "blesses", ["virtual_present_id"], name: "index_blesses_on_virtual_present_id", using: :btree
+  add_index "blesses", ["virtual_present_infor"], name: "index_blesses_on_virtual_present_infor", using: :gin
 
   create_table "bootsy_image_galleries", force: :cascade do |t|
     t.integer  "bootsy_resource_id"
