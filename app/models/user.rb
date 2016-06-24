@@ -37,6 +37,7 @@ class User < ActiveRecord::Base
 
   has_many :blesses, foreign_key: 'sender_id'
   has_many :birthday_parties
+  has_many :redpacks
 
   validates :username, presence: true, uniqueness: true
   validates :mobile, presence: true, uniqueness: true
