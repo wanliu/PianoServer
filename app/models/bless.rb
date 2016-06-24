@@ -1,5 +1,7 @@
 class Bless < ActiveRecord::Base
   scope :paid, -> { where(paid: true) }
+  scope :free_hearts, -> { where("virtual_present_infor @> ?", Bless.free_hearts_hash.to_json) }
+  scope :charged, -> { where.not("virtual_present_infor @> ?", Bless.free_hearts_hash.to_json) }
 
   belongs_to :virtual_present
   belongs_to :birthday_party
@@ -12,6 +14,12 @@ class Bless < ActiveRecord::Base
   validate :only_one_free_bless, on: :create
 
   before_validation :copy_virtual_present_infor, on: :create
+
+  class << self
+    def free_hearts_hash
+      {price: BigDecimal.new(0)}
+    end
+  end
 
   private
 
@@ -33,7 +41,7 @@ class Bless < ActiveRecord::Base
 
   def free_present_exist?
     sender.blesses
-      .where("virtual_present_infor @> ?", {price: BigDecimal.new(0)}.to_json)
+      .where("virtual_present_infor @> ?", self.class.free_hearts_hash.to_json)
       .exists?
   end
 end

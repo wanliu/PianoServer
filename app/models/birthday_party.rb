@@ -43,14 +43,29 @@ class BirthdayParty < ActiveRecord::Base
   end
 
   def withdrawable
-    blesses(true).paid.reduce(0) do |sum, bless|
-      sum += bless.virtual_present_infor["value"].to_f
-    end
+    free_hearts_withdrawable + charged_widthdrawable
   end
 
   private
 
   def set_hearts_limit_from_cake
     self.hearts_limit = cake.hearts_limit
+  end
+
+  def free_hearts_withdrawable
+    free_hearts = blesses.free_hearts.paid.limit(hearts_limit)
+    # free_hearts = blesses.free_hearts.paid.take(hearts_limit)
+
+    amount = free_hearts.reduce(0) do |sum, bless|
+      sum += bless.virtual_present_infor["value"].to_f
+    end
+  end
+
+  def charged_widthdrawable
+    charged_blesses = blesses.charged.paid
+
+    amount = charged_blesses.reduce(0) do |sum, bless|
+      sum += bless.virtual_present_infor["value"].to_f
+    end
   end
 end
