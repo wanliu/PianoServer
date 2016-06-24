@@ -13,14 +13,7 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
   # GET /birthday_parties/1
   # GET /birthday_parties/1.json
   def show
-    @blesses = @birthday_party.blesses
-      .includes(:sender, :virtual_present)
-      .order(id: :desc)
-      .paid
-      .page(params[:page])
-      .per(params[:per])
-    @blesses_page = @blesses.current_page
-    @blesses_total_page = @blesses.total_pages
+
   end
 
   def upload_avatar
