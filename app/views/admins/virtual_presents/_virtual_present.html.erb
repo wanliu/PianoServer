@@ -10,7 +10,7 @@
   </td>
 <% end %>
 <tr class='virtual_present-eidt-form' style='display:none;' data-virtual_present-id="<%= virtual_present.id %>">
-  <td colspan='4'>
+  <td colspan='5'>
     <%= form_for [:admins, virtual_present], remote: true do |f| %>
       名称：<%= f.text_field :title %>
       价格：<%= f.number_field :price %>

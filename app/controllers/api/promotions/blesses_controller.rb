@@ -3,14 +3,18 @@ class Api::Promotions::BlessesController < Api::BaseController
   skip_before_action :authenticate_user!, only: [:index, :show]
 
   def index
+    @total = @birthday_party.blesses.paid.count
+
     @blesses = @birthday_party.blesses
       .includes(:sender, :virtual_present)
       .order(id: :desc)
       .paid
-      .page(params[:page])
-      .per(params[:per])
-    @page = @blesses.current_page
-    @total_page = @blesses.total_pages
+      .limit(params[:limit].to_i + 1)
+      .offset(0)
+
+    @blesses = @blesses.where('id < ?', params[:latest_id].to_i) if params[:latest_id].present?
+
+    @total = @total
   end
 
   # TODO 如果赠送的礼物需要使用微信支付，则传送微信支付所需要的参数到前段
@@ -25,7 +29,7 @@ class Api::Promotions::BlessesController < Api::BaseController
     if @bless.save
       render :show, format: :json
     else
-      render json: { errors: @bless.errors }, status: :unprocessable_entity
+      render json: { errors: @bless.errors.full_messages.join(', ')}, status: :unprocessable_entity
     end
   end
 

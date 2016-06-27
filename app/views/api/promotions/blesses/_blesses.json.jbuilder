@@ -3,5 +3,4 @@ json.blesses @blesses do |bless|
   json.sender bless.sender, :login, :avatar_url, :id
   json.virtual_present bless.virtual_present, :id, :name
 end
-json.page @page
-json.total_page @total_page
+json.total @total

@@ -9,7 +9,9 @@ class Bless < ActiveRecord::Base
   validates :virtual_present, presence: true
   validates :sender, presence: true
 
-  before_save :copy_virtual_present_infor, on: :create
+  validate :only_one_free_bless, on: :create
+
+  before_validation :copy_virtual_present_infor, on: :create
 
   private
 
@@ -21,5 +23,17 @@ class Bless < ActiveRecord::Base
       price: virtual_present.price,
       value: virtual_present.value
     }
+  end
+
+  def only_one_free_bless
+    if 0 == virtual_present.price && free_present_exist?
+      errors.add(:base, "免费的礼物的配额已经使用！")
+    end
+  end
+
+  def free_present_exist?
+    sender.blesses
+      .where("virtual_present_infor @> ?", {price: BigDecimal.new(0)}.to_json)
+      .exists?
   end
 end
