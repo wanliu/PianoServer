@@ -24,7 +24,7 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
         url: @birthday_party.person_avatar.url(:cover),
         filename: @birthday_party.person_avatar.filename }
     else
-      render json: {errors: @birthday_party.errors}, status: :unprocessable_entity
+      render json: { errors: @birthday_party.errors.full_messages.join(', ') }, status: :unprocessable_entity
     end
   end
 
@@ -36,7 +36,7 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
   #   if @birthday_party.save
   #     render json: @birthday_party, status: :created, location: @birthday_party
   #   else
-  #     render json: @birthday_party.errors, status: :unprocessable_entity
+  #     render json: @birthday_party.errors.full_messages.join(', '), status: :unprocessable_entity
   #   end
   # end
 
@@ -48,7 +48,7 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
     if @birthday_party.update(birethday_party_update_params)
       render json: {}
     else
-      render json: @birthday_party.errors, status: :unprocessable_entity
+      render json: { errors: @birthday_party.errors.full_messages.join(', ') }, status: :unprocessable_entity
     end
   end
 
