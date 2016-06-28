@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
-  get 'blesses/wxpay'
-
   # resources :gifts, except: [:new, :edit]
   resources :birthday_parties, only: [:show]
 
@@ -333,16 +331,23 @@ Rails.application.routes.draw do
       resources :virtual_presents, only: :index
 
       resources :birthday_parties, only: [:index, :show, :update] do
-        resources :blesses, except: [:new, :edit], shallow: true
+        resources :blesses, except: [:new, :edit], shallow: true do
+          get :wx_pay_params, on: :member
+        end
 
         patch :upload_avatar, on: :member
       end
+
     end
     # resources :business, concerns: :roomable do
     #   member do
     #     post :add_participant
     #   end
     # end
+
+    resources :weixin_configs, only: [:index] do
+      get :wx_config, on: :collection
+    end
 
     resources :cart_items, only: [:index, :create]
 
