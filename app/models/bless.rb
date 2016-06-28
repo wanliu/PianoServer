@@ -1,4 +1,10 @@
+require 'wx_order'
+require 'weixin_api'
+
 class Bless < ActiveRecord::Base
+
+  include WxOrder
+
   scope :paid, -> { where(paid: true) }
   scope :free_hearts, -> { where("virtual_present_infor @> ?", Bless.free_hearts_hash.to_json) }
   scope :charged, -> { where.not("virtual_present_infor @> ?", Bless.free_hearts_hash.to_json) }
@@ -19,6 +25,14 @@ class Bless < ActiveRecord::Base
     def free_hearts_hash
       {price: BigDecimal.new(0)}
     end
+  end
+
+  def wx_order_notify_url
+    "#{Settings.app.website}/blesses/#{id}/wx_notify"
+  end
+
+  def wx_total_fee
+    virtual_present.price
   end
 
   private
@@ -43,5 +57,9 @@ class Bless < ActiveRecord::Base
     sender.blesses
       .where("virtual_present_infor @> ?", self.class.free_hearts_hash.to_json)
       .exists?
+  end
+
+  def out_trade_no
+    "bless#{super}"
   end
 end

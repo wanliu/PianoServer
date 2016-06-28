@@ -2,7 +2,7 @@ module WxOrder
   ORDER_QUERY_URL = "https://api.mch.weixin.qq.com/pay/orderquery"
   WECHAT_CONFIG = Rails.application.config_for(:wechat)
 
-  attr_accessor :wx_order_created, :wx_create_response
+  attr_accessor :wx_order_created, :wx_create_response, :request_ip
 
   def create_wx_order(options)
     params = prepay_params.merge(options)
@@ -105,7 +105,7 @@ module WxOrder
       out_trade_no: out_trade_no,
       total_fee: (wx_total_fee * 100).to_i,
       spbill_create_ip: request_ip,
-      notify_url: "#{Settings.app.website}/orders/#{id}/wx_notify",
+      notify_url: wx_order_notify_url,
       trade_type: 'JSAPI'
     }
   end

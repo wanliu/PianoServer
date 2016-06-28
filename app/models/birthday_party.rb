@@ -23,8 +23,8 @@ class BirthdayParty < ActiveRecord::Base
   before_validation :set_hearts_limit_from_cake, on: :create
 
   def withdraw
-    if withdrew > 0
-      if redpack(true).sent?
+    if redpack(true).present?
+      if redpack.sent?
         WithdrawStatus.new(false, "已经发放过了")
       else
         redpack.send_redpack
@@ -34,12 +34,15 @@ class BirthdayParty < ActiveRecord::Base
 
       if withdrew >= 1
         build_redpack(user: user, amount: withdrew)
-
-        WithdrawStatus.new(save, errors.full_messages.join(', '))
+        if save
+          redpack.send_redpack
+        else
+          WithdrawStatus.new(false, errors.full_messages.join(', '))
+        end
       else
         WithdrawStatus.new(false, "低于一元钱的红包无法领取！")
       end
-    end 
+    end
   end
 
   def withdrawable

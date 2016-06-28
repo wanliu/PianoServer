@@ -17,8 +17,7 @@ class Order < ActiveRecord::Base
   has_one :birthday_party, inverse_of: :order
   accepts_nested_attributes_for :birthday_party
 
-  attr_accessor :cart_item_ids
-  attr_accessor :address_id, :request_ip, :cake_id
+  attr_accessor :cart_item_ids, :address_id, :cake_id
 
   enum status: { initiated: 0, finish: 1 }
 
@@ -311,6 +310,10 @@ class Order < ActiveRecord::Base
 
   def items_total
     items.reduce(0) { |total, item| total += item.price * item.quantity }
+  end
+
+  def wx_order_notify_url
+    "{Settings.app.website}/orders/#{id}/wx_notify"
   end
 
   private

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160624093227) do
+ActiveRecord::Schema.define(version: 20160627083053) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -91,6 +91,9 @@ ActiveRecord::Schema.define(version: 20160624093227) do
     t.datetime "created_at",            null: false
     t.datetime "updated_at",            null: false
     t.jsonb    "virtual_present_infor"
+    t.string   "wx_prepay_id"
+    t.string   "wx_noncestr"
+    t.string   "wx_transaction_id"
   end
 
   add_index "blesses", ["birthday_party_id"], name: "index_blesses_on_birthday_party_id", using: :btree

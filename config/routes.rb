@@ -1,10 +1,18 @@
 Rails.application.routes.draw do
+  get 'blesses/wxpay'
+
   # resources :gifts, except: [:new, :edit]
   resources :birthday_parties, only: [:show]
 
   resources :thumbs, except: [:new, :edit]
 
   resource :wechat, only: [:show, :create]
+
+  resources :blesses, only: [] do
+    get "wxpay/:id", to: 'blesses#wxpay', as: 'wxpay', on: :collection
+
+    post "wx_notify", on: :member
+  end
 
   resources :order_items, except: [:new, :edit] do
     collection do
