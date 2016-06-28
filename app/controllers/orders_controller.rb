@@ -120,6 +120,7 @@ class OrdersController < ApplicationController
   def buy_now_confirm
     if params[:order].present?
       @order = current_user.orders.build(buy_now_confirm_params)
+      @order.birthday_party.cake_id = @order.cake_id if @order.birthday_party.present?
 
       set_birthday_location
 
