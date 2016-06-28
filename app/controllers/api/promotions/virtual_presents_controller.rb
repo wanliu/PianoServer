@@ -2,7 +2,7 @@ class Api::Promotions::VirtualPresentsController < Api::BaseController
   skip_before_action :authenticate_user!
 
   def index
-    @virtual_presents = VirtualPresent.order(id: :desc)
+    @virtual_presents = VirtualPresent.order(price: :asc)
       .page(params[:page])
       .per(params[:per])
 

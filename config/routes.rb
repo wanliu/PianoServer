@@ -324,7 +324,7 @@ Rails.application.routes.draw do
 
       resources :virtual_presents, only: :index
 
-      resources :birthday_parties, only: [:index, :show] do
+      resources :birthday_parties, only: [:index, :show, :update] do
         resources :blesses, except: [:new, :edit], shallow: true
 
         patch :upload_avatar, on: :member
@@ -341,6 +341,8 @@ Rails.application.routes.draw do
     concerns :evaluationable
 
     resources :shops do
+      get "/:shop_name", to: "shops#show_by_name"
+
       member do
         get "favorite_count", to: "shops#favorite_count"
       end
