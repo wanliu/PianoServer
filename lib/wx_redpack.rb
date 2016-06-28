@@ -11,7 +11,7 @@ module WxRedpack
     def success
       "SUCCESS" == @response["result_code"]
     end
-    alias :success?, :success
+    alias :success? :success
 
     def fail
       !success
