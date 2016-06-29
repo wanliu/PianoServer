@@ -40,8 +40,8 @@ threads = []
       id = queue.pop(true) rescue nil
       if id
         puts "#{id} command"
-        `wechat custom_text #{id} #{text}`
-        puts "wx_bcast_news: #{Time.now} success" if $?.success?
+        result = system('wechat custom_text #{id} #{text}')
+        puts "wx_bcast_news: #{Time.now} success" if result
       end
     end
     # when there is no more work, the thread will stop
