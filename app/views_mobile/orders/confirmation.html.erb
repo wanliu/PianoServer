@@ -2,14 +2,12 @@
 
 <div class='order-confirm order-confirm-mobile'>
   <section class="mobile-delivery-address">
-    <a>
+    <a href="/locations">
     <div class="address-content">
-      <h4><span>陈治文 </span><span>18682348768</span></h4>
+      <h4><span><%= @location.contact %> </span><span><%= @location.contact_phone %></span></h4>
       <p>
-        <span>湖南省</span>
-        <span>长沙市</span>
-        <span>雨花区</span>
-        <span>香樟路万科金域华府</span>
+        <span><%= ChinaCity.get(@location.region_id.to_s, prepend_parent: true) %></span>
+        <span><%= @location.road %></span>
       </p>
       <i class="glyphicon glyphicon-map-marker before"></i>
       <i class="glyphicon glyphicon-menu-right after"></i>
@@ -45,10 +43,9 @@
         <ul class="list-group">
           <li class="list-group-item link-to-list">
             <span class="item-label">优惠券</span>
-            <span class="favorable-price">已节省 -¥ 70.00元</span>
+            <span class="favorable-price">已节省 -¥ <span id="coupon_discount">0.00</span>元</span>
             <i class="glyphicon glyphicon-menu-right"></i>
           </li>
-
         </ul>
 
       </section>
@@ -114,7 +111,10 @@
                 }
               });
               var data = $('form').serialize();
-              $.post('/orders/select_coupon?' + data);
+              $.post('/orders/select_coupon?' + data)
+              .done(function(data){
+                $('#coupon_discount').html('');
+              });
               $this.removeClass('selected');
             }
             else{
@@ -125,7 +125,10 @@
                 }
               });
               var data = $('form').serialize();
-              $.post('/orders/select_coupon?' + data);
+              $.post('/orders/select_coupon?' + data)
+                .done(function(data){
+                $('#coupon_discount').html(data.coupons_discount);
+              });
               $this.addClass('selected');
             }
           }
