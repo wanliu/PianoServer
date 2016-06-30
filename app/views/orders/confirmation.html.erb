@@ -14,17 +14,22 @@
         <% end %>
       <% end %>
     <% end %>
-
+    <div class='panel panel-default'>
     <div class='cart-group'>
-      <div class='header'>
-        <span class='shop'>
-          <%= link_to shop_site_path(@supplier.name) do %>
-            <%= image_tag @supplier.avatar_url %><%= @supplier.title %>
+      <div class='panel-heading'>
+          <span>商品信息</span>
+          <div class="shop pull-right">
+          <%= link_to shop_site_path(@supplier.name) do  %>
+            <%= image_tag @supplier.avatar_url %>
+                      <% end %>
+                 <%= link_to shop_site_path(@supplier.name) do  %>
+            <%= @supplier.title %>
           <% end %>
-        </span>
+
+        </div>
       </div>
 
-      <table class='table table-bordered'>
+      <table class='table '>
         <colgroup>
           <col width='35%' />
           <col width='15%' />
@@ -33,57 +38,89 @@
         </colgroup>
         <%= render partial: "confirmation_item", collection: @order_items.sort_by(&:id), as: :item, locals: { supplier: @supplier, f: f } %>
         <tr class='footer'>
-          <td colspan='5' class='text-right'>
-            <div class='confirmation-total'>
-              <%= render "confirmation_total" %>
+          <td colspan="4">
+            <div class="pull-right">
+              <%= f.submit "提交订单", class: 'submit'%>
             </div>
-
-            <%= link_to "返回购物车", cart_path, class: 'cancel' %>
-            <%= f.submit "提交订单", class: 'submit'%>
+            <div class="pull-right">
+              <%= link_to "返回购物车", cart_path, class: 'cancel' %>
+            </div>
+            <div class="footer-box">
+              <div class="confirmation-coupon table-cell-middle">
+                <div class="coupon coupon-select">
+                  <div class="coupon-content">优惠券</div>
+                  <div class="glyphicon glyphicon-menu-down"></div>
+                  <i></i>
+                </div>
+                <div class="coupon-popup">
+                <div class="coupon-list">
+                  <i class="close-popup glyphicon glyphicon-remove"></i>
+                  <ul>
+                    <% @order.available_coupons(coupon_ids: @order.coupon_ids).each do |coupon| %>
+                      <%= render "orders/coupon", locals: {coupon: coupon} %>
+                    <% end %>
+                  </ul>
+                </div>
+                <span class="bot"></span>
+                <span class="top"></span>
+              </div>
+              </div>
+              <div class='confirmation-total table-cell-middle'>
+                <%= render "confirmation_total" %>
+              </div>
+            </div>
           </td>
         </tr>
       </table>
-
-      <div class="coupons">
-        <div class="selectable-coupons">
-          <ul class="list-group">
-            <% @order.available_coupons(coupon_ids: @order.coupon_ids).each do |coupon| %>
-              <li class="list-group-item coupon" data-coupon-id="<%= coupon.id %>">
-                <%= coupon.name %> 减<%= coupon.par %>元
-                <button class='btn btn-default use-coupon'>使用</button>
-                <%= hidden_field_tag "order[coupon_ids][]", coupon.id, disabled: true %>
-              </li>
-            <% end %>
-          </ul>
-        </div>
-
-        <div class="selected-coupons">
-          <% @order.coupons.each do |coupon| %>
-            <div class="coupon" data-coupon-id="<%= coupon.id %>">
-              <%= coupon.name %> 减<%= coupon.par %>元
-              <%= hidden_field_tag "order[coupon_ids][]", coupon.id %>
-              <button class='btn btn-default delete-coupon'>删除</button>
-            </div>
-          <% end %>
-        </div>
-      </div>
+    </div>
     </div>
   <% end %>
 </div>
 
 <script type="text/javascript">
   (function() {
-    $('.use-coupon').click(function() {
-      var $el = $(this);
-      $(this).closest("ul").find('.use-coupon').attr("disabled", "disabled");
-      $(this).closest(".coupon").find('input').removeAttr("disabled");
+    $('.coupon-select').click(function(e) {
+      var $height = $('.coupon-popup').outerHeight(),
+          $display = $('.coupon-popup').css('display');
+          $height = $height + 8;
+          if ($display === 'none') {
+            $('.coupon-popup').css('top','-'+$height+'px');
+            $('.coupon-popup').fadeIn();
+          }
+          else{
+            $('.coupon-popup').fadeOut();
+          }
+      e.stopPropagation();
+    });
 
-      var data = $(this).closest('form').serialize();
-      $.post('/orders/select_coupon?' + data)
-        .done(function(data) {
-          $el.parent('.coupon').remove();
-          // $el.closest("ul").find('.use-coupon').attr("disabled", "disabled");
-        })
+    $('.coupon-list').on('click','.btn-select',function(){
+      var cssClass = $(this).prop('class');
+      if (cssClass.indexOf('btn-selected') < 0) {
+        $(this).addClass('btn-selected'); 
+        $(this).siblings('#order_coupon_ids_').prop('disabled','');
+        $(this).val('取消');
+        formPost();
+      }
+      else{
+        $(this).removeClass('btn-selected');
+        $(this).siblings('#order_coupon_ids_').prop('disabled','disabled');
+        $(this).val('选择');
+        formPost();
+      }
+    });
+
+    $('.close-popup').click(function(){
+      $('.coupon-popup').fadeOut();
     });
   })();
+
+
+  function formPost(){
+    var data = $($('form')[1]).serialize();
+    $.post('/orders/select_coupon?' + data)
+    .done(function(data){
+      console.log(data);
+      $('.confirmation-total').html(data.total_html);
+    });
+  }
 </script>

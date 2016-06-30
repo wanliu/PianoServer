@@ -1,0 +1,13 @@
+<li class="" data-coupon-id="<%= coupon.id %>">
+    <div class="coupon-item">
+      <div class="coupon-item-left text-center">¥<span class="favorable-value"><%= coupon.par %></span></div>
+      <div class="coupon-item-right">
+        <div class="right-wrapper text-left">
+        <p><%= coupon.name %></p>
+        <p><%= "满#{coupon.apply_minimal_total.to_i}减#{coupon.par.to_i}" if coupon.apply_minimal_total > 0 %></p>
+        <p><%= coupon.end_time.strftime("%Y.%m.%d") %>过期</p>
+        </div>
+      </div>
+    </div>
+    <i></i>
+</li>

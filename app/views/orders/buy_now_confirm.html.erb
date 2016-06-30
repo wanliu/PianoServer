@@ -1,80 +1,88 @@
-<div class='buy-now-confirm col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1'>
+<div class='buy-now-confirm order-confirm col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1'>
   <%= render "order_address", locals: { delivery_addresses: @delivery_addresses, order: @order } %>
 
   <%= form_for @order, url: "/orders/buy_now_create" do |f| %>
     <%= f.hidden_field :address_id %>
     <%= f.hidden_field :supplier_id %>
-
-    <div class='cart-group'>
-      <div class='header'>
-        <span class='shop'>
-          <%= link_to shop_site_path(@supplier.name) do %>
-            <%= image_tag @supplier.avatar_url %><%= @supplier.title %>
+    <div class="panel panel-default">
+      <div class='cart-group'>
+      <div class='panel-heading'>
+          <span>商品信息</span>
+          <div class="shop pull-right">
+          <%= link_to shop_site_path(@supplier.name) do  %>
+            <%= image_tag @supplier.avatar_url %>
+                      <% end %>
+                 <%= link_to shop_site_path(@supplier.name) do  %>
+            <%= @supplier.title %>
           <% end %>
-        </span>
+
+        </div>
       </div>
 
-      <table class='table table-bordered' style='background-color: white;'>
-        <colgroup>
-          <col width='35%' />
-          <col width='15%' />
-          <col width='25%' />
-          <col width='15%' />
-        </colgroup>
+        <table class='table' style='background-color: white;'>
+          <colgroup>
+            <col width='35%' />
+            <col width='15%' />
+            <col width='25%' />
+            <col width='15%' />
+          </colgroup>
 
-        <%= f.fields_for :items do |item_form| %>
-          <%= item_form.hidden_field :orderable_type %>
-          <%= item_form.hidden_field :orderable_id %>
+          <%= f.fields_for :items do |item_form| %>
+            <%= item_form.hidden_field :orderable_type %>
+            <%= item_form.hidden_field :orderable_id %>
 
-          <% @order_item.properties.each do |key, value| %>
-            <%= item_form.hidden_field "properties[#{key}]", value: value %>
-          <% end %>
-          <%= render partial: "buy_now_item", locals: { item: @order_item, supplier: @supplier, f: item_form, props: @props, orderable: @orderable } %>
+            <% @order_item.properties.each do |key, value| %>
+              <%= item_form.hidden_field "properties[#{key}]", value: value %>
+            <% end %>
+            <%= render partial: "buy_now_item", locals: { item: @order_item, supplier: @supplier, f: item_form, props: @props, orderable: @orderable } %>
 
-          <% if @orderable.try(:gifts).blank? %>
-            <%= hidden_field_tag "order[item_gifts][#{@orderable.id}][undefined]", nil, { multiple: true } %>
-          <% else %>
-            <% @orderable.gifts.each do |gift| %>
-              <%= hidden_field_tag "order[item_gifts][#{@orderable.id}][#{gift.id}]", gift.eval_available_quantity(@order_item.quantity), { multiple: true } %>
+            <% if @orderable.try(:gifts).blank? %>
+              <%= hidden_field_tag "order[item_gifts][#{@orderable.id}][undefined]", nil, { multiple: true } %>
+            <% else %>
+              <% @orderable.gifts.each do |gift| %>
+                <%= hidden_field_tag "order[item_gifts][#{@orderable.id}][#{gift.id}]", gift.eval_available_quantity(@order_item.quantity), { multiple: true } %>
+              <% end %>
             <% end %>
           <% end %>
-        <% end %>
-      
-        <tr class='footer'>
-          <td colspan='5' class='text-right'>
-            <div class='confirmation-total'>
-              <%= render "confirmation_total" %>
-            </div>
-
-            <%= f.submit "提交订单", class: 'submit'%>
-          </td>
-        </tr>
-      </table>
-
-      <div class="coupons">
-        <div class="selectable-coupons">
-          <ul class="list-group">
-            <% @order.available_coupons(coupon_ids: @order.coupon_ids).each do |coupon| %>
-              <li class="list-group-item coupon" data-coupon-id="<%= coupon.id %>">
-                <%= coupon.name %> 减<%= coupon.par %>元
-                <button class='btn btn-default use-coupon' type='button' role='button'>使用</button>
-                <%= hidden_field_tag "order[coupon_ids][]", coupon.id, disabled: true %>
-              </li>
-            <% end %>
-          </ul>
-        </div>
-
-        <div class="selected-coupons">
-          <% @order.coupons.each do |coupon| %>
-            <div class="coupon" data-coupon-id="<%= coupon.id %>">
-              <%= coupon.name %> 减<%= coupon.par %>元
-              <%= hidden_field_tag "order[coupon_ids][]", coupon.id %>
-              <button class='btn btn-default delete-coupon' type='button' role='button'>删除</button>
-            </div>
-          <% end %>
-        </div>
+        
+         <tr class='footer'>
+            <td colspan="4">
+              <div class="pull-right">
+                <%= f.submit "提交订单", class: 'submit'%>
+              </div>
+              <div class="pull-right">
+                <%= link_to "返回购物车", cart_path, class: 'cancel' %>
+              </div>
+              <div class="footer-box">
+                <div class="confirmation-coupon table-cell-middle">
+                  <div class="coupon coupon-select">
+                    <div class="coupon-content">优惠券</div>
+                    <div class="glyphicon glyphicon-menu-down"></div>
+                    <i></i>
+                  </div>
+                  <div class="coupon-popup">
+                  <div class="coupon-list">
+                    <i class="close-popup glyphicon glyphicon-remove"></i>
+                    <ul>
+                      <% @order.available_coupons(coupon_ids: @order.coupon_ids).each do |coupon| %>
+                        <%= render "orders/coupon", locals: {coupon: coupon} %>
+                      <% end %>
+                    </ul>
+                  </div>
+                  <span class="bot"></span>
+                  <span class="top"></span>
+                </div>
+                </div>
+                <div class='confirmation-total table-cell-middle'>
+                  <%= render "confirmation_total" %>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
       </div>
     </div>
+
   <% end %>
 </div>
 
@@ -155,5 +163,49 @@
         })
       <% end %>
     }
+
+        $('.coupon-select').click(function(e) {
+      var $height = $('.coupon-popup').outerHeight(),
+          $display = $('.coupon-popup').css('display');
+          $height = $height + 8;
+          if ($display === 'none') {
+            $('.coupon-popup').css('top','-'+$height+'px');
+            $('.coupon-popup').fadeIn();
+          }
+          else{
+            $('.coupon-popup').fadeOut();
+          }
+      e.stopPropagation();
+    });
+
+    $('.coupon-list').on('click','.btn-select',function(){
+      var cssClass = $(this).prop('class');
+      if (cssClass.indexOf('btn-selected') < 0) {
+        $(this).addClass('btn-selected'); 
+        $(this).siblings('#order_coupon_ids_').prop('disabled','');
+        $(this).val('取消');
+        formPost();
+      }
+      else{
+        $(this).removeClass('btn-selected');
+        $(this).siblings('#order_coupon_ids_').prop('disabled','disabled');
+        $(this).val('选择');
+        formPost();
+      }
+    });
+
+    $('.close-popup').click(function(){
+      $('.coupon-popup').fadeOut();
+    });
+
   })();
+
+  function formPost(){
+    var data = $($('form')[1]).serialize();
+    $.post('/orders/select_coupon?' + data)
+    .done(function(data){
+      console.log(data);
+      $('.confirmation-total').html(data.total_html);
+    });
+  }
 </script>

@@ -342,6 +342,8 @@ class OrdersController < ApplicationController
         @delivery_addresses.first.id
       end
 
+    @location = Location.find(@order.address_id)
+
     @order.set_express_fee
   end
 
@@ -425,6 +427,8 @@ class OrdersController < ApplicationController
     render json: {
       coupons: coupons.as_json(serialize_options),
       avaliable: avaliables.as_json(serialize_options),
+      coupons_length: @order.coupons.length,
+      coupons_discount: @order.coupons.map(&:offset_par).reduce(&:+),
       total_html: total_html
     }
   end

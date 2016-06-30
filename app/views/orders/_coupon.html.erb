@@ -1,0 +1,17 @@
+
+<li>
+  <div class="list-item-left">
+    <div class="item-left-content">
+      ¥<%= coupon.par %>
+    </div>
+    <i></i>
+  </div>
+  <div class="list-item-content">
+    <div><%= coupon.name %> <%= "满#{coupon.apply_minimal_total.to_i}减#{coupon.par.to_i}" if coupon.apply_minimal_total > 0 %></div>
+    <div><%= coupon.start_time.strftime("%Y.%m.%d")  %>-<%= coupon.end_time.strftime("%Y.%m.%d") %></div>
+  </div>
+  <div class="list-item-right">
+    <%= hidden_field_tag "order[coupon_ids][]", coupon.id, disabled: true %>
+    <input class="btn-select" type="button" value="选择" />
+  </div>
+</li>

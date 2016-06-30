@@ -1,8 +1,19 @@
 <% content_for :module do "no_footer" end %>
 
 <div class='order-confirm order-confirm-mobile'>
-  <%= render "order_address", locals: { delivery_addresses: @delivery_addresses, order: @order } %>
-
+  <section class="mobile-delivery-address">
+    <a href="/locations">
+    <div class="address-content">
+      <h4><span><%= @location.contact %> </span><span><%= @location.contact_phone %></span></h4>
+      <p>
+        <span><%= ChinaCity.get(@location.region_id.to_s, prepend_parent: true) %></span>
+        <span><%= @location.road %></span>
+      </p>
+      <i class="glyphicon glyphicon-map-marker before"></i>
+      <i class="glyphicon glyphicon-menu-right after"></i>
+    </div>
+    </a>
+  </section>
   <%= form_for @order do |f| %>
     <%= f.hidden_field :address_id %>
     <%= f.hidden_field :supplier_id %>
@@ -28,25 +39,99 @@
 
       <%= render partial: "confirmation_item", collection: @order_items.sort_by(&:id), as: :order_item, locals: { supplier: @supplier, f: f } %>
 
-      <div class='footer confirmation-total'> 
-        <%= render "confirmation_total" %>
-      </div>
+      <section class="mobile-coupon-link">
+        <ul class="list-group">
+          <li class="list-group-item link-to-list">
+            <span class="item-label">优惠券</span>
+            <span class="favorable-price">已节省 -¥ <span id="coupon_discount">0.00</span>元</span>
+            <i class="glyphicon glyphicon-menu-right"></i>
+          </li>
+        </ul>
 
-      <div class='footer'>
-        <td colspan='5' class='text-right'>
-          <%= link_to "返回购物车", cart_path, class: 'cancel' %>
+      </section>
+
+      <section class='mobile-footer'>
+        <div class='confirmation-total'> 
+        <%= render "confirmation_total" %>
+        </div>
           <%= f.submit "提交订单", class: 'submit'%>
-        </td>
-      </div>
+      </section>
     </div>
+
+    <% @order.available_coupons(coupon_ids: @order.coupon_ids).each do |coupon| %>
+      <%= hidden_field_tag "order[coupon_ids][]", coupon.id, disabled: true, data: {coupon_id: coupon.id} %>
+    <% end %>
+
   <% end %>
 </div>
+
+<section class="coupon-list-container">
+  <ul>
+     <% @order.available_coupons(coupon_ids: @order.coupon_ids).each do |coupon| %>
+        <%= render "orders/coupon", locals: {coupon: coupon} %>
+      <% end %>
+  </ul>
+
+  <div class="mobile-coupon-footer">
+    <input id='confirm' type="button" value='确认选择' />
+  </div>
+</section>
 
 <script type="text/javascript">
   (function(){
     $('.more').click(function(event) {
       $(this).siblings('.gifts')
         .toggleClass('toggle-more-gifts');
-    })
+    });
+
+    $('.link-to-list').click(function(){
+      $('.order-confirm-mobile').hide();
+      $('.coupon-list-container').fadeIn();
+    });
+
+    $('#confirm').click(function(){
+      $('.coupon-list-container').hide();
+      $('.order-confirm-mobile').fadeIn();
+    });
+
+    $('.coupon-list-container li').click(function(){
+      var $this = $(this),
+          className = $this.attr('class'),
+          data_id = $(this).attr('data-coupon-id');
+
+          if (className === 'unuseful') {
+            return 
+          }
+          else {
+            if (className) {
+              $('#order_coupon_ids_').each(function(){
+                var match_id = $(this).attr('data-coupon-id');
+                if (match_id === data_id) {
+                  $(this).prop('disabled','disabled');
+                }
+              });
+              var data = $('form').serialize();
+              $.post('/orders/select_coupon?' + data)
+              .done(function(data){
+                $('#coupon_discount').html('');
+              });
+              $this.removeClass('selected');
+            }
+            else{
+              $('#order_coupon_ids_').each(function(){
+                var match_id = $(this).attr('data-coupon-id');
+                if (match_id === data_id) {
+                  $(this).prop('disabled','');
+                }
+              });
+              var data = $('form').serialize();
+              $.post('/orders/select_coupon?' + data)
+                .done(function(data){
+                $('#coupon_discount').html(data.coupons_discount);
+              });
+              $this.addClass('selected');
+            }
+          }
+    });
   })();
 </script>

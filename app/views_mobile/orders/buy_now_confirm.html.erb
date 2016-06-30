@@ -1,17 +1,29 @@
-<div class='buy-now-confirm'>
-  <%= render "order_address", locals: { delivery_addresses: @delivery_addresses, order: @order } %>
-
+<% content_for :module do "no_footer" end %>
+<div class='buy-now-confirm-mobile order-confirm order-confirm-mobile'>
+  <section class="mobile-delivery-address">
+   <a href="/locations">
+    <div class="address-content">
+      <h4><span><%= @location.contact %> </span><span><%= @location.contact_phone %></span></h4>
+      <p>
+        <span><%= ChinaCity.get(@location.region_id.to_s, prepend_parent: true) %></span>
+        <span><%= @location.road %></span>
+      </p>
+      <i class="glyphicon glyphicon-map-marker before"></i>
+      <i class="glyphicon glyphicon-menu-right after"></i>
+    </div>
+    </a>
+  </section>
   <%= form_for @order, url: "/orders/buy_now_create" do |f| %>
     <%= f.hidden_field :address_id %>
     <%= f.hidden_field :supplier_id %>
 
-    <div class='cart-group'>
-      <div class='header media'>
-        <div class='shop media-left'>
+    <div class='items-container'>
+     <div class='header'>
+        <span class='shop'>
           <%= link_to shop_site_path(@supplier.name) do %>
             <%= image_tag @supplier.avatar_url %><%= @supplier.title %>
           <% end %>
-        </div>
+        </span>
       </div>
 
       <%= f.fields_for :items do |item_form| %>
@@ -35,7 +47,7 @@
       <% if @orderable.is_a? Item %>
         <% has_available_gifts = @orderable.available_gifts.present? %>
         <div class='mobile-gifts' style="<%= has_available_gifts ? '' : 'display: none' %>">
-          <div class='head'></div>
+          <div class='head'>礼品</div>
           <div class='mobile-cart-gifts'>
             <% @orderable.available_gifts.each do |gift| %>
               <div class='cart-gift' data-gift-id="<%= gift.id %>">
@@ -60,16 +72,40 @@
           </div>
         </div>
       <% end %>
+      
+      <section class="mobile-coupon-link">
+        <ul class="list-group">
+          <li class="list-group-item link-to-list">
+            <span class="item-label">优惠券</span>
+            <span class="favorable-price">已节省 -¥ <span id="coupon_discount">0.00</span>元</span>
+            <i class="glyphicon glyphicon-menu-right"></i>
+          </li>
 
-      <div class='footer'>
-        <div class="confirmation-total">
-          <%= render "confirmation_total" %>
+        </ul>
+
+      </section>
+
+      <section class='mobile-footer'>
+        <div class='confirmation-total'> 
+        <%= render "confirmation_total" %>
         </div>
-        <%= f.submit "结  算", class: 'submit' %>
-      </div>
+          <%= f.submit "提交订单", class: 'submit'%>
+      </section>
     </div>
   <% end %>
 </div>
+
+<section class="coupon-list-container">
+  <ul>
+     <% @order.available_coupons(coupon_ids: @order.coupon_ids).each do |coupon| %>
+        <%= render "orders/coupon", locals: {coupon: coupon} %>
+      <% end %>
+  </ul>
+
+  <div class="mobile-coupon-footer">
+    <input id='confirm' type="button" value='确认选择' />
+  </div>
+</section>
 
 <script type="text/template" id="mobile-gift-template">
   <div class='cart-gift' data-gift-id="{{= id }}">
@@ -121,10 +157,12 @@
         $quantity = $cartItem.find('.quantity'),
         $subTotal = $cartItem.find('.subtotal'),
         $btnMinus = $cartItem.find('span.btn-minus'),
-        $formQuanInput = $cartItem.find('#order_items_attributes_0_quantity');
+        $formQuanInput = $cartItem.find('#order_items_attributes_0_quantity'),
+        $price = $cartItem.find('.price');
 
     $quantity.text(quantity);
     $formQuanInput.val(quantity);
+    $subTotal.text((($quantity.text() * 1) * ($price.text().substring(1) * 1)).toFixed(2));
 
     if (+quantity > 1) {
       $btnMinus.addClass('glyphicon-minus');
@@ -137,7 +175,7 @@
         item_id: <%= @orderable.id %>,
         quantity: quantity
       }).done(function(data) {
-        renderGifts(data.gifts);
+        renderGifts(data.gifts || "");
         revaluateTotal();
       })
 
@@ -146,7 +184,7 @@
         $.post('/orders/express_fee?' + formData)
           .done(function(html) {
             $('.confirmation-total').html(html);
-          })
+          });
       }
 
       function renderGifts(gifts) {
@@ -155,7 +193,7 @@
 
         $container.html('');
 
-        if (gifts.length > 0) {
+        if (gifts || gifts.length > 0) {
           _.each(gifts, function(gift) {
             var html = giftTpl(gift);
             var $hiddenInput = $("#order_item_gifts_" + <%= @orderable.id %> + "_" + gift.id);
@@ -168,5 +206,56 @@
       }
     <% end %>
   }
+
+
+  $('.link-to-list').click(function(){
+    $('.order-confirm-mobile').hide();
+    $('.coupon-list-container').fadeIn();
+  });
+
+  $('#confirm').click(function(){
+    $('.coupon-list-container').hide();
+    $('.order-confirm-mobile').fadeIn();
+  });
+
+  $('.coupon-list-container li').click(function(){
+    var $this = $(this),
+        className = $this.attr('class'),
+        data_id = $(this).attr('data-coupon-id');
+
+        if (className === 'unuseful') {
+          return 
+        }
+        else {
+          if (className) {
+            $('#order_coupon_ids_').each(function(){
+              var match_id = $(this).attr('data-coupon-id');
+              if (match_id === data_id) {
+                $(this).prop('disabled','disabled');
+              }
+            });
+            var data = $('form').serialize();
+            $.post('/orders/select_coupon?' + data)
+            .done(function(data){
+              $('#coupon_discount').html('');
+            });
+            $this.removeClass('selected');
+          }
+          else{
+            $('#order_coupon_ids_').each(function(){
+              var match_id = $(this).attr('data-coupon-id');
+              if (match_id === data_id) {
+                $(this).prop('disabled','');
+              }
+            });
+            var data = $('form').serialize();
+            $.post('/orders/select_coupon?' + data)
+              .done(function(data){
+              $('#coupon_discount').html(data.coupons_discount);
+            });
+            $this.addClass('selected');
+          }
+        }
+  });
 })();
 </script>
