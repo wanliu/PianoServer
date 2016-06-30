@@ -87,7 +87,6 @@ module WxRedpack
     #   verify_ssl: OpenSSL::SSL::VERIFY_NONE,
     #   headers: { content_type: 'application/xml' }
     # })
-
     response = WxPay::Service.sendredpack(redpack_params)
     Rails.logger.info "微信派发红包返回值：#{response.inspect}"
     WxPackSendResponse.new(response)

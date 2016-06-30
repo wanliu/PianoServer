@@ -15,18 +15,14 @@ class Redpack < ActiveRecord::Base
   # after_commit :set_wx_order_no, on: :create
 
   # TODO async using sidekiq
-  def send_pack
-    if wx_user_openid.present?
-      response = super
+  def send_redpack
+    response = super
 
-      if response.success?
-        update_attribute("sent", true)
-      end
-
-      response.success?
-    else
-      false
+    if response.success? && !sent?
+      update_column("sent", true)
     end
+
+    response
   end
 
   def wx_order_no
