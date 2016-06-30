@@ -32,7 +32,7 @@ class BlessesController < ApplicationController
 
     result = Hash.from_xml(request.body.read)["xml"]
 
-    puts "微信支付确认请求，#{result.to_json}"
+    Rails.logger.info "微信支付确认请求，#{result.to_json}"
 
     if WxPay::Sign.verify?(result) && @bless.verify_wx_notify(result)
       # find your order and process the post-paid logic.
@@ -41,7 +41,7 @@ class BlessesController < ApplicationController
       @bless.paid_total = @bless.wx_total_fee
       @bless.save(validate: false)
 
-      puts "微信支付成功返回，结果：#{result.to_json}"
+      Rails.logger.info "微信支付成功返回，结果：#{result.to_json}"
 
       render :xml => {return_code: "SUCCESS"}.to_xml(root: 'xml', dasherize: false)
     else

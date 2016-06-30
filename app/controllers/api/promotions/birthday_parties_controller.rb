@@ -1,5 +1,5 @@
 class Api::Promotions::BirthdayPartiesController < Api::BaseController
-  before_action :set_birthday_party, only: [:show, :update, :edit, :destroy]
+  before_action :set_birthday_party, only: [:show, :update, :edit, :destroy, :withdraw]
   before_action :authenticate_user!, only: [:upload_avatar]
 
   # GET /birthday_parties
@@ -13,7 +13,6 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
   # GET /birthday_parties/1
   # GET /birthday_parties/1.json
   def show
-
   end
 
   def upload_avatar

@@ -4,12 +4,17 @@ module WxRedpack
   WECHAT_CONFIG = Rails.application.config_for(:wechat)
 
   class WxPackResponse
-    def initialize(response_string)
-      @response = JSON.parse(response_string)
+    def initialize(response)
+      if response.is_a? String
+        @response = Hash.from_xml(response_string)["xml"]
+      else
+        @response = response
+      end
     end
 
     def success
-      "SUCCESS" == @response["result_code"]
+      "SUCCESS" == @response["return_code"] &&
+        "SUCCESS" == @response["result_code"]
     end
     alias :success? :success
 
@@ -17,6 +22,10 @@ module WxRedpack
       !success
     end
     alias :fail? :fail
+
+    def error_message
+      @response["return_msg"] || @response["err_code_des"]
+    end
   end
 
   class WxPackSendResponse < WxPackResponse; end
@@ -50,21 +59,53 @@ module WxRedpack
   end
 
   def send_redpack
-    response = RestClient::Request.execute({
-      method: :post,
-      url: WX_REDPACK_REQUEST_URL,
-      payload: payload,
-      headers: { content_type: 'application/xml' }
-    })
+    # ssl_ca_file = Rails.application.config_for(:wechat)["ca_file"]
+    # ssl_client_cert = OpenSSL::X509::Certificate.new(File.read(Rails.application.config_for(:wechat)["client_cert"]))
+    # ssl_client_key = OpenSSL::PKey::RSA.new(File.read(Rails.application.config_for(:wechat)["client_key"]), "passphrase, if any")
+    # ssl_p12_path = Rails.application.config_for(:wechat)["ssl_p12_path"]
+    # p12 = OpenSSL::PKCS12.new(File.read(ssl_p12_path), '1268114401')
 
+    # request = RestClient::Resource.new(
+    #   # WX_REDPACK_REQUEST_URL,
+    #   "https://api.mch.weixin.qq.com",
+    #   ssl_client_cert: p12.certificate,
+    #   ssl_client_key: p12.key,
+    #   ssl_ca_file: "/var/temp/ssl/rootca.pem",
+    #   verify_ssl: OpenSSL::SSL::VERIFY_PEER)
+
+    # debugger
+
+    # response = request["mmpaymkttransfers/sendredpack"].post(payload, headers: { content_type: 'application/xml' })
+
+    # response = RestClient::Request.execute({
+    #   method: :post,
+    #   url: WX_REDPACK_REQUEST_URL,
+    #   payload: payload,
+    #   ssl_client_cert: p12.certificate,
+    #   ssl_client_key: p12.key,
+    #   ssl_ca_file: "/var/temp/ssl/rootca.pem",
+    #   verify_ssl: OpenSSL::SSL::VERIFY_NONE,
+    #   headers: { content_type: 'application/xml' }
+    # })
+
+    response = WxPay::Service.sendredpack(redpack_params)
+    Rails.logger.info "微信派发红包返回值：#{response.inspect}"
     WxPackSendResponse.new(response)
   end
 
   def query_redpack
+    ssl_client_cert = OpenSSL::X509::Certificate.new(File.read(Rails.application.config_for(:wechat)["client_cert"]))
+    ssl_client_key = OpenSSL::PKey::RSA.new(File.read(Rails.application.config_for(:wechat)["client_key"]), "passphrase, if any")
+  
     response = RestClient::Request.execute({
       method: :post,
       url: WX_REDPACK_QUERY_URL,
       payload: query_payload,
+      ssl_ca_file: Rails.application.config_for(:wechat)["ca_file"],
+      # ssl_ca_path: Rails.application.config_for(:wechat)["ca_file"],
+      ssl_client_cert: ssl_client_cert,
+      ssl_client_key: ssl_client_key,
+      verify_ssl: OpenSSL::SSL::VERIFY_PEER,
       headers: { content_type: 'application/xml' }
     })
 
@@ -94,8 +135,8 @@ module WxRedpack
   def redpack_params
     {
       mch_billno: mch_billno,
-      mch_id: mch_id,
-      wxappid: appid,
+      # mch_id: mch_id,
+      # wxappid: appid,
       send_name: '耒阳街上',
       # re_openid: user.data["weixin_openid"],
       re_openid: wx_user_openid,
@@ -105,7 +146,7 @@ module WxRedpack
       client_ip: '127.0.0.1',
       act_name: '生日趴红包',
       remark: '生日趴红包',
-      nonce_str: Devise.friendly_token
+      # nonce_str: Devise.friendly_token
     }
 
     # sign = WxPay::Sign.generate(params)
@@ -130,13 +171,15 @@ module WxRedpack
   end
 
   def payload
-    sign = WxPay::Sign.generate(redpack_params)
-    "<xml>#{redpack_params.map { |k, v| "<#{k}>#{v}</#{k}>" }.join}<sign>#{sign}</sign></xml>"
+    params = redpack_params
+    sign = WxPay::Sign.generate(params)
+    "<xml>#{params.map { |k, v| "<#{k}>#{v}</#{k}>" }.join}<sign>#{sign}</sign></xml>"
   end
 
   def query_payload
-    sign = WxPay::Sign.generate(redpack_querty_params)
-    "<xml>#{redpack_querty_params.map { |k, v| "<#{k}>#{v}</#{k}>" }.join}<sign>#{sign}</sign></xml>"
+    params = redpack_params
+    sign = WxPay::Sign.generate(params)
+    "<xml>#{params.map { |k, v| "<#{k}>#{v}</#{k}>" }.join}<sign>#{sign}</sign></xml>"
   end
 
   def appid

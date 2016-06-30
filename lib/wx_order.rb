@@ -17,7 +17,8 @@ module WxOrder
 
       update_attributes(wx_prepay_id: prepayid, wx_noncestr: noncestr)
     else
-      puts "微信支付统一下单失败！", 'options:', params.to_json, ',responses:', wx_order.to_json
+      Rails.logger.info "[微信]微信支付统一下单失败！, options:#{params.inspect}, responses: #{wx_order.inspect}"
+      # puts "微信支付统一下单失败！", 'options:', params.to_json, ',responses:', wx_order.to_json
     end
 
     if wx_create_response_paid? && wx_order_paid?(true)

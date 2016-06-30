@@ -12,7 +12,7 @@ class Redpack < ActiveRecord::Base
   validates :amount, numericality: { greater_than_or_equal_to: 1 }
   # validates :wx_order_no, presence: true
 
-  after_commit :set_wx_order_no, on: :create
+  # after_commit :set_wx_order_no, on: :create
 
   # TODO async using sidekiq
   def send_pack
@@ -29,11 +29,15 @@ class Redpack < ActiveRecord::Base
     end
   end
 
+  def wx_order_no
+    "1#{id.to_s.rjust(9, '0')}"
+  end
+
   private
 
-  def set_wx_order_no
-    if persisted?
-      udpate_attribute('wx_order_no', "1#{id.to_s.rjust(9, '0')}")
-    end
-  end
+  # def set_wx_order_no
+  #   if persisted?
+  #     update_attribute('wx_order_no', "1#{id.to_s.rjust(9, '0')}")
+  #   end
+  # end
 end

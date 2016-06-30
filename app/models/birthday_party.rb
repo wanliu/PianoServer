@@ -1,5 +1,7 @@
 class BirthdayParty < ActiveRecord::Base
 
+  attr_accessor :request_ip, :wx_user_openid
+
   WithdrawStatus = Struct.new(:success, :error_message) do
     alias :success? :success
   end
@@ -27,15 +29,17 @@ class BirthdayParty < ActiveRecord::Base
       if redpack.sent?
         WithdrawStatus.new(false, "已经发放过了")
       else
-        redpack.send_redpack
+        response = redpack.send_redpack
+        WithdrawStatus.new(response.success?, response.error_message)
       end
     else
       self.withdrew = withdrawable
 
       if withdrew >= 1
-        build_redpack(user: user, amount: withdrew)
+        build_redpack(user: user, amount: withdrew, wx_user_openid: wx_user_openid)
         if save
-          redpack.send_redpack
+          response = redpack.send_redpack
+          WithdrawStatus.new(response.success?, response.error_message)
         else
           WithdrawStatus.new(false, errors.full_messages.join(', '))
         end

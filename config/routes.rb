@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   # resources :gifts, except: [:new, :edit]
-  resources :birthday_parties, only: [:show]
+  resources :birthday_parties, only: [:show] do
+    get :withdraw, on: :member
+  end
 
   resources :thumbs, except: [:new, :edit]
 
@@ -335,7 +337,9 @@ Rails.application.routes.draw do
           get :wx_pay_params, on: :member
         end
 
-        patch :upload_avatar, on: :member
+        member do
+          patch :upload_avatar
+        end
       end
 
     end

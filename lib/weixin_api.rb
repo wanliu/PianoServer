@@ -7,6 +7,8 @@ module WeixinApi
 
       message = JSON.parse res.body
 
+      Rails.logger.info "[微信]获取微信openid, resonse:#{message.inspect}"
+
       if message["errmsg"].present?
         return nil
       end
