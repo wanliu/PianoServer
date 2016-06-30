@@ -6,7 +6,7 @@ module WxRedpack
   class WxPackResponse
     def initialize(response)
       if response.is_a? String
-        @response = Hash.from_xml(response_string)["xml"]
+        @response = Hash.from_xml(response)["xml"]
       else
         @response = response
       end
@@ -28,9 +28,18 @@ module WxRedpack
     end
   end
 
-  class WxPackSendResponse < WxPackResponse; end
+  class WxPackSendResponse < WxPackResponse
+    def initialize(response)
+      super
+      Rails.logger.info "微信派发红包返回值：#{@response.inspect}"
+    end
+  end
 
   class WxPackQueryResponse < WxPackResponse
+    def initialize(response)
+      super
+      Rails.logger.info "红包查询返回返回值：#{@response.inspect}"
+    end
 
     # SENDING:发放中 
     # SENT:已发放待领取 
@@ -73,8 +82,6 @@ module WxRedpack
     #   ssl_ca_file: "/var/temp/ssl/rootca.pem",
     #   verify_ssl: OpenSSL::SSL::VERIFY_PEER)
 
-    # debugger
-
     # response = request["mmpaymkttransfers/sendredpack"].post(payload, headers: { content_type: 'application/xml' })
 
     # response = RestClient::Request.execute({
@@ -88,25 +95,22 @@ module WxRedpack
     #   headers: { content_type: 'application/xml' }
     # })
     response = WxPay::Service.sendredpack(redpack_params)
-    Rails.logger.info "微信派发红包返回值：#{response.inspect}"
     WxPackSendResponse.new(response)
   end
 
   def query_redpack
-    ssl_client_cert = OpenSSL::X509::Certificate.new(File.read(Rails.application.config_for(:wechat)["client_cert"]))
-    ssl_client_key = OpenSSL::PKey::RSA.new(File.read(Rails.application.config_for(:wechat)["client_key"]), "passphrase, if any")
+    options = {
+      ssl_client_cert: WxPay.apiclient_cert,
+      ssl_client_key: WxPay.apiclient_key,
+      verify_ssl: OpenSSL::SSL::VERIFY_NONE
+    }
   
     response = RestClient::Request.execute({
       method: :post,
       url: WX_REDPACK_QUERY_URL,
       payload: query_payload,
-      ssl_ca_file: Rails.application.config_for(:wechat)["ca_file"],
-      # ssl_ca_path: Rails.application.config_for(:wechat)["ca_file"],
-      ssl_client_cert: ssl_client_cert,
-      ssl_client_key: ssl_client_key,
-      verify_ssl: OpenSSL::SSL::VERIFY_PEER,
       headers: { content_type: 'application/xml' }
-    })
+    }.merge(options))
 
     WxPackQueryResponse.new(response)
   end
@@ -162,10 +166,10 @@ module WxRedpack
   def redpack_querty_params
     {
       mch_billno: mch_billno,
-      mch_id: mch_id,
-      appid: appid,
       bill_type: 'MCHT',
-      nonce_str: Devise.friendly_token
+      appid: WxPay.appid,
+      mch_id: WxPay.mch_id,
+      nonce_str: SecureRandom.uuid.tr('-', '')
     }
   end
 
@@ -176,7 +180,7 @@ module WxRedpack
   end
 
   def query_payload
-    params = redpack_params
+    params = redpack_querty_params
     sign = WxPay::Sign.generate(params)
     "<xml>#{params.map { |k, v| "<#{k}>#{v}</#{k}>" }.join}<sign>#{sign}</sign></xml>"
   end
