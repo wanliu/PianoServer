@@ -11,7 +11,10 @@ Rails.application.routes.draw do
   resources :blesses, only: [] do
     get "wxpay/:id", to: 'blesses#wxpay', as: 'wxpay', on: :collection
 
-    post "wx_notify", on: :member
+    member do
+      post "wx_notify"
+      post "wxpay_confirm"
+    end
   end
 
   resources :order_items, except: [:new, :edit] do

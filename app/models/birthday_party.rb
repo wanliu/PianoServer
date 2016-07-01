@@ -26,7 +26,7 @@ class BirthdayParty < ActiveRecord::Base
 
   def withdraw
     if redpack(true).present?
-      if redpack.sent?
+      if redpack.sent? || redpack.received? || redpack.sending?
         WithdrawStatus.new(false, "已经发放过了")
       else
         response = redpack.send_redpack

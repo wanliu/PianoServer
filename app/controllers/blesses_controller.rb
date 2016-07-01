@@ -27,6 +27,21 @@ class BlessesController < ApplicationController
     end
   end
 
+  def wxpay_confirm
+    @bless = Bless.find(params[:id])
+
+    if @bless.paid?
+      render json: {paid: true}, status: :ok
+    else
+      if @bless.wx_order_paid?
+        @bless.update_column('paid', true)
+        render json: {paid: true}, status: :ok
+      else
+        render json: {paid: false}, status: :unprocessable_entity
+      end
+    end
+  end
+
   def wx_notify
     @bless = Bless.find(params[:id])
 

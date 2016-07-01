@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160627083053) do
+ActiveRecord::Schema.define(version: 20160701022202) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -314,7 +314,7 @@ ActiveRecord::Schema.define(version: 20160627083053) do
     t.integer  "product_id"
     t.decimal  "price",               precision: 10, scale: 2
     t.integer  "inventory"
-    t.boolean  "on_sale",                                      default: true,  null: false
+    t.boolean  "on_sale",                                      default: true
     t.datetime "created_at",                                                   null: false
     t.datetime "updated_at",                                                   null: false
     t.integer  "sid"
@@ -378,9 +378,8 @@ ActiveRecord::Schema.define(version: 20160627083053) do
     t.string   "zipcode"
     t.string   "contact"
     t.string   "contact_phone"
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
-    t.integer  "gender",        default: 1
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
   end
 
   create_table "logs", force: :cascade do |t|
@@ -495,15 +494,14 @@ ActiveRecord::Schema.define(version: 20160627083053) do
     t.integer  "birthday_party_id"
     t.string   "nonce_str"
     t.string   "wx_order_no"
-    t.boolean  "sent"
     t.boolean  "withdrew",                                   default: false
     t.string   "wx_user_openid"
     t.datetime "created_at",                                                 null: false
     t.datetime "updated_at",                                                 null: false
+    t.integer  "status",                                     default: 0
   end
 
   add_index "redpacks", ["birthday_party_id"], name: "index_redpacks_on_birthday_party_id", using: :btree
-  add_index "redpacks", ["sent"], name: "index_redpacks_on_sent", using: :btree
   add_index "redpacks", ["user_id"], name: "index_redpacks_on_user_id", using: :btree
   add_index "redpacks", ["withdrew"], name: "index_redpacks_on_withdrew", using: :btree
   add_index "redpacks", ["wx_order_no"], name: "index_redpacks_on_wx_order_no", using: :btree
@@ -577,8 +575,8 @@ ActiveRecord::Schema.define(version: 20160627083053) do
     t.datetime "created_at",                               null: false
     t.datetime "updated_at",                               null: false
     t.string   "logo"
-    t.string   "address"
     t.jsonb    "settings",                    default: {}
+    t.string   "address"
     t.integer  "shop_type",                   default: 0
     t.float    "lat"
     t.float    "lon"

@@ -58,8 +58,4 @@ class Bless < ActiveRecord::Base
       .where("virtual_present_infor @> ?", self.class.free_hearts_hash.to_json)
       .exists?
   end
-
-  def out_trade_no
-    "bless#{super}"
-  end
 end

@@ -124,10 +124,12 @@ module WxOrder
   end
 
   def out_trade_no
+    no = "#{self.class.to_s.downcase}_#{id}"
+
     if Rails.env.development?
-      "development#{id}"
+      "development_#{no}"
     else
-      id.to_s
+      no
     end
   end
 end

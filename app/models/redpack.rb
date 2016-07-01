@@ -4,6 +4,9 @@ class Redpack < ActiveRecord::Base
 
   include WxRedpack
 
+  # SENDING:发放中, SENT:已发放待领取, FAILED：发放失败, RECEIVED:已领取, REFUND:已退款
+  enum status: { unknown: 0, sending: 1, sent: 2, failed: 3, received: 4, refound: 5 }
+
   belongs_to :user
   belongs_to :birthday_party
 
@@ -19,12 +22,23 @@ class Redpack < ActiveRecord::Base
     response = super
 
     if response.success? && !sent?
-      update_column("sent", true)
+      update_column("status", self.class.statuses["sent"])
     end
 
     response
   end
 
+  def query_redpack
+    response = super
+
+    if response.success?
+      update_column("status", self.class.statuses[response.status.downcase])
+    end
+
+    response
+  end
+
+  # 红包单号最后10位数子以1开头，以便与订单相区分
   def wx_order_no
     "1#{id.to_s.rjust(9, '0')}"
   end
