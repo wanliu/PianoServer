@@ -47,11 +47,7 @@ module WxRedpack
     # RECEIVED:已领取 
     # REFUND:已退款
     def status
-      if fail?
-        "fail"
-      else
-        @response["status"]
-      end
+      @response["status"]
     end
 
     def fail_reason

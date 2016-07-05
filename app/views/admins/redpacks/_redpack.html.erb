@@ -1,0 +1,24 @@
+<%= content_tag_for "tr", redpack do %>
+  <td>
+    <%= redpack.birthday_party.birthday_person %>
+  </td>
+  <td>
+    <%= link_to "查看", "/cake_party/#/party/#{redpack.birthday_party_id}" %>
+  </td>
+  <td>
+    <%= redpack.amount %>
+  </td>
+  <td>
+    <%= redpack.status_title %>
+  </td>
+  <td>
+    <%= redpack.error_message %>
+  </td>
+  <td>
+    <% if redpack.unknown? || redpack.failed? %>
+      <%= button_to "发放", send_redpack_admins_redpack_path(redpack), remote: true, data: { confirm: "确定发送微信红包么？" } %>
+    <% else %>
+      <%= button_to "查询红包", query_admins_redpack_path(redpack), remote: true %>
+    <% end %>
+  </td>
+<% end %>

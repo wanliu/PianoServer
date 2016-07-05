@@ -218,6 +218,13 @@ Rails.application.routes.draw do
 
     resources :virtual_presents, except: [:new, :edit]
 
+    resources :redpacks, only: [:index, :show, :update] do
+      member do
+        post :send_redpack
+        post :query
+      end
+    end
+
     resources :attachments
     resources :industries do
       concerns :templable, templable_type: 'Industry', parent_type: 'Industry'
