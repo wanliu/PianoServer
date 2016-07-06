@@ -32,7 +32,7 @@ class Bless < ActiveRecord::Base
   end
 
   def wx_total_fee
-    virtual_present.price
+    virtual_present_infor["price"].to_f
   end
 
   private
