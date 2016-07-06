@@ -1,12 +1,17 @@
 namespace :daily_cheap do
   desc "create a daily cheap"
   task :create_tomorrow => :environment do |task, args|
-    create_daily_cheap DateTime.now + 1.day
+    create_daily_cheap DateTime.now + 1.day, false
   end
 
-  def create_daily_cheap(date)
+  def create_daily_cheap(date, overwrite = true)
     title_template = Settings.promotions.daily_cheap.title_template.dup
 
+    unless overwrite
+      OneMoney.all.reverse_each do |one| 
+        exit if one.start_at.to_date == date.to_date
+      end
+    end
     # title = I18n.l(date) + ' 天天惠'
     start_hour = Settings.promotions.daily_cheap.start_hour || 10
     end_hour =  Settings.promotions.daily_cheap.end_hour || 22

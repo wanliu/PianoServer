@@ -9,7 +9,7 @@ require 'thread'
 
 queue = Queue.new
 
-news = ARGF.argv[0]
+text = ARGF.argv[0]
 
 
 # producer = Thread.new do
@@ -40,8 +40,8 @@ threads = []
       id = queue.pop(true) rescue nil
       if id
         puts "#{id} command"
-        `wechat custom_news #{id} #{news}`
-        puts "wx_bcast_news: #{Time.now} success" if $?.success?
+        result = system('wechat custom_text #{id} #{text}')
+        puts "wx_bcast_news: #{Time.now} success" if result
       end
     end
     # when there is no more work, the thread will stop
@@ -50,6 +50,3 @@ end
 
 threads.each { |t| t.join }
 
-# openids.each do |id|
-#   `wechat custom_news #{id} #{news}`
-# end
