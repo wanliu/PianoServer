@@ -7,7 +7,7 @@ class BlessesController < ApplicationController
   def wxpay
     @bless = Bless.find(params[:id])
     if @bless.paid?
-      render "blesses/paid"
+      render "blesses/wx_paid"
       return
     end
 
