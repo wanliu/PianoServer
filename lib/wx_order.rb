@@ -78,7 +78,7 @@ module WxOrder
     if true == paid && true == udpate_wx_transation_id_if_paid
       self.paid = true
       self.wx_transaction_id = res["transaction_id"]
-      self.paid_total = wx_total_fee
+      self.paid_total = wx_total_fee if is_a? Order
       save(validate: false)
     end
 
