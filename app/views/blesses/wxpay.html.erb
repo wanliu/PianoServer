@@ -56,7 +56,7 @@
           // 确认支付成功
           // alert("支付成功");
           // window.location.href = "<%= wx_paid_order_path(@bless) %>";
-          window.location.href = "/cake_party/#/party/<%= @bless.birthday_party_id %>/#<%= @blesses.virtual_present_infor['name']";
+          window.location.href = "/cake_party/#/party/<%= @bless.birthday_party_id %>/#<%= @blesses.virtual_present_infor['name'] %>";
         });
 
         res.fail(function (data, status, xhr) {

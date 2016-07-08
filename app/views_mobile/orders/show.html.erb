@@ -125,22 +125,48 @@
     </div>
 
     <% unless @order.finish? %>
-      <div class='receive-operation row'>
-        <div class='col-xs-4 toggler' data-zone='qrcode-receive'>
-          <span class='glyphicon glyphicon-qrcode'></span><br>
-          <span class='desc'>扫码收货</span>
-        </div>
-        
-        <div class='col-xs-4 toggler' data-zone='receive'>
-          <span class='glyphicon glyphicon-copyright-mark'></span><br>
-          <div class='desc'>确认收货</div>
-        </div>
+      <% if @order.birthday_party.present? %>
+        <div class='receive-operation row'>
+          <div class='col-xs-3 toggler' data-zone='qrcode-receive'>
+            <span class='glyphicon glyphicon-qrcode'></span><br>
+            <span class='desc'>扫码收货</span>
+          </div>
+          
+          <div class='col-xs-3 toggler' data-zone='receive'>
+            <span class='glyphicon glyphicon-copyright-mark'></span><br>
+            <div class='desc'>确认收货</div>
+          </div>
 
-        <div class='col-xs-4 toggler' data-zone='order-detail'>
-          <span class='glyphicon glyphicon-th-list active'></span><br>
-          <div class='desc'>订单详情</div>
+          <div class='col-xs-3 toggler' data-zone='order-detail'>
+            <span class='glyphicon glyphicon-th-list active'></span><br>
+            <div class='desc'>订单详情</div>
+          </div>
+
+          <div class='col-xs-3 toggler' data-zone='birthday-party'>
+            <%= link_to "/cake_party/#/party/#{@order.birthday_party.id}", style: 'color: #ddd;' do %>
+              <span class='glyphicon glyphicon-glass active'></span><br>
+              <div class='desc'>生日趴</div>
+            <% end %>
+          </div>
         </div>
-      </div>
+      <% else %>
+        <div class='receive-operation row'>
+          <div class='col-xs-4 toggler' data-zone='qrcode-receive'>
+            <span class='glyphicon glyphicon-qrcode'></span><br>
+            <span class='desc'>扫码收货</span>
+          </div>
+          
+          <div class='col-xs-4 toggler' data-zone='receive'>
+            <span class='glyphicon glyphicon-copyright-mark'></span><br>
+            <div class='desc'>确认收货</div>
+          </div>
+
+          <div class='col-xs-4 toggler' data-zone='order-detail'>
+            <span class='glyphicon glyphicon-th-list active'></span><br>
+            <div class='desc'>订单详情</div>
+          </div>
+        </div>
+      <% end %>
     <% end %>
     <% if @one_more_time %>
       <%= link_to "点击可再次获得抢购机会", @redirect_url, class: 'btn btn-warning btn-large btn-block', id: 'pmo-once-more' %>
