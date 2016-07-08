@@ -68,6 +68,7 @@
       fail: function(res) {
         // 支付失败后的回调函数
         alert('pay fail', + JSON.stringify(res));
+        window.location.href = "/cake_party/#/party/<%= @bless.birthday_party_id %>";
       }
     });
   } 
