@@ -349,6 +349,7 @@ Rails.application.routes.draw do
 
         member do
           patch :upload_avatar
+          post :update_avatar_media_id
         end
       end
 

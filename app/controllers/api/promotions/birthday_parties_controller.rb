@@ -27,6 +27,19 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
     end
   end
 
+  def update_avatar_media_id
+    @birthday_party = current_user.birthday_parties.find(params[:id])
+
+    @birthday_party.update_column('avatar_media_id', params[:avatar_media_id] || params[:birthday_party][:avatar_media_id])
+
+    @birthday_party.download_avatar_media
+
+    render json: {} 
+    # else
+      # render json: { errors: @birthday_party.errors.full_messages.join(', ') }, status: :unprocessable_entity
+    # end
+  end
+
   # POST /birthday_parties
   # POST /birthday_parties.json
   # def create

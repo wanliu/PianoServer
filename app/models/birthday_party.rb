@@ -53,6 +53,10 @@ class BirthdayParty < ActiveRecord::Base
     free_hearts_withdrawable + charged_widthdrawable
   end
 
+  def download_avatar_media
+    # TODO async download avatar
+  end
+
   private
 
   def set_hearts_limit_from_cake
