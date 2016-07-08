@@ -16,4 +16,4 @@ else
   WxPay.set_apiclient_by_pkcs12(File.read(ssl_p12_path), pass)
 end
 
-WxPay.extra_rest_client_options = {timeout: 1000, open_timeout: 3}
+WxPay.extra_rest_client_options = {timeout: 1000, open_timeout: 6}
