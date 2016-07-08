@@ -61,7 +61,8 @@
 
         res.fail(function (data, status, xhr) {
           // 无法确认支付成功
-          alert("由于某种原因，支付没有成功，如有疑问请联系客服");
+          alert("支付没有成功");
+          window.location.href = "/cake_party/#/party/<%= @bless.birthday_party_id %>";
         });
       },
       fail: function(res) {
