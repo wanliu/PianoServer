@@ -27,7 +27,7 @@
   <div class="panel-footer">
     <div class='text-right'>
       <% if order.birthday_party.present? %>
-        <%= link_to "进入生日趴", birthday_party_path(order.birthday_party), class: 'btn btn-default' %>
+        <%= link_to "进入生日趴", "/cake_party/#/party/#{order.birthday_party.id}", class: 'btn btn-default' %>
       <% end %>
 
       <%= link_to "订单详情", order_path(order), class: 'btn btn-default' %>
