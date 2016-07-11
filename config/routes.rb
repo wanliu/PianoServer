@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   # resources :gifts, except: [:new, :edit]
-  resources :birthday_parties, only: [:show] do
+  resources :birthday_parties, only: [] do
     get :withdraw, on: :member
   end
 

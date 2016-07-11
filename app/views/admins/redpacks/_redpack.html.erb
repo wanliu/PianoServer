@@ -3,7 +3,7 @@
     <%= redpack.birthday_party.birthday_person %>
   </td>
   <td>
-    <%= link_to "查看", "/cake_party/#/party/#{redpack.birthday_party_id}" %>
+    <%= link_to "查看", birthday_party_path(redpack.birthday_party_id) %>
   </td>
   <td>
     <%= redpack.amount %>
