@@ -1,3 +1,5 @@
+require 'wx_avatar_downloader'
+
 class BirthdayParty < ActiveRecord::Base
 
   attr_accessor :request_ip, :wx_user_openid
@@ -54,7 +56,7 @@ class BirthdayParty < ActiveRecord::Base
   end
 
   def download_avatar_media
-    # TODO async download avatar
+    WxAvatarDownloader.perform_async(id)
   end
 
   private
