@@ -55,7 +55,7 @@ class Bless < ActiveRecord::Base
 
   def free_present_exist?
     sender.blesses
-      .where("virtual_present_infor @> ?", self.class.free_hearts_hash.to_json)
+      .where("birthday_party_id = ? AND virtual_present_infor @> ?", birthday_party_id, self.class.free_hearts_hash.to_json)
       .exists?
   end
 end
