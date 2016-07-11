@@ -35,7 +35,7 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
     WxAvatarDownloader.download(@birthday_party)
     # @birthday_party.download_avatar_media
 
-    render json: {} 
+    render :show
     # else
       # render json: { errors: @birthday_party.errors.full_messages.join(', ') }, status: :unprocessable_entity
     # end
