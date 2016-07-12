@@ -32,7 +32,7 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
 
     @birthday_party.update_column('avatar_media_id', params[:avatar_media_id] || params[:birthday_party][:avatar_media_id])
 
-    WxAvatarDownloader.download(@birthday_party)
+    @birthday_party = WxAvatarDownloader.download(@birthday_party)
     # @birthday_party.download_avatar_media
 
     render :show

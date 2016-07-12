@@ -9,7 +9,12 @@ class WxAvatarDownloader
   end
 
   def perform(birthday_party_id)
-    birthday_party = BirthdayParty.find(birthday_party_id)
+    birthday_party = if birthday_party_id.is_a? BirthdayParty
+      birthday_party_id
+    else
+      BirthdayParty.find(birthday_party_id)
+    end
+
 
     if birthday_party.avatar_media_id.blank?
       Rails.logger.error "ID为 '#{birthday_party_id}' 的生日趴的属性为空，无法下载微信媒体！"
@@ -47,6 +52,8 @@ class WxAvatarDownloader
         end
       end
     end
+
+    birthday_party
   end
 
   def wx_media_download_url(media_id)
