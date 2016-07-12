@@ -15,7 +15,7 @@ class BirthdayParty < ActiveRecord::Base
   belongs_to :order
 
   has_many :blesses
-  has_one :redpack, autosave: true, inverse_of: :birthday_party
+  has_many :redpacks, autosave: true, inverse_of: :birthday_party
 
   validates :cake, presence: true
   validates :user, presence: true
@@ -27,26 +27,18 @@ class BirthdayParty < ActiveRecord::Base
   before_validation :set_hearts_limit_from_cake, on: :create
 
   def withdraw
-    if redpack(true).present?
-      if redpack.sent? || redpack.received? || redpack.sending?
-        WithdrawStatus.new(false, "已经发放过了")
-      else
-        response = redpack.send_redpack
-        WithdrawStatus.new(response.success?, response.error_message)
-      end
-    else
-      self.withdrew = withdrawable
+    amount = withdrawable - withdrew
 
-      if withdrew >= 1
-        build_redpack(user: user, amount: withdrew, wx_user_openid: wx_user_openid)
-        if save
-          response = redpack.send_redpack
-          WithdrawStatus.new(response.success?, response.error_message)
-        else
-          WithdrawStatus.new(false, errors.full_messages.join(', '))
-        end
-      else
-        WithdrawStatus.new(false, "低于一元钱的红包无法领取！")
+    if amount > 1
+      self.withdrew = withdrawable
+      redpacks.build(user: user, amount: amount, wx_user_openid: wx_user_openid)
+
+      save
+    end
+
+    redpacks(true) do |redpack|
+      if redpack.failed? || redpack.unknown?
+        redpack.send_redpack
       end
     end
   end
