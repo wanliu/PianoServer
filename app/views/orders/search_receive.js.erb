@@ -1,0 +1,17 @@
+(function() {
+  <% if @order.blank? %>
+    var html = "编号为 \"<%= params[:order_id] %>\" 的订单不存在，请确认输入的订单号真实有效！";
+  <% elsif @is_deliver %>
+    <% if @order.finish? %>
+      html = "编号为 \"<%= params[:order_id] %>\" 的订单已经完成，请确认输入的单号！"
+    <% else %>
+      var html = "<%= j(render @order) %>";
+      html += "<%= j(button_to '确认付款（收货）', confirm_receive_orders_path(order_id: @order.id), remote: true, class: 'btn btn-danger btn-block', data: { confirm: '确认收到付款并完成此订单么？' }) %>";
+    <% end %>
+  <% else %>
+    var html = '没有这个订单的收货操作权限，请联系商店管理员！';
+  <% end %>
+
+  $('.order').html(html);
+  $('.receive-operation-zone').show();
+})();

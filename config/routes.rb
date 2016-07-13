@@ -454,6 +454,9 @@ Rails.application.routes.draw do
       # get "wxpay"
       get "wxpay/:id", to: 'orders#wxpay', as: 'wxpay'
       get "wxpay_test"
+      get 'receive'
+      post 'search_receive'
+      post 'confirm_receive'
     end
 
     member do
