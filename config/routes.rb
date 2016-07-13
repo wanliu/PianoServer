@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
   # resources :gifts, except: [:new, :edit]
-  resources :birthday_parties, only: [] do
+  resources :birthday_parties, only: [:index] do
     get :withdraw, on: :member
+    get :blessed, on: :collection
   end
 
   resources :thumbs, except: [:new, :edit]

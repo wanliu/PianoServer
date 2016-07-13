@@ -1,9 +1,25 @@
 require "weixin_api"
 
 class BirthdayPartiesController < ApplicationController
-  before_action :authenticate_user!, only: :withdraw
+  before_action :authenticate_user!, only: [:withdraw, :index, :blessed]
 
   before_action :set_birthday_party, only: :show
+
+  def index
+    @birthday_parties = current_user.birthday_parties
+      .order(id: :desc)
+      .page(params[:page])
+      .per(params[:per])
+  end
+
+  def blessed
+    @birthday_parties = BirthdayParty.joins(:blesses)
+      .where("blesses.sender_id = :sender_id AND blesses.paid ='t'", sender_id: current_user.id)
+      .distinct
+      .order(id: :desc)
+      .page(params[:page])
+      .per(params[:per])
+  end
 
   def show
     # @blesses = @birthday_party.blesses

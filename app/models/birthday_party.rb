@@ -2,6 +2,8 @@ require 'wx_avatar_downloader'
 
 class BirthdayParty < ActiveRecord::Base
 
+  paginates_per 5
+
   attr_accessor :request_ip, :wx_user_openid
 
   WithdrawStatus = Struct.new(:success, :error_message) do
