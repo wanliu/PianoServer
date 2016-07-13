@@ -156,7 +156,7 @@ class User < ActiveRecord::Base
   end
 
   def is_receiver?
-    shop_delivers.present?
+    shop_delivers.count > 0
   end
 
   private

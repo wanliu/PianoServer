@@ -322,7 +322,7 @@ class OrdersController < ApplicationController
   end
 
   def order_update_params
-    params.require(:order).permit(:status, :note)
+    params.require(:order).permit(:note)
   end
 
   def buy_now_order_params
