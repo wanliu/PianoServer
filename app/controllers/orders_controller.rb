@@ -12,9 +12,7 @@ class OrdersController < ApplicationController
       :pay_kind,
       :wxpay,
       :wxpay_confirm,
-      :wx_paid,
-      :receive,
-      :qrcode_receive
+      :wx_paid
     ]
 
   before_action :set_evaluatable_order,
@@ -36,10 +34,9 @@ class OrdersController < ApplicationController
       :evaluate,
       :evaluate_item,
       :create_evaluations,
-      :evaluate_item_create, 
-      :receive, 
-      :qrcode_receive,
-      :express_fee
+      :evaluate_item_create,
+      :express_fee,
+      :confirm_receive
     ]
 
   before_action :set_order_item, only: [:evaluate_item, :evaluate_item_create]
@@ -281,6 +278,26 @@ class OrdersController < ApplicationController
       flash.alert = @evaluation.errors.full_messages.join(', ')
       render :evaluate_item
     end
+  end
+
+  def receive
+  end
+
+  def search_receive
+    @order = Order.find(params[:order_id])
+    shop = @order.supplier
+    @is_deliver = shop.shop_delivers.where(deliver_id: current_user.id).exists?
+  rescue ActiveRecord::RecordNotFound
+    @order = nil
+  end
+
+  def confirm_receive
+    @order = Order.find(params[:order_id])
+    shop = @order.supplier
+    @is_deliver = shop.shop_delivers.where(deliver_id: current_user.id).exists?
+    @order.finish! if @is_deliver
+  rescue ActiveRecord::RecordNotFound
+    @order = nil
   end
 
   private

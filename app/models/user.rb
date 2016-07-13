@@ -155,6 +155,10 @@ class User < ActiveRecord::Base
     distributor?
   end
 
+  def is_receiver?
+    shop_delivers.present?
+  end
+
   private
 
   def generate_authentication_token

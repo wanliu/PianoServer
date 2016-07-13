@@ -1,0 +1,12 @@
+<div class='container' style='margin-top: 20px;'>
+  <%= form_tag search_receive_orders_path, remote: true do %>
+    <%= text_field_tag 'order_id', nil, placeholder: "请输入订单号", class: 'form-control', autofocus: true, autocomplete: 'off' %>
+    <br>
+    <%= submit_tag "确认", class: 'btn btn-primary btn-block' %>
+  <% end %>
+
+  <div class='receive-operation-zone' style='display: none;'>
+    <div>订单信息</div>
+    <div class='order'></div>
+  </div>
+</div>
