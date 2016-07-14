@@ -2,47 +2,7 @@
   恭喜你，抢购成功！请选择收货地址
 </div>
 
-<ul class='locations list-group'>
-  <% @locations.each do |location| %>
-    <li class='list-group-item yiyuan-address-item' data-address-id='<%= location.id %>'>
-      <div class='yiyuan-confirm-location'>
-        <div class='location-detail'>
-          <div class='contact'>
-            <span class='contact'><%= location.contact %></span>
-            <span class='contact-phone'><%= location.contact_phone %></span>
-          </div>
-          <div class='address-detail'>
-            <%= "#{location.province_name}#{location.city_name}#{location.region_name}#{location.road}" %>
-          </div>
-        </div>
-
-        <div class='array'>
-          <span class='glyphicon glyphicon-menu-right glyphicon-next'></span>
-        </div>
-      </div>
-      <!-- <div class='contact'>
-        收货人：<%= location.contact %>
-      </div>
-      <div class='row'>
-        <div class='area col-xs-10'>
-          地址：<%= "#{location.province_name}#{location.city_name}#{location.region_name}#{location.road}" %>
-        </div>
-        <div class='col-xs-2'>
-          <span class='glyphicon glyphicon-menu-right glyphicon-next'></span>
-        </div>
-      </div>
-      <div class='phone'>
-        电话：<%= location.contact_phone %>
-      </div> -->
-    </li>
-  <% end %>
-</ul>
-
-<div class='padding-text new-yiyuan-address'>
-  <%= link_to new_yiyuan_address_orders_path(callback: callback_url), class: 'text-center' do %>
-    <span class='glyphicon glyphicon-plus-sign'></span>使用一个新的地址
-  <% end %>
-</div>
+<%= render "addresses" %>
 <%#= link_to "管理我的收货地址", locations_path(callback: request.fullpath), class: 'pull-right' %>
 
 <script type="text/javascript">
@@ -51,7 +11,7 @@
       event.preventDefault();
 
       var addressId = $(this).data('addressId');
-      var url = "<%= callback_url.html_safe %>";
+      var url = "<%= callback_url.try(:html_safe) %>";
 
       url = url.split('&address_id=')[0]
       url += ('&address_id=' + addressId);

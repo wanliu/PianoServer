@@ -1,0 +1,27 @@
+<ul class='locations list-group'>
+  <% @locations.each do |location| %>
+    <li class='list-group-item yiyuan-address-item' data-address-id='<%= location.id %>'>
+      <div class='yiyuan-confirm-location'>
+        <div class='location-detail'>
+          <div class='contact'>
+            <span class='contact'><%= location.contact %></span>
+            <span class='contact-phone'><%= location.contact_phone %></span>
+          </div>
+          <div class='address-detail'>
+            <%= "#{location.province_name}#{location.city_name}#{location.region_name}#{location.road}" %>
+          </div>
+        </div>
+
+        <div class='array'>
+          <span class='glyphicon glyphicon-menu-right glyphicon-next'></span>
+        </div>
+      </div>
+    </li>
+  <% end %>
+</ul>
+
+<div class='padding-text new-yiyuan-address'>
+  <%= link_to new_yiyuan_address_orders_path(callback: callback_url), class: 'text-center' do %>
+    <span class='glyphicon glyphicon-plus-sign'></span>使用一个新的地址
+  <% end %>
+</div>
