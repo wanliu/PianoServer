@@ -1,0 +1,36 @@
+<div class='new-cake' style='display: none;'>
+  <div class="dropdown">
+    <input type='text' id='search-cake-items' class='dropdown-toggle form-control' placeholder='输入蛋糕名称搜索' data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" >
+    <ul class="dropdown-menu cake-items-dropdown" aria-labelledby="item-search-dropdown">
+    </ul>
+  </div>
+
+  <%= form_for [:admins, @cake], remote: true do |f| %>
+    <%= f.hidden_field :item_id %>
+    
+    <div class='selected-item'>
+    </div>
+
+    限制红心数量：<%= f.number_field :hearts_limit, class: 'form-control' %>
+
+    <br>
+    <button type='button' class='btn btn-default cancel'>取消</button>
+    <%= f.submit '保存', class: 'btn btn-primary', disabled: "disabled" %>
+  <% end %>
+</div>
+
+<script type="text/template" id='cake-item'>
+  <li class='cake-item' data-item-id="{{ id }}">
+    <img src="{{cover_url}}" style='width: 50px; height: 50px;'>
+    {{ title }}
+    {{ price }}
+    {{ shop_name }}
+  </li>
+</script>
+
+<script type="text/template" id='selected-item'>
+  <img src="{{cover_url}}" style='width: 50px; height: 50px;'>
+  {{ title }}
+  {{ price }}
+  {{ shop_name }}
+</script>

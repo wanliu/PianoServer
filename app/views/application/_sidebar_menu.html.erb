@@ -17,6 +17,10 @@
     var purchase_amount = <%= current_user.orders.count %>;
     menu.insertSection('profile', 'orders', 'purchase-orders', '购买订单', { iconClass: 'glyphicon glyphicon-import', has_quantity: true, quantity: purchase_amount });
 
+    menu.insertSection('profile', "<%= birthday_parties_path %>", 'birthday_parties', '我的日生趴', { iconClass: 'glyphicon glyphicon-glass' });
+
+    menu.insertSection('profile', "<%= blessed_birthday_parties_path %>", 'birthday_parties', '参加的日生趴', { iconClass: 'glyphicon glyphicon-cutlery' });
+
     <% if Settings.dev.feature.favorites %>
       menu.insertSection('profile', 'favorites', 'favorites', '我的收藏', { iconClass: 'glyphicon glyphicon-heart' });
     <% end %>
@@ -79,6 +83,11 @@
 
   <% if Settings.dev.feature.qrcode && !weixin_device? %>
     menu.insertGroup('qrode', 'qrode', '二维码', { qrode: true, iconClass: 'glyphicon glyphicon-qrcode' });
+  <% end %>
+
+  <% if current_user.present? && current_user.is_receiver? %>
+    route = "<%= receive_orders_path %>";
+    menu.insertGroup(route, 'receiver', '订单收款', { iconClass: 'glyphicon glyphicon-usd' });
   <% end %>
 
   <% if Settings.dev.feature.user.sign_in %>

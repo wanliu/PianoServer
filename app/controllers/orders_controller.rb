@@ -12,9 +12,7 @@ class OrdersController < ApplicationController
       :pay_kind,
       :wxpay,
       :wxpay_confirm,
-      :wx_paid,
-      :receive,
-      :qrcode_receive
+      :wx_paid
     ]
 
   before_action :set_evaluatable_order,
@@ -36,10 +34,9 @@ class OrdersController < ApplicationController
       :evaluate,
       :evaluate_item,
       :create_evaluations,
-      :evaluate_item_create, 
-      :receive, 
-      :qrcode_receive,
-      :express_fee
+      :evaluate_item_create,
+      :express_fee,
+      :confirm_receive
     ]
 
   before_action :set_order_item, only: [:evaluate_item, :evaluate_item_create]
@@ -128,9 +125,19 @@ class OrdersController < ApplicationController
 
   # 直接购买
   def buy_now_confirm
-    @order = current_user.orders.build
+    if params[:order].present?
+      @order = current_user.orders.build(buy_now_confirm_params)
 
-    @order_item = @order.items.build(order_item_params)
+      set_birthday_location
+
+      cake = Cake.find(@order.cake_id)
+      item = cake.item
+
+      @order_item = @order.items.build(orderable: item)
+    else
+      @order = current_user.orders.build
+      @order_item = @order.items.build(order_item_params)
+    end
 
     @order.supplier_id = @order_item.orderable.try(:shop_id)
 
@@ -147,12 +154,18 @@ class OrdersController < ApplicationController
 
     @total = @order_item.price * @order_item.quantity
 
-    @props = params[:cart_item][:properties]
+    @props = @order_item.properties || {}
   end
 
   # 直接购买生成订单
   def buy_now_create
     @order = current_user.orders.build(buy_now_order_params)
+
+    birthday_party = @order.birthday_party
+    if birthday_party.present?
+      birthday_party.user = current_user
+      birthday_party.cake_id = @order.cake_id
+    end
 
     @order.items.each(&:set_initial_attributes)
 
@@ -164,9 +177,20 @@ class OrdersController < ApplicationController
       else
         format.html do
           @order_item = @order.items.first
-          @delivery_addresses = current_user.locations.order(id: :asc)
+          @order_item.set_initial_attributes
+
+          @orderable = @order_item.orderable
+          if @orderable.is_a? Item
+            @orderable.eval_available_gifts(@order_item.quantity)
+          end
+
+          set_addresses_add_express_fee
+
+          @order.supplier_id = @order_item.orderable.try(:shop_id)
+
           @supplier = @order.supplier
           @total = @order_item.price * @order_item.quantity
+          @props = @order_item.properties
 
           flash.now[:error] = @order.errors.full_messages.join(', ')
 
@@ -270,6 +294,26 @@ class OrdersController < ApplicationController
     @location = Location.find(params[:location_id])
   end
 
+  def receive
+  end
+
+  def search_receive
+    @order = Order.find(params[:order_id])
+    shop = @order.supplier
+    @is_deliver = shop.shop_delivers.where(deliver_id: current_user.id).exists?
+  rescue ActiveRecord::RecordNotFound
+    @order = nil
+  end
+
+  def confirm_receive
+    @order = Order.find(params[:order_id])
+    shop = @order.supplier
+    @is_deliver = shop.shop_delivers.where(deliver_id: current_user.id).exists?
+    @order.finish! if @is_deliver
+  rescue ActiveRecord::RecordNotFound
+    @order = nil
+  end
+
   private
 
   def set_order
@@ -292,12 +336,18 @@ class OrdersController < ApplicationController
   end
 
   def order_update_params
-    params.require(:order).permit(:status, :note)
+    params.require(:order).permit(:note)
   end
 
   def buy_now_order_params
     params.require(:order)
-      .permit(:supplier_id, :address_id, :note, items_attributes: [:orderable_type, :orderable_id, :quantity])
+      .permit(
+        :supplier_id, 
+        :address_id, 
+        :note, 
+        :cake_id,
+        items_attributes: [:orderable_type, :orderable_id, :quantity],
+        birthday_party_attributes: [:message, :birthday_person, :birth_day])
       .tap do |white_list|
         white_list[:items_attributes].each do |key, attributes|
           attributes[:properties] = params[:order][:items_attributes][key][:properties] || {}
@@ -307,6 +357,12 @@ class OrdersController < ApplicationController
           white_list[:item_gifts] = params[:order][:item_gifts]
         end
       end
+  end
+
+  def buy_now_confirm_params
+    params.require(:order).permit(
+      :cake_id, 
+      birthday_party_attributes: [:message, :birthday_person, :birth_day])
   end
 
   def order_item_params
@@ -328,14 +384,18 @@ class OrdersController < ApplicationController
     @delivery_addresses = [shop_address].concat current_user.locations.order(id: :asc)
     @delivery_addresses.compact!
 
-    @order.address_id =
-      if current_user.latest_location_id.present?
-        current_user.latest_location_id
-      elsif shop_address.present?
-        shop_address.id
-      elsif @delivery_addresses.present?
-        @delivery_addresses.first.id
-      end
+    if @order.address_id.present?
+      @order.address_id = @order.address_id.to_i
+    else
+      @order.address_id =
+        if current_user.latest_location_id.present?
+          current_user.latest_location_id
+        elsif shop_address.present?
+          shop_address.id
+        elsif @delivery_addresses.present?
+          @delivery_addresses.first.id
+        end
+    end
 
     @order.set_express_fee
   end
@@ -401,5 +461,28 @@ class OrdersController < ApplicationController
         white_list[:evaluationable_id] = @item.orderable_id
         white_list[:user_id] = current_user.id
       end
+  end
+
+  def set_birthday_location
+    location = current_user.locations.find_by(cake_location_params)
+
+    unless location.present?
+      location = current_user.locations.create cake_location_params.merge(skip_limit_validation: true)
+    end
+
+    if location.persisted?
+      current_user.update_column('latest_location_id', location.id)
+    end
+  end
+
+  def cake_location_params
+    @cake_location_params ||= {
+      contact: params[:order][:birthday_party_attributes][:birthday_person], 
+      road: params[:order][:road],
+      contact_phone: params[:order][:contact_phone],
+      province_id: '430000',
+      city_id:  '430400',
+      region_id: '430481'
+    }
   end
 end

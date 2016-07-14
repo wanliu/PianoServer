@@ -41,6 +41,7 @@ threads = []
       if id
         puts "#{id} command"
         `wechat custom_news #{id} #{news}`
+        puts "wx_bcast_news: #{Time.now} success" if $?.success?
       end
     end
     # when there is no more work, the thread will stop

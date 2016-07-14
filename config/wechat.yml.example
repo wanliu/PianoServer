@@ -7,6 +7,8 @@ default: &default
   encrypt_mode: false # if true must fill encoding_aes_key
   encoding_aes_key:  "my_encoding_aes_key"
   jsapi_ticket: "/var/tmp/wechat_jsapi_ticket"
+  ssl_p12_path: "/var/tmp/apiclient_cert.p12"
+  ssl_p12_password: "0000000000"
 
 production:
   <<: *default

@@ -1,7 +1,7 @@
 <% if @deliver.persisted? %>
   (function() {
     var $deliversContainer = $('.delivers');
-    var deliver = <%= @deliver.to_json(methods: [:avatar_url, :username]).html_safe %>;
+    var deliver = <%= @deliver.to_json(methods: [:avatar_url, :nickname]).html_safe %>;
     var template = _.template($('#deliver-template').html());
 
     var $results = $('.search-results');

@@ -1,0 +1,57 @@
+<div class='virtual_presents-container'>
+  <div class='alert-header'>
+    <div class="alert alert-success infors" role="alert" style='display: none;'>
+    </div>
+    <div class="alert alert-danger errors" role="alert" style='display: none;'>
+    </div>
+    <div class='title'>
+      <h3>虚拟道具</h3>
+      <button class='btn btn-default new-virtual_present-btn'>
+        <span class='glyphicon glyphicon-plus'>新建</span>
+      </button>
+    </div>
+  </div>
+
+  <%= render 'form' %>
+
+  <table class='table virtual_presents'>
+    <thead>
+      <tr>
+        <th>名称　</th>
+        <th>类型　</th>
+        <th>价格　</th>
+        <th>兑换现金　</th>
+        <th>操作 </th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @virtual_presents.each do |virtual_present| %>
+        <%= render virtual_present %>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%= paginate @virtual_presents %>
+</div>
+
+<script type="text/javascript">
+(function (event) {
+  var $virtualPresentFormContainer = $('.new-virtual_present');
+  var $newVirtualPresentBtn = $('.new-virtual_present-btn');
+
+  $newVirtualPresentBtn.click(function() {
+    $virtualPresentFormContainer.toggle();
+  });
+
+  $('.virtual_presents').on('click', 'tr .edit-btn', toggleVirtualPresentEdit);
+
+  $('form#new_virtual_present button.cancel').click(function(event) {
+    $virtualPresentFormContainer.hide();
+  });
+
+  function toggleVirtualPresentEdit(event) {
+    var id = $(this).closest('tr').attr('id').replace('virtual_present_', '');
+    $('tr.virtual_present-eidt-form[data-virtual_present-id=' + id + ']').toggle();
+  }
+})();
+</script>

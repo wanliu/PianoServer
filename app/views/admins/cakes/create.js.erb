@@ -1,0 +1,32 @@
+<% if @cake.persisted? %>
+  (function() {
+    var html = '<%= j render @cake %>';
+    $('table.cakes tbody').prepend(html);
+    $('#search-cake-items').val('');
+    $("#new_cake #cake_item_id").val(null);
+    $("#new_cake [name=commit]").attr("disabled", "disabled");
+
+    $('.new-cake').hide();
+
+    var $alert = $(".infors.alert");
+    $alert.html("添加成功！").show();
+
+    setTimeout(function() {
+      $alert.fadeOut(function() {
+        $alert.html("");
+      });
+    }, 5000);
+  })();
+<% else %>
+  (function() {
+    var $alert = $(".errors.alert")
+    $alert .html("保存失败！<%= @cake.errors.full_messages.join(', ') %>")
+      .show();
+
+    setTimeout(function() {
+      $alert .fadeOut(function() {
+        $alert .html("");
+      });
+    }, 5000);
+  })();
+<% end %>

@@ -5,6 +5,15 @@
     <%= f.hidden_field :address_id %>
     <%= f.hidden_field :supplier_id %>
 
+    <% if @order.birthday_party.present? %>
+      <%= f.hidden_field :cake_id %>
+      <%= f.fields_for :birthday_party do |party_form| %>
+        <%= party_form.hidden_field :message %>
+        <%= party_form.hidden_field :birthday_person %>
+        <%= party_form.hidden_field :birth_day %>
+      <% end %>
+    <% end %>
+
     <div class='cart-group'>
       <div class='header media'>
         <div class='shop media-left'>
@@ -114,6 +123,10 @@
     var newQuantity = quantity + 1;
 
     changeQuantity(quantityInput, newQuantity);
+  });
+
+  $('form#new_order').on('submit', function(event) {
+    $(this).find('input[type=submit]').attr('disabled', 'disabled');
   });
 
   function changeQuantity(quantityInput, quantity, reflect) {

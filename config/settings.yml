@@ -136,7 +136,7 @@ promotions:
         exec: make clean; make release NAME=$name ONE_MONEY=$one_money_id DR_CODE=$qrcode HOME_IMG=$home_img LIST_IMG=$list_img SIGN_URL=$sign_url WINNERS_NUM=$winners API_URL=$api_url
   daily_cheap:
     start_hour: 10
-    end_hour: 22
+    end_hour: 16
     default_callback: http://m.wanliu.biz/orders/yiyuan_confirm
     enter_url: /daily_cheap
     title_template: $year-$month-$day $weekday $start_hour:$start_minute 天天惠
@@ -152,3 +152,12 @@ sms:
 
 config:
   hots_compare_days: 30
+
+virtual_presents:
+  names:
+    - heart
+    - flower
+    - car
+    - teddy_bear
+    - music_box
+    - motor
