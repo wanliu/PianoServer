@@ -165,8 +165,7 @@
 <% end %>
 
 <script type="text/javascript">
-  $(function () {
-
+  (function () {
     $('.more').click(function(event) {
       $(this).siblings('.gifts')
         .toggleClass('toggle-more-gifts');
@@ -208,5 +207,5 @@
 
     // 收货二维码
     new QRCode(document.getElementById("qrcode-receive-code"), '<%= qr_shop_admin_order_url(@order.supplier.name, @order, host: Settings.app.website, t: @order.receive_token) %>' );
-  })
+  })();
 </script>
