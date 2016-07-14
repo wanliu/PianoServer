@@ -12,4 +12,11 @@ class Api::Promotions::VirtualPresentsController < Api::BaseController
       total_page: @virtual_presents.total_pages
     }
   end
+
+  def existPresent
+    virtual_present = VirtualPresent.find_by(name: params[:name]);
+    isExist = virtual_present.present?
+
+    render json: { isExist: isExist }
+  end
 end
