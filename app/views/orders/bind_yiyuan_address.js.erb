@@ -1,0 +1,7 @@
+(function() {
+  var html = "<%= j(render 'orders/partials/address.html.erb') %>";
+  $(".order-confirm-mobile .yiyuan-confirm-location").replaceWith(html);
+  $('#order_address_id').val(<%= @location.id %>);
+
+  window.history.go(-2);
+})();

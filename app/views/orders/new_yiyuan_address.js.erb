@@ -1,0 +1,8 @@
+(function(){
+  var html = "<%= j(render template: 'orders/new_yiyuan_address.html.erb') %>";
+  $('.new-address').siblings('.toggle-siblings').hide();
+  $('.new-address').html(html).show();
+  $('#new_location').data("remote", "true");
+
+  history.pushState({show: "new-address"}, "new-address", "new_address");
+})();

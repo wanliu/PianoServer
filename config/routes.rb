@@ -401,6 +401,7 @@ Rails.application.routes.draw do
       post "yiyuan_confirm", to: 'orders#create_yiyuan'
       get "new_yiyuan_address"
       get "chose_yiyuan_address"
+      get "chose_address"
       post "yiyuan_address", to: 'orders#bind_yiyuan_address'
       # get "wxpay"
       get "wxpay/:id", to: 'orders#wxpay', as: 'wxpay'

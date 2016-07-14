@@ -54,15 +54,21 @@ module YiyuanOrdersController
     @location = current_user.locations.build(location_params)
     @location.skip_limit_validation = true
 
-    if @location.save
-      redirect_url = if callback_url.include?('?')
-        callback_url.split('&address_id=').first + "&address_id=#{@location.id}"
+    respond_to do |format|
+      if @location.save
+        format.html do
+          redirect_url = if callback_url.include?('?')
+            callback_url.split('&address_id=').first + "&address_id=#{@location.id}"
+          else
+            callback_url + "?address_id=#{@location.id}"
+          end
+          redirect_to redirect_url
+        end
+        format.js
       else
-        callback_url + "?address_id=#{@location.id}"
+        format.html { render "orders/new_yiyuan_address" }
+        format.js
       end
-      redirect_to redirect_url
-    else
-      render "orders/new_yiyuan_address"
     end
   end
 

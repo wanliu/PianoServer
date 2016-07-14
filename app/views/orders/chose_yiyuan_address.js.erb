@@ -1,8 +1,8 @@
 (function() {
-  var html = "<%= j(render 'addresses.html.erb') %>";
-  $('.address-zone').html(html).show();
+  var html = "<%= j(render 'orders/partials/addresses.html.erb') %>";
+  $('.address-list').html(html).show();
   $('.order-confirm-mobile').hide();
 
-  var state = {show: "address-zone", hide: "order-confirm-mobile"};
+  var state = {show: "address-list"};
   history.pushState(state, "选择地址", "chose_address");
 })();

@@ -1,25 +1,8 @@
 <% content_for :module do "no_footer" end %>
 
-<div class='order-confirm order-confirm-mobile'>
-  <div class='yiyuan-confirm-location'>
-    <div class='location-mark'>
-      <span class='glyphicon glyphicon-map-marker'></span>
-    </div>
+<div class='order-confirm order-confirm-mobile toggle-siblings'>
+  <%= render "orders/partials/address" %>
 
-    <div class='location-detail'>
-      <div class='contact'>
-        <span class='contact'><%= @location.contact %></span>
-        <span class='contact-phone'><%= @location.contact_phone %></span>
-      </div>
-      <div class='address-detail'>
-        <%= "#{@location.province_name}#{@location.city_name}#{@location.region_name}#{@location.road}" %>
-      </div>
-    </div>
-
-    <div class='array'>
-      <span class='glyphicon glyphicon-menu-right glyphicon-next'></span>
-    </div>
-  </div>
   <div class='envelope-border'></div>
 
   <%= form_for @order do |f| %>
@@ -61,8 +44,10 @@
   <% end %>
 </div>
 
-<div class="address-zone" style='display: none;'>
+<div class="address-list toggle-siblings" style='display: none;'>
+</div>
 
+<div class="new-address toggle-siblings" style='display: none;'>
 </div>
 
 <script type="text/javascript">
@@ -72,7 +57,7 @@
         .toggleClass('toggle-more-gifts');
     })
 
-    $('.yiyuan-confirm-location').click(function (event) {
+    $(document).on('click', '.order-confirm-mobile .yiyuan-confirm-location', function (event) {
       event.preventDefault();
 
       var url = "<%= chose_yiyuan_address_orders_path %>"
@@ -80,18 +65,34 @@
       $.get(url, {format: 'js'})
     });
 
+    $(document).on('click', '.new-yiyuan-address a', function(event) {
+      event.preventDefault();
+
+      var url = $(this).attr('href');
+      $.get(url, {format: 'js'})
+    })
+
+    // $(document).on('submit', '#new_location', function(event) {
+    //   event.preventDefault();
+
+    //   var url = $(this).attr('action');
+    // });
+
     window.onpopstate = function(event) {
       var showClass = event.state.show;
-      var hideClass = event.state.hide;
 
       if (showClass) {
-        $('.' + showClass).show();
-      }
+        var $showClass = $('.' + showClass);
 
-      if (hideClass) {
-        $('.' + hideClass).hide();
+        $showClass.siblings('.toggle-siblings').hide();
+        $showClass.show();
       }
     };
+
+    $(document).on('click', '.locations .yiyuan-address-item', function(event) {
+      var location_id = $(this).closest('.yiyuan-address-item').data("addressId");
+      $.get('/orders/chose_address?location_id=' + location_id, {format: 'js'});
+    });
 
     history.replaceState({show: "order-confirm-mobile", hide: "address-zone"}, null);
   })();

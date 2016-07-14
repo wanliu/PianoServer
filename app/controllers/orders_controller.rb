@@ -266,6 +266,10 @@ class OrdersController < ApplicationController
     end
   end
 
+  def chose_address
+    @location = Location.find(params[:location_id])
+  end
+
   private
 
   def set_order
