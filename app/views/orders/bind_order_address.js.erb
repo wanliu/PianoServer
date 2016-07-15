@@ -1,0 +1,13 @@
+(function() {
+  <% if @location.valid? %>
+    var html = "<%= j(render 'orders/partials/address.html.erb') %>";
+    $(".default-chosen-location").replaceWith(html);
+    $('#order_address_id').val(<%= @location.id %>);
+
+    window.history.go(-2);
+  <% else %>
+    var html = "<%= j(render template: 'orders/new_order_address.html.erb') %>";
+    $('.new-address').html(html)
+    $('#new_location').data("remote", "true");
+  <% end %>
+})();

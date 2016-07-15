@@ -1,5 +1,9 @@
-<div class='buy-now-confirm'>
-  <%= render "order_address", locals: { delivery_addresses: @delivery_addresses, order: @order } %>
+<% content_for :module do "no_footer" end %>
+
+<div class='buy-now-confirm toggle-siblings'>
+  <%= render "orders/partials/address" %>
+
+  <div class='envelope-border'></div>
 
   <%= form_for @order, url: "/orders/buy_now_create" do |f| %>
     <%= f.hidden_field :address_id %>
@@ -78,6 +82,12 @@
       </div>
     </div>
   <% end %>
+</div>
+
+<div class="address-list toggle-siblings" style='display: none;'>
+</div>
+
+<div class="new-address toggle-siblings" style='display: none;'>
 </div>
 
 <script type="text/template" id="mobile-gift-template">
@@ -181,5 +191,44 @@
       }
     <% end %>
   }
+
+  $(document).on('click', '.buy-now-confirm .yiyuan-confirm-location', function (event) {
+    event.preventDefault();
+
+    var url = "<%= chose_order_address_orders_path %>"
+    // window.location.href = url;
+    $.get(url, {format: 'js'})
+  });
+
+  $(document).on('click', '.new-yiyuan-address a', function(event) {
+    event.preventDefault();
+
+    var url = $(this).attr('href');
+    $.get(url, {format: 'js'})
+  })
+
+  // $(document).on('submit', '#new_location', function(event) {
+  //   event.preventDefault();
+
+  //   var url = $(this).attr('action');
+  // });
+
+  window.onpopstate = function(event) {
+    var showClass = event.state.show;
+
+    if (showClass) {
+      var $showClass = $('.' + showClass);
+
+      $showClass.siblings('.toggle-siblings').hide();
+      $showClass.show();
+    }
+  };
+
+  $(document).on('click', '.locations .yiyuan-address-item', function(event) {
+    var location_id = $(this).closest('.yiyuan-address-item').data("addressId");
+    $.get('/orders/chose_address?location_id=' + location_id, {format: 'js'});
+  });
+
+  history.replaceState({show: "buy-now-confirm"}, null);
 })();
 </script>

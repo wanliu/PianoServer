@@ -449,10 +449,10 @@ Rails.application.routes.draw do
       get "history"
       get "yiyuan_confirm"
       post "yiyuan_confirm", to: 'orders#create_yiyuan'
-      get "new_yiyuan_address"
-      get "chose_yiyuan_address"
+      get "new_order_address"
+      get "chose_order_address"
       get "chose_address"
-      post "yiyuan_address", to: 'orders#bind_yiyuan_address'
+      post "yiyuan_address", to: 'orders#bind_order_address'
       # get "wxpay"
       get "wxpay/:id", to: 'orders#wxpay', as: 'wxpay'
       get "wxpay_test"

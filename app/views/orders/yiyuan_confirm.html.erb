@@ -109,7 +109,7 @@
     $('.yiyuan-confirm-location').click(function (event) {
       event.preventDefault();
 
-      var url = "<%= chose_yiyuan_address_orders_path(callback: request.fullpath) %>"
+      var url = "<%= chose_order_address_orders_path(callback: request.fullpath) %>"
       window.location.href = url;
     })
   })

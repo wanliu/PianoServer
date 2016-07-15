@@ -252,8 +252,8 @@ zh-CN:
     create: 创建
     destroy: 删除
     yiyuan_confirm: 活动订单确认
-    new_yiyuan_address: 收货地址
-    chose_yiyuan_address: 收货地址
+    new_order_address: 收货地址
+    chose_order_address: 收货地址
   modules:
     shop: 商店
     admin: 工作平台

@@ -10,10 +10,10 @@ module YiyuanOrdersController
     if params[:address_id].present?
       @location = current_user.locations.find(params[:address_id])
     elsif current_user.locations.present?
-      # redirect_to chose_yiyuan_address_orders_path(callback: request.fullpath)
+      # redirect_to chose_order_address_orders_path(callback: request.fullpath)
       @location = current_user.latest_location || current_user.locations.last
     else
-      redirect_to new_yiyuan_address_orders_path(callback: request.fullpath)
+      redirect_to new_order_address_orders_path(callback: request.fullpath)
       return
     end
 
@@ -42,15 +42,15 @@ module YiyuanOrdersController
     end
   end
 
-  def new_yiyuan_address
+  def new_order_address
     @location = current_user.locations.build
   end
 
-  def chose_yiyuan_address
+  def chose_order_address
     @locations = current_user.locations
   end
 
-  def bind_yiyuan_address
+  def bind_order_address
     @location = current_user.locations.build(location_params)
     @location.skip_limit_validation = true
 
@@ -66,7 +66,7 @@ module YiyuanOrdersController
         end
         format.js
       else
-        format.html { render "orders/new_yiyuan_address" }
+        format.html { render "orders/new_order_address" }
         format.js
       end
     end

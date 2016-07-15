@@ -1,7 +1,7 @@
 (function() {
   var html = "<%= j(render 'orders/partials/addresses.html.erb') %>";
   $('.address-list').html(html).show();
-  $('.order-confirm-mobile').hide();
+  $('.address-list').siblings('.toggle-siblings').hide();
 
   var state = {show: "address-list"};
   history.pushState(state, "选择地址", "chose_address");
