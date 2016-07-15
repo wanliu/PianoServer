@@ -50,7 +50,7 @@ module YiyuanOrdersController
     @locations = current_user.locations
   end
 
-  def bind_order_address
+  def create_order_address
     @location = current_user.locations.build(location_params)
     @location.skip_limit_validation = true
 

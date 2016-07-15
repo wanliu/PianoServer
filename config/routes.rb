@@ -452,7 +452,7 @@ Rails.application.routes.draw do
       get "new_order_address"
       get "list_addresses"
       get "chose_address"
-      post "yiyuan_address", to: 'orders#bind_order_address'
+      post "create_order_address"
       # get "wxpay"
       get "wxpay/:id", to: 'orders#wxpay', as: 'wxpay'
       get "wxpay_test"

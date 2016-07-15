@@ -3,7 +3,7 @@
     恭喜你，抢购成功！请填写好收货地址信息
   </div>
   <div class='yiyuan-address-form'>
-    <%= form_for @location, url: yiyuan_address_orders_path(callback: callback_url) do |f| %>
+    <%= form_for @location, url: create_order_address_orders_path(callback: callback_url) do |f| %>
       <div class='fields'>
         <div class="row <%= @location.errors.messages[:contact].present? ? 'has-error' : '' %>">
           <div class='col-xs-offset-2 col-xs-10 error-message control-label'>
