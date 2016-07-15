@@ -12,18 +12,7 @@ class Admins::CakesController < Admins::BaseController
   end
 
   def search_items
-    search_options = 
-    {
-      query: {
-        bool: {
-          must: [
-            {
-              term: {title: params[:q]}
-            }
-          ]
-        }
-      }
-    }
+    search_options = { query: { match: { title: params[:q] } } }
     
     items = Item.search(search_options).records.limit(10)
     render json: items.as_json(methods: [:title, :cover_url, :shop_name])
