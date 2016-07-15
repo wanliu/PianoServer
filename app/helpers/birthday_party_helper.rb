@@ -9,7 +9,7 @@ module BirthdayPartyHelper
     path = "/cake_party/#/party/#{birthday_party_id}"
 
     if virtual_present_name.present?
-      path << "/##{virtual_present_name}"
+      path << "#animation:#{virtual_present_name}#"
     end
 
     path
