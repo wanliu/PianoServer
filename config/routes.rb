@@ -450,7 +450,7 @@ Rails.application.routes.draw do
       get "yiyuan_confirm"
       post "yiyuan_confirm", to: 'orders#create_yiyuan'
       get "new_order_address"
-      get "chose_order_address"
+      get "list_addresses"
       get "chose_address"
       post "yiyuan_address", to: 'orders#bind_order_address'
       # get "wxpay"

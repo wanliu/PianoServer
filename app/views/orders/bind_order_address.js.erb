@@ -4,6 +4,12 @@
     $(".default-chosen-location").replaceWith(html);
     $('#order_address_id').val(<%= @location.id %>);
 
+    var formData = $('#new_order').serialize()
+    $.post('/orders/express_fee?' + formData)
+      .done(function(html) {
+        $('.confirmation-total').html(html);
+      })
+
     window.history.go(-2);
   <% else %>
     var html = "<%= j(render template: 'orders/new_order_address.html.erb') %>";

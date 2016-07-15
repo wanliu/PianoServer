@@ -10,7 +10,7 @@ module YiyuanOrdersController
     if params[:address_id].present?
       @location = current_user.locations.find(params[:address_id])
     elsif current_user.locations.present?
-      # redirect_to chose_order_address_orders_path(callback: request.fullpath)
+      # redirect_to list_addresses_orders_path(callback: request.fullpath)
       @location = current_user.latest_location || current_user.locations.last
     else
       redirect_to new_order_address_orders_path(callback: request.fullpath)
@@ -46,7 +46,7 @@ module YiyuanOrdersController
     @location = current_user.locations.build
   end
 
-  def chose_order_address
+  def list_addresses
     @locations = current_user.locations
   end
 

@@ -195,7 +195,7 @@
   $(document).on('click', '.buy-now-confirm .yiyuan-confirm-location', function (event) {
     event.preventDefault();
 
-    var url = "<%= chose_order_address_orders_path %>"
+    var url = "<%= list_addresses_orders_path %>"
     // window.location.href = url;
     $.get(url, {format: 'js'})
   });
