@@ -1,8 +1,22 @@
 Rails.application.routes.draw do
   # resources :gifts, except: [:new, :edit]
+  resources :birthday_parties, only: [:index] do
+    get :withdraw, on: :member
+    get :blessed, on: :collection
+  end
+
   resources :thumbs, except: [:new, :edit]
 
   resource :wechat, only: [:show, :create]
+
+  resources :blesses, only: [] do
+    get "wxpay/:id", to: 'blesses#wxpay', as: 'wxpay', on: :collection
+
+    member do
+      post "wx_notify"
+      post "wxpay_confirm"
+    end
+  end
 
   resources :order_items, except: [:new, :edit] do
     collection do
@@ -198,6 +212,20 @@ Rails.application.routes.draw do
 
     resources :one_money, path: :daily_cheap, as: :daily_cheap, :defaults => { type: :daily_cheap } do
     end
+
+    resources :cakes do
+      get "search_items", on: :collection
+    end
+
+    resources :virtual_presents, except: [:new, :edit]
+
+    resources :redpacks, only: [:index, :show, :update] do
+      member do
+        post :send_redpack
+        post :query
+      end
+    end
+
     resources :attachments
     resources :industries do
       concerns :templable, templable_type: 'Industry', parent_type: 'Industry'
@@ -310,6 +338,26 @@ Rails.application.routes.draw do
           post "toggle_open", action: :toggle_open
         end
       end
+
+      resources :cakes, only: [:index, :show]
+
+      resources :virtual_presents, only: [:index, :existPresent] do
+        collection do
+          get :existPresent, action: :existPresent
+        end
+      end
+
+      resources :birthday_parties, only: [:index, :show, :update] do
+        resources :blesses, except: [:new, :edit], shallow: true do
+          get :wx_pay_params, on: :member
+        end
+
+        member do
+          patch :upload_avatar
+          post :update_avatar_media_id
+        end
+      end
+
     end
     # resources :business, concerns: :roomable do
     #   member do
@@ -317,11 +365,17 @@ Rails.application.routes.draw do
     #   end
     # end
 
+    resources :weixin_configs, only: [:index] do
+      get :wx_config, on: :collection
+    end
+
     resources :cart_items, only: [:index, :create]
 
     concerns :evaluationable
 
     resources :shops do
+      get "/:shop_name", to: "shops#show_by_name"
+
       member do
         get "favorite_count", to: "shops#favorite_count"
       end
@@ -388,13 +442,13 @@ Rails.application.routes.draw do
       post 'express_fee'
 
       # 为避免用户回退到立即购买的post页面，提供一个过期提示窗口
-      get "buy_now_confirm", to: Proc.new { |env|
-        [
-          200,
-          {"Content-Type" => "text/html"},
-          [File.read("public/expire.html")]
-        ]
-      }
+      get "buy_now_confirm"#, to: Proc.new { |env|
+      #   [
+      #     200,
+      #     {"Content-Type" => "text/html"},
+      #     [File.read("public/expire.html")]
+      #   ]
+      # }
 
       get "history"
       get "yiyuan_confirm"
@@ -405,6 +459,9 @@ Rails.application.routes.draw do
       # get "wxpay"
       get "wxpay/:id", to: 'orders#wxpay', as: 'wxpay'
       get "wxpay_test"
+      get 'receive'
+      post 'search_receive'
+      post 'confirm_receive'
     end
 
     member do

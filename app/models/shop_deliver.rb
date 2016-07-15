@@ -9,5 +9,5 @@ class ShopDeliver < ActiveRecord::Base
     scope: [:shop_id],
     message: "该人员已经添加过，无需再次添加" }
 
-  delegate :avatar_url, :username, to: :deliver
+  delegate :avatar_url, :username, :nickname, to: :deliver
 end

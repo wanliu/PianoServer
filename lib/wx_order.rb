@@ -2,7 +2,7 @@ module WxOrder
   ORDER_QUERY_URL = "https://api.mch.weixin.qq.com/pay/orderquery"
   WECHAT_CONFIG = Rails.application.config_for(:wechat)
 
-  attr_accessor :wx_order_created, :wx_create_response
+  attr_accessor :wx_order_created, :wx_create_response, :request_ip
 
   def create_wx_order(options)
     params = prepay_params.merge(options)
@@ -17,7 +17,8 @@ module WxOrder
 
       update_attributes(wx_prepay_id: prepayid, wx_noncestr: noncestr)
     else
-      puts "微信支付统一下单失败！", 'options:', params.to_json, ',responses:', wx_order.to_json
+      Rails.logger.info "[微信]微信支付统一下单失败！, options:#{params.inspect}, responses: #{wx_order.inspect}"
+      # puts "微信支付统一下单失败！", 'options:', params.to_json, ',responses:', wx_order.to_json
     end
 
     if wx_create_response_paid? && wx_order_paid?(true)
@@ -77,7 +78,7 @@ module WxOrder
     if true == paid && true == udpate_wx_transation_id_if_paid
       self.paid = true
       self.wx_transaction_id = res["transaction_id"]
-      self.paid_total = wx_total_fee
+      self.paid_total = wx_total_fee if is_a? Order
       save(validate: false)
     end
 
@@ -105,7 +106,7 @@ module WxOrder
       out_trade_no: out_trade_no,
       total_fee: (wx_total_fee * 100).to_i,
       spbill_create_ip: request_ip,
-      notify_url: "#{Settings.app.website}/orders/#{id}/wx_notify",
+      notify_url: wx_order_notify_url,
       trade_type: 'JSAPI'
     }
   end
@@ -123,10 +124,12 @@ module WxOrder
   end
 
   def out_trade_no
+    no = "#{self.class.to_s.downcase}_#{id}"
+
     if Rails.env.development?
-      "development#{id}"
+      "development_#{no}"
     else
-      id.to_s
+      no
     end
   end
 end

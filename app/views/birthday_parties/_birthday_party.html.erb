@@ -1,0 +1,6 @@
+<%= content_tag_for :tr, birthday_party do %>
+  <td><%= birthday_party.birthday_person %></td>
+  <td><%= birthday_party.user.nickname %></td>
+  <td><%= birthday_party.birth_day %></td>
+  <td><%= link_to "进入", birthday_party_path(birthday_party), class: 'btn btn-default btn-lg' %></td>
+<% end %>

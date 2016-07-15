@@ -35,6 +35,10 @@ class User < ActiveRecord::Base
   has_many :shop_delivers, foreign_key: :deliver_id
   has_many :deliverable_shops, through: :shop_delivers, source: :shop
 
+  has_many :blesses, foreign_key: 'sender_id'
+  has_many :birthday_parties
+  has_many :redpacks, inverse_of: :user
+
   validates :username, presence: true, uniqueness: true
   validates :mobile, presence: true, uniqueness: true
 
@@ -149,6 +153,10 @@ class User < ActiveRecord::Base
 
   def sms_forward?
     distributor?
+  end
+
+  def is_receiver?
+    shop_delivers.count > 0
   end
 
   private

@@ -27,6 +27,6 @@ class Shops::Admin::DeliversController < Shops::Admin::BaseController
   def search_new_delivers
     except_ids = current_shop.deliver_ids.concat([current_shop.owner_id])
     users = User.where("id NOT IN (:except_ids) AND (username LIKE :query OR nickname LIKE :query)", query: "%#{params[:q]}%", except_ids: except_ids).limit(10)
-    render json: users.to_json(only: [:id], methods: [:avatar_url, :username])
+    render json: users.to_json(only: [:id], methods: [:avatar_url, :nickname])
   end
 end

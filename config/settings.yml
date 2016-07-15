@@ -152,3 +152,12 @@ sms:
 
 config:
   hots_compare_days: 30
+
+virtual_presents:
+  names:
+    - heart
+    - flower
+    - car
+    - teddy_bear
+    - music_box
+    - motor

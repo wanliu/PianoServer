@@ -1,0 +1,29 @@
+<% if @virtual_present.persisted? %>
+  (function() {
+    var html = '<%= j render @virtual_present %>';
+    $('table.virtual_presents tbody').prepend(html);
+
+    $('.new-virtual_present').hide();
+
+    var $alert = $(".infors.alert");
+    $alert.html("添加成功！").show();
+
+    setTimeout(function() {
+      $alert.fadeOut(function() {
+        $alert.html("");
+      });
+    }, 5000);
+  })();
+<% else %>
+  (function() {
+    var $alert = $(".errors.alert")
+    $alert .html("保存失败！<%= @virtual_present.errors.full_messages.join(', ') %>")
+      .show();
+
+    setTimeout(function() {
+      $alert .fadeOut(function() {
+        $alert .html("");
+      });
+    }, 5000);
+  })();
+<% end %>
