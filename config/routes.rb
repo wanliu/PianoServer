@@ -341,7 +341,11 @@ Rails.application.routes.draw do
 
       resources :cakes, only: [:index, :show]
 
-      resources :virtual_presents, only: :index
+      resources :virtual_presents, only: [:index, :existPresent] do
+        collection do
+          get :existPresent, action: :existPresent
+        end
+      end
 
       resources :birthday_parties, only: [:index, :show, :update] do
         resources :blesses, except: [:new, :edit], shallow: true do
