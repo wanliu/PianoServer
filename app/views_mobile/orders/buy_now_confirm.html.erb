@@ -168,7 +168,7 @@
 
         $container.html('');
 
-        if (gifts.length > 0) {
+        if (gifts && gifts.length > 0) {
           _.each(gifts, function(gift) {
             var html = giftTpl(gift);
             var $hiddenInput = $("#order_item_gifts_" + <%= @orderable.id %> + "_" + gift.id);
