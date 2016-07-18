@@ -129,7 +129,7 @@ class @GiftCollection
     @setModalForMofify()
 
   failUpdateGiftCallback: (data, status, xhr) =>
-    @gitfItemModify.find('.errors')
+    @$modalModifier.find('.errors')
       .text(data.responseJSON.error)
       .show()
 
