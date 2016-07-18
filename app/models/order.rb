@@ -36,6 +36,7 @@ class Order < ActiveRecord::Base
   before_create :caculate_total, :generate_receive_token
 
   after_commit :send_notify_to_seller, on: :create
+  after_commit :set_user_default_location, on: :create
 
   paginates_per 5
 
@@ -376,5 +377,11 @@ class Order < ActiveRecord::Base
     end
 
     self.receive_token = token
+  end
+
+  def set_user_default_location
+    if persisted? && buyer.present? && address_id.present?
+      buyer.update_column("latest_location_id", address_id)
+    end
   end
 end
