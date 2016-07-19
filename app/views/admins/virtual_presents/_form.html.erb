@@ -6,10 +6,10 @@
     类型: <%= f.collection_select :name, VirtualPresent::NAMES, :to_s, :to_s %>
 
     <br>
-    价格：<%= f.number_field :price %>
+    价格：<%= f.number_field :price, step: 0.01 %>
 
     <br>
-    兑换现金：<%= f.number_field :value %>
+    兑换现金：<%= f.number_field :value, step: 0.01 %>
 
     <br>
     <div class='btn-groups'>

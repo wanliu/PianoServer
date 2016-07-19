@@ -123,8 +123,13 @@ module WxOrder
     WECHAT_CONFIG["token"]
   end
 
+  # 使用Settings.wxpay.wx_order_prefix来区分测试版本和线上版本，避免订单号冲突
   def out_trade_no
-    no = "#{self.class.to_s.downcase}_#{id}"
+    no = if Settings.wxpay && Settings.wxpay.wx_order_prefix
+      "#{self.class.to_s.downcase}_#{Settings.wxpay.wx_order_prefix}_#{id}"
+    else
+      "#{self.class.to_s.downcase}_#{id}"
+    end
 
     if Rails.env.development?
       "development_#{no}"

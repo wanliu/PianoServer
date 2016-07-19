@@ -73,18 +73,13 @@ class BirthdayParty < ActiveRecord::Base
 
   def free_hearts_withdrawable
     free_hearts = blesses.free_hearts.paid.limit(hearts_limit)
-    # free_hearts = blesses.free_hearts.paid.take(hearts_limit)
 
-    amount = free_hearts.reduce(0) do |sum, bless|
-      sum += bless.virtual_present_infor["value"].to_f
-    end
+    free_hearts.sum("cast(virtual_present_infor->>'value' AS float)")
   end
 
   def charged_widthdrawable
     charged_blesses = blesses.charged.paid
 
-    amount = charged_blesses.reduce(0) do |sum, bless|
-      sum += bless.virtual_present_infor["value"].to_f
-    end
+    charged_blesses.sum("cast(virtual_present_infor->>'value' AS float)")
   end
 end
