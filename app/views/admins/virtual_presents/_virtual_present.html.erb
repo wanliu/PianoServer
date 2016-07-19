@@ -13,8 +13,8 @@
   <td colspan='5'>
     <%= form_for [:admins, virtual_present], remote: true do |f| %>
       名称：<%= f.text_field :title %>
-      价格：<%= f.number_field :price %>
-      兑换现金：<%= f.number_field :value %>
+      价格：<%= f.number_field :price, step: 0.01 %>
+      兑换现金：<%= f.number_field :value, step: 0.01 %>
       <%= f.submit "保存" %>
     <% end %>
   </td>
