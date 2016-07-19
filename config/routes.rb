@@ -347,7 +347,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :birthday_parties, only: [:index, :show, :update] do
+      resources :birthday_parties, only: [:index, :show, :update, :rank] do
         resources :blesses, except: [:new, :edit], shallow: true do
           get :wx_pay_params, on: :member
         end
@@ -355,6 +355,10 @@ Rails.application.routes.draw do
         member do
           patch :upload_avatar
           post :update_avatar_media_id
+        end
+
+        collection do
+          get :rank, action: :rank
         end
       end
 
