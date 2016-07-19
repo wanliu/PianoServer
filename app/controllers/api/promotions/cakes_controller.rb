@@ -15,8 +15,7 @@ class Api::Promotions::CakesController < Api::BaseController
   end
 
   def show
-    buyer_ids = OrderItem.joins(:order).where(orderable: @cake.item).pluck("orders.buyer_id").uniq
-    @buyers = User.where(id: buyer_ids)
+    @birthday_parties = @cake.birthday_parties.includes(:user)
   end
 
   private
