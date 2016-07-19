@@ -73,6 +73,20 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
   #   head :no_content
   # end
 
+  def rank
+    ids = Bless
+      .select("sum(cast(virtual_present_infor->>'value' as float)) as vv, birthday_party_id")
+      .group("birthday_party_id")
+      .order('vv desc, birthday_party_id desc')
+      .page(params[:page])
+      .per(params[:per])
+      .map(&:birthday_party_id)
+
+    @parties = BirthdayParty.find(ids)
+
+    render :rank
+  end
+
   private
 
     def set_birthday_party

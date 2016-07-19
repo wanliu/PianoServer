@@ -28,6 +28,10 @@ class BirthdayParty < ActiveRecord::Base
 
   before_validation :set_hearts_limit_from_cake, on: :create
 
+  # scope :feedback -> {}
+
+  # scope :bless_group -> { blesses.count(:all, group: 'name' ) }
+
   def withdraw
     unless order.finish?
       return WithdrawStatus.new(false, "订单尚未完成，请在订单完成（收货）后再试！")
