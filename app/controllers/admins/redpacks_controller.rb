@@ -2,7 +2,7 @@ class Admins::RedpacksController < Admins::BaseController
   before_action :set_redpack, only: [:show, :update, :send_redpack, :query]
 
   def index
-    @redpacks = Redpack.order(id: :desc).page(params[:page]).per(params[:per])
+    @redpacks = Redpack.includes(birthday_party: :user).order(id: :desc).page(params[:page]).per(params[:per])
   end
 
   def show
