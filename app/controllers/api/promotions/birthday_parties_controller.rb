@@ -74,13 +74,18 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
   # end
 
   def rank
-    ids = Bless
+    @hash = Bless
       .select("sum(cast(virtual_present_infor->>'value' as float)) as vv, birthday_party_id")
       .group("birthday_party_id")
       .order('vv desc, birthday_party_id desc')
       .page(params[:page])
       .per(params[:per])
-      .map(&:birthday_party_id)
+      .reduce({}) do |result, record|
+        result[record.birthday_party_id.to_s] = record.vv
+        result
+      end
+
+    ids = @hash.keys
 
     @parties = BirthdayParty.find(ids)
 
