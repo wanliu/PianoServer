@@ -12,6 +12,17 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
 
   def recently
     @parties = BirthdayParty.where("birth_day >= :today", today: Date.today).limit(3)
+    ids = @parties.pluck(:id)
+    @hash = Bless
+      .paid
+      .where(birthday_party_id: ids)
+      .select("sum(cast(virtual_present_infor->>'value' as float)) as vv, birthday_party_id")
+      .group("birthday_party_id")
+      .order('vv desc, birthday_party_id desc')
+      .reduce({}) do |result, record|
+        result[record.birthday_party_id.to_s] = record.vv
+        result
+      end
   end
 
   # GET /birthday_parties/1
@@ -79,6 +90,7 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
 
   def rank
     @hash = Bless
+      .paid
       .select("sum(cast(virtual_present_infor->>'value' as float)) as vv, birthday_party_id")
       .group("birthday_party_id")
       .order('vv desc, birthday_party_id desc')

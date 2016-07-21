@@ -316,7 +316,7 @@ ActiveRecord::Schema.define(version: 20160721024428) do
     t.integer  "product_id"
     t.decimal  "price",               precision: 10, scale: 2
     t.integer  "inventory"
-    t.boolean  "on_sale",                                      default: true
+    t.boolean  "on_sale",                                      default: true,  null: false
     t.datetime "created_at",                                                   null: false
     t.datetime "updated_at",                                                   null: false
     t.integer  "sid"
@@ -380,8 +380,9 @@ ActiveRecord::Schema.define(version: 20160721024428) do
     t.string   "zipcode"
     t.string   "contact"
     t.string   "contact_phone"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.integer  "gender",        default: 1
   end
 
   create_table "logs", force: :cascade do |t|
@@ -578,8 +579,8 @@ ActiveRecord::Schema.define(version: 20160721024428) do
     t.datetime "created_at",                               null: false
     t.datetime "updated_at",                               null: false
     t.string   "logo"
-    t.jsonb    "settings",                    default: {}
     t.string   "address"
+    t.jsonb    "settings",                    default: {}
     t.integer  "shop_type",                   default: 0
     t.float    "lat"
     t.float    "lon"
