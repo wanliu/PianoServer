@@ -358,7 +358,8 @@ Rails.application.routes.draw do
         end
 
         collection do
-          get :rank, action: :rank
+          get :rank
+          get :recently
         end
       end
 

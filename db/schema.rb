@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160708063951) do
+ActiveRecord::Schema.define(version: 20160721024428) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -79,6 +79,7 @@ ActiveRecord::Schema.define(version: 20160708063951) do
     t.string   "avatar_media_id"
   end
 
+  add_index "birthday_parties", ["birth_day"], name: "index_birthday_parties_on_birth_day", using: :btree
   add_index "birthday_parties", ["cake_id"], name: "index_birthday_parties_on_cake_id", using: :btree
   add_index "birthday_parties", ["order_id"], name: "index_birthday_parties_on_order_id", using: :btree
   add_index "birthday_parties", ["user_id"], name: "index_birthday_parties_on_user_id", using: :btree

@@ -10,6 +10,10 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
     render json: @birthday_parties
   end
 
+  def recently
+    @parties = BirthdayParty.where("birth_day >= :today", today: Date.today).limit(3)
+  end
+
   # GET /birthday_parties/1
   # GET /birthday_parties/1.json
   def show
