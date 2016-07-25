@@ -34,7 +34,7 @@ class BirthdayParty < ActiveRecord::Base
 
   def self.rank
     BirthdayParty.joins("left join blesses on blesses.birthday_party_id = birthday_parties.id and blesses.paid = 't'")
-      .select("coalesce(sum(cast(blesses.virtual_present_infor->>'value' as float)), 0) as vv, birthday_parties.*")
+      .select("coalesce(sum(cast(blesses.virtual_present_infor->>'value' as float)), 0) as vv, count(blesses.id) as bc, birthday_parties.*")
       .group("id")
       .order("vv desc, id desc")
   end
@@ -52,7 +52,7 @@ class BirthdayParty < ActiveRecord::Base
         WithdrawStatus.new(response.success?, response.error_message)
       end
     else
-      self.withdrew = withdrawable
+      self.withdrew = get_withdrawable
 
       if withdrew >= 1
         build_redpack(user: user, amount: withdrew, wx_user_openid: wx_user_openid)
@@ -68,7 +68,11 @@ class BirthdayParty < ActiveRecord::Base
     end
   end
 
-  def withdrawable
+  def update_withdrawable
+    update_column('withdrawable', get_withdrawable)
+  end
+
+  def get_withdrawable
     free_hearts_withdrawable + charged_widthdrawable
   end
 

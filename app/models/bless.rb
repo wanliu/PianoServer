@@ -20,6 +20,7 @@ class Bless < ActiveRecord::Base
   validate :only_one_free_bless, on: :create
 
   before_validation :copy_virtual_present_infor, on: :create
+  after_commit :update_birthday_party_withdrawable, on: :create
 
   class << self
     def free_hearts_hash
@@ -57,5 +58,11 @@ class Bless < ActiveRecord::Base
     sender.blesses
       .where("birthday_party_id = ? AND virtual_present_infor @> ?", birthday_party_id, self.class.free_hearts_hash.to_json)
       .exists?
+  end
+
+  def update_birthday_party_withdrawable
+    if persisted?
+      birthday_party.update_withdrawable
+    end
   end
 end
