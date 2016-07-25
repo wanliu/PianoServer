@@ -11,18 +11,9 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
   end
 
   def recently
-    @parties = BirthdayParty.where("birth_day >= :today", today: Date.today).limit(3)
-    ids = @parties.pluck(:id)
-    @hash = Bless
-      .paid
-      .where(birthday_party_id: ids)
-      .select("sum(cast(virtual_present_infor->>'value' as float)) as vv, birthday_party_id")
-      .group("birthday_party_id")
-      .order('vv desc, birthday_party_id desc')
-      .reduce({}) do |result, record|
-        result[record.birthday_party_id.to_s] = record.vv
-        result
-      end
+    ids = BirthdayParty.where("birth_day >= :today", today: Date.today).limit(3).pluck(:id)
+
+    @birthday_parties = BirthdayParty.where(id: ids).rank
   end
 
   # GET /birthday_parties/1
@@ -89,21 +80,9 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
   # end
 
   def rank
-    @hash = Bless
-      .paid
-      .select("sum(cast(virtual_present_infor->>'value' as float)) as vv, birthday_party_id")
-      .group("birthday_party_id")
-      .order('vv desc, birthday_party_id desc')
+    @parties = BirthdayParty.rank
       .page(params[:page])
       .per(params[:per])
-      .reduce({}) do |result, record|
-        result[record.birthday_party_id.to_s] = record.vv
-        result
-      end
-
-    ids = @hash.keys
-
-    @parties = BirthdayParty.find(ids)
 
     render :rank
   end

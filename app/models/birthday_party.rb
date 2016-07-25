@@ -32,6 +32,13 @@ class BirthdayParty < ActiveRecord::Base
 
   # scope :bless_group -> { blesses.count(:all, group: 'name' ) }
 
+  def self.rank
+    BirthdayParty.joins("left join blesses on blesses.birthday_party_id = birthday_parties.id and blesses.paid = 't'")
+      .select("coalesce(sum(cast(blesses.virtual_present_infor->>'value' as float)), 0) as vv, birthday_parties.*")
+      .group("id")
+      .order("vv desc, id desc")
+  end
+
   def withdraw
     unless order.finish?
       return WithdrawStatus.new(false, "订单尚未完成，请在订单完成（收货）后再试！")
@@ -67,6 +74,13 @@ class BirthdayParty < ActiveRecord::Base
 
   def download_avatar_media
     WxAvatarDownloader.perform_async(id)
+  end
+
+  # TODO 使用后台任务，定时（每天一次／两次）计算排名，写入字段保存
+  def rank_position
+    ids = self.class.rank.map(&:id)
+
+    ids.index(id)
   end
 
   private
