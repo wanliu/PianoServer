@@ -84,7 +84,7 @@ class BirthdayParty < ActiveRecord::Base
   def rank_position
     ids = self.class.rank.map(&:id)
 
-    ids.index(id)
+    ids.index(id) + 1
   end
 
   private
