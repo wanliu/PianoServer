@@ -10,7 +10,7 @@
   <div class='order-amount text-center'>
     <h1><%= number_to_currency @bless.virtual_present_infor["price"].to_f %></h1>
   </div>
- 
+
   <div  class='chose-pay-kind'>
     <div class='pay-kind wx-pay-now text-center' data-order-id='<%= @bless.id %>'>
       <%= image_tag "wxpay_logo.png", class: 'wx-pay-logo' %>微信支付<%= @bless.virtual_present_infor["price"] %>元
@@ -56,7 +56,7 @@
           // 确认支付成功
           // alert("支付成功");
           // window.location.href = "<%= wx_paid_order_path(@bless) %>";
-          window.location.href = "<%= birthday_party_path(@bless.birthday_party_id, @bless.virtual_present_infor['name']) %>";
+          window.location.href = "<%= birthday_party_path(@bless.birthday_party, @bless.id) %>";
         });
 
         res.fail(function (data, status, xhr) {
@@ -71,7 +71,7 @@
         window.location.href = "<%= birthday_party_path(@bless.birthday_party_id) %>";
       }
     });
-  } 
+  }
 
   $(function() {
     // 用户点击“微信支付”
