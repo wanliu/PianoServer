@@ -89,9 +89,24 @@ class BirthdayParty < ActiveRecord::Base
 
   # TODO 使用后台任务，定时（每天一次／两次）计算排名，写入字段保存
   def rank_position
-    ids = self.class.rank.map(&:id)
+    # ids = self.class.rank.map(&:id)
+    # ids.index(id) + 1
 
-    ids.index(id) + 1
+    select_statement = <<-SQL
+      coalesce(sum(cast(blesses.virtual_present_infor->>'value' as float)), 0) as vv,
+      birthday_parties.id
+    SQL
+
+    anteriors = BirthdayParty.joins("left join blesses on blesses.birthday_party_id = birthday_parties.id and blesses.paid = 't'")
+      .select(select_statement)
+      .group("id")
+      .having("coalesce(sum(cast(blesses.virtual_present_infor->>'value' as float)), 0) > ?", all_blesses_value)
+
+    anteriors.length + 1
+  end
+
+  def all_blesses_value
+    blesses.paid.sum("cast(virtual_present_infor->>'value' AS float)")
   end
 
   private
