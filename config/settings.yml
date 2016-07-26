@@ -161,3 +161,8 @@ virtual_presents:
     - teddy_bear
     - music_box
     - motor
+
+wx_redpack:
+  msg_receivers:
+    - '18774891025'
+    - '18673412345'

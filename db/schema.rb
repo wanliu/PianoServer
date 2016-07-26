@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160721024428) do
+ActiveRecord::Schema.define(version: 20160725082259) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -77,6 +77,7 @@ ActiveRecord::Schema.define(version: 20160721024428) do
     t.decimal  "withdrew",        precision: 10, scale: 2, default: 0.0
     t.integer  "lock_version",                             default: 0
     t.string   "avatar_media_id"
+    t.decimal  "withdrawable",    precision: 10, scale: 2, default: 0.0
   end
 
   add_index "birthday_parties", ["birth_day"], name: "index_birthday_parties_on_birth_day", using: :btree
@@ -316,7 +317,7 @@ ActiveRecord::Schema.define(version: 20160721024428) do
     t.integer  "product_id"
     t.decimal  "price",               precision: 10, scale: 2
     t.integer  "inventory"
-    t.boolean  "on_sale",                                      default: true,  null: false
+    t.boolean  "on_sale",                                      default: true
     t.datetime "created_at",                                                   null: false
     t.datetime "updated_at",                                                   null: false
     t.integer  "sid"
@@ -380,9 +381,8 @@ ActiveRecord::Schema.define(version: 20160721024428) do
     t.string   "zipcode"
     t.string   "contact"
     t.string   "contact_phone"
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
-    t.integer  "gender",        default: 1
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
   end
 
   create_table "logs", force: :cascade do |t|
@@ -579,8 +579,8 @@ ActiveRecord::Schema.define(version: 20160721024428) do
     t.datetime "created_at",                               null: false
     t.datetime "updated_at",                               null: false
     t.string   "logo"
-    t.string   "address"
     t.jsonb    "settings",                    default: {}
+    t.string   "address"
     t.integer  "shop_type",                   default: 0
     t.float    "lat"
     t.float    "lon"

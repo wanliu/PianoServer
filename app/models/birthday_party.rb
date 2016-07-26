@@ -32,6 +32,20 @@ class BirthdayParty < ActiveRecord::Base
 
   # scope :bless_group -> { blesses.count(:all, group: 'name' ) }
 
+  def self.rank
+    select_statement = <<-SQL
+      coalesce(sum(cast(blesses.virtual_present_infor->>'value' as float)), 0) as vv,
+      sum(case when blesses.virtual_present_infor @> '#{Bless.free_hearts_hash.to_json}' then 1 else 0 end) as fc,
+      count(blesses.id) as bc,
+      birthday_parties.*
+    SQL
+
+    BirthdayParty.joins("left join blesses on blesses.birthday_party_id = birthday_parties.id and blesses.paid = 't'")
+      .select(select_statement)
+      .group("id")
+      .order("vv desc, id desc")
+  end
+
   def withdraw
     unless order.finish?
       return WithdrawStatus.new(false, "订单尚未完成，请在订单完成（收货）后再试！")
@@ -45,7 +59,7 @@ class BirthdayParty < ActiveRecord::Base
         WithdrawStatus.new(response.success?, response.error_message)
       end
     else
-      self.withdrew = withdrawable
+      self.withdrew = get_withdrawable
 
       if withdrew >= 1
         build_redpack(user: user, amount: withdrew, wx_user_openid: wx_user_openid)
@@ -61,12 +75,23 @@ class BirthdayParty < ActiveRecord::Base
     end
   end
 
-  def withdrawable
+  def update_withdrawable
+    update_column('withdrawable', get_withdrawable)
+  end
+
+  def get_withdrawable
     free_hearts_withdrawable + charged_widthdrawable
   end
 
   def download_avatar_media
     WxAvatarDownloader.perform_async(id)
+  end
+
+  # TODO 使用后台任务，定时（每天一次／两次）计算排名，写入字段保存
+  def rank_position
+    ids = self.class.rank.map(&:id)
+
+    ids.index(id) + 1
   end
 
   private
