@@ -33,11 +33,15 @@ class BirthdayParty < ActiveRecord::Base
   # scope :bless_group -> { blesses.count(:all, group: 'name' ) }
 
   def self.rank
+    select_statement = <<-SQL
+      coalesce(sum(cast(blesses.virtual_present_infor->>'value' as float)), 0) as vv,
+      sum(case when blesses.virtual_present_infor @> '#{Bless.free_hearts_hash.to_json}' then 1 else 0 end) as fc,
+      count(blesses.id) as bc,
+      birthday_parties.*
+    SQL
+
     BirthdayParty.joins("left join blesses on blesses.birthday_party_id = birthday_parties.id and blesses.paid = 't'")
-      .select("coalesce(sum(cast(blesses.virtual_present_infor->>'value' as float)), 0) as vv")
-      .select("sum(case when blesses.virtual_present_infor @> '#{Bless.free_hearts_hash.to_json}' then 1 else 0 end) as fc")
-      .select("count(blesses.id) as bc")
-      .select("birthday_parties.*")
+      .select(select_statement)
       .group("id")
       .order("vv desc, id desc")
   end
