@@ -1,7 +1,7 @@
 json.parties @parties do |party|
   json.extract! party, *(party.attribute_names + ["withdrawable"] - ["person_avatar"])
   json.bless_count party.bc
-  json.heart_count party.blesses.free_hearts.paid.count
+  json.heart_count party.fc
   json.gnh party.vv
 
   if party[:person_avatar].present?
