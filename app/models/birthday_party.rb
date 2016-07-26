@@ -34,7 +34,10 @@ class BirthdayParty < ActiveRecord::Base
 
   def self.rank
     BirthdayParty.joins("left join blesses on blesses.birthday_party_id = birthday_parties.id and blesses.paid = 't'")
-      .select("coalesce(sum(cast(blesses.virtual_present_infor->>'value' as float)), 0) as vv, count(blesses.id) as bc, birthday_parties.*")
+      .select("coalesce(sum(cast(blesses.virtual_present_infor->>'value' as float)), 0) as vv")
+      .select("sum(case when blesses.virtual_present_infor @> '#{Bless.free_hearts_hash.to_json}' then 1 else 0 end) as fc")
+      .select("count(blesses.id) as bc")
+      .select("birthday_parties.*")
       .group("id")
       .order("vv desc, id desc")
   end
