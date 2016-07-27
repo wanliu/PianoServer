@@ -113,7 +113,7 @@
 
     <% if @order.birthday_party.present? %>
     <div>
-      <%= link_to "生日趴", birthday_party_path(@order.birthday_party.id), class: 'btn btn-warning btn-large btn-block' %>
+      <%= link_to "进入生日趴", birthday_party_path(@order.birthday_party.id), class: 'btn btn-warning btn-large btn-block' %>
     </div>
     <% end %>
 
