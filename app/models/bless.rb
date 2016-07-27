@@ -49,15 +49,16 @@ class Bless < ActiveRecord::Base
   end
 
   def free_bless_limit
-    if 0 == virtual_present_infor["price"].to_f && free_present_exist?
+    if 0 == virtual_present_infor["price"].to_f && reach_free_limit?
       errors.add(:base, "免费的礼物的配额已经使用！")
     end
   end
 
-  def free_present_exist?
+  def reach_free_limit?
+    limit = (Settings.virtual_presents && Settings.virtual_presents.free_limit) || 1
     sender.blesses
       .where("birthday_party_id = ? AND virtual_present_infor @> ?", birthday_party_id, self.class.free_hearts_hash.to_json)
-      .exists?
+      .count >= limit
   end
 
   def update_birthday_party_withdrawable
