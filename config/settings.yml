@@ -161,6 +161,7 @@ virtual_presents:
     - pleasant_sheep
     - ultraman
     - bonnie_bear
+  free_limit: 1
 
 wx_redpack:
   msg_receivers:
