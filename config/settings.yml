@@ -157,10 +157,10 @@ virtual_presents:
   names:
     - heart
     - flower
-    - car
-    - teddy_bear
     - music_box
-    - motor
+    - pleasant_sheep
+    - ultraman
+    - bonnie_bear
 
 wx_redpack:
   msg_receivers:
