@@ -3,7 +3,7 @@ class Item < ActiveRecord::Base
   include ContentManagement::Model
   include PublicActivity::Model
   include Elasticsearch::Model
-  include Elasticsearch::Model::Callbacks
+  # include Elasticsearch::Model::Callbacks
   include ESModel
 
   tracked
@@ -48,6 +48,10 @@ class Item < ActiveRecord::Base
   validate :express_template_from_shop
 
   delegate :region_id, to: :shop, prefix: true
+
+  after_commit :create_elastic_index, on: :create
+  after_commit :update_elastic_index, on: :update
+  after_commit :destroy_elastic_index, on: :destroy
 
   if Settings.dev.feature.dynamic_property
     validates :properties, properties: {
@@ -551,5 +555,29 @@ class Item < ActiveRecord::Base
     if express_template.present? && express_template.shop_id != shop_id
       errors.add(:express_template_id, "只能使用本商店的运费模板")
     end
+  end
+
+  def create_elastic_index
+    __elasticsearch__.index_document
+  rescue Faraday::ConnectionFailed => e
+    send_elastic_error_notification
+  end
+
+  def update_elastic_index
+    __elasticsearch__.update_document
+  rescue Faraday::ConnectionFailed => e
+    send_elastic_error_notification
+  end
+
+  def destroy_elastic_index
+    __elasticsearch__.delete_document
+  rescue Faraday::ConnectionFailed => e
+    send_elastic_error_notification
+  end
+
+  def send_elastic_error_notification
+    mobiles = Settings.error_receivers.join(',')
+    text = "【万流网】Elasticsearch服务连接失败！请检查修复"
+    NotificationSender.delay.send_sms(mobile: mobiles, text: text)
   end
 end
