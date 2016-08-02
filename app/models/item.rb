@@ -576,8 +576,16 @@ class Item < ActiveRecord::Base
   end
 
   def send_elastic_error_notification
-    mobiles = Settings.error_receivers.join(',')
     text = "【万流网】Elasticsearch服务连接失败！请检查修复"
-    NotificationSender.delay.send_sms(mobile: mobiles, text: text)
+    Rails.logger.error "\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"
+    Rails.logger.error "Elasticsearch服务连接失败！请检查修复"
+    Rails.logger.error "\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"
+    mobiles = Settings.error_receivers
+
+    if mobiles.present?
+      mobiles.each do |mobile|
+        NotificationSender.delay.send_sms(mobile: mobile, text: text)
+      end
+    end
   end
 end
