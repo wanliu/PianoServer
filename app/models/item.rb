@@ -582,7 +582,7 @@ class Item < ActiveRecord::Base
     Rails.logger.error "\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"
     mobiles = Settings.error_receivers
 
-    if mobiles.present?
+    if mobiles.present? && Rails.env.production?
       mobiles.each do |mobile|
         NotificationSender.delay.send_sms(mobile: mobile, text: text)
       end
