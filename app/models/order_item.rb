@@ -73,6 +73,7 @@ class OrderItem < ActiveRecord::Base
 
   def deduct_stocks!(operator)
     orderable.deduct_stocks!(operator, quantity: quantity, data: properties, source: self)
+
     gifts.each do |gift_setting|
       item = Item.find(gift_setting["item_id"])
       gift = Gift.find(gift_setting["gift_id"])
