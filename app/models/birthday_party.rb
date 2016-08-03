@@ -27,30 +27,9 @@ class BirthdayParty < ActiveRecord::Base
   before_validation :set_hearts_limit_from_cake, on: :create
 
   def withdraw
-    withdraw_amount = withdrawable - withdrew
+    build_unwithdrew_redpacks
 
-    if withdraw_amount > 1
-      self.withdrew += withdraw_amount
-
-      amounts = []
-      times = (withdraw_amount/200).floor
-      left = withdraw_amount%200
-
-      times.times { amounts << 200 }
-      amounts << left if left >= 1
-
-      amounts.each do |amount|
-        redpacks.build(user: user, amount: amount, wx_user_openid: wx_user_openid)
-      end 
-
-      save
-    end
-
-    redpacks(true) do |redpack|
-      if redpack.failed? || redpack.unknown?
-        redpack.send_redpack
-      end
-    end
+    send_unsent_redpacks
   end
 
   def withdrawable
@@ -81,6 +60,34 @@ class BirthdayParty < ActiveRecord::Base
 
     amount = charged_blesses.reduce(0) do |sum, bless|
       sum += bless.virtual_present_infor["value"].to_f
+    end
+  end
+
+  def build_unwithdrew_redpacks
+    withdraw_amount = withdrawable - withdrew
+
+    if withdraw_amount >= 1
+      self.withdrew += withdraw_amount
+
+      while withdraw_amount > 200 do
+        withdraw_amount -= 200
+
+        redpacks.build(user: user, amount: 200, wx_user_openid: wx_user_openid)
+      end
+
+      if withdraw_amount >= 1
+        redpacks.build(user: user, amount: withdraw_amount, wx_user_openid: wx_user_openid)
+      end
+
+      save
+    end
+  end
+
+  def send_unsent_redpacks
+    redpacks(true).each do |redpack|
+      if redpack.failed? || redpack.unknown?
+        redpack.send_redpack
+      end
     end
   end
 end
