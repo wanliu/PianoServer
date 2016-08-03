@@ -1,0 +1,8 @@
+<% if @birthday_party.person_avatar.try(:url) %>
+  <%= image_tag @birthday_party.person_avatar.url(:cover) %>
+<% end %>
+
+<%= form_for @birthday_party, url: { controller: "api/promotions/birthday_parties", action: "upload_avatar" } do |f| %>
+  <%= f.file_field :person_avatar %>
+  <%= f.submit "Ok" %>
+<% end %>

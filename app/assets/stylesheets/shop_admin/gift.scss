@@ -1,0 +1,26 @@
+#gift-search {
+  width: 320px;
+}
+
+.shop-items-dropdown {
+  min-width: 320px;
+  max-height: 300px;
+  overflow-y: scroll;
+
+  li {
+    padding-right: 20px;
+    padding-left: 5px;
+    margin-bottom: 2px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #dff0d8;
+    }
+  }
+}
+
+table.gifts {
+  .button_to {
+    display: inline-block;
+  }
+}

@@ -1,0 +1,30 @@
+<% if @virtual_present.valid? %>
+(function() {
+  var $alert = $(".infors.alert");
+  $alert.html("保存成功！").show();
+
+  setTimeout(function() {
+    $alert.fadeOut(function() {
+      $alert.html("");
+    });
+  }, 5000);
+
+  var $html = $('<%= j render "virtual_present", locals: {virtual_present: @virtual_present} %>');
+  var $originTr = $('.virtual_presents tr[id=virtual_present_<%= @virtual_present.id %>');
+  $originTr.replaceWith($($html[0]));
+
+  var $originForm = $('.virtual_presents tr.virtual_present-eidt-form[data-virtual_present-id=<%= @virtual_present.id %>]');
+  $originForm.replaceWith($($html[1]));
+})();
+<% else %>
+(function() {
+  var $error = $(".errors.alert");
+  $error.html("保存失败！<%= @virtual_present.errors.full_messages.join(', ') %>").show();
+
+  setTimeout(function() {
+    $error.fadeOut(function() {
+      $error.html("");
+    });
+  }, 5000);
+})();
+<% end %>

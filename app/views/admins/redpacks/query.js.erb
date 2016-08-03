@@ -1,0 +1,4 @@
+(function() {
+  var html = "<%= j(render @redpack) %>";
+  $("#redpack_<%= @redpack.id %>").replaceWith(html);
+})();

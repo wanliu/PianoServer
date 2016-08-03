@@ -1,9 +1,14 @@
 class Admins::OneMoneyController < Admins::BaseController
 
-  before_action :set_one_money, except: [:index, :new, :create, :search]
+  before_action :set_one_money, except: [:index, :new, :create, :search, :toggle_open]
 
   def index
-    @one_moneies = OneMoney.all
+    @one_moneies =
+      if params[:type]
+        OneMoney.find(type: params[:type])
+      else
+        OneMoney.all.select {|o| o.type != 'daily_cheap'}
+      end
   end
 
   def new
@@ -29,22 +34,30 @@ class Admins::OneMoneyController < Admins::BaseController
   end
 
   def edit
+    items_with_gifts = @one_money.items_with_gifts
+    item_ids = if items_with_gifts.nil? then '' else items_with_gifts.split(',') end
+
+    @gift_items = if item_ids.length > 0 then item_ids.map do |id|
+      Item.find(id)
+    end else
+      []
+    end
   end
 
   def publish
     # response.headers['Content-Type'] = 'text/event-stream'
-
     start_at = @one_money.start_at
     name = "%04d-%02d-%02d" % [start_at.year, start_at.month, start_at.day]
-    OneMoneyPublishJob.perform_now @one_money, name
+
+    logger.info start_at
+    logger.info @one_money.id
+    logger.info name
+
+    job_id = OneMoneyPublishWorker.perform_async @one_money.id, name, {type: @one_money.type}
     render json: {
       status: :success,
-      url: File.join(Settings.promotions.one_money.enter_url, name)
+      job_id: job_id
     }
-  # rescue e
-  #   response.stream.write e.message
-  # ensure
-  #   response.stream.close
   end
 
   def upload_image
@@ -82,6 +95,12 @@ class Admins::OneMoneyController < Admins::BaseController
     # params[]
   end
 
+  def toggle_open
+    @one_money.update_attribute('is_open', params[:is_open])
+
+    redirect_to action: :edit
+  end
+
   def search
     q = params[:q]
     if q.to_i == 0
@@ -97,7 +116,9 @@ class Admins::OneMoneyController < Admins::BaseController
                                                  shop_name: item.shop.title,
                                                  sid: item.sid,
                                                  price: item.price,
-                                                 inventory: item.current_stock }} }
+                                                 on_sale: item.on_sale,
+                                                 inventory: item.current_stock,
+                                                 gifts: item.gifts.as_json(methods: [:title, :avatar_url]) }} }
   end
 
   def add_item
@@ -214,13 +235,25 @@ class Admins::OneMoneyController < Admins::BaseController
     @stastics
   end
 
+  def update_items_with_gifts
+    @one_money.items_with_gifts = params[:items_with_gifts]
+    @one_money.save
+
+    head :no_content
+  end
+
   private
 
   def one_money_params
     hash = {}
     params[:one_money].each do |k, v|
       hash[k] = v unless v.blank?
+
+      if k == :is_open or k == 'is_open'
+        hash[k] = v == 'true'
+      end
     end
+
     hash
   end
 

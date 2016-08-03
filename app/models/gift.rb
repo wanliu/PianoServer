@@ -11,6 +11,7 @@ class Gift < ActiveRecord::Base
   validates :present, uniqueness: { scope: [:item_id, :properties] }
 
   validate :item_and_present_shop
+  validate :total_and_quantity
 
   validate :saled_counter_with_total
 
@@ -18,7 +19,8 @@ class Gift < ActiveRecord::Base
   delegate :avatar_url, to: :present, prefix: false
   delegate :cover_url, to: :present, prefix: false
   delegate :current_stock, to: :present, prefix: false
-
+  delegate :sid, to: :present, prefix: false
+  delegate :public_price, to: :present, prefix: false
 
   def properties_title(props=properties)
     present.properties_title(props)
@@ -49,6 +51,12 @@ class Gift < ActiveRecord::Base
   def saled_counter_with_total
     if saled_counter > total
       errors.add(:saled_counter, '赠品可赠送量不足或者赠品变更，请重新提交订单')
+    end
+  end
+
+  def total_and_quantity
+    if quantity > total
+      errors.add(:base, '赠送总数不能小于单次赠送数量')
     end
   end
 end

@@ -22,11 +22,14 @@ class OneMoney < Ohm::Model
   attribute :head_url
   attribute :publish_url
   attribute :status
+  attribute :type
 
   attribute :shares, Type::Integer        # 分享次数
   attribute :share_seed, Type::Integer    # 分享种子数
 
   attribute :price, Type::Decimal
+  attribute :is_open, Type::Boolean       # 是否打开
+  attribute :items_with_gifts             # 礼品购的商品
 
   collection :items, :PmoItem
   collection :seeds, :PmoSeed
@@ -43,6 +46,9 @@ class OneMoney < Ohm::Model
   counter :hits
 
   index :name
+  index :type
+  index :start_at
+  index :is_open
 
   attr_accessor :query
 
@@ -78,6 +84,23 @@ class OneMoney < Ohm::Model
         # Rails.logger.info "Set end_at Expire Time #{self.end_at}" if self.end_at && self.now < self.end_at
       end
     end
+  end
+
+  def item_status
+    status = []
+
+    shop_item_ids = items.map(&:item_id)
+    shop_items = Item.where(id: shop_item_ids)
+
+    unless shop_items.all?(&:on_sale)
+      status.push "包含已下架商品！"
+    end
+
+    unless shop_items.all? { |item| item.current_stock.to_i > 0 }
+      status.push "包含库存不足商品！"
+    end
+
+    "<span style='color:red'>#{status.join('<br>')}</span>".html_safe
   end
 
   private

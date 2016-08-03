@@ -1,12 +1,17 @@
 .delivery-addresses {
   padding-bottom: 10px;
 
+  .address-container {
+    padding-top: 15px;
+    // padding-bottom: 10px
+  }
+
   .delivery-address {
     // border: 1px solid #ddd;
-    margin: 5px;
+    // margin: 5px;
     padding: 15px;
-    float: left;
-    // width: 23%;
+    // float: left;
+    // width: 30%;
     // height: 73px;
     cursor: pointer;
     border: 4px solid transparent;

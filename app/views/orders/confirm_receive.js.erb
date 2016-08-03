@@ -1,0 +1,14 @@
+(function() {
+  <% if @order.blank? %>
+    var html = "编号为 \"<%= params[:order_id] %>\" 的订单不存在，请确认输入的订单号真实有效！";
+  <% elsif !@is_deliver %>
+    var html = '没有这个订单的收货操作权限，请联系商店管理员！';
+  <% elsif @order.valid? %>
+    var html = '操作成功！';
+  <% else %>
+    var html = '操作失败！<%= @order.errors.full_messages.join(", ") %>';
+  <% end %>
+
+  $('.order').html(html);
+  $('.receive-operation-zone').show();
+})();

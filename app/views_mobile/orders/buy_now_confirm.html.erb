@@ -5,6 +5,15 @@
     <%= f.hidden_field :address_id %>
     <%= f.hidden_field :supplier_id %>
 
+    <% if @order.birthday_party.present? %>
+      <%= f.hidden_field :cake_id %>
+      <%= f.fields_for :birthday_party do |party_form| %>
+        <%= party_form.hidden_field :message %>
+        <%= party_form.hidden_field :birthday_person %>
+        <%= party_form.hidden_field :birth_day %>
+      <% end %>
+    <% end %>
+
     <div class='cart-group'>
       <div class='header media'>
         <div class='shop media-left'>
@@ -23,22 +32,21 @@
         <% end %>
         <%= render partial: "buy_now_item", locals: { item: @order_item, supplier: @supplier, f: item_form, props: @props } %>
 
-        <% if @order_item.orderable.try(:gifts).blank? %>
-          <%= hidden_field_tag "order[item_gifts][#{@order_item.orderable.id}][undefined]", nil, { multiple: true } %>
+        <% if @orderable.try(:gifts).blank? %>
+          <%= hidden_field_tag "order[item_gifts][#{@orderable.id}][undefined]", nil, { multiple: true } %>
         <% else %>
-          <% @order_item.orderable.gifts.each do |gift| %>
-            <%= hidden_field_tag "order[item_gifts][#{@order_item.orderable.id}][#{gift.id}]", gift.eval_available_quantity(@order_item.quantity), { multiple: true } %>
+          <% @orderable.gifts.each do |gift| %>
+            <%= hidden_field_tag "order[item_gifts][#{@orderable.id}][#{gift.id}]", gift.eval_available_quantity(@order_item.quantity), { multiple: true } %>
           <% end %>
         <% end %>
       <% end %>
 
-      <% if @order_item.orderable.is_a? Item %>
-        <% @order_item.orderable.eval_available_gifts(@order_item.quantity) %>
-        <% has_available_gifts = @order_item.orderable.available_gifts.present? %>
+      <% if @orderable.is_a? Item %>
+        <% has_available_gifts = @orderable.available_gifts.present? %>
         <div class='mobile-gifts' style="<%= has_available_gifts ? '' : 'display: none' %>">
           <div class='head'></div>
           <div class='mobile-cart-gifts'>
-            <% @order_item.orderable.available_gifts.each do |gift| %>
+            <% @orderable.available_gifts.each do |gift| %>
               <div class='cart-gift' data-gift-id="<%= gift.id %>">
                 <div class='desc'>
                   <div class='avatar'>
@@ -117,6 +125,10 @@
     changeQuantity(quantityInput, newQuantity);
   });
 
+  $('form#new_order').on('submit', function(event) {
+    $(this).find('input[type=submit]').attr('disabled', 'disabled');
+  });
+
   function changeQuantity(quantityInput, quantity, reflect) {
     var $cartItem = $(quantityInput).parents('.cart-item:first'),
         $quantity = $cartItem.find('.quantity'),
@@ -133,9 +145,9 @@
       $btnMinus.removeClass('glyphicon-minus');
     }
 
-    <% if @order_item.orderable.is_a? (Item) %>
+    <% if @orderable.is_a? (Item) %>
       $.getJSON('/order_items/buy_now_gifts', {
-        item_id: <%= @order_item.orderable.id %>,
+        item_id: <%= @orderable.id %>,
         quantity: quantity
       }).done(function(data) {
         renderGifts(data.gifts);
@@ -156,10 +168,10 @@
 
         $container.html('');
 
-        if (gifts.length > 0) {
+        if (gifts && gifts.length > 0) {
           _.each(gifts, function(gift) {
             var html = giftTpl(gift);
-            var $hiddenInput = $("#order_item_gifts_" + <%= @order_item.orderable.id %> + "_" + gift.id);
+            var $hiddenInput = $("#order_item_gifts_" + <%= @orderable.id %> + "_" + gift.id);
             $hiddenInput.val(gift.quantity);
             $container.append(html);
           });

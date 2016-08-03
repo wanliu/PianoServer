@@ -45,6 +45,7 @@
 //= require lib/fastclick
 //= require utils/alert-dismiss
 //= require utils/parseUrl
+//= require _common/modal_confirm
 //= require _common/fileuploader
 //= require _common/qrcode
 //= require _common/local-address

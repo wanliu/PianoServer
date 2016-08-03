@@ -1,0 +1,19 @@
+<h4 class='head birthday-party'>我参加的生日趴</h4>
+
+<table class='table birthday-parties'>
+  <thead>
+    <tr>
+      <th>谁过生日</th>
+      <th>发起人</th>
+      <th>日期</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @birthday_parties.each do |birthday_party| %>
+      <%= render birthday_party %>
+    <% end %>
+  </tbody>
+</table>
+
+<%= paginate @birthday_parties %>

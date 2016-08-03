@@ -25,12 +25,13 @@ class ShopCategory < ActiveRecord::Base
 
   before_validation :default_values
   before_create do |record|
-    record.iid = ShopCategory.last_iid(record.shop) + 1
+    record.iid = ShopCategory.last_iid(record.root.try(:shop)) + 1
   end
   # alias_method :cover_url, :avatar_url
   # alias_method :logo_url, :avatar_url
   scope :last_iid, -> (shop) do
-    where(shop: shop).maximum(:iid) || 0
+    return 0 if shop.blank?
+    where(shop_id: shop.try(:id)).maximum(:iid) || 0
   end
 
   validate :out_of_depth

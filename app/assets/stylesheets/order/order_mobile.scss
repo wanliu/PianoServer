@@ -66,6 +66,7 @@
 
     .receive-operation {
       padding-top: 20px;
+      padding-bottom: 20px;
     }
 
     .receive-operation, .receive-operation>a {
@@ -79,6 +80,14 @@
         padding-left: 13px;
         font-size: 30px;
       }
+    }
+
+    #pmo-once-more {
+      margin-top: 20px;
+      border-radius: 0;
+      display: block;
+      font-size: 16px;
+      color: red;
     }
   }
 

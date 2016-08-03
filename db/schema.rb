@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160516085123) do
+ActiveRecord::Schema.define(version: 20160725082259) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -63,6 +63,46 @@ ActiveRecord::Schema.define(version: 20160516085123) do
     t.datetime "updated_at",      null: false
   end
 
+  create_table "birthday_parties", force: :cascade do |t|
+    t.integer  "cake_id"
+    t.integer  "user_id"
+    t.integer  "order_id"
+    t.integer  "hearts_limit"
+    t.date     "birth_day"
+    t.string   "birthday_person"
+    t.string   "person_avatar"
+    t.text     "message"
+    t.datetime "created_at",                                             null: false
+    t.datetime "updated_at",                                             null: false
+    t.decimal  "withdrew",        precision: 10, scale: 2, default: 0.0
+    t.integer  "lock_version",                             default: 0
+    t.string   "avatar_media_id"
+    t.decimal  "withdrawable",    precision: 10, scale: 2, default: 0.0
+  end
+
+  add_index "birthday_parties", ["birth_day"], name: "index_birthday_parties_on_birth_day", using: :btree
+  add_index "birthday_parties", ["cake_id"], name: "index_birthday_parties_on_cake_id", using: :btree
+  add_index "birthday_parties", ["order_id"], name: "index_birthday_parties_on_order_id", using: :btree
+  add_index "birthday_parties", ["user_id"], name: "index_birthday_parties_on_user_id", using: :btree
+
+  create_table "blesses", force: :cascade do |t|
+    t.integer  "sender_id"
+    t.integer  "virtual_present_id"
+    t.text     "message"
+    t.integer  "birthday_party_id"
+    t.boolean  "paid"
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
+    t.jsonb    "virtual_present_infor"
+    t.string   "wx_prepay_id"
+    t.string   "wx_noncestr"
+    t.string   "wx_transaction_id"
+  end
+
+  add_index "blesses", ["birthday_party_id"], name: "index_blesses_on_birthday_party_id", using: :btree
+  add_index "blesses", ["virtual_present_id"], name: "index_blesses_on_virtual_present_id", using: :btree
+  add_index "blesses", ["virtual_present_infor"], name: "index_blesses_on_virtual_present_infor", using: :gin
+
   create_table "bootsy_image_galleries", force: :cascade do |t|
     t.integer  "bootsy_resource_id"
     t.string   "bootsy_resource_type"
@@ -86,6 +126,15 @@ ActiveRecord::Schema.define(version: 20160516085123) do
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
   end
+
+  create_table "cakes", force: :cascade do |t|
+    t.integer  "item_id"
+    t.integer  "hearts_limit"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  add_index "cakes", ["item_id"], name: "index_cakes_on_item_id", using: :btree
 
   create_table "cart_items", force: :cascade do |t|
     t.integer  "cart_id"
@@ -442,6 +491,26 @@ ActiveRecord::Schema.define(version: 20160516085123) do
   add_index "punches", ["average_time"], name: "index_punches_on_average_time", using: :btree
   add_index "punches", ["punchable_type", "punchable_id"], name: "punchable_index", using: :btree
 
+  create_table "redpacks", force: :cascade do |t|
+    t.integer  "user_id"
+    t.decimal  "amount",            precision: 10, scale: 2
+    t.integer  "birthday_party_id"
+    t.string   "nonce_str"
+    t.string   "wx_order_no"
+    t.boolean  "withdrew",                                   default: false
+    t.string   "wx_user_openid"
+    t.datetime "created_at",                                                 null: false
+    t.datetime "updated_at",                                                 null: false
+    t.integer  "status",                                     default: 0
+    t.text     "error_message"
+  end
+
+  add_index "redpacks", ["birthday_party_id"], name: "index_redpacks_on_birthday_party_id", using: :btree
+  add_index "redpacks", ["user_id"], name: "index_redpacks_on_user_id", using: :btree
+  add_index "redpacks", ["withdrew"], name: "index_redpacks_on_withdrew", using: :btree
+  add_index "redpacks", ["wx_order_no"], name: "index_redpacks_on_wx_order_no", using: :btree
+  add_index "redpacks", ["wx_user_openid"], name: "index_redpacks_on_wx_user_openid", using: :btree
+
   create_table "regions", force: :cascade do |t|
     t.string   "name"
     t.string   "title"
@@ -657,6 +726,18 @@ ActiveRecord::Schema.define(version: 20160516085123) do
   end
 
   add_index "variables", ["host_type", "host_id"], name: "index_variables_on_host_type_and_host_id", using: :btree
+
+  create_table "virtual_presents", force: :cascade do |t|
+    t.decimal  "price",      precision: 10, scale: 2
+    t.string   "name"
+    t.boolean  "show",                                default: true
+    t.datetime "created_at",                                         null: false
+    t.datetime "updated_at",                                         null: false
+    t.decimal  "value",      precision: 10, scale: 2, default: 0.0
+    t.string   "title"
+  end
+
+  add_index "virtual_presents", ["show"], name: "index_virtual_presents_on_show", using: :btree
 
   add_foreign_key "gifts", "items"
   add_foreign_key "order_items", "orders"

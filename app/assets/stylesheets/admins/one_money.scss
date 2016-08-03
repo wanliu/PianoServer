@@ -108,6 +108,43 @@
   }
 }
 
+.select2-container {
+  .media-right {
+    width: 30%;
+    background: #75A6D0;
+  }
+
+  .no-gifts {
+    text-align: center;
+    padding-top: 15px;
+  }
+}
+
+.gift-brief {
+  .gift-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.gift-item-list {
+  .gift-item {
+    position: relative;
+    line-height: 24px;
+    border: 1px solid #e5e5e5;
+    padding: 3px 30px 3px 5px;
+    border-radius: 5px;
+
+    .remove-icon {
+      position: absolute;
+      right: 5px;
+      top: 4px;
+      padding: 0 3px;
+      color: #CC1F1F;
+    }
+  }
+}
 
 .fare-modifier {
   // position: absolute;

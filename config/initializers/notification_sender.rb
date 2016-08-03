@@ -29,8 +29,12 @@ module NotificationSender
     apikey   = Settings.sms.token
     sms_host = Settings.sms.host
     sms_api  = Settings.sms.api_uri
-    text     = Settings.promotions.one_money.sms_to_supplier_template
-    text     = text.sub("#o_id#", order_id.to_s)
+
+    text = options[:text]
+    if options[:text].blank?
+      text = Settings.promotions.one_money.sms_to_supplier_template
+      text = text.sub("#o_id#", order_id.to_s)
+    end
 
     unless apikey.present? && sms_host.present? && sms_api.present? && text.present?
       return

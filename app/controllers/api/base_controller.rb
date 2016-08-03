@@ -9,6 +9,7 @@ class Api::BaseController < ::ActionController::API
   include JSONOptions
 
   helper ApplicationHelper
+  helper BirthdayPartyHelper
  
   before_action :authenticate_user!
 

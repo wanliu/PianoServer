@@ -1,0 +1,30 @@
+<% if @cake.valid? %>
+(function() {
+  var $alert = $(".infors.alert");
+  $alert.html("保存成功！").show();
+
+  setTimeout(function() {
+    $alert.fadeOut(function() {
+      $alert.html("");
+    });
+  }, 5000);
+
+  var $html = $('<%= j render "cake", locals: {cake: @cake} %>');
+  var $originTr = $('.cakes tr[id=cake_<%= @cake.id %>');
+  $originTr.replaceWith($($html[0]));
+
+  var $originForm = $('.cakes tr.cake-eidt-form[data-cake-id=<%= @cake.id %>]');
+  $originForm.replaceWith($($html[1]));
+})();
+<% else %>
+(function() {
+  var $error = $(".errors.alert");
+  $error.html("保存失败！<%= @cake.errors.full_messages.join(', ') %>").show();
+
+  setTimeout(function() {
+    $error.fadeOut(function() {
+      $error.html("");
+    });
+  }, 5000);
+})();
+<% end %>

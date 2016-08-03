@@ -1,0 +1,35 @@
+<div class='redpacks-container'>
+  <div class='alert-header'>
+    <div class="alert alert-success infors" role="alert" style='display: none;'>
+    </div>
+    <div class="alert alert-danger errors" role="alert" style='display: none;'>
+    </div>
+    <div class='title'>
+      <h3>生日趴红包一览</h3>
+      <!-- <button class='btn btn-default new-cake-btn'>
+        <span class='glyphicon glyphicon-plus'>新建</span>
+      </button> -->
+    </div>
+  </div>
+
+  <table class='table redpacks'>
+    <thead>
+      <tr>
+        <th>过生日的人 </th>
+        <th>发起人 </th>
+        <th>生日趴 </th>
+        <th>金额 </th>
+        <th>状态 </th>
+        <th>微信信息 </th>
+        <th>操作 </th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @redpacks.each do |redpack| %>
+        <%= render redpack %>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%= paginate @redpacks %>
+</div>

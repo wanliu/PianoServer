@@ -1,0 +1,11 @@
+<div class='container'>
+  <% if @withdraw_status.success? %>
+    <div class="alert alert-success" role="alert">
+      红包发送成功，请注意查收！
+    </div>
+  <% else %>
+    <div class="alert alert-danger" role="alert">
+      <%= @withdraw_status.error_message %>
+    </div>
+  <% end %>
+</div>

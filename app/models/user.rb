@@ -35,6 +35,10 @@ class User < ActiveRecord::Base
   has_many :shop_delivers, foreign_key: :deliver_id
   has_many :deliverable_shops, through: :shop_delivers, source: :shop
 
+  has_many :blesses, foreign_key: 'sender_id'
+  has_many :birthday_parties
+  has_many :redpacks, inverse_of: :user
+
   validates :username, presence: true, uniqueness: true
   validates :mobile, presence: true, uniqueness: true
 
@@ -151,6 +155,10 @@ class User < ActiveRecord::Base
     distributor?
   end
 
+  def is_receiver?
+    shop_delivers.count > 0
+  end
+
   private
 
   def generate_authentication_token
@@ -175,17 +183,17 @@ class User < ActiveRecord::Base
     end
 
     begin
-      # RestClient::Request.execute(method: :post, 
-      #   url: pusher_url,
-      #   payload: options,
-      #   headers: {},
-      #   timeout: 2,
-      #   open_timeout: 2)
+      RestClient::Request.execute(method: :post, 
+        url: pusher_url,
+        payload: options,
+        headers: {},
+        timeout: 1,
+        open_timeout: 1) if pusher_url.present?
 
       # RestClient.post pusher_url, options
     rescue Errno::ECONNREFUSED, RestClient::RequestTimeout => e
-      logger.fatal "连接通讯服务器失败!"
-      # TODO what to do when sync fails?
+    # rescue Errno::ECONNREFUSED => e
+    # TODO what to do when sync fails?
     end
   end
 

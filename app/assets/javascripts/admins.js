@@ -19,6 +19,7 @@
 //= require select2.full
 //= require select2_locale_zh-CN
 //= require picturefill.all
+//= require _common/modal_confirm
 //= require _common/fileuploader
 //= require _common/hammer
 //= require _common/util
@@ -32,6 +33,7 @@
 //= require lib/ace_editor
 //= require lib/ajax_status
 //= require lib/fastclick
+//= require lib/jquery.sse
 //= require utils/alert-dismiss
 //= require _common/fileuploader
 //= require _common/paginate

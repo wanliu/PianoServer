@@ -1,0 +1,21 @@
+<%= content_tag_for :tr, virtual_present do %>
+  <td><%= virtual_present.title %></td>
+  <td><%= virtual_present.name %></td>
+  <td><%= virtual_present.price %></td>
+  <td><%= virtual_present.value %>元</td>
+  <td>
+    <button class='btn btn-default edit-btn'>编辑</button>
+    <!-- <button class='btn btn-danger'>Delete</button> -->
+    <%= button_to "删除", [:admins, virtual_present], method: :delete, remote: true, class: 'btn btn-danger', data: {confirm: '确定删除么？'} %>
+  </td>
+<% end %>
+<tr class='virtual_present-eidt-form' style='display:none;' data-virtual_present-id="<%= virtual_present.id %>">
+  <td colspan='5'>
+    <%= form_for [:admins, virtual_present], remote: true do |f| %>
+      名称：<%= f.text_field :title %>
+      价格：<%= f.number_field :price, step: 0.01 %>
+      兑换现金：<%= f.number_field :value, step: 0.01 %>
+      <%= f.submit "保存" %>
+    <% end %>
+  </td>
+</tr>

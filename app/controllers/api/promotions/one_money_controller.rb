@@ -8,8 +8,8 @@ class Api::Promotions::OneMoneyController < Api::BaseController
   class InvalidSeedOwner < RuntimeError; end
 
   include FastUsers
-  skip_before_action :authenticate_user!, only: [:show, :item, :items, :status, :item_status]
-  skip_before_action :authenticate_user!, only: [:signup] unless Rails.env.production?
+  skip_before_action :authenticate_user!, only: [:show, :item, :items, :status, :item_status, :retrieve_seed, :seed, :signup_count, :items_with_gifts]
+  skip_before_action :authenticate_user!, only: [:signup, :user_seeds] unless Rails.env.production?
   skip_before_action :authenticate_user!, only: [:signup, :grab, :callback] if ENV['TEST_PERFORMANCE']
 
   before_action :set_one_money #, except: [:, :update, :status, :item]
@@ -75,11 +75,51 @@ class Api::Promotions::OneMoneyController < Api::BaseController
     @one_money.save
     if @from_seed
       if PmoGrab.find(one_money: @one_money.id, user_id: pmo_current_user.id).count == 0
-        @from_seed.given = pmo_current_user
-        @from_seed.save
+        if PmoSeed.find(one_money: @one_money.id, owner_id: @from_seed.owner_id).select{ |s| s.given == pmo_current_user }.count == 0
+          @from_seed.given = pmo_current_user
+          @from_seed.save
+        end
       end
     end
     render json: {user_id: pmo_current_user.id, user_user_id: pmo_current_user.user_id, status: status > 0 ? "success" : "always" }
+  end
+
+  def signup_count
+    count = @one_money.signups.count
+
+    render json: { count: count }
+  end
+
+  def retrieve_seed
+    @user = User.find(params[:user_id])
+    @callback = URI(params[:callback])
+    @pmo_user = PmoUser.find(user_id: @user.id).first
+    result = {
+      status: "success",
+      seed: nil,
+    }
+
+    if @pmo_user
+      @options = {one_money: @one_money.id, owner_id: @pmo_user.id}
+      @options.merge!(period: params[:period]) if params[:period]
+      to_key = params[:to] == "query" ? :query : :fragment
+      @seed = PmoSeed.find(@options).select {|s| s.status == 'pending' }.first
+      if @seed
+        hash = Hash[URI.decode_www_form(@callback.send(to_key) || '')]
+        if to_key == :fragment
+          @callback.fragment = '/?'+ URI.encode_www_form(hash.merge(fromSeed: @seed.seed_id))
+        else
+          @callback.query = URI.encode_www_form(hash.merge(fromSeed: @seed.seed_id))
+        end
+
+        result[:callback_url] = @callback.to_s
+      end
+
+      result[:seed] = @seed
+    end
+
+    redirect_to @callback.to_s
+    # render json: result
   end
 
   def status
@@ -111,11 +151,17 @@ class Api::Promotions::OneMoneyController < Api::BaseController
     if params[:stat].present?
       hash[:items] = @one_money.items.map do |item|
         item_hash = item.attributes
+        item_hash[:id] = item.id
         item_hash[:participant_count] = item.participants.count
         item_hash[:winner_count] = item.winners.count
         item_hash[:total_amount] = item.total_amount
         item_hash[:completes] = item.completes
-        item_hash[:seed_count] = item.seeds.count
+
+        if params[:used].present?
+          used_seeds = item.seeds.select {|s| s.status == "used" }
+          item_hash[:seed_count] = used_seeds.count
+          item_hash[:own_seed_count] = used_seeds.select{ |s| s.owner_id == pmo_current_user.id }.count
+        end
 
         # items.status
         item_hash
@@ -151,7 +197,13 @@ class Api::Promotions::OneMoneyController < Api::BaseController
 
     hash[:participant_count] = @item.participants.count
     hash[:winner_count] = @item.winners.count
-    hash[:seed_count] = @item.seeds.count
+
+    if params[:used].present?
+      used_seeds = @item.seeds.select {|s| s.status == "used" }
+      hash[:seed_count] = used_seeds.count
+      hash[:own_seed_count] = used_seeds.select { |s| s.owner_id == pmo_current_user.id }.count
+    end
+
     hash[:total_amount] = @item.total_amount
     hash[:completes] = @item.completes
 
@@ -250,7 +302,10 @@ class Api::Promotions::OneMoneyController < Api::BaseController
   end
 
   def user_seeds
-    @options = {one_money: @one_money.id, owner_id: pmo_current_user.id}
+    user = User.find(params[:user_id])
+    pmo_user = PmoUser.find(user_id: user.id).first || PmoUser.from(user)
+    pmo_user.save if pmo_user.new?
+    @options = {one_money: @one_money.id, owner_id: pmo_user.id}
     @options.merge!(period: params[:period]) if params[:period]
     @seeds = PmoSeed.find(@options)
     hash ={
@@ -269,6 +324,40 @@ class Api::Promotions::OneMoneyController < Api::BaseController
     }
   end
 
+  def items_with_gifts
+    items_with_gifts = @one_money.items_with_gifts || ''
+
+    gift_items = if items_with_gifts.length > 0 then items_with_gifts.split(',').map do |id|
+      item = Item.find(id)
+
+      since = case params[:since]
+      when "month", "m", nil
+        1.month.ago
+      when "week", "w"
+        1.week.ago
+      else
+        1.month.ago
+      end
+
+      count = item.order_items.where("created_at > :since", since: since).count
+      current_stock = item.current_stock
+
+      gifts = item.gifts.as_json(methods: [:title, :avatar_url, :inventory, :cover_url, :sid, :public_price])
+      json = item.as_json(except: [:income_price, :public_price], methods: [:shop_name, :shop_realname])
+      json['avatar_urls'] = [item.avatar_url]
+      json['cover_urls'] = [item.cover_url]
+      json['gifts'] = gifts
+      json['ori_price'] = item.public_price
+      json['total_amount'] = current_stock.to_i + count
+      json['completes'] = count
+
+      json
+    end else
+      []
+    end
+
+    render json: gift_items
+  end
 
   protected
 

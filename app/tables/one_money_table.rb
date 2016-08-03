@@ -1,6 +1,6 @@
 class OneMoneyTable < TableCloth::Base
 
-  COLUMNS = %w(name title description cover_url status created_at updated_at start_at end_at)
+  COLUMNS = %w(name title description cover_url status created_at updated_at start_at end_at item_status)
   column :id
 
   COLUMNS.each do |col_name|

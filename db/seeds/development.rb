@@ -50,7 +50,7 @@ level_3 = level_2.children.create(name: 'cate_level_3')
     shop_category: shop_category.children.last,
     description: "description",
     category: level_3,
-    sid: id)
+    sid: 1000 + id)
 
   item.build_stocks(owner, 100)
 

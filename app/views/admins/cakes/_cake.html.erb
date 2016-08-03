@@ -1,0 +1,18 @@
+<%= content_tag_for :tr, cake do %>
+  <td><%= image_tag cake.avatar_url %><%= cake.title %></td>
+  <td><%= cake.shop_name %></td>
+  <td><%= cake.hearts_limit %></td>
+  <td>
+    <button class='btn btn-default edit-btn'>编辑</button>
+    <!-- <button class='btn btn-danger'>Delete</button> -->
+    <%= button_to "删除", [:admins, cake], method: :delete, remote: true, class: 'btn btn-danger', data: {confirm: '确定删除么？'} %>
+  </td>
+<% end %>
+<tr class='cake-eidt-form' style='display:none;' data-cake-id="<%= cake.id %>">
+  <td colspan='4'>
+    <%= form_for [:admins, cake], remote: true do |f| %>
+      限制红心数量：<%= f.number_field :hearts_limit %>
+      <%= f.submit "保存" %>
+    <% end %>
+  </td>
+</tr>

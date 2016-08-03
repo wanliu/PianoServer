@@ -20,7 +20,7 @@ class Shops::Admin::GiftsController < Shops::Admin::BaseController
 
   def update
     if @gift.update(gift_update_params)
-      render json: @gift.as_json(methods: [:title, :cover_url, :properties_title])
+      render json: @gift.as_json(methods: [:title, :cover_url, :properties_title, :current_stock])
     else
       render json: { error: @gift.errors.full_messages.join(', ') }, status: :unprocessable_entity
     end
@@ -37,7 +37,7 @@ class Shops::Admin::GiftsController < Shops::Admin::BaseController
   private
 
   def set_item
-    @item = @shop.items.find(params[:item_id])
+    @item = @shop.items.find_by(sid: params[:item_id])
   end
 
   def set_gift

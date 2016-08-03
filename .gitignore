@@ -28,9 +28,15 @@ config/wechat.yml
 /public/assets
 /public/uploads
 /public/deploy
+/public/generatings
+
 .gitver
 .powenv
 .ruby-version
 .git-hooks/post_checkout/.read
 
 node_modules
+error.log
+cron.log
+
+dump.rdb

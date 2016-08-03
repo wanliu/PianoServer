@@ -4,12 +4,28 @@
     // border-bottom: 1px solid #ddd;
   }
 
+  .order-desc {
+    border-top: 1px solid #ddd; 
+    border-bottom: 1px solid #ddd; 
+    padding: 10px;
+    margin: 10px 15px;
+
+    .item {
+      color: #777777;
+    }
+  }
+
   .chose-pay-kind {
     .pay-kind {
-      margin: 10px 15px;
+      margin: 20px 15px;
       padding: 10px 0;
-      border: 1px solid #ddd;
+      // border: 1px solid #ddd;
       cursor: pointer;
+      background-color: #00C800; 
+      font-size: 14px; 
+      color: #FFFFFF;
+      border-bottom: 1px solid #00A000; 
+      border-radius: 5px;
 
       .wx-pay-logo {
         display: inline-block;

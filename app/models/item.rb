@@ -3,7 +3,7 @@ class Item < ActiveRecord::Base
   include ContentManagement::Model
   include PublicActivity::Model
   include Elasticsearch::Model
-  include Elasticsearch::Model::Callbacks
+  # include Elasticsearch::Model::Callbacks
   include ESModel
 
   tracked
@@ -28,6 +28,7 @@ class Item < ActiveRecord::Base
   has_many :stock_changes, autosave: true
   has_many :evaluations, as: :evaluationable
 
+  has_many :order_items, as: :orderable
   has_many :gifts
   has_many :items, through: :gifts
   has_many :presents, through: :gifts
@@ -47,6 +48,10 @@ class Item < ActiveRecord::Base
   validate :express_template_from_shop
 
   delegate :region_id, to: :shop, prefix: true
+
+  after_commit :create_elastic_index, on: :create
+  after_commit :update_elastic_index, on: :update
+  after_commit :destroy_elastic_index, on: :destroy
 
   if Settings.dev.feature.dynamic_property
     validates :properties, properties: {
@@ -165,11 +170,13 @@ class Item < ActiveRecord::Base
     query = {
       query: {
         bool: {
-          should: [
+          must: [
             {
-              query_string: {"default_field" => "item.shop_name","query" => shop_name }
+              term: {shop_name: shop_name }
             }
-          ]
+          ],
+          should: [],
+          minimum_should_match: 1
         }
       }
     }
@@ -177,11 +184,15 @@ class Item < ActiveRecord::Base
     if product.present?
       if product.to_i > 0
         query[:query][:bool][:should].push({
-          "range" => {"item.sid" => {"from" => product,"to" => product }}
+          "range" => {"sid" => {"from" => product,"to" => product }}
+        })
+      elsif 1 == product.length
+        query[:query][:bool][:should].push({
+          "query_string" => {"default_field" => "title","query" => "*#{product}*" }
         })
       else
         query[:query][:bool][:should].push({
-          "query_string" => {"default_field" => "item.title","query" => product }
+          match: { title: product }
         })
       end
     end
@@ -420,6 +431,14 @@ class Item < ActiveRecord::Base
     shop.try(:name)
   end
 
+  def shop_address
+    shop.try(:address)
+  end
+
+  def shop_avatar
+    shop.try(:avatar_url)
+  end
+
   # options: {
   #   data: {size: 'l', color: 'red'},
   #   quantity: 1
@@ -535,6 +554,38 @@ class Item < ActiveRecord::Base
   def express_template_from_shop
     if express_template.present? && express_template.shop_id != shop_id
       errors.add(:express_template_id, "只能使用本商店的运费模板")
+    end
+  end
+
+  def create_elastic_index
+    __elasticsearch__.index_document
+  rescue Faraday::ConnectionFailed => e
+    send_elastic_error_notification
+  end
+
+  def update_elastic_index
+    __elasticsearch__.update_document
+  rescue Faraday::ConnectionFailed => e
+    send_elastic_error_notification
+  end
+
+  def destroy_elastic_index
+    __elasticsearch__.delete_document
+  rescue Faraday::ConnectionFailed => e
+    send_elastic_error_notification
+  end
+
+  def send_elastic_error_notification
+    text = "【万流网】Elasticsearch服务连接失败！请检查修复"
+    Rails.logger.error "\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"
+    Rails.logger.error "Elasticsearch服务连接失败！请检查修复"
+    Rails.logger.error "\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"
+    mobiles = Settings.error_receivers
+
+    if mobiles.present? && Rails.env.production?
+      mobiles.each do |mobile|
+        NotificationSender.delay.send_sms(mobile: mobile, text: text)
+      end
     end
   end
 end

@@ -1,15 +1,17 @@
-<div class='delivery-addresses panel panel-default'>
+<div class='delivery-addresses panel panel-default row'>
   <% if delivery_addresses.present? %>
     <div class="panel-heading">
       选择收货地址
     </div>
     <% delivery_addresses.each_with_index do |address, index| %>
-      <div class='delivery-address <%= "active" if order.address_id == address.id %>' data-address-id=<%= address.id %>>
-        <div class='title'>
-          <%= address.contact %>
-        </div>
-        <div class='detail'>
-          <%= address.delivery_address %>
+      <div class='address-container col-xs-12 col-md-4 col-sm-6 '>
+        <div class='delivery-address <%= "active" if order.address_id == address.id %>' data-address-id=<%= address.id %>>
+          <div class='title'>
+            <%= address.contact %>
+          </div>
+          <div class='detail'>
+            <%= address.delivery_address %>
+          </div>
         </div>
       </div>
     <% end %>

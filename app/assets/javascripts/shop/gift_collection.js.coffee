@@ -129,7 +129,7 @@ class @GiftCollection
     @setModalForMofify()
 
   failUpdateGiftCallback: (data, status, xhr) =>
-    @gitfItemModify.find('.errors')
+    @$modalModifier.find('.errors')
       .text(data.responseJSON.error)
       .show()
 
@@ -149,11 +149,19 @@ class @GiftCollection
 
     $.getJSON(@giftSearchUrl, { q: query })
       .done (data, status, xhr) =>
-        @$dropdown.html('')
+        if data.length > 0
+          @$dropdown.html('')
 
-        _.each data, (item) =>
-          html = @itemTemplate(item)
-          @$dropdown.append(html)
+          _.each data, (item) =>
+            html = @itemTemplate(item)
+            @$dropdown.append(html)
+
+          if 'false' == $('#gift-search').attr('aria-expanded')
+            $('#gift-search').dropdown('toggle')
+        else
+          @$dropdown.html('<li><span class="glyphicon glyphicon-info-sign"></span> 没有搜到与"' + query + '"有关的商品</li>')
+          if 'false' == $('#gift-search').attr('aria-expanded')
+            $('#gift-search').dropdown('toggle')
 
   clearModalCreater: () =>
     @setModalForCreate()
