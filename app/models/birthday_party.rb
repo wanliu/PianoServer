@@ -27,11 +27,21 @@ class BirthdayParty < ActiveRecord::Base
   before_validation :set_hearts_limit_from_cake, on: :create
 
   def withdraw
-    amount = withdrawable - withdrew
+    withdraw_amount = withdrawable - withdrew
 
-    if amount > 1
-      self.withdrew = withdrawable
-      redpacks.build(user: user, amount: amount, wx_user_openid: wx_user_openid)
+    if withdraw_amount > 1
+      self.withdrew += withdraw_amount
+
+      amounts = []
+      times = (withdraw_amount/200).floor
+      left = withdraw_amount%200
+
+      times.times { amounts << 200 }
+      amounts << left if left >= 1
+
+      amounts.each do |amount|
+        redpacks.build(user: user, amount: amount, wx_user_openid: wx_user_openid)
+      end 
 
       save
     end
