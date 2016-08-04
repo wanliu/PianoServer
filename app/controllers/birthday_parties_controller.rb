@@ -40,9 +40,9 @@ class BirthdayPartiesController < ApplicationController
       @birthday_party.wx_user_openid = openid
       @birthday_party.request_ip = request.ip
 
-      @withdraw_status = @birthday_party.withdraw
+      @withdraw_statuses = @birthday_party.withdraw
     else
-      @withdraw_status = BirthdayParty::WithdrawStatus.new(false, "订单尚未完成，请在订单完成（收货）后再试！")
+      @error = "订单尚未完成，请在订单完成（收货）后再试！"
     end
   end
 

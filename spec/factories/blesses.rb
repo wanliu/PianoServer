@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :bless do
-    sender_id 1
+    association :sender, factory: :user
     virtual_present nil
     message "MyText"
     birthday_party nil

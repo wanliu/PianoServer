@@ -17,7 +17,7 @@ class BirthdayParty < ActiveRecord::Base
   belongs_to :order
 
   has_many :blesses
-  has_one :redpack, autosave: true, inverse_of: :birthday_party
+  has_many :redpacks, autosave: true, inverse_of: :birthday_party
 
   validates :cake, presence: true
   validates :user, presence: true
@@ -47,32 +47,15 @@ class BirthdayParty < ActiveRecord::Base
   end
 
   def withdraw
-    unless order.finish?
-      return WithdrawStatus.new(false, "订单尚未完成，请在订单完成（收货）后再试！")
-    end
+    return false unless order.finish?
 
-    if redpack(true).present?
-      if redpack.sent? || redpack.received? || redpack.sending?
-        WithdrawStatus.new(false, "已经发放过了")
-      else
-        response = redpack.send_redpack
-        WithdrawStatus.new(response.success?, response.error_message)
-      end
-    else
-      self.withdrew = get_withdrawable
+    build_unwithdrew_redpacks
 
-      if withdrew >= 1
-        build_redpack(user: user, amount: withdrew, wx_user_openid: wx_user_openid)
-        if save
-          response = redpack.send_redpack
-          WithdrawStatus.new(response.success?, response.error_message)
-        else
-          WithdrawStatus.new(false, errors.full_messages.join(', '))
-        end
-      else
-        WithdrawStatus.new(false, "低于一元钱的红包无法领取！")
-      end
-    end
+    send_unsent_redpacks
+  end
+
+  def withdrew(force=false)
+    force ? redpacks.sum(:amount) : super()
   end
 
   def update_withdrawable
@@ -125,5 +108,37 @@ class BirthdayParty < ActiveRecord::Base
     charged_blesses = blesses.charged.paid
 
     charged_blesses.sum("cast(virtual_present_infor->>'value' AS float)")
+  end
+
+  def build_unwithdrew_redpacks
+    withdrew_cache = withdrew(true)
+    withdrawable_cache = get_withdrawable
+
+    withdraw_amount = withdrawable_cache - withdrew_cache
+
+    if withdraw_amount >= 1
+      self.withdrew = withdrawable_cache
+
+      while withdraw_amount > 200 do
+        withdraw_amount -= 200
+
+        redpacks.build(user: user, amount: 200, wx_user_openid: wx_user_openid)
+      end
+
+      if withdraw_amount >= 1
+        redpacks.build(user: user, amount: withdraw_amount, wx_user_openid: wx_user_openid)
+      end
+
+      save
+    end
+  end
+
+  def send_unsent_redpacks
+    options = {
+      failed: Redpack.statuses["failed"],
+      unknown: Redpack.statuses["unknown"]}
+
+    redpacks.where("status = :failed OR status = :unknown", options)
+      .map(&:send_redpack)
   end
 end
