@@ -134,10 +134,11 @@ class BirthdayParty < ActiveRecord::Base
   end
 
   def send_unsent_redpacks
-    redpacks.where("status = :failed OR status = :unknown", failed: Redpack.statuses["failed"], unknown: Redpack.statuses["unknown"]).map do |redpack|
-      if redpack.failed? || redpack.unknown?
-        redpack.send_redpack
-      end
-    end
+    options = {
+      failed: Redpack.statuses["failed"],
+      unknown: Redpack.statuses["unknown"]}
+
+    redpacks.where("status = :failed OR status = :unknown", options)
+      .map(&:send_redpack)
   end
 end
