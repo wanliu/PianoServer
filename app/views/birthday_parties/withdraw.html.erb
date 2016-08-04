@@ -6,7 +6,7 @@
   <% elsif @withdraw_statuses.present? %>
     <!-- 即使红包发送不成功，也不在这里显示．这种情况由后台处理 -->
     <div class="alert alert-success" role="alert">
-      已发出<%= @withdraw_statuses.length %> 个红包，请注意查收！
+      已发出<%= @withdraw_statuses.length %>个红包，请注意查收！
     </div>
   <% elsif false == @withdraw_statuses %>
   	<div class="alert alert-danger" role="alert">
