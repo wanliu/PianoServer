@@ -31,12 +31,12 @@
 </div>
 
 <script type="text/template" id='deliver-template'>
-  <div class='item text-center' data-deliver-id='{{ id }}' data-toggle="tooltip" data-placement="right" title="{{ username }}">
+  <div class='item text-center' data-deliver-id='{{ id }}' data-toggle="tooltip" data-placement="right" title="{{ nickname }}">
     <div class='avatar deliver-avatar'>
       <img src={{ avatar_url }}>
     </div>
-    <div class='username'>
-      {{ username.length > 16 ? username.substring(0, 12) + "..." : username }}
+    <div class='nickname'>
+      {{ nickname.length > 16 ? nickname.substring(0, 12) + "..." : nickname }}
     </div>
     <div class='operations'>
       <%= button_to shop_admin_deliver_path(@shop.name, 88888888), method: :delete, remote: true, class: 'btn btn-danger', data: {confirm: '确定删除该运送员？'} do %>
@@ -47,12 +47,12 @@
 </script>
 
 <script type="text/template" id='new-deliver-template'>
-  <div class='item' data-deliver-id='{{ id }}' data-toggle="tooltip" data-placement="right" title="{{ username }}">
+  <div class='item' data-deliver-id='{{ id }}' data-toggle="tooltip" data-placement="right" title="{{ nickname }}">
     <div class='avatar'>
       <img src={{ avatar_url }}>
     </div>
-    <div class='username'>
-      {{ username.length > 16 ? username.substring(0, 12) + "..." : username }}
+    <div class='nickname'>
+      {{ nickname.length > 16 ? nickname.substring(0, 12) + "..." : nickname }}
     </div>
     <div class='operations'>
       <%= button_to shop_admin_delivers_path(@shop.name, deliver: {user_id: 88888888}), method: :post, remote: true, class: 'btn btn-primary' do %>
@@ -64,7 +64,7 @@
 
 <script type="text/javascript">
 (function (argument) {
-  var delivers = <%= @delivers.to_json(methods: [:avatar_url, :username]).html_safe %>;
+  var delivers = <%= @delivers.to_json(methods: [:avatar_url, :nickname]).html_safe %>;
   var template = _.template($('#deliver-template').html());
   var newTempalte = _.template($('#new-deliver-template').html());
   var searchUrl = "<%= search_shop_admin_delivers_path(@shop.name) %>";

@@ -17,9 +17,10 @@ class Bless < ActiveRecord::Base
   validates :virtual_present, presence: true
   validates :sender, presence: true
 
-  validate :only_one_free_bless, on: :create
+  validate :free_bless_limit, on: :create
 
   before_validation :copy_virtual_present_infor, on: :create
+  after_commit :update_birthday_party_withdrawable
 
   class << self
     def free_hearts_hash
@@ -39,23 +40,30 @@ class Bless < ActiveRecord::Base
 
   def copy_virtual_present_infor
     self.virtual_present_infor = {
-      id: virtual_present.id,
-      name: virtual_present.name,
-      title: virtual_present.title,
-      price: virtual_present.price,
-      value: virtual_present.value
+      "id" => virtual_present.id,
+      "name" => virtual_present.name,
+      "title" => virtual_present.title,
+      "price" => virtual_present.price,
+      "value" => virtual_present.value
     }
   end
 
-  def only_one_free_bless
-    if 0 == virtual_present.price && free_present_exist?
+  def free_bless_limit
+    if 0 == virtual_present_infor["price"].to_f && reach_free_limit?
       errors.add(:base, "免费的礼物的配额已经使用！")
     end
   end
 
-  def free_present_exist?
+  def reach_free_limit?
+    limit = (Settings.virtual_presents && Settings.virtual_presents.free_limit) || 1
     sender.blesses
       .where("birthday_party_id = ? AND virtual_present_infor @> ?", birthday_party_id, self.class.free_hearts_hash.to_json)
-      .exists?
+      .count >= limit
+  end
+
+  def update_birthday_party_withdrawable
+    if persisted? && paid?
+      birthday_party.update_withdrawable
+    end
   end
 end

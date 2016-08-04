@@ -28,19 +28,10 @@
           </td>
           <td>
             <div class='order-status'>
-              <% if @order.initiated? %>
-                <div class='title'><b>订单状态：订单生成成功，等待买家确认！</b></div>
-                <div>订单编号：<%= @order.id %></div>
-                <div>您可以
-                  <button type="button" class="order-finish btn btn-danger" data-toggle="modal" data-target="#finish-order-<%= @order.id %>">
-                    确认收货
-                  </button>
-                  <span>完成订单</span>
-                </div>
-              <% elsif @order.finish? %>
+              <% if @order.finish? %>
                 <div class='title'>订单状态：订单已经完成，交易成功！</div>
-                <div>订单编号：<%= @order.id %></div>
               <% end %>
+              <div>订单编号：<%= @order.id %></div>
             </div>
           </td>
         </tr>
@@ -98,26 +89,6 @@
 </div>
 
 <% unless @order.finish? %>
-  <!-- 确认收货弹出框 -->
-  <div class="modal fade" id="finish-order-<%= @order.id %>" tabindex="-1" role="dialog" aria-labelledby="myOrderLable<%= @order.id %>">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="myOrderLable<%= @order.id %>">确认收货</h4>
-        </div>
-        <div class="modal-body">
-          订单号: <%= @order.id %> 确认收货?
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-          <%= link_to "确认收货", order_path(@order, "order[status]" => "finish"), method: :patch, class: 'btn btn-primary' %>
-          <!-- <button type="button" class="btn btn-primary"></button> -->
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- 修改备注弹出框 -->
   <div class="modal fade" id="note-order-<%= @order.id %>" tabindex="-1" role="dialog" aria-labelledby="noteOrderLable<%= @order.id %>">
     <div class="modal-dialog" role="document">

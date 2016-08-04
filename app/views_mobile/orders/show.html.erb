@@ -44,33 +44,6 @@
           <div id='qrcode-receive-code' class='center'></div>
           <div>您的收货码</div>
         </div>
-
-        <div class='toggle-zone receive' style='display: none;'>
-          <div>收到购买的商品后</div>
-          <div class='center'>
-            <button class='btn btn-primary  btn-danger' data-toggle="modal" data-target="#finish-order-<%= @order.id %>">确认收货</button>
-          </div>
-
-          <div class="modal fade" id="finish-order-<%= @order.id %>" tabindex="-1" role="dialog" aria-labelledby="myOrderLable<%= @order.id %>">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                  <h4 class="modal-title" id="myOrderLable<%= @order.id %>">确认收货</h4>
-                </div>
-                <div class="modal-body">
-                  订单号: <%= @order.id %> 确认收货?
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                  <%= link_to "确认收货", order_path(@order, "order[status]" => "finish"), method: :patch, class: 'btn btn-primary' %>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       <% end %>
 
       <div class='toggle-zone order-detail'>
@@ -125,49 +98,25 @@
     </div>
 
     <% unless @order.finish? %>
-      <% if @order.birthday_party.present? %>
-        <div class='receive-operation row'>
-          <div class='col-xs-3 toggler' data-zone='qrcode-receive'>
-            <span class='glyphicon glyphicon-qrcode'></span><br>
-            <span class='desc'>扫码收货</span>
-          </div>
-          
-          <div class='col-xs-3 toggler' data-zone='receive'>
-            <span class='glyphicon glyphicon-copyright-mark'></span><br>
-            <div class='desc'>确认收货</div>
-          </div>
-
-          <div class='col-xs-3 toggler' data-zone='order-detail'>
-            <span class='glyphicon glyphicon-th-list active'></span><br>
-            <div class='desc'>订单详情</div>
-          </div>
-
-          <div class='col-xs-3 toggler' data-zone='birthday-party'>
-            <%= link_to birthday_party_path(@order.birthday_party.id), style: 'color: #ddd;' do %>
-              <span class='glyphicon glyphicon-glass active'></span><br>
-              <div class='desc'>生日趴</div>
-            <% end %>
-          </div>
+      <div class='receive-operation row'>
+        <div class='col-xs-6 toggler text-center' data-zone='qrcode-receive'>
+          <span class='glyphicon glyphicon-qrcode'></span><br>
+          <span class='desc'>扫码收货</span>
         </div>
-      <% else %>
-        <div class='receive-operation row'>
-          <div class='col-xs-4 toggler' data-zone='qrcode-receive'>
-            <span class='glyphicon glyphicon-qrcode'></span><br>
-            <span class='desc'>扫码收货</span>
-          </div>
-          
-          <div class='col-xs-4 toggler' data-zone='receive'>
-            <span class='glyphicon glyphicon-copyright-mark'></span><br>
-            <div class='desc'>确认收货</div>
-          </div>
 
-          <div class='col-xs-4 toggler' data-zone='order-detail'>
-            <span class='glyphicon glyphicon-th-list active'></span><br>
-            <div class='desc'>订单详情</div>
-          </div>
+        <div class='col-xs-6 toggler text-center' data-zone='order-detail'>
+          <span class='glyphicon glyphicon-th-list active'></span><br>
+          <div class='desc'>订单详情</div>
         </div>
-      <% end %>
+      </div>
     <% end %>
+
+    <% if @order.birthday_party.present? %>
+    <div>
+      <%= link_to "进入生日趴", birthday_party_path(@order.birthday_party.id), class: 'btn btn-warning btn-large btn-block' %>
+    </div>
+    <% end %>
+
     <% if @one_more_time %>
       <%= link_to "点击可再次获得抢购机会", @redirect_url, class: 'btn btn-warning btn-large btn-block', id: 'pmo-once-more' %>
     <% end %>
@@ -202,8 +151,7 @@
 <% end %>
 
 <script type="text/javascript">
-  $(function () {
-
+  (function () {
     $('.more').click(function(event) {
       $(this).siblings('.gifts')
         .toggleClass('toggle-more-gifts');
@@ -245,5 +193,5 @@
 
     // 收货二维码
     new QRCode(document.getElementById("qrcode-receive-code"), '<%= qr_shop_admin_order_url(@order.supplier.name, @order, host: Settings.app.website, t: @order.receive_token) %>' );
-  })
+  })();
 </script>

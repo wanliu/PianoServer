@@ -157,7 +157,17 @@ virtual_presents:
   names:
     - heart
     - flower
-    - car
-    - teddy_bear
     - music_box
-    - motor
+    - pleasant_sheep
+    - ultraman
+    - bonnie_bear
+  free_limit: 1
+
+wx_redpack:
+  msg_receivers:
+    - '18774891025'
+    - '18673412345'
+
+error_receivers:
+  - '18774891025'
+  - '15074995527'

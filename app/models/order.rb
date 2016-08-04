@@ -86,7 +86,7 @@ class Order < ActiveRecord::Base
   # create new order_items
   # delete relevant cart_items
   # inventory deducting
-  # 与cart_item_gifts不同的是，这里的key是商品item的id, 而cart_item_gifts的key是cart_item的id
+  # 与cart_item_gifts不同的是，这里的key(13, 12, 15)是商品item的id, 而cart_item_gifts的key是cart_item的id
   # "options"=>{
   #   "13"=>{"16"=>"2", "14"=>"1"}, 
   #   "12"=>{"17"=>"-1.0", "19"=>"2", "22"=>"2"}, 

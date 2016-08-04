@@ -1,6 +1,9 @@
 <%= content_tag_for "tr", redpack do %>
   <td>
-    <%= redpack.birthday_party.birthday_person %>
+    <%= redpack.birthday_party.try(:birthday_person) %>
+  </td>
+  <td>
+    <%= redpack.birthday_party.try(:user).try(:nickname) %>
   </td>
   <td>
     <%= redpack.birthday_party_id %>

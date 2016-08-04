@@ -1,11 +1,20 @@
 <div class='container'>
-  <% if @withdraw_status.success? %>
+  <% if @error.present? %>
+    <div class="alert alert-danger" role="alert">
+      <%= @error %>
+    </div>
+  <% elsif @withdraw_statuses.present? %>
+    <!-- 即使红包发送不成功，也不在这里显示．这种情况由后台处理 -->
     <div class="alert alert-success" role="alert">
-      红包发送成功，请注意查收！
+      已发出<%= @withdraw_statuses.length %> 个红包，请注意查收！
+    </div>
+  <% elsif false == @withdraw_statuses %>
+  	<div class="alert alert-danger" role="alert">
+      订单尚未完成，请在订单完成（收货）后再试！
     </div>
   <% else %>
-    <div class="alert alert-danger" role="alert">
-      <%= @withdraw_status.error_message %>
+  	<div class="alert alert-danger" role="alert">
+      暂时没有红包可以发！
     </div>
   <% end %>
 </div>

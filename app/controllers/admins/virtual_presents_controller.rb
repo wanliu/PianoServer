@@ -45,7 +45,8 @@ class Admins::VirtualPresentsController < Admins::BaseController
         format.json { render json: {} }
       else
         format.js
-        render json: @virtual_present.errors, status: :unprocessable_entity
+        format.json { render json: @virtual_present.errors, status: :unprocessable_entity }
+        format.html { render json: @virtual_present.errors, status: :unprocessable_entity }
       end
     end
   end

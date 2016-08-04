@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
   # resources :gifts, except: [:new, :edit]
-  resources :birthday_parties, only: [] do
+  resources :birthday_parties, only: [:index] do
     get :withdraw, on: :member
+    get :blessed, on: :collection
   end
 
   resources :thumbs, except: [:new, :edit]
@@ -340,9 +341,13 @@ Rails.application.routes.draw do
 
       resources :cakes, only: [:index, :show]
 
-      resources :virtual_presents, only: :index
+      resources :virtual_presents, only: [:index, :existPresent] do
+        collection do
+          get :existPresent, action: :existPresent
+        end
+      end
 
-      resources :birthday_parties, only: [:index, :show, :update] do
+      resources :birthday_parties, only: [:index, :show, :update, :rank] do
         resources :blesses, except: [:new, :edit], shallow: true do
           get :wx_pay_params, on: :member
         end
@@ -350,6 +355,11 @@ Rails.application.routes.draw do
         member do
           patch :upload_avatar
           post :update_avatar_media_id
+        end
+
+        collection do
+          get :rank
+          get :recently
         end
       end
 
@@ -454,6 +464,9 @@ Rails.application.routes.draw do
       # get "wxpay"
       get "wxpay/:id", to: 'orders#wxpay', as: 'wxpay'
       get "wxpay_test"
+      get 'receive'
+      post 'search_receive'
+      post 'confirm_receive'
     end
 
     member do
