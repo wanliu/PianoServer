@@ -55,7 +55,7 @@ class BirthdayParty < ActiveRecord::Base
   end
 
   def withdrew(force=false)
-    force ? redpacks.sum(:amount) : super
+    force ? redpacks.sum(:amount) : super()
   end
 
   def update_withdrawable
@@ -134,7 +134,7 @@ class BirthdayParty < ActiveRecord::Base
   end
 
   def send_unsent_redpacks
-    redpacks(true).map do |redpack|
+    redpacks.where("status = :failed OR status = :unknown", failed: Redpack.statuses["failed"], unknown: Redpack.statuses["unknown"]).map do |redpack|
       if redpack.failed? || redpack.unknown?
         redpack.send_redpack
       end
