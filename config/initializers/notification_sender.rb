@@ -11,7 +11,7 @@ require 'uri'
 
 module NotificationSender
   def self.notify(options)
-    send_pusher(options)
+    # send_pusher(options)
     send_sms(options)
   end
 
