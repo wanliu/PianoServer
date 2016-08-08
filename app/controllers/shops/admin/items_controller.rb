@@ -171,6 +171,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
 
     if stock_options.present?
       @item.adjust_stocks(current_user, stock_options)
+      @item.set_price_offsets(stock_options)
     else
       flash.now[:error] = "库存设置错误，请正确填写"
       set_stocks_for_feedback

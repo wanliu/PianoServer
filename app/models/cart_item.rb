@@ -38,7 +38,7 @@ class CartItem < ActiveRecord::Base
       # if sale_mode == "retail"
         # item.cartable.public_price
       # else
-      cartable.price
+      cartable.price(properties)
       # end
     when Promotion
       cartable.discount_price
