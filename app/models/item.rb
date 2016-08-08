@@ -363,6 +363,8 @@ class Item < ActiveRecord::Base
   end
 
   def price(props={})
+    base_price = super() || 0
+
     result = if props.present?
       offset_setting = price_offset.find do |_, setting|
         setting["props"] == props.stringify_keys
@@ -374,15 +376,17 @@ class Item < ActiveRecord::Base
         0
       end
 
-      super() + offset
+      base_price + offset
     else
-      super()
+      base_price
     end
 
     result > 0 ? result : 0
   end
 
   def public_price(props={})
+    base_price = super() || 0
+
     result = if props.present?
       offset_setting = price_offset.find do |_, setting|
         setting["props"] == props.stringify_keys
@@ -394,9 +398,9 @@ class Item < ActiveRecord::Base
         0
       end
 
-      super() + offset
+      base_price + offset
     else
-      super()
+      base_price
     end
 
     result > 0 ? result : 0
