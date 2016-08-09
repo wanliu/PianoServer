@@ -39,7 +39,7 @@ module WxRedpack
         if Settings.wx_redpack && Settings.wx_redpack.msg_receivers.present?
           text = "【万流网】微信公众账号余额不足，微信红包无法发放，请速充值！"
           Settings.wx_redpack.msg_receivers.each do |mobile|
-            NotificationSender.delay.send_sms(mobile: mobile.to_s, text: text)
+            NotificationSender.delay.send_sms("mobile" => mobile.to_s, "text" => text)
           end
         end
       end

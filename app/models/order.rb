@@ -355,7 +355,7 @@ class Order < ActiveRecord::Base
   end
 
   def send_notify_to_seller
-    seller_mobile = supplier.try(:owner).try(:mobile)
+    seller_mobile = supplier.try(:owner).try(:mobile) || phone
     seller_id = supplier.try(:owner).try(:id)
 
     unless persisted? && Settings.promotions.one_money.sms_to_supplier && pmo_grab_id && seller_mobile
@@ -363,8 +363,8 @@ class Order < ActiveRecord::Base
     end
 
     order_url = Rails.application.routes.url_helpers.shop_admin_order_path(supplier.name, self)
-    # NotificationSender.delay.send_sms({mobile: seller_mobile, order_id: id, order_url: order_url, seller_id: seller_id})
-    NotificationSender.delay.notify({mobile: seller_mobile, order_id: id, order_url: order_url, seller_id: seller_id})
+
+    NotificationSender.delay.notify({"mobile" => seller_mobile, "order_id" => id, "order_url" => order_url, "seller_id" => seller_id})
   end
 
   def generate_receive_token

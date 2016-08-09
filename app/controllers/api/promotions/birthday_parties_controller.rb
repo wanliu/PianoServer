@@ -11,14 +11,24 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
   end
 
   def recently
-    ids = BirthdayParty.where("birth_day >= :today", today: Date.today).limit(3).pluck(:id)
+    day_options = {
+      seven_days_ago: 7.days.ago.to_date,
+      seven_days_later: 7.days.since.to_date
+    }
 
-    @birthday_parties = BirthdayParty.where(id: ids).rank
+    ids = BirthdayParty.where("birth_day >= :seven_days_ago AND birth_day <= :seven_days_later", day_options)
+    .limit(3)
+    .pluck(:id)
+
+    @parties = BirthdayParty.where(id: ids).rank
   end
 
   # GET /birthday_parties/1
   # GET /birthday_parties/1.json
   def show
+    @hearts_count = @birthday_party.blesses
+      .where("virtual_present_infor @> ?", {name: 'heart'}.to_json)
+      .count
   end
 
   def upload_avatar
