@@ -26,6 +26,9 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
   # GET /birthday_parties/1
   # GET /birthday_parties/1.json
   def show
+    @hearts_count = @birthday_party.blesses
+      .where("virtual_present_infor @> ?", {name: 'heart'}.to_json)
+      .count
   end
 
   def upload_avatar
