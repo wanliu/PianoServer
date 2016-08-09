@@ -20,7 +20,7 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
     .limit(3)
     .pluck(:id)
 
-    @birthday_parties = BirthdayParty.where(id: ids).rank
+    @parties = BirthdayParty.where(id: ids).rank
   end
 
   # GET /birthday_parties/1
