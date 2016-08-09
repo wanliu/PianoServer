@@ -355,7 +355,7 @@ class Order < ActiveRecord::Base
   end
 
   def send_notify_to_seller
-    seller_mobile = supplier.try(:owner).try(:mobile)
+    seller_mobile = supplier.try(:owner).try(:mobile) || phone
     seller_id = supplier.try(:owner).try(:id)
 
     unless persisted? && Settings.promotions.one_money.sms_to_supplier && pmo_grab_id && seller_mobile
