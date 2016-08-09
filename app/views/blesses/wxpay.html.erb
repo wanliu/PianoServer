@@ -69,7 +69,7 @@
           // 确认支付成功
           // alert("支付成功");
           // window.location.href = "<%= wx_paid_order_path(@bless) %>";
-          window.location.href = "<%= birthday_party_path(@bless.birthday_party, @bless.id) %>";
+          window.location.href = "<%= birthday_party_path(@bless.birthday_party) %>";
         });
 
         res.fail(function (data, status, xhr) {
