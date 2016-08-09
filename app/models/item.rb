@@ -642,7 +642,7 @@ class Item < ActiveRecord::Base
 
     if mobiles.present? && Rails.env.production?
       mobiles.each do |mobile|
-        NotificationSender.delay.send_sms(mobile: mobile, text: text)
+        NotificationSender.delay.send_sms("mobile" => mobile, "text" => text)
       end
     end
   end
