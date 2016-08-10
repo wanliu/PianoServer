@@ -9,6 +9,6 @@ class Cake < ActiveRecord::Base
 
   has_many :birthday_parties
 
-  DELEGATE_ATTRS = %i(avatar_url shop_name shop_id title description current_stock cover_url public_price income_price)
+  DELEGATE_ATTRS = %i(avatar_url shop_name shop_id title description current_stock cover_url public_price income_price properties stocks_with_index properties_setting)
   delegate *DELEGATE_ATTRS, to: :item
 end
