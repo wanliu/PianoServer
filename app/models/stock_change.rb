@@ -29,7 +29,7 @@ class StockChange < ActiveRecord::Base
   def self.extract_stocks_with_index(options)
     options.values.reduce({}) do |cache, item|
       key = item[:key].keys.sort.map {|k| "#{k}:#{item[:key][k]}"}.join(';')
-      cache[key] = { quantity: item[:value], data: item[:key] }
+      cache[key] = { quantity: item[:value], data: item[:key], price_offset: item[:price_offset] }
       cache
     end
   end
