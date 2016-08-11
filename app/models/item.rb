@@ -516,7 +516,10 @@ class Item < ActiveRecord::Base
         stock["data"] ||= {}
         index = stock["data"].keys.sort.map {|k| "#{k}:#{stock['data'][k]}"}.join(';')
 
-        cache[index] = { quantity: stock["quantity"], data: stock["data"], price: price(stock["data"]) }
+        offset_set = price_offset.find { |_, off| off["props"] == stock["data"]}.last
+        offset = offset_set.try(:[], "price_offset") || 0
+
+        cache[index] = { quantity: stock["quantity"], data: stock["data"], price: price(stock["data"]), price_offset: offset }
         cache
       end
   end

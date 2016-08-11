@@ -16,7 +16,7 @@
                     <% end %>
                   </span>
                   <%= number_field_tag "inventories[#{index}][value]",  @stocks_with_index.try(:[], find_key).try(:[], :quantity), class: "form-control", placeholder: "库存" %>
-                  <%= number_field_tag "inventories[#{index}][price_offset]", @stocks_with_index.try(:[], find_key).try(:[], :offset), class: "form-control", placeholder: "价格浮动", step: 0.01 %>
+                  <%= number_field_tag "inventories[#{index}][price_offset]", @stocks_with_index.try(:[], find_key).try(:[], :price_offset), class: "form-control", placeholder: "价格浮动", step: 0.01 %>
                 </div>
               </div>
             <% end %>
