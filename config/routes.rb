@@ -497,6 +497,8 @@ Rails.application.routes.draw do
   #
   get '/about' => 'home#about'
 
+  get '/profile' => 'profile#index', as: :my_profile
+
   match '@:profile', :to => 'profile#username', as: :profile, via: [ :get ]
 
   match 'goshop/:id', :to => 'shops#show', via: :get
