@@ -362,6 +362,50 @@ class Item < ActiveRecord::Base
     end
   end
 
+  def price(props={})
+    base_price = super() || 0
+
+    result = if props.present?
+      offset_setting = price_offset.find do |_, setting|
+        setting["props"] == props.stringify_keys
+      end
+
+      offset = if offset_setting.present?
+        offset_setting.last["price_offset"].to_f || 0
+      else
+        0
+      end
+
+      base_price + offset
+    else
+      base_price
+    end
+
+    result > 0 ? result : 0
+  end
+
+  def public_price(props={})
+    base_price = super() || 0
+
+    result = if props.present?
+      offset_setting = price_offset.find do |_, setting|
+        setting["props"] == props.stringify_keys
+      end
+
+      offset = if offset_setting.present?
+        offset_setting.last["price_offset"].to_f || 0
+      else
+        0
+      end
+
+      base_price + offset
+    else
+      base_price
+    end
+
+    result > 0 ? result : 0
+  end
+
   def pinyin
     Pinyin.t title
   end
@@ -423,6 +467,19 @@ class Item < ActiveRecord::Base
     end
   end
 
+  #  {"0"=>{"key"=>{"size"=>"21"}, "value"=>"10.0", "price_offset"=>"5"},
+  # "1"=>{"key"=>{"size"=>"25"}, "value"=>"20.0", "price_offset"=>"6"},
+  # "2"=>{"key"=>{"size"=>"28"}, "value"=>"30.0", "price_offset"=>"6.88"}}
+  def set_price_offsets(options)
+    if options.is_a? Hash
+      self.price_offset = {}
+
+      options.each do |key, value|
+        self.price_offset[key] = {props: value["key"], price_offset: (value["price_offset"] || 0).to_f}
+      end
+    end
+  end
+
   def shop_name
     shop.try(:title)
   end
@@ -458,7 +515,16 @@ class Item < ActiveRecord::Base
       .reduce({}) do |cache, stock|
         stock["data"] ||= {}
         index = stock["data"].keys.sort.map {|k| "#{k}:#{stock['data'][k]}"}.join(';')
-        cache[index] = { quantity: stock["quantity"], data: stock["data"] }
+
+        offset_set = price_offset.find { |_, off| off["props"] == stock["data"]}
+
+        offset = if offset_set.present?
+          offset_set.try(:last).try(:[], "price_offset") || 0
+        else
+          0
+        end
+
+        cache[index] = { quantity: stock["quantity"], data: stock["data"], price: price(stock["data"]), price_offset: offset }
         cache
       end
   end
@@ -509,9 +575,8 @@ class Item < ActiveRecord::Base
           prop_name == key
         end
 
-        prop = prop[1]
-
         if prop.present?
+          prop = prop[1]
           "#{prop['title']}:#{prop['value'][value].try(:[], 'title')}"
         else
           ""

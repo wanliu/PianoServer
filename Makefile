@@ -74,7 +74,7 @@ try_config:
 ifneq ("$(wildcard Settingfile)","")
 	$(eval SETTIGNS_FILE=$(shell cat Settingfile))
 endif
-	@echo $(SETTIGNS_FILE)	
+	@echo $(SETTIGNS_FILE)
 
 sync_config: try_config
 	@aws s3 cp $(SETTIGNS_FILE) config/settings.local.yml $(PROFILE)
@@ -89,7 +89,7 @@ bundle:
 migrate:
 	@bundle exec rake db:migrate
 
-launch: sync_config bundle migrate precompile restart sidekiq schedule
+launch: sync_config bundle migrate restart sidekiq schedule
 
 sidekiq:
 	@-test -s tmp/pids/sidekiq.pid && kill -TERM `cat tmp/pids/sidekiq.pid`
@@ -120,4 +120,4 @@ ssh:
 	@aws s3 cp s3://wanliu/test.pem ~/.ssh/test.pem $(PROFILE)
 	@ssh -i ~/.ssh/test.pem ec2-user@test.wanliu.biz
 
-deploy: package upload
+deploy: precompile package upload
