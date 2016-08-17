@@ -3,6 +3,10 @@ button:
 - name: "天天惠"
   sub_button:
   - type: view
+    name: "生日叭🎂"
+    url: http://m.wanliu.biz/cake_party/
+    sub_button: []    
+  - type: view
     name: "天天惠"
     url: http://m.wanliu.biz/daily_cheap/
     sub_button: []
@@ -21,6 +25,10 @@ button:
   - type: view
     name: "意见反馈"
     url: http://koudaitong.com/v2/x/dq0wg3ob
+    sub_button: []
+  - type: view
+    name: "我的生日趴"
+    url: http://m.wanliu.biz/birthday_parties
     sub_button: []
   - type: view
     name: "我的订单"
