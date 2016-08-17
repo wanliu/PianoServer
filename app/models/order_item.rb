@@ -112,7 +112,7 @@ class OrderItem < ActiveRecord::Base
       # if sale_mode == "retail"
         # @order_item.orderable.public_price
       # else
-      orderable.price
+      orderable.price(properties)
       # end
     when Promotion
       orderable.discount_price

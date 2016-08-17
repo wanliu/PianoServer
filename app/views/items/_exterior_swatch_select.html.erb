@@ -47,7 +47,7 @@
         var cloneItem = _.clone(item);
         delete cloneItem.quantity;
 
-        for (var key in cloneItem) {
+        for (var key in fullfillProps) {
           if (cloneItem[key] != fullfillProps[key]) return false;
         }
         return true;
@@ -55,6 +55,11 @@
 
       $(document).data('stock', +fullfillStock.quantity);
       $('.available-stock').text(+fullfillStock.quantity);
+
+      if (fullfillStock && !_.isUndefined(fullfillStock.price)) {
+        $('.promotion-price').text(+fullfillStock.price);
+      }
+
       $('#cart_item_quantity').prop('max', fullfillStock.quantity);
     }
 

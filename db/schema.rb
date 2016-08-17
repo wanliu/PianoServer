@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160725082259) do
+ActiveRecord::Schema.define(version: 20160808030436) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -333,11 +333,13 @@ ActiveRecord::Schema.define(version: 20160725082259) do
     t.boolean  "abandom",                                      default: false, null: false
     t.jsonb    "properties_setting",                           default: {}
     t.integer  "express_template_id"
+    t.jsonb    "price_offset",                                 default: {}
   end
 
   add_index "items", ["brand_id"], name: "index_items_on_brand_id", using: :btree
   add_index "items", ["category_id"], name: "index_items_on_category_id", using: :btree
   add_index "items", ["on_sale"], name: "index_items_on_on_sale", using: :btree
+  add_index "items", ["price_offset"], name: "index_items_on_price_offset", using: :gin
   add_index "items", ["shop_category_id"], name: "index_items_on_shop_category_id", using: :btree
   add_index "items", ["shop_id"], name: "index_items_on_shop_id", using: :btree
   add_index "items", ["sid"], name: "index_items_on_sid", using: :btree
