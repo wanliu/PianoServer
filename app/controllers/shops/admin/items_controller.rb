@@ -110,6 +110,7 @@ class Shops::Admin::ItemsController < Shops::Admin::BaseController
 
     stock_options = params["inventories"] || params["inventory"]
     @item.build_stocks(current_user, stock_options)
+    @item.set_price_offsets(stock_options)
 
     if @item.save
       expire_page controller: 'items', action: 'show', id: @item.sid
