@@ -29,6 +29,14 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
     @hearts_count = @birthday_party.blesses
       .where("virtual_present_infor @> ?", {name: 'heart'}.to_json)
       .count
+    hearts_limit = @birthday_party.hearts_limit
+    @progress = 100
+    free = @birthday_party.send(:free_hearts_withdrawable)
+    charged = @birthday_party.send(:charged_widthdrawable)
+
+    if @hearts_count < hearts_limit
+      @progress = ((free + charged) / (hearts_limit + charged) * 100).floor
+    end
   end
 
   def upload_avatar
