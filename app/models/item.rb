@@ -575,9 +575,8 @@ class Item < ActiveRecord::Base
           prop_name == key
         end
 
-        prop = prop[1]
-
         if prop.present?
+          prop = prop[1]
           "#{prop['title']}:#{prop['value'][value].try(:[], 'title')}"
         else
           ""
