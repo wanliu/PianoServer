@@ -101,6 +101,6 @@ class Admins::CakesController < Admins::BaseController
     end
 
     def cake_update_params
-      params.require(:cake).permit(:item_id, :hearts_limit)
+      params.require(:cake).permit(:hearts_limit)
     end
 end
