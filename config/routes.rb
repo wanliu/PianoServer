@@ -215,6 +215,7 @@ Rails.application.routes.draw do
 
     resources :cakes do
       get "search_items", on: :collection
+      post "undo_delete", on: :member
     end
 
     resources :virtual_presents, except: [:new, :edit]
