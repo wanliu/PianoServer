@@ -1,4 +1,6 @@
 class Cake < ActiveRecord::Base
+  acts_as_paranoid
+  
   paginates_per 15
 
   belongs_to :item
