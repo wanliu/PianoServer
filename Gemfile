@@ -144,6 +144,9 @@ gem 'wechat'
 gem 'spreadsheet'
 
 gem 'wx_pay'
+
+gem "paranoia", "~> 2.0"
+
 gem 'web-console', group: :development
 
 group :development, :test do
