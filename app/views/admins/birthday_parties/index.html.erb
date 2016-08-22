@@ -1,0 +1,36 @@
+<div class='cakes-container'>
+  <div class='alert-header'>
+    <div class="alert alert-success infors" role="alert" style='display: none;'>
+    </div>
+    <div class="alert alert-danger errors" role="alert" style='display: none;'>
+    </div>
+    <div class='title'>
+      <h3>生日趴列表</h3>
+    </div>
+  </div>
+
+  <table class='table cakes'>
+    <thead>
+      <tr>
+        <th>ID </th>
+        <th>蛋糕 </th>
+        <th>过生日的人 </th>
+        <th>发起人 </th>
+        <th>生日日期 </th>
+        <th>生日趴 </th>
+        <th>已返现金额 </th>
+        <th>总返现金额 </th>
+        <th>免费返现金额 </th>
+        <th>增值返现金额 </th>
+        <!-- <th>操作 </th> -->
+      </tr>
+    </thead>
+    <tbody>
+      <% @birthday_parties.each do |birthday_party| %>
+        <%= render birthday_party %>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%= paginate @birthday_parties %>
+</div>

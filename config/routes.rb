@@ -218,6 +218,8 @@ Rails.application.routes.draw do
       post "undo_delete", on: :member
     end
 
+    resources :birthday_parties, only: [:index, :show]
+
     resources :virtual_presents, except: [:new, :edit]
 
     resources :redpacks, only: [:index, :show, :update] do
