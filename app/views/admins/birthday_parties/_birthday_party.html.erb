@@ -1,0 +1,15 @@
+<tr>
+  <td> <%= birthday_party.id %> </td>
+  <td> <%= birthday_party.cake.try(:item).try(:title) %> </td>
+  <td> <%= birthday_party.birthday_person %> </td>
+  <td> <%= birthday_party.try(:user).try(:nickname) %> </td>
+  <td> <%= birthday_party.birth_day %> </td>
+  <td> <%= link_to "查看", birthday_party_path(birthday_party.id) %> </td>
+  <td> <%= birthday_party.withdrew %> </td>
+  <td> <%= birthday_party.withdrawable %> </td>
+  <td> <%= birthday_party.free_hearts_withdrawable %></td>
+  <td> <%= birthday_party.charged_widthdrawable %></td>
+  <td>
+    <!-- <button>删除</button> -->
+  </td>
+</tr>
