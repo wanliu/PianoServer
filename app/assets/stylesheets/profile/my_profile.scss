@@ -3,7 +3,9 @@
     width: 100%;
     padding: 50px 30px;
     height: 180px;
-    background-color: blue;
+    // background-color: blue;
+    background-image: image_url('p_bj.jpg');
+    background-size: cover;
 
     div {
       float: left;
@@ -12,7 +14,7 @@
     .info {
       color: white;
       font-size: 20px;
-      padding: 30px 10px;
+      padding: 30px 20px;
     }
 
     img {
@@ -27,7 +29,7 @@
 
   .break-line {
     height: 20px;
-    background-color: #ddd;
+    // background-image: image_url('bj.jpg');
   }
 
   .item {
@@ -41,15 +43,24 @@
     }
   }
 
+  a {
+    color: #737373;
+  }
+
   .list {
+    background-color: white;
     .order {
       border-right: 1px solid #ddd;
     }
   }
 
   .items {
+    background-color: white;
+    // margin-top: -1px;
+
     .item {
       border-right: 1px solid #ddd;
+      // border-top: 1px solid #ddd;
     }
 
     .glyphicon {

@@ -50,7 +50,7 @@
   <div class='break-line'></div>
 
   <div class='items row'>
-    <div class='col-xs-3 item'>
+    <div class='col-xs-4 item'>
       <%= link_to locations_path do %>
         <div>
           <span class="glyphicon glyphicon-star"></span>
@@ -59,27 +59,36 @@
       <% end %>
     </div>
 
-    <div class='col-xs-3 item'>
-      <div>
-        <span class="glyphicon glyphicon-star"></span>
-      </div>
-      <div>生日趴</div>
+    <div class='col-xs-4 item'>
+      <%= link_to birthday_parties_path do %>
+        <div>
+          <span class="glyphicon glyphicon-star"></span>
+        </div>
+        <div>发起的生日趴</div>
+      <% end %>
     </div>
 
-    <div class='col-xs-3 item'>
+    <div class='col-xs-4 item'>
+      <%= link_to blessed_birthday_parties_path do %>
+        <div>
+          <span class="glyphicon glyphicon-star"></span>
+        </div>
+        <div>参加的生日趴</div>
+      <% end %>
+    </div>
+
+<!--     <div class='col-xs-3 item'>
       <div>
         <span class="glyphicon glyphicon-star"></span>
       </div>
       <div>天天惠</div>
-    </div>
+    </div> -->
 
-    <div class='col-xs-3 item'>
+    <!-- <div class='col-xs-3 item'>
       <div>
         <span class="glyphicon glyphicon-star"></span>
       </div>
       <div>更多</div>
-    </div>
+    </div> -->
   </div>
-
-  <div class='break-line'></div>
 </div>
