@@ -12,21 +12,19 @@ class BirthdayParty < ActiveRecord::Base
 
   mount_uploader :person_avatar, ItemImageUploader
 
-  belongs_to :cake
+  belongs_to :cake, -> { with_deleted }
   belongs_to :user
   belongs_to :order
 
   has_many :blesses
   has_many :redpacks, autosave: true, inverse_of: :birthday_party
 
-  # validates :cake, presence: true
+  validates :cake, presence: true
   validates :user, presence: true
   validates :order, presence: true
   validates :message, presence: true
   validates :birthday_person, presence: true
   validates :hearts_limit, numericality: { greater_than_or_equal_to: 1 }
-
-  # validate :cake_presence
 
   before_validation :set_hearts_limit_from_cake, on: :create
 
@@ -147,10 +145,4 @@ class BirthdayParty < ActiveRecord::Base
     redpacks.where("status = :failed OR status = :unknown", options)
       .map(&:send_redpack)
   end
-
-  # def cake_presence
-  #   unless Cake.with_deleted.find(cake_id).present?
-  #     errors.add(:base, "生日蛋糕不存在")
-  #   end
-  # end
 end
