@@ -21,6 +21,7 @@ class CartItemsController < ApplicationController
     if exsited_item.present?
       @item = exsited_item
       @item.quantity += params[:cart_item][:quantity].to_i
+      @item.price = exsited_item.caculate_price
     else
       @item = current_cart.items.new(cart_item_params) do |item|
         item.price = item.caculate_price

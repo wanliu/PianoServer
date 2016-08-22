@@ -21,6 +21,6 @@ class Api::Promotions::CakesController < Api::BaseController
   private
 
   def set_cake
-    @cake = Cake.find(params[:id])
+    @cake = Cake.with_deleted.find(params[:id])
   end
 end

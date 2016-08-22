@@ -2,3 +2,4 @@
 target: /usr/src/app/PianoServer
 script: scripts/install.sh
 owner: ec2-user
+before: scripts/clear.sh

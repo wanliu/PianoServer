@@ -123,7 +123,8 @@ class OrdersController < ApplicationController
       cake = Cake.find(@order.cake_id)
       item = cake.item
 
-      @order_item = @order.items.build(orderable: item)
+      item_properties = params[:order][:properties] || {}
+      @order_item = @order.items.build(orderable: item, properties: item_properties)
     else
       @order = current_user.orders.build
       @order_item = @order.items.build(order_item_params)
@@ -462,8 +463,10 @@ class OrdersController < ApplicationController
   end
 
   def cake_location_params
+    contact = params[:order][:birthday_party_attributes] && params[:order][:birthday_party_attributes][:birthday_person]
+
     @cake_location_params ||= {
-      contact: params[:order][:birthday_party_attributes][:birthday_person], 
+      contact: contact, 
       road: params[:order][:road],
       contact_phone: params[:order][:contact_phone],
       province_id: '430000',

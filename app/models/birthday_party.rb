@@ -2,7 +2,7 @@ require 'wx_avatar_downloader'
 
 class BirthdayParty < ActiveRecord::Base
 
-  paginates_per 5
+  paginates_per 10
 
   attr_accessor :request_ip, :wx_user_openid
 
@@ -12,7 +12,7 @@ class BirthdayParty < ActiveRecord::Base
 
   mount_uploader :person_avatar, ItemImageUploader
 
-  belongs_to :cake
+  belongs_to :cake, -> { with_deleted }
   belongs_to :user
   belongs_to :order
 
@@ -92,16 +92,14 @@ class BirthdayParty < ActiveRecord::Base
     blesses.paid.sum("cast(virtual_present_infor->>'value' AS float)")
   end
 
-  private
-
-  def set_hearts_limit_from_cake
-    self.hearts_limit = cake.hearts_limit
-  end
-
   def free_hearts_withdrawable
     free_hearts = blesses.free_hearts.paid.limit(hearts_limit)
 
-    free_hearts.sum("cast(virtual_present_infor->>'value' AS float)")
+    # free_hearts.sum("cast(virtual_present_infor->>'value' AS float)")
+    free_hearts.reduce(0) do |sum, bless|
+      sum += bless.virtual_present_infor["value"].to_f
+      sum
+    end
   end
 
   def charged_widthdrawable
@@ -109,6 +107,13 @@ class BirthdayParty < ActiveRecord::Base
 
     charged_blesses.sum("cast(virtual_present_infor->>'value' AS float)")
   end
+
+  private
+
+  def set_hearts_limit_from_cake
+    self.hearts_limit = cake.hearts_limit
+  end
+
 
   def build_unwithdrew_redpacks
     withdrew_cache = withdrew(true)
