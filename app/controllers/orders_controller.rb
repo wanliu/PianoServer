@@ -28,6 +28,8 @@ class OrdersController < ApplicationController
       :index,
       :show,
       :history,
+      :cakes,
+      :yiyuan,
       :confirmation,
       :buy_now_confirm,
       :buy_now_create,
@@ -61,6 +63,25 @@ class OrdersController < ApplicationController
     @orders = current_user.orders
       .finish
       .includes(:items, :supplier)
+      .order(id: :desc)
+      .page(params[:page])
+      .per(params[:per])
+  end
+
+  def cakes
+    @orders = current_user.orders
+      .includes(:items, :supplier, :birthday_party)
+      .where("birthday_parties.id IS NOT NULL")
+      .references(:birthday_party)
+      .order(id: :desc)
+      .page(params[:page])
+      .per(params[:per])
+  end
+
+  def yiyuan
+    @orders = current_user.orders
+      .includes(:items, :supplier)
+      .where("pmo_grab_id IS NOT NULL")
       .order(id: :desc)
       .page(params[:page])
       .per(params[:per])

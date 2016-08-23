@@ -1,7 +1,7 @@
 <div class='mobile-orders'>
   <ul class="nav nav-pills orders-tab current-history buyer-orders" role="tablist">
-    <li role="presentation" class="active">
-      <a href="javascript: void(0)" aria-controls="current-orders" role="tab" data-toggle="tab"><b>未完成</b></a>
+    <li role="presentation">
+      <a href="/orders/cakes"><b>未完成</b></a>
     </li>
     <li role="presentation">
       <a href="/orders/history"><b>已完成</b></a>
@@ -9,8 +9,8 @@
     <li role="presentation">
       <a href="/orders/cakes"><b>生日趴</b></a>
     </li>
-    <li role="presentation">
-      <a href="/orders/yiyuan"><b>天天惠</b></a>
+    <li role="presentation" class="active">
+      <a href="javascript: void(0)" aria-controls="current-orders" role="tab" data-toggle="tab"><b>天天惠</b></a>
     </li>
   </ul>
 
@@ -19,7 +19,7 @@
       <%= render partial: "order", collection: @orders, as: :order %>
       <%= paginate @orders %>
     <% else %>
-      <div class='text-center empty-orders'>没有正在处理的订单！</div>
+      <div class='text-center empty-orders'>没有订单！</div>
     <% end %>
   </div>
 </div>

@@ -3,14 +3,14 @@
     <li role="presentation">
       <a href="/orders"><b>未完成的订单</b></a>
     </li>
-    <li role="presentation" class="active">
-      <a href="javascrit: void(0)" aria-controls="current-orders" role="tab" data-toggle="tab"><b>历史订单</b></a>
+    <li role="presentation">
+      <a href="/orders/history"><b>历史订单</b></a>
     </li>
     <li role="presentation">
       <a href="/orders/cakes"><b>生日趴订单</b></a>
     </li>
-    <li role="presentation">
-      <a href="/orders/yiyuan"><b>天天惠订单</b></a>
+    <li role="presentation" class="active">
+      <a href="javascrit: void(0)" aria-controls="current-orders" role="tab" data-toggle="tab"><b>天天惠订单</b></a>
     </li>
   </ul>
 
@@ -20,7 +20,7 @@
         <%= render partial: "order", collection: @orders, as: :order %>
         <%= paginate @orders %>
       <% else %>
-        <div class='text-center empty-orders'>没有历史订单！</div>
+        <div class='text-center empty-orders'>没有订单！</div>
       <% end %>
     </div>
   </div>
