@@ -459,6 +459,9 @@ Rails.application.routes.draw do
       # }
 
       get "history"
+      get "cakes"
+      get "yiyuan"
+
       get "yiyuan_confirm"
       post "yiyuan_confirm", to: 'orders#create_yiyuan'
       get "new_yiyuan_address"

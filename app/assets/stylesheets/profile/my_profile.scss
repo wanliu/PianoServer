@@ -1,6 +1,12 @@
 .my-profile {
+  max-width: 1170px;
+  margin-right: auto;
+  margin-left: auto;
+
   .head {
-    width: 100%;
+    // width: 100%;
+    margin-left: -15px;
+    margin-right: -15px;
     padding: 50px 30px;
     height: 180px;
     // background-color: blue;
