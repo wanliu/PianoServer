@@ -145,7 +145,8 @@ class OrdersController < ApplicationController
       item = cake.item
 
       item_properties = params[:order][:properties] || {}
-      @order_item = @order.items.build(orderable: item, properties: item_properties)
+      quantity = params[:order][:quantity] || 1
+      @order_item = @order.items.build(orderable: item, quantity: quantity, properties: item_properties)
     else
       @order = current_user.orders.build
       @order_item = @order.items.build(order_item_params)
@@ -369,7 +370,7 @@ class OrdersController < ApplicationController
 
   def buy_now_confirm_params
     params.require(:order).permit(
-      :cake_id, 
+      :cake_id, :quantity,
       birthday_party_attributes: [:message, :birthday_person, :birth_day])
   end
 
