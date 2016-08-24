@@ -370,7 +370,7 @@ class OrdersController < ApplicationController
 
   def buy_now_confirm_params
     params.require(:order).permit(
-      :cake_id, :quantity,
+      :cake_id,
       birthday_party_attributes: [:message, :birthday_person, :birth_day])
   end
 
