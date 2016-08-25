@@ -36,6 +36,22 @@
   // <%= signature.to_json.html_safe %>
 
   $(function() {
+    if (typeof wx == "undefined") {
+      $.post("/api/error_records", {error_record: {name: "微信支付配置失败", infor: "wx变量未定义"}});
+      alert('微信支付加载失败，请稍后再试');
+      return;
+    }
+
+    wx.ready(function(){
+    });
+
+    wx.error(function(res){
+      // alert('wx config error')
+      // alert('error msg:' +  JSON.stringify(res));
+      $.post("/api/error_records", {error_record: {name: "微信支付配置错误", infor: res}});
+      alert('微信支付请求失败，请稍后再试');
+    });
+
     wx.config({
       // debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
       appId: '<%= WxPay.appid %>', // 必填，公众号的唯一标识
@@ -44,14 +60,6 @@
       signature: '<%= signature[:signature] %>',// 必填，签名，见附录1
       jsApiList: ['chooseWXPay', 'onMenuShareTimeline'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
     });
-
-    wx.ready(function(){
-    });
-
-    wx.error(function(res){
-      // alert('wx config error')
-      alert('error msg:' +  JSON.stringify(res));
-    })
 
     function payNow() {
       wx.chooseWXPay({
@@ -80,6 +88,7 @@
             window.location.href = "<%= birthday_party_path(@bless.birthday_party_id) %>";
           });
         },
+
         fail: function(res) {
           // 支付失败后的回调函数
           alert('支付没有成功', + JSON.stringify(res));
@@ -88,14 +97,12 @@
       });
     }
 
-    $(function() {
-      // 用户点击“微信支付”
-      // 从后端得到微信订单号和各签名参数，用于发起微信支付
-      $('.wx-pay-now').click(function(e) {
-        e.preventDefault();
+    // 用户点击“微信支付”
+    // 从后端得到微信订单号和各签名参数，用于发起微信支付
+    $('.wx-pay-now').click(function(e) {
+      e.preventDefault();
 
-        payNow();
-      })
+      payNow();
     })
   });
 </script>

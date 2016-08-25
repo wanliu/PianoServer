@@ -402,6 +402,8 @@ Rails.application.routes.draw do
       #   get 'stream'
       # end
     end
+
+    resources :error_records, only: [:index, :create]
   end
 
   resources :promotions, concerns: [ :chatable ] do
