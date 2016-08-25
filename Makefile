@@ -92,7 +92,8 @@ migrate:
 launch: sync_config bundle migrate restart sidekiq schedule
 
 sidekiq:
-	@-test -s tmp/pids/sidekiq.pid && kill -TERM `cat tmp/pids/sidekiq.pid`
+	# @-test -s tmp/pids/sidekiq.pid && kill -TERM `cat tmp/pids/sidekiq.pid`
+	@-ps -A u | grep sidekiq | awk '{ print $2}' | xargs kill
 	@bundle exec sidekiq -d
 
 schedule:
