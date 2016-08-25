@@ -1,0 +1,76 @@
+.my-profile {
+  max-width: 1170px;
+  margin-right: auto;
+  margin-left: auto;
+
+  .head {
+    // width: 100%;
+    margin-left: -15px;
+    margin-right: -15px;
+    padding: 50px 30px;
+    height: 180px;
+    // background-color: blue;
+    background-image: image_url('p_bj.jpg');
+    background-size: cover;
+
+    div {
+      float: left;
+    }
+
+    .info {
+      color: white;
+      font-size: 20px;
+      padding: 30px 20px;
+    }
+
+    img {
+      max-height: 80px;
+      background-repeat: no-repeat;
+      background-position: 50%;
+      border-radius: 50%;
+      height: 80px;
+    }
+
+  }
+
+  .break-line {
+    height: 20px;
+    // background-image: image_url('bj.jpg');
+  }
+
+  .item {
+    color: #737373;
+    height: 100x;
+    padding: 20px 0;
+    text-align: center;
+
+    .glyphicon {
+      font-size: 40px;
+    }
+  }
+
+  a {
+    color: #737373;
+  }
+
+  .list {
+    background-color: white;
+    .order {
+      border-right: 1px solid #ddd;
+    }
+  }
+
+  .items {
+    background-color: white;
+    // margin-top: -1px;
+
+    .item {
+      border-right: 1px solid #ddd;
+      // border-top: 1px solid #ddd;
+    }
+
+    .glyphicon {
+      color: orange;
+    }
+  }
+}

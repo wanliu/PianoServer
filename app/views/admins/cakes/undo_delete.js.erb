@@ -1,12 +1,10 @@
+
 (function() {
   var html = '<%= j render @cake %>';
-  var $item = $('table.cakes #cake_<%= @cake.id %>');
-
-  $item.replaceWith(html);
-
+  $('table.cakes #cake_<%= @cake.id %>').replaceWith(html);
+  
   var $alert = $(".infors.alert");
   $alert.html("操作成功！").show();
-  $item.fadeOut(500).fadeIn(500)
 
   setTimeout(function() {
     $alert.fadeOut(function() {

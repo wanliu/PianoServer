@@ -215,7 +215,10 @@ Rails.application.routes.draw do
 
     resources :cakes do
       get "search_items", on: :collection
+      post "undo_delete", on: :member
     end
+
+    resources :birthday_parties, only: [:index, :show]
 
     resources :virtual_presents, except: [:new, :edit]
 
@@ -399,6 +402,8 @@ Rails.application.routes.draw do
       #   get 'stream'
       # end
     end
+
+    resources :error_records, only: [:index, :create]
   end
 
   resources :promotions, concerns: [ :chatable ] do
@@ -456,6 +461,9 @@ Rails.application.routes.draw do
       # }
 
       get "history"
+      get "cakes"
+      get "yiyuan"
+
       get "yiyuan_confirm"
       post "yiyuan_confirm", to: 'orders#create_yiyuan'
       get "new_yiyuan_address"
@@ -496,6 +504,8 @@ Rails.application.routes.draw do
   ## shop route
   #
   get '/about' => 'home#about'
+
+  get '/profile' => 'profile#index', as: :my_profile
 
   match '@:profile', :to => 'profile#username', as: :profile, via: [ :get ]
 

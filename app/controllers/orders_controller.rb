@@ -28,6 +28,8 @@ class OrdersController < ApplicationController
       :index,
       :show,
       :history,
+      :cakes,
+      :yiyuan,
       :confirmation,
       :buy_now_confirm,
       :buy_now_create,
@@ -61,6 +63,25 @@ class OrdersController < ApplicationController
     @orders = current_user.orders
       .finish
       .includes(:items, :supplier)
+      .order(id: :desc)
+      .page(params[:page])
+      .per(params[:per])
+  end
+
+  def cakes
+    @orders = current_user.orders
+      .includes(:items, :supplier, :birthday_party)
+      .where("birthday_parties.id IS NOT NULL")
+      .references(:birthday_party)
+      .order(id: :desc)
+      .page(params[:page])
+      .per(params[:per])
+  end
+
+  def yiyuan
+    @orders = current_user.orders
+      .includes(:items, :supplier)
+      .where("pmo_grab_id IS NOT NULL")
       .order(id: :desc)
       .page(params[:page])
       .per(params[:per])
@@ -124,7 +145,8 @@ class OrdersController < ApplicationController
       item = cake.item
 
       item_properties = params[:order][:properties] || {}
-      @order_item = @order.items.build(orderable: item, properties: item_properties)
+      quantity = params[:order][:quantity] || 1
+      @order_item = @order.items.build(orderable: item, quantity: quantity, properties: item_properties)
     else
       @order = current_user.orders.build
       @order_item = @order.items.build(order_item_params)
@@ -348,7 +370,7 @@ class OrdersController < ApplicationController
 
   def buy_now_confirm_params
     params.require(:order).permit(
-      :cake_id, 
+      :cake_id,
       birthday_party_attributes: [:message, :birthday_person, :birth_day])
   end
 
