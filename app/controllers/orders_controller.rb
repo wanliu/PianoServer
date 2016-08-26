@@ -356,7 +356,7 @@ class OrdersController < ApplicationController
         :note, 
         :cake_id,
         items_attributes: [:orderable_type, :orderable_id, :quantity],
-        birthday_party_attributes: [:message, :birthday_person, :birth_day])
+        birthday_party_attributes: [:message, :birthday_person, :birth_day, :delivery_time])
       .tap do |white_list|
         white_list[:items_attributes].each do |key, attributes|
           attributes[:properties] = params[:order][:items_attributes][key][:properties] || {}
@@ -371,7 +371,7 @@ class OrdersController < ApplicationController
   def buy_now_confirm_params
     params.require(:order).permit(
       :cake_id,
-      birthday_party_attributes: [:message, :birthday_person, :birth_day])
+      birthday_party_attributes: [:message, :birthday_person, :birth_day, :delivery_time])
   end
 
   def order_item_params
