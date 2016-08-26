@@ -1,6 +1,6 @@
 class Api::Promotions::BirthdayPartiesController < Api::BaseController
   before_action :set_birthday_party, only: [:show, :update, :edit, :destroy, :withdraw]
-  before_action :authenticate_user!, only: [:upload_avatar]
+  before_action :authenticate_user!, only: [:index, :upload_avatar]
 
   # GET /birthday_parties
   # GET /birthday_parties.json
@@ -29,6 +29,10 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
     @hearts_count = @birthday_party.blesses
       .where("virtual_present_infor @> ?", {name: 'heart'}.to_json)
       .count
+
+    order = @birthday_party.order
+    @order_item = order.items.first
+
     hearts_limit = @birthday_party.hearts_limit
     @progress = 100
     free = @birthday_party.send(:free_hearts_withdrawable)
