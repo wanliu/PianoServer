@@ -129,7 +129,7 @@ promotions:
     sms_to_supplier: true
     sms_to_supplier_template: '【万流网】你的商店有一个新的一元购订单，订单号：#o_id#，请及时查看！'
     sms_to_cake_buyer: true
-    sms_to_cake_buyer_template: '您的生日趴蛋糕:#cakename#订购成功, 蛋糕将于#date#前送到#address#,请注意查收! 如有疑问, 请拨打客服电话:#phone#, 谢谢您的光临!'
+    sms_to_cake_buyer_template: '【耒阳街上】您的生日趴蛋糕:#cakename#订购成功, 蛋糕将于#date#前送到#address#,请注意查收! 如有疑问, 请拨打客服电话:#phone#, 谢谢您的光临!'
     wx_pay_discount: 5
     enter_url: /one_money
     scripts:
