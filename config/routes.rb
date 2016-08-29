@@ -610,6 +610,10 @@ Rails.application.routes.draw do
           post "/upload_shop_signage", to: "settings#upload_shop_signage"
         end
       end
+
+      resources :sales_men, except: [:new, :edit] do
+        get :search, on: :collection
+      end
     end
   end
 
