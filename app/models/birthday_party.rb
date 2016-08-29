@@ -108,6 +108,14 @@ class BirthdayParty < ActiveRecord::Base
     charged_blesses.sum("cast(virtual_present_infor->>'value' AS float)")
   end
 
+  def delivery_deadline
+    if delivery_time.present?
+      delivery_time.strftime("%Y年%m月%d日%H点")
+    else
+      birth_day.strftime("%Y年%m月%d日")
+    end
+  end
+
   private
 
   def set_hearts_limit_from_cake

@@ -41,7 +41,7 @@
           <span style='color: #d9534f;'>
             <span class='glyphicon glyphicon-send'></span> 送货
           </span>
-          生日趴送货日期: <%= order.birthday_party.birth_day.strftime("%Y年%m月%d日") %>
+          生日趴送货日期: <%= order.birthday_party.delivery_deadline %>
           <%= link_to '进入生日趴', birthday_party_path(order.birthday_party) %>
         </td>
       </tr>
