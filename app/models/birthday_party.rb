@@ -110,7 +110,7 @@ class BirthdayParty < ActiveRecord::Base
 
   def delivery_deadline
     if delivery_time.present?
-      delivery_time.strftime("%Y年%m月%d日%H点%M分")
+      delivery_time.strftime("%Y年%m月%d日%H点")
     else
       birth_day.strftime("%Y年%m月%d日")
     end
