@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160826090744) do
+ActiveRecord::Schema.define(version: 20160830061125) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -542,6 +542,16 @@ ActiveRecord::Schema.define(version: 20160826090744) do
   add_index "regions", ["parent_id"], name: "index_regions_on_parent_id", using: :btree
   add_index "regions", ["rgt"], name: "index_regions_on_rgt", using: :btree
 
+  create_table "sales_men", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "shop_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "sales_men", ["shop_id"], name: "index_sales_men_on_shop_id", using: :btree
+  add_index "sales_men", ["user_id"], name: "index_sales_men_on_user_id", using: :btree
+
   create_table "shop_categories", force: :cascade do |t|
     t.string   "name"
     t.string   "category_type"
@@ -661,6 +671,27 @@ ActiveRecord::Schema.define(version: 20160826090744) do
   end
 
   add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
+
+  create_table "temp_birthday_parties", force: :cascade do |t|
+    t.integer  "cake_id"
+    t.integer  "quantity"
+    t.integer  "hearts_limit"
+    t.date     "birth_day"
+    t.datetime "delivery_time"
+    t.integer  "user_id"
+    t.integer  "sales_man_id"
+    t.text     "message"
+    t.string   "delivery_address"
+    t.string   "birthday_person"
+    t.string   "person_avatar"
+    t.string   "avatar_media_id"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+  end
+
+  add_index "temp_birthday_parties", ["cake_id"], name: "index_temp_birthday_parties_on_cake_id", using: :btree
+  add_index "temp_birthday_parties", ["sales_man_id"], name: "index_temp_birthday_parties_on_sales_man_id", using: :btree
+  add_index "temp_birthday_parties", ["user_id"], name: "index_temp_birthday_parties_on_user_id", using: :btree
 
   create_table "templates", force: :cascade do |t|
     t.string   "name"
