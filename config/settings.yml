@@ -163,6 +163,11 @@ virtual_presents:
     - bonnie_bear
   free_limit: 1
 
+cakes:
+  suppliers:
+    - 亿金蛋糕
+    - 工匠烘焙
+
 wx_redpack:
   msg_receivers:
     - '18774891025'

@@ -134,10 +134,12 @@ ActiveRecord::Schema.define(version: 20160830061125) do
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
     t.datetime "deleted_at"
+    t.string   "supplier"
   end
 
   add_index "cakes", ["deleted_at"], name: "index_cakes_on_deleted_at", using: :btree
   add_index "cakes", ["item_id"], name: "index_cakes_on_item_id", using: :btree
+  add_index "cakes", ["supplier"], name: "index_cakes_on_supplier", using: :btree
 
   create_table "cart_items", force: :cascade do |t|
     t.integer  "cart_id"
