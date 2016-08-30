@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160829081904) do
+ActiveRecord::Schema.define(version: 20160826090744) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -542,16 +542,6 @@ ActiveRecord::Schema.define(version: 20160829081904) do
   add_index "regions", ["parent_id"], name: "index_regions_on_parent_id", using: :btree
   add_index "regions", ["rgt"], name: "index_regions_on_rgt", using: :btree
 
-  create_table "sales_men", force: :cascade do |t|
-    t.integer  "user_id"
-    t.integer  "shop_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  add_index "sales_men", ["shop_id"], name: "index_sales_men_on_shop_id", using: :btree
-  add_index "sales_men", ["user_id"], name: "index_sales_men_on_user_id", using: :btree
-
   create_table "shop_categories", force: :cascade do |t|
     t.string   "name"
     t.string   "category_type"
@@ -766,8 +756,6 @@ ActiveRecord::Schema.define(version: 20160829081904) do
   add_foreign_key "order_items", "orders"
   add_foreign_key "orders", "shops", column: "supplier_id"
   add_foreign_key "orders", "users", column: "buyer_id"
-  add_foreign_key "sales_men", "shops"
-  add_foreign_key "sales_men", "users"
   add_foreign_key "shop_categories", "shops"
   add_foreign_key "shop_delivers", "shops"
   add_foreign_key "shop_delivers", "users", column: "deliver_id"
