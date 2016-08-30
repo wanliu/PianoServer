@@ -30,9 +30,6 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
       .where("virtual_present_infor @> ?", {name: 'heart'}.to_json)
       .count
 
-    order = @birthday_party.order
-    @order_item = order.items.first
-
     hearts_limit = @birthday_party.hearts_limit
     @progress = 100
     free = @birthday_party.send(:free_hearts_withdrawable)
