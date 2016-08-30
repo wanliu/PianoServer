@@ -363,6 +363,8 @@ Rails.application.routes.draw do
         collection do
           get :rank
           get :recently
+          post :upload_avatar, action: "upload_temp_avatar"
+          post :upload_avatar_media_id, action: "upload_temp_avatar_media_id"
         end
       end
 

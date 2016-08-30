@@ -55,7 +55,14 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
     end
   end
 
-  def update_avatar_media_id
+  def upload_temp_avatar
+    uploader = ItemImageUploader.new(Item.new, :images)
+    uploader.store! params[:file]
+
+    render json: { success: true, url: uploader.url(:cover)  , filename: uploader.filename }
+  end
+
+  def upload_avatar_media_id
     @birthday_party = current_user.birthday_parties.find(params[:id])
 
     @birthday_party.update_column('avatar_media_id', params[:avatar_media_id] || params[:birthday_party][:avatar_media_id])
@@ -64,6 +71,22 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
     # @birthday_party.download_avatar_media
 
     render :show
+    # else
+      # render json: { errors: @birthday_party.errors.full_messages.join(', ') }, status: :unprocessable_entity
+    # end
+  end
+
+  def upload_temp_avatar_media_id
+    birthday_party = BirthdayParty.new
+
+    birthday_party.avatar_media_id = params[:avatar_media_id] || params[:birthday_party][:avatar_media_id]
+
+    birthday_party = WxAvatarDownloader.download(birthday_party)
+    # @birthday_party.download_avatar_media
+
+    render json: { success: true, url: birthday_party.person_avatar.url, filename: birthday_party.person_avatar.filename }
+
+    # render :show
     # else
       # render json: { errors: @birthday_party.errors.full_messages.join(', ') }, status: :unprocessable_entity
     # end
