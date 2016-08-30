@@ -1,6 +1,7 @@
 <%= content_tag_for :tr, cake do %>
   <td><%= image_tag cake.avatar_url %><%= cake.title %></td>
   <td><%= cake.shop_name %></td>
+  <td><%= cake.supplier %></td>
   <td><%= cake.hearts_limit %></td>
   <td>
     <% if cake.deleted? %>
@@ -23,6 +24,7 @@
   <td colspan='4'>
     <%= form_for [:admins, cake], remote: true do |f| %>
       限制红心数量：<%= f.number_field :hearts_limit %>
+      蛋糕店：<%= f.collection_select :supplier, Cake::SUPPLIERS, :to_s, :to_s %>
       <%= f.submit "保存" %>
     <% end %>
   </td>

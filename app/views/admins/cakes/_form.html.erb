@@ -13,6 +13,8 @@
 
     限制红心数量：<%= f.number_field :hearts_limit, class: 'form-control' %>
 
+    蛋糕店：<%= f.collection_select :supplier, Cake::SUPPLIERS, :to_s, :to_s, {}, class: 'form-control' %>
+
     <br>
     <button type='button' class='btn btn-default cancel'>取消</button>
     <%= f.submit '保存', class: 'btn btn-primary', disabled: "disabled" %>
