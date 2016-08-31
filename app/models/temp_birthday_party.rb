@@ -47,7 +47,8 @@ class TempBirthdayParty < ActiveRecord::Base
 
     order_item = order.items.build({
       orderable: cake.item,
-      quantity: quantity
+      quantity: quantity,
+      properties: properties || {}
     })
 
     order_item.set_initial_attributes
