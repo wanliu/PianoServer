@@ -78,7 +78,9 @@ class Api::Promotions::TempBirthdayPartiesController < Api::BaseController
       params.require(:temp_birthday_party)
         .permit(:cake_id, :quantity, :birth_day, :person_avatar,
                 :delivery_time, :message, :delivery_address, 
-                :birthday_person, :delivery_region_id, :receiver_phone)
+                :birthday_person, :delivery_region_id, :receiver_phone).tap |white_list|
+          white_list[:properties] = params[:temp_birthday_party][:properties] || {}
+      end
     end
 
     def set_current_sales_man
