@@ -2,6 +2,8 @@ class TempBirthdayParty < ActiveRecord::Base
 
   mount_uploader :active_token_qrcode, ItemImageUploader
 
+  attr_accessor :order, :party
+
   belongs_to :cake, -> { with_deleted }
   belongs_to :user
   belongs_to :sales_man
@@ -22,10 +24,10 @@ class TempBirthdayParty < ActiveRecord::Base
   before_validation :set_hearts_limit_from_cake, on: :create
 
   def generate_order_and_birthday_party(buyer)
-    @order = generate_order(buyer)
-    @party = generate_birthday_party(@order, buyer)
+    self.order = generate_order(buyer)
+    self.party = generate_birthday_party(order, buyer)
 
-    @order.save_with_items(buyer) && destroy
+    order.save_with_items(buyer) && destroy
   end
 
   private

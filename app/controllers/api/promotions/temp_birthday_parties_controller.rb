@@ -25,7 +25,7 @@ class Api::Promotions::TempBirthdayPartiesController < Api::BaseController
     @temp_birthday_party.quantity ||= 1
 
     if @temp_birthday_party.save
-      render json: @temp_birthday_party, status: :created
+      render json: @temp_birthday_party.as_json(except: [:active_token]), status: :created
     else
       render json: @temp_birthday_party.errors, status: :unprocessable_entity
     end
