@@ -1,59 +1,22 @@
 class TempBirthdayPartiesController < ApplicationController
-  before_action :set_temp_birthday_party, only: [:show, :update, :destroy]
+  before_action :authenticate_user!
+  before_action :set_temp_birthday_party, only: [:active]
 
-  # GET /temp_birthday_parties
-  # GET /temp_birthday_parties.json
-  def index
-    @temp_birthday_parties = TempBirthdayParty.all
-
-    render json: @temp_birthday_parties
-  end
-
-  # GET /temp_birthday_parties/1
-  # GET /temp_birthday_parties/1.json
-  def show
-    render json: @temp_birthday_party
-  end
-
-  # POST /temp_birthday_parties
-  # POST /temp_birthday_parties.json
-  def create
-    @temp_birthday_party = TempBirthdayParty.new(temp_birthday_party_params)
-
-    if @temp_birthday_party.save
-      render json: @temp_birthday_party, status: :created, location: @temp_birthday_party
+  def active
+    if @temp_birthday_party.generate_order_and_birthday_party(current_user)
+      render "temp_birthday_party_active_success"
     else
-      render json: @temp_birthday_party.errors, status: :unprocessable_entity
+      render "temp_birthday_party_active_failed", status: :unproccessable_entity
     end
-  end
-
-  # PATCH/PUT /temp_birthday_parties/1
-  # PATCH/PUT /temp_birthday_parties/1.json
-  def update
-    @temp_birthday_party = TempBirthdayParty.find(params[:id])
-
-    if @temp_birthday_party.update(temp_birthday_party_params)
-      head :no_content
-    else
-      render json: @temp_birthday_party.errors, status: :unprocessable_entity
-    end
-  end
-
-  # DELETE /temp_birthday_parties/1
-  # DELETE /temp_birthday_parties/1.json
-  def destroy
-    @temp_birthday_party.destroy
-
-    head :no_content
   end
 
   private
 
-    def set_temp_birthday_party
-      @temp_birthday_party = TempBirthdayParty.find(params[:id])
-    end
+  def set_temp_birthday_party
+    @temp_birthday_party = TempBirthdayParty.find_by(active_token: params[:token])
 
-    def temp_birthday_party_params
-      params.require(:temp_birthday_party).permit(:cake_id, :quantity, :birth_day, :delivery_time, :user_id, :sales_man_id, :message, :delivery_address, :birthday_person, :person_avatar)
+    if @temp_birthday_party.blank?
+      render "temp_birthday_party_not_found"
     end
+  end
 end

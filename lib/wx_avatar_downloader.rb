@@ -43,16 +43,22 @@ class WxAvatarDownloader
         File.open("/tmp/#{file_name}", 'wb') do |file|
           file.write r.body
 
-          birthday_party.person_avatar = file
-
           if birthday_party.persisted?
+            birthday_party.person_avatar = file
+
             saved = birthday_party.save
 
             result = saved ? "成功" : "失败"
             Rails.logger.info "ID为 '#{birthday_party.id}' 的生日趴下载微信媒体#{result}！ #{birthday_party.errors.full_messages.join(', ')}"
+          else
+            uploader = ItemImageUploader.new(birthday_party, :person_avatar)
+            uploader.store! file
+            birthday_party[:person_avatar] = uploader.filename
           end
         end
       end
+    else
+      Rails.logger.error "微信下载图片失败！#{r.body}"
     end
 
     birthday_party

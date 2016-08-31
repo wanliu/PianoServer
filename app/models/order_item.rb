@@ -4,7 +4,7 @@ class OrderItem < ActiveRecord::Base
 
   # validates :order, presence: true
   validates :orderable, presence: true
-  validates :orderable_id, uniqueness: { scope: [:order_id, :orderable_type] }
+  validates :orderable_id, uniqueness: { scope: [:order_id, :orderable_type] }, if: "order_id.present?"
   validates :quantity, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
   validates :title, presence: true
   validates :price, numericality: { greater_than: 0 }

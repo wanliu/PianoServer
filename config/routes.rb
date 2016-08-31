@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  resources :temp_birthday_parties, except: [:new, :edit]
   # resources :gifts, except: [:new, :edit]
   resources :birthday_parties, only: [:index] do
     get :withdraw, on: :member
@@ -364,11 +363,15 @@ Rails.application.routes.draw do
         collection do
           get :rank
           get :recently
-          post :upload_avatar, action: "upload_temp_avatar"
-          post :upload_avatar_media_id, action: "upload_temp_avatar_media_id"
         end
       end
 
+      resources :temp_birthday_parties, only: [:create, :show] do
+        collection do
+          post :upload_avatar
+          post :upload_avatar_media_id
+        end
+      end
     end
     # resources :business, concerns: :roomable do
     #   member do
@@ -517,6 +520,7 @@ Rails.application.routes.draw do
 
   match "create_shop", to: "shops#create", via: [:post], as: :create_shop
   match "update_name", to: "shops#update_name", via: [:put], as: :update_shop
+  get '/parties/active/:token', to: "temp_birthday_parties#active"
 
   resources :shops, path: '/', only: [], constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do
     member do

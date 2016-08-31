@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160830055253) do
+ActiveRecord::Schema.define(version: 20160831070523) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -677,6 +677,7 @@ ActiveRecord::Schema.define(version: 20160830055253) do
   create_table "temp_birthday_parties", force: :cascade do |t|
     t.integer  "cake_id"
     t.integer  "quantity"
+    t.jsonb    "properties",          default: {}
     t.integer  "hearts_limit"
     t.date     "birth_day"
     t.datetime "delivery_time"
@@ -684,11 +685,15 @@ ActiveRecord::Schema.define(version: 20160830055253) do
     t.integer  "sales_man_id"
     t.text     "message"
     t.string   "delivery_address"
+    t.integer  "delivery_region_id"
     t.string   "birthday_person"
     t.string   "person_avatar"
     t.string   "avatar_media_id"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.string   "receiver_phone"
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
+    t.string   "active_token"
+    t.string   "active_token_qrcode"
   end
 
   add_index "temp_birthday_parties", ["cake_id"], name: "index_temp_birthday_parties_on_cake_id", using: :btree

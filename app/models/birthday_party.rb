@@ -23,6 +23,7 @@ class BirthdayParty < ActiveRecord::Base
   validates :user, presence: true
   validates :order, presence: true
   validates :message, presence: true
+  validates :birth_day, presence: true
   validates :birthday_person, presence: true
   validates :hearts_limit, numericality: { greater_than_or_equal_to: 1 }
 
@@ -119,7 +120,7 @@ class BirthdayParty < ActiveRecord::Base
   private
 
   def set_hearts_limit_from_cake
-    self.hearts_limit = cake.hearts_limit
+    self.hearts_limit = cake.hearts_limit if hearts_limit.blank?
   end
 
 
