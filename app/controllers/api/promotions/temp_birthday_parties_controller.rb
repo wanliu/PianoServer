@@ -35,6 +35,7 @@ class Api::Promotions::TempBirthdayPartiesController < Api::BaseController
 
   def update
     if @temp_birthday_party.update(temp_birthday_party_params)
+      @temp_birthday_party.build_order_and_order_item(current_user)
       render "create"
     else
       render json: @temp_birthday_party.errors, status: :unprocessable_entity
