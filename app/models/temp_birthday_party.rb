@@ -47,7 +47,7 @@ class TempBirthdayParty < ActiveRecord::Base
     order = Order.new({
       buyer: buyer, 
       supplier: cake.shop, 
-      delivery_address: delivery_address, 
+      delivery_address: "#{ChinaCity.get(delivery_region_id, prepend_parent: true)}#{delivery_address}", 
       receiver_name: birthday_person, 
       receiver_phone: receiver_phone
     })
