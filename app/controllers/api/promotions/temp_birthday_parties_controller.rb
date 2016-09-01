@@ -87,10 +87,10 @@ class Api::Promotions::TempBirthdayPartiesController < Api::BaseController
 
     def check_is_sales_man
       cake = Cake.find(params[:temp_birthday_party][:cake_id]) 
-      shop_id = cake.shop_id
-      sales_man = SalesMan.find_by(shop_id: shop_id, user_id: current_user.id)
+      shop = Shop.find(cake.shop_id)
+      sales_man = SalesMan.find_by(shop_id: shop.id, user_id: current_user.id)
 
-      if sales_man.blank?
+      if shop.owner_id != current_user.id && sales_man.blank?
         head 403
       end
     end
