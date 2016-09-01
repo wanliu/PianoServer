@@ -16,6 +16,9 @@ class Api::Promotions::CakesController < Api::BaseController
 
   def show
     @birthday_parties = @cake.birthday_parties.includes(:user)
+
+    @is_sales_man = user_signed_in? &&
+      @cake.shop.sales_men.exists?(user_id: current_user.id)
   end
 
   private

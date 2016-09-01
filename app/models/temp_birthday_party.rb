@@ -2,7 +2,7 @@ class TempBirthdayParty < ActiveRecord::Base
 
   mount_uploader :active_token_qrcode, ItemImageUploader
 
-  attr_accessor :order, :party
+  attr_accessor :order, :party, :order_item
 
   belongs_to :cake, -> { with_deleted }
   belongs_to :user
@@ -24,10 +24,15 @@ class TempBirthdayParty < ActiveRecord::Base
   before_validation :set_hearts_limit_from_cake, on: :create
 
   def generate_order_and_birthday_party(buyer)
-    self.order = generate_order(buyer)
-    self.party = generate_birthday_party(order, buyer)
+    build_order_and_order_item(buyer)
 
     order.save_with_items(buyer) && destroy
+  end
+
+  def build_order_and_order_item(buyer)
+    self.order = build_order(buyer)
+    self.order_item = build_order_item(order)
+    self.party = build_birthday_party(order, buyer)
   end
 
   private
@@ -36,7 +41,7 @@ class TempBirthdayParty < ActiveRecord::Base
     self.hearts_limit = cake.hearts_limit
   end
 
-  def generate_order(buyer)
+  def build_order(buyer)
     order = Order.new({
       buyer: buyer, 
       supplier: cake.shop, 
@@ -45,6 +50,10 @@ class TempBirthdayParty < ActiveRecord::Base
       receiver_phone: receiver_phone
     })
 
+    order
+  end
+
+  def build_order_item(order)
     order_item = order.items.build({
       orderable: cake.item,
       quantity: quantity,
@@ -53,10 +62,10 @@ class TempBirthdayParty < ActiveRecord::Base
 
     order_item.set_initial_attributes
 
-    order
+    order_item
   end
 
-  def generate_birthday_party(order, buyer)
+  def build_birthday_party(order, buyer)
     party = order.build_birthday_party({
       user: buyer, 
       message: message, 
