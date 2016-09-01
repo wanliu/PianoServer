@@ -33,6 +33,9 @@ class Api::Promotions::TempBirthdayPartiesController < Api::BaseController
     end
   end
 
+  # def update
+  # end
+
   def upload_avatar
     uploader = ItemImageUploader.new(BirthdayParty.new, :person_avatar)
     uploader.store! params[:file]

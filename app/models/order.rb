@@ -36,7 +36,6 @@ class Order < ActiveRecord::Base
   before_create :caculate_total, :generate_receive_token
 
   after_commit :send_notify_to_seller, on: :create
-  after_commit :send_confirm_to_buyer, on: :create
 
   paginates_per 5
 
@@ -366,22 +365,6 @@ class Order < ActiveRecord::Base
     order_url = Rails.application.routes.url_helpers.shop_admin_order_path(supplier.name, self)
 
     NotificationSender.delay.notify({"mobile" => seller_mobile, "order_id" => id, "order_url" => order_url, "seller_id" => seller_id})
-  end
-
-  def send_confirm_to_buyer
-    return if !persisted? || birthday_party.blank?
-
-    if Settings.promotions.one_money.sms_to_cake_buyer
-      cake_name = birthday_party.cake.try(:title)
-      delivery_time = birthday_party.delivery_time
-      address = delivery_address
-
-      template = Settings.promotions.one_money.sms_to_cake_buyer_template
-      text = template.sub("#cakename#", cake_name).sub("#date#", delivery_time).sub("#address#", address)
-      # text = "【耒阳街上】您订购的生日趴蛋糕:#{cake_name}成功, 蛋糕将于#{delivery_time}前送到#{address},请注意查收!"
-      
-      NotificationSender.delay.notify({"mobile" => receiver_phone, "text" => text})
-    end
   end
 
   def generate_receive_token

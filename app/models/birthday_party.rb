@@ -32,6 +32,9 @@ class BirthdayParty < ActiveRecord::Base
 
   before_validation :set_hearts_limit_from_cake, on: :create
 
+  after_commit :send_confirm_to_buyer, on: :create
+  after_commit :send_sms_to_sales_man, on: :create
+
   # scope :feedback -> {}
 
   # scope :bless_group -> { blesses.count(:all, group: 'name' ) }
@@ -157,5 +160,46 @@ class BirthdayParty < ActiveRecord::Base
 
     redpacks.where("status = :failed OR status = :unknown", options)
       .map(&:send_redpack)
+  end
+
+  def send_confirm_to_buyer
+    return unless persisted? && Settings.promotions.one_money.sms_to_cake_buyer
+
+    if cake.shop.try(:phone).present?
+      template = Settings.promotions.one_money.sms_to_cake_buyer_template
+      service_phone = cake.shop.phone
+    else
+      template = Settings.promotions.one_money.sms_to_cake_buyer_template_without_phone
+      service_phone = nil
+    end
+
+    if template.present?
+      cake_name = cake.try(:title)
+      address = order.delivery_address
+
+      text = template.sub("#cakename#", cake_name).sub("#date#", delivery_deadline).sub("#address#", address)
+
+      text = text.sub("#phone#", service_phone) if service_phone.present?
+      # text = "【耒阳街上】您订购的生日趴蛋糕:#{cake_name}成功, 蛋糕将于#{delivery_time}送到#{address},请注意查收!"
+      
+      NotificationSender.delay.notify({"mobile" => order.receiver_phone, "text" => text})
+    end
+  end
+
+  # 【耒阳街上】由您推荐的"#name#的生日趴"创建成功！可在个人中心(http://m.wanliu.biz/profile)查看，或者访问地址：#url# 查看.
+  def send_sms_to_sales_man
+    return unless persisted? && Settings.promotions.one_money.sms_to_cake_sales_man
+
+    mobile = sales_man.mobile
+
+    if mobile.present?
+      template = Settings.promotions.one_money.sms_to_cake_sales_man_template
+
+      url = "#{Settings.app.website}#{ApplicationController.helpers.birthday_party_path(self)}"
+
+      text = template.sub("#name#", birthday_person).sub("#url#", url)
+
+      NotificationSender.delay.notify({"mobile" => mobile, "text" => text})
+    end
   end
 end
