@@ -366,7 +366,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :temp_birthday_parties, only: [:create, :show] do
+      resources :temp_birthday_parties, only: [:create, :show, :update] do
         collection do
           post :upload_avatar
           post :upload_avatar_media_id

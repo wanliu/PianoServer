@@ -1,6 +1,6 @@
 class Api::Promotions::TempBirthdayPartiesController < Api::BaseController
   before_action :authenticate_user!
-  before_action :check_is_sales_man, only: [:create]
+  before_action :check_is_sales_man, only: [:create, :update]
   before_action :set_temp_birthday_party, only: [:show, :update, :destroy]
 
   # GET /temp_birthday_parties
@@ -33,8 +33,13 @@ class Api::Promotions::TempBirthdayPartiesController < Api::BaseController
     end
   end
 
-  # def update
-  # end
+  def update
+    if @temp_birthday_party.update(temp_birthday_party_params)
+      render "create"
+    else
+      render json: @temp_birthday_party.errors, status: :unprocessable_entity
+    end
+  end
 
   def upload_avatar
     uploader = ItemImageUploader.new(BirthdayParty.new, :person_avatar)
@@ -75,9 +80,9 @@ class Api::Promotions::TempBirthdayPartiesController < Api::BaseController
 
   private
 
-    # def set_temp_birthday_party
-    #   @temp_birthday_party = TempBirthdayParty.find(params[:id])
-    # end
+    def set_temp_birthday_party
+      @temp_birthday_party = current_user.temp_birthday_parties.find(params[:id])
+    end
 
     def temp_birthday_party_params
       params.require(:temp_birthday_party)
