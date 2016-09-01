@@ -16,6 +16,9 @@ class BirthdayParty < ActiveRecord::Base
   belongs_to :user
   belongs_to :order
 
+  # NOTE these is a user, not a sales_man
+  belongs_to :sales_man, class_name: 'User'
+
   has_many :blesses
   has_many :redpacks, autosave: true, inverse_of: :birthday_party
 

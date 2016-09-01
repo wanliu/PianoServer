@@ -6,7 +6,9 @@ class TempBirthdayParty < ActiveRecord::Base
 
   belongs_to :cake, -> { with_deleted }
   belongs_to :user
-  belongs_to :sales_man
+
+  # NOTE these is a user, not a sales_man
+  belongs_to :sales_man, class_name: 'User'
 
   validates :cake, presence: true
   validates :sales_man, presence: true
@@ -72,7 +74,8 @@ class TempBirthdayParty < ActiveRecord::Base
       cake: cake, 
       birth_day: birth_day, 
       birthday_person: birthday_person,
-      delivery_time: delivery_time
+      delivery_time: delivery_time,
+      sales_man_id: sales_man_id
     })
     
     party[:person_avatar] = person_avatar

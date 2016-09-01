@@ -1,6 +1,6 @@
 class Api::Promotions::TempBirthdayPartiesController < Api::BaseController
   before_action :authenticate_user!
-  before_action :set_current_sales_man, only: [:create]
+  before_action :check_is_sales_man, only: [:create]
   before_action :set_temp_birthday_party, only: [:show, :update, :destroy]
 
   # GET /temp_birthday_parties
@@ -20,7 +20,7 @@ class Api::Promotions::TempBirthdayPartiesController < Api::BaseController
   # POST /temp_birthday_parties
   # POST /temp_birthday_parties.json
   def create
-    @temp_birthday_party = @sales_man.temp_birthday_parties.build(temp_birthday_party_params)
+    @temp_birthday_party = current_user.temp_birthday_parties.build(temp_birthday_party_params)
 
     @temp_birthday_party.quantity ||= 1
 
@@ -85,13 +85,12 @@ class Api::Promotions::TempBirthdayPartiesController < Api::BaseController
       end
     end
 
-    def set_current_sales_man
-      # current_user.sales_men
+    def check_is_sales_man
       cake = Cake.find(params[:temp_birthday_party][:cake_id]) 
       shop_id = cake.shop_id
-      @sales_man = SalesMan.find_by(shop_id: shop_id, user_id: current_user.id)
+      sales_man = SalesMan.find_by(shop_id: shop_id, user_id: current_user.id)
 
-      if @sales_man.blank?
+      if sales_man.blank?
         head 403
       end
     end

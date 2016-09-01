@@ -39,6 +39,9 @@ class User < ActiveRecord::Base
   has_many :birthday_parties
   has_many :redpacks, inverse_of: :user
 
+  has_many :temp_birthday_parties, foreign_key: 'sales_man_id'
+  has_many :saled_birthday_parties, class_name: 'BirthdayParty', foreign_key: 'sales_man_id'
+
   validates :username, presence: true, uniqueness: true
   validates :mobile, presence: true, uniqueness: true
 

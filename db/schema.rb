@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160831070523) do
+ActiveRecord::Schema.define(version: 20160901030223) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -79,11 +79,13 @@ ActiveRecord::Schema.define(version: 20160831070523) do
     t.string   "avatar_media_id"
     t.decimal  "withdrawable",    precision: 10, scale: 2, default: 0.0
     t.datetime "delivery_time"
+    t.integer  "sales_man_id"
   end
 
   add_index "birthday_parties", ["birth_day"], name: "index_birthday_parties_on_birth_day", using: :btree
   add_index "birthday_parties", ["cake_id"], name: "index_birthday_parties_on_cake_id", using: :btree
   add_index "birthday_parties", ["order_id"], name: "index_birthday_parties_on_order_id", using: :btree
+  add_index "birthday_parties", ["sales_man_id"], name: "index_birthday_parties_on_sales_man_id", using: :btree
   add_index "birthday_parties", ["user_id"], name: "index_birthday_parties_on_user_id", using: :btree
 
   create_table "blesses", force: :cascade do |t|
