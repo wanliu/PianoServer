@@ -39,6 +39,7 @@ class User < ActiveRecord::Base
   has_many :birthday_parties
   has_many :redpacks, inverse_of: :user
 
+  has_many :sales_men
   has_many :temp_birthday_parties, foreign_key: 'sales_man_id'
   has_many :saled_birthday_parties, class_name: 'BirthdayParty', foreign_key: 'sales_man_id'
 
@@ -152,6 +153,10 @@ class User < ActiveRecord::Base
     else
       false
     end
+  end
+
+  def sales_man?
+    sales_men.exists? || owner_shop.present?
   end
 
   def sms_forward?

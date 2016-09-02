@@ -1,0 +1,22 @@
+<h4 class='head birthday-party'>我发起的生日趴</h4>
+
+<table class='table birthday-parties'>
+  <thead>
+    <tr>
+      <th>谁过生日</th>
+      <th>发起人</th>
+      <th>生日日期 </th>
+      <th>生日趴 </th>
+      <th>总返现金额 </th>
+      <th>免费返现金额 </th>
+      <th>增值返现金额 </th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @birthday_parties.each do |birthday_party| %>
+      <%= render "saled_birthday_party", locals: {birthday_party: birthday_party} %>
+    <% end %>
+  </tbody>
+</table>
+
+<%= paginate @birthday_parties %>

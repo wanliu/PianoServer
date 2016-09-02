@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   resources :birthday_parties, only: [:index] do
     get :withdraw, on: :member
     get :blessed, on: :collection
+    get :saled, on: :collection
   end
 
   resources :thumbs, except: [:new, :edit]

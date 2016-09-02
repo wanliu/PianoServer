@@ -1,0 +1,9 @@
+<%= content_tag_for :tr, birthday_party do %>
+  <td> <%= birthday_party.birthday_person %> </td>
+  <td> <%= birthday_party.user.nickname %> </td>
+  <td> <%= birthday_party.birth_day %> </td>
+  <td> <%= link_to "查看", birthday_party_path(birthday_party.id) %> </td>
+  <td> <%= birthday_party.withdrawable %> </td>
+  <td> <%= birthday_party.free_hearts_withdrawable %></td>
+  <td> <%= birthday_party.charged_widthdrawable %></td>
+<% end %>
