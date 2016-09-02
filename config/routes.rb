@@ -372,6 +372,8 @@ Rails.application.routes.draw do
           post :upload_avatar
           post :upload_avatar_media_id
         end
+
+        get :is_actived, on: :member
       end
     end
     # resources :business, concerns: :roomable do

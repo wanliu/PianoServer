@@ -1,5 +1,7 @@
 class TempBirthdayParty < ActiveRecord::Base
 
+  acts_as_paranoid column: :actived_at
+
   mount_uploader :active_token_qrcode, ItemImageUploader
 
   attr_accessor :order, :party, :order_item

@@ -1,7 +1,8 @@
 class Api::Promotions::TempBirthdayPartiesController < Api::BaseController
   before_action :authenticate_user!
   before_action :check_is_sales_man, only: [:create, :update]
-  before_action :set_temp_birthday_party, only: [:show, :update, :destroy]
+  before_action :set_temp_birthday_party, only: [:update, :destroy]
+  before_action :set_deleted_temp_birthday_party, only: [:show, :is_actived]
 
   # GET /temp_birthday_parties
   # GET /temp_birthday_parties.json
@@ -13,9 +14,15 @@ class Api::Promotions::TempBirthdayPartiesController < Api::BaseController
 
   # GET /temp_birthday_parties/1
   # GET /temp_birthday_parties/1.json
-  # def show
-  #   render json: @temp_birthday_party
-  # end
+  def show
+    @temp_birthday_party.build_order_and_order_item(current_user)
+    render "create"
+  end
+
+  def is_actived
+    is_actived = @temp_birthday_party.deleted?
+    render json: { actived: is_actived }
+  end
 
   # POST /temp_birthday_parties
   # POST /temp_birthday_parties.json
@@ -83,6 +90,10 @@ class Api::Promotions::TempBirthdayPartiesController < Api::BaseController
 
     def set_temp_birthday_party
       @temp_birthday_party = current_user.temp_birthday_parties.find(params[:id])
+    end
+
+    def set_deleted_temp_birthday_party
+      @temp_birthday_party = current_user.temp_birthday_parties.with_deleted.find(params[:id])
     end
 
     def temp_birthday_party_params
