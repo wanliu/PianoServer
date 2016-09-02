@@ -188,7 +188,7 @@ class BirthdayParty < ActiveRecord::Base
 
   # 【耒阳街上】由您推荐的"#name#的生日趴"创建成功！可在个人中心(http://m.wanliu.biz/profile)查看，或者访问地址：#url# 查看.
   def send_sms_to_sales_man
-    return unless persisted? && Settings.promotions.one_money.sms_to_cake_sales_man
+    return unless persisted? && sales_man.present? && Settings.promotions.one_money.sms_to_cake_sales_man
 
     mobile = sales_man.mobile
 
