@@ -128,11 +128,6 @@ promotions:
     default_callback: http://m.wanliu.biz/orders/yiyuan_confirm
     sms_to_supplier: true
     sms_to_supplier_template: '【万流网】你的商店有一个新的一元购订单，订单号：#o_id#，请及时查看！'
-    sms_to_cake_buyer: true
-    sms_to_cake_buyer_template: '【耒阳街上】您的生日趴蛋糕:#cakename#订购成功, 蛋糕将于#date#前送到#address#,请注意查收! 如有疑问, 请拨打客服电话:#phone#, 谢谢您的光临!'
-    sms_to_cake_buyer_template_without_phone: '【耒阳街上】您的生日趴蛋糕:#cakename#订购成功, 蛋糕将于#date#前送到#address#,请注意查收! 谢谢您的光临!'
-    sms_to_cake_sales_man: true
-    sms_to_cake_sales_man_template: '【耒阳街上】由您推荐的"#name#的生日趴"创建成功！可在个人中心(http://m.wanliu.biz/profile)查看，或者访问地址：#url# 查看.'
     wx_pay_discount: 5
     enter_url: /one_money
     scripts:
@@ -172,6 +167,14 @@ cakes:
   suppliers:
     - 亿金蛋糕
     - 工匠烘焙
+  sms:
+    notify_buyer: true
+    buyer_template: '【耒阳街上】您的生日趴蛋糕:#cakename#订购成功, 蛋糕将于#date#送到#address#,请注意查收! 如有疑问, 请拨打客服电话:#phone#, 谢谢您的光临!'
+    buyer_template_without_phone: '【耒阳街上】您的生日趴蛋糕:#cakename#订购成功, 蛋糕将于#date#送到#address#,请注意查收! 谢谢您的光临!'
+    notify_shop_owner: true
+    shop_owner_template: '【耒阳街上】您的商店有一个新的生日蛋糕订单,订单号:#orderid#,请及时处理'
+    notify_sales_man: true
+    sales_man_template: '【耒阳街上】由您推荐的"#name#的生日趴"创建成功！可在个人中心(http://m.wanliu.biz/profile)查看，或者访问地址：#url# 查看.'
 
 wx_redpack:
   msg_receivers:

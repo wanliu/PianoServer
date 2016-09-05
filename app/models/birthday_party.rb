@@ -34,6 +34,7 @@ class BirthdayParty < ActiveRecord::Base
 
   after_commit :send_confirm_to_buyer, on: :create
   after_commit :send_sms_to_sales_man, on: :create
+  after_commit :send_confirm_to_shop_owner, on: :create
 
   # scope :feedback -> {}
 
@@ -163,13 +164,13 @@ class BirthdayParty < ActiveRecord::Base
   end
 
   def send_confirm_to_buyer
-    return unless persisted? && Settings.promotions.one_money.sms_to_cake_buyer
+    return unless persisted? && Settings.cakes.sms.notify_buyer
 
     if cake.shop.try(:phone).present?
-      template = Settings.promotions.one_money.sms_to_cake_buyer_template
+      template = Settings.cakes.sms.buyer_template
       service_phone = cake.shop.phone
     else
-      template = Settings.promotions.one_money.sms_to_cake_buyer_template_without_phone
+      template = Settings.cakes.sms.buyer_template_without_phone
       service_phone = nil
     end
 
@@ -188,18 +189,32 @@ class BirthdayParty < ActiveRecord::Base
 
   # 【耒阳街上】由您推荐的"#name#的生日趴"创建成功！可在个人中心(http://m.wanliu.biz/profile)查看，或者访问地址：#url# 查看.
   def send_sms_to_sales_man
-    return unless persisted? && sales_man.present? && Settings.promotions.one_money.sms_to_cake_sales_man
+    return unless persisted? && sales_man.present? && Settings.cakes.sms.notify_sales_man
 
     mobile = sales_man.mobile
 
     if mobile.present?
-      template = Settings.promotions.one_money.sms_to_cake_sales_man_template
+      template = Settings.cakes.sms.cake_sales_man_template
 
       url = "#{Settings.app.website}#{ApplicationController.helpers.birthday_party_path(self)}"
 
       text = template.sub("#name#", birthday_person).sub("#url#", url)
 
       NotificationSender.delay.notify({"mobile" => mobile, "text" => text})
+    end
+  end
+
+  def send_confirm_to_shop_owner
+    return unless persisted? && Settings.cakes.sms.notify_shop_owner
+
+    if cake.shop.try(:phone).present?
+      service_phone = cake.shop.phone
+      template = Settings.cakes.sms.shop_owner_template
+
+      if template.present?
+        text = template.sub("#orderid#", order_id.to_s)
+        NotificationSender.delay.notify({"mobile" => service_phone, "text" => text})
+      end
     end
   end
 end
