@@ -176,11 +176,13 @@ cakes:
     notify_sales_man: true
     sales_man_template: '【耒阳街上】由您推荐的"#name#的生日趴"创建成功！可在个人中心(http://m.wanliu.biz/profile)查看，或者访问地址：#url# 查看.'
 
+# 公众号余额不足等信息提醒
 wx_redpack:
   msg_receivers:
     - '18774891025'
     - '18673412345'
 
+# Elasticsearch无法连接等系统错误提醒
 error_receivers:
   - '18774891025'
   - '15074995527'
