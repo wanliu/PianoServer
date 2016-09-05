@@ -28,6 +28,9 @@ class BirthdayParty < ActiveRecord::Base
 
   before_validation :set_hearts_limit_from_cake, on: :create
 
+  after_commit :send_confirm_to_buyer, on: :create
+  after_commit :send_confirm_to_shop_owner, on: :create
+
   # scope :feedback -> {}
 
   # scope :bless_group -> { blesses.count(:all, group: 'name' ) }
@@ -153,5 +156,43 @@ class BirthdayParty < ActiveRecord::Base
 
     redpacks.where("status = :failed OR status = :unknown", options)
       .map(&:send_redpack)
+  end
+
+  def send_confirm_to_buyer
+    return unless persisted? && Settings.cakes.sms.notify_cake_buyer
+
+    if cake.shop.try(:phone).present?
+      template = Settings.cakes.sms.buyer_template
+      service_phone = cake.shop.phone
+    else
+      template = Settings.cakes.sms.buyer_template_without_phone
+      service_phone = nil
+    end
+
+    if template.present?
+      cake_name = cake.try(:title)
+      address = order.delivery_address
+
+      text = template.sub("#cakename#", cake_name).sub("#date#", delivery_deadline).sub("#address#", address)
+
+      text = text.sub("#phone#", service_phone) if service_phone.present?
+      # text = "【耒阳街上】您订购的生日趴蛋糕:#{cake_name}成功, 蛋糕将于#{delivery_time}送到#{address},请注意查收!"
+      
+      NotificationSender.delay.notify({"mobile" => order.receiver_phone, "text" => text})
+    end
+  end
+
+  def send_confirm_to_shop_owner
+    return unless persisted? && Settings.cakes.sms.notify_cake_shop_owner
+
+    if cake.shop.try(:phone).present?
+      service_phone = cake.shop.phone
+      template = Settings.cakes.sms.shop_owner_template
+
+      if template.present?
+        text = template.sub("#orderid#", order_id.to_s)
+        NotificationSender.delay.notify({"mobile" => service_phone, "text" => text})
+      end
+    end
   end
 end

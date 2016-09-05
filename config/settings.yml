@@ -167,6 +167,12 @@ cakes:
   suppliers:
     - 亿金蛋糕
     - 工匠烘焙
+  sms:
+    notify_cake_buyer: true
+    buyer_template: '【耒阳街上】您的生日趴蛋糕:#cakename#订购成功, 蛋糕将于#date#送到#address#,请注意查收! 如有疑问, 请拨打客服电话:#phone#, 谢谢您的光临!'
+    buyer_template_without_phone: '【耒阳街上】您的生日趴蛋糕:#cakename#订购成功, 蛋糕将于#date#送到#address#,请注意查收! 谢谢您的光临!'
+    notify_cake_shop_owner: true
+    shop_owner_template: '【耒阳街上】您的商店有一个新的生日蛋糕订单,订单号:#orderid#,请及时处理'
 
 wx_redpack:
   msg_receivers:
