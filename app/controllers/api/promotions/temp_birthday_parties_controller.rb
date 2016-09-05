@@ -16,6 +16,9 @@ class Api::Promotions::TempBirthdayPartiesController < Api::BaseController
   # GET /temp_birthday_parties/1.json
   def show
     @temp_birthday_party.build_order_and_order_item(current_user)
+    @is_sales_man = user_signed_in? &&
+      (@temp_birthday_party.cake.shop.sales_men.exists?(user_id: current_user.id) ||
+        @temp_birthday_party.cake.shop.owner_id == current_user.id)
     render "create"
   end
 
@@ -33,6 +36,7 @@ class Api::Promotions::TempBirthdayPartiesController < Api::BaseController
 
     if @temp_birthday_party.save
       @temp_birthday_party.build_order_and_order_item(current_user)
+      @is_sales_man = true
       # render json: @temp_birthday_party.as_json(except: [:active_token]), status: :created
       render "create", status: :created
     else
@@ -43,6 +47,7 @@ class Api::Promotions::TempBirthdayPartiesController < Api::BaseController
   def update
     if @temp_birthday_party.update(temp_birthday_party_params)
       @temp_birthday_party.build_order_and_order_item(current_user)
+      @is_sales_man = true
       render "create"
     else
       render json: @temp_birthday_party.errors, status: :unprocessable_entity
@@ -99,14 +104,14 @@ class Api::Promotions::TempBirthdayPartiesController < Api::BaseController
     def temp_birthday_party_params
       params.require(:temp_birthday_party)
         .permit(:cake_id, :quantity, :birth_day, :person_avatar,
-                :delivery_time, :message, :delivery_address, 
+                :delivery_time, :message, :delivery_address,
                 :birthday_person, :delivery_region_id, :receiver_phone).tap do |white_list|
           white_list[:properties] = params[:temp_birthday_party][:properties] || {}
       end
     end
 
     def check_is_sales_man
-      cake = Cake.find(params[:temp_birthday_party][:cake_id]) 
+      cake = Cake.find(params[:temp_birthday_party][:cake_id])
       shop = Shop.find(cake.shop_id)
       sales_man = SalesMan.find_by(shop_id: shop.id, user_id: current_user.id)
 
