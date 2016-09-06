@@ -1,5 +1,5 @@
 class Api::Promotions::TempBirthdayPartiesController < Api::BaseController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: :show
   before_action :check_is_sales_man, only: [:create, :update]
   before_action :set_temp_birthday_party, only: [:update, :destroy]
   before_action :set_deleted_temp_birthday_party, only: [:is_actived]
