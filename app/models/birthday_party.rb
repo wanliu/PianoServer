@@ -194,7 +194,7 @@ class BirthdayParty < ActiveRecord::Base
     mobile = sales_man.mobile
 
     if mobile.present?
-      template = Settings.cakes.sms.cake_sales_man_template
+      template = Settings.cakes.sms.sales_man_template
 
       url = "#{Settings.app.website}#{ApplicationController.helpers.birthday_party_path(self)}"
 

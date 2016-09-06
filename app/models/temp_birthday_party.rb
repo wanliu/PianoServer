@@ -4,13 +4,15 @@ class TempBirthdayParty < ActiveRecord::Base
 
   mount_uploader :active_token_qrcode, ItemImageUploader
 
-  attr_accessor :order, :party, :order_item
+  attr_accessor :order, :order_item
 
   belongs_to :cake, -> { with_deleted }
   belongs_to :user
 
   # NOTE these is a user, not a sales_man
   belongs_to :sales_man, class_name: 'User'
+
+  belongs_to :birthday_party
 
   validates :cake, presence: true
   validates :sales_man, presence: true
@@ -31,13 +33,13 @@ class TempBirthdayParty < ActiveRecord::Base
   def generate_order_and_birthday_party(buyer)
     build_order_and_order_item(buyer)
 
-    order.save_with_items(buyer) && destroy
+    order.save_with_items(buyer) && update_column('birthday_party_id', self.birthday_party.id) && destroy
   end
 
   def build_order_and_order_item(buyer)
     self.order = build_order(buyer)
     self.order_item = build_order_item(order)
-    self.party = build_birthday_party(order, buyer)
+    self.birthday_party = build_birthday_party(order, buyer)
   end
 
   private
