@@ -27,6 +27,8 @@ class Shop < ActiveRecord::Base
   has_many :shop_delivers
   has_many :delivers, through: :shop_delivers, source: :deliver
 
+  has_many :sales_men
+
   has_many :express_templates, dependent: :destroy
   belongs_to :default_express_template, class_name: 'ExpressTemplate'
 

@@ -147,6 +147,8 @@ gem 'wx_pay'
 
 gem "paranoia", "~> 2.0"
 
+gem "rqrcode"
+
 gem 'web-console', group: :development
 
 group :development, :test do

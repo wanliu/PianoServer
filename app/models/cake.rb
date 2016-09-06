@@ -20,4 +20,14 @@ class Cake < ActiveRecord::Base
   def shop
     item.shop
   end
+
+  def sales_man?(user)
+    user_id = if user.is_a? User
+      user.id
+    else
+      user
+    end
+
+    shop.sales_men.exists?(user_id: user_id) || shop.owner_id == user_id
+  end
 end

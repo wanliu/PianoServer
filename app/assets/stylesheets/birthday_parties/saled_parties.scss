@@ -1,0 +1,56 @@
+.head.saled-parties {
+  padding: 20px 10px;
+  color: white;
+  background-color: #E32929;
+}
+
+.saled-parties {
+  font-size: 16px;
+  color: #737373;
+
+  > div {
+    background-color: white;
+    margin: 20px 0;
+    padding: 10px 20px;
+
+    .header {
+      .user {
+        color: black;
+      }
+    }
+
+    .body {
+      padding: 10px 0;
+
+      .avatar {
+        float: left;
+
+        img {
+          height: 70px;
+        }
+      }
+
+      .infor {
+        float: left;
+        padding-left: 10px;
+
+        .title {
+          color: black;
+          margin-top: 0;
+          // font-weight: 
+        }
+      }
+    }
+
+    .footer {
+      .withdrawable {
+        padding: 20px 0;
+
+        .amount {
+          color: black;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}

@@ -66,6 +66,8 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
     # end
   end
 
+
+
   # POST /birthday_parties
   # POST /birthday_parties.json
   # def create

@@ -16,6 +16,9 @@ class BirthdayParty < ActiveRecord::Base
   belongs_to :user
   belongs_to :order
 
+  # NOTE these is a user, not a sales_man
+  belongs_to :sales_man, class_name: 'User'
+
   has_many :blesses
   has_many :redpacks, autosave: true, inverse_of: :birthday_party
 
@@ -23,12 +26,14 @@ class BirthdayParty < ActiveRecord::Base
   validates :user, presence: true
   validates :order, presence: true
   validates :message, presence: true
+  validates :birth_day, presence: true
   validates :birthday_person, presence: true
   validates :hearts_limit, numericality: { greater_than_or_equal_to: 1 }
 
   before_validation :set_hearts_limit_from_cake, on: :create
 
   after_commit :send_confirm_to_buyer, on: :create
+  after_commit :send_sms_to_sales_man, on: :create
   after_commit :send_confirm_to_shop_owner, on: :create
 
   # scope :feedback -> {}
@@ -122,7 +127,7 @@ class BirthdayParty < ActiveRecord::Base
   private
 
   def set_hearts_limit_from_cake
-    self.hearts_limit = cake.hearts_limit
+    self.hearts_limit = cake.hearts_limit if hearts_limit.blank?
   end
 
 
@@ -159,7 +164,7 @@ class BirthdayParty < ActiveRecord::Base
   end
 
   def send_confirm_to_buyer
-    return unless persisted? && Settings.cakes.sms.notify_cake_buyer
+    return unless persisted? && Settings.cakes.sms.notify_buyer
 
     if cake.shop.try(:phone).present?
       template = Settings.cakes.sms.buyer_template
@@ -182,8 +187,25 @@ class BirthdayParty < ActiveRecord::Base
     end
   end
 
+  # 【耒阳街上】由您推荐的"#name#的生日趴"创建成功！可在个人中心(http://m.wanliu.biz/profile)查看，或者访问地址：#url# 查看.
+  def send_sms_to_sales_man
+    return unless persisted? && sales_man.present? && Settings.cakes.sms.notify_sales_man
+
+    mobile = sales_man.mobile
+
+    if mobile.present?
+      template = Settings.cakes.sms.cake_sales_man_template
+
+      url = "#{Settings.app.website}#{ApplicationController.helpers.birthday_party_path(self)}"
+
+      text = template.sub("#name#", birthday_person).sub("#url#", url)
+
+      NotificationSender.delay.notify({"mobile" => mobile, "text" => text})
+    end
+  end
+
   def send_confirm_to_shop_owner
-    return unless persisted? && Settings.cakes.sms.notify_cake_shop_owner
+    return unless persisted? && Settings.cakes.sms.notify_shop_owner
 
     if cake.shop.try(:phone).present?
       service_phone = cake.shop.phone

@@ -1,0 +1,15 @@
+(function() {
+  var $alert = $(".infors.alert");
+  var $item = $(".item[data-sales_man-id=<%= @sales_man.id %>]");
+  $alert.html("删除成功！").show();
+  $item.fadeOut(500).fadeIn(500).delay(100)
+    .fadeOut(500, function() {
+      $item.remove();
+    })
+
+  setTimeout(function() {
+    $alert.fadeOut(function() {
+      $alert.html("");
+    });
+  }, 5000);
+})();

@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   resources :birthday_parties, only: [:index] do
     get :withdraw, on: :member
     get :blessed, on: :collection
+    get :saled, on: :collection
   end
 
   resources :thumbs, except: [:new, :edit]
@@ -366,6 +367,14 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :temp_birthday_parties, only: [:create, :show, :update] do
+        collection do
+          post :upload_avatar
+          post :upload_avatar_media_id
+        end
+
+        get :is_actived, on: :member
+      end
     end
     # resources :business, concerns: :roomable do
     #   member do
@@ -514,6 +523,7 @@ Rails.application.routes.draw do
 
   match "create_shop", to: "shops#create", via: [:post], as: :create_shop
   match "update_name", to: "shops#update_name", via: [:put], as: :update_shop
+  get '/parties/active/:token', to: "temp_birthday_parties#active"
 
   resources :shops, path: '/', only: [], constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do
     member do
@@ -609,6 +619,10 @@ Rails.application.routes.draw do
           post "/upload_shop_poster", to: "settings#upload_shop_poster"
           post "/upload_shop_signage", to: "settings#upload_shop_signage"
         end
+      end
+
+      resources :sales_men, except: [:new, :edit] do
+        get :search, on: :collection
       end
     end
   end

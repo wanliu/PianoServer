@@ -1,0 +1,36 @@
+<% if @sales_man.persisted? %>
+  (function() {
+    var $sales_menContainer = $('.sales_men');
+    var sales_man = <%= @sales_man.to_json(methods: [:avatar_url, :nickname]).html_safe %>;
+    var template = _.template($('#sales_man-template').html());
+
+    var $results = $('.search-results');
+    $results.fadeOut(1000, function() {
+      $results.find('.item').remove();
+      var $html = $(template(sales_man).replace('88888888', sales_man.id));
+      $sales_menContainer.append($html);
+      $html.fadeOut(500).fadeIn(500);
+    });
+
+    var $alert = $(".infors.alert");
+    $alert.html("添加成功！").show();
+
+    setTimeout(function() {
+      $alert.fadeOut(function() {
+        $alert.html("");
+      });
+    }, 5000);
+  })();
+<% else %>
+  (function() {
+    var $alert = $(".errors.alert")
+    $alert .html("添加失败！<%= @sales_man.errors.full_messages.join(', ') %>")
+      .show();
+
+    setTimeout(function() {
+      $alert .fadeOut(function() {
+        $alert .html("");
+      });
+    }, 5000);
+  })();
+<% end %>
