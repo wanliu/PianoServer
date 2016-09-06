@@ -4,7 +4,8 @@ class TempBirthdayPartiesController < ApplicationController
 
   def active
     if @temp_birthday_party.generate_order_and_birthday_party(current_user)
-      render "success"
+      # render "success"
+      redirect_to ApplicationController.helpers.birthday_party_path(@temp_birthday_party.party)
     else
       render "failed", status: :unproccessable_entity
     end
