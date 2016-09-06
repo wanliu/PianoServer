@@ -1,6 +1,6 @@
 json.extract! @temp_birthday_party, *(@temp_birthday_party.attribute_names - ["active_token", "person_avatar", "active_token_qrcode"])
 json.active_token_qrcode @temp_birthday_party.active_token_qrcode.url
-json.person_avatar @temp_birthday_party.party.try(:person_avatar).try(:url)
+json.person_avatar @temp_birthday_party.birthday_party.try(:person_avatar).try(:url)
 json.is_sales_man @is_sales_man
 
 json.order_item do
