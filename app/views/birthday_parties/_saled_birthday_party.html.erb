@@ -1,9 +1,27 @@
-<%= content_tag_for :tr, birthday_party do %>
-  <td> <%= birthday_party.birthday_person %> </td>
-  <td> <%= birthday_party.user.nickname %> </td>
-  <td> <%= birthday_party.birth_day %> </td>
-  <td> <%= link_to "查看", birthday_party_path(birthday_party.id) %> </td>
-  <td> <%= birthday_party.withdrawable %> </td>
-  <td> <%= birthday_party.free_hearts_withdrawable %></td>
-  <td> <%= birthday_party.charged_widthdrawable %></td>
+<%= content_tag_for :div, birthday_party do %>
+  <div class='header'>
+    <span class='user'><%= birthday_party.user.nickname %>发起</span>
+    - <%= birthday_party.created_at.to_date %>
+  </div>
+  <div class='body'>
+    <div class='avatar'>
+      <%= image_tag birthday_party.person_avatar.url(:cover) %>
+    </div>
+    <div class='infor'>
+      <h4 class='title'><%= birthday_party.birthday_person %>的生日趴</h4>
+      <div>生日:<%= birthday_party.birth_day %></div>
+
+      <% order_item =  birthday_party.order.items.first %>
+      <div><%= "#{order_item.title} #{order_item.properties_title}" %></div>
+    </div>
+    <div style='clear: both;'></div>
+  </div>
+  <div class='footer'>
+    <div class='withdrawable'>
+      当前返现 <span class='amount'><%= number_to_currency birthday_party.withdrawable %></span>
+    </div>
+    <div class='operations'>
+      <%= link_to "查看", birthday_party_path(birthday_party.id), class: 'btn btn-default btn-lg' %>
+    </div>
+  </div>
 <% end %>

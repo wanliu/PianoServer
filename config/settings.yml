@@ -174,7 +174,7 @@ cakes:
     notify_shop_owner: true
     shop_owner_template: '【耒阳街上】您的商店有一个新的生日蛋糕订单,订单号:#orderid#,请及时处理'
     notify_sales_man: true
-    sales_man_template: '【耒阳街上】由您推荐的"#name#的生日趴"创建成功！可在个人中心(http://m.wanliu.biz/profile)查看，或者访问地址：#url# 查看.'
+    sales_man_template: '【耒阳街上】由您开单的"#name#的生日趴"创建成功！访问地址：#url#'
 
 # 公众号余额不足等信息提醒
 wx_redpack:
