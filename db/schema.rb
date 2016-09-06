@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160830061125) do
+ActiveRecord::Schema.define(version: 20160905082844) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -79,11 +79,13 @@ ActiveRecord::Schema.define(version: 20160830061125) do
     t.string   "avatar_media_id"
     t.decimal  "withdrawable",    precision: 10, scale: 2, default: 0.0
     t.datetime "delivery_time"
+    t.integer  "sales_man_id"
   end
 
   add_index "birthday_parties", ["birth_day"], name: "index_birthday_parties_on_birth_day", using: :btree
   add_index "birthday_parties", ["cake_id"], name: "index_birthday_parties_on_cake_id", using: :btree
   add_index "birthday_parties", ["order_id"], name: "index_birthday_parties_on_order_id", using: :btree
+  add_index "birthday_parties", ["sales_man_id"], name: "index_birthday_parties_on_sales_man_id", using: :btree
   add_index "birthday_parties", ["user_id"], name: "index_birthday_parties_on_user_id", using: :btree
 
   create_table "blesses", force: :cascade do |t|
@@ -544,6 +546,16 @@ ActiveRecord::Schema.define(version: 20160830061125) do
   add_index "regions", ["parent_id"], name: "index_regions_on_parent_id", using: :btree
   add_index "regions", ["rgt"], name: "index_regions_on_rgt", using: :btree
 
+  create_table "sales_men", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "shop_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "sales_men", ["shop_id"], name: "index_sales_men_on_shop_id", using: :btree
+  add_index "sales_men", ["user_id"], name: "index_sales_men_on_user_id", using: :btree
+
   create_table "shop_categories", force: :cascade do |t|
     t.string   "name"
     t.string   "category_type"
@@ -664,6 +676,34 @@ ActiveRecord::Schema.define(version: 20160830061125) do
 
   add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
 
+  create_table "temp_birthday_parties", force: :cascade do |t|
+    t.integer  "cake_id"
+    t.integer  "quantity"
+    t.jsonb    "properties",          default: {}
+    t.integer  "hearts_limit"
+    t.date     "birth_day"
+    t.datetime "delivery_time"
+    t.integer  "user_id"
+    t.integer  "sales_man_id"
+    t.text     "message"
+    t.string   "delivery_address"
+    t.integer  "delivery_region_id"
+    t.string   "birthday_person"
+    t.string   "person_avatar"
+    t.string   "avatar_media_id"
+    t.string   "receiver_phone"
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
+    t.string   "active_token"
+    t.string   "active_token_qrcode"
+    t.datetime "actived_at"
+  end
+
+  add_index "temp_birthday_parties", ["actived_at"], name: "index_temp_birthday_parties_on_actived_at", using: :btree
+  add_index "temp_birthday_parties", ["cake_id"], name: "index_temp_birthday_parties_on_cake_id", using: :btree
+  add_index "temp_birthday_parties", ["sales_man_id"], name: "index_temp_birthday_parties_on_sales_man_id", using: :btree
+  add_index "temp_birthday_parties", ["user_id"], name: "index_temp_birthday_parties_on_user_id", using: :btree
+
   create_table "templates", force: :cascade do |t|
     t.string   "name"
     t.string   "filename"
@@ -720,6 +760,8 @@ ActiveRecord::Schema.define(version: 20160830061125) do
     t.integer  "shop_id"
     t.integer  "user_type",              default: 0
     t.integer  "industry_id"
+    t.integer  "virtual_cash",           default: 0
+    t.integer  "lock_version",           default: 0
   end
 
   add_index "users", ["authentication_token"], name: "index_users_on_authentication_token", unique: true, using: :btree
@@ -741,6 +783,16 @@ ActiveRecord::Schema.define(version: 20160830061125) do
   end
 
   add_index "variables", ["host_type", "host_id"], name: "index_variables_on_host_type_and_host_id", using: :btree
+
+  create_table "virtual_cash_changes", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "amount"
+    t.integer  "kind"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "virtual_cash_changes", ["user_id"], name: "index_virtual_cash_changes_on_user_id", using: :btree
 
   create_table "virtual_presents", force: :cascade do |t|
     t.decimal  "price",      precision: 10, scale: 2
@@ -765,4 +817,5 @@ ActiveRecord::Schema.define(version: 20160830061125) do
   add_foreign_key "stock_changes", "units"
   add_foreign_key "stock_changes", "users", column: "operator_id"
   add_foreign_key "thumbs", "users", column: "thumber_id"
+  add_foreign_key "virtual_cash_changes", "users"
 end
