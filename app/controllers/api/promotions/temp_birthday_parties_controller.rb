@@ -16,9 +16,8 @@ class Api::Promotions::TempBirthdayPartiesController < Api::BaseController
   # GET /temp_birthday_parties/1.json
   def show
     @temp_birthday_party.build_order_and_order_item(current_user)
-    @is_sales_man = user_signed_in? &&
-      (@temp_birthday_party.cake.shop.sales_men.exists?(user_id: current_user.id) ||
-        @temp_birthday_party.cake.shop.owner_id == current_user.id)
+    @is_sales_man = user_signed_in? && @temp_birthday_party.cake.sales_man?(current_user)
+
     render "create"
   end
 
