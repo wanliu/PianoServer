@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160902090231) do
+ActiveRecord::Schema.define(version: 20160906040644) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -697,8 +697,10 @@ ActiveRecord::Schema.define(version: 20160902090231) do
     t.string   "active_token"
     t.string   "active_token_qrcode"
     t.datetime "actived_at"
+    t.string   "access_token"
   end
 
+  add_index "temp_birthday_parties", ["access_token"], name: "index_temp_birthday_parties_on_access_token", using: :btree
   add_index "temp_birthday_parties", ["actived_at"], name: "index_temp_birthday_parties_on_actived_at", using: :btree
   add_index "temp_birthday_parties", ["cake_id"], name: "index_temp_birthday_parties_on_cake_id", using: :btree
   add_index "temp_birthday_parties", ["sales_man_id"], name: "index_temp_birthday_parties_on_sales_man_id", using: :btree

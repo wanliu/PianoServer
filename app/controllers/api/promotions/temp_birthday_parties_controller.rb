@@ -2,7 +2,8 @@ class Api::Promotions::TempBirthdayPartiesController < Api::BaseController
   before_action :authenticate_user!
   before_action :check_is_sales_man, only: [:create, :update]
   before_action :set_temp_birthday_party, only: [:update, :destroy]
-  before_action :set_deleted_temp_birthday_party, only: [:show, :is_actived]
+  before_action :set_deleted_temp_birthday_party, only: [:is_actived]
+  before_action :set_deleted_party_by_access_token, only: [:show]
 
   # GET /temp_birthday_parties
   # GET /temp_birthday_parties.json
@@ -98,6 +99,14 @@ class Api::Promotions::TempBirthdayPartiesController < Api::BaseController
 
     def set_deleted_temp_birthday_party
       @temp_birthday_party = current_user.temp_birthday_parties.with_deleted.find(params[:id])
+    end
+
+    def set_deleted_party_by_access_token
+      @temp_birthday_party = TempBirthdayParty.with_deleted.find_by(access_token: params[:id])
+
+      if @temp_birthday_party.blank?
+        head 404
+      end
     end
 
     def temp_birthday_party_params

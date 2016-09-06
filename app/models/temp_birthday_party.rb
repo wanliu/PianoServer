@@ -25,6 +25,7 @@ class TempBirthdayParty < ActiveRecord::Base
   validates :hearts_limit, numericality: { greater_than_or_equal_to: 1 }
 
   before_validation :generate_active_token_qrcode, on: :create
+  before_validation :generate_access_token, on: :create
   before_validation :set_hearts_limit_from_cake, on: :create
 
   def generate_order_and_birthday_party(buyer)
@@ -88,6 +89,17 @@ class TempBirthdayParty < ActiveRecord::Base
   def generate_active_token_qrcode
     generate_active_token
     generate_qrcode
+  end
+
+  def generate_access_token
+    token = nil
+
+    loop do
+      token = Devise.friendly_token
+      break token unless TempBirthdayParty.where(access_token: token).first
+    end
+
+    self.access_token = token
   end
 
   def generate_active_token
