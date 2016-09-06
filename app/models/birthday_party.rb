@@ -192,10 +192,9 @@ class BirthdayParty < ActiveRecord::Base
     return unless persisted? && sales_man.present? && Settings.cakes.sms.notify_sales_man
 
     mobile = sales_man.mobile
+    template = Settings.cakes.sms.sales_man_template
 
-    if mobile.present?
-      template = Settings.cakes.sms.sales_man_template
-
+    if mobile.present? && template.present?
       url = "#{Settings.app.website}#{ApplicationController.helpers.birthday_party_path(self)}"
 
       text = template.sub("#name#", birthday_person).sub("#url#", url)
