@@ -31,19 +31,17 @@ class Shops::Admin::SalesMenController < Shops::Admin::BaseController
 
   # PATCH/PUT /sales_men/1
   # PATCH/PUT /sales_men/1.json
-  # def update
-  #   @sales_man = SalesMan.find(params[:id])
-
-  #   respond_to do |format|
-  #     if @sales_man.update(sales_man_params)
-  #       format.json { head :no_content }
-  #       format.js
-  #     else
-  #       format.json { render json: @sales_man.errors, status: :unprocessable_entity }
-  #       format.js
-  #     end
-  #   end
-  # end
+  def update
+    respond_to do |format|
+      if @sales_man.update(sales_man_update_params)
+        format.json { head :no_content }
+        format.js
+      else
+        format.json { render json: @sales_man.errors, status: :unprocessable_entity }
+        format.js
+      end
+    end
+  end
 
   # DELETE /sales_men/1
   # DELETE /sales_men/1.json
@@ -70,10 +68,14 @@ class Shops::Admin::SalesMenController < Shops::Admin::BaseController
   private
 
     def set_sales_man
-      @sales_man = SalesMan.find(params[:id])
+      @sales_man = current_shop.sales_men.find(params[:id])
     end
 
     def sales_man_params
-      params.require(:sales_man).permit(:user_id, :shop_id)
+      params.require(:sales_man).permit(:user_id)
+    end
+
+    def sales_man_update_params
+      params.require(:sales_man).permit(:phone)
     end
 end

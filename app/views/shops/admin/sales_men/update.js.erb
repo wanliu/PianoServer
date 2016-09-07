@@ -1,0 +1,34 @@
+<% if @sales_man.persisted? %>
+  (function() {
+    var $originalTr1 = $('.sales_men tbody tr.item[data-sales_man-id=<%= @sales_man.id%>]');
+    var $originalTr2 = $('.sales_men tbody tr.edit-phone[data-sales_man-id=<%= @sales_man.id%>]');
+
+    var template = _.template($('#sales_man-template').html());
+    var sales_man = <%= @sales_man.to_json(methods: [:avatar_url, :nickname]).html_safe %>;
+    var $html = $("<div></div>").html(template(sales_man).replace(/88888888/g, sales_man.id));
+
+    $originalTr1.replaceWith($html.find('.item'));
+    $originalTr2.replaceWith($html.find('.edit-phone'));
+
+    var $alert = $(".infors.alert");
+    $alert.html("保存成功！").show();
+
+    setTimeout(function() {
+      $alert.fadeOut(function() {
+        $alert.html("");
+      });
+    }, 5000);
+  })();
+<% else %>
+  (function() {
+    var $alert = $(".errors.alert")
+    $alert .html("保存失败！<%= @sales_man.errors.full_messages.join(', ') %>")
+      .show();
+
+    setTimeout(function() {
+      $alert .fadeOut(function() {
+        $alert .html("");
+      });
+    }, 5000);
+  })();
+<% end %>

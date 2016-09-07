@@ -191,7 +191,14 @@ class BirthdayParty < ActiveRecord::Base
   def send_sms_to_sales_man
     return unless persisted? && sales_man.present? && Settings.cakes.sms.notify_sales_man
 
-    mobile = sales_man.mobile
+    real_sales_man = SalesMan.find_by(shop_id: cake.shop.id, user_id: sales_man_id)
+
+    mobile = if real_sales_man.present?
+      real_sales_man.phone
+    else
+      sales_man.mobile
+    end
+
     template = Settings.cakes.sms.sales_man_template
 
     if mobile.present? && template.present?
