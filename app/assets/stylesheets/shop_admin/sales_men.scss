@@ -1,4 +1,8 @@
 .sales_men-manager {
+  .inline-form {
+    display: inline;
+  }
+
   .search-zone {
     z-index: 5;
     position: relative;
@@ -49,23 +53,6 @@
         .username {
           word-break: break-word;
         }
-      }
-    }
-  }
-
-  .sales_men {
-    .item {
-      float: left; 
-      margin: 10px; 
-      width:120px; 
-      height: 100px;
-
-      img {
-        height: 50px;
-      }
-
-      .username {
-        word-break: break-word;
       }
     }
   }

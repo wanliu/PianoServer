@@ -26,24 +26,45 @@
     </div>
   </div>
 
-  <div class='sales_men'>
-  </div>
+  <table class='sales_men table'>
+    <thead>
+      <th>头像 </th>
+      <th>昵称 </th>
+      <th>号码 </th>
+      <th>操作 </th>
+    </thead>
+    <tbody>
+      
+    </tbody>
+  </table>
 </div>
 
 <script type="text/template" id='sales_man-template'>
-  <div class='item text-center' data-sales_man-id='{{ id }}' data-toggle="tooltip" data-placement="right" title="{{ nickname }}">
-    <div class='avatar sales_man-avatar'>
+  <tr class='item' data-sales_man-id='{{ id }}'>
+    <td class='avatar sales_man-avatar'>
       <img src={{ avatar_url }}>
-    </div>
-    <div class='nickname'>
-      {{ nickname.length > 16 ? nickname.substring(0, 12) + "..." : nickname }}
-    </div>
-    <div class='operations'>
-      <%= button_to shop_admin_sales_man_path(@shop.name, 88888888), method: :delete, remote: true, class: 'btn btn-danger', data: {confirm: '确定删除该运送员？'} do %>
+    </td>
+    <td class='nickname'>
+      {{ nickname }}<br>
+    </td>
+    <td>
+      {{ phone || "号码未设" }}
+    </td>
+    <td class='operations'>
+      <button class='btn btn-default edit-phone'>编辑号码</button>
+      <%= button_to shop_admin_sales_man_path(@shop.name, 88888888), method: :delete, remote: true, class: 'btn btn-danger', form_class: 'inline-form', data: {confirm: '确定删除该运送员？'} do %>
         删除
       <% end %>
-    </div>
-  </div>
+    </td>
+  </tr>
+  <tr style='display: none;' class='edit-phone' data-sales_man-id='{{ id }}'>
+    <td colspan='4'>
+      <form class="inline-form" method="post" action="/shop_test/admin/sales_men/88888888" data-remote="true">
+        <input type='hidden' name='_method' value='patch'>
+        <input type='text' name='sales_man[phone]' value={{ phone }}>
+        <input type='submit' value='保存'>
+    </td>
+  </tr>
 </script>
 
 <script type="text/template" id='new-sales_man-template'>
@@ -68,7 +89,7 @@
   var template = _.template($('#sales_man-template').html());
   var newTempalte = _.template($('#new-sales_man-template').html());
   var searchUrl = "<%= search_shop_admin_sales_men_path(@shop.name) %>";
-  var $sales_menContainer = $('.sales_men');
+  var $sales_menContainer = $('.sales_men tbody');
   var $searchResults = $('.search-results');
 
   $searchResults.find('.close-results').click(function(event) {
@@ -77,8 +98,19 @@
   });
 
   _.each(sales_men, function(sales_man) {
-    var html = template(sales_man).replace('88888888', sales_man.id);
+    var html = template(sales_man).replace(/88888888/g, sales_man.id);
     $sales_menContainer.append(html);
+  });
+
+  $('table.sales_men').on("click", "button.edit-phone", function(event) {
+    var $tr = $(this).closest('tr');
+    var sales_man_id = $tr.attr("data-sales_man-id");
+
+    var $editer = $('tr.edit-phone[data-sales_man-id=' + sales_man_id + ']');
+
+    $editer.toggle();
+    $editer.find('input').focus().select();
+
   });
 
   $('#search-sales_men').keyup(function(event) {
@@ -92,7 +124,7 @@
             $searchResults.find('.stuber').before(html);
           } else {
             _.each(data, function(item) {
-              var html = newTempalte(item).replace('88888888', item.id);
+              var html = newTempalte(item).replace(/88888888/g, item.id);
               $searchResults.find('.stuber').before(html);
             })
           }

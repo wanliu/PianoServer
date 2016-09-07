@@ -9,4 +9,14 @@ class SalesMan < ActiveRecord::Base
   validates :user_id, uniqueness: { scope: [:shop_id] }
 
   delegate :avatar_url, :username, :nickname, to: :user
+
+  def phone
+    attr_phone = super
+
+    if attr_phone.present?
+      attr_phone
+    else
+      user.mobile
+    end
+  end
 end
