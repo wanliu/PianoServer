@@ -59,7 +59,7 @@
   </tr>
   <tr style='display: none;' class='edit-phone' data-sales_man-id='{{ id }}'>
     <td colspan='4'>
-      <form class="inline-form" method="post" action="/shop_test/admin/sales_men/88888888" data-remote="true">
+      <form class="inline-form" method="post" action="/<%= @shop.name %>/admin/sales_men/88888888" data-remote="true">
         <input type='hidden' name='_method' value='patch'>
         <input type='text' name='sales_man[phone]' value={{ phone }}>
         <input type='submit' value='保存'>
