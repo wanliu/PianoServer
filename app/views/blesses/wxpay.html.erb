@@ -35,9 +35,15 @@
   <% signature = Wechat.api.jsapi_ticket.signature request.original_url %>
   // <%= signature.to_json.html_safe %>
 
-  $(function() {
+  (function() {
     if (typeof wx == "undefined") {
       $.post("/api/error_records", {error_record: {name: "微信支付配置失败", infor: "wx变量未定义"}});
+      alert('微信支付加载失败，请稍后再试');
+      return;
+    }
+
+    if (typeof $ == "undefined") {
+      $.post("/api/error_records", {error_record: {name: "微信支付Jquery 加载失败", infor: "$变量未定义"}});
       alert('微信支付加载失败，请稍后再试');
       return;
     }
@@ -99,10 +105,10 @@
 
     // 用户点击“微信支付”
     // 从后端得到微信订单号和各签名参数，用于发起微信支付
-    $('.wx-pay-now').click(function(e) {
+    $('body').on('click', '.wx-pay-now', function(e) {
       e.preventDefault();
 
       payNow();
     })
-  });
+  })();
 </script>
