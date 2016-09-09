@@ -243,6 +243,7 @@ zh-CN:
     dashboard: 面板
     regions: 城市区域
     orders: 订单
+    blesses: 礼品
   actions:
     new: 新增
     new_step2: 创建
@@ -254,6 +255,7 @@ zh-CN:
     yiyuan_confirm: 活动订单确认
     new_yiyuan_address: 收货地址
     chose_yiyuan_address: 收货地址
+    wxpay: 微信支付
   modules:
     shop: 商店
     admin: 工作平台
