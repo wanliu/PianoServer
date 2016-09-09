@@ -68,13 +68,16 @@ restart: stop quick_start
 
 prepare_config:
 	@echo $(SETTIGNS_FILE) > Settingfile
+	@echo $(WECHAT_FILE) > Wechatfile
 
 after_config:
 	@rm Settingfile
+	@rm Wechatfile
 
 try_config:
 ifneq ("$(wildcard Settingfile)","")
 	$(eval SETTIGNS_FILE=$(shell cat Settingfile))
+	$(eval WECHAT_FILE=$(shell cat Wechatfile))
 endif
 	@echo $(SETTIGNS_FILE)
 
