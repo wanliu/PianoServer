@@ -161,6 +161,9 @@ virtual_presents:
     - pleasant_sheep
     - ultraman
     - bonnie_bear
+    - car
+    - house
+    - moto
   free_limit: 1
 
 cakes:
