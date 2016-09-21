@@ -151,6 +151,10 @@ ActiveRecord::Schema.define(version: 20160921032618) do
     t.datetime "updated_at",                  null: false
   end
 
+  add_index "cards", ["available_range"], name: "index_cards_on_available_range", using: :btree
+  add_index "cards", ["title"], name: "index_cards_on_title", using: :btree
+  add_index "cards", ["wx_card_id"], name: "index_cards_on_wx_card_id", using: :btree
+
   create_table "cart_items", force: :cascade do |t|
     t.integer  "cart_id"
     t.integer  "cartable_id"
