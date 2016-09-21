@@ -1,0 +1,31 @@
+<% if @card.persisted? %>
+  (function() {
+    var html = '<%= j render @card %>';
+    $('table.cards tbody').prepend(html);
+    $('#search-card-items').val('');
+    $("#new_card #card_item_id").val(null);
+
+    $('.new-card').hide();
+
+    var $alert = $(".infors.alert");
+    $alert.html("添加成功！").show();
+
+    setTimeout(function() {
+      $alert.fadeOut(function() {
+        $alert.html("");
+      });
+    }, 5000);
+  })();
+<% else %>
+  (function() {
+    var $alert = $(".errors.alert")
+    $alert .html("保存失败！<%= @card.errors.full_messages.join(', ') %>")
+      .show();
+
+    setTimeout(function() {
+      $alert .fadeOut(function() {
+        $alert .html("");
+      });
+    }, 5000);
+  })();
+<% end %>

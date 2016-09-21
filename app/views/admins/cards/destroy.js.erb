@@ -1,0 +1,16 @@
+(function() {
+  var html = '<%= j render @card %>';
+  var $item = $('table.cards #card_<%= @card.id %>');
+
+  $item.replaceWith(html);
+
+  var $alert = $(".infors.alert");
+  $alert.html("操作成功！").show();
+  $item.fadeOut(500).fadeIn(500)
+
+  setTimeout(function() {
+    $alert.fadeOut(function() {
+      $alert.html("");
+    });
+  }, 5000);
+})();

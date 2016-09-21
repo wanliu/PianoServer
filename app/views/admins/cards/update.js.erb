@@ -1,0 +1,30 @@
+<% if @card.valid? %>
+(function() {
+  var $alert = $(".infors.alert");
+  $alert.html("保存成功！").show();
+
+  setTimeout(function() {
+    $alert.fadeOut(function() {
+      $alert.html("");
+    });
+  }, 5000);
+
+  var $html = $('<%= j render "card", locals: {card: @card} %>');
+  var $originTr = $('.cards tr[id=card_<%= @card.id %>');
+  $originTr.replaceWith($($html[0]));
+
+  var $originForm = $('.cards tr.card-eidt-form[data-card-id=<%= @card.id %>]');
+  $originForm.replaceWith($($html[1]));
+})();
+<% else %>
+(function() {
+  var $error = $(".errors.alert");
+  $error.html("保存失败！<%= @card.errors.full_messages.join(', ') %>").show();
+
+  setTimeout(function() {
+    $error.fadeOut(function() {
+      $error.html("");
+    });
+  }, 5000);
+})();
+<% end %>
