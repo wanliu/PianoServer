@@ -219,6 +219,8 @@ Rails.application.routes.draw do
       post "undo_delete", on: :member
     end
 
+    resources :cards
+
     resources :birthday_parties, only: [:index, :show]
 
     resources :virtual_presents, except: [:new, :edit]
@@ -344,6 +346,8 @@ Rails.application.routes.draw do
       end
 
       resources :cakes, only: [:index, :show]
+
+      resources :cards, only: :index
 
       resources :virtual_presents, only: [:index, :existPresent] do
         collection do

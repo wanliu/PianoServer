@@ -1,0 +1,73 @@
+<div class='cards-container'>
+  <div class='alert-header'>
+    <div class="alert alert-success infors" role="alert" style='display: none;'>
+    </div>
+    <div class="alert alert-danger errors" role="alert" style='display: none;'>
+    </div>
+    <div class='title'>
+      <h3>代金卷</h3>
+      <button class='btn btn-default new-card-btn'>
+        <span class='glyphicon glyphicon-plus'>新建</span>
+      </button>
+    </div>
+  </div>
+
+  <%= render 'form' %>
+
+  <table class='table cards'>
+    <thead>
+      <tr>
+        <th>名称　</th>
+        <th>微信卡卷ID </th>
+        <th>适用场景　</th>
+        <th>操作 </th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @cards.each do |card| %>
+        <%= render card %>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%= paginate @cards %>
+</div>
+
+<script type="text/javascript">
+(function (event) {
+  var cateItemTpl = _.template($('#card-item').html());
+  var selectedItemTpl = _.template($('#selected-item').html());
+  var $itemSearcher = $('#search-card-items');
+  var $cardFormContainer = $('.new-card');
+  var $newCakeBtn = $('.new-card-btn');
+  var $selectedItem = $('.selected-item');
+
+  var items = [];
+
+  $newCakeBtn.click(function() {
+    $cardFormContainer.toggle();
+  });
+
+  $('.cards').on('click', 'tr .edit-btn', toggleCakeEdit);
+
+  $('form#new_card button.cancel').click(function(event) {
+    $cardFormContainer.hide();
+  });
+
+  function reflashCakeItems(data, status, xhr) {
+    items = data;
+
+    _.each(data, function(item) {
+      var html = cateItemTpl(item);
+    })
+
+    if ('false' == $itemSearcher.attr('aria-expanded')) {
+    }
+  }
+
+  function toggleCakeEdit(event) {
+    var cardId = $(this).closest('tr').attr('id').replace('card_', '');
+    $('tr.card-eidt-form[data-card-id=' + cardId + ']').toggle();
+  }
+})();
+</script>

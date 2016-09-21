@@ -1,0 +1,29 @@
+<div class='new-card' style='display: none;'>
+  <%= form_for [:admins, @card], remote: true do |f| %>    
+    <div class='selected-item'>
+    </div>
+
+    卡卷名称:<%= f.text_field :title, class: 'form-control' %>
+    微信卡卷ID：<%= f.text_field :wx_card_id, class: 'form-control' %>
+    适用场景：<%= f.collection_select :available_range, Card.available_ranges.keys, :to_s, :to_s, {}, class: 'form-control' %>
+
+    <br>
+    <button type='button' class='btn btn-default cancel'>取消</button>
+    <%= f.submit '保存', class: 'btn btn-primary' %>
+  <% end %>
+</div>
+
+<script type="text/template" id='card-item'>
+  <li class='card-item' data-item-id="{{ id }}">
+    {{ title }}
+    {{ wx_card_id }}
+    {{ available_range }}
+  </li>
+</script>
+
+<script type="text/template" id='selected-item'>
+  <img src="{{cover_url}}" style='width: 50px; height: 50px;'>
+  {{ title }}
+  {{ wx_card_id }}
+  {{ available_range }}
+</script>
