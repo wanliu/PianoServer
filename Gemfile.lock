@@ -46,6 +46,16 @@ GIT
       railties (>= 3.0.0)
 
 GIT
+  remote: git://github.com/satbirdd/wechat.git
+  revision: ccb568693d01c64a29ddd08afeb379c80239be61
+  specs:
+    wechat (0.7.20)
+      activesupport (>= 3.2, < 5.1.x)
+      http (>= 1.0.4, < 3)
+      nokogiri (>= 1.6.0)
+      thor
+
+GIT
   remote: https://github.com/rails/rails-observers.git
   revision: 2e83e3bf13dd4d963ed70bf4766f233f993b3e44
   specs:
@@ -170,7 +180,7 @@ GEM
     devise-async (0.10.1)
       devise (~> 3.2)
     diff-lcs (1.2.5)
-    domain_name (0.5.20160310)
+    domain_name (0.5.20160826)
       unf (>= 0.0.5, < 1.0.0)
     elasticsearch (1.0.17)
       elasticsearch-api (= 1.0.17)
@@ -233,7 +243,7 @@ GEM
     hashdiff (0.3.0)
     hashie (3.4.3)
     hiredis (0.5.2)
-    http (1.0.4)
+    http (2.0.3)
       addressable (~> 2.3)
       http-cookie (~> 1.0)
       http-form_data (~> 1.0.1)
@@ -283,8 +293,8 @@ GEM
     method_source (0.8.2)
     mime-types (2.99.1)
     mini_magick (4.2.10)
-    mini_portile2 (2.0.0)
-    minitest (5.8.4)
+    mini_portile2 (2.1.0)
+    minitest (5.9.0)
     mobylette (3.5)
       actionpack (>= 3.0)
     momentjs-rails (2.11.1)
@@ -295,8 +305,9 @@ GEM
     nenv (0.3.0)
     netrc (0.11.0)
     nido (1.0.0)
-    nokogiri (1.6.7.2)
-      mini_portile2 (~> 2.0.0.rc2)
+    nokogiri (1.6.8)
+      mini_portile2 (~> 2.1.0)
+      pkg-config (~> 1.1.7)
     notiffany (0.0.8)
       nenv (~> 0.1)
       shellany (~> 0.0)
@@ -330,6 +341,7 @@ GEM
     pg (0.18.4)
     photoswipe-rails (4.1.1)
     picturefill (0.1.3)
+    pkg-config (1.1.7)
     poseidon (0.0.5)
     pry (0.10.3)
       coderay (~> 1.1.0)
@@ -527,11 +539,6 @@ GEM
       binding_of_caller (>= 0.7.2)
       railties (>= 4.0)
       sprockets-rails (>= 2.0, < 4.0)
-    wechat (0.7.11)
-      activesupport (>= 3.2, < 5.1.x)
-      http (~> 1.0, >= 1.0.1)
-      nokogiri (>= 1.6.0)
-      thor
     whenever (0.9.4)
       chronic (>= 0.6.3)
     wx_pay (0.5.0)
@@ -636,7 +643,10 @@ DEPENDENCIES
   uglifier (>= 1.3.0)
   unicorn
   web-console
-  wechat
+  wechat!
   weixin_authorize!
   whenever
   wx_pay
+
+BUNDLED WITH
+   1.10.6

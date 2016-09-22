@@ -387,7 +387,10 @@ Rails.application.routes.draw do
     # end
 
     resources :weixin_configs, only: [:index] do
-      get :wx_config, on: :collection
+      collection do
+        get :signature
+        get :card_ext
+      end
     end
 
     resources :cart_items, only: [:index, :create]

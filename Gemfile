@@ -138,7 +138,7 @@ gem 'weixin_authorize', github: 'hysios/weixin_authorize'
 gem 'omniauth'
 gem "omniauth-wechat-oauth2"
 
-gem 'wechat'
+gem 'wechat', github: 'satbirdd/wechat'
 
 #excel导入导出
 gem 'spreadsheet'
