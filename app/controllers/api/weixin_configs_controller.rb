@@ -20,6 +20,7 @@ class Api::WeixinConfigsController < Api::BaseController
 
     options[:openid] = params[:open_id] if params[:open_id].present?
     options[:code] = params[:code] if params[:code].present?
+    options[:card_id] = params[:card_id] if params[:card_id].present?
 
     result = Wechat.api.card_api_ticket.card_ext(options)
 
