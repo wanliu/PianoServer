@@ -84,8 +84,6 @@ endif
 sync_config: try_config
 	@aws s3 cp $(SETTIGNS_FILE) config/settings.local.yml $(PROFILE)
 	@aws s3 cp $(WECHAT_FILE) config/wechat.yml $(PROFILE)
-	@aws s3 cp s3://wanliu/config/piano/wechat_access_token /var/tmp/wechat_access_token $(PROFILE)
-	@aws s3 cp s3://wanliu/config/piano/wechat_jsapi_ticket /var/tmp/wechat_jsapi_ticket $(PROFILE)
 	@aws s3 cp s3://wanliu/config/piano/apiclient_cert.p12 /var/tmp/apiclient_cert.p12 $(PROFILE)
 
 bundle:
