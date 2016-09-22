@@ -18,7 +18,7 @@ class Api::WeixinConfigsController < Api::BaseController
   def card_ext
     options = {}
 
-    options[:openid] = params[:open_id] if params[:open_id].present?
+    options[:openid] = params[:openid] if params[:openid].present?
     options[:code] = params[:code] if params[:code].present?
     options[:card_id] = params[:card_id] if params[:card_id].present?
 
