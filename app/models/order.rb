@@ -17,7 +17,7 @@ class Order < ActiveRecord::Base
   has_one :birthday_party, inverse_of: :order
   accepts_nested_attributes_for :birthday_party
 
-  attr_accessor :cart_item_ids, :address_id, :cake_id
+  attr_accessor :cart_item_ids, :address_id, :cake_id, :card
 
   enum status: { initiated: 0, finish: 1 }
 
@@ -134,6 +134,13 @@ class Order < ActiveRecord::Base
     self.receiver_phone = location.contact_phone
   end
 
+  def card=(card_code)
+    @card = card_code
+
+    self.cards = [card_code]
+    # cards << card_code
+  end
+
   def receive_token
     return unless persisted?
     if super.blank?
@@ -227,6 +234,14 @@ class Order < ActiveRecord::Base
 
   def wait_for_yiyuan_evaluate?
     wait_for_evaluate? && pmo_grab_id.present?
+  end
+
+  def can_use_card?
+    !finished? && pmo_grab_id.blank? && birthday_party.blank? && !card_used?
+  end
+
+  def card_used?
+    cards.present?
   end
 
   def yiyuan_fullfilled?

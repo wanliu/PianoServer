@@ -509,6 +509,8 @@ Rails.application.routes.draw do
       post "evaluate_items/:order_item_id",
         to: "orders#evaluate_item_create",
         as: :evaluate_items_create
+
+      post :use_wx_card
     end
   end
 

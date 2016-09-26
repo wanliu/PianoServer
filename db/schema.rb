@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160921032618) do
+ActiveRecord::Schema.define(version: 20160923015725) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -491,9 +491,11 @@ ActiveRecord::Schema.define(version: 20160921032618) do
     t.decimal  "paid_total",        precision: 10, scale: 2
     t.string   "note"
     t.string   "receive_token"
+    t.string   "cards",                                      default: [],                 array: true
   end
 
   add_index "orders", ["buyer_id"], name: "index_orders_on_buyer_id", using: :btree
+  add_index "orders", ["cards"], name: "index_orders_on_cards", using: :gin
   add_index "orders", ["supplier_id"], name: "index_orders_on_supplier_id", using: :btree
 
   create_table "properties", force: :cascade do |t|

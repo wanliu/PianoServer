@@ -128,6 +128,10 @@
     </div>
     <% end %>
 
+    <% if params[:card].present? %>
+      <%= render partial: 'wx_card', locals: {order: @order} %>
+    <% end %>
+
     <% if @one_more_time %>
       <%= link_to "点击可再次获得抢购机会", @redirect_url, class: 'btn btn-warning btn-large btn-block', id: 'pmo-once-more' %>
     <% end %>
