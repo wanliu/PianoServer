@@ -351,7 +351,7 @@ class OrdersController < ApplicationController
 
       code = Wechat.api.card_api_ticket.decrypt_code params[:encrypt_code]
       code_detail = Wechat.api.card_api_ticket.code_detail code
-      can_consume = 0 == code_detail["errcode"] == 0 && "ok" == code_detail["errmsg"]
+      can_consume = 0 == code_detail["errcode"] && "ok" == code_detail["errmsg"]
 
       if reduce_cost.present? && @order.can_use_card? && can_consume
         @order.card = params[:card_id]
@@ -367,7 +367,7 @@ class OrdersController < ApplicationController
         render json: {consume: false, errmsg: '无法使用这张优惠卷!'}, status: :unprocessable_entity
       end
     else
-
+      render json: {}
     end
   end
 
