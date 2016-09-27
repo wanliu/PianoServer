@@ -324,6 +324,7 @@ class OrdersController < ApplicationController
     @order = nil
   end
 
+  # 确认订单后使用优惠卷
   # {errMsg: 'xxx',
   # cardList: [
   #   { 
@@ -357,11 +358,45 @@ class OrdersController < ApplicationController
 
         if reduce_cost.present? && @order.can_use_card? && can_consume
           if Wechat.api.card_api_ticket.consume(code)
-            @order.update_columns(cards: [params[:card_id]], total: @order.total - reduce_cost.to_f/100)
+            @order.update_columns(cards: [code], total: @order.total - reduce_cost.to_f/100)
             render json: {consume: true, total: @order.total}
           else
             render json: {consume: false, errmsg: '微信核销失败, 请稍后再试!'}, status: :unprocessable_entity
           end
+        else
+          render json: {consume: false, errmsg: '无法使用这张优惠卷!'}, status: :unprocessable_entity
+        end
+      rescue Wechat::ResponseError => e
+        render json: {consume: false, errmsg: '无法使用这张优惠卷, 请稍后再试!'}, status: :unprocessable_entity
+      end
+    else
+      render json: {consume: false, errmsg: '无法识别优惠卷信息,请稍后再试!'}, status: :unprocessable_entity
+    end
+  end
+
+  # 确认订单前选择优惠卷
+  def add_wx_card
+    @order = current_user.orders.build(express_fee_params)
+    @order.set_express_fee
+
+    @order.items.each do |item|
+      item.price = item.caculate_price
+    end
+
+    if params[:card_id].present? && params[:encrypt_code].present?
+      begin
+        card_info = Wechat.api.card_api_ticket.card_detail params[:card_id]
+
+        reduce_cost = card_info.try(:[], "cash").try(:[], "reduce_cost")
+        card_title = card_info.try(:[], "cash").try(:[], "base_info").try(:[]. "title")
+
+        code = Wechat.api.card_api_ticket.decrypt_code params[:encrypt_code]
+        code_detail = Wechat.api.card_api_ticket.code_detail code
+        can_consume = 0 == code_detail["errcode"] && "ok" == code_detail["errmsg"] && 
+
+        if reduce_cost.present? && @order.can_use_card? && can_consume
+          @reduce_cost = reduce_cost.to_f/100
+          render json: {consume: true, code: code, card_title: card_title, total_html: j(render partial: "confirmation_total")}
         else
           render json: {consume: false, errmsg: '无法使用这张优惠卷!'}, status: :unprocessable_entity
         end

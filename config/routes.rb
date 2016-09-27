@@ -491,6 +491,8 @@ Rails.application.routes.draw do
       get 'receive'
       post 'search_receive'
       post 'confirm_receive'
+
+      post :add_ex_card
     end
 
     member do

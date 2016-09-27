@@ -10,6 +10,6 @@
 
 合计
 <span class='total-total'>
-  <%= number_to_currency @order.items.map { |item| item.price * item.quantity }.reduce(:+) + @order.express_fee %>
+  <%= number_to_currency @order.items.map { |item| item.price * item.quantity }.reduce(:+) + @order.express_fee - (@reduce_cost || 0) %>
 </span>
 元

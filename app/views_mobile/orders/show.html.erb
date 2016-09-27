@@ -130,7 +130,7 @@
 
     <% if params[:card].present? %>
       <% if @order.can_use_card? %>
-        <%= render partial: 'wx_card', locals: {order: @order} %>
+        <%= render partial: 'wx_card', locals: {request_path: apply_wx_card_order_path(@order)} %>
       <% elsif @order.cards.present? %>
         已使用优惠卡
       <% else %>

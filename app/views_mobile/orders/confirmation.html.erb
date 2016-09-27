@@ -32,6 +32,12 @@
         <%= render "confirmation_total" %>
       </div>
 
+      <% if params[:card].present? %>
+        <% if @order.can_use_card? %>
+          <%= render partial: 'wx_card', locals: {request_path: add_wx_card_orders_path} %>
+        <% end %>
+      <% end %>
+
       <div class='footer'>
         <td colspan='5' class='text-right'>
           <%= link_to "返回购物车", cart_path, class: 'cancel' %>
