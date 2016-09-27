@@ -237,7 +237,7 @@ class Order < ActiveRecord::Base
   end
 
   def can_use_card?
-    !finished? && pmo_grab_id.blank? && birthday_party.blank? && !card_used?
+    !finish? && pmo_grab_id.blank? && birthday_party.blank? && !card_used?
   end
 
   def card_used?
