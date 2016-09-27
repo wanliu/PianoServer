@@ -129,7 +129,13 @@
     <% end %>
 
     <% if params[:card].present? %>
-      <%= render partial: 'wx_card', locals: {order: @order} %>
+      <% if @order.can_use_card? %>
+        <%= render partial: 'wx_card', locals: {order: @order} %>
+      <% elsif @order.cards.present? %>
+        已使用优惠卡
+      <% else %>
+        本单不能使用优惠卡
+      <% end %>
     <% end %>
 
     <% if @one_more_time %>
