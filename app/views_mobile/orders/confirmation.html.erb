@@ -6,6 +6,8 @@
   <%= form_for @order do |f| %>
     <%= f.hidden_field :address_id %>
     <%= f.hidden_field :supplier_id %>
+    <%= f.hidden_field :card_id %>
+    <%= f.hidden_field :encrypte_code %>
 
     <% @order_items.each do |cart_item| %>
       <% if cart_item.cartable.try(:gifts).blank? %>
@@ -34,7 +36,7 @@
 
       <% if params[:card].present? %>
         <% if @order.can_use_card? %>
-          <%= render partial: 'wx_card', locals: {request_path: add_wx_card_orders_path} %>
+          <%= render partial: 'wx_card_confirm' %>
         <% end %>
       <% end %>
 

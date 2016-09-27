@@ -52,6 +52,22 @@
           <div>创建时间：<%= @order.created_at.strftime("%Y/%m/%d %H:%M") %></div>
         </div>
 
+        <% if params[:card].present? %>
+          <div class='order-card row'>
+            <% if @order.can_use_card? %>
+              <%= render partial: 'wx_card', locals: {order: @order} %>
+            <% elsif @order.cards.present? %>
+              <div>
+                已使用优惠卷
+              </div>
+            <% else %>
+              <div>
+                本单不能使用优惠卷
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+
         <div class='order-note row show mobile'>
           <div class='content note col-xs-9'>
             <div>备注：</div>
@@ -126,16 +142,6 @@
     <div>
       <%= link_to "进入生日趴", birthday_party_path(@order.birthday_party.id), class: 'btn btn-warning btn-large btn-block' %>
     </div>
-    <% end %>
-
-    <% if params[:card].present? %>
-      <% if @order.can_use_card? %>
-        <%= render partial: 'wx_card', locals: {request_path: apply_wx_card_order_path(@order)} %>
-      <% elsif @order.cards.present? %>
-        已使用优惠卡
-      <% else %>
-        本单不能使用优惠卡
-      <% end %>
     <% end %>
 
     <% if @one_more_time %>

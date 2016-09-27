@@ -252,7 +252,9 @@ class OrdersController < ApplicationController
   # 用户切换收货地址时，计算新地址的运送费用
   def express_fee
     @order = current_user.orders.build(express_fee_params)
+
     @order.set_express_fee
+    @reduce_cost = @order.set_card_reduce
 
     @order.items.each do |item|
       item.price = item.caculate_price
@@ -354,7 +356,7 @@ class OrdersController < ApplicationController
 
         code = Wechat.api.card_api_ticket.decrypt_code params[:encrypt_code]
         code_detail = Wechat.api.card_api_ticket.code_detail code
-        can_consume = 0 == code_detail["errcode"] && "ok" == code_detail["errmsg"] && 
+        can_consume = 0 == code_detail["errcode"] && "ok" == code_detail["errmsg"] 
 
         if reduce_cost.present? && @order.can_use_card? && can_consume
           if Wechat.api.card_api_ticket.consume(code)
@@ -377,35 +379,41 @@ class OrdersController < ApplicationController
   # 确认订单前选择优惠卷
   def add_wx_card
     @order = current_user.orders.build(express_fee_params)
+
     @order.set_express_fee
+    @order.set_card_reduce
 
     @order.items.each do |item|
       item.price = item.caculate_price
     end
 
-    if params[:card_id].present? && params[:encrypt_code].present?
-      begin
-        card_info = Wechat.api.card_api_ticket.card_detail params[:card_id]
+    render partial: "confirmation_total"
 
-        reduce_cost = card_info.try(:[], "cash").try(:[], "reduce_cost")
-        card_title = card_info.try(:[], "cash").try(:[], "base_info").try(:[]. "title")
+    # if @order.card_id.present? && @order.encrypt_code.present?
+    #   begin
+    #     card_info = Wechat.api.card_api_ticket.card_detail @order.card_id
 
-        code = Wechat.api.card_api_ticket.decrypt_code params[:encrypt_code]
-        code_detail = Wechat.api.card_api_ticket.code_detail code
-        can_consume = 0 == code_detail["errcode"] && "ok" == code_detail["errmsg"] && 
+    #     reduce_cost = card_info.try(:[], "cash").try(:[], "reduce_cost")
+    #     card_title = card_info.try(:[], "cash").try(:[], "base_info").try(:[], "title")
 
-        if reduce_cost.present? && @order.can_use_card? && can_consume
-          @reduce_cost = reduce_cost.to_f/100
-          render json: {consume: true, code: code, card_title: card_title, total_html: j(render partial: "confirmation_total")}
-        else
-          render json: {consume: false, errmsg: '无法使用这张优惠卷!'}, status: :unprocessable_entity
-        end
-      rescue Wechat::ResponseError => e
-        render json: {consume: false, errmsg: '无法使用这张优惠卷, 请稍后再试!'}, status: :unprocessable_entity
-      end
-    else
-      render json: {consume: false, errmsg: '无法识别优惠卷信息,请稍后再试!'}, status: :unprocessable_entity
-    end
+    #     code = Wechat.api.card_api_ticket.decrypt_code @order.encrypt_code
+    #     code_detail = Wechat.api.card_api_ticket.code_detail code
+    #     can_consume = 0 == code_detail["errcode"] && "ok" == code_detail["errmsg"]
+
+    #     if reduce_cost.present? && @order.can_use_card? && can_consume
+    #       @reduce_cost = reduce_cost.to_f/100
+    #       render partial: "confirmation_total"
+    #       # total_html = ApplicationController.new.render_to_string(partial: 'orders/confirmation_total', locals: { variable: 'value' })
+    #       # render json: {consume: true, code: code, card_title: card_title, total_html: j(render partial: "confirmation_total")}
+    #     else
+    #       render json: {consume: false, errmsg: '无法使用这张优惠卷!'}, status: :unprocessable_entity
+    #     end
+    #   rescue Wechat::ResponseError => e
+    #     render json: {consume: false, errmsg: '无法使用这张优惠卷, 请稍后再试!'}, status: :unprocessable_entity
+    #   end
+    # else
+    #   render json: {consume: false, errmsg: '无法识别优惠卷信息,请稍后再试!'}, status: :unprocessable_entity
+    # end
   end
 
   private
@@ -440,6 +448,8 @@ class OrdersController < ApplicationController
         :address_id, 
         :note, 
         :cake_id,
+        :card_id,
+        :encypte_code,
         items_attributes: [:orderable_type, :orderable_id, :quantity],
         birthday_party_attributes: [:message, :birthday_person, :birth_day, :delivery_time])
       .tap do |white_list|
@@ -499,7 +509,9 @@ class OrdersController < ApplicationController
       .permit(:supplier_id, 
         :address_id, 
         :pmo_grab_id, 
-        :one_money_id, 
+        :one_money_id,
+        :card_id,
+        :encypte_code,
         :note).tap do |white_list|
       if params[:order][:cart_item_ids].present?
         white_list[:cart_item_ids] = params[:order][:cart_item_ids]

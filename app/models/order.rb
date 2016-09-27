@@ -17,7 +17,8 @@ class Order < ActiveRecord::Base
   has_one :birthday_party, inverse_of: :order
   accepts_nested_attributes_for :birthday_party
 
-  attr_accessor :cart_item_ids, :address_id, :cake_id, :card
+  attr_accessor :cart_item_ids, :address_id, :cake_id, :card, :card_id, :encypte_code, 
+    :reduce_cost, :card_title, :card_setted, :card_err
 
   enum status: { initiated: 0, finish: 1 }
 
@@ -329,6 +330,36 @@ class Order < ActiveRecord::Base
 
   def wx_order_notify_url
     "{Settings.app.website}/orders/#{id}/wx_notify"
+  end
+
+  # a. set wx card code
+  # b. calculate reduce cost
+  # return setted code: 0: no setting, 1: setting success, 2: setting failed 
+  def set_card_reduce
+    if card_id.present? && encrypt_code.present?
+      begin
+        card_info = Wechat.api.card_api_ticket.card_detail card_id
+
+        reduce_cost = card_info.try(:[], "cash").try(:[], "reduce_cost")
+        card_title = card_info.try(:[], "cash").try(:[], "base_info").try(:[], "title")
+
+        code = Wechat.api.card_api_ticket.decrypt_code encrypt_code
+        code_detail = Wechat.api.card_api_ticket.code_detail code
+        can_consume = 0 == code_detail["errcode"] && "ok" == code_detail["errmsg"]
+
+        if reduce_cost.present? && can_consume
+          self.reduce_cost = reduce_cost.to_f/100
+          self.card_title = card_title
+          self.card_setted = true
+        else
+          self.card_setted = true
+          self.card_err = true
+        end
+      rescue Wechat::ResponseError => e
+        self.card_setted = true
+        self.card_err = true
+      end
+    end
   end
 
   private

@@ -32,19 +32,16 @@
         nonceStr: "<%= card_sign[:nonce_str] %>", // 卡券签名随机串
         cardSign: "<%= card_sign[:cardSign] %>", // 卡券签名
         success: function (res) {
+            var $form = $('form.order-confirm-mobile');
             var cardList= JSON.parse(res.cardList); // 用户选中的卡券列表信息
-            // alert(JSON.stringify(cardList[0]));
-            $.post('<%= apply_wx_card_order_path(order) %>', cardList[0])
-              .done(function(response) {
-                alert("优惠卷使用成功!");
-                // alert(JSON.stringify(response));
-                // location.reload();
-                if (!!~window.location.href.indexOf('?')) {
-                  window.location.href = window.location.href + "&time=" + new Date().getTime();
-                } else {
-                  window.location.href = window.location.href + "?time=" + new Date().getTime();
-                }
+            var cardInfo = cardList[0]
 
+            $form.find("input[name=card_id]").val(cardInfo["card_id"]);
+            $form.find("input[name=encrypte_code]").val(cardInfo["encrypte_code"]);
+            // alert(JSON.stringify(cardList[0]));
+            $.post('<%= add_wx_card_orders_path %>', $form.serialize())
+              .done(function(response) {
+                alert(JSON.stringify(response));
               })
               .fail(function(response) {
                 alert(response.errmsg);

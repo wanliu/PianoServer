@@ -1,3 +1,7 @@
+<%= f.hidden_field :card_id, @order.card_id %>
+<%= f.hidden_field :encrypte_code, @order.encrypte_code %>
+<%= f.hidden_field :code, @order.code %>
+
 <div class='text-right'>
   共<%= @order.items.map(&:quantity).reduce(:+) %>件商品 <%=number_to_currency @order.items.map { |item| item.price * item.quantity }.reduce(:+)  %>元 
 </div>
@@ -6,6 +10,6 @@
     运送费用 <%= number_to_currency @order.express_fee %>元
   </div>
   <div  class='text-right total'>
-    合计 <span class='amount'><%= number_to_currency @order.express_fee + @order.items.map { |item| item.price * item.quantity }.reduce(:+) %></span>元
+    合计 <span class='amount'><%= number_to_currency @order.express_fee + @order.items.map { |item| item.price * item.quantity }.reduce(:+) - (@order.reduce_cost || 0) %></span>元
   </div>
 </div>
