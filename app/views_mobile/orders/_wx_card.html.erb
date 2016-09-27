@@ -28,7 +28,7 @@
           success: function (res) {
               var cardList= JSON.parse(res.cardList); // 用户选中的卡券列表信息
               alert(JSON.stringify(cardList[0]));
-              $.post('<%= use_wx_card_order_path(order) %>', cardList[0])
+              $.post('<%= apply_wx_card_order_path(order) %>', cardList[0])
                 .done(function(response) {
                   alert(JSON.stringify(response));
                 })

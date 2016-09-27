@@ -13,7 +13,7 @@ class OrdersController < ApplicationController
       :wxpay,
       :wxpay_confirm,
       :wx_paid,
-      :use_wx_card
+      :apply_wx_card
     ]
 
   before_action :set_evaluatable_order,
@@ -344,7 +344,7 @@ class OrdersController < ApplicationController
   #     }
   #   }
   # }
-  def use_wx_card
+  def apply_wx_card
     if params[:card_id].present? && params[:encrypt_code].present?
       begin
         card_info = Wechat.api.card_api_ticket.card_detail params[:card_id]

@@ -510,7 +510,7 @@ Rails.application.routes.draw do
         to: "orders#evaluate_item_create",
         as: :evaluate_items_create
 
-      post :use_wx_card
+      post :apply_wx_card
     end
   end
 
