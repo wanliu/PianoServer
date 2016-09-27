@@ -37,11 +37,17 @@
             $.post('<%= apply_wx_card_order_path(order) %>', cardList[0])
               .done(function(response) {
                 alert("优惠卷使用成功!");
-                location.reload();
                 // alert(JSON.stringify(response));
+                // location.reload();
+                if (!!~window.location.href.indexOf('?')) {
+                  window.location.href = window.location.href + "&time=" + new Date().getTime();
+                } else {
+                  window.location.href = window.location.href + "?time=" + new Date().getTime();
+                }
+
               })
               .fail(function(response) {
-                // alert(JSON.stringify(response));
+                alert(response.errmsg);
               })
         }
       });
