@@ -60,7 +60,7 @@ class AuthorizeController < ApplicationController
     logger.info "profile: #{profile.inspect}"
 
     user = User.where('data @> ?', {weixin_openid: profile['openid']}.to_json)
-           .assign_attributes(
+           .first.assign_attributes(
              username: SecureRandom.urlsafe_base64.tr('-', '_'),
              weixin_openid: profile['openid'],
              nickname: profile['nickname'],
