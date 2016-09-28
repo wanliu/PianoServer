@@ -5,7 +5,7 @@ class CardOrdersController < ApplicationController
   skip_before_action :verify_authenticity_token, only: :wx_notify
 
   def wxpay
-    @card_order = CardOrder.find(params[:id])
+    @card_order = current_user.card_orders.find(params[:id])
     if @card_order.paid?
       render "card_orders/wx_paid"
       return
@@ -32,7 +32,7 @@ class CardOrdersController < ApplicationController
   end
 
   def withdraw
-    @card_order = CardOrder.find(params[:id])
+    @card_order = current_user.card_orders.find(params[:id])
 
     unless @card_order.paid?
       redirect_to WeixinApi.get_openid_url("/card_orders/wxpay/#{card_order.id}")
@@ -46,14 +46,14 @@ class CardOrdersController < ApplicationController
   end
 
   def withdrew
-    @card_order = CardOrder.find(params[:id])
+    @card_order = current_user.card_orders.find(params[:id])
     @card_order.withdrew_card
 
     render json: {}
   end
 
   def wxpay_confirm
-    @card_order = CardOrder.find(params[:id])
+    @card_order = current_user.card_orders.find(params[:id])
 
     if @card_order.paid?
       render json: {paid: true}, status: :ok

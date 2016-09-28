@@ -12,7 +12,7 @@
 
 <script>
   <% signature = Wechat.api.jsapi_ticket.signature request.original_url %>
-  <% card_sign = Wechat.api.card_api_ticket.card_sign(card_id: @card_order.wx_card_id).to_json.html_safe %>
+  <% card_ext = Wechat.api.card_api_ticket.card_ext(card_id: @card_order.wx_card_id) %>
   // <%= signature.to_json.html_safe %>
 
   (function() {
@@ -55,7 +55,7 @@
       wx.addCard({
         cardList: [{
             cardId: '<%= @card_order.wx_card_id %>',
-            cardExt: '<%= card_sign %>'
+            cardExt: '{"timestamp":"<%= card_ext[:timestamp] %>","nonce_str":"<%= card_ext[:nonce_str] %>","signature":"<%= card_ext[:signature].html_safe %>"}'
         }], // 需要添加的卡券列表
         success: function (res) {
             var cardList = JSON.parse(res.cardList); // 添加的卡券列表信息
