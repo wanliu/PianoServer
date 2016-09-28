@@ -24,6 +24,8 @@ Rails.application.routes.draw do
 
     member do
       get "wxpay"
+      get "withdraw"
+      post "withdrew"
       post "wx_notify"
       post "wxpay_confirm"
     end

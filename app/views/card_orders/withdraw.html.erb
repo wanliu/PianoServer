@@ -12,7 +12,7 @@
 
 <script>
   <% signature = Wechat.api.jsapi_ticket.signature request.original_url %>
-  <% card_sign = Wechat.api.card_api_ticket.card_sign(card_id: @card_order.wx_card_id) %>
+  <% card_sign = Wechat.api.card_api_ticket.card_sign(card_id: @card_order.wx_card_id).to_json.html_safe %>
   // <%= signature.to_json.html_safe %>
 
   (function() {
@@ -67,6 +67,9 @@
             .fail(function() {
               withdrew_lock = false;
               alert("领取失败！");
+            })
+            .cancel(function() {
+              withdrew_lock = false;
             })
         }
       });

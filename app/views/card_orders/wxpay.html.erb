@@ -83,22 +83,18 @@
 
           res.done(function (data, status, xhr) {
             // 确认支付成功
-            // alert("支付成功");
-            // window.location.href = "<%= wx_paid_order_path(@card_order) %>";
-            // window.location.href = "<%= birthday_party_path(@card_order.birthday_party) %>";
+            alert("支付成功");
           });
 
           res.fail(function (data, status, xhr) {
             // 无法确认支付成功
             alert("支付没有成功");
-            // window.location.href = "<%= birthday_party_path(@card_order.birthday_party_id) %>";
           });
         },
 
         fail: function(res) {
           // 支付失败后的回调函数
           alert('支付没有成功', + JSON.stringify(res));
-          // window.location.href = "<%= birthday_party_path(@card_order.birthday_party_id) %>";
         }
       });
     }

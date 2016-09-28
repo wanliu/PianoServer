@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160928015543) do
+ActiveRecord::Schema.define(version: 20160928074821) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -145,16 +145,19 @@ ActiveRecord::Schema.define(version: 20160928015543) do
 
   create_table "card_orders", force: :cascade do |t|
     t.string   "wx_card_id"
-    t.boolean  "paid",                                  default: false
-    t.boolean  "withdrew",                              default: false
+    t.boolean  "paid",                                       default: false
+    t.boolean  "withdrew",                                   default: false
     t.integer  "pmo_grab_id"
     t.integer  "one_money_id"
     t.integer  "item_id"
     t.integer  "user_id"
-    t.decimal  "price",        precision: 10, scale: 2
+    t.decimal  "price",             precision: 10, scale: 2
     t.string   "title"
-    t.datetime "created_at",                                            null: false
-    t.datetime "updated_at",                                            null: false
+    t.datetime "created_at",                                                 null: false
+    t.datetime "updated_at",                                                 null: false
+    t.string   "wx_prepay_id"
+    t.string   "wx_noncestr"
+    t.string   "wx_transaction_id"
   end
 
   add_index "card_orders", ["item_id"], name: "index_card_orders_on_item_id", using: :btree

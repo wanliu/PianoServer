@@ -226,7 +226,7 @@ class Api::Promotions::OneMoneyController < Api::BaseController
 
           @card_order = CardOrder.create({
             title: shop_item.title,
-            user_id: @grab.user_id,
+            user_id: @grab.user_user_id,
             wx_card_id: shop_item.properties.try(:[], PmoItem::CARD_ATTR_NAME).try(:[], "value"),
             price: @grab.price,
             paid: @grab.price <= 0,

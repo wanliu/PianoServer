@@ -43,6 +43,8 @@ class User < ActiveRecord::Base
   has_many :temp_birthday_parties, foreign_key: 'sales_man_id'
   has_many :saled_birthday_parties, class_name: 'BirthdayParty', foreign_key: 'sales_man_id'
 
+  has_many :card_orders
+
   validates :username, presence: true, uniqueness: true
   validates :mobile, presence: true, uniqueness: true
 

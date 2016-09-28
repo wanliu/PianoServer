@@ -2,6 +2,7 @@ class CardOrder < ActiveRecord::Base
   include WxOrder
 
   belongs_to :item
+  belongs_to :user
 
   # validates :item, presence: true
   # validates :wx_card_id, presence: true
