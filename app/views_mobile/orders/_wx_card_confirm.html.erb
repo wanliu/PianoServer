@@ -40,11 +40,9 @@
             $form.find("input[name=encrypte_code]").val(cardInfo["encrypte_code"]);
             // alert(JSON.stringify(cardList[0]));
             $.post('<%= add_wx_card_orders_path %>', $form.serialize())
-              .done(function(response) {
-                alert(JSON.stringify(response));
-              })
-              .fail(function(response) {
-                alert(response.errmsg);
+              .done(function(html) {
+                // alert(JSON.stringify(html));
+                $('.confirmation-total').html(html);
               })
         }
       });
