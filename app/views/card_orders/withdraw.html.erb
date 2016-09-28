@@ -49,13 +49,11 @@
       jsApiList: ['addCard', 'onMenuShareTimeline'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
     });
 
-
-
     function withdraw() {
       wx.addCard({
         cardList: [{
             cardId: '<%= @card_order.wx_card_id %>',
-            cardExt: '{"timestamp":"<%= card_ext[:timestamp] %>","nonce_str":"<%= card_ext[:nonce_str] %>","signature":"<%= card_ext[:signature].html_safe %>"}'
+            cardExt: '{"code": "", "openid": "", "timestamp":"<%= card_ext[:timestamp] %>","nonce_str":"<%= card_ext[:nonce_str] %>","signature":"<%= card_ext[:signature].html_safe %>"}'
         }], // 需要添加的卡券列表
         success: function (res) {
             var cardList = JSON.parse(res.cardList); // 添加的卡券列表信息
@@ -68,9 +66,12 @@
               withdrew_lock = false;
               alert("领取失败！");
             })
-            .cancel(function() {
-              withdrew_lock = false;
-            })
+        },
+        fail: function(res) {
+          withdrew_lock = false;
+        },
+        cancel: function (res) {
+          withdrew_lock = false;
         }
       });
     }
