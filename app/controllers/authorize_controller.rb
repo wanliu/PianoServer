@@ -59,9 +59,7 @@ class AuthorizeController < ApplicationController
   def lookup_user(profile)
     logger.info "profile: #{profile.inspect}"
 
-    user = User.where('data @> ?', {weixin_openid: profile['openid']}.to_json)
-           .first.assign_attributes(
-             username: SecureRandom.urlsafe_base64.tr('-', '_'),
+    attr = { username: SecureRandom.urlsafe_base64.tr('-', '_'),
              weixin_openid: profile['openid'],
              nickname: profile['nickname'],
              sex: profile['sex'],
@@ -70,10 +68,14 @@ class AuthorizeController < ApplicationController
              province: profile['province'],
              country: profile['country'],
              weixin_privilege: profile['privilege'],
-             unionid: profile['unionid']
-           )
+             unionid: profile["unionid"],
+             image: profile['headimgurl']
+           }
 
-    user.__send__(:write_attribute, :image, profile['headimgurl'])
+    user = User.where('data @> ?', {weixin_openid: profile['openid']}.to_json)
+           .first_or_initialize(attr)
+
+    user.assign_attributes(attr)
     user.save
     [user, !user.persisted?]
   end
