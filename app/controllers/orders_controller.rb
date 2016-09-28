@@ -96,7 +96,8 @@ class OrdersController < ApplicationController
 
       one_money = OneMoney[@order.one_money_id]
       @one_more_time = pmo_grab.seeds.any? { |seed| "pending" == seed.status }
-      redirect_url = one_money.try(:publish_url) || "/one_money/#{ one_money.start_at.strftime('%Y-%m-%d') }/index.html"
+      one_money_type = one_money.try(:type) || "one_money"
+      redirect_url = one_money.try(:publish_url) || "/#{one_money_type}/#{ one_money.start_at.strftime('%Y-%m-%d') }/index.html"
       @redirect_url = "#{redirect_url}#/detail/#{ pmo_grab.pmo_item_id }"
     end
     # @order.items.includes(:orderable)
