@@ -69,7 +69,8 @@ class AuthorizeController < ApplicationController
              city: profile['city'],
              province: profile['province'],
              country: profile['country'],
-             weixin_privilege: profile['privilege']
+             weixin_privilege: profile['privilege'],
+             unionid: profile['unionid']
            )
 
     user.__send__(:write_attribute, :image, profile['headimgurl'])
