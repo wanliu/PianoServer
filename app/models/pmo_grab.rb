@@ -25,6 +25,7 @@ class PmoGrab < Ohm::Model
 
   attribute :used_seed
 
+  attribute :is_card, Type::Boolean
   attribute :avatar_urls, Type::Array
   attribute :timeout_at, OhmTime::ISO8601
   attribute :one_money  # 活动的 id , etc OneMoney
@@ -112,7 +113,8 @@ class PmoGrab < Ohm::Model
       shop_name: pmo_item.shop_name,
       avatar_urls: pmo_item.avatar_urls,
       one_money: one_money.id,
-      pmo_item: pmo_item
+      pmo_item: pmo_item,
+      is_card: pmo_item.is_card
     })
   end
 
@@ -123,13 +125,28 @@ class PmoGrab < Ohm::Model
   end
 
   def callback_url!
-    url = real_callback_url
-    l = URI.parse(url)
-    query = Hash[URI.decode_www_form(l.query || "")]
-    encode_message =  encrypt(self.to_hash.to_json)
-    query = query.merge("i" => encode_message)
-    l.query = URI.encode_www_form(query)
-    l.to_s
+    if is_card
+      card_order = CardOrder.find_by(pmo_grab_id: id)
+
+      if card_order.present?
+        if card_order.paid
+          "/card_orders/#{card_order.id}/withdraw"
+        else
+          # "/card_orders/#{card_order.id}/wxpay"
+          WeixinApi.get_openid_url("/card_orders/wxpay/#{card_order.id}")
+        end
+      else
+        nil
+      end
+    else
+      url = real_callback_url
+      l = URI.parse(url)
+      query = Hash[URI.decode_www_form(l.query || "")]
+      encode_message =  encrypt(self.to_hash.to_json)
+      query = query.merge("i" => encode_message)
+      l.query = URI.encode_www_form(query)
+      l.to_s
+    end
   end
 
   def callback_with_fallback

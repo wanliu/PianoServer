@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160923015725) do
+ActiveRecord::Schema.define(version: 20160928015543) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -142,6 +142,27 @@ ActiveRecord::Schema.define(version: 20160923015725) do
   add_index "cakes", ["deleted_at"], name: "index_cakes_on_deleted_at", using: :btree
   add_index "cakes", ["item_id"], name: "index_cakes_on_item_id", using: :btree
   add_index "cakes", ["supplier"], name: "index_cakes_on_supplier", using: :btree
+
+  create_table "card_orders", force: :cascade do |t|
+    t.string   "wx_card_id"
+    t.boolean  "paid",                                  default: false
+    t.boolean  "withdrew",                              default: false
+    t.integer  "pmo_grab_id"
+    t.integer  "one_money_id"
+    t.integer  "item_id"
+    t.integer  "user_id"
+    t.decimal  "price",        precision: 10, scale: 2
+    t.string   "title"
+    t.datetime "created_at",                                            null: false
+    t.datetime "updated_at",                                            null: false
+  end
+
+  add_index "card_orders", ["item_id"], name: "index_card_orders_on_item_id", using: :btree
+  add_index "card_orders", ["one_money_id"], name: "index_card_orders_on_one_money_id", using: :btree
+  add_index "card_orders", ["paid"], name: "index_card_orders_on_paid", using: :btree
+  add_index "card_orders", ["pmo_grab_id"], name: "index_card_orders_on_pmo_grab_id", using: :btree
+  add_index "card_orders", ["user_id"], name: "index_card_orders_on_user_id", using: :btree
+  add_index "card_orders", ["withdrew"], name: "index_card_orders_on_withdrew", using: :btree
 
   create_table "cards", force: :cascade do |t|
     t.string   "wx_card_id"

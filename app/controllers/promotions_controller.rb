@@ -5,29 +5,30 @@ class PromotionsController < ApplicationController
 
   before_action :set_promotion, only: [:show, :update, :destroy, :chat, :shop, :toggle_follow]
 
-  caches_action :index, layout: false, cache_path: Proc.new { |request|
-    etag = if @subject.present?
-       @subject.updated_at.utc.to_i
-    else
-      @promotions = Promotion.find(:all, from: :active, params: request.query_params).to_a
-      if @promotions.blank?
-        'empty'
-      else
-        Digest::MD5.hexdigest "#{@promotions.first.updated_at}-#{@promotions.last.updated_at}-#{@promotions.length}"
-      end
-    end
+  # caches_action :index, layout: false, cache_path: Proc.new { |request|
+  #   etag = if @subject.present?
+  #      @subject.updated_at.utc.to_i
+  #   else
+  #     @promotions = Promotion.find(:all, from: :active, params: request.query_params).to_a
+  #     if @promotions.blank?
+  #       'empty'
+  #     else
+  #       Digest::MD5.hexdigest "#{@promotions.first.updated_at}-#{@promotions.last.updated_at}-#{@promotions.length}"
+  #     end
+  #   end
 
-    { etag: etag }
-  }
+  #   { etag: etag }
+  # }
 
   respond_to :json, :html
 
   # GET /promotions
   # GET /promotions.json
   def index
-    @promotions ||= Promotion.find(:all, from: :active, params: query_params).to_a
+    # @promotions ||= Promotion.find(:all, from: :active, params: query_params).to_a
 
-    render :homepage, with: @subject
+    # render :homepage, with: @subject
+    render text: 'hello'
   end
 
   # GET /promotions/1
