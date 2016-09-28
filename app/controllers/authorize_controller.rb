@@ -60,7 +60,7 @@ class AuthorizeController < ApplicationController
     logger.info "profile: #{profile.inspect}"
 
     user = User.where('data @> ?', {weixin_openid: profile['openid']}.to_json)
-           .first_or_initialize(
+           .assign_attributes(
              username: SecureRandom.urlsafe_base64.tr('-', '_'),
              weixin_openid: profile['openid'],
              nickname: profile['nickname'],
@@ -74,6 +74,7 @@ class AuthorizeController < ApplicationController
            )
 
     user.__send__(:write_attribute, :image, profile['headimgurl'])
+    user.save
     [user, !user.persisted?]
   end
 
