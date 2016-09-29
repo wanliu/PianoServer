@@ -177,6 +177,13 @@ class ApplicationController < ActionController::Base
     agent_str =~ Regexp.new(MOBILE_USER_AGENTS)
   end
 
+  WEIXIN_USER_AGENTS = 'micromessenger'
+  def weixin?
+    agent_str = request.user_agent.to_s.downcase
+    # return false if agent_str =~ /ipad/
+    agent_str =~ Regexp.new(WEIXIN_USER_AGENTS)
+  end
+
   def weixin_device?
     agent_str = request.user_agent.to_s.downcase
     return agent_str =~ /micromessenger/

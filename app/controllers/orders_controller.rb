@@ -389,32 +389,6 @@ class OrdersController < ApplicationController
     end
 
     render partial: "confirmation_total"
-
-    # if @order.card_id.present? && @order.encrypt_code.present?
-    #   begin
-    #     card_info = Wechat.api.card_api_ticket.card_detail @order.card_id
-
-    #     reduce_cost = card_info.try(:[], "cash").try(:[], "reduce_cost")
-    #     card_title = card_info.try(:[], "cash").try(:[], "base_info").try(:[], "title")
-
-    #     code = Wechat.api.card_api_ticket.decrypt_code @order.encrypt_code
-    #     code_detail = Wechat.api.card_api_ticket.code_detail code
-    #     can_consume = 0 == code_detail["errcode"] && "ok" == code_detail["errmsg"]
-
-    #     if reduce_cost.present? && @order.can_use_card? && can_consume
-    #       @reduce_cost = reduce_cost.to_f/100
-    #       render partial: "confirmation_total"
-    #       # total_html = ApplicationController.new.render_to_string(partial: 'orders/confirmation_total', locals: { variable: 'value' })
-    #       # render json: {consume: true, code: code, card_title: card_title, total_html: j(render partial: "confirmation_total")}
-    #     else
-    #       render json: {consume: false, errmsg: '无法使用这张优惠卷!'}, status: :unprocessable_entity
-    #     end
-    #   rescue Wechat::ResponseError => e
-    #     render json: {consume: false, errmsg: '无法使用这张优惠卷, 请稍后再试!'}, status: :unprocessable_entity
-    #   end
-    # else
-    #   render json: {consume: false, errmsg: '无法识别优惠卷信息,请稍后再试!'}, status: :unprocessable_entity
-    # end
   end
 
   private
