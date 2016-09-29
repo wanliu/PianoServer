@@ -52,20 +52,20 @@
     function withdraw() {
       wx.addCard({
         cardList: [{
-            cardId: '<%= @card_order.wx_card_id %>',
-            cardExt: '{"code": "", "openid": "", "timestamp":"<%= card_ext[:timestamp] %>","nonce_str":"<%= card_ext[:nonce_str] %>","signature":"<%= card_ext[:signature].html_safe %>"}'
+          cardId: '<%= @card_order.wx_card_id %>',
+          cardExt: '{"code": "", "openid": "", "timestamp":"<%= card_ext[:timestamp] %>","nonce_str":"<%= card_ext[:nonce_str] %>","signature":"<%= card_ext[:signature].html_safe %>"}'
         }], // 需要添加的卡券列表
         success: function (res) {
-            // var cardList = res.cardList; // 添加的卡券列表信息
-            // alert(res.cardList);
-            $.post("<%= withdrew_card_order_path(@card_order) %>")
-            .done(function() {
-              alert("领取成功！");
-            })
-            .fail(function() {
-              withdrew_lock = false;
-              alert("领取失败！");
-            })
+          // var cardList = res.cardList; // 添加的卡券列表信息
+          // alert(res.cardList);
+          $.post("<%= withdrew_card_order_path(@card_order) %>")
+          .done(function() {
+            alert("领取成功！");
+          })
+          .fail(function() {
+            withdrew_lock = false;
+            alert("领取失败！");
+          })
         },
         fail: function(res) {
           withdrew_lock = false;
