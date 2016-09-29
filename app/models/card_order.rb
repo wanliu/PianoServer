@@ -21,7 +21,7 @@ class CardOrder < ActiveRecord::Base
     update_column('withdrew', true)
 
     if pmo_grab_id.present?
-      pmo_grab = PmoGrab[@card_order.pmo_grab_id]
+      pmo_grab = PmoGrab[pmo_grab_id]
       pmo_grab.ensure! if pmo_grab.present?
     end
   end

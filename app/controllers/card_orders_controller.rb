@@ -40,6 +40,11 @@ class CardOrdersController < ApplicationController
     end
 
     if @card_order.withdrew
+      if @card_order.pmo_grab_id.present?
+        pmo_grab = PmoGrab[@card_order.pmo_grab_id]
+        pmo_grab.ensure! if pmo_grab.present?
+      end
+
       render "card_orders/order_withdrew"
       return
     end
