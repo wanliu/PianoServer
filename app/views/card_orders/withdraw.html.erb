@@ -1,0 +1,97 @@
+<% content_for :javascripts do %>
+  <%= javascript_include_tag "http://res.wx.qq.com/open/js/jweixin-1.0.0.js" %>
+<% end %>
+
+<div class='container order-pay'>
+  <div  class='chose-pay-kind'>
+    <div class='pay-kind withdraw-now text-center' data-order-id='<%= @card_order.id %>'>
+      领取<%= @card_order.title %>
+    </div>
+    <div class='withdrew' data-order-id='<%= @card_order.id %>' style='display: none;'>
+      领取成功，<%= @card_order.title %> 已经添加到您的微信卡卷中！
+    </div>
+  </div>
+</div>
+
+<script>
+  <% signature = Wechat.api.jsapi_ticket.signature request.original_url %>
+  <% card_ext = Wechat.api.card_api_ticket.card_ext(card_id: @card_order.wx_card_id) %>
+
+  (function() {
+    var withdrew_lock = false;
+
+    if (typeof wx == "undefined") {
+      $.post("/api/error_records", {error_record: {name: "微信领取卡卷配置失败", infor: "wx变量未定义"}});
+      alert('微信领取卡卷加载失败，请稍后再试');
+      return;
+    }
+
+    if (typeof $ == "undefined") {
+      $.post("/api/error_records", {error_record: {name: "微信领取卡卷Jquery 加载失败", infor: "$变量未定义"}});
+      alert('微信领取卡卷加载失败，请稍后再试');
+      return;
+    }
+
+    wx.ready(function(){
+    });
+
+    wx.error(function(res){
+      // alert('wx config error')
+      // alert('error msg:' +  JSON.stringify(res));
+      $.post("/api/error_records", {error_record: {name: "微信领取卡卷配置错误", infor: res}});
+      alert('微信领取卡卷请求失败，请稍后再试');
+    });
+
+    wx.config({
+      debug: <%= params[:debug].present? ? 'true' : 'false' %>, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+      appId: '<%= WxPay.appid %>', // 必填，公众号的唯一标识
+      timestamp: <%= signature[:timestamp] %>, // 必填，生成签名的时间戳
+      nonceStr: '<%= signature[:noncestr] %>', // 必填，生成签名的随机串
+      signature: '<%= signature[:signature] %>',// 必填，签名，见附录1
+      jsApiList: ['addCard', 'onMenuShareTimeline'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+    });
+
+    function withdraw() {
+      wx.addCard({
+        cardList: [{
+          cardId: '<%= @card_order.wx_card_id %>',
+          cardExt: '{"code": "", "openid": "", "timestamp":"<%= card_ext[:timestamp] %>","nonce_str":"<%= card_ext[:nonce_str] %>","signature":"<%= card_ext[:signature].html_safe %>"}'
+        }], // 需要添加的卡券列表
+        success: function (res) {
+          // var cardList = res.cardList; // 添加的卡券列表信息
+          // alert(res.cardList);
+          $.post("<%= withdrew_card_order_path(@card_order) %>")
+          .done(function() {
+            $(".withdraw-now").hide();
+            $(".withdrew").show();
+
+            alert("领取成功！");
+          })
+          .fail(function() {
+            withdrew_lock = false;
+            alert("领取失败！");
+          })
+        },
+        fail: function(res) {
+          withdrew_lock = false;
+        },
+        cancel: function (res) {
+          withdrew_lock = false;
+        }
+      });
+    }
+
+    // 用户点击“微信领取卡卷”
+    // 从后端得到微信订单号和各签名参数，用于发起微信领取卡卷
+    $('body').on('click', '.withdraw-now', function(e) {
+      e.preventDefault();
+
+      if (false == withdrew_lock) {
+        withdrew_lock = true;
+        withdraw();        
+      } else {
+        alert("已经领取!")
+      }
+    })
+  })();
+</script>
