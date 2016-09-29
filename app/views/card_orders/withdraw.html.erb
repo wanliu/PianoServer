@@ -7,13 +7,15 @@
     <div class='pay-kind withdraw-now text-center' data-order-id='<%= @card_order.id %>'>
       领取<%= @card_order.title %>
     </div>
+    <div class='withdrew' data-order-id='<%= @card_order.id %>' style='display: none;'>
+      领取成功，<%= @card_order.title %> 已经添加到您的微信卡卷中！
+    </div>
   </div>
 </div>
 
 <script>
   <% signature = Wechat.api.jsapi_ticket.signature request.original_url %>
   <% card_ext = Wechat.api.card_api_ticket.card_ext(card_id: @card_order.wx_card_id) %>
-  // <%= signature.to_json.html_safe %>
 
   (function() {
     var withdrew_lock = false;
@@ -60,6 +62,9 @@
           // alert(res.cardList);
           $.post("<%= withdrew_card_order_path(@card_order) %>")
           .done(function() {
+            $(".withdraw-now").hide();
+            $(".withdrew").show();
+
             alert("领取成功！");
           })
           .fail(function() {
