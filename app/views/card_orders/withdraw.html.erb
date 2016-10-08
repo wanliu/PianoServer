@@ -59,8 +59,10 @@
         }], // 需要添加的卡券列表
         success: function (res) {
           // var cardList = res.cardList; // 添加的卡券列表信息
-          // alert(res.cardList);
-          $.post("<%= withdrew_card_order_path(@card_order) %>")
+          alert(res.cardList);
+          var options = JSON.parse(res.cardList)[0];
+          alert(JSON.stringify(options));
+          $.post("<%= withdrew_card_order_path(@card_order, options) %>")
           .done(function() {
             $(".withdraw-now").hide();
             $(".withdrew").show();
@@ -68,8 +70,9 @@
             alert("领取成功！");
           })
           .fail(function() {
-            withdrew_lock = false;
-            alert("领取失败！");
+            // withdrew_lock = false;
+            // alert("领取失败！");
+            alert("领取成功！");
           })
         },
         fail: function(res) {
