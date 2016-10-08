@@ -59,8 +59,8 @@
         }], // 需要添加的卡券列表
         success: function (res) {
           // var cardList = res.cardList; // 添加的卡券列表信息
-          alert(res.cardList);
-          var options = JSON.parse(res.cardList)[0];
+          alert(JSON.stringify(res));
+          var options = res.cardList[0];
           alert(JSON.stringify(options));
           $.post("<%= withdrew_card_order_path(@card_order) %>", options)
           .done(function() {

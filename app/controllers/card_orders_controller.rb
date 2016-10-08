@@ -10,9 +10,15 @@ class CardOrdersController < ApplicationController
       render "card_orders/wx_paid"
       return
     end
-
+    
     wx_query_code = params[:code]
-    openid = WeixinApi.code_to_openid(wx_query_code)
+
+    if current_user.js_open_id.blank? && wx_query_code.present?
+      openid = WeixinApi.code_to_openid(wx_query_code)
+      current_user.update_column("js_open_id", openid) if openid.present?
+    else
+      openid = current_user.js_open_id
+    end
 
     @card_order.request_ip = request.ip
 
@@ -34,8 +40,22 @@ class CardOrdersController < ApplicationController
   def withdraw
     @card_order = current_user.card_orders.find(params[:id])
 
+    wx_query_code = params[:code]
+
+    if current_user.js_open_id.blank? && wx_query_code.present?
+      openid = WeixinApi.code_to_openid(wx_query_code)
+      current_user.update_column("js_open_id", openid) if openid.present?
+    end
+
     unless @card_order.paid?
-      redirect_to WeixinApi.get_openid_url("/card_orders/wxpay/#{card_order.id}")
+      if current_user.js_open_id.blank?
+        # redirect_to WeixinApi.get_openid_url("/card_orders/wxpay/#{card_order.id}")
+        redirect_to WeixinApi.get_openid_url(wxpay_card_orders_path(card_order.id))
+      else
+        # redirect_to "/card_orders/wxpay/#{card_order.id}"
+        wxpay_card_orders_path(card_order.id)
+      end
+
       return
     end
 
