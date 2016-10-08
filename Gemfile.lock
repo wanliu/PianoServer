@@ -47,7 +47,7 @@ GIT
 
 GIT
   remote: git://github.com/satbirdd/wechat.git
-  revision: ebe516520f8f60fd94decdb9dd22b227bbb20f7a
+  revision: bd29c3083efdfb58317a6b816abb6520b7a6c60c
   specs:
     wechat (0.7.20)
       activesupport (>= 3.2, < 5.1.x)

@@ -231,7 +231,9 @@ Rails.application.routes.draw do
       post "undo_delete", on: :member
     end
 
-    resources :cards
+    resources :cards do
+      get :refresh, on: :collection
+    end
 
     resources :birthday_parties, only: [:index, :show]
 

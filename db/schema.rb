@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160928074821) do
+ActiveRecord::Schema.define(version: 20160929090842) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -169,13 +169,18 @@ ActiveRecord::Schema.define(version: 20160928074821) do
 
   create_table "cards", force: :cascade do |t|
     t.string   "wx_card_id"
-    t.integer  "available_range", default: 0
     t.string   "title"
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.integer  "kind"
+    t.jsonb    "base_info"
+    t.jsonb    "deal_detail"
+    t.string   "gift"
+    t.integer  "least_cost"
+    t.integer  "reduce_cost"
+    t.integer  "discount"
   end
 
-  add_index "cards", ["available_range"], name: "index_cards_on_available_range", using: :btree
   add_index "cards", ["title"], name: "index_cards_on_title", using: :btree
   add_index "cards", ["wx_card_id"], name: "index_cards_on_wx_card_id", using: :btree
 
