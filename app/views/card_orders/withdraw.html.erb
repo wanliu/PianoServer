@@ -62,7 +62,7 @@
           alert(res.cardList);
           var options = JSON.parse(res.cardList)[0];
           alert(JSON.stringify(options));
-          $.post("<%= withdrew_card_order_path(@card_order, options) %>")
+          $.post("<%= withdrew_card_order_path(@card_order) %>", options)
           .done(function() {
             $(".withdraw-now").hide();
             $(".withdrew").show();
