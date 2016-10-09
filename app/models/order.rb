@@ -34,6 +34,8 @@ class Order < ActiveRecord::Base
 
   before_save :set_modified, if: :total_changed?
   before_create :caculate_total, :generate_receive_token
+  before_create :exam_cards
+  after_create :consume_cards
 
   after_commit :send_notify_to_seller, on: :create
 
@@ -134,11 +136,11 @@ class Order < ActiveRecord::Base
     self.receiver_phone = location.contact_phone
   end
 
-  def card=(card_code)
-    @card = card_code
+  def card=(wx_card_id)
+    @card = wx_card_id
 
-    self.cards = [card_code]
-    # cards << card_code
+    self.cards = [wx_card_id]
+    # cards << wx_card_id
   end
 
   def receive_token
@@ -335,6 +337,16 @@ class Order < ActiveRecord::Base
 
   def caculate_total
     self.origin_total = self.total = items_total + (express_fee || 0)
+  end
+
+  def exam_cards
+    cards = Card.where(wx_card_id: cards)
+    # cards.all? do |card|
+    #   card.
+    # end 
+  end
+
+  def consume_cards
   end
 
   def avoid_from_shop_owner

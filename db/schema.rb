@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161009015735) do
+ActiveRecord::Schema.define(version: 20161009064729) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -521,6 +521,7 @@ ActiveRecord::Schema.define(version: 20161009015735) do
     t.string   "note"
     t.string   "receive_token"
     t.string   "cards",                                      default: [],                 array: true
+    t.string   "consumed_codes",                             default: [],                 array: true
   end
 
   add_index "orders", ["buyer_id"], name: "index_orders_on_buyer_id", using: :btree

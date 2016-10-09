@@ -194,9 +194,17 @@ class User < ActiveRecord::Base
   end
 
   def consume_wx_card(wx_card_id)
-    get_wx_card_codes(wx_card_id).any? do |code|
-      consume_wx_card_code code
+    consumed_code = nil
+
+    consumed = get_wx_card_codes(wx_card_id).any? do |code|
+      done = consume_wx_card_code code
+      consumed_code = code if done
+      done
     end
+
+    yield consumed_code if block_given? && consumed
+
+    consumed
   end
 
   def consume_wx_card_code(code)
