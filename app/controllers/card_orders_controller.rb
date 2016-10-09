@@ -74,8 +74,6 @@ class CardOrdersController < ApplicationController
     @card_order = current_user.card_orders.find(params[:id])
     @card_order.withdrew_card
 
-    current_user.user_cards.create(wx_order_id: params[:wx_order_id], encrypt_code: params[:encrypt_code])
-
     render json: {}
   end
 
