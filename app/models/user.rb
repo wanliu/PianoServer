@@ -189,6 +189,10 @@ class User < ActiveRecord::Base
     card_infos.map { |item| item["code"] }
   end
 
+  def has_avaliable_code?(wx_card_id)
+    get_wx_card_codes.present?
+  end
+
   def consume_wx_card(wx_card_id)
     get_wx_card_codes(wx_card_id).any? do |code|
       consume_wx_card_code code
