@@ -133,19 +133,15 @@ class PmoGrab < Ohm::Model
 
         if user.js_open_id.present?
           if card_order.paid
-            # "/card_orders/#{card_order.id}/withdraw"
-            withdraw_card_order_path(card_order.id)
+            "/card_orders/#{card_order.id}/withdraw"
           else
-            # "/card_orders/wxpay/#{card_order.id}"
-            wxpay_card_orders_path(card_order.id)
+            "/card_orders/wxpay/#{card_order.id}"
           end
         else
           if card_order.paid
-            # WeixinApi.get_openid_url("/card_orders/#{card_order.id}/withdraw")
-            WeixinApi.get_openid_url(withdraw_card_order_path(card_order.id))
+            WeixinApi.get_openid_url("/card_orders/#{card_order.id}/withdraw")
           else
-            # WeixinApi.get_openid_url("/card_orders/wxpay/#{card_order.id}")
-            WeixinApi.get_openid_url(wxpay_card_orders_path(card_order.id))
+            WeixinApi.get_openid_url("/card_orders/wxpay/#{card_order.id}")
           end
         end
       else
