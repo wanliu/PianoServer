@@ -30,7 +30,7 @@ class User < ActiveRecord::Base
   has_many :orders, foreign_key: 'buyer_id'
 
   has_many :evaluations
-  has_many :thumbs, foreign_key: :thumber_id
+  has_many :thumbs, foreign_key: :thumber_id, dependent: :destroy
 
   has_many :shop_delivers, foreign_key: :deliver_id
   has_many :deliverable_shops, through: :shop_delivers, source: :shop
@@ -63,7 +63,7 @@ class User < ActiveRecord::Base
   mount_uploader :image, AvatarUploader
   enum sex: {'保密' => 0, '男' => 1, '女' => 2 }
   store_accessor :data,
-                 :weixin_openid, :weixin_privilege, :language, :city, :province, :country
+                 :weixin_openid, :weixin_privilege, :language, :city, :province, :country, :unionid
 
   JWT_TOKEN = Rails.application.secrets.live_key_base
 
