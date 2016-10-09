@@ -169,6 +169,36 @@ class User < ActiveRecord::Base
     shop_delivers.count > 0
   end
 
+  def get_wx_card_list(force=false)
+    return @wx_card_list if @wx_card_list && !force
+
+    if js_open_id.blank?
+      wx_card_list = []
+    else
+      card_infos = Wechat.api.card_api_ticket.get_card_list js_open_id
+      wx_card_list = card_infos.map { |item| item["card_id"] }.uniq
+    end
+
+    @wx_card_list = Card.exam(wx_card_list)
+  end
+
+  def get_wx_card_codes(wx_card_id)
+    return [] if js_open_id.blank?
+
+    card_infos = Wechat.api.card_api_ticket.get_card_list js_open_id, wx_card_id
+    card_infos.map { |item| item["code"] }
+  end
+
+  def consume_wx_card(wx_card_id)
+    get_wx_card_codes(wx_card_id).any? do |code|
+      consume_wx_card_code code
+    end
+  end
+
+  def consume_wx_card_code(code)
+    Wechat.api.card_api_ticket.consume(code)
+  end
+
   private
 
   def generate_authentication_token

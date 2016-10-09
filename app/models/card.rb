@@ -22,6 +22,7 @@ class Card < ActiveRecord::Base
 
   class << self
     def refresh!
+      Rails.logger.info "[微信卡卷]重新拉取微信卡卷信息!"
       card_list = Wechat.api.card_api_ticket.batch_get
 
       card_list.each do |card_id|
@@ -34,6 +35,19 @@ class Card < ActiveRecord::Base
           create_from_card_info(card_info)
         end
       end
+    end
+
+    def exam(wx_card_ids)
+      return wx_card_ids if wx_card_ids.blank?
+
+      all_wx_card_ids = pluck(:wx_card_id)
+
+      if wx_card_ids.any? { |wx_card_id| all_wx_card_ids.exclude? wx_card_id }
+        refresh!
+        all_wx_card_ids = pluck(:wx_card_id)
+      end
+
+      all_wx_card_ids & wx_card_ids
     end
 
     def create_from_card_info(card_info)
