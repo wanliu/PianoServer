@@ -184,6 +184,7 @@ class User < ActiveRecord::Base
 
     @wx_card_list_ids = Card.exam(wx_card_list_ids)
   rescue Wechat::AccessTokenExpiredError => e
+    Rails.logger.error "[微信卡卷] access token过期警告! 微信access_token已经过期"
     @wx_card_list_ids = []
   end
 
@@ -197,6 +198,7 @@ class User < ActiveRecord::Base
 
     card_infos.map { |item| item["code"] } - consumed_codes
   rescue Wechat::AccessTokenExpiredError => e
+    Rails.logger.error "[微信卡卷] access token过期警告! 微信access_token已经过期"
     []
   end
 
@@ -222,6 +224,7 @@ class User < ActiveRecord::Base
   def consume_wx_card_code(code)
     Wechat.api.card_api_ticket.consume(code)
   rescue Wechat::AccessTokenExpiredError => e
+    Rails.logger.error "[微信卡卷] access token过期警告! 微信access_token已经过期"
     false
   end
 
