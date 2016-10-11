@@ -17,6 +17,8 @@ class Order < ActiveRecord::Base
   has_one :birthday_party, inverse_of: :order
   accepts_nested_attributes_for :birthday_party
 
+  has_many :consumed_card_codes
+
   attr_accessor :cart_item_ids, :address_id, :cake_id, :card,
     :consumed_card_ids, :unconsumed_card_ids, :unuseable_card_ids, :card_rollback
 
@@ -366,7 +368,7 @@ class Order < ActiveRecord::Base
     # end
   end
 
-  # 
+  # 核销一张指定id的卡卷,并记录下来被核销的卡卷code
   def consume_cards
     return if cards.blank?
 
@@ -380,7 +382,7 @@ class Order < ActiveRecord::Base
       if buyer.consume_wx_card(card.wx_card_id) { |code| consumed_code = code }
         apply_card card
         consumed_card_ids << card.wx_card_id
-        consumed_codes << consumed_code
+        consumed_card_codes.create(user_id: buyer_id, code: consumed_code, wx_card_id: card.wx_card_id)
       else
         unconsumed_card_ids << card.wx_card_id
       end
@@ -390,7 +392,7 @@ class Order < ActiveRecord::Base
       self.card_rollback = true
       raise Exception.new("微信卡卷无效,请重新选择")
     else
-      update_columns(total: total, consumed_codes: consumed_codes)
+      update_columns(total: total)
     end
   end
 

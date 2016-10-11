@@ -45,6 +45,8 @@ class User < ActiveRecord::Base
 
   has_many :card_orders
 
+  has_many :consumed_card_codes
+
   validates :username, presence: true, uniqueness: true
   validates :mobile, presence: true, uniqueness: true
 
@@ -169,6 +171,7 @@ class User < ActiveRecord::Base
     shop_delivers.count > 0
   end
 
+  # TODO deal with Wechat::AccessTokenExpiredError
   def get_wx_card_list(force=false)
     return @wx_card_list_ids if @wx_card_list_ids && !force
 
@@ -180,13 +183,21 @@ class User < ActiveRecord::Base
     end
 
     @wx_card_list_ids = Card.exam(wx_card_list_ids)
+  rescue Wechat::AccessTokenExpiredError => e
+    @wx_card_list_ids = []
   end
 
+  # 获取用户已领取卡券接口居然把已经核销掉的卡卷也返回
+  # 因此需要把已经核销掉的卡卷排除
   def get_wx_card_codes(wx_card_id)
     return [] if js_open_id.blank?
 
     card_infos = Wechat.api.card_api_ticket.get_card_list js_open_id, wx_card_id
-    card_infos.map { |item| item["code"] }
+    consumed_codes = consumed_card_codes.where(wx_card_id: wx_card_id).pluck(:code)
+
+    card_infos.map { |item| item["code"] } - consumed_codes
+  rescue Wechat::AccessTokenExpiredError => e
+    []
   end
 
   def has_avaliable_code?(wx_card_id)
@@ -210,6 +221,8 @@ class User < ActiveRecord::Base
 
   def consume_wx_card_code(code)
     Wechat.api.card_api_ticket.consume(code)
+  rescue Wechat::AccessTokenExpiredError => e
+    false
   end
 
   private
