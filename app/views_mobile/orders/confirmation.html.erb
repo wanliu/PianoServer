@@ -28,6 +28,15 @@
 
       <%= render partial: "confirmation_item", collection: @order_items.sort_by(&:id), as: :order_item, locals: { supplier: @supplier, f: f } %>
 
+      <% if @cards.present? %>
+        <div class='wx-cards'>
+          <div class='notify'>您有微信优惠卷可以使用</div>
+          <div class='chose-card'>
+            <%= f.collection_select :card, @cards, :wx_card_id, :title, prompt: true %>
+          </div>
+        </div>
+      <% end %>
+
       <div class='footer confirmation-total'> 
         <%= render "confirmation_total" %>
       </div>

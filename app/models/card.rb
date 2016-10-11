@@ -41,13 +41,14 @@ class Card < ActiveRecord::Base
       return wx_card_ids if wx_card_ids.blank?
 
       all_wx_card_ids = pluck(:wx_card_id)
+      cash_wx_card_ids = self.CASH.pluck(:wx_card_id)
 
       if wx_card_ids.any? { |wx_card_id| all_wx_card_ids.exclude? wx_card_id }
         refresh!
-        all_wx_card_ids = pluck(:wx_card_id)
+        cash_wx_card_ids = self.CASH.pluck(:wx_card_id)
       end
 
-      all_wx_card_ids & wx_card_ids
+      cash_wx_card_ids & wx_card_ids
     end
 
     def create_from_card_info(card_info)

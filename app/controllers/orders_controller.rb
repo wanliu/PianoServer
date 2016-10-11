@@ -117,6 +117,9 @@ class OrdersController < ApplicationController
         format.html do
           set_feed_back
           set_addresses_add_express_fee
+
+          set_wx_cards
+
           flash.now[:error] = @order.errors.full_messages.join(', ')
 
           render :confirmation, status: :unprocessable_entity
@@ -134,6 +137,8 @@ class OrdersController < ApplicationController
     set_feed_back
 
     set_addresses_add_express_fee
+
+    set_wx_cards
   end
 
   # 直接购买
@@ -170,6 +175,8 @@ class OrdersController < ApplicationController
     @total = @order_item.price * @order_item.quantity
 
     @props = @order_item.properties || {}
+
+    set_wx_cards
   end
 
   # 直接购买生成订单
@@ -206,6 +213,8 @@ class OrdersController < ApplicationController
           @supplier = @order.supplier
           @total = @order_item.price * @order_item.quantity
           @props = @order_item.properties
+
+          set_wx_cards
 
           flash.now[:error] = @order.errors.full_messages.join(', ')
 
@@ -406,6 +415,7 @@ class OrdersController < ApplicationController
         :address_id, 
         :note, 
         :cake_id,
+        :card,
         items_attributes: [:orderable_type, :orderable_id, :quantity],
         birthday_party_attributes: [:message, :birthday_person, :birth_day, :delivery_time])
       .tap do |white_list|
@@ -460,12 +470,17 @@ class OrdersController < ApplicationController
     @order.set_express_fee
   end
 
+  def set_wx_cards
+    @cards = Card.where(wx_card_id: current_user.get_wx_card_list)
+  end
+
   def order_params
     params.require(:order)
       .permit(:supplier_id, 
         :address_id, 
         :pmo_grab_id, 
-        :one_money_id, 
+        :one_money_id,
+        :card,
         :note).tap do |white_list|
       if params[:order][:cart_item_ids].present?
         white_list[:cart_item_ids] = params[:order][:cart_item_ids]

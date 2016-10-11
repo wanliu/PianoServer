@@ -17,7 +17,8 @@ class Order < ActiveRecord::Base
   has_one :birthday_party, inverse_of: :order
   accepts_nested_attributes_for :birthday_party
 
-  attr_accessor :cart_item_ids, :address_id, :cake_id, :card
+  attr_accessor :cart_item_ids, :address_id, :cake_id, :card,
+    :consumed_card_ids, :unconsumed_card_ids, :unuseable_card_ids, :card_rollback
 
   enum status: { initiated: 0, finish: 1 }
 
@@ -339,14 +340,58 @@ class Order < ActiveRecord::Base
     self.origin_total = self.total = items_total + (express_fee || 0)
   end
 
+  # ①检查card是否可用于本订单
+  # ②检查card_id下是否有可用的code
   def exam_cards
-    cards = Card.where(wx_card_id: cards)
-    # cards.all? do |card|
-    #   card.
-    # end 
+    return if cards.blank?
+
+    self.unuseable_card_ids = []
+
+    cards.each do |wx_card_id|
+      unless buyer.has_avaliable_code? wx_card_id
+        unuseable_card_ids << wx_card_id
+      end
+    end
+
+    unuseable_card_ids.blank?
   end
 
+  def apply_card(card)
+    # if card.CASH?
+    #   if card.least_cost.present? && origin_total < card.least_cost
+    #     return
+    #   end
+
+      self.total -= card.reduce_cost.to_f/100
+    # end
+  end
+
+  # 
   def consume_cards
+    return if cards.blank?
+
+    self.consumed_card_ids = []
+    self.unconsumed_card_ids = []
+
+    wx_cards = Card.where(wx_card_id: cards)
+
+    wx_cards.each do |card|
+      consumed_code = nil
+      if buyer.consume_wx_card(card.wx_card_id) { |code| consumed_code = code }
+        apply_card card
+        consumed_card_ids << card.wx_card_id
+        consumed_codes << consumed_code
+      else
+        unconsumed_card_ids << card.wx_card_id
+      end
+    end
+
+    if consumed_card_ids.blank?
+      self.card_rollback = true
+      raise Exception.new("微信卡卷无效,请重新选择")
+    else
+      update_columns(total: total, consumed_codes: consumed_codes)
+    end
   end
 
   def avoid_from_shop_owner

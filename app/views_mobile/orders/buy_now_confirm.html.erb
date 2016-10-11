@@ -42,6 +42,16 @@
         <% end %>
       <% end %>
 
+      <% if @cards.present? %>
+        <div class='wx-cards'>
+          <div class='notify'>您有微信优惠卷可以使用</div>
+          <div class='chose-card'>
+            <%= f.collection_select :card, @cards, :wx_card_id, :title, prompt: true %>
+          </div>
+        </div>
+      <% end %>
+
+
       <% if @orderable.is_a? Item %>
         <% has_available_gifts = @orderable.available_gifts.present? %>
         <div class='mobile-gifts' style="<%= has_available_gifts ? '' : 'display: none' %>">

@@ -170,16 +170,16 @@ class User < ActiveRecord::Base
   end
 
   def get_wx_card_list(force=false)
-    return @wx_card_list if @wx_card_list && !force
+    return @wx_card_list_ids if @wx_card_list_ids && !force
 
     if js_open_id.blank?
-      wx_card_list = []
+      wx_card_list_ids = []
     else
       card_infos = Wechat.api.card_api_ticket.get_card_list js_open_id
-      wx_card_list = card_infos.map { |item| item["card_id"] }.uniq
+      wx_card_list_ids = card_infos.map { |item| item["card_id"] }.uniq
     end
 
-    @wx_card_list = Card.exam(wx_card_list)
+    @wx_card_list_ids = Card.exam(wx_card_list_ids)
   end
 
   def get_wx_card_codes(wx_card_id)
@@ -190,7 +190,7 @@ class User < ActiveRecord::Base
   end
 
   def has_avaliable_code?(wx_card_id)
-    get_wx_card_codes.present?
+    get_wx_card_codes(wx_card_id).present?
   end
 
   def consume_wx_card(wx_card_id)
@@ -198,6 +198,7 @@ class User < ActiveRecord::Base
 
     consumed = get_wx_card_codes(wx_card_id).any? do |code|
       done = consume_wx_card_code code
+      Rails.logger.info "[微信卡卷]核销卡卷#{wx_card_id}:(code:#{code})#{done ? "成功" : "失败"}"
       consumed_code = code if done
       done
     end
