@@ -177,7 +177,7 @@
 </div>
 
 <div class="items-container clearfix">
-  <%= render partial: "item", collection: @one_money.items.to_a %>
+  <%= render partial: "item", collection: @one_money.items.sort_by(:item_index).to_a %>
 </div>
 <script type="text/javascript">
 
@@ -234,6 +234,49 @@
           'items_with_gifts': ids
         }
       });
+    }
+  });
+
+  $('.items-container').sortable({
+    items: '.pmo-item',
+    handle: '.sortable-handler',
+    tolerance: 'pointer',
+    update: function(event, ui) {
+      var start = $(this).data('start-index');
+      var stop = ui.item.index('.pmo-item');
+      var itemId = ui.item.attr('pmo-item');
+      var changedMap = {};
+
+      changedMap[itemId] = stop;
+
+      var startIndex = start;
+      var endIndex = stop;
+
+      if (stop < start) {
+        startIndex = stop;
+        endIndex = start;
+      }
+
+      for (var i=startIndex+1; i<=endIndex; i++) {
+        var $item = $(this).find('.pmo-item:eq('+ i +')');
+        itemId = $item.attr('pmo-item');
+        changedMap[itemId] = i;
+      }
+
+      var url = "<%= admins_one_money_path(@one_money.id) %>";
+      $.ajax({
+        url: url + "/update_items_index",
+        type: 'PUT',
+        dataType: 'json',
+        data: {
+          'index_map': changedMap
+        }
+      });
+
+      $(this).removeData('start-index');
+    },
+    start: function(event, ui) {
+      $(this).data('start-index', ui.item.index('.pmo-item'));
     }
   });
 </script>

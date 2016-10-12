@@ -248,6 +248,16 @@ class Admins::OneMoneyController < Admins::BaseController
     head :no_content
   end
 
+  def update_items_index
+    params[:index_map].each do |k, v|
+      item = PmoItem[k.to_i]
+      item.item_index = v;
+      item.save
+    end
+
+    head :no_content
+  end
+
   private
 
   def one_money_params
