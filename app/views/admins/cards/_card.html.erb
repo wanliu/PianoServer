@@ -1,18 +1,6 @@
 <%= content_tag_for :tr, card do %>
   <td><%= card.title %></td>
   <td><%= card.wx_card_id %></td>
-  <td><%= card.available_range %></td>
-  <td>
-    <button class='btn btn-default edit-btn'>编辑</button>
-    <%= button_to "删除", admins_card_path(card), remote: true, method: :delete, data: { confirm: "确定删除代金卷\"#{card.title}\"么?" }, class: 'btn  btn-danger destroy-btn' %>
-  </td>
+  <td><%= Card::KIND_MAP[card.kind] %></td>
+  <td><%= card.promotion %></td>
 <% end %>
-<tr class='card-eidt-form' style='display:none;' data-card-id="<%= card.id %>">
-  <td colspan='4'>
-    <%= form_for [:admins, card], remote: true do |f| %>
-      卡卷名称:<%= f.text_field :title, class: 'form-control' %>
-      适用场景：<%= f.collection_select :available_range, Card.available_ranges.keys, :to_s, :to_s, {}, class: 'form-control' %>
-      <%= f.submit "保存" %>
-    <% end %>
-  </td>
-</tr>

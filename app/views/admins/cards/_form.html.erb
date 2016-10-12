@@ -5,7 +5,6 @@
 
     卡卷名称:<%= f.text_field :title, class: 'form-control' %>
     微信卡卷ID：<%= f.text_field :wx_card_id, class: 'form-control' %>
-    适用场景：<%= f.collection_select :available_range, Card.available_ranges.keys, :to_s, :to_s, {}, class: 'form-control' %>
 
     <br>
     <button type='button' class='btn btn-default cancel'>取消</button>

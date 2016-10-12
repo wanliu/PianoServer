@@ -19,6 +19,18 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :card_orders, only: [] do
+    get "wxpay/:id", to: 'card_orders#wxpay', as: 'wxpay', on: :collection
+
+    member do
+      get "wxpay"
+      get "withdraw"
+      post "withdrew"
+      post "wx_notify"
+      post "wxpay_confirm"
+    end
+  end
+
   resources :order_items, except: [:new, :edit] do
     collection do
       get "buy_now_gifts"
@@ -220,7 +232,9 @@ Rails.application.routes.draw do
       post "undo_delete", on: :member
     end
 
-    resources :cards
+    resources :cards do
+      get :refresh, on: :collection
+    end
 
     resources :birthday_parties, only: [:index, :show]
 

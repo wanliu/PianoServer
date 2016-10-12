@@ -43,6 +43,10 @@ class User < ActiveRecord::Base
   has_many :temp_birthday_parties, foreign_key: 'sales_man_id'
   has_many :saled_birthday_parties, class_name: 'BirthdayParty', foreign_key: 'sales_man_id'
 
+  has_many :card_orders
+
+  has_many :consumed_card_codes
+
   validates :username, presence: true, uniqueness: true
   validates :mobile, presence: true, uniqueness: true
 
@@ -165,6 +169,63 @@ class User < ActiveRecord::Base
 
   def is_receiver?
     shop_delivers.count > 0
+  end
+
+  # TODO deal with Wechat::AccessTokenExpiredError
+  def get_wx_card_list(force=false)
+    return @wx_card_list_ids if @wx_card_list_ids && !force
+
+    if js_open_id.blank?
+      wx_card_list_ids = []
+    else
+      card_infos = Wechat.api.card_api_ticket.get_card_list js_open_id
+      wx_card_list_ids = card_infos.map { |item| item["card_id"] }.uniq
+    end
+
+    @wx_card_list_ids = Card.exam(wx_card_list_ids)
+  rescue Wechat::AccessTokenExpiredError => e
+    Rails.logger.error "[微信卡卷] access token过期警告! 微信access_token已经过期"
+    @wx_card_list_ids = []
+  end
+
+  # 获取用户已领取卡券接口居然把已经核销掉的卡卷也返回
+  # 因此需要把已经核销掉的卡卷排除
+  def get_wx_card_codes(wx_card_id)
+    return [] if js_open_id.blank?
+
+    card_infos = Wechat.api.card_api_ticket.get_card_list js_open_id, wx_card_id
+    consumed_codes = consumed_card_codes.where(wx_card_id: wx_card_id).pluck(:code)
+
+    card_infos.map { |item| item["code"] } - consumed_codes
+  rescue Wechat::AccessTokenExpiredError => e
+    Rails.logger.error "[微信卡卷] access token过期警告! 微信access_token已经过期"
+    []
+  end
+
+  def has_avaliable_code?(wx_card_id)
+    get_wx_card_codes(wx_card_id).present?
+  end
+
+  def consume_wx_card(wx_card_id)
+    consumed_code = nil
+
+    consumed = get_wx_card_codes(wx_card_id).any? do |code|
+      done = consume_wx_card_code code
+      Rails.logger.info "[微信卡卷]核销卡卷#{wx_card_id}:(code:#{code})#{done ? "成功" : "失败"}"
+      consumed_code = code if done
+      done
+    end
+
+    yield consumed_code if block_given? && consumed
+
+    consumed
+  end
+
+  def consume_wx_card_code(code)
+    Wechat.api.card_api_ticket.consume(code)
+  rescue Wechat::AccessTokenExpiredError => e
+    Rails.logger.error "[微信卡卷] access token过期警告! 微信access_token已经过期"
+    false
   end
 
   private

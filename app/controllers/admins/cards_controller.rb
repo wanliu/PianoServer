@@ -4,8 +4,9 @@ class Admins::CardsController < Admins::BaseController
   # GET /cards
   # GET /cards.json
   def index
+    # Card.refresh!
+
     @cards = Card.order(id: :desc).page(params[:page]).per(params[:per])
-    @card  = Card.new(available_range: '礼品购')
     # render json: @cards
   end
 
@@ -61,6 +62,13 @@ class Admins::CardsController < Admins::BaseController
       format.html { head :no_content }
       format.json { head :no_content }
     end
+  end
+
+  def refresh
+    Card.refresh!
+
+    flash[:notice] = "重新完毕，现在的卡卷信息是最新的了!"
+    redirect_to admins_cards_path
   end
 
   private

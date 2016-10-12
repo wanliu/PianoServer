@@ -17,7 +17,10 @@ class Order < ActiveRecord::Base
   has_one :birthday_party, inverse_of: :order
   accepts_nested_attributes_for :birthday_party
 
-  attr_accessor :cart_item_ids, :address_id, :cake_id
+  has_many :consumed_card_codes
+
+  attr_accessor :cart_item_ids, :address_id, :cake_id, :card,
+    :consumed_card_ids, :unconsumed_card_ids, :unuseable_card_ids, :card_rollback
 
   enum status: { initiated: 0, finish: 1 }
 
@@ -34,6 +37,8 @@ class Order < ActiveRecord::Base
 
   before_save :set_modified, if: :total_changed?
   before_create :caculate_total, :generate_receive_token
+  before_create :exam_cards
+  after_create :consume_cards
 
   after_commit :send_notify_to_seller, on: :create
 
@@ -134,6 +139,13 @@ class Order < ActiveRecord::Base
     self.receiver_phone = location.contact_phone
   end
 
+  def card=(wx_card_id)
+    @card = wx_card_id
+
+    self.cards = [wx_card_id]
+    # cards << wx_card_id
+  end
+
   def receive_token
     return unless persisted?
     if super.blank?
@@ -229,6 +241,14 @@ class Order < ActiveRecord::Base
     wait_for_evaluate? && pmo_grab_id.present?
   end
 
+  def can_use_card?
+    !finish? && pmo_grab_id.blank? && birthday_party.blank? && !card_used?
+  end
+
+  def card_used?
+    cards.present?
+  end
+
   def yiyuan_fullfilled?
     delivery_address.present?
   end
@@ -320,6 +340,60 @@ class Order < ActiveRecord::Base
 
   def caculate_total
     self.origin_total = self.total = items_total + (express_fee || 0)
+  end
+
+  # ①检查card是否可用于本订单
+  # ②检查card_id下是否有可用的code
+  def exam_cards
+    return if cards.blank?
+
+    self.unuseable_card_ids = []
+
+    cards.each do |wx_card_id|
+      unless buyer.has_avaliable_code? wx_card_id
+        unuseable_card_ids << wx_card_id
+      end
+    end
+
+    unuseable_card_ids.blank?
+  end
+
+  def apply_card(card)
+    # if card.CASH?
+    #   if card.least_cost.present? && origin_total < card.least_cost
+    #     return
+    #   end
+
+      self.total -= card.reduce_cost.to_f/100
+    # end
+  end
+
+  # 核销一张指定id的卡卷,并记录下来被核销的卡卷code
+  def consume_cards
+    return if cards.blank?
+
+    self.consumed_card_ids = []
+    self.unconsumed_card_ids = []
+
+    wx_cards = Card.where(wx_card_id: cards)
+
+    wx_cards.each do |card|
+      consumed_code = nil
+      if buyer.consume_wx_card(card.wx_card_id) { |code| consumed_code = code }
+        apply_card card
+        consumed_card_ids << card.wx_card_id
+        consumed_card_codes.create(user_id: buyer_id, code: consumed_code, wx_card_id: card.wx_card_id)
+      else
+        unconsumed_card_ids << card.wx_card_id
+      end
+    end
+
+    if consumed_card_ids.blank?
+      self.card_rollback = true
+      raise Exception.new("微信卡卷无效,请重新选择")
+    else
+      update_columns(total: total)
+    end
   end
 
   def avoid_from_shop_owner

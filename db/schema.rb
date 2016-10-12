@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160921032618) do
+ActiveRecord::Schema.define(version: 20161011060025) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -143,15 +143,44 @@ ActiveRecord::Schema.define(version: 20160921032618) do
   add_index "cakes", ["item_id"], name: "index_cakes_on_item_id", using: :btree
   add_index "cakes", ["supplier"], name: "index_cakes_on_supplier", using: :btree
 
-  create_table "cards", force: :cascade do |t|
+  create_table "card_orders", force: :cascade do |t|
     t.string   "wx_card_id"
-    t.integer  "available_range", default: 0
+    t.boolean  "paid",                                       default: false
+    t.boolean  "withdrew",                                   default: false
+    t.integer  "pmo_grab_id"
+    t.integer  "one_money_id"
+    t.integer  "item_id"
+    t.integer  "user_id"
+    t.decimal  "price",             precision: 10, scale: 2
     t.string   "title"
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
+    t.datetime "created_at",                                                 null: false
+    t.datetime "updated_at",                                                 null: false
+    t.string   "wx_prepay_id"
+    t.string   "wx_noncestr"
+    t.string   "wx_transaction_id"
   end
 
-  add_index "cards", ["available_range"], name: "index_cards_on_available_range", using: :btree
+  add_index "card_orders", ["item_id"], name: "index_card_orders_on_item_id", using: :btree
+  add_index "card_orders", ["one_money_id"], name: "index_card_orders_on_one_money_id", using: :btree
+  add_index "card_orders", ["paid"], name: "index_card_orders_on_paid", using: :btree
+  add_index "card_orders", ["pmo_grab_id"], name: "index_card_orders_on_pmo_grab_id", using: :btree
+  add_index "card_orders", ["user_id"], name: "index_card_orders_on_user_id", using: :btree
+  add_index "card_orders", ["withdrew"], name: "index_card_orders_on_withdrew", using: :btree
+
+  create_table "cards", force: :cascade do |t|
+    t.string   "wx_card_id"
+    t.string   "title"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.integer  "kind"
+    t.jsonb    "base_info"
+    t.jsonb    "deal_detail"
+    t.string   "gift"
+    t.integer  "least_cost"
+    t.integer  "reduce_cost"
+    t.integer  "discount"
+  end
+
   add_index "cards", ["title"], name: "index_cards_on_title", using: :btree
   add_index "cards", ["wx_card_id"], name: "index_cards_on_wx_card_id", using: :btree
 
@@ -220,6 +249,20 @@ ActiveRecord::Schema.define(version: 20160921032618) do
     t.string   "channel_id"
     t.string   "tokens",                                  array: true
   end
+
+  create_table "consumed_card_codes", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "order_id"
+    t.string   "wx_card_id"
+    t.string   "code"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "consumed_card_codes", ["code"], name: "index_consumed_card_codes_on_code", using: :btree
+  add_index "consumed_card_codes", ["order_id"], name: "index_consumed_card_codes_on_order_id", using: :btree
+  add_index "consumed_card_codes", ["user_id"], name: "index_consumed_card_codes_on_user_id", using: :btree
+  add_index "consumed_card_codes", ["wx_card_id"], name: "index_consumed_card_codes_on_wx_card_id", using: :btree
 
   create_table "contacts", force: :cascade do |t|
     t.string   "name"
@@ -491,9 +534,11 @@ ActiveRecord::Schema.define(version: 20160921032618) do
     t.decimal  "paid_total",        precision: 10, scale: 2
     t.string   "note"
     t.string   "receive_token"
+    t.string   "cards",                                      default: [],                 array: true
   end
 
   add_index "orders", ["buyer_id"], name: "index_orders_on_buyer_id", using: :btree
+  add_index "orders", ["cards"], name: "index_orders_on_cards", using: :gin
   add_index "orders", ["supplier_id"], name: "index_orders_on_supplier_id", using: :btree
 
   create_table "properties", force: :cascade do |t|
@@ -777,11 +822,13 @@ ActiveRecord::Schema.define(version: 20160921032618) do
     t.integer  "shop_id"
     t.integer  "user_type",              default: 0
     t.integer  "industry_id"
+    t.string   "js_open_id"
   end
 
   add_index "users", ["authentication_token"], name: "index_users_on_authentication_token", unique: true, using: :btree
   add_index "users", ["data"], name: "index_users_on_data", using: :gin
   add_index "users", ["email"], name: "index_users_on_email", using: :btree
+  add_index "users", ["js_open_id"], name: "index_users_on_js_open_id", using: :btree
   add_index "users", ["mobile"], name: "index_users_on_mobile", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["username"], name: "index_users_on_username", unique: true, using: :btree

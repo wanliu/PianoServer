@@ -1,0 +1,56 @@
+<% content_for :javascripts do %>
+  <%= javascript_include_tag "http://res.wx.qq.com/open/js/jweixin-1.0.0.js" %>
+<% end %>
+
+<div class='content card col-xs-9'>
+  优惠卷
+</div>
+<div class='operation col-xs-3'>
+  <button type='button' class='use-card btn btn-default'>选择</button>
+</div>
+
+<script type="text/javascript">
+  <% signature = Wechat.api.jsapi_ticket.signature request.original_url %>
+  <% card_sign = Wechat.api.card_api_ticket.card_sign %>
+
+  $(function() {
+    wx.config({
+      debug: <%= params[:debug].present? ? 'true' : 'false' %>, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+      appId: '<%= WxPay.appid %>', // 必填，公众号的唯一标识
+      timestamp: <%= signature[:timestamp] %>, // 必填，生成签名的时间戳
+      nonceStr: '<%= signature[:noncestr] %>', // 必填，生成签名的随机串
+      signature: '<%= signature[:signature] %>',// 必填，签名，见附录1
+      jsApiList: ['chooseCard', 'onMenuShareTimeline'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+    });
+
+    $('button.use-card').on('click', function() {
+      wx.chooseCard({
+        // shopId: '', // 门店Id
+        // cardType: '', // 卡券类型
+        // cardId: '', // 卡券Id
+        timestamp: <%= card_sign[:timestamp] %>, // 卡券签名时间戳
+        nonceStr: "<%= card_sign[:nonce_str] %>", // 卡券签名随机串
+        cardSign: "<%= card_sign[:cardSign] %>", // 卡券签名
+        success: function (res) {
+            var cardList= JSON.parse(res.cardList); // 用户选中的卡券列表信息
+            // alert(JSON.stringify(cardList[0]));
+            $.post('<%= apply_wx_card_order_path(order) %>', cardList[0])
+              .done(function(response) {
+                alert("优惠卷使用成功!");
+                // alert(JSON.stringify(response));
+                // location.reload();
+                if (!!~window.location.href.indexOf('?')) {
+                  window.location.href = window.location.href + "&time=" + new Date().getTime();
+                } else {
+                  window.location.href = window.location.href + "?time=" + new Date().getTime();
+                }
+
+              })
+              .fail(function(response) {
+                alert(response.errmsg);
+              })
+        }
+      });
+    })
+  })
+</script>
