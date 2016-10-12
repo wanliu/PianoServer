@@ -208,6 +208,7 @@ Rails.application.routes.draw do
         get "details/:item_id", action: :details, as: :details
         get "churn_stastic"
         put "publish", action: :publish, as: :publish
+        put "update_items_index", action: :update_items_index, as: :update_items_index
       end
     end
 
