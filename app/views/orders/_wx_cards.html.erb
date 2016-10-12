@@ -1,0 +1,21 @@
+<div class='chose-cards' style='display: none;'>
+  <div class='header text-center'>选择微信购物卷</div>
+
+  <ul class='cards list-group'>
+    <% @cards.each do |card| %>
+      <li class='card row list-group-item' data-card-id='<%= card.id %>' data-card-title='<%= card.title %>' data-card-reduce=<%= (card.reduce_cost.to_f/100).to_i %> >
+        <div class='promotion-info col-xs-4'>
+          ¥ <span class='amount'><%= (card.reduce_cost.to_f/100).to_i %></span>
+        </div>
+        <div class='desc col-xs-8'>
+          <div><%= card.title %></div>
+          <div>
+            <%= Card::KIND_MAP[card.kind] %>
+            <%= card.promotion %>
+          </div>
+        </div>
+        <div style='clear: both'></div>
+      </li>
+    <% end %>
+  </ul>
+</div>
