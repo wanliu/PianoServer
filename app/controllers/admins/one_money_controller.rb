@@ -5,9 +5,15 @@ class Admins::OneMoneyController < Admins::BaseController
   def index
     @one_moneies =
       if params[:type]
-        OneMoney.find(type: params[:type])
+        one_money = OneMoney.all.select {|o| o.type == 'daily_cheap'}
+        one_money = one_money.reverse
+        Kaminari.paginate_array(one_money).page(params[:page])
+                .per(10)
       else
-        OneMoney.all.select {|o| o.type != 'daily_cheap'}
+        one_money = OneMoney.all.select {|o| o.type == 'one_money'}
+        one_money = one_money.reverse
+        Kaminari.paginate_array(one_money).page(params[:page])
+                .per(10)
       end
   end
 
