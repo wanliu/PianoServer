@@ -1,1 +1,0 @@
-function getQueryParams(){var e,r=location.search,t=location.href;if(r)e=0===r.length?r:r.slice(1);else{var l=t.split("?");e=l.length>1?l[1]:""}for(var a={},l=e.split("&"),i=0;i<l.length;i++){var n=l[i].split("="),s=n[0],o=n[1];a[s]=o}return a}

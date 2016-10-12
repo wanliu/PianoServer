@@ -8,6 +8,8 @@ class OneMoney < Ohm::Model
   attribute :name
   attribute :title
   attribute :description
+  attribute :header
+  attribute :footer
 
   attribute :start_at, OhmTime::ISO8601
   attribute :end_at, OhmTime::ISO8601

@@ -58,7 +58,7 @@ class Api::Promotions::OneMoneyController < Api::BaseController
 
   def items
     hash = {}
-    @items = @one_money.items
+    @items = @one_money.items.sort_by(:item_index)
 
     if params[:u].present?
       now = @one_money.now.to_f * 1000

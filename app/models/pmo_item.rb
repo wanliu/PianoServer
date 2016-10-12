@@ -37,6 +37,7 @@ class PmoItem < Ohm::Model
   attribute :overwrites, Type::Hash
 
   attribute :independence, Type::Boolean
+  attribute :item_index, Type::Integer
 
   set :participants, :PmoUser
   set :winners, :PmoUser
