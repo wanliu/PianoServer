@@ -36,7 +36,7 @@ class Order < ActiveRecord::Base
   validate :items_should_exist, on: :create
 
   before_save :set_modified, if: :total_changed?
-  before_create :caculate_total, :generate_receive_token
+  before_create :assign_total, :generate_receive_token
   before_create :exam_cards
   after_create :consume_cards
 
@@ -336,10 +336,14 @@ class Order < ActiveRecord::Base
     "{Settings.app.website}/orders/#{id}/wx_notify"
   end
 
+  def calculate_total
+    items_total + (express_fee || 0)
+  end
+
   private
 
-  def caculate_total
-    self.origin_total = self.total = items_total + (express_fee || 0)
+  def assign_total
+    self.origin_total = self.total = calculate_total
   end
 
   # ①检查card是否可用于本订单
