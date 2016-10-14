@@ -1,4 +1,6 @@
 class Card < ActiveRecord::Base
+  belongs_to :card_apply_template
+
   validates :wx_card_id, presence: true, uniqueness: true
   validates :title, presence: true, uniqueness: true
 

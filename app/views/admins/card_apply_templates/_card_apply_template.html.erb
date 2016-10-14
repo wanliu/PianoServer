@@ -1,0 +1,20 @@
+<%= content_tag_for :tr, card_apply_template do %>
+  <td><%= card_apply_template.title %></td>
+  <td><%= CardApplyTemplate::APPLY_ITEMS_TITLES[card_apply_template.apply_items] %></td>
+  <td><%= card_apply_template.desc %></td>
+  <td>
+    <!-- <button class='btn btn-default edit-btn'>编辑</button> -->
+    <%= link_to "编辑", [:edit, :admins, card_apply_template], class: 'btn btn-default', "data-no-turbolink" => true %>
+    <%= button_to "删除", [:admins, card_apply_template], remote: true, method: :delete, class: 'btn btn-danger', data: { confirm: "确认删除该模板么？"} %>
+    <!-- <button class='btn btn-danger destroy-btn'>删除</button> -->
+  </td>
+<% end %>
+<tr class='card_apply_template-eidt-form' style='display:none;' data-card_apply_template-id="<%= card_apply_template.id %>">
+  <td colspan='4'>
+    <%= form_for [:admins, card_apply_template], remote: true do |f| %>
+      名称: <%= f.text_field :title %>
+      范围：<%= f.collection_select :apply_items, CardApplyTemplate::APPLY_ITEMS_TITLES, :first, :last, {}, class: 'form-control' %>
+      <%= f.submit "保存" %>
+    <% end %>
+  </td>
+</tr>

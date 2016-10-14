@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161011060025) do
+ActiveRecord::Schema.define(version: 20161013074541) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -143,6 +143,16 @@ ActiveRecord::Schema.define(version: 20161011060025) do
   add_index "cakes", ["item_id"], name: "index_cakes_on_item_id", using: :btree
   add_index "cakes", ["supplier"], name: "index_cakes_on_supplier", using: :btree
 
+  create_table "card_apply_templates", force: :cascade do |t|
+    t.integer  "apply_items", default: 0
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.string   "title"
+  end
+
+  add_index "card_apply_templates", ["apply_items"], name: "index_card_apply_templates_on_apply_items", using: :btree
+  add_index "card_apply_templates", ["title"], name: "index_card_apply_templates_on_title", using: :btree
+
   create_table "card_orders", force: :cascade do |t|
     t.string   "wx_card_id"
     t.boolean  "paid",                                       default: false
@@ -167,11 +177,21 @@ ActiveRecord::Schema.define(version: 20161011060025) do
   add_index "card_orders", ["user_id"], name: "index_card_orders_on_user_id", using: :btree
   add_index "card_orders", ["withdrew"], name: "index_card_orders_on_withdrew", using: :btree
 
+  create_table "card_template_items", force: :cascade do |t|
+    t.integer  "card_apply_template_id"
+    t.integer  "item_id"
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  add_index "card_template_items", ["card_apply_template_id"], name: "index_card_template_items_on_card_apply_template_id", using: :btree
+  add_index "card_template_items", ["item_id"], name: "index_card_template_items_on_item_id", using: :btree
+
   create_table "cards", force: :cascade do |t|
     t.string   "wx_card_id"
     t.string   "title"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
     t.integer  "kind"
     t.jsonb    "base_info"
     t.jsonb    "deal_detail"
@@ -179,8 +199,10 @@ ActiveRecord::Schema.define(version: 20161011060025) do
     t.integer  "least_cost"
     t.integer  "reduce_cost"
     t.integer  "discount"
+    t.integer  "card_apply_template_id"
   end
 
+  add_index "cards", ["card_apply_template_id"], name: "index_cards_on_card_apply_template_id", using: :btree
   add_index "cards", ["title"], name: "index_cards_on_title", using: :btree
   add_index "cards", ["wx_card_id"], name: "index_cards_on_wx_card_id", using: :btree
 
@@ -271,6 +293,85 @@ ActiveRecord::Schema.define(version: 20161011060025) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  create_table "coupon_template_shops", force: :cascade do |t|
+    t.integer  "coupon_template_id"
+    t.integer  "shop_id"
+    t.integer  "kind"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
+
+  add_index "coupon_template_shops", ["coupon_template_id"], name: "index_coupon_template_shops_on_coupon_template_id", using: :btree
+  add_index "coupon_template_shops", ["kind"], name: "index_coupon_template_shops_on_kind", using: :btree
+  add_index "coupon_template_shops", ["shop_id"], name: "index_coupon_template_shops_on_shop_id", using: :btree
+
+  create_table "coupon_template_times", force: :cascade do |t|
+    t.integer  "coupon_template_id"
+    t.integer  "type"
+    t.datetime "from"
+    t.datetime "to"
+    t.jsonb    "expire_duration",    default: {}
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+  end
+
+  add_index "coupon_template_times", ["coupon_template_id"], name: "index_coupon_template_times_on_coupon_template_id", using: :btree
+
+  create_table "coupon_templates", force: :cascade do |t|
+    t.integer  "issuer_id"
+    t.string   "issuer_type"
+    t.string   "name"
+    t.decimal  "par",                 precision: 10, scale: 2
+    t.integer  "apply_items"
+    t.decimal  "apply_minimal_total", precision: 10, scale: 2
+    t.integer  "apply_shops"
+    t.integer  "apply_time"
+    t.boolean  "overlap"
+    t.datetime "created_at",                                                   null: false
+    t.datetime "updated_at",                                                   null: false
+    t.integer  "coupons_count"
+    t.text     "desc"
+    t.boolean  "issued",                                       default: false
+  end
+
+  add_index "coupon_templates", ["issuer_type", "issuer_id"], name: "index_coupon_templates_on_issuer_type_and_issuer_id", using: :btree
+
+  create_table "coupon_tokens", force: :cascade do |t|
+    t.integer  "coupon_template_id"
+    t.integer  "customer_id"
+    t.string   "token"
+    t.integer  "lock_version",       default: 0
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+  end
+
+  add_index "coupon_tokens", ["coupon_template_id"], name: "index_coupon_tokens_on_coupon_template_id", using: :btree
+  add_index "coupon_tokens", ["customer_id"], name: "index_coupon_tokens_on_customer_id", using: :btree
+  add_index "coupon_tokens", ["token"], name: "index_coupon_tokens_on_token", using: :btree
+
+  create_table "coupons", force: :cascade do |t|
+    t.integer  "coupon_template_id"
+    t.integer  "receiver_shop_id"
+    t.datetime "receive_time"
+    t.integer  "receive_taget_id"
+    t.string   "receive_taget_type"
+    t.integer  "customer_id"
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.integer  "status",                                      default: 0
+    t.datetime "created_at",                                                null: false
+    t.datetime "updated_at",                                                null: false
+    t.integer  "lock_version",                                default: 0
+    t.datetime "deleted_at"
+    t.decimal  "offset_par",         precision: 10, scale: 2, default: 0.0
+  end
+
+  add_index "coupons", ["coupon_template_id"], name: "index_coupons_on_coupon_template_id", using: :btree
+  add_index "coupons", ["customer_id"], name: "index_coupons_on_customer_id", using: :btree
+  add_index "coupons", ["deleted_at"], name: "index_coupons_on_deleted_at", using: :btree
+  add_index "coupons", ["receive_taget_type", "receive_taget_id"], name: "index_coupons_on_receive_taget_type_and_receive_taget_id", using: :btree
+  add_index "coupons", ["receiver_shop_id"], name: "index_coupons_on_receiver_shop_id", using: :btree
 
   create_table "error_records", force: :cascade do |t|
     t.string   "name"
@@ -535,6 +636,7 @@ ActiveRecord::Schema.define(version: 20161011060025) do
     t.string   "note"
     t.string   "receive_token"
     t.string   "cards",                                      default: [],                 array: true
+    t.decimal  "offseted_total",    precision: 10, scale: 2, default: 0.0
   end
 
   add_index "orders", ["buyer_id"], name: "index_orders_on_buyer_id", using: :btree
@@ -673,6 +775,10 @@ ActiveRecord::Schema.define(version: 20161011060025) do
     t.string   "region_id"
     t.integer  "default_express_template_id"
   end
+
+  add_index "shops", ["name"], name: "index_shops_on_name", using: :btree
+  add_index "shops", ["owner_id"], name: "index_shops_on_owner_id", using: :btree
+  add_index "shops", ["title"], name: "index_shops_on_title", using: :btree
 
   create_table "statuses", force: :cascade do |t|
     t.integer  "stateable_id"
