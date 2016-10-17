@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161013074541) do
+ActiveRecord::Schema.define(version: 20161017030115) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -145,12 +145,14 @@ ActiveRecord::Schema.define(version: 20161013074541) do
 
   create_table "card_apply_templates", force: :cascade do |t|
     t.integer  "apply_items", default: 0
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
     t.string   "title"
+    t.boolean  "is_default",  default: false
   end
 
   add_index "card_apply_templates", ["apply_items"], name: "index_card_apply_templates_on_apply_items", using: :btree
+  add_index "card_apply_templates", ["is_default"], name: "index_card_apply_templates_on_is_default", using: :btree
   add_index "card_apply_templates", ["title"], name: "index_card_apply_templates_on_title", using: :btree
 
   create_table "card_orders", force: :cascade do |t|

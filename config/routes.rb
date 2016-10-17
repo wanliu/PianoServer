@@ -304,6 +304,7 @@ Rails.application.routes.draw do
       member do
         post :add_item
         delete :remove_item
+        put :set_default
       end
     end
   end

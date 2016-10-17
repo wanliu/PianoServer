@@ -11,6 +11,17 @@ class CardApplyTemplate < ActiveRecord::Base
 
   validates :title, presence: true, uniqueness: true
 
+  class << self
+    def set_default(template)
+      where(is_default: true).update_all(is_default: false)
+      template.update_column("is_default", true)
+    end
+  end
+
+  def set_default!
+    self.class.set_default(self)
+  end
+
   def desc
     if all_items?
       "适用于所有商品"

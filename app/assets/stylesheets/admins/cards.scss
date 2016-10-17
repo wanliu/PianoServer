@@ -58,6 +58,22 @@
       width: 320px;
     }
   }
+
+  table.card_apply_templates {
+    tr {
+      &.default {
+        .notify-not-default, .set-default {
+          display: none;
+        }
+      }
+
+      &.not-default {
+        .notify-default {
+          display: none;
+        }
+      }
+    }
+  }
 }
 
 

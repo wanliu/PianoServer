@@ -1,5 +1,5 @@
 class Admins::CardApplyTemplatesController < Admins::BaseController
-  before_action :set_template, only: [:show, :edit, :update, :destroy, :add_item, :remove_item]
+  before_action :set_template, only: [:show, :edit, :update, :destroy, :add_item, :remove_item, :set_default]
 
   def index
     @templates = CardApplyTemplate.includes(:items).order(id: :desc)
@@ -57,6 +57,12 @@ class Admins::CardApplyTemplatesController < Admins::BaseController
     else
       render json: {errors: @card_template_item.errors.full_messages}, status: :unprocessable_entity
     end
+  end
+
+  def set_default
+    @template.set_default!
+
+    # render json: {}
   end
 
   def remove_item
