@@ -5,7 +5,7 @@ class CardApplyTemplate < ActiveRecord::Base
 
   has_many :cards, dependent: :nullify
 
-  has_many :card_template_items, autosave: true, inverse_of: :card_apply_template
+  has_many :card_template_items, autosave: true, inverse_of: :card_apply_template, dependent: :destroy
   has_many :items, through: :card_template_items
   accepts_nested_attributes_for :card_template_items
 

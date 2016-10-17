@@ -51,9 +51,19 @@ class Admins::CardApplyTemplatesController < Admins::BaseController
   end
 
   def add_item
+    @card_template_item = @template.card_template_items.build(item_id: params[:item_id])
+    if @card_template_item.save
+      render json: @card_template_item.item.to_json(except: [:income_price], methods: [:shop_name, :shop_realname])
+    else
+      render json: {errors: @card_template_item.errors.full_messages}, status: :unprocessable_entity
+    end
   end
 
   def remove_item
+    @card_template_item = @template.card_template_items.find_by(item_id: params[:item_id])
+    @card_template_item.destroy if @card_template_item.present?
+
+    head :no_content
   end
 
   def destroy

@@ -49,12 +49,11 @@
 
 <script type="text/javascript">
   var itemSearchResults = [];
-  var selectedItems = <%= @template.items.pluck(:id) %>;
+  var selectedItems = <%= @template.items.to_json(except: [:income_price], methods: [:shop_name, :shop_realname]).html_safe %>;
   var item_template = _.template($("#template-item").html());
   var select_item_template = _.template($("#selected-item").html());
 
-  var items = <%= @template.items.to_json(except: [:income_price], methods: [:shop_name, :shop_realname]).html_safe %>;
-  _.each(items, function(item) {
+  _.each(selectedItems, function(item) {
     var html = select_item_template(item);
     $(".selected-items").prepend(html);
   });
@@ -101,30 +100,51 @@
       var itemId = $(this).data("itemId");
 
       $.post("<%= add_item_admins_card_apply_template_path(@template) %>", {item_id: itemId})
-      //   .done(function(res) {
-          
-      //   })
-      // var item = _.find(itemSearchResults, function(i) {
-      //   return i.id.toString() == itemId.toString();
-      // });
+        .done(function(item) {
+          var item = _.find(itemSearchResults, function(i) {
+            return i.id.toString() == itemId.toString();
+          });
 
-      // selectedItems.push(item);
-      // var html = select_item_template(item);
-      // $(".selected-items").prepend(html);
+          selectedItems.push(item);
+          var html = select_item_template(item);
+          $(".selected-items").prepend(html);
 
-      // $(".template-items-dropdown [data-item-id=" + item.id + "]").remove();
+          $(".template-items-dropdown [data-item-id=" + item.id + "]").remove();
+
+          var $alert = $(".infors.alert");
+          $alert.html("添加成功！").show();
+
+          setTimeout(function() {
+            $alert.fadeOut(function() {
+              $alert.html("");
+            });
+          }, 5000);
+        })
     });
 
     $(".edit-card_apply_template-form .selected-items").on('click', '.item .delete', function(event) {
       var itemId = $(this).closest('.item').data('itemId');
-      var selectedItemIds = _.pluck(selectedItems, "id");
-      var index = selectedItemIds.indexOf(itemId)
 
-      if (index > -1) {
-        selectedItems.splice(index, 1);
-      }
+      $.post("<%= remove_item_admins_card_apply_template_path(@template) %>", {_method: "delete", item_id: itemId})
+        .done(function(res) {
+          var selectedItemIds = _.pluck(selectedItems, "id");
+          var index = selectedItemIds.indexOf(itemId)
 
-      $(".selected-items .item[data-item-id=" + itemId + "]").remove();
+          if (index > -1) {
+            selectedItems.splice(index, 1);
+          }
+
+          $(".selected-items .item[data-item-id=" + itemId + "]").remove();
+
+          var $alert = $(".infors.alert");
+          $alert.html("删除成功！").show();
+
+          setTimeout(function() {
+            $alert.fadeOut(function() {
+              $alert.html("");
+            });
+          }, 5000);
+        })
     });
   });
 </script>
