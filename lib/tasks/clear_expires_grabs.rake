@@ -8,7 +8,7 @@ task :clear_expired_grabs, [:model] => :environment do |task, args|
         if card_order.present?
           unless card_order.paid
             card_order.destroy
-            grab.delete
+            grb.delete
           end
         else 
           grb.delete

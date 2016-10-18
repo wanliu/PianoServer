@@ -39,6 +39,7 @@ class PmoItem < Ohm::Model
 
   attribute :is_card, Type::Boolean
   attribute :independence, Type::Boolean
+  attribute :item_index, Type::Integer
 
   set :participants, :PmoUser
   set :winners, :PmoUser
