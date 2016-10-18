@@ -122,6 +122,16 @@ class Card < ActiveRecord::Base
     super || CardApplyTemplate.default_template
   end
 
+  def card_apply_template_title
+    if self[:card_apply_template_id].blank? && card_apply_template.present?
+      "#{card_apply_template.title}[默认模板]"
+    elsif self[:card_apply_template_id].blank?
+      "未设置"
+    else
+      card_apply_template.title
+    end
+  end
+
   def update_from_card_info(card_info)
     card_kind = card_info["card_type"]
     infors = card_info[card_kind.downcase].freeze

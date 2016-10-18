@@ -4,12 +4,14 @@
   <td><%= Card::KIND_MAP[card.kind] %></td>
   <td><%= card.promotion %></td>
   <td>
-    <%= card.card_apply_template.try(:title) || "未设置" %>
+    <%= card.card_apply_template_title %>
+  </td>
+  <td>
     <button class='change-apply-template-btn btn btn-default '>更改应用模板</button>
   </td>
 </tr>
 <tr data-card-id="<%= card.id %>" class='change-apply-template' style='display: none;'>
-  <td colspan=5 class="input-group">
+  <td colspan='6' class="input-group">
     <%= form_for [:admins, card], remote: true do |f| %>
       <%= f.collection_select :card_apply_template_id, CardApplyTemplate.all, :id, :title, {}, class: 'form-control' %> 
       <%= f.submit '确认', class: 'chose-apply-template form-control' %>
