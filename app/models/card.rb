@@ -39,6 +39,44 @@ class Card < ActiveRecord::Base
       end
     end
 
+    #  AND (least_cost = 0 OR least_cost <= :total)
+    #  total: @order.items_total.to_f*100
+    def available_with_order(order)
+      items_total = order.items_total.to_f*100
+      item_ids = order.items.find_all{ |item| item.orderable_type == 'Item'}.map(&:orderable_id)
+
+      tpl_ids = CardTemplateItem.where("item_id IN (?)", item_ids).pluck(:card_apply_template_id)
+
+      availabe_template_ids = CardApplyTemplate.where("id IN (:ids) Or apply_items = :all_items", ids: tpl_ids, all_items: CardApplyTemplate.apply_items["all_items"])
+        .pluck(:id)
+
+      availabe_with_items = if availabe_template_ids.present?
+        if CardApplyTemplate.default_template.present? && availabe_template_ids.include?(CardApplyTemplate.default_template.id)
+          where("card_apply_template_id in (:template_ids) OR card_apply_template_id IS null", template_ids: availabe_template_ids)
+        else
+          where("card_apply_template_id in (:template_ids)", template_ids: availabe_template_ids)
+        end
+      else
+        none
+      end
+
+      availabe_with_items.where("least_cost = 0 OR least_cost <= :total", total: items_total)
+
+      # sql_query = <<-SQL
+      #   apply_items = :all_items
+      #   OR (
+      #     apply_items = :include_items 
+      #     AND
+      #       card_template_items.item_id IN (:item_ids)
+      #   )
+      # <<SQL
+
+      # CardApplyTemplate.where("apply_items = :all_items OR ")
+
+      # where("least_cost = 0 OR least_cost <= :total", total: items_total)
+      #   .where()
+    end
+
     def exam(wx_card_ids)
       return wx_card_ids if wx_card_ids.blank?
 
@@ -78,6 +116,10 @@ class Card < ActiveRecord::Base
         discount: infors["discount"]
       }
     end
+  end
+
+  def card_apply_template
+    super || CardApplyTemplate.default_template
   end
 
   def update_from_card_info(card_info)

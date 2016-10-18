@@ -477,7 +477,7 @@ class OrdersController < ApplicationController
   end
 
   def set_wx_cards
-    @cards = Card.where("wx_card_id IN (:list) AND (least_cost = 0 OR least_cost <= :total)", list: current_user.get_wx_card_list, total: @order.items_total.to_f*100)
+    @cards = Card.available_with_order(@order).where("wx_card_id IN (:list)", list: current_user.get_wx_card_list)
     if @order.cards.first.present?
       @chosen_card = @cards.find { |card| card.wx_card_id == @order.cards.first }
     end

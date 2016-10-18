@@ -11,7 +11,13 @@ class CardApplyTemplate < ActiveRecord::Base
 
   validates :title, presence: true, uniqueness: true
 
+  # validate :only_one_default
+
   class << self
+    def default_template
+      find_by(is_default: true)
+    end
+
     def set_default(template)
       where(is_default: true).update_all(is_default: false)
       template.update_column("is_default", true)
@@ -27,6 +33,20 @@ class CardApplyTemplate < ActiveRecord::Base
       "适用于所有商品"
     else
       "适用商品: #{items.map(&:title).join(', ')}"
+    end
+  end
+
+  private
+
+  def only_one_default
+    if persisted? && is_default?
+      if where("id != :id AND is_default IS :true", id: id, true: true).exists?
+        errors.add(:is_default, "默认模板已经存在")
+      end
+    elsif is_default?
+      if where("is_default IS :true", true: true).exists?
+        errors.add(:is_default, "默认模板已经存在")
+      end
     end
   end
 end
