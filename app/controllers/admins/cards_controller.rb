@@ -82,6 +82,6 @@ class Admins::CardsController < Admins::BaseController
     end
 
     def card_update_params
-      params.require(:card).permit(:available_range, :title)
+      params.require(:card).permit(:available_range, :title, :card_apply_template_id)
     end
 end

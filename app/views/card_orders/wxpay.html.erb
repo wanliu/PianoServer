@@ -84,6 +84,8 @@
           res.done(function (data, status, xhr) {
             // 确认支付成功
             alert("支付成功");
+            var url = '<%= withdraw_card_order_path(@card_order) %>';
+            window.location.href = url;
           });
 
           res.fail(function (data, status, xhr) {

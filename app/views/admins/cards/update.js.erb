@@ -10,11 +10,16 @@
   }, 5000);
 
   var $html = $('<%= j render "card", locals: {card: @card} %>');
-  var $originTr = $('.cards tr[id=card_<%= @card.id %>');
-  $originTr.replaceWith($($html[0]));
 
-  var $originForm = $('.cards tr.card-eidt-form[data-card-id=<%= @card.id %>]');
-  $originForm.replaceWith($($html[1]));
+  var $originTr = $('.cards tr.card[data-card-id=<%= @card.id %>]');
+  $originTr.remove();
+
+  var $originForm = $('.cards tr.change-apply-template[data-card-id=<%= @card.id %>]');
+  $originForm.before($html);
+  $originForm.remove()
+
+  // $originTr.replaceWith($($html[0]));
+  // $originForm.replaceWith($($html[2]));
 })();
 <% else %>
 (function() {

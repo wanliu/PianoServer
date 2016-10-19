@@ -244,6 +244,7 @@ zh-CN:
     regions: 城市区域
     orders: 订单
     blesses: 礼品
+    card_orders: 代金卷
   actions:
     new: 新增
     new_step2: 创建
@@ -256,6 +257,9 @@ zh-CN:
     new_yiyuan_address: 收货地址
     chose_yiyuan_address: 收货地址
     wxpay: 微信支付
+    buy_now_confirm: 立即购买
+    confirmation: 确认订单
+    withdraw: 领取
   modules:
     shop: 商店
     admin: 工作平台
