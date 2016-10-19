@@ -86,6 +86,12 @@
 
             $("ul.template-items-dropdown").html('');
 
+            var display = $("ul.template-items-dropdown").css('display');
+  
+            if ("none" == display) {
+              $("#search-items").dropdown('toggle');
+            }
+
             _.each(res, function(item) {
               var html = item_template(item);
               $("ul.template-items-dropdown").append(html);              
