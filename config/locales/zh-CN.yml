@@ -244,7 +244,7 @@ zh-CN:
     regions: 城市区域
     orders: 订单
     blesses: 礼品
-    card_orders: 代金卷
+    card_orders: 代金券
   actions:
     new: 新增
     new_step2: 创建

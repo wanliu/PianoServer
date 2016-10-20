@@ -379,13 +379,13 @@ class OrdersController < ApplicationController
   #           render json: {consume: false, errmsg: '微信核销失败, 请稍后再试!'}, status: :unprocessable_entity
   #         end
   #       else
-  #         render json: {consume: false, errmsg: '无法使用这张优惠卷!'}, status: :unprocessable_entity
+  #         render json: {consume: false, errmsg: '无法使用这张优惠券!'}, status: :unprocessable_entity
   #       end
   #     rescue Wechat::ResponseError => e
-  #       render json: {consume: false, errmsg: '无法使用这张优惠卷, 请稍后再试!'}, status: :unprocessable_entity
+  #       render json: {consume: false, errmsg: '无法使用这张优惠券, 请稍后再试!'}, status: :unprocessable_entity
   #     end
   #   else
-  #     render json: {consume: false, errmsg: '无法识别优惠卷信息,请稍后再试!'}, status: :unprocessable_entity
+  #     render json: {consume: false, errmsg: '无法识别优惠券信息,请稍后再试!'}, status: :unprocessable_entity
   #   end
   # end
 

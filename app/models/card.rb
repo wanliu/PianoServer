@@ -24,7 +24,7 @@ class Card < ActiveRecord::Base
 
   class << self
     def refresh!
-      Rails.logger.info "[微信卡卷]重新拉取微信卡卷信息!"
+      Rails.logger.info "[微信卡券]重新拉取微信卡券信息!"
       card_list = Wechat.api.card_api_ticket.batch_get
 
       card_list.each do |card_id|
