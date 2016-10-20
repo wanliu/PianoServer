@@ -32,7 +32,7 @@ class CardApplyTemplate < ActiveRecord::Base
     if all_items?
       "适用于所有商品"
     else
-      "适用商品: #{items.map(&:title).join(', ')}"
+      "适用以下商品: <br>#{items.each_with_index.map { |item, index| "#{index + 1}.#{item.title}  (#{item.shop.title})" }.join('<br>')}"
     end
   end
 
