@@ -87,11 +87,13 @@
   <% end %>
 </div>
 
-<% if @cards.present? %>
-  <%= render "wx_cards" %>
-<% else %>
-  <div style='display: none;' class='empty-cards-mark'></div>
-<% end %>
+<div class="wx_card-container">
+  <% if @cards.present? %>
+    <%= render "wx_cards" %>
+  <% else %>
+    <div style='display: none;' class='empty-cards-mark'></div>
+  <% end %>
+</div>
 
 <script type="text/template" id="mobile-gift-template">
   <div class='cart-gift' data-gift-id="{{= id }}">
@@ -196,12 +198,12 @@
 
   }
 
-  $('buy-now-confirm').on('click', '.wx-cards', function(event) {
+  $('.buy-now-confirm').on('click', '.wx-cards', function(event) {
     $('.buy-now-confirm').hide();
     $('.chose-cards').show();
   });
 
-  $('buy-now-confirm').on('click', '.chose-cards li', function(event) {
+  $('.wx_card-container').on('click', '.chose-cards li', function(event) {
     $('.chose-cards li').removeClass('chosen');
     $(this).addClass('chosen');
 
@@ -223,6 +225,18 @@
       $('.chose-cards').hide();
       $('.buy-now-confirm').show();        
     }, 500);
+  });
+
+  $('.wx_card-container').on('click', '.cancel-chose-card', function(event) {
+    $('.chose-cards li').removeClass('chosen');
+    $('.card-hidden-fields input').prop('disabled', true);
+    $('.wx-cards .empty').show();
+    $('.wx-cards .chosen').hide();
+  });
+
+  $('.wx_card-container').on('click', '.back-to-order', function(event) {
+    $('.chose-cards').hide();
+    $('.buy-now-confirm').show();
   });
 })();
 </script>
