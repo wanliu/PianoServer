@@ -196,12 +196,12 @@
 
   }
 
-  $('body').on('click', '.wx-cards', function(event) {
+  $('buy-now-confirm').on('click', '.wx-cards', function(event) {
     $('.buy-now-confirm').hide();
     $('.chose-cards').show();
   });
 
-  $('body').on('click', '.chose-cards li', function(event) {
+  $('buy-now-confirm').on('click', '.chose-cards li', function(event) {
     $('.chose-cards li').removeClass('chosen');
     $(this).addClass('chosen');
 
