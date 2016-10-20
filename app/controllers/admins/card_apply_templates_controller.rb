@@ -2,7 +2,7 @@ class Admins::CardApplyTemplatesController < Admins::BaseController
   before_action :set_template, only: [:show, :edit, :update, :destroy, :add_item, :remove_item, :set_default]
 
   def index
-    @templates = CardApplyTemplate.includes(:items).order(id: :desc)
+    @templates = CardApplyTemplate.includes(items: :shop).order(id: :desc)
       .page(params[:page])
       .per(params[:per])
 

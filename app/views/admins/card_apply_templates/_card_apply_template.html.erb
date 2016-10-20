@@ -1,7 +1,7 @@
 <%= content_tag_for :tr, card_apply_template, class: (card_apply_template.is_default? ? "default" : "not-default") do %>
   <td><%= card_apply_template.title %></td>
   <td><%= CardApplyTemplate::APPLY_ITEMS_TITLES[card_apply_template.apply_items] %></td>
-  <td><%= card_apply_template.desc %></td>
+  <td><%= card_apply_template.desc.html_safe %></td>
   <td>
     <span class='notify-default'>默认模板</span>
     <span class='notify-not-default'>-</span>
