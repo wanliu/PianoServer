@@ -67,7 +67,7 @@ class Admins::CardsController < Admins::BaseController
   def refresh
     Card.refresh!
 
-    flash[:notice] = "重新完毕，现在的卡卷信息是最新的了!"
+    flash[:notice] = "重新完毕，现在的卡券信息是最新的了!"
     redirect_to admins_cards_path
   end
 

@@ -372,7 +372,7 @@ class Order < ActiveRecord::Base
     # end
   end
 
-  # 核销一张指定id的卡卷,并记录下来被核销的卡卷code
+  # 核销一张指定id的卡券,并记录下来被核销的卡券code
   def consume_cards
     return if cards.blank?
 
@@ -394,7 +394,7 @@ class Order < ActiveRecord::Base
 
     if consumed_card_ids.blank?
       self.card_rollback = true
-      raise Exception.new("微信卡卷无效,请重新选择")
+      raise Exception.new("微信卡券无效,请重新选择")
     else
       update_columns(total: total)
     end

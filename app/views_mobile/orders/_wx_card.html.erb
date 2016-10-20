@@ -3,7 +3,7 @@
 <% end %>
 
 <div class='content card col-xs-9'>
-  优惠卷
+  优惠券
 </div>
 <div class='operation col-xs-3'>
   <button type='button' class='use-card btn btn-default'>选择</button>
@@ -36,7 +36,7 @@
             // alert(JSON.stringify(cardList[0]));
             $.post('<%= apply_wx_card_order_path(order) %>', cardList[0])
               .done(function(response) {
-                alert("优惠卷使用成功!");
+                alert("优惠券使用成功!");
                 // alert(JSON.stringify(response));
                 // location.reload();
                 if (!!~window.location.href.indexOf('?')) {

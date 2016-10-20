@@ -8,7 +8,7 @@
       领取<%= @card_order.title %>
     </div>
     <div class='withdrew' data-order-id='<%= @card_order.id %>' style='display: none;'>
-      领取成功，<%= @card_order.title %> 已经添加到您的微信卡卷中！
+      领取成功，<%= @card_order.title %> 已经添加到您的微信卡券中！
     </div>
   </div>
 </div>
@@ -21,14 +21,14 @@
     var withdrew_lock = false;
 
     if (typeof wx == "undefined") {
-      $.post("/api/error_records", {error_record: {name: "微信领取卡卷配置失败", infor: "wx变量未定义"}});
-      alert('微信领取卡卷加载失败，请稍后再试');
+      $.post("/api/error_records", {error_record: {name: "微信领取卡券配置失败", infor: "wx变量未定义"}});
+      alert('微信领取卡券加载失败，请稍后再试');
       return;
     }
 
     if (typeof $ == "undefined") {
-      $.post("/api/error_records", {error_record: {name: "微信领取卡卷Jquery 加载失败", infor: "$变量未定义"}});
-      alert('微信领取卡卷加载失败，请稍后再试');
+      $.post("/api/error_records", {error_record: {name: "微信领取卡券Jquery 加载失败", infor: "$变量未定义"}});
+      alert('微信领取卡券加载失败，请稍后再试');
       return;
     }
 
@@ -38,8 +38,8 @@
     wx.error(function(res){
       // alert('wx config error')
       // alert('error msg:' +  JSON.stringify(res));
-      $.post("/api/error_records", {error_record: {name: "微信领取卡卷配置错误", infor: res}});
-      alert('微信领取卡卷请求失败，请稍后再试');
+      $.post("/api/error_records", {error_record: {name: "微信领取卡券配置错误", infor: res}});
+      alert('微信领取卡券请求失败，请稍后再试');
     });
 
     wx.config({
@@ -82,8 +82,8 @@
       });
     }
 
-    // 用户点击“微信领取卡卷”
-    // 从后端得到微信订单号和各签名参数，用于发起微信领取卡卷
+    // 用户点击“微信领取卡券”
+    // 从后端得到微信订单号和各签名参数，用于发起微信领取卡券
     $('body').on('click', '.withdraw-now', function(e) {
       e.preventDefault();
 
