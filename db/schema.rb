@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161017030115) do
+ActiveRecord::Schema.define(version: 20161021054343) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -681,6 +681,7 @@ ActiveRecord::Schema.define(version: 20161017030115) do
     t.datetime "updated_at",                                                 null: false
     t.integer  "status",                                     default: 0
     t.text     "error_message"
+    t.date     "wx_expired_at"
   end
 
   add_index "redpacks", ["birthday_party_id"], name: "index_redpacks_on_birthday_party_id", using: :btree
