@@ -13,6 +13,7 @@ WATCH=
 PIPE=$(pipe)
 S3_STORAGE=s3://wxtest
 SETTIGNS_FILE=s3://wanliu/config/piano/settings.local.test.yml
+WECHAT_FILE=s3://wanliu/config/piano/wechat.test.yml
 
 ifeq ($(PIPE),1)
 	LOGNAME:=$(NAME)Log
@@ -37,6 +38,7 @@ endif
 ifdef online
 	S3_STORAGE:=s3://wxapps
 	SETTIGNS_FILE=s3://wanliu/config/piano/settings.local.yml
+	WECHAT_FILE=s3://wanliu/config/piano/wechat.yml
 endif
 
 AWSLOGS:=$(shell awslogs -h 2> /dev/null)
@@ -66,22 +68,23 @@ restart: stop quick_start
 
 prepare_config:
 	@echo $(SETTIGNS_FILE) > Settingfile
+	@echo $(WECHAT_FILE) > Wechatfile
 
 after_config:
 	@rm Settingfile
+	@rm Wechatfile
 
 try_config:
 ifneq ("$(wildcard Settingfile)","")
 	$(eval SETTIGNS_FILE=$(shell cat Settingfile))
+	$(eval WECHAT_FILE=$(shell cat Wechatfile))
 endif
-	@echo $(SETTIGNS_FILE)	
+	@echo $(SETTIGNS_FILE)
 
 sync_config: try_config
 	@aws s3 cp $(SETTIGNS_FILE) config/settings.local.yml $(PROFILE)
-	@aws s3 cp s3://wanliu/config/piano/wechat_access_token /var/tmp/wechat_access_token $(PROFILE)
-	@aws s3 cp s3://wanliu/config/piano/wechat_jsapi_ticket /var/tmp/wechat_jsapi_ticket $(PROFILE)
+	@aws s3 cp $(WECHAT_FILE) config/wechat.yml $(PROFILE)
 	@aws s3 cp s3://wanliu/config/piano/apiclient_cert.p12 /var/tmp/apiclient_cert.p12 $(PROFILE)
-	@aws s3 cp s3://wanliu/config/piano/wechat.yml config/wechat.yml $(PROFILE)
 
 bundle:
 	@bundle install
@@ -89,10 +92,11 @@ bundle:
 migrate:
 	@bundle exec rake db:migrate
 
-launch: sync_config bundle migrate precompile restart sidekiq schedule
+launch: sync_config bundle migrate restart sidekiq schedule
 
 sidekiq:
-	@-test -s tmp/pids/sidekiq.pid && kill -TERM `cat tmp/pids/sidekiq.pid`
+	# @-test -s tmp/pids/sidekiq.pid && kill -TERM `cat tmp/pids/sidekiq.pid`
+	@-ps -A u | grep sidekiq | awk '{ print $2}' | xargs kill
 	@bundle exec sidekiq -d
 
 schedule:
@@ -120,4 +124,4 @@ ssh:
 	@aws s3 cp s3://wanliu/test.pem ~/.ssh/test.pem $(PROFILE)
 	@ssh -i ~/.ssh/test.pem ec2-user@test.wanliu.biz
 
-deploy: package upload
+deploy: precompile package upload

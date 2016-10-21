@@ -30,6 +30,10 @@
 
       <%= render partial: "confirmation_item", collection: @order_items.sort_by(&:id), as: :order_item, locals: { supplier: @supplier, f: f } %>
 
+      <% if @cards.present? %>
+        <%= render "wx_cards_fields", locals: {f: f} %>
+      <% end %>
+
       <div class='footer confirmation-total'> 
         <%= render "confirmation_total" %>
       </div>
@@ -50,12 +54,16 @@
 <div class="new-address toggle-siblings" style='display: none;'>
 </div>
 
+<% if @cards.present? %>
+  <%= render "wx_cards" %>
+<% end %>
+
 <script type="text/javascript">
   (function(){
     $('.more').click(function(event) {
       $(this).siblings('.gifts')
         .toggleClass('toggle-more-gifts');
-    })
+    });
 
     $(document).on('click', '.order-confirm-mobile .yiyuan-confirm-location', function (event) {
       event.preventDefault();
@@ -95,5 +103,36 @@
     });
 
     history.replaceState({show: "order-confirm-mobile"}, null);
+
+  <% if @cards.present? %>
+    $('.wx-cards').on('click', function(event) {
+      $('.order-confirm-mobile').hide();
+      $('.chose-cards').show();
+    });
+
+    $('.chose-cards li').on('click', function(event) {
+      $('.chose-cards li').removeClass('chosen');
+      $(this).addClass('chosen');
+
+      var cardId = $(this).data('cardId');
+      var cardTitle = $(this).data('cardTitle');
+      var cardAmount = $(this).data('cardReduce');
+
+      $('.card-hidden-fields input').prop('disabled', true);
+      $('.card-hidden-fields .card_' + cardId).prop('disabled', false);
+
+      $('.wx-cards .empty').hide();
+
+      var $chosen = $('.wx-cards .chosen');
+      $chosen.find('.amount').html(cardAmount);
+      $chosen.find('.title').html(cardTitle);
+      $chosen.show();
+
+      setTimeout(function() {
+        $('.chose-cards').hide();
+        $('.order-confirm-mobile').show();        
+      }, 300);
+    });
+  <% end %>
   })();
 </script>

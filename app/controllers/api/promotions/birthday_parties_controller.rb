@@ -1,6 +1,6 @@
 class Api::Promotions::BirthdayPartiesController < Api::BaseController
   before_action :set_birthday_party, only: [:show, :update, :edit, :destroy, :withdraw]
-  before_action :authenticate_user!, only: [:upload_avatar]
+  before_action :authenticate_user!, only: [:index, :upload_avatar]
 
   # GET /birthday_parties
   # GET /birthday_parties.json
@@ -10,9 +10,34 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
     render json: @birthday_parties
   end
 
+  def recently
+    day_options = {
+      seven_days_ago: 7.days.ago.to_date,
+      seven_days_later: 7.days.since.to_date
+    }
+
+    ids = BirthdayParty.where("birth_day >= :seven_days_ago AND birth_day <= :seven_days_later", day_options)
+    .limit(3)
+    .pluck(:id)
+
+    @parties = BirthdayParty.where(id: ids).rank
+  end
+
   # GET /birthday_parties/1
   # GET /birthday_parties/1.json
   def show
+    @hearts_count = @birthday_party.blesses
+      .where("virtual_present_infor @> ?", {name: 'heart'}.to_json)
+      .count
+
+    hearts_limit = @birthday_party.hearts_limit
+    @progress = 100
+    free = @birthday_party.send(:free_hearts_withdrawable)
+    charged = @birthday_party.send(:charged_widthdrawable)
+
+    if @hearts_count < hearts_limit
+      @progress = ((free + charged) / (hearts_limit + charged) * 100).floor
+    end
   end
 
   def upload_avatar
@@ -40,6 +65,8 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
       # render json: { errors: @birthday_party.errors.full_messages.join(', ') }, status: :unprocessable_entity
     # end
   end
+
+
 
   # POST /birthday_parties
   # POST /birthday_parties.json
@@ -72,6 +99,14 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
 
   #   head :no_content
   # end
+
+  def rank
+    @parties = BirthdayParty.rank
+      .page(params[:page])
+      .per(params[:per])
+
+    render :rank
+  end
 
   private
 

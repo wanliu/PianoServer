@@ -6,15 +6,21 @@ class Api::Promotions::BlessesController < Api::BaseController
     @total = @birthday_party.blesses.paid.count
 
     @blesses = @birthday_party.blesses
-      .includes(:sender, :virtual_present)
-      .order(id: :desc)
-      .paid
-      .limit(params[:limit].to_i + 1)
-      .offset(0)
+        .includes(:sender, :virtual_present)
+        .order("cast(virtual_present_infor->>'price' AS float) desc,  id desc")
+        .paid
+        .limit(params[:limit].to_i + 1)
 
-    @blesses = @blesses.where('id < ?', params[:latest_id].to_i) if params[:latest_id].present?
+    if params[:latest_id].present?
+      bless = Bless.find(params[:latest_id])
 
-    @total = @total
+      options = {
+        price: bless.virtual_present_infor["price"].to_f,
+        id: bless.id
+      }
+
+      @blesses = @blesses.where("cast(virtual_present_infor->>'price' AS float) <= :price AND id < :id", options)
+    end
   end
 
   # TODO 如果赠送的礼物需要使用微信支付，则传送微信支付所需要的参数到前段

@@ -14,6 +14,16 @@ class Api::ItemsController < Api::BaseController
     }
   end
 
+  def search
+    @items = if params[:except].present?
+      Item.search_all(q: params[:q], except: params[:except]).page(1).per(10).records
+    else
+      Item.search_all(q: params[:q]).page(1).per(10).records
+    end
+
+    render json: @items.as_json(except: [:income_price], methods: [:shop_name, :shop_realname])
+  end
+
   def hots
     config_hots_days = Settings.config.hots_compare_days.try(:to_i) || 30
     start_time = config_hots_days.day.ago

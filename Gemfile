@@ -138,12 +138,17 @@ gem 'weixin_authorize', github: 'hysios/weixin_authorize'
 gem 'omniauth'
 gem "omniauth-wechat-oauth2"
 
-gem 'wechat'
+gem 'wechat', github: 'satbirdd/wechat'
 
 #excel导入导出
 gem 'spreadsheet'
 
 gem 'wx_pay'
+
+gem "paranoia", "~> 2.0"
+
+gem "rqrcode"
+
 gem 'web-console', group: :development
 
 group :development, :test do

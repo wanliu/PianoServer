@@ -1,0 +1,50 @@
+<div class='card_apply_templates-container'>
+  <div class='alert-header'>
+    <div class="alert alert-success infors" role="alert" style='display: none;'>
+    </div>
+    <div class="alert alert-danger errors" role="alert" style='display: none;'>
+    </div>
+    <div class='title'>
+      <h3>代金券</h3>
+      <%= link_to refresh_admins_cards_path, class: 'btn btn-default' do %>
+        <span class='glyphicon glyphicon-refresh'></span> 重新刷新卡券信息
+      <% end %>
+      <%= link_to "应用模板管理", admins_card_apply_templates_path, class: 'btn btn-default pull-right' %>
+      <!-- <button class='btn btn-default new-card-btn'>
+        <span class='glyphicon glyphicon-plus'>新建</span>
+      </button> -->
+    </div>
+  </div>
+
+  <%#= render 'form' %>
+
+  <table class='table cards'>
+    <thead>
+      <tr>
+        <th>名称　</th>
+        <th>微信卡券ID </th>
+        <th>类别　</th>
+        <th>优惠　</th>
+        <th>应用模板　</th>
+        <th></th>
+        <!-- <th>库存　</th> -->
+      </tr>
+    </thead>
+    <tbody>
+      <% @cards.each do |card| %>
+        <%= render card %>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%= paginate @cards %>
+</div>
+
+<script type="text/javascript">
+  (function (event) {
+    $('table.cards').on("click", '.change-apply-template-btn', function(event) {
+      var cardId = $(this).closest('tr').data('cardId');
+      $('tr.change-apply-template[data-card-id=' + cardId + ']').toggle();
+    })
+  })();
+</script>

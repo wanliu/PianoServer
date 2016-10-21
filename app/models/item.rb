@@ -3,7 +3,7 @@ class Item < ActiveRecord::Base
   include ContentManagement::Model
   include PublicActivity::Model
   include Elasticsearch::Model
-  include Elasticsearch::Model::Callbacks
+  # include Elasticsearch::Model::Callbacks
   include ESModel
 
   tracked
@@ -48,6 +48,10 @@ class Item < ActiveRecord::Base
   validate :express_template_from_shop
 
   delegate :region_id, to: :shop, prefix: true
+
+  after_commit :create_elastic_index, on: :create
+  after_commit :update_elastic_index, on: :update
+  after_commit :destroy_elastic_index, on: :destroy
 
   if Settings.dev.feature.dynamic_property
     validates :properties, properties: {
@@ -329,6 +333,60 @@ class Item < ActiveRecord::Base
     Item.search(query_params)
   end
 
+  scope :search_all, -> (params) do
+    query_params = {
+      query: {
+        filtered: {}
+      }
+    }
+
+    if params[:except].present?
+      query_params[:query][:filtered][:query] ||= {}
+      query_params[:query][:filtered][:query].deep_merge!({
+        bool: {
+          must_not: {
+            terms: { id: params[:except] }
+          }
+        }
+      })
+    end
+
+    # 搜索内容只有字母的时候
+    # ①只有声母
+    # ②声母韵母都有
+    if params[:q].present?
+      query_params[:query][:filtered][:query] ||= {}
+      query_params[:query][:filtered][:query].deep_merge!({
+        bool: {
+          should: [{ match: {title: params[:q]} }],
+          minimum_should_match: 1
+        }
+      })
+
+      if /[a-z]+/.match params[:q]
+        if /[(a|o|e|i|u|ü|v)]/.match params[:q]
+          pinyin = params[:q].gsub /[(b|p|m|f|d|t|n|l|g|k|h|j|q|x|zh|ch|sh|r|z|c|s|w|y)]/ do |i|
+            " #{i}"
+          end
+          pinyin = pinyin.gsub(" z ", " z")
+            .gsub(" c ", " c")
+            .gsub(" s ", " s")
+            .gsub(" n ", "n ")
+            .gsub(" g ", "g ")
+            .gsub(/\W+g\z/, "g")
+            .gsub(/\W+n\z/, "n")
+            .strip
+
+          query_params[:query][:filtered][:query][:bool][:should].push({ match: {"title.pinyin" => pinyin} })
+        else
+          query_params[:query][:filtered][:query][:bool][:should].push({ match: {"title.first_lt" => params[:q]} })
+        end
+      end
+    end
+
+    Item.search(query_params)
+  end
+
   def as_indexed_json(options={})
     self.as_json(methods: [:shop_region_id, :shop_name])
   end
@@ -356,6 +414,50 @@ class Item < ActiveRecord::Base
     else
       0
     end
+  end
+
+  def price(props={})
+    base_price = super() || 0
+
+    result = if props.present?
+      offset_setting = price_offset.find do |_, setting|
+        setting["props"] == props.stringify_keys
+      end
+
+      offset = if offset_setting.present?
+        offset_setting.last["price_offset"].to_f || 0
+      else
+        0
+      end
+
+      base_price + offset
+    else
+      base_price
+    end
+
+    result > 0 ? result : 0
+  end
+
+  def public_price(props={})
+    base_price = super() || 0
+
+    result = if props.present?
+      offset_setting = price_offset.find do |_, setting|
+        setting["props"] == props.stringify_keys
+      end
+
+      offset = if offset_setting.present?
+        offset_setting.last["price_offset"].to_f || 0
+      else
+        0
+      end
+
+      base_price + offset
+    else
+      base_price
+    end
+
+    result > 0 ? result : 0
   end
 
   def pinyin
@@ -419,6 +521,19 @@ class Item < ActiveRecord::Base
     end
   end
 
+  #  {"0"=>{"key"=>{"size"=>"21"}, "value"=>"10.0", "price_offset"=>"5"},
+  # "1"=>{"key"=>{"size"=>"25"}, "value"=>"20.0", "price_offset"=>"6"},
+  # "2"=>{"key"=>{"size"=>"28"}, "value"=>"30.0", "price_offset"=>"6.88"}}
+  def set_price_offsets(options)
+    if options.is_a? Hash
+      self.price_offset = {}
+
+      options.each do |key, value|
+        self.price_offset[key] = {props: value["key"], price_offset: (value["price_offset"] || 0).to_f}
+      end
+    end
+  end
+
   def shop_name
     shop.try(:title)
   end
@@ -454,7 +569,16 @@ class Item < ActiveRecord::Base
       .reduce({}) do |cache, stock|
         stock["data"] ||= {}
         index = stock["data"].keys.sort.map {|k| "#{k}:#{stock['data'][k]}"}.join(';')
-        cache[index] = { quantity: stock["quantity"], data: stock["data"] }
+
+        offset_set = price_offset.find { |_, off| off["props"] == stock["data"]}
+
+        offset = if offset_set.present?
+          offset_set.try(:last).try(:[], "price_offset") || 0
+        else
+          0
+        end
+
+        cache[index] = { quantity: stock["quantity"], data: stock["data"], price: price(stock["data"]), price_offset: offset }
         cache
       end
   end
@@ -505,9 +629,8 @@ class Item < ActiveRecord::Base
           prop_name == key
         end
 
-        prop = prop[1]
-
         if prop.present?
+          prop = prop[1]
           "#{prop['title']}:#{prop['value'][value].try(:[], 'title')}"
         else
           ""
@@ -550,6 +673,38 @@ class Item < ActiveRecord::Base
   def express_template_from_shop
     if express_template.present? && express_template.shop_id != shop_id
       errors.add(:express_template_id, "只能使用本商店的运费模板")
+    end
+  end
+
+  def create_elastic_index
+    __elasticsearch__.index_document
+  rescue Faraday::ConnectionFailed => e
+    send_elastic_error_notification
+  end
+
+  def update_elastic_index
+    __elasticsearch__.update_document
+  rescue Faraday::ConnectionFailed => e
+    send_elastic_error_notification
+  end
+
+  def destroy_elastic_index
+    __elasticsearch__.delete_document
+  rescue Faraday::ConnectionFailed => e
+    send_elastic_error_notification
+  end
+
+  def send_elastic_error_notification
+    text = "【万流网】Elasticsearch服务连接失败！请检查修复"
+    Rails.logger.error "\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"
+    Rails.logger.error "Elasticsearch服务连接失败！请检查修复"
+    Rails.logger.error "\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"
+    mobiles = Settings.error_receivers
+
+    if mobiles.present? && Rails.env.production?
+      mobiles.each do |mobile|
+        NotificationSender.delay.send_sms("mobile" => mobile, "text" => text)
+      end
     end
   end
 end

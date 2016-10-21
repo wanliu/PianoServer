@@ -1,0 +1,67 @@
+.sales_men-manager {
+  .inline-form {
+    display: inline;
+  }
+
+  .search-zone {
+    z-index: 5;
+    position: relative;
+    // padding-left: 20px;
+
+    .searcher {
+      padding: 10px;
+      width: 250px;
+      margin-bottom: 0;
+    }
+
+    .search-results {
+      position: absolute; 
+      border-top: 1px solid #ddd; 
+      border-left: 1px solid #ddd; 
+      border-radius: 5px; 
+      display: none;
+      width: 100%;
+      box-shadow: 15px 10px 5px -5px #777;
+      padding: 10px;
+      padding-left: 0;
+      left: 0;
+      top: -11px;
+
+      .replacer {
+        height: 54px;
+      }
+
+      .results {
+        background-color: white;
+      }
+
+      .item {
+        float: left; 
+        margin: 10px; 
+        width:120px; 
+        height: 100px;
+
+        &.empty {
+          width: 100%;
+          padding: 20px;
+        }
+
+        img {
+          height: 50px;
+        }
+
+        .username {
+          word-break: break-word;
+        }
+      }
+    }
+  }
+}
+
+table.sales_men {
+  tr.item {
+    img {
+      height: 50px;
+    }
+  }
+}

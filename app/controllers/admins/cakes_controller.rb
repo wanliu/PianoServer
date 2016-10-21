@@ -1,10 +1,10 @@
 class Admins::CakesController < Admins::BaseController
-  before_action :set_cake, only: [:show, :edit, :update, :destroy]
+  before_action :set_cake, only: [:show, :edit, :update, :destroy, :undo_delete]
 
   # GET /cakes
   # GET /cakes.json
   def index
-    @cakes = Cake.order(id: :desc).includes(:item)
+    @cakes = Cake.with_deleted.order(deleted_at: :desc, id: :desc).includes(:item)
       .page(params[:page])
       .per(params[:per])
 
@@ -80,17 +80,27 @@ class Admins::CakesController < Admins::BaseController
     end
   end
 
+  def undo_delete
+    @cake.restore
+
+    respond_to do |format|
+      format.js
+      format.html { head :no_content }
+      format.json { head :no_content }
+    end
+  end
+
   private
 
     def set_cake
-      @cake = Cake.find(params[:id])
+      @cake = Cake.with_deleted.find(params[:id])
     end
 
     def cake_params
-      params.require(:cake).permit(:item_id, :hearts_limit)
+      params.require(:cake).permit(:item_id, :hearts_limit, :supplier)
     end
 
     def cake_update_params
-      params.require(:cake).permit(:item_id, :hearts_limit)
+      params.require(:cake).permit(:hearts_limit, :supplier)
     end
 end

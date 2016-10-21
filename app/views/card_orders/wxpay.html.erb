@@ -1,0 +1,112 @@
+<% content_for :javascripts do %>
+  <%= javascript_include_tag "http://res.wx.qq.com/open/js/jweixin-1.0.0.js" %>
+<% end %>
+
+<div class='container order-pay'>
+  <div class='header text-center'>
+    微信支付
+  </div>
+
+  <div class='order-amount text-center'>
+    <h1><%= number_to_currency @card_order.price %></h1>
+  </div>
+
+  <div class='order-desc'>
+    <div>
+      <span class='item'>收款方</span>
+      <span class='pull-right'>耒阳街上</span>
+    </div>
+
+    <div>
+      <span class='item'>商&nbsp;&nbsp;&nbsp;&nbsp;品</span>
+      <span class='pull-right'><%= @card_order.title %></span>
+    </div>
+  </div>
+
+  <div  class='chose-pay-kind'>
+    <div class='pay-kind wx-pay-now text-center' data-order-id='<%= @card_order.id %>'>
+      <!-- 立即支付 -->
+      <%= image_tag "wxpay_logo_white.png", class: 'wx-pay-logo' %>微信支付<%= @card_order.price %>元
+    </div>
+  </div>
+</div>
+
+<script>
+  <% signature = Wechat.api.jsapi_ticket.signature request.original_url %>
+  // <%= signature.to_json.html_safe %>
+
+  (function() {
+    if (typeof wx == "undefined") {
+      $.post("/api/error_records", {error_record: {name: "微信支付配置失败", infor: "wx变量未定义"}});
+      alert('微信支付加载失败，请稍后再试');
+      return;
+    }
+
+    if (typeof $ == "undefined") {
+      $.post("/api/error_records", {error_record: {name: "微信支付Jquery 加载失败", infor: "$变量未定义"}});
+      alert('微信支付加载失败，请稍后再试');
+      return;
+    }
+
+    wx.ready(function(){
+    });
+
+    wx.error(function(res){
+      // alert('wx config error')
+      // alert('error msg:' +  JSON.stringify(res));
+      $.post("/api/error_records", {error_record: {name: "微信支付配置错误", infor: res}});
+      alert('微信支付请求失败，请稍后再试');
+    });
+
+    wx.config({
+      debug: <%= params[:debug].present? ? 'true' : 'false' %>, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+      appId: '<%= WxPay.appid %>', // 必填，公众号的唯一标识
+      timestamp: <%= signature[:timestamp] %>, // 必填，生成签名的时间戳
+      nonceStr: '<%= signature[:noncestr] %>', // 必填，生成签名的随机串
+      signature: '<%= signature[:signature] %>',// 必填，签名，见附录1
+      jsApiList: ['chooseWXPay', 'onMenuShareTimeline'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+    });
+
+    function payNow() {
+      wx.chooseWXPay({
+        timestamp: <%= @params[:timeStamp] %>, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+        nonceStr: '<%= @params[:nonceStr] %>', // 支付签名随机串，不长于 32 位
+        package: '<%= @params[:package] %>', // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
+        signType: '<%= @params[:signType] %>', // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+        paySign: '<%= @params[:paySign] %>', // 支付签名
+        success: function (res) {
+          // 支付成功后的回调函数
+          // alert('pay success!' + JSON.stringify(res));
+
+          var csrfToken = $('meta[name=csrf-token]').attr('content');
+          var res = $.post('/card_orders/<%= @card_order.id %>/wxpay_confirm', {authenticity_token: csrfToken});
+
+          res.done(function (data, status, xhr) {
+            // 确认支付成功
+            alert("支付成功");
+            var url = '<%= withdraw_card_order_path(@card_order) %>';
+            window.location.href = url;
+          });
+
+          res.fail(function (data, status, xhr) {
+            // 无法确认支付成功
+            alert("支付没有成功");
+          });
+        },
+
+        fail: function(res) {
+          // 支付失败后的回调函数
+          alert('支付没有成功', + JSON.stringify(res));
+        }
+      });
+    }
+
+    // 用户点击“微信支付”
+    // 从后端得到微信订单号和各签名参数，用于发起微信支付
+    $('body').on('click', '.wx-pay-now', function(e) {
+      e.preventDefault();
+
+      payNow();
+    })
+  })();
+</script>

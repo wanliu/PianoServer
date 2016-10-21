@@ -1,0 +1,14 @@
+
+(function() {
+  var html = '<%= j render @cake %>';
+  $('table.cakes #cake_<%= @cake.id %>').replaceWith(html);
+  
+  var $alert = $(".infors.alert");
+  $alert.html("操作成功！").show();
+
+  setTimeout(function() {
+    $alert.fadeOut(function() {
+      $alert.html("");
+    });
+  }, 5000);
+})();

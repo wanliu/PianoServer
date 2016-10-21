@@ -1,0 +1,9 @@
+<h4 class='head saled-parties'>我的开单</h4>
+
+<div class='saled-parties'>
+  <% @birthday_parties.each do |birthday_party| %>
+    <%= render "saled_birthday_party", locals: {birthday_party: birthday_party} %>
+  <% end %>
+</div>
+
+<%= paginate @birthday_parties %>

@@ -1,0 +1,1 @@
+json.extract! @temp_birthday_party, :id, :cake_id, :quantity, :birth_day, :delivery_time, :user_id, :sales_man_id, :message, :delivery_address, :birthday_person, :person_avatar, :created_at, :updated_at

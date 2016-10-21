@@ -11,7 +11,7 @@ require 'uri'
 
 module NotificationSender
   def self.notify(options)
-    send_pusher(options)
+    # send_pusher(options)
     send_sms(options)
   end
 
@@ -19,8 +19,8 @@ module NotificationSender
     params = {}
     mobile_reg = /^1\d{9,10}$/
 
-    order_id = options[:order_id]
-    mobile = options[:mobile]
+    order_id = options["order_id"] || options[:order_id]
+    mobile = options["mobile"] || options[:mobile]
     unless mobile_reg =~ mobile
       puts "短信发送失败，#{mobile}不是一个有效的手机号码！"
       return
@@ -29,8 +29,12 @@ module NotificationSender
     apikey   = Settings.sms.token
     sms_host = Settings.sms.host
     sms_api  = Settings.sms.api_uri
-    text     = Settings.promotions.one_money.sms_to_supplier_template
-    text     = text.sub("#o_id#", order_id.to_s)
+
+    text = options["text"] || options[:text]
+    if text.blank?
+      text = Settings.promotions.one_money.sms_to_supplier_template
+      text = text.sub("#o_id#", order_id.to_s)
+    end
 
     unless apikey.present? && sms_host.present? && sms_api.present? && text.present?
       return
@@ -52,6 +56,7 @@ module NotificationSender
 
   def self.send_pusher(options)
     # {order_id: order.id, order_url: Rails.application.routes.url_helpers.shop_admin_order_path(order.supplier.name, order)}
-    MessageSystemService.push_notification(options[:seller_id], options)
+    seller_id = options[:seller_id] || options["seller_id"]
+    MessageSystemService.push_notification(seller_id, options)
   end
 end

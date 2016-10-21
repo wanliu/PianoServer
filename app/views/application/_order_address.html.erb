@@ -120,8 +120,8 @@
 
     var formData = $('#new_order').serialize()
     $.post('/orders/express_fee?' + formData)
-      .done(function(html) {
-        $('.confirmation-total').html(html);
-      })
+      // .done(function(html) {
+      //   $('.confirmation-total').html(html);
+      // })
   });
 </script>

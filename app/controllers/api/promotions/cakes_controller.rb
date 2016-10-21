@@ -15,13 +15,14 @@ class Api::Promotions::CakesController < Api::BaseController
   end
 
   def show
-    buyer_ids = OrderItem.joins(:order).where(orderable: @cake.item).pluck("orders.buyer_id").uniq
-    @buyers = User.where(id: buyer_ids)
+    @birthday_parties = @cake.birthday_parties.includes(:user)
+
+    @is_sales_man = user_signed_in? && @cake.sales_man?(current_user)
   end
 
   private
 
   def set_cake
-    @cake = Cake.find(params[:id])
+    @cake = Cake.with_deleted.find(params[:id])
   end
 end

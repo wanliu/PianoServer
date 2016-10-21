@@ -1,0 +1,4 @@
+(function() {
+  $("table.card_apply_templates tr.default").removeClass("default").addClass("not-default");
+  $("table.card_apply_templates tr#card_apply_template_<%= @template.id %>").removeClass("not-default").addClass("default");
+})();

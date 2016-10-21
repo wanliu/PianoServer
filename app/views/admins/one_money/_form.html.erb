@@ -17,6 +17,16 @@
   </div>
 
   <div class="form-group">
+    <%= label_tag 'one_money_header', '头部' %>
+    <%= bootsy_area 'one_money', :header, value: @one_money.header, class: "form-control", rows: 4 %>
+  </div>
+
+  <div class="form-group">
+    <%= label_tag 'one_money_header', '底部' %>
+    <%= bootsy_area 'one_money', :footer, value: @one_money.footer, class: "form-control", rows: 4 %>
+  </div>
+
+  <div class="form-group">
     <%= label_tag 'one_money_description', '活动类型' %>
     <%= select 'one_money', :type, [ ['一元购', 'one_money'], ['天天惠', 'daily_cheap']] %>
   </div>
@@ -220,8 +230,7 @@
 
     }).fail(reset);
     // .always(reset);
-  })
-
+  });
 
 </script>
 

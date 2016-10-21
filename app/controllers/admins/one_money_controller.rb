@@ -5,9 +5,15 @@ class Admins::OneMoneyController < Admins::BaseController
   def index
     @one_moneies =
       if params[:type]
-        OneMoney.find(type: params[:type])
+        one_money = OneMoney.all.select {|o| o.type == 'daily_cheap'}
+        one_money = one_money.reverse
+        Kaminari.paginate_array(one_money).page(params[:page])
+                .per(10)
       else
-        OneMoney.all.select {|o| o.type != 'daily_cheap'}
+        one_money = OneMoney.all.select {|o| o.type == 'one_money'}
+        one_money = one_money.reverse
+        Kaminari.paginate_array(one_money).page(params[:page])
+                .per(10)
       end
   end
 
@@ -238,6 +244,16 @@ class Admins::OneMoneyController < Admins::BaseController
   def update_items_with_gifts
     @one_money.items_with_gifts = params[:items_with_gifts]
     @one_money.save
+
+    head :no_content
+  end
+
+  def update_items_index
+    params[:index_map].each do |k, v|
+      item = PmoItem[k.to_i]
+      item.item_index = v;
+      item.save
+    end
 
     head :no_content
   end

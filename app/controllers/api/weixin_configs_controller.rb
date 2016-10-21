@@ -13,4 +13,17 @@ class Api::WeixinConfigsController < Api::BaseController
       expired_at: Wechat.api.jsapi_ticket.got_ticket_at + Wechat.api.jsapi_ticket.ticket_life_in_seconds
     }
   end
+  alias :signature :index
+
+  def card_ext
+    options = {}
+
+    options[:openid] = params[:openid] if params[:openid].present?
+    options[:code] = params[:code] if params[:code].present?
+    options[:card_id] = params[:card_id] if params[:card_id].present?
+
+    result = Wechat.api.card_api_ticket.card_ext(options)
+
+    render json: {card_ext: result}
+  end
 end

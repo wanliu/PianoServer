@@ -4,7 +4,7 @@ class OrderItem < ActiveRecord::Base
 
   # validates :order, presence: true
   validates :orderable, presence: true
-  validates :orderable_id, uniqueness: { scope: [:order_id, :orderable_type] }
+  validates :orderable_id, uniqueness: { scope: [:order_id, :orderable_type] }, if: "order_id.present?"
   validates :quantity, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
   validates :title, presence: true
   validates :price, numericality: { greater_than: 0 }
@@ -73,6 +73,7 @@ class OrderItem < ActiveRecord::Base
 
   def deduct_stocks!(operator)
     orderable.deduct_stocks!(operator, quantity: quantity, data: properties, source: self)
+
     gifts.each do |gift_setting|
       item = Item.find(gift_setting["item_id"])
       gift = Gift.find(gift_setting["gift_id"])
@@ -111,7 +112,7 @@ class OrderItem < ActiveRecord::Base
       # if sale_mode == "retail"
         # @order_item.orderable.public_price
       # else
-      orderable.price
+      orderable.price(properties)
       # end
     when Promotion
       orderable.discount_price

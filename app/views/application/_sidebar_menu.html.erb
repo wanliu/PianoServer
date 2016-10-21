@@ -34,6 +34,11 @@
       menu.insertSection('profile', path, 'completion', '升级企业用户', {iconClass: 'glyphicon glyphicon-edit' })
     <% end %>
 
+    <% unless current_user.anonymous? %>
+      var route = '/profile';
+      menu.insertGroup(route, 'person_profile', '个人中心', { iconClass: 'glyphicon glyphicon-dashboard' });
+    <% end %>
+
     <% if current_user.join_shop %>
       var shopName = '<%= current_user.join_shop.name %>';
 

@@ -2,6 +2,7 @@ require 'redlock'
 
 class PmoItem < Ohm::Model
   LOCK_TIMEOUT = Settings.promotions.lock_timeout
+  CARD_ATTR_NAME = 'wx_card_id'
 
   include Ohm::Timestamps
   include Ohm::DataTypes
@@ -36,7 +37,9 @@ class PmoItem < Ohm::Model
   attribute :suspend_at, OhmTime::ISO8601
   attribute :overwrites, Type::Hash
 
+  attribute :is_card, Type::Boolean
   attribute :independence, Type::Boolean
+  attribute :item_index, Type::Integer
 
   set :participants, :PmoUser
   set :winners, :PmoUser
@@ -73,7 +76,8 @@ class PmoItem < Ohm::Model
       shop_avatar_url: item.shop.avatar_url,
       total_amount: item.current_stock || 10,
       shop_category_name: item.shop_category.try(:title),
-      category_name: item.category.try(:title)
+      category_name: item.category.try(:title),
+      is_card: item.properties.present? && item.properties[CARD_ATTR_NAME].present?
     })
   end
 

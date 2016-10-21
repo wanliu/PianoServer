@@ -1,5 +1,5 @@
 module BirthdayPartyHelper
-  def birthday_party_path(birthday_party, virtual_present_name=nil)
+  def birthday_party_path(birthday_party, bless_id=nil)
     birthday_party_id = if birthday_party.is_a? BirthdayParty
       birthday_party.id
     else
@@ -8,8 +8,8 @@ module BirthdayPartyHelper
 
     path = "/cake_party/#/party/#{birthday_party_id}"
 
-    if virtual_present_name.present?
-      path << "#animation:#{virtual_present_name}#"
+    if bless_id.present?
+      path << "#bless:{bless_id}#"
     end
 
     path

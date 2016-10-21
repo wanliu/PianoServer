@@ -1,17 +1,30 @@
 <%= content_tag_for :tr, cake do %>
   <td><%= image_tag cake.avatar_url %><%= cake.title %></td>
   <td><%= cake.shop_name %></td>
+  <td><%= cake.supplier %></td>
   <td><%= cake.hearts_limit %></td>
+  <td>
+    <% if cake.deleted? %>
+      已下架
+    <% else %>
+      上架
+    <% end %>
+  </td>
   <td>
     <button class='btn btn-default edit-btn'>编辑</button>
     <!-- <button class='btn btn-danger'>Delete</button> -->
-    <%= button_to "删除", [:admins, cake], method: :delete, remote: true, class: 'btn btn-danger', data: {confirm: '确定删除么？'} %>
+    <% if cake.deleted? %>
+      <%= button_to "上架", [:undo_delete, :admins, cake], method: :post, remote: true, class: 'btn btn-warning', data: {confirm: '确定上架么？'} %>
+    <% else %>
+      <%= button_to "下架", [:admins, cake], method: :delete, remote: true, class: 'btn btn-danger', data: {confirm: '确定下架么？'} %>
+    <% end %>
   </td>
 <% end %>
 <tr class='cake-eidt-form' style='display:none;' data-cake-id="<%= cake.id %>">
   <td colspan='4'>
     <%= form_for [:admins, cake], remote: true do |f| %>
       限制红心数量：<%= f.number_field :hearts_limit %>
+      蛋糕店：<%= f.collection_select :supplier, Cake::SUPPLIERS, :to_s, :to_s %>
       <%= f.submit "保存" %>
     <% end %>
   </td>

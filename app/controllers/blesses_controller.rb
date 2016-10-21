@@ -11,8 +11,14 @@ class BlessesController < ApplicationController
       return
     end
 
-    wx_query_code = params[:code]
-    openid = WeixinApi.code_to_openid(wx_query_code)
+    if current_user.js_open_id.blank?
+      wx_query_code = params[:code]
+      openid = WeixinApi.code_to_openid(wx_query_code)
+
+      current_user.update_column("js_open_id", openid) if openid.present?
+    else
+      openid = current_user.js_open_id
+    end
 
     @bless.request_ip = request.ip
 
@@ -38,7 +44,7 @@ class BlessesController < ApplicationController
       render json: {paid: true}, status: :ok
     else
       if @bless.wx_order_paid?
-        @bless.update_column('paid', true)
+        @bless.update_attribute('paid', true)
         render json: {paid: true}, status: :ok
       else
         render json: {paid: false}, status: :unprocessable_entity

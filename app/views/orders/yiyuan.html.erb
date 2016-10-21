@@ -1,0 +1,27 @@
+<div class='orders col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1'>
+  <ul class="nav nav-pills orders-tab current-history buyer-orders" role="tablist">
+    <li role="presentation">
+      <a href="/orders"><b>未完成的订单</b></a>
+    </li>
+    <li role="presentation">
+      <a href="/orders/history"><b>历史订单</b></a>
+    </li>
+    <li role="presentation">
+      <a href="/orders/cakes"><b>生日趴订单</b></a>
+    </li>
+    <li role="presentation" class="active">
+      <a href="javascrit: void(0)" aria-controls="current-orders" role="tab" data-toggle="tab"><b>天天惠订单</b></a>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active history-orders" id="history-orders">
+      <% if @orders.present? %>
+        <%= render partial: "order", collection: @orders, as: :order %>
+        <%= paginate @orders %>
+      <% else %>
+        <div class='text-center empty-orders'>没有订单！</div>
+      <% end %>
+    </div>
+  </div>
+</div>

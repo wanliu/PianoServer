@@ -1,7 +1,7 @@
 require "weixin_api"
 
 class BirthdayPartiesController < ApplicationController
-  before_action :authenticate_user!, only: [:withdraw, :index, :blessed]
+  before_action :authenticate_user!, except: [:show]
 
   before_action :set_birthday_party, only: :show
 
@@ -16,6 +16,13 @@ class BirthdayPartiesController < ApplicationController
     @birthday_parties = BirthdayParty.joins(:blesses)
       .where("blesses.sender_id = :sender_id AND blesses.paid ='t'", sender_id: current_user.id)
       .distinct
+      .order(id: :desc)
+      .page(params[:page])
+      .per(params[:per])
+  end
+
+  def saled
+    @birthday_parties = current_user.saled_birthday_parties
       .order(id: :desc)
       .page(params[:page])
       .per(params[:per])
@@ -40,9 +47,9 @@ class BirthdayPartiesController < ApplicationController
       @birthday_party.wx_user_openid = openid
       @birthday_party.request_ip = request.ip
 
-      @withdraw_status = @birthday_party.withdraw
+      @withdraw_statuses = @birthday_party.withdraw
     else
-      @withdraw_status = BirthdayParty::WithdrawStatus.new(false, "订单尚未完成，请在订单完成（收货）后再试！")
+      @error = "订单尚未完成，请在订单完成（收货）后再试！"
     end
   end
 

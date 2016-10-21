@@ -22,6 +22,17 @@
         总计：<b class='total'><%= number_to_currency order.paid_total || order.total %>元</b>
       </div>
     </li>
+
+    <% if order.birthday_party.present? %>
+      <li class="list-group-item order-item">
+        <div class='text-right'>
+          <span style='color: #d9534f;'>
+            <span class='glyphicon glyphicon-send'></span> 送货
+          </span>
+          生日趴送货日期: <%= order.birthday_party.delivery_deadline %>
+        </div>
+      </li>
+    <% end %>
   </ul>
 
   <div class="panel-footer">

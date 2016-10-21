@@ -157,7 +157,35 @@ virtual_presents:
   names:
     - heart
     - flower
-    - car
-    - teddy_bear
     - music_box
-    - motor
+    - pleasant_sheep
+    - ultraman
+    - bonnie_bear
+    - car
+    - house
+    - moto
+  free_limit: 1
+
+cakes:
+  suppliers:
+    - 亿金蛋糕
+    - 工匠烘焙
+  sms:
+    notify_buyer: true
+    buyer_template: '【耒阳街上】您的生日趴蛋糕:#cakename#订购成功, 蛋糕将于#date#送到#address#,请注意查收! 如有疑问, 请拨打客服电话:#phone#, 谢谢您的光临!'
+    buyer_template_without_phone: '【耒阳街上】您的生日趴蛋糕:#cakename#订购成功, 蛋糕将于#date#送到#address#,请注意查收! 谢谢您的光临!'
+    notify_shop_owner: true
+    shop_owner_template: '【耒阳街上】您的商店有一个新的生日蛋糕订单,订单号:#orderid#,请及时处理'
+    notify_sales_man: true
+    sales_man_template: '【耒阳街上】由您开单的"#name#的生日趴"创建成功！访问地址：#url#'
+
+# 公众号余额不足等信息提醒
+wx_redpack:
+  msg_receivers:
+    - '18774891025'
+    - '18673412345'
+
+# Elasticsearch无法连接等系统错误提醒
+error_receivers:
+  - '18774891025'
+  - '15074995527'

@@ -1,0 +1,105 @@
+<% content_for :module do "no_footer" end %>
+
+<div class='my-profile'>
+  <div class='head'>
+    <div class='avatar'>
+      <%= image_tag current_user.avatar_url %>
+    </div>
+    <div class='info'><%= truncate(current_user.nickname, length: 9) %></div>
+  </div>
+
+  <div class='list row'>
+    <div class='col-xs-3 item order'>
+      <%= link_to orders_path do %>
+        <div>
+          <span class="glyphicon glyphicon-file"></span>
+        </div>
+        <div>我的订单</div>
+      <% end %>
+    </div>
+
+    <div class='col-xs-3 item'>
+      <%= link_to history_orders_path do %>
+        <div>
+          <span class="glyphicon glyphicon-save-file"></span>
+        </div>
+        <div>已完成</div>
+      <% end %>
+    </div>
+
+    <div class='col-xs-3 item'>
+      <%= link_to orders_path do %>
+        <div>
+          <span class="glyphicon glyphicon-open-file"></span>
+        </div>
+        <div>未完成</div>
+      <% end %>
+    </div>
+
+
+    <div class='col-xs-3 item'>
+      <%= link_to cart_path do %>
+        <div>
+          <span class="glyphicon glyphicon-shopping-cart"></span>
+        </div>
+        <div>购物车</div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class='break-line'></div>
+
+  <div class='items row'>
+    <div class='col-xs-4 item bottom-border'>
+      <%= link_to locations_path do %>
+        <div>
+          <span class="glyphicon glyphicon-star"></span>
+        </div>
+        <div>送货地址</div>
+      <% end %>
+    </div>
+
+    <div class='col-xs-4 item bottom-border'>
+      <%= link_to birthday_parties_path do %>
+        <div>
+          <span class="glyphicon glyphicon-star"></span>
+        </div>
+        <div>发起的生日趴</div>
+      <% end %>
+    </div>
+
+    <div class='col-xs-4 item bottom-border'>
+      <%= link_to blessed_birthday_parties_path do %>
+        <div>
+          <span class="glyphicon glyphicon-star"></span>
+        </div>
+        <div>参加的生日趴</div>
+      <% end %>
+    </div>
+
+    <% if current_user.sales_man? %>
+      <div class='col-xs-4 item'>
+        <%= link_to saled_birthday_parties_path do %>
+          <div>
+            <span class="glyphicon glyphicon-star"></span>
+          </div>
+          <div>推荐的生日趴</div>
+        <% end %>
+      </div>
+    <% end %>
+
+<!--     <div class='col-xs-3 item'>
+      <div>
+        <span class="glyphicon glyphicon-star"></span>
+      </div>
+      <div>天天惠</div>
+    </div> -->
+
+    <!-- <div class='col-xs-3 item'>
+      <div>
+        <span class="glyphicon glyphicon-star"></span>
+      </div>
+      <div>更多</div>
+    </div> -->
+  </div>
+</div>

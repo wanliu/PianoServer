@@ -17,7 +17,10 @@ class Order < ActiveRecord::Base
   has_one :birthday_party, inverse_of: :order
   accepts_nested_attributes_for :birthday_party
 
-  attr_accessor :cart_item_ids, :address_id, :cake_id
+  has_many :consumed_card_codes
+
+  attr_accessor :cart_item_ids, :address_id, :cake_id, :card,
+    :consumed_card_ids, :unconsumed_card_ids, :unuseable_card_ids, :card_rollback
 
   enum status: { initiated: 0, finish: 1 }
 
@@ -33,7 +36,9 @@ class Order < ActiveRecord::Base
   validate :items_should_exist, on: :create
 
   before_save :set_modified, if: :total_changed?
-  before_create :caculate_total, :generate_receive_token
+  before_create :assign_total, :generate_receive_token
+  before_create :exam_cards
+  after_create :consume_cards
 
   after_commit :send_notify_to_seller, on: :create
   after_commit :set_user_default_location, on: :create
@@ -87,7 +92,7 @@ class Order < ActiveRecord::Base
   # create new order_items
   # delete relevant cart_items
   # inventory deducting
-  # 与cart_item_gifts不同的是，这里的key是商品item的id, 而cart_item_gifts的key是cart_item的id
+  # 与cart_item_gifts不同的是，这里的key(13, 12, 15)是商品item的id, 而cart_item_gifts的key是cart_item的id
   # "options"=>{
   #   "13"=>{"16"=>"2", "14"=>"1"}, 
   #   "12"=>{"17"=>"-1.0", "19"=>"2", "22"=>"2"}, 
@@ -133,6 +138,13 @@ class Order < ActiveRecord::Base
     self.delivery_address = location.delivery_address_without_phone
     self.receiver_name = location.contact
     self.receiver_phone = location.contact_phone
+  end
+
+  def card=(wx_card_id)
+    @card = wx_card_id
+
+    self.cards = [wx_card_id]
+    # cards << wx_card_id
   end
 
   def receive_token
@@ -230,6 +242,14 @@ class Order < ActiveRecord::Base
     wait_for_evaluate? && pmo_grab_id.present?
   end
 
+  def can_use_card?
+    !finish? && pmo_grab_id.blank? && birthday_party.blank? && !card_used?
+  end
+
+  def card_used?
+    cards.present?
+  end
+
   def yiyuan_fullfilled?
     delivery_address.present?
   end
@@ -317,10 +337,68 @@ class Order < ActiveRecord::Base
     "{Settings.app.website}/orders/#{id}/wx_notify"
   end
 
+  def calculate_total
+    items_total + (express_fee || 0)
+  end
+
   private
 
-  def caculate_total
-    self.origin_total = self.total = items_total + (express_fee || 0)
+  def assign_total
+    self.origin_total = self.total = calculate_total
+  end
+
+  # ①检查card是否可用于本订单
+  # ②检查card_id下是否有可用的code
+  def exam_cards
+    return if cards.blank?
+
+    self.unuseable_card_ids = []
+
+    cards.each do |wx_card_id|
+      unless buyer.has_avaliable_code? wx_card_id
+        unuseable_card_ids << wx_card_id
+      end
+    end
+
+    unuseable_card_ids.blank?
+  end
+
+  def apply_card(card)
+    # if card.CASH?
+    #   if card.least_cost.present? && origin_total < card.least_cost
+    #     return
+    #   end
+
+      self.total -= card.reduce_cost.to_f/100
+    # end
+  end
+
+  # 核销一张指定id的卡券,并记录下来被核销的卡券code
+  def consume_cards
+    return if cards.blank?
+
+    self.consumed_card_ids = []
+    self.unconsumed_card_ids = []
+
+    wx_cards = Card.where(wx_card_id: cards)
+
+    wx_cards.each do |card|
+      consumed_code = nil
+      if buyer.consume_wx_card(card.wx_card_id) { |code| consumed_code = code }
+        apply_card card
+        consumed_card_ids << card.wx_card_id
+        consumed_card_codes.create(user_id: buyer_id, code: consumed_code, wx_card_id: card.wx_card_id)
+      else
+        unconsumed_card_ids << card.wx_card_id
+      end
+    end
+
+    if consumed_card_ids.blank?
+      self.card_rollback = true
+      raise Exception.new("微信卡券无效,请重新选择")
+    else
+      update_columns(total: total)
+    end
   end
 
   def avoid_from_shop_owner
@@ -356,7 +434,7 @@ class Order < ActiveRecord::Base
   end
 
   def send_notify_to_seller
-    seller_mobile = supplier.try(:owner).try(:mobile)
+    seller_mobile = supplier.try(:owner).try(:mobile) || phone
     seller_id = supplier.try(:owner).try(:id)
 
     unless persisted? && Settings.promotions.one_money.sms_to_supplier && pmo_grab_id && seller_mobile
@@ -364,8 +442,8 @@ class Order < ActiveRecord::Base
     end
 
     order_url = Rails.application.routes.url_helpers.shop_admin_order_path(supplier.name, self)
-    # NotificationSender.delay.send_sms({mobile: seller_mobile, order_id: id, order_url: order_url, seller_id: seller_id})
-    NotificationSender.delay.notify({mobile: seller_mobile, order_id: id, order_url: order_url, seller_id: seller_id})
+
+    NotificationSender.delay.notify({"mobile" => seller_mobile, "order_id" => id, "order_url" => order_url, "seller_id" => seller_id})
   end
 
   def generate_receive_token

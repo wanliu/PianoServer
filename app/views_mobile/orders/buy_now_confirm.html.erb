@@ -15,6 +15,7 @@
         <%= party_form.hidden_field :message %>
         <%= party_form.hidden_field :birthday_person %>
         <%= party_form.hidden_field :birth_day %>
+        <%= party_form.hidden_field :delivery_time %>
       <% end %>
     <% end %>
 
@@ -74,6 +75,12 @@
         </div>
       <% end %>
 
+      <% if @cards.present? %>
+        <%= render "wx_cards_fields", locals: {f: f} %>
+      <% else %>
+        <div style='display: none;' class='empty-cards-feilds-mark'></div>
+      <% end %>
+
       <div class='footer'>
         <div class="confirmation-total">
           <%= render "confirmation_total" %>
@@ -84,10 +91,19 @@
   <% end %>
 </div>
 
+
 <div class="address-list toggle-siblings" style='display: none;'>
 </div>
 
 <div class="new-address toggle-siblings" style='display: none;'>
+</div>
+
+<div class="wx_card-container">
+  <% if @cards.present? %>
+    <%= render "wx_cards" %>
+  <% else %>
+    <div style='display: none;' class='empty-cards-mark'></div>
+  <% end %>
 </div>
 
 <script type="text/template" id="mobile-gift-template">
@@ -166,10 +182,10 @@
 
       function revaluateTotal () {
         var formData = $('#new_order').serialize()
-        $.post('/orders/express_fee?' + formData)
-          .done(function(html) {
-            $('.confirmation-total').html(html);
-          })
+        $.post('/orders/express_fee?' + formData + '&reset_cards=true')
+          // .done(function(html) {
+          //   $('.confirmation-total').html(html);
+          // })
       }
 
       function renderGifts(gifts) {
@@ -190,9 +206,10 @@
         }
       }
     <% end %>
+
   }
 
-  $(document).on('click', '.buy-now-confirm .yiyuan-confirm-location', function (event) {
+  $('.buy-now-confirm').on('click', '.yiyuan-confirm-location', function (event) {
     event.preventDefault();
 
     var url = "<%= list_addresses_orders_path %>"
@@ -230,5 +247,46 @@
   });
 
   history.replaceState({show: "buy-now-confirm"}, null);
+
+  $('.buy-now-confirm').on('click', '.wx-cards', function(event) {
+    $('.buy-now-confirm').hide();
+    $('.chose-cards').show();
+  });
+
+  $('.wx_card-container').on('click', '.chose-cards li', function(event) {
+    $('.chose-cards li').removeClass('chosen');
+    $(this).addClass('chosen');
+
+    var cardId = $(this).data('cardId');
+    var cardTitle = $(this).data('cardTitle');
+    var cardAmount = $(this).data('cardReduce');
+
+    $('.card-hidden-fields input').prop('disabled', true);
+    $('.card-hidden-fields .card_' + cardId).prop('disabled', false);
+
+    $('.wx-cards .empty').hide();
+
+    var $chosen = $('.wx-cards .chosen');
+    $chosen.find('.amount').html(cardAmount);
+    $chosen.find('.title').html(cardTitle);
+    $chosen.show();
+
+    setTimeout(function() {
+      $('.chose-cards').hide();
+      $('.buy-now-confirm').show();        
+    }, 500);
+  });
+
+  $('.wx_card-container').on('click', '.cancel-chose-card', function(event) {
+    $('.chose-cards li').removeClass('chosen');
+    $('.card-hidden-fields input').prop('disabled', true);
+    $('.wx-cards .empty').show();
+    $('.wx-cards .chosen').hide();
+  });
+
+  $('.wx_card-container').on('click', '.back-to-order', function(event) {
+    $('.chose-cards').hide();
+    $('.buy-now-confirm').show();
+  });
 })();
 </script>

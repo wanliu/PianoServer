@@ -20,7 +20,7 @@
       </div>
     </div>
     <% item.inventory_properties.each do |property, prop_value| %>
-      <%= render partial: "exterior_#{prop_value['exterior'] || "swatch_select"}", with: @item.category, locals: { item: @item, property: property, prop_value: prop_value, shop: @shop } %>
+      <%= render partial: "exterior_swatch_select", with: @item.category, locals: { item: @item, property: property, prop_value: prop_value, shop: @shop } %>
     <% end %>
 
     <div class="media">

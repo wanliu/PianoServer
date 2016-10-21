@@ -1,11 +1,12 @@
 (function() {
+  var html = '<%= j render @cake %>';
+  var $item = $('table.cakes #cake_<%= @cake.id %>');
+
+  $item.replaceWith(html);
+
   var $alert = $(".infors.alert");
-  var $item = $('#cake_<%= @cake.id %>');
-  $alert.html("删除成功！").show();
-  $item.fadeOut(500).fadeIn(500).delay(100)
-    .fadeOut(500, function() {
-      $item.remove();
-    })
+  $alert.html("操作成功！").show();
+  $item.fadeOut(500).fadeIn(500)
 
   setTimeout(function() {
     $alert.fadeOut(function() {

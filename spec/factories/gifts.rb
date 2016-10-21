@@ -1,9 +1,8 @@
 FactoryGirl.define do
   factory :gift do
-    item nil
-present_id 1
-quantity 1
-total 1
+    item
+    association :present, factory: :item
+    quantity 1
+    total 100
   end
-
 end

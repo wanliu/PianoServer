@@ -11,6 +11,7 @@
         <%= party_form.hidden_field :message %>
         <%= party_form.hidden_field :birthday_person %>
         <%= party_form.hidden_field :birth_day %>
+        <%= party_form.hidden_field :delivery_time %>
       <% end %>
     <% end %>
 
@@ -125,9 +126,9 @@
 
           var formData = $('#new_order').serialize()
           $.post('/orders/express_fee?' + formData)
-            .done(function(html) {
-              $('.confirmation-total').html(html);
-            })
+            // .done(function(html) {
+            //   $('.confirmation-total').html(html);
+            // })
         })
       <% end %>
     }

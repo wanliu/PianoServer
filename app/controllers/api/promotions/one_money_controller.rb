@@ -58,7 +58,7 @@ class Api::Promotions::OneMoneyController < Api::BaseController
 
   def items
     hash = {}
-    @items = @one_money.items
+    @items = @one_money.items.sort_by(:item_index)
 
     if params[:u].present?
       now = @one_money.now.to_f * 1000
@@ -220,6 +220,21 @@ class Api::Promotions::OneMoneyController < Api::BaseController
         @item.save
         @grab = PmoGrab.from(@item, @one_money, pmo_current_user)
         @grab.save
+
+        if @item.is_card
+          shop_item = Item.find(@grab.shop_item_id)
+
+          @card_order = CardOrder.create({
+            title: shop_item.title,
+            user_id: @grab.user_user_id,
+            wx_card_id: shop_item.properties.try(:[], PmoItem::CARD_ATTR_NAME).try(:[], "value"),
+            price: @grab.price,
+            paid: @grab.price <= 0,
+            pmo_grab_id: @grab.id,
+            item_id: @grab.shop_item_id,
+            one_money_id: @grab.one_money
+          })
+        end
 
         if @from_seed
           @from_seed.given = pmo_current_user

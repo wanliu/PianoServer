@@ -13,6 +13,7 @@ class OrdersController < ApplicationController
       :wxpay,
       :wxpay_confirm,
       :wx_paid
+      # :apply_wx_card
     ]
 
   before_action :set_evaluatable_order,
@@ -28,6 +29,8 @@ class OrdersController < ApplicationController
       :index,
       :show,
       :history,
+      :cakes,
+      :yiyuan,
       :confirmation,
       :buy_now_confirm,
       :buy_now_create,
@@ -66,6 +69,25 @@ class OrdersController < ApplicationController
       .per(params[:per])
   end
 
+  def cakes
+    @orders = current_user.orders
+      .includes(:items, :supplier, :birthday_party)
+      .where("birthday_parties.id IS NOT NULL")
+      .references(:birthday_party)
+      .order(id: :desc)
+      .page(params[:page])
+      .per(params[:per])
+  end
+
+  def yiyuan
+    @orders = current_user.orders
+      .includes(:items, :supplier)
+      .where("pmo_grab_id IS NOT NULL")
+      .order(id: :desc)
+      .page(params[:page])
+      .per(params[:per])
+  end
+
   # GET /orders/1
   # GET /orders/1.json
   def show
@@ -75,7 +97,8 @@ class OrdersController < ApplicationController
 
       one_money = OneMoney[@order.one_money_id]
       @one_more_time = pmo_grab.seeds.any? { |seed| "pending" == seed.status }
-      redirect_url = one_money.try(:publish_url) || "/one_money/#{ one_money.start_at.strftime('%Y-%m-%d') }/index.html"
+      one_money_type = one_money.try(:type) || "one_money"
+      redirect_url = one_money.try(:publish_url) || "/#{one_money_type}/#{ one_money.start_at.strftime('%Y-%m-%d') }/index.html"
       @redirect_url = "#{redirect_url}#/detail/#{ pmo_grab.pmo_item_id }"
     end
     # @order.items.includes(:orderable)
@@ -94,6 +117,9 @@ class OrdersController < ApplicationController
         format.html do
           set_feed_back
           set_addresses_add_express_fee
+
+          set_wx_cards
+
           flash.now[:error] = @order.errors.full_messages.join(', ')
 
           render :confirmation, status: :unprocessable_entity
@@ -111,6 +137,8 @@ class OrdersController < ApplicationController
     set_feed_back
 
     set_addresses_add_express_fee
+
+    set_wx_cards
   end
 
   # 直接购买
@@ -123,7 +151,9 @@ class OrdersController < ApplicationController
       cake = Cake.find(@order.cake_id)
       item = cake.item
 
-      @order_item = @order.items.build(orderable: item)
+      item_properties = params[:order][:properties] || {}
+      quantity = params[:order][:quantity] || 1
+      @order_item = @order.items.build(orderable: item, quantity: quantity, properties: item_properties)
     else
       @order = current_user.orders.build
       @order_item = @order.items.build(order_item_params)
@@ -145,6 +175,8 @@ class OrdersController < ApplicationController
     @total = @order_item.price * @order_item.quantity
 
     @props = @order_item.properties || {}
+
+    set_wx_cards
   end
 
   # 直接购买生成订单
@@ -181,6 +213,8 @@ class OrdersController < ApplicationController
           @supplier = @order.supplier
           @total = @order_item.price * @order_item.quantity
           @props = @order_item.properties
+
+          set_wx_cards
 
           flash.now[:error] = @order.errors.full_messages.join(', ')
 
@@ -234,10 +268,16 @@ class OrdersController < ApplicationController
       item.price = item.caculate_price
     end
 
+    @reset_cards = params[:reset_cards].present?
+
+    if @reset_cards
+      set_wx_cards
+    end
+
     # if params[:order][:items_attributes].present?
     #   render partial: "buy_now_confirmation_total"
     # else
-      render partial: "confirmation_total"
+      # render json: {total_partial: j(render partial: "confirmation_total") }
     # end
   end
 
@@ -304,6 +344,55 @@ class OrdersController < ApplicationController
     @order = nil
   end
 
+  # {errMsg: 'xxx',
+  # cardList: [
+  #   { 
+  #     card_id: 'xxxxxxxxxxx',
+  #     encrypt_code: 'yyyyyyyyyyy'
+  #   }, {
+  #     card_id: 'xxxxxxxxxxx',
+  #     encrypt_code: 'yyyyyyyyyyy'
+  #   }]
+  # }
+
+  # card_info: {
+  #   card_type: 'CASH',
+  #   cash: {
+  #     base_info: {
+  #       id: "xxxxxxxxx",
+  #       .............
+  #     }
+  #   }
+  # }
+  # def apply_wx_card
+  #   if params[:card_id].present? && params[:encrypt_code].present?
+  #     begin
+  #       card_info = Wechat.api.card_api_ticket.card_detail params[:card_id]
+
+  #       reduce_cost = card_info.try(:[], "cash").try(:[], "reduce_cost")
+
+  #       code = Wechat.api.card_api_ticket.decrypt_code params[:encrypt_code]
+  #       code_detail = Wechat.api.card_api_ticket.code_detail code
+  #       can_consume = 0 == code_detail["errcode"] && "ok" == code_detail["errmsg"] 
+
+  #       if reduce_cost.present? && @order.can_use_card? && can_consume
+  #         if Wechat.api.card_api_ticket.consume(code)
+  #           @order.update_columns(cards: [params[:card_id]], total: @order.total - reduce_cost.to_f/100)
+  #           render json: {consume: true, total: @order.total}
+  #         else
+  #           render json: {consume: false, errmsg: '微信核销失败, 请稍后再试!'}, status: :unprocessable_entity
+  #         end
+  #       else
+  #         render json: {consume: false, errmsg: '无法使用这张优惠券!'}, status: :unprocessable_entity
+  #       end
+  #     rescue Wechat::ResponseError => e
+  #       render json: {consume: false, errmsg: '无法使用这张优惠券, 请稍后再试!'}, status: :unprocessable_entity
+  #     end
+  #   else
+  #     render json: {consume: false, errmsg: '无法识别优惠券信息,请稍后再试!'}, status: :unprocessable_entity
+  #   end
+  # end
+
   private
 
   def set_order
@@ -336,8 +425,9 @@ class OrdersController < ApplicationController
         :address_id, 
         :note, 
         :cake_id,
+        :card,
         items_attributes: [:orderable_type, :orderable_id, :quantity],
-        birthday_party_attributes: [:message, :birthday_person, :birth_day])
+        birthday_party_attributes: [:message, :birthday_person, :birth_day, :delivery_time])
       .tap do |white_list|
         white_list[:items_attributes].each do |key, attributes|
           attributes[:properties] = params[:order][:items_attributes][key][:properties] || {}
@@ -351,8 +441,8 @@ class OrdersController < ApplicationController
 
   def buy_now_confirm_params
     params.require(:order).permit(
-      :cake_id, 
-      birthday_party_attributes: [:message, :birthday_person, :birth_day])
+      :cake_id,
+      birthday_party_attributes: [:message, :birthday_person, :birth_day, :delivery_time])
   end
 
   def order_item_params
@@ -392,12 +482,20 @@ class OrdersController < ApplicationController
     @order.set_express_fee
   end
 
+  def set_wx_cards
+    @cards = Card.available_with_order(@order).where("wx_card_id IN (:list)", list: current_user.get_wx_card_list)
+    if @order.cards.first.present?
+      @chosen_card = @cards.find { |card| card.wx_card_id == @order.cards.first }
+    end
+  end
+
   def order_params
     params.require(:order)
       .permit(:supplier_id, 
         :address_id, 
         :pmo_grab_id, 
-        :one_money_id, 
+        :one_money_id,
+        :card,
         :note).tap do |white_list|
       if params[:order][:cart_item_ids].present?
         white_list[:cart_item_ids] = params[:order][:cart_item_ids]
@@ -468,8 +566,10 @@ class OrdersController < ApplicationController
   end
 
   def cake_location_params
+    contact = params[:order][:birthday_party_attributes] && params[:order][:birthday_party_attributes][:birthday_person]
+
     @cake_location_params ||= {
-      contact: params[:order][:birthday_party_attributes][:birthday_person], 
+      contact: contact, 
       road: params[:order][:road],
       contact_phone: params[:order][:contact_phone],
       province_id: '430000',

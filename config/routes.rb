@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   resources :birthday_parties, only: [:index] do
     get :withdraw, on: :member
     get :blessed, on: :collection
+    get :saled, on: :collection
   end
 
   resources :thumbs, except: [:new, :edit]
@@ -13,6 +14,18 @@ Rails.application.routes.draw do
     get "wxpay/:id", to: 'blesses#wxpay', as: 'wxpay', on: :collection
 
     member do
+      post "wx_notify"
+      post "wxpay_confirm"
+    end
+  end
+
+  resources :card_orders, only: [] do
+    get "wxpay/:id", to: 'card_orders#wxpay', as: 'wxpay', on: :collection
+
+    member do
+      get "wxpay"
+      get "withdraw"
+      post "withdrew"
       post "wx_notify"
       post "wxpay_confirm"
     end
@@ -207,6 +220,7 @@ Rails.application.routes.draw do
         get "details/:item_id", action: :details, as: :details
         get "churn_stastic"
         put "publish", action: :publish, as: :publish
+        put "update_items_index", action: :update_items_index, as: :update_items_index
       end
     end
 
@@ -215,7 +229,14 @@ Rails.application.routes.draw do
 
     resources :cakes do
       get "search_items", on: :collection
+      post "undo_delete", on: :member
     end
+
+    resources :cards do
+      get :refresh, on: :collection
+    end
+
+    resources :birthday_parties, only: [:index, :show]
 
     resources :virtual_presents, except: [:new, :edit]
 
@@ -279,6 +300,14 @@ Rails.application.routes.draw do
         post "upload", as: :upload
       end
     end
+
+    resources :card_apply_templates do
+      member do
+        post :add_item
+        delete :remove_item
+        put :set_default
+      end
+    end
   end
 
   namespace :api do
@@ -296,6 +325,7 @@ Rails.application.routes.draw do
       # get "/items/search_ly", :to => "items#search_ly"
       # get "/items/hots", :to => "items#hots"
       collection do
+        get "search"
         get "search_ly"
         get "hots"
       end
@@ -341,13 +371,15 @@ Rails.application.routes.draw do
 
       resources :cakes, only: [:index, :show]
 
+      resources :cards, only: :index
+
       resources :virtual_presents, only: [:index, :existPresent] do
         collection do
           get :existPresent, action: :existPresent
         end
       end
 
-      resources :birthday_parties, only: [:index, :show, :update] do
+      resources :birthday_parties, only: [:index, :show, :update, :rank] do
         resources :blesses, except: [:new, :edit], shallow: true do
           get :wx_pay_params, on: :member
         end
@@ -356,8 +388,21 @@ Rails.application.routes.draw do
           patch :upload_avatar
           post :update_avatar_media_id
         end
+
+        collection do
+          get :rank
+          get :recently
+        end
       end
 
+      resources :temp_birthday_parties, only: [:create, :show, :update] do
+        collection do
+          post :upload_avatar
+          post :upload_avatar_media_id
+        end
+
+        get :is_actived, on: :member
+      end
     end
     # resources :business, concerns: :roomable do
     #   member do
@@ -366,7 +411,10 @@ Rails.application.routes.draw do
     # end
 
     resources :weixin_configs, only: [:index] do
-      get :wx_config, on: :collection
+      collection do
+        get :signature
+        get :card_ext
+      end
     end
 
     resources :cart_items, only: [:index, :create]
@@ -394,6 +442,8 @@ Rails.application.routes.draw do
       #   get 'stream'
       # end
     end
+
+    resources :error_records, only: [:index, :create]
   end
 
   resources :promotions, concerns: [ :chatable ] do
@@ -451,6 +501,9 @@ Rails.application.routes.draw do
       # }
 
       get "history"
+      get "cakes"
+      get "yiyuan"
+
       get "yiyuan_confirm"
       post "yiyuan_confirm", to: 'orders#create_yiyuan'
       get "new_order_address"
@@ -493,6 +546,8 @@ Rails.application.routes.draw do
   #
   get '/about' => 'home#about'
 
+  get '/profile' => 'profile#index', as: :my_profile
+
   match '@:profile', :to => 'profile#username', as: :profile, via: [ :get ]
 
   match 'goshop/:id', :to => 'shops#show', via: :get
@@ -500,6 +555,7 @@ Rails.application.routes.draw do
 
   match "create_shop", to: "shops#create", via: [:post], as: :create_shop
   match "update_name", to: "shops#update_name", via: [:put], as: :update_shop
+  get '/parties/active/:token', to: "temp_birthday_parties#active"
 
   resources :shops, path: '/', only: [], constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do
     member do
@@ -595,6 +651,10 @@ Rails.application.routes.draw do
           post "/upload_shop_poster", to: "settings#upload_shop_poster"
           post "/upload_shop_signage", to: "settings#upload_shop_signage"
         end
+      end
+
+      resources :sales_men, except: [:new, :edit] do
+        get :search, on: :collection
       end
     end
   end

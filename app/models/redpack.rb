@@ -34,7 +34,7 @@ class Redpack < ActiveRecord::Base
     end
 
     unless response.success?
-      update_column("error_message", response.error_message)
+      update_columns("error_message" => response.error_message, "status" => self.class.statuses["failed"])
     end
 
     response

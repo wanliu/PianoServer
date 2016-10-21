@@ -28,6 +28,7 @@ class PromotionsController < ApplicationController
     @promotions ||= Promotion.find(:all, from: :active, params: query_params).to_a
 
     render :homepage, with: @subject
+    # render text: 'hello'
   end
 
   # GET /promotions/1

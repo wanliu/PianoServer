@@ -1,0 +1,62 @@
+<div class='card_apply_templates-container'>
+  <div class='alert-header'>
+    <div class="alert alert-success infors" role="alert" style='display: none;'>
+    </div>
+    <div class="alert alert-danger errors" role="alert" style='display: none;'>
+    </div>
+    <div class='title'>
+      <h3>卡券应用模板</h3>
+      <button class='btn btn-default new-template-btn'>
+        <span class='glyphicon glyphicon-plus'>新建</span>
+      </button>
+    </div>
+  </div>
+
+  <div class='new-card_apply_template' style='display: none;'>
+    <%= render 'form' %>
+  </div>
+
+  <table class='table card_apply_templates'>
+    <thead>
+      <tr>
+        <th width="10%"></th>
+        <th width="10%"></th>
+        <th width="50%"></th>
+        <th width="10%"></th>
+        <th width="20%"></th>
+      </tr>
+      <tr>
+        <th>名称 </th>
+        <th>应用范围 </th>
+        <th>描述 </th>
+        <th>默认模板 </th>
+        <th>操作 </th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @templates.each do |template| %>
+        <%= render template %>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%= paginate @templates %>
+</div>
+
+<script type="text/javascript">
+(function (event) {
+  var cateItemTpl = _.template($('#template-item').html());
+  var selectedItemTpl = _.template($('#selected-item').html());
+  var $dropdown = $('.template-items-dropdown');
+  var $itemSearcher = $('#search-template-items');
+  var $templateFormContainer = $('.new-card_apply_template');
+  var $newCakeBtn = $('.new-template-btn');
+  var $selectedItem = $('.selected-item');
+
+  var items = [];
+
+  $newCakeBtn.click(function() {
+    $templateFormContainer.toggle();
+  });
+})();
+</script>
