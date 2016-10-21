@@ -34,7 +34,11 @@ class Redpack < ActiveRecord::Base
     end
 
     unless response.success?
-      update_columns("error_message" => response.error_message, "status" => self.class.statuses["failed"])
+      if "该订单已经过期,请更换商户单号" == response.error_message
+        update_columns("error_message" => "该订单已经过期,已经更改订单号,请再次发送该红包", "status" => self.class.statuses["failed"], "wx_expired_at" => Date.today)
+      else
+        update_columns("error_message" => response.error_message, "status" => self.class.statuses["failed"])
+      end
     end
 
     response
