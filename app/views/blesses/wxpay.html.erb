@@ -105,7 +105,7 @@
 
     // 用户点击“微信支付”
     // 从后端得到微信订单号和各签名参数，用于发起微信支付
-    $('body').on('click', '.wx-pay-now', function(e) {
+    $('.wx-pay-now').on('click', function(e) {
       e.preventDefault();
 
       payNow();
