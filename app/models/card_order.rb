@@ -1,3 +1,5 @@
+require 'wx_order'
+
 class CardOrder < ActiveRecord::Base
   include WxOrder
 

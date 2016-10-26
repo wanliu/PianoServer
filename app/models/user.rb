@@ -184,12 +184,12 @@ class User < ActiveRecord::Base
 
     @wx_card_list_ids = Card.exam(wx_card_list_ids)
   rescue Wechat::AccessTokenExpiredError => e
-    Rails.logger.error "[微信卡卷] access token过期警告! 微信access_token已经过期"
+    Rails.logger.error "[微信卡券] access token过期警告! 微信access_token已经过期"
     @wx_card_list_ids = []
   end
 
-  # 获取用户已领取卡券接口居然把已经核销掉的卡卷也返回
-  # 因此需要把已经核销掉的卡卷排除
+  # 获取用户已领取卡券接口居然把已经核销掉的卡券也返回
+  # 因此需要把已经核销掉的卡券排除
   def get_wx_card_codes(wx_card_id)
     return [] if js_open_id.blank?
 
@@ -198,7 +198,7 @@ class User < ActiveRecord::Base
 
     card_infos.map { |item| item["code"] } - consumed_codes
   rescue Wechat::AccessTokenExpiredError => e
-    Rails.logger.error "[微信卡卷] access token过期警告! 微信access_token已经过期"
+    Rails.logger.error "[微信卡券] access token过期警告! 微信access_token已经过期"
     []
   end
 
@@ -211,7 +211,7 @@ class User < ActiveRecord::Base
 
     consumed = get_wx_card_codes(wx_card_id).any? do |code|
       done = consume_wx_card_code code
-      Rails.logger.info "[微信卡卷]核销卡卷#{wx_card_id}:(code:#{code})#{done ? "成功" : "失败"}"
+      Rails.logger.info "[微信卡券]核销卡券#{wx_card_id}:(code:#{code})#{done ? "成功" : "失败"}"
       consumed_code = code if done
       done
     end
@@ -224,7 +224,7 @@ class User < ActiveRecord::Base
   def consume_wx_card_code(code)
     Wechat.api.card_api_ticket.consume(code)
   rescue Wechat::AccessTokenExpiredError => e
-    Rails.logger.error "[微信卡卷] access token过期警告! 微信access_token已经过期"
+    Rails.logger.error "[微信卡券] access token过期警告! 微信access_token已经过期"
     false
   end
 

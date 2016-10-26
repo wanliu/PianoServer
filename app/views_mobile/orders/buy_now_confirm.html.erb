@@ -72,23 +72,9 @@
       <% end %>
 
       <% if @cards.present? %>
-        <div class='wx-cards'>
-          <div class='notify pull-left'>
-            <span class='empty'>您有微信优惠卷可以使用</span>
-            <span class='chosen' style='display: none;'>
-              已选择 <span class='title'></span>，下单立减<span class='amount'></span>元
-            </span>
-          </div>
-          <div class='pull-right'>
-            <span class='glyphicon glyphicon-menu-right glyphicon-next'></span>
-          </div>
-          <div style='clear: both;'></div>
-          <div style='display: none;' class='card-hidden-fields'>
-            <% @cards.each do |card| %>
-              <%= f.hidden_field :card, value: card.wx_card_id, disabled: true, class: "card_#{card.id}" %>
-            <% end %>
-          </div>
-        </div>
+        <%= render "wx_cards_fields", locals: {f: f} %>
+      <% else %>
+        <div style='display: none;' class='empty-cards-feilds-mark'></div>
       <% end %>
 
       <div class='footer'>
@@ -101,9 +87,13 @@
   <% end %>
 </div>
 
-<% if @cards.present? %>
-  <%= render "wx_cards" %>
-<% end %>
+<div class="wx_card-container">
+  <% if @cards.present? %>
+    <%= render "wx_cards" %>
+  <% else %>
+    <div style='display: none;' class='empty-cards-mark'></div>
+  <% end %>
+</div>
 
 <script type="text/template" id="mobile-gift-template">
   <div class='cart-gift' data-gift-id="{{= id }}">
@@ -181,10 +171,10 @@
 
       function revaluateTotal () {
         var formData = $('#new_order').serialize()
-        $.post('/orders/express_fee?' + formData)
-          .done(function(html) {
-            $('.confirmation-total').html(html);
-          })
+        $.post('/orders/express_fee?' + formData + '&reset_cards=true')
+          // .done(function(html) {
+          //   $('.confirmation-total').html(html);
+          // })
       }
 
       function renderGifts(gifts) {
@@ -208,35 +198,45 @@
 
   }
 
-  <% if @cards.present? %>
-    $('.wx-cards').on('click', function(event) {
-      $('.buy-now-confirm').hide();
-      $('.chose-cards').show();
-    });
+  $('.buy-now-confirm').on('click', '.wx-cards', function(event) {
+    $('.buy-now-confirm').hide();
+    $('.chose-cards').show();
+  });
 
-    $('.chose-cards li').on('click', function(event) {
-      $('.chose-cards li').removeClass('chosen');
-      $(this).addClass('chosen');
+  $('.wx_card-container').on('click', '.chose-cards li', function(event) {
+    $('.chose-cards li').removeClass('chosen');
+    $(this).addClass('chosen');
 
-      var cardId = $(this).data('cardId');
-      var cardTitle = $(this).data('cardTitle');
-      var cardAmount = $(this).data('cardReduce');
+    var cardId = $(this).data('cardId');
+    var cardTitle = $(this).data('cardTitle');
+    var cardAmount = $(this).data('cardReduce');
 
-      $('.card-hidden-fields input').prop('disabled', true);
-      $('.card-hidden-fields .card_' + cardId).prop('disabled', false);
+    $('.card-hidden-fields input').prop('disabled', true);
+    $('.card-hidden-fields .card_' + cardId).prop('disabled', false);
 
-      $('.wx-cards .empty').hide();
+    $('.wx-cards .empty').hide();
 
-      var $chosen = $('.wx-cards .chosen');
-      $chosen.find('.amount').html(cardAmount);
-      $chosen.find('.title').html(cardTitle);
-      $chosen.show();
+    var $chosen = $('.wx-cards .chosen');
+    $chosen.find('.amount').html(cardAmount);
+    $chosen.find('.title').html(cardTitle);
+    $chosen.show();
 
-      setTimeout(function() {
-        $('.chose-cards').hide();
-        $('.buy-now-confirm').show();        
-      }, 500);
-    });
-  <% end %>
+    setTimeout(function() {
+      $('.chose-cards').hide();
+      $('.buy-now-confirm').show();        
+    }, 500);
+  });
+
+  $('.wx_card-container').on('click', '.cancel-chose-card', function(event) {
+    $('.chose-cards li').removeClass('chosen');
+    $('.card-hidden-fields input').prop('disabled', true);
+    $('.wx-cards .empty').show();
+    $('.wx-cards .chosen').hide();
+  });
+
+  $('.wx_card-container').on('click', '.back-to-order', function(event) {
+    $('.chose-cards').hide();
+    $('.buy-now-confirm').show();
+  });
 })();
 </script>

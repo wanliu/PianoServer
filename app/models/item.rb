@@ -333,6 +333,60 @@ class Item < ActiveRecord::Base
     Item.search(query_params)
   end
 
+  scope :search_all, -> (params) do
+    query_params = {
+      query: {
+        filtered: {}
+      }
+    }
+
+    if params[:except].present?
+      query_params[:query][:filtered][:query] ||= {}
+      query_params[:query][:filtered][:query].deep_merge!({
+        bool: {
+          must_not: {
+            terms: { id: params[:except] }
+          }
+        }
+      })
+    end
+
+    # 搜索内容只有字母的时候
+    # ①只有声母
+    # ②声母韵母都有
+    if params[:q].present?
+      query_params[:query][:filtered][:query] ||= {}
+      query_params[:query][:filtered][:query].deep_merge!({
+        bool: {
+          should: [{ match: {title: params[:q]} }],
+          minimum_should_match: 1
+        }
+      })
+
+      if /[a-z]+/.match params[:q]
+        if /[(a|o|e|i|u|ü|v)]/.match params[:q]
+          pinyin = params[:q].gsub /[(b|p|m|f|d|t|n|l|g|k|h|j|q|x|zh|ch|sh|r|z|c|s|w|y)]/ do |i|
+            " #{i}"
+          end
+          pinyin = pinyin.gsub(" z ", " z")
+            .gsub(" c ", " c")
+            .gsub(" s ", " s")
+            .gsub(" n ", "n ")
+            .gsub(" g ", "g ")
+            .gsub(/\W+g\z/, "g")
+            .gsub(/\W+n\z/, "n")
+            .strip
+
+          query_params[:query][:filtered][:query][:bool][:should].push({ match: {"title.pinyin" => pinyin} })
+        else
+          query_params[:query][:filtered][:query][:bool][:should].push({ match: {"title.first_lt" => params[:q]} })
+        end
+      end
+    end
+
+    Item.search(query_params)
+  end
+
   def as_indexed_json(options={})
     self.as_json(methods: [:shop_region_id, :shop_name])
   end

@@ -1,6 +1,20 @@
-<%= content_tag_for :tr, card do %>
+<tr data-card-id=<%= card.id %> class='card'>
   <td><%= card.title %></td>
   <td><%= card.wx_card_id %></td>
   <td><%= Card::KIND_MAP[card.kind] %></td>
   <td><%= card.promotion %></td>
-<% end %>
+  <td>
+    <%= card.card_apply_template_title %>
+  </td>
+  <td>
+    <button class='change-apply-template-btn btn btn-default '>更改应用模板</button>
+  </td>
+</tr>
+<tr data-card-id="<%= card.id %>" class='change-apply-template' style='display: none;'>
+  <td colspan='6' class="input-group">
+    <%= form_for [:admins, card], remote: true do |f| %>
+      <%= f.collection_select :card_apply_template_id, CardApplyTemplate.all, :id, :title, {}, class: 'form-control' %> 
+      <%= f.submit '确认', class: 'chose-apply-template form-control' %>
+    <% end %>
+  </td>
+</tr>

@@ -27,17 +27,23 @@ class Redpack < ActiveRecord::Base
 
   # TODO async using sidekiq
   def send_redpack
-    response = super
+    if unknown? || failed?
+      response = super
 
-    if response.success? && !sent?
-      update_columns(status: self.class.statuses["sent"], error_message: nil)
+      if response.success? && !sent?
+        update_columns(status: self.class.statuses["sent"], error_message: nil)
+      end
+
+      unless response.success?
+        if "该订单已经过期,请更换商户单号" == response.error_message
+          update_columns("error_message" => "该订单已经过期,已经更改订单号,请再次发送该红包", "status" => self.class.statuses["failed"], "wx_expired_at" => Date.today)
+        else
+          update_columns("error_message" => response.error_message, "status" => self.class.statuses["failed"])
+        end
+      end
     end
 
-    unless response.success?
-      update_columns("error_message" => response.error_message, "status" => self.class.statuses["failed"])
-    end
-
-    response
+    # response
   end
 
   def query_redpack

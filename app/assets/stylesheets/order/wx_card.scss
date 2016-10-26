@@ -32,7 +32,7 @@
 
       &.chosen {
         &::after {
-          background-image: url('card_chosen.png');
+          background-image: image-url('card_chosen.png');
           background-size: 80px 80px;
           background-repeat: no-repeat;
 
@@ -47,5 +47,21 @@
         }
       }
     }
+  }
+
+  .btns {
+    padding: 10px;
+  }
+}
+
+.wx-cards {
+  color: #F12A39;
+
+  img.card-logo {
+    height: 24px;
+  }
+
+  .glyphicon-next {
+    color: #F12A39;
   }
 }

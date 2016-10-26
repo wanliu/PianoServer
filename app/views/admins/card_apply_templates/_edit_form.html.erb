@@ -1,0 +1,156 @@
+<%= form_for [:admins, @template], html: { class: 'edit-card_apply_template-form new-edit-card_apply_template-form' } do |f| %>    
+  <div class='selected-item'>
+  </div>
+
+  名称：<%= f.text_field :title, class: 'form-control' %>
+
+  <br>
+  范围：<%= f.collection_select :apply_items, CardApplyTemplate::APPLY_ITEMS_TITLES, :first, :last, {}, {class: 'form-control'} %>
+
+  <div class="dropdown">
+    <input type='text' id='search-items' class='dropdown-toggle form-control' placeholder='输入商品名称搜索' data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" >
+    <ul class="dropdown-menu template-items-dropdown" aria-labelledby="item-search-dropdown">
+    </ul>
+
+    <div class='selected-items'>
+      <div style='clear: both;'></div>
+    </div>
+  </div>
+
+  <br>
+  <button type='button' class='btn btn-default cancel'>取消</button>
+  <%= f.submit '保存', class: 'btn btn-primary' %>
+<% end %>
+
+<script type="text/template" id='template-item'>
+  <li class='template-item' data-item-id="{{ id }}">
+    <img src="{{images[0] && images[0]['url']}}" style='width: 50px; height: 50px;'>
+    {{ title }}
+    {{ price }}
+    {{ shop_name }}
+  </li>
+</script>
+
+<script type="text/template" id='selected-item'>
+  <div data-item-id={{ id }} class='item'>
+    <div>
+      <img src="{{images[0] && images[0]['url']}}" style='width: 50px; height: 50px;'>
+    </div>
+    <div>
+      商品：{{ title }}<br>
+      价格：{{ price }}<br>
+      商店：{{ shop_name }}      
+    </div>
+    <div>
+      <button class='btn btn-danger delete' type='button'>删除</button>
+    </div>
+  </div>
+</script>
+
+<script type="text/javascript">
+  var itemSearchResults = [];
+  var selectedItems = <%= @template.items.to_json(except: [:income_price], methods: [:shop_name, :shop_realname]).html_safe %>;
+  var item_template = _.template($("#template-item").html());
+  var select_item_template = _.template($("#selected-item").html());
+
+  _.each(selectedItems, function(item) {
+    var html = select_item_template(item);
+    $(".selected-items").prepend(html);
+  });
+
+  $(function() {
+
+    $(".edit-card_apply_template-form #card_apply_template_apply_items").change(function(event) {
+      var value = $(this).val();
+
+      if ("include_items" == value) {
+        $(".new-card_apply_template .dropdown").show();
+      } else {
+        $(".new-card_apply_template .dropdown").hide();
+      }
+    });
+
+    $(".edit-card_apply_template-form #search-items").keyup(function(event) {
+      var value = $(this).val();
+
+      if (value.length) {
+        queryParams = {q: value};
+
+        if (selectedItems.length) {
+          queryParams["except"] = _.pluck(selectedItems, 'id');
+        }
+
+        $.get("/api/items/search", queryParams)
+          .done(function(res) {
+            itemSearchResults = res;
+
+            $("ul.template-items-dropdown").html('');
+
+            var display = $("ul.template-items-dropdown").css('display');
+  
+            if ("none" == display) {
+              $("#search-items").dropdown('toggle');
+            }
+
+            _.each(res, function(item) {
+              var html = item_template(item);
+              $("ul.template-items-dropdown").append(html);              
+            });
+          })
+      } 
+    });
+
+    $(".edit-card_apply_template-form .template-items-dropdown").on('click', 'li', function(event) {
+      $('#search-items').val('');
+
+      var itemId = $(this).data("itemId");
+
+      $.post("<%= add_item_admins_card_apply_template_path(@template) %>", {item_id: itemId})
+        .done(function(item) {
+          var item = _.find(itemSearchResults, function(i) {
+            return i.id.toString() == itemId.toString();
+          });
+
+          selectedItems.push(item);
+          var html = select_item_template(item);
+          $(".selected-items").prepend(html);
+
+          $(".template-items-dropdown [data-item-id=" + item.id + "]").remove();
+
+          var $alert = $(".infors.alert");
+          $alert.html("添加成功！").show();
+
+          setTimeout(function() {
+            $alert.fadeOut(function() {
+              $alert.html("");
+            });
+          }, 5000);
+        })
+    });
+
+    $(".edit-card_apply_template-form .selected-items").on('click', '.item .delete', function(event) {
+      var itemId = $(this).closest('.item').data('itemId');
+
+      $.post("<%= remove_item_admins_card_apply_template_path(@template) %>", {_method: "delete", item_id: itemId})
+        .done(function(res) {
+          var selectedItemIds = _.pluck(selectedItems, "id");
+          var index = selectedItemIds.indexOf(itemId)
+
+          if (index > -1) {
+            selectedItems.splice(index, 1);
+          }
+
+          $(".selected-items .item[data-item-id=" + itemId + "]").remove();
+
+          var $alert = $(".infors.alert");
+          $alert.html("删除成功！").show();
+
+          setTimeout(function() {
+            $alert.fadeOut(function() {
+              $alert.html("");
+            });
+          }, 5000);
+        })
+    });
+  });
+</script>

@@ -169,7 +169,7 @@ virtual_presents:
 cakes:
   suppliers:
     - 亿金蛋糕
-    - 工匠烘焙
+    - 好又多蛋糕
   sms:
     notify_buyer: true
     buyer_template: '【耒阳街上】您的生日趴蛋糕:#cakename#订购成功, 蛋糕将于#date#送到#address#,请注意查收! 如有疑问, 请拨打客服电话:#phone#, 谢谢您的光临!'

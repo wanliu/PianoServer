@@ -268,10 +268,16 @@ class OrdersController < ApplicationController
       item.price = item.caculate_price
     end
 
+    @reset_cards = params[:reset_cards].present?
+
+    if @reset_cards
+      set_wx_cards
+    end
+
     # if params[:order][:items_attributes].present?
     #   render partial: "buy_now_confirmation_total"
     # else
-      render partial: "confirmation_total"
+      # render json: {total_partial: j(render partial: "confirmation_total") }
     # end
   end
 
@@ -373,13 +379,13 @@ class OrdersController < ApplicationController
   #           render json: {consume: false, errmsg: '微信核销失败, 请稍后再试!'}, status: :unprocessable_entity
   #         end
   #       else
-  #         render json: {consume: false, errmsg: '无法使用这张优惠卷!'}, status: :unprocessable_entity
+  #         render json: {consume: false, errmsg: '无法使用这张优惠券!'}, status: :unprocessable_entity
   #       end
   #     rescue Wechat::ResponseError => e
-  #       render json: {consume: false, errmsg: '无法使用这张优惠卷, 请稍后再试!'}, status: :unprocessable_entity
+  #       render json: {consume: false, errmsg: '无法使用这张优惠券, 请稍后再试!'}, status: :unprocessable_entity
   #     end
   #   else
-  #     render json: {consume: false, errmsg: '无法识别优惠卷信息,请稍后再试!'}, status: :unprocessable_entity
+  #     render json: {consume: false, errmsg: '无法识别优惠券信息,请稍后再试!'}, status: :unprocessable_entity
   #   end
   # end
 
@@ -471,7 +477,10 @@ class OrdersController < ApplicationController
   end
 
   def set_wx_cards
-    @cards = Card.where(wx_card_id: current_user.get_wx_card_list)
+    @cards = Card.available_with_order(@order).where("wx_card_id IN (:list)", list: current_user.get_wx_card_list)
+    if @order.cards.first.present?
+      @chosen_card = @cards.find { |card| card.wx_card_id == @order.cards.first }
+    end
   end
 
   def order_params

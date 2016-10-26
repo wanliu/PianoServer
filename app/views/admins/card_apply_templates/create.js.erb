@@ -1,0 +1,40 @@
+<% if @template.persisted? %>
+  (function() {
+    var html = '<%= j render @template %>';
+    $('table.card_apply_templates tbody').prepend(html);
+    $('#search-items').val('');
+
+    var $newTemplate = $('.new-card_apply_template');
+    $newTemplate.hide();
+    // $newTemplate.find('input[name="card_apply_template[title]"]').val('');
+    // $newTemplate.find('input[name="card_apply_template[apply_items]"]').val('all_items');
+    $newTemplate.find('form')[0].reset();
+
+    $newTemplate.find('.dropdown').hide();
+    $newTemplate.find('.dropdown ul').html('');
+
+    itemSearchResults = []
+    selectedItems = []
+
+    var $alert = $(".infors.alert");
+    $alert.html("添加成功！").show();
+
+    setTimeout(function() {
+      $alert.fadeOut(function() {
+        $alert.html("");
+      });
+    }, 5000);
+  })();
+<% else %>
+  (function() {
+    var $alert = $(".errors.alert")
+    $alert .html("保存失败！<%= @template.errors.full_messages.join(', ') %>")
+      .show();
+
+    setTimeout(function() {
+      $alert .fadeOut(function() {
+        $alert .html("");
+      });
+    }, 5000);
+  })();
+<% end %>

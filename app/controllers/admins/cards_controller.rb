@@ -67,7 +67,7 @@ class Admins::CardsController < Admins::BaseController
   def refresh
     Card.refresh!
 
-    flash[:notice] = "重新完毕，现在的卡卷信息是最新的了!"
+    flash[:notice] = "重新完毕，现在的卡券信息是最新的了!"
     redirect_to admins_cards_path
   end
 
@@ -82,6 +82,6 @@ class Admins::CardsController < Admins::BaseController
     end
 
     def card_update_params
-      params.require(:card).permit(:available_range, :title)
+      params.require(:card).permit(:available_range, :title, :card_apply_template_id)
     end
 end

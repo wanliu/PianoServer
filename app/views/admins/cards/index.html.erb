@@ -1,14 +1,15 @@
-<div class='cards-container'>
+<div class='card_apply_templates-container'>
   <div class='alert-header'>
     <div class="alert alert-success infors" role="alert" style='display: none;'>
     </div>
     <div class="alert alert-danger errors" role="alert" style='display: none;'>
     </div>
     <div class='title'>
-      <h3>代金卷</h3>
+      <h3>代金券</h3>
       <%= link_to refresh_admins_cards_path, class: 'btn btn-default' do %>
-        <span class='glyphicon glyphicon-refresh'></span> 重新刷新卡卷信息
+        <span class='glyphicon glyphicon-refresh'></span> 重新刷新卡券信息
       <% end %>
+      <%= link_to "应用模板管理", admins_card_apply_templates_path, class: 'btn btn-default pull-right' %>
       <!-- <button class='btn btn-default new-card-btn'>
         <span class='glyphicon glyphicon-plus'>新建</span>
       </button> -->
@@ -21,9 +22,11 @@
     <thead>
       <tr>
         <th>名称　</th>
-        <th>微信卡卷ID </th>
+        <th>微信卡券ID </th>
         <th>类别　</th>
         <th>优惠　</th>
+        <th>应用模板　</th>
+        <th></th>
         <!-- <th>库存　</th> -->
       </tr>
     </thead>
@@ -38,40 +41,10 @@
 </div>
 
 <script type="text/javascript">
-// (function (event) {
-//   var cateItemTpl = _.template($('#card-item').html());
-//   var selectedItemTpl = _.template($('#selected-item').html());
-//   var $itemSearcher = $('#search-card-items');
-//   var $cardFormContainer = $('.new-card');
-//   var $newCakeBtn = $('.new-card-btn');
-//   var $selectedItem = $('.selected-item');
-
-//   var items = [];
-
-//   $newCakeBtn.click(function() {
-//     $cardFormContainer.toggle();
-//   });
-
-//   $('.cards').on('click', 'tr .edit-btn', toggleCakeEdit);
-
-//   $('form#new_card button.cancel').click(function(event) {
-//     $cardFormContainer.hide();
-//   });
-
-//   function reflashCakeItems(data, status, xhr) {
-//     items = data;
-
-//     _.each(data, function(item) {
-//       var html = cateItemTpl(item);
-//     })
-
-//     if ('false' == $itemSearcher.attr('aria-expanded')) {
-//     }
-//   }
-
-//   function toggleCakeEdit(event) {
-//     var cardId = $(this).closest('tr').attr('id').replace('card_', '');
-//     $('tr.card-eidt-form[data-card-id=' + cardId + ']').toggle();
-//   }
-// })();
+  (function (event) {
+    $('table.cards').on("click", '.change-apply-template-btn', function(event) {
+      var cardId = $(this).closest('tr').data('cardId');
+      $('tr.change-apply-template[data-card-id=' + cardId + ']').toggle();
+    })
+  })();
 </script>

@@ -1,0 +1,31 @@
+(function() {
+  var total_partial = '<%= j(render partial: "confirmation_total") %>';
+  $('.confirmation-total').html(total_partial);
+
+  <% if @reset_cards %>
+    <% if @cards.present? %>
+      var cards_field_partial = '<%= j(render partial: "wx_cards_fields") %>';
+
+      if ($('.wx-cards').length) {
+        $('.wx-cards').replaceWith(cards_field_partial);
+      } else {
+        $('.empty-cards-feilds-mark').before(cards_field_partial);
+      }
+
+      var cards_partial = '<%= j(render partial: "wx_cards") %>';
+      if ($('.chose-cards').length) {
+        $('.chose-cards').replaceWith(cards_partial);
+      } else {
+        $('.empty-cards-mark').before(cards_partial);
+      } 
+    <% else %>
+      if ($('.wx-cards').length) {
+        $('.wx-cards').remove();
+      }
+
+      if ($('.chose-cards').length) {
+        $('.chose-cards').remove();
+      }
+    <% end %>
+  <% end %>
+})();

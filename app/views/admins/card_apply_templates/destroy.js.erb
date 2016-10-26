@@ -1,0 +1,15 @@
+(function() {
+  var $item = $('table.card_apply_templates #card_apply_template_<%= @template.id %>');
+  var $alert = $(".infors.alert");
+
+  $alert.html("操作成功！").show();
+  $item.fadeOut(500).fadeIn(function() {
+    $item.remove();
+  }, 500)
+
+  setTimeout(function() {
+    $alert.fadeOut(function() {
+      $alert.html("");
+    });
+  }, 5000);
+})();

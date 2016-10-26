@@ -12,12 +12,12 @@ class Admins::RedpacksController < Admins::BaseController
   end
 
   def send_redpack
-    response = @redpack.send_redpack
-    if response.success?
-      @redpack.update_columns(status: Redpack.statuses["sent"])
-    else
-      @redpack.update_columns(status: Redpack.statuses["failed"], error_message: response.error_message)
-    end
+    @redpack.send_redpack
+    # if response.success?
+    #   @redpack.update_columns(status: Redpack.statuses["sent"])
+    # else
+    #   @redpack.update_columns(status: Redpack.statuses["failed"], error_message: response.error_message)
+    # end
 
     render "query"
   end

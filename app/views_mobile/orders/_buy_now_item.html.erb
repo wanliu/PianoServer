@@ -25,7 +25,7 @@
       </colgroup>
       <tbody>
         <tr>
-          <td>单价:<span  class='price'><%= number_to_currency item.price %></span></td>
+          <td>单价:<span  class='price' data-price=<%= item.price %>><%= number_to_currency item.price %></span></td>
           <% if item.quantity <= 1 %>
             <td><span class="glyphicon btn-minus"></span></td>
           <% else %>

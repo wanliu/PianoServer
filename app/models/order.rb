@@ -36,7 +36,7 @@ class Order < ActiveRecord::Base
   validate :items_should_exist, on: :create
 
   before_save :set_modified, if: :total_changed?
-  before_create :caculate_total, :generate_receive_token
+  before_create :assign_total, :generate_receive_token
   before_create :exam_cards
   after_create :consume_cards
 
@@ -336,10 +336,14 @@ class Order < ActiveRecord::Base
     "{Settings.app.website}/orders/#{id}/wx_notify"
   end
 
+  def calculate_total
+    items_total + (express_fee || 0)
+  end
+
   private
 
-  def caculate_total
-    self.origin_total = self.total = items_total + (express_fee || 0)
+  def assign_total
+    self.origin_total = self.total = calculate_total
   end
 
   # ①检查card是否可用于本订单
@@ -368,7 +372,7 @@ class Order < ActiveRecord::Base
     # end
   end
 
-  # 核销一张指定id的卡卷,并记录下来被核销的卡卷code
+  # 核销一张指定id的卡券,并记录下来被核销的卡券code
   def consume_cards
     return if cards.blank?
 
@@ -390,7 +394,7 @@ class Order < ActiveRecord::Base
 
     if consumed_card_ids.blank?
       self.card_rollback = true
-      raise Exception.new("微信卡卷无效,请重新选择")
+      raise Exception.new("微信卡券无效,请重新选择")
     else
       update_columns(total: total)
     end

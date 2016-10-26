@@ -204,7 +204,12 @@ module WxRedpack
     WECHAT_CONFIG["token"]
   end
 
+  # 应对红包发送失败后,3天未再次发送成功,则订单过期的问题,通过expired来更新订单号
   def mch_billno
-    "#{mch_id}#{created_at.strftime("%y%m%d")}#{wx_order_no}"
+    if try(:wx_expired_at).present?
+      "#{mch_id}#{wx_expired_at.strftime("%y%m%d")}#{wx_order_no}"
+    else
+      "#{mch_id}#{created_at.strftime("%y%m%d")}#{wx_order_no}"
+    end
   end
 end

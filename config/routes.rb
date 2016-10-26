@@ -300,6 +300,14 @@ Rails.application.routes.draw do
         post "upload", as: :upload
       end
     end
+
+    resources :card_apply_templates do
+      member do
+        post :add_item
+        delete :remove_item
+        put :set_default
+      end
+    end
   end
 
   namespace :api do
@@ -317,6 +325,7 @@ Rails.application.routes.draw do
       # get "/items/search_ly", :to => "items#search_ly"
       # get "/items/hots", :to => "items#hots"
       collection do
+        get "search"
         get "search_ly"
         get "hots"
       end
