@@ -10,7 +10,7 @@
   <div class='order-amount text-center'>
     <h1><%= number_to_currency @order.total %></h1>
   </div>
- 
+
   <div  class='chose-pay-kind'>
     <div class='pay-kind wx-pay-now text-center' data-order-id='<%= @order.id %>'>
       <%= image_tag "wxpay_logo.png", class: 'wx-pay-logo' %>微信支付<%= @order.wx_total_fee %>元（优惠<%= Settings.promotions.one_money.wx_pay_discount || 0 %>元）
@@ -20,6 +20,14 @@
 
 <script>
   <% signature = Wechat.api.jsapi_ticket.signature request.original_url %>
+  wx.ready(function(){
+  });
+
+  wx.error(function(res){
+    // alert('wx config error')
+    alert('error msg:' +  JSON.stringify(res));
+  })
+
   // <%= signature.to_json.html_safe %>
   wx.config({
     // debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
@@ -29,14 +37,6 @@
     signature: '<%= signature[:signature] %>',// 必填，签名，见附录1
     jsApiList: ['chooseWXPay', 'onMenuShareTimeline'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
   });
-
-  wx.ready(function(){
-  });
-
-  wx.error(function(res){
-    // alert('wx config error')
-    alert('error msg:' +  JSON.stringify(res));
-  })
 
   function payNow() {
     wx.chooseWXPay({
@@ -68,7 +68,7 @@
         alert('pay fail', + JSON.stringify(res));
       }
     });
-  } 
+  }
 
   $(function() {
     // 用户点击“微信支付”
