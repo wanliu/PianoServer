@@ -70,15 +70,15 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
 
   # POST /birthday_parties
   # POST /birthday_parties.json
-  # def create
-  #   @birthday_party = BirthdayParty.new(birthday_party_params)
+  def create
+    @birthday_party = BirthdayParty.new(birthday_party_params)
 
-  #   if @birthday_party.save
-  #     render json: @birthday_party, status: :created, location: @birthday_party
-  #   else
-  #     render json: @birthday_party.errors.full_messages.join(', '), status: :unprocessable_entity
-  #   end
-  # end
+    if @birthday_party.save
+      render json: @birthday_party, status: :created
+    else
+      render json: @birthday_party.errors.full_messages.join(', '), status: :unprocessable_entity
+    end
+  end
 
   # PATCH/PUT /birthday_parties/1
   # PATCH/PUT /birthday_parties/1.json
@@ -119,7 +119,7 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
     end
 
     def birthday_party_params
-      params.require(:birthday_party).permit(:cake_id, :user_id, :hearts_limit, :birth_day, :birthday_person, :person_avatar)
+      params.require(:birthday_party).permit(:cake_id, :birth_day, :birthday_person, :message, :person_avatar, :data, :skip_validates)
     end
 
     def upload_avatar_params

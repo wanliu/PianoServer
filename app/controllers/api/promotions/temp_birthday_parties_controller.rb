@@ -35,8 +35,11 @@ class Api::Promotions::TempBirthdayPartiesController < Api::BaseController
     @temp_birthday_party.quantity ||= 1
 
     if @temp_birthday_party.save
-      @temp_birthday_party.build_order_and_order_item(current_user)
+      unless params[:temp_birthday_party][:skip_order]
+        @temp_birthday_party.build_order_and_order_item(current_user)
+      end
       @is_sales_man = true
+
       # render json: @temp_birthday_party.as_json(except: [:active_token]), status: :created
       render "create", status: :created
     else
@@ -46,7 +49,9 @@ class Api::Promotions::TempBirthdayPartiesController < Api::BaseController
 
   def update
     if @temp_birthday_party.update(temp_birthday_party_params)
-      @temp_birthday_party.build_order_and_order_item(current_user)
+      unless params[:temp_birthday_party][:skip_order]
+        @temp_birthday_party.build_order_and_order_item(current_user)
+      end
       @is_sales_man = true
       render "create"
     else
@@ -113,7 +118,7 @@ class Api::Promotions::TempBirthdayPartiesController < Api::BaseController
       params.require(:temp_birthday_party)
         .permit(:cake_id, :quantity, :birth_day, :person_avatar,
                 :delivery_time, :message, :delivery_address,
-                :birthday_person, :delivery_region_id, :receiver_phone).tap do |white_list|
+                :birthday_person, :delivery_region_id, :receiver_phone, :skip_order).tap do |white_list|
           white_list[:properties] = params[:temp_birthday_party][:properties] || {}
       end
     end
