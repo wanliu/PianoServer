@@ -22,7 +22,7 @@ class Order < ActiveRecord::Base
   attr_accessor :cart_item_ids, :address_id, :cake_id, :card,
     :consumed_card_ids, :unconsumed_card_ids, :unuseable_card_ids, :card_rollback
 
-  enum status: { initiated: 0, finish: 1 }
+  enum status: { initiated: 0, finish: 1, deleted: 2 }
 
   validates :supplier, presence: true
   validates :buyer, presence: true
@@ -245,6 +245,30 @@ class Order < ActiveRecord::Base
     !finish? && pmo_grab_id.blank? && birthday_party.blank? && !card_used?
   end
 
+  def birthday_party_order?
+    birthday_party.present?
+  end
+
+  def created_within_30_minutes?
+    created_at >= Time.now - 30.minutes
+  end
+
+  def cancelable?
+    birthday_party_order? && initiated? && created_within_30_minutes?
+  end
+
+  def deleted!
+    transaction do
+      super
+
+      items.each do |item|
+        item.cancel_deduct_stocks!(buyer)
+      end
+
+      birthday_party.destroy! if birthday_party.present?
+    end
+  end
+
   def card_used?
     cards.present?
   end
@@ -408,7 +432,7 @@ class Order < ActiveRecord::Base
 
   # status could noly change from "initated" to "finish" right now
   def status_transfer
-    if status_changed? && !status_changed?(form: "initated", to: "finish")
+    if status_changed? && status_changed?(from: "finish")
       errors.add(:base, "错误的操作")
     end
   end

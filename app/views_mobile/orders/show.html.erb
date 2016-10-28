@@ -23,6 +23,12 @@
         </div>
         <div style='clear: both;'></div>
         <%= image_tag 'order-delivery.png', class: 'status pull-right' %>
+      <% elsif @order.deleted? %>
+        <div class='notification pull-left'>
+          <h4>订单已删除</h4>
+        </div>
+        <div style='clear: both;'></div>
+        <%= image_tag 'order-delivery.png', class: 'status pull-right' %>
       <% else %>
         <div class='notification pull-left'>
           <h4>货到请确认</h4>
@@ -108,7 +114,7 @@
       </div>
     </div>
 
-    <% unless @order.finish? %>
+    <% unless @order.finish? || @order.deleted? %>
       <div class='receive-operation row'>
         <div class='col-xs-6 toggler text-center' data-zone='qrcode-receive'>
           <span class='glyphicon glyphicon-qrcode'></span><br>
@@ -127,6 +133,13 @@
       <%= link_to "进入生日趴", birthday_party_path(@order.birthday_party.id), class: 'btn btn-warning btn-large btn-block' %>
     </div>
     <% end %>
+
+    <% if @order.cancelable? %>
+      <div class='delete-birthday-party-order'>
+        <%= button_to "删除订单", order_path(@order), method: :delete, data: { confirm: "确定要删除这个订单么？" }, class: 'btn btn-danger btn-large btn-block' %>
+      </div>
+    <% end %>
+
 
     <% if @one_more_time %>
       <%= link_to "点击可再次获得抢购机会", @redirect_url, class: 'btn btn-warning btn-large btn-block', id: 'pmo-once-more' %>

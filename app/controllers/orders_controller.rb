@@ -39,7 +39,8 @@ class OrdersController < ApplicationController
       :create_evaluations,
       :evaluate_item_create,
       :express_fee,
-      :confirm_receive
+      :confirm_receive,
+      :destroy
     ]
 
   before_action :set_order_item, only: [:evaluate_item, :evaluate_item_create]
@@ -53,7 +54,7 @@ class OrdersController < ApplicationController
   # GET /orders.json
   def index
     @orders = current_user.orders
-      .initiated
+      .where(status: [Order.statuses[:initiated], Order.statuses[:deleted]])
       .includes(:items, :supplier)
       .order(id: :desc)
       .page(params[:page])
@@ -254,9 +255,16 @@ class OrdersController < ApplicationController
   # DELETE /orders/1
   # DELETE /orders/1.json
   def destroy
-    @order.destroy
-
-    head :no_content
+    if @order.cancelable?
+      @order.deleted!
+      # head :no_content
+      flash[:notice] = "订单删除成功!"
+      redirect_to order_path(@order)
+    else
+      # render json: {error: "订单创建已经超过30分钟，不能删除"}, status: :unprocessable_entity
+      flash[:error] = "这个订单不能删除!"
+      redirect_to order_path(@order)
+    end
   end
 
   # 用户切换收货地址时，计算新地址的运送费用

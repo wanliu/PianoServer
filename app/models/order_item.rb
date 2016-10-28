@@ -82,6 +82,17 @@ class OrderItem < ActiveRecord::Base
     end
   end
 
+  def cancel_deduct_stocks!(operator)
+    orderable.deduct_stocks!(operator, quantity: -quantity, data: properties, source: self, kind: :sale_refund)
+
+    gifts.each do |gift_setting|
+      item = Item.find(gift_setting["item_id"])
+      gift = Gift.find(gift_setting["gift_id"])
+      item.deduct_stocks!(operator, quantity: -gift_setting["quantity"], data: gift_setting["properties"], kind: :gift, source: self)
+      gift.increment!('saled_counter', -gift_setting["quantity"].to_i)
+    end
+  end
+
   def avatar_url
     if orderable_type == 'Promotion'
       orderable.image_url

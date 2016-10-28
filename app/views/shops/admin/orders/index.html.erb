@@ -6,6 +6,9 @@
     <li role="presentation">
       <a href="<%= history_shop_admin_orders_path %>"><b>历史订单</b></a>
     </li>
+    <li role="presentation">
+      <a href="<%= deleted_shop_admin_orders_path %>"><b>已删除订单</b></a>
+    </li>
 
     <li class='export-excel pull-right'>
       <%= link_to export_excel_shop_admin_orders_path(initiated: true), target: '_blank' do %>
