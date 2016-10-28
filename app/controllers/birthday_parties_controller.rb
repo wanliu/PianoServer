@@ -10,16 +10,23 @@ class BirthdayPartiesController < ApplicationController
       .order(id: :desc)
       .page(params[:page])
       .per(params[:per])
-  end
 
-  def blessed
-    @birthday_parties = BirthdayParty.joins(:blesses)
+    @blessed_parties = BirthdayParty.joins(:blesses)
       .where("blesses.sender_id = :sender_id AND blesses.paid ='t'", sender_id: current_user.id)
       .distinct
       .order(id: :desc)
       .page(params[:page])
       .per(params[:per])
   end
+
+  # def blessed
+  #   @birthday_parties = BirthdayParty.joins(:blesses)
+  #     .where("blesses.sender_id = :sender_id AND blesses.paid ='t'", sender_id: current_user.id)
+  #     .distinct
+  #     .order(id: :desc)
+  #     .page(params[:page])
+  #     .per(params[:per])
+  # end
 
   def saled
     @birthday_parties = current_user.saled_birthday_parties
