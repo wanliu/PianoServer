@@ -29,6 +29,16 @@ class Shops::Admin::OrdersController < Shops::Admin::BaseController
       .per(params[:per])
   end
 
+  def deleted
+    @orders = current_shop
+      .orders
+      .deleted
+      .includes(:items, :buyer)
+      .order(id: :desc)
+      .page(params[:page])
+      .per(params[:per])
+  end
+
   # GET /shops/admin/orders/1
   # GET /shops/admin/orders/1.json
   def show

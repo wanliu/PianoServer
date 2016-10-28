@@ -4,7 +4,12 @@
       <%= link_to shop_site_path(order.supplier.name) do %>
         <%= image_tag order.supplier.avatar_url %><%= order.supplier.title %>
       <% end %>
-      <span class='pull-right'>订单号: <%= order.id %></span>
+      <span class='pull-right'>
+        订单号: <%= order.id %>
+        <% if order.deleted? %>
+        (已删除)
+      <% end %>
+      </span>
     </span>
   </div>
 
@@ -39,6 +44,10 @@
     <div class='text-right'>
       <% if order.birthday_party.present? %>
         <%= link_to "进入生日趴", birthday_party_path(order.birthday_party.id), class: 'btn btn-default' %>
+      <% end %>
+
+      <% if order.deleted? %>
+        订单已删除
       <% end %>
 
       <%= link_to "订单详情", order_path(order), class: 'btn btn-default' %>

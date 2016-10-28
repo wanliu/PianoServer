@@ -16,10 +16,12 @@
     <td rowspan='<%= order.items.count + order.items.find_all {|item| item.gifts.present? }.length %>' class='operation'>
       <% if order.paid %>
         <div class='order-paid'>已支付</div>
-      <% elsif !order.finish? %>
+      <% elsif order.initiated? %>
         <button type="button" class="btn btn-danger"  data-toggle="modal" data-target="#change-total-<%= order.id %>">
           修改总价
         </button>
+      <% elsif order.deleted? %>
+        <div class='text-center'>订单已删除</div>
       <% end %>
       
       <div class='detail text-center'>

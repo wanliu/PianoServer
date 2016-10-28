@@ -638,6 +638,7 @@ Rails.application.routes.draw do
         collection do
           get 'export_excel'
           get 'history'
+          get 'deleted'
         end
 
         member do

@@ -11,7 +11,12 @@
   <tbody>
     <tr class='head'>
       <td colspan='6'>
-        <b>订单号: <%= order.id %></b>&emsp;
+        <b>
+          订单号: <%= order.id %>
+          <% if order.deleted? %>
+            (已删除)
+          <% end %>
+        </b>&emsp;
         <b class='create-time'>创建时间：<%= order.created_at.strftime("%Y/%m/%d %H:%M") %></b>
         <span class='shop-info'>
           <%= link_to shop_site_path(order.supplier.name), class:'pull-right' do %>
@@ -43,6 +48,13 @@
           </span>
           生日趴送货日期: <%= order.birthday_party.delivery_deadline %>
           <%= link_to '进入生日趴', birthday_party_path(order.birthday_party) %>
+        </td>
+      </tr>
+    <% end %>
+    <% if order.deleted? %>
+      <tr>
+        <td colspan='6'>
+          订单已删除
         </td>
       </tr>
     <% end %>

@@ -30,6 +30,8 @@
             <div class='order-status'>
               <% if @order.finish? %>
                 <div class='title'>订单状态：订单已经完成，交易成功！</div>
+              <% elsif @order.deleted? %>
+                <div class='title'>订单状态：订单已删除</div>
               <% end %>
               <div>订单编号：<%= @order.id %></div>
             </div>
