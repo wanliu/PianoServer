@@ -16,11 +16,9 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
       seven_days_later: 7.days.since.to_date
     }
 
-    ids = BirthdayParty.where("birth_day >= :seven_days_ago AND birth_day <= :seven_days_later", day_options)
-    .limit(3)
-    .pluck(:id)
+    ids = BirthdayParty.where("birth_day >= :seven_days_ago AND birth_day <= :seven_days_later", day_options).pluck(:id)
 
-    @parties = BirthdayParty.where(id: ids).rank
+    @parties = BirthdayParty.where(id: ids).rank.limit(3)
   end
 
   # GET /birthday_parties/1
