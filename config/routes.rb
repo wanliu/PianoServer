@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   # resources :gifts, except: [:new, :edit]
   resources :birthday_parties, only: [:index] do
     get :withdraw, on: :member
-    get :blessed, on: :collection
+    # get :blessed, on: :collection
     get :saled, on: :collection
   end
 

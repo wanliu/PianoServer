@@ -19,8 +19,6 @@
 
     menu.insertSection('profile', "<%= birthday_parties_path %>", 'birthday_parties', '我的日生趴', { iconClass: 'glyphicon glyphicon-glass' });
 
-    menu.insertSection('profile', "<%= blessed_birthday_parties_path %>", 'birthday_parties', '参加的日生趴', { iconClass: 'glyphicon glyphicon-cutlery' });
-
     <% if Settings.dev.feature.favorites %>
       menu.insertSection('profile', 'favorites', 'favorites', '我的收藏', { iconClass: 'glyphicon glyphicon-heart' });
     <% end %>
