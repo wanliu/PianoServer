@@ -52,10 +52,6 @@
         </div>
       <% end %>
 
-      <% if @order.cancelable? %>
-        <%= button_to "删除订单", order_path(@order), method: :delete, data: { confirm: "确定要删除这个订单么？" } %>
-      <% end %>
-
       <div class='toggle-zone order-detail'>
         <div class='details'>
           <div>订 单 号： <%= @order.id %></div>
@@ -137,6 +133,13 @@
       <%= link_to "进入生日趴", birthday_party_path(@order.birthday_party.id), class: 'btn btn-warning btn-large btn-block' %>
     </div>
     <% end %>
+
+    <% if @order.cancelable? %>
+      <div class='delete-birthday-party-order'>
+        <%= button_to "删除订单", order_path(@order), method: :delete, data: { confirm: "确定要删除这个订单么？" }, class: 'btn btn-danger btn-large btn-block' %>
+      </div>
+    <% end %>
+
 
     <% if @one_more_time %>
       <%= link_to "点击可再次获得抢购机会", @redirect_url, class: 'btn btn-warning btn-large btn-block', id: 'pmo-once-more' %>
