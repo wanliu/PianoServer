@@ -49,12 +49,14 @@ class TempBirthdayParty < ActiveRecord::Base
       cake: cake,
       birth_day: birth_day,
       birthday_person: birthday_person,
-      delivery_time: delivery_time,
       sales_man_id: sales_man_id,
       person_avatar: person_avatar,
       skip_validates: true,
       data: {
-
+        delivery_time: delivery_time,
+        delivery_address: "#{ChinaCity.get(delivery_region_id.to_s, prepend_parent: true)}#{delivery_address}",
+        receiver_name: birthday_person,
+        receiver_phone: receiver_phone
       }
     })
 
