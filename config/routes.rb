@@ -371,7 +371,12 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :cakes, only: [:index, :show]
+      resources :cakes, only: [:index, :show, :search_items, :search_cakes] do
+        collection do
+          get :search_items, action: :search_items
+          get :search_cakes, action: :search_cakes
+        end
+      end
 
       resources :cards, only: :index
 
@@ -381,7 +386,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :birthday_parties, only: [:index, :show, :update, :rank] do
+      resources :birthday_parties, only: [:index, :show, :update, :rank, :create] do
         resources :blesses, except: [:new, :edit], shallow: true do
           get :wx_pay_params, on: :member
         end
@@ -394,6 +399,8 @@ Rails.application.routes.draw do
         collection do
           get :rank
           get :recently
+          post :upload_temp_avatar
+          post :upload_temp_avatar_media_id
         end
       end
 

@@ -4,13 +4,14 @@ class BirthdayParty < ActiveRecord::Base
 
   paginates_per 10
 
-  attr_accessor :request_ip, :wx_user_openid
+  attr_accessor :request_ip, :wx_user_openid, :skip_validates
 
   WithdrawStatus = Struct.new(:success, :error_message) do
     alias :success? :success
   end
 
   mount_uploader :person_avatar, ItemImageUploader
+  store_accessor :data, :properties
 
   belongs_to :cake, -> { with_deleted }
   belongs_to :user
@@ -24,7 +25,7 @@ class BirthdayParty < ActiveRecord::Base
 
   validates :cake, presence: true
   validates :user, presence: true
-  validates :order, presence: true
+  validates :order, presence: true, unless: :skip_validations
   validates :message, presence: true
   validates :birth_day, presence: true
   validates :birthday_person, presence: true
@@ -124,6 +125,14 @@ class BirthdayParty < ActiveRecord::Base
     end
   end
 
+  def skip_validations
+    skip_validates
+  end
+
+  def properties_title(props=properties)
+    cake.item.properties_title(props)
+  end
+
   private
 
   def set_hearts_limit_from_cake
@@ -164,6 +173,7 @@ class BirthdayParty < ActiveRecord::Base
   end
 
   def send_confirm_to_buyer
+    return if skip_validations
     return unless persisted? && Settings.cakes.sms.notify_buyer
 
     if cake.shop.try(:phone).present?
@@ -182,13 +192,14 @@ class BirthdayParty < ActiveRecord::Base
 
       text = text.sub("#phone#", service_phone) if service_phone.present?
       # text = "【耒阳街上】您订购的生日趴蛋糕:#{cake_name}成功, 蛋糕将于#{delivery_time}送到#{address},请注意查收!"
-      
+
       NotificationSender.delay.notify({"mobile" => order.receiver_phone, "text" => text})
     end
   end
 
   # 【耒阳街上】由您推荐的"#name#的生日趴"创建成功！可在个人中心(http://m.wanliu.biz/profile)查看，或者访问地址：#url# 查看.
   def send_sms_to_sales_man
+    return if skip_validations
     return unless persisted? && sales_man.present? && Settings.cakes.sms.notify_sales_man
 
     real_sales_man = SalesMan.find_by(shop_id: cake.shop.id, user_id: sales_man_id)
@@ -211,6 +222,7 @@ class BirthdayParty < ActiveRecord::Base
   end
 
   def send_confirm_to_shop_owner
+    return if skip_validations
     return unless persisted? && Settings.cakes.sms.notify_shop_owner
 
     if cake.shop.try(:phone).present?

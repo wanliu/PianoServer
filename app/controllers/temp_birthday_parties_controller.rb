@@ -17,6 +17,16 @@ class TempBirthdayPartiesController < ApplicationController
     end
   end
 
+  def formalize
+    if @temp_birthday_party.present?
+      if @temp_birthday_party.create_party_without_order(current_user)
+        redirect_to ApplicationController.helpers.birthday_party_path(@temp_birthday_party.birthday_party)
+      else
+        render "failed", status: :unproccessable_entity
+      end
+    end
+  end
+
   private
 
   def set_temp_birthday_party

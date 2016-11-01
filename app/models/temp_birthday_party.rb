@@ -4,7 +4,7 @@ class TempBirthdayParty < ActiveRecord::Base
 
   mount_uploader :active_token_qrcode, ItemImageUploader
 
-  attr_accessor :order, :order_item
+  attr_accessor :order, :order_item, :skip_order
 
   belongs_to :cake, -> { with_deleted }
   belongs_to :user
@@ -18,11 +18,11 @@ class TempBirthdayParty < ActiveRecord::Base
   validates :sales_man, presence: true
   validates :message, presence: true
   validates :birthday_person, presence: true
-  validates :delivery_address, presence: true
-  validates :delivery_time, presence: true
+  validates :delivery_address, presence: true, unless: :skip_validation
+  validates :delivery_time, presence: true, unless: :skip_validation
   validates :birth_day, presence: true
-  validates :delivery_region_id, presence: true
-  validates :receiver_phone, presence: true
+  validates :delivery_region_id, presence: true, unless: :skip_validation
+  validates :receiver_phone, presence: true, unless: :skip_validation
   validates :active_token, presence: true
   validates :hearts_limit, numericality: { greater_than_or_equal_to: 1 }
 
@@ -42,6 +42,31 @@ class TempBirthdayParty < ActiveRecord::Base
     self.birthday_party = build_birthday_party(order, buyer)
   end
 
+  def create_party_without_order(buyer)
+    party = BirthdayParty.create({
+      user: buyer,
+      message: message,
+      cake: cake,
+      birth_day: birth_day,
+      birthday_person: birthday_person,
+      sales_man_id: sales_man_id,
+      person_avatar: person_avatar,
+      skip_validates: true,
+      data: {
+        delivery_time: delivery_time,
+        delivery_address: "#{ChinaCity.get(delivery_region_id.to_s, prepend_parent: true)}#{delivery_address}",
+        receiver_name: birthday_person,
+        receiver_phone: receiver_phone
+      }
+    })
+
+    self.birthday_party = party
+  end
+
+  def skip_validation
+    skip_order
+  end
+
   private
 
   def set_hearts_limit_from_cake
@@ -50,10 +75,10 @@ class TempBirthdayParty < ActiveRecord::Base
 
   def build_order(buyer)
     order = Order.new({
-      buyer: buyer, 
-      supplier: cake.shop, 
-      delivery_address: "#{ChinaCity.get(delivery_region_id.to_s, prepend_parent: true)}#{delivery_address}", 
-      receiver_name: birthday_person, 
+      buyer: buyer,
+      supplier: cake.shop,
+      delivery_address: "#{ChinaCity.get(delivery_region_id.to_s, prepend_parent: true)}#{delivery_address}",
+      receiver_name: birthday_person,
       receiver_phone: receiver_phone
     })
 
@@ -74,15 +99,15 @@ class TempBirthdayParty < ActiveRecord::Base
 
   def build_birthday_party(order, buyer)
     party = order.build_birthday_party({
-      user: buyer, 
-      message: message, 
-      cake: cake, 
-      birth_day: birth_day, 
+      user: buyer,
+      message: message,
+      cake: cake,
+      birth_day: birth_day,
       birthday_person: birthday_person,
       delivery_time: delivery_time,
       sales_man_id: sales_man_id
     })
-    
+
     party[:person_avatar] = person_avatar
 
     party
@@ -116,7 +141,11 @@ class TempBirthdayParty < ActiveRecord::Base
   end
 
   def generate_qrcode
-    url = "#{Settings.app.website}/parties/active/#{active_token}"
+    url = if skip_order then
+      "#{Settings.app.website}/parties/formalize/#{active_token}"
+    else
+      "#{Settings.app.website}/parties/active/#{active_token}"
+    end
 
     qrcode = RQRCode::QRCode.new(url)
 

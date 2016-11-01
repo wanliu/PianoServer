@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161021054343) do
+ActiveRecord::Schema.define(version: 20161028035613) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -80,6 +80,7 @@ ActiveRecord::Schema.define(version: 20161021054343) do
     t.decimal  "withdrawable",    precision: 10, scale: 2, default: 0.0
     t.datetime "delivery_time"
     t.integer  "sales_man_id"
+    t.jsonb    "data"
   end
 
   add_index "birthday_parties", ["birth_day"], name: "index_birthday_parties_on_birth_day", using: :btree
@@ -296,85 +297,6 @@ ActiveRecord::Schema.define(version: 20161021054343) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "coupon_template_shops", force: :cascade do |t|
-    t.integer  "coupon_template_id"
-    t.integer  "shop_id"
-    t.integer  "kind"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
-  end
-
-  add_index "coupon_template_shops", ["coupon_template_id"], name: "index_coupon_template_shops_on_coupon_template_id", using: :btree
-  add_index "coupon_template_shops", ["kind"], name: "index_coupon_template_shops_on_kind", using: :btree
-  add_index "coupon_template_shops", ["shop_id"], name: "index_coupon_template_shops_on_shop_id", using: :btree
-
-  create_table "coupon_template_times", force: :cascade do |t|
-    t.integer  "coupon_template_id"
-    t.integer  "type"
-    t.datetime "from"
-    t.datetime "to"
-    t.jsonb    "expire_duration",    default: {}
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
-  end
-
-  add_index "coupon_template_times", ["coupon_template_id"], name: "index_coupon_template_times_on_coupon_template_id", using: :btree
-
-  create_table "coupon_templates", force: :cascade do |t|
-    t.integer  "issuer_id"
-    t.string   "issuer_type"
-    t.string   "name"
-    t.decimal  "par",                 precision: 10, scale: 2
-    t.integer  "apply_items"
-    t.decimal  "apply_minimal_total", precision: 10, scale: 2
-    t.integer  "apply_shops"
-    t.integer  "apply_time"
-    t.boolean  "overlap"
-    t.datetime "created_at",                                                   null: false
-    t.datetime "updated_at",                                                   null: false
-    t.integer  "coupons_count"
-    t.text     "desc"
-    t.boolean  "issued",                                       default: false
-  end
-
-  add_index "coupon_templates", ["issuer_type", "issuer_id"], name: "index_coupon_templates_on_issuer_type_and_issuer_id", using: :btree
-
-  create_table "coupon_tokens", force: :cascade do |t|
-    t.integer  "coupon_template_id"
-    t.integer  "customer_id"
-    t.string   "token"
-    t.integer  "lock_version",       default: 0
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
-  end
-
-  add_index "coupon_tokens", ["coupon_template_id"], name: "index_coupon_tokens_on_coupon_template_id", using: :btree
-  add_index "coupon_tokens", ["customer_id"], name: "index_coupon_tokens_on_customer_id", using: :btree
-  add_index "coupon_tokens", ["token"], name: "index_coupon_tokens_on_token", using: :btree
-
-  create_table "coupons", force: :cascade do |t|
-    t.integer  "coupon_template_id"
-    t.integer  "receiver_shop_id"
-    t.datetime "receive_time"
-    t.integer  "receive_taget_id"
-    t.string   "receive_taget_type"
-    t.integer  "customer_id"
-    t.datetime "start_time"
-    t.datetime "end_time"
-    t.integer  "status",                                      default: 0
-    t.datetime "created_at",                                                null: false
-    t.datetime "updated_at",                                                null: false
-    t.integer  "lock_version",                                default: 0
-    t.datetime "deleted_at"
-    t.decimal  "offset_par",         precision: 10, scale: 2, default: 0.0
-  end
-
-  add_index "coupons", ["coupon_template_id"], name: "index_coupons_on_coupon_template_id", using: :btree
-  add_index "coupons", ["customer_id"], name: "index_coupons_on_customer_id", using: :btree
-  add_index "coupons", ["deleted_at"], name: "index_coupons_on_deleted_at", using: :btree
-  add_index "coupons", ["receive_taget_type", "receive_taget_id"], name: "index_coupons_on_receive_taget_type_and_receive_taget_id", using: :btree
-  add_index "coupons", ["receiver_shop_id"], name: "index_coupons_on_receiver_shop_id", using: :btree
-
   create_table "error_records", force: :cascade do |t|
     t.string   "name"
     t.string   "refer"
@@ -490,7 +412,7 @@ ActiveRecord::Schema.define(version: 20161021054343) do
     t.integer  "product_id"
     t.decimal  "price",               precision: 10, scale: 2
     t.integer  "inventory"
-    t.boolean  "on_sale",                                      default: true
+    t.boolean  "on_sale",                                      default: true,  null: false
     t.datetime "created_at",                                                   null: false
     t.datetime "updated_at",                                                   null: false
     t.integer  "sid"
@@ -556,8 +478,9 @@ ActiveRecord::Schema.define(version: 20161021054343) do
     t.string   "zipcode"
     t.string   "contact"
     t.string   "contact_phone"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.integer  "gender",        default: 1
   end
 
   create_table "logs", force: :cascade do |t|
@@ -638,7 +561,6 @@ ActiveRecord::Schema.define(version: 20161021054343) do
     t.string   "note"
     t.string   "receive_token"
     t.string   "cards",                                      default: [],                 array: true
-    t.decimal  "offseted_total",    precision: 10, scale: 2, default: 0.0
   end
 
   add_index "orders", ["buyer_id"], name: "index_orders_on_buyer_id", using: :btree
@@ -769,8 +691,8 @@ ActiveRecord::Schema.define(version: 20161021054343) do
     t.datetime "created_at",                               null: false
     t.datetime "updated_at",                               null: false
     t.string   "logo"
-    t.jsonb    "settings",                    default: {}
     t.string   "address"
+    t.jsonb    "settings",                    default: {}
     t.integer  "shop_type",                   default: 0
     t.float    "lat"
     t.float    "lon"
@@ -778,10 +700,6 @@ ActiveRecord::Schema.define(version: 20161021054343) do
     t.string   "region_id"
     t.integer  "default_express_template_id"
   end
-
-  add_index "shops", ["name"], name: "index_shops_on_name", using: :btree
-  add_index "shops", ["owner_id"], name: "index_shops_on_owner_id", using: :btree
-  add_index "shops", ["title"], name: "index_shops_on_title", using: :btree
 
   create_table "statuses", force: :cascade do |t|
     t.integer  "stateable_id"
