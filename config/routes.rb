@@ -397,6 +397,8 @@ Rails.application.routes.draw do
         collection do
           get :rank
           get :recently
+          post :upload_temp_avatar
+          post :upload_temp_avatar_media_id
         end
       end
 

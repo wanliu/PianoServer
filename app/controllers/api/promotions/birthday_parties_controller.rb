@@ -42,7 +42,7 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
 
   def upload_avatar
     @birthday_party = current_user.birthday_parties.find(params[:id])
-    if @birthday_party.update(upload_avatar_params)
+    if @birthday_party.update_attribute('person_avatar', params[:birthday_party][:person_avatar])
       render json: {
         success: true,
         url: @birthday_party.person_avatar.url(:cover),
@@ -66,14 +66,33 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
     # end
   end
 
+  def upload_temp_avatar
+    uploader = ItemImageUploader.new(BirthdayParty.new, :person_avatar)
+    uploader.store! params[:file]
 
+    render json: { success: true, url: uploader.url(:cover)  , filename: uploader.filename }
+  end
+
+  def upload_temp_avatar_media_id
+    birthday_party = BirthdayParty.new
+
+    birthday_party.avatar_media_id = params[:avatar_media_id] || params[:birthday_party][:avatar_media_id]
+
+    birthday_party = WxAvatarDownloader.download(birthday_party)
+
+    render json: { success: true, url: birthday_party.person_avatar.url(:cover), filename: birthday_party[:person_avatar] }
+  end
 
   # POST /birthday_parties
   # POST /birthday_parties.json
   def create
     @birthday_party = BirthdayParty.new(birthday_party_params)
+    @birthday_party.user = current_user
 
     if @birthday_party.save
+      if params[:birthday_party][:person_avatar].is_a? String
+        @birthday_party.update_column('person_avatar', params[:birthday_party][:person_avatar])
+      end
       render json: @birthday_party, status: :created
     else
       render json: @birthday_party.errors.full_messages.join(', '), status: :unprocessable_entity
@@ -85,7 +104,7 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
   def update
     @birthday_party = BirthdayParty.find(params[:id])
 
-    if @birthday_party.update(birethday_party_update_params)
+    if @birthday_party.update_attribute('message', params[:birthday_party][:message])
       render json: {}
     else
       render json: { errors: @birthday_party.errors.full_messages.join(', ') }, status: :unprocessable_entity
