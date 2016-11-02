@@ -564,6 +564,7 @@ Rails.application.routes.draw do
   match "create_shop", to: "shops#create", via: [:post], as: :create_shop
   match "update_name", to: "shops#update_name", via: [:put], as: :update_shop
   get '/parties/active/:token', to: "temp_birthday_parties#active"
+  get '/parties/formalize/:token', to: "temp_birthday_parties#formalize"
 
   resources :shops, path: '/', only: [], constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ } do
     member do
