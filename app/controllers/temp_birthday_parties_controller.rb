@@ -2,7 +2,7 @@ class TempBirthdayPartiesController < ApplicationController
   include RedirectCallback
 
   before_action :authenticate_user!
-  before_action :set_temp_birthday_party, only: [:active]
+  before_action :set_temp_birthday_party, only: [:active, :formalize]
 
   def active
     if @temp_birthday_party.present?
@@ -24,6 +24,8 @@ class TempBirthdayPartiesController < ApplicationController
       else
         render "failed", status: :unproccessable_entity
       end
+    else
+      redirect_to ApplicationController.helpers.birthday_party_path(@deleted_temp_birthday_party.birthday_party)
     end
   end
 
