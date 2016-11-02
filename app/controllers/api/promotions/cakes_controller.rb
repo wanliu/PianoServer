@@ -1,6 +1,7 @@
 class Api::Promotions::CakesController < Api::BaseController
   skip_before_action :authenticate_user!
   before_action :set_cake, only: [:show]
+  before_action :authenticate_user!, only: [:search_cakes]
 
   def index
     @cakes = Cake.order(id: :desc)
@@ -23,7 +24,7 @@ class Api::Promotions::CakesController < Api::BaseController
 
   def search_cakes
     search_options = { query: { match: { title: params[:q] } } }
-    items = Item.search(search_options).records.limit(20)
+    items = Item.search_shop_items(q: params[:q], shop_id: current_user.join_shop.id).records.limit(20)
     cakes = Cake.where("item_id in (?)", items.map {|item| item.id }).to_a
     json = cakes.map { |cake| cake.item.as_json(methods: [:title, :cover_url, :shop_name]).merge({ cake_id: cake.id }) }
 
