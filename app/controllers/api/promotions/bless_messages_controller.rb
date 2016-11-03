@@ -1,7 +1,7 @@
 class Api::Promotions::BlessMessagesController < Api::BaseController
   before_action :authenticate_user!, only: [:create, :destroy]
-  before_action :check_permission, only: [:destroy]
   before_action :set_bless_message, only: [:destroy]
+  before_action :check_permission, only: [:destroy]
 
   # POST /bless_message
   # POST /bless_message.json
@@ -10,15 +10,23 @@ class Api::Promotions::BlessMessagesController < Api::BaseController
     @bless_message.sender = current_user
 
     if @bless_message.save
-      render json: @bless_message, status: :created
+      render json: @bless_message.as_json(methods: [:sender_avatar, :sender_username]), status: :created
     else
       render json: @bless_message.errors.full_messages.join(', '), status: :unprocessable_entity
     end
   end
 
+  # DELETE /bless_message/1
+  # DELETE /bless_message/1.json
+  def destroy
+    @bless_message.destroy
+
+    render json: {}
+  end
+
   private
     def check_permission
-      if sender_id != current_user.id && sender_id != @bless_message.party_owner_id
+      if @bless_message.sender_id != current_user.id && @bless_message.sender_id != @bless_message.party_owner_id
         head 403
       end
     end
