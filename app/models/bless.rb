@@ -13,6 +13,8 @@ class Bless < ActiveRecord::Base
   belongs_to :birthday_party
   belongs_to :sender, class_name: 'User'
 
+  has_many :bless_messages
+
   validates :birthday_party, presence: true
   validates :virtual_present, presence: true
   validates :sender, presence: true

@@ -412,6 +412,8 @@ Rails.application.routes.draw do
 
         get :is_actived, on: :member
       end
+
+      resources :bless_messages
     end
     # resources :business, concerns: :roomable do
     #   member do
