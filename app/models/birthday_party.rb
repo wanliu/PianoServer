@@ -23,13 +23,13 @@ class BirthdayParty < ActiveRecord::Base
   has_many :blesses
   has_many :redpacks, autosave: true, inverse_of: :birthday_party
 
-  validates :cake, presence: true
-  validates :user, presence: true
+  validates :cake, presence: true, unless: :skip_validations
+  validates :user, presence: true, unless: :skip_validations
   validates :order, presence: true, unless: :skip_validations
-  validates :message, presence: true
+  validates :message, presence: true, unless: :skip_validations
   validates :birth_day, presence: true
   validates :birthday_person, presence: true
-  validates :hearts_limit, numericality: { greater_than_or_equal_to: 1 }
+  validates :hearts_limit, numericality: { greater_than_or_equal_to: 1 }, unless: :skip_validations
 
   before_validation :set_hearts_limit_from_cake, on: :create
 
