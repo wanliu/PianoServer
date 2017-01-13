@@ -5,6 +5,8 @@ class Bless < ActiveRecord::Base
 
   include WxOrder
 
+  mount_uploader :wechat_native_qrcode, ImageUploader
+
   scope :paid, -> { where(paid: true) }
   scope :free_hearts, -> { where("virtual_present_infor @> ?", Bless.free_hearts_hash.to_json) }
   scope :charged, -> { where.not("virtual_present_infor @> ?", Bless.free_hearts_hash.to_json) }

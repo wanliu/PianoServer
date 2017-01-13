@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161102053555) do
+ActiveRecord::Schema.define(version: 20170113064911) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -112,6 +112,7 @@ ActiveRecord::Schema.define(version: 20161102053555) do
     t.string   "wx_prepay_id"
     t.string   "wx_noncestr"
     t.string   "wx_transaction_id"
+    t.string   "wechat_native_qrcode"
   end
 
   add_index "blesses", ["birthday_party_id"], name: "index_blesses_on_birthday_party_id", using: :btree
@@ -423,7 +424,7 @@ ActiveRecord::Schema.define(version: 20161102053555) do
     t.integer  "product_id"
     t.decimal  "price",               precision: 10, scale: 2
     t.integer  "inventory"
-    t.boolean  "on_sale",                                      default: true,  null: false
+    t.boolean  "on_sale",                                      default: true
     t.datetime "created_at",                                                   null: false
     t.datetime "updated_at",                                                   null: false
     t.integer  "sid"
@@ -489,9 +490,8 @@ ActiveRecord::Schema.define(version: 20161102053555) do
     t.string   "zipcode"
     t.string   "contact"
     t.string   "contact_phone"
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
-    t.integer  "gender",        default: 1
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
   end
 
   create_table "logs", force: :cascade do |t|
@@ -552,26 +552,27 @@ ActiveRecord::Schema.define(version: 20161102053555) do
   create_table "orders", force: :cascade do |t|
     t.integer  "buyer_id"
     t.integer  "supplier_id"
-    t.decimal  "total",             precision: 10, scale: 2
+    t.decimal  "total",                precision: 10, scale: 2
     t.string   "delivery_address"
-    t.boolean  "total_modified",                             default: false, null: false
-    t.decimal  "origin_total",      precision: 10, scale: 2
-    t.integer  "status",                                     default: 0
-    t.datetime "created_at",                                                 null: false
-    t.datetime "updated_at",                                                 null: false
+    t.boolean  "total_modified",                                default: false, null: false
+    t.decimal  "origin_total",         precision: 10, scale: 2
+    t.integer  "status",                                        default: 0
+    t.datetime "created_at",                                                    null: false
+    t.datetime "updated_at",                                                    null: false
     t.string   "receiver_name"
     t.string   "receiver_phone"
     t.integer  "pmo_grab_id"
     t.integer  "one_money_id"
-    t.decimal  "express_fee",       precision: 10, scale: 2, default: 0.0
-    t.boolean  "paid",                                       default: false
+    t.decimal  "express_fee",          precision: 10, scale: 2, default: 0.0
+    t.boolean  "paid",                                          default: false
     t.string   "wx_prepay_id"
     t.string   "wx_noncestr"
     t.string   "wx_transaction_id"
-    t.decimal  "paid_total",        precision: 10, scale: 2
+    t.decimal  "paid_total",           precision: 10, scale: 2
     t.string   "note"
     t.string   "receive_token"
-    t.string   "cards",                                      default: [],                 array: true
+    t.string   "cards",                                         default: [],                 array: true
+    t.string   "wechat_native_qrcode"
   end
 
   add_index "orders", ["buyer_id"], name: "index_orders_on_buyer_id", using: :btree
@@ -702,8 +703,8 @@ ActiveRecord::Schema.define(version: 20161102053555) do
     t.datetime "created_at",                               null: false
     t.datetime "updated_at",                               null: false
     t.string   "logo"
-    t.string   "address"
     t.jsonb    "settings",                    default: {}
+    t.string   "address"
     t.integer  "shop_type",                   default: 0
     t.float    "lat"
     t.float    "lon"

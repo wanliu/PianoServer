@@ -13,7 +13,11 @@ Rails.application.routes.draw do
   resource :wechat, only: [:show, :create]
 
   resources :blesses, only: [] do
-    get "wxpay/:id", to: 'blesses#wxpay', as: 'wxpay', on: :collection
+    collection do
+      get "wxpay/:id", to: 'blesses#wxpay', as: 'wxpay'
+      get :native
+      post :native
+    end
 
     member do
       post "wx_notify"

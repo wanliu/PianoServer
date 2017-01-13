@@ -97,6 +97,91 @@ module WxOrder
     total_fee > 0 ? total_fee : 0
   end
 
+  # 微信扫码支付模式一,详情:
+  # https://pay.weixin.qq.com/wiki/doc/api/native.php?chapter=6_4
+  # 支付二维码规则:
+  # //wxpay/bizpayurl?sign=XXXXX&appid=XXXXX&mch_id=XXXXX&product_id=XXXXXX&time_stamp=XXXXXX&nonce_str=XXXXX
+  def wechat_native_qrcode_path
+    if self.wechat_native_qrcode.blank?
+      content = wechat_native_content
+
+      qrcode = RQRCode::QRCode.new(content)
+
+      # With default options specified explicitly
+      png = qrcode.as_png(
+                resize_gte_to: false,
+                resize_exactly_to: false,
+                fill: 'white',
+                color: 'black',
+                size: 320,
+                border_modules: 4,
+                module_px_size: 6,
+                file: nil # path to write
+                )
+
+      File.open("/tmp/orderqr_#{self.class.to_s.downcase}_#{id}.temp.png", 'wb') do |file|
+        file.write png.to_s
+
+        self.wechat_native_qrcode = file
+      end
+
+      save
+    end 
+
+    wechat_native_qrcode.url
+  end
+
+  def wechat_native_content
+    time_stamp = Time.now.to_i
+    nonce_str = Devise.friendly_token
+    appid = "wx3fe5b90f6015df42"
+    mch_id = "1303592101"
+    order_id = out_trade_no
+
+    params = {
+      appid: appid,
+      mch_id: mch_id,
+      product_id: order_id,
+      time_stamp: time_stamp,
+      nonce_str: nonce_str
+    }
+    sign = WxPay::Sign.generate(params)
+
+    "weixin://wxpay/bizpayurl?sign=#{sign}&appid=#{appid}&mch_id=#{mch_id}&product_id=#{order_id}&time_stamp=#{time_stamp}&nonce_str=#{nonce_str}"
+  end
+
+  def wechat_native_respnse
+    options = {
+      return_code: "SUCCESS",
+      return_msg: '',
+      appid: appid,
+      mch_id: mch_id,
+      nonstr: Devise.friendly_token,
+      prepay_id: prepay_id,
+      result_code: "SUCCESS"
+    }
+
+    sign = WxPay::Sign.generate(params)
+
+    options.merge(sign: sign)
+  end
+
+  def wechat_native_err_response(err_msg)
+    options = {
+      return_code: "FAIL",
+      return_msg: err_msg,
+      appid: appid,
+      mch_id: mch_id,
+      nonstr: Devise.friendly_token,
+      prepay_id: prepay_id,
+      result_code: "FAIL"
+    }
+
+    sign = WxPay::Sign.generate(params)
+
+    options.merge(sign: sign)
+  end
+
   private
 
   def prepay_params

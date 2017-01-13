@@ -72,4 +72,30 @@ class BlessesController < ApplicationController
       render :xml => {return_code: "FAIL", return_msg: "签名失败"}.to_xml(root: 'xml', dasherize: false)
     end
   end
+
+  def native
+    qr_params = Hash.from_xml(request.body.read)["xml"]
+
+    Rails.logger.info "微信扫码支付请求，#{qr_params.to_json}"
+
+    if WxPay::Sign.verify?(qr_params)
+      klass, id = qr_params["product_id"].split('_')
+      if "bless" == klass
+        order = Bless.find_by(id: id)
+      elsif "order" == klass
+        order = Order.find_by(id: id)
+      else
+        res = order.wechat_native_err_respnse("参数错误")
+        render :xml => res.to_xml(root: 'xml', dasherize: false)
+        return
+      end
+
+      res = order.wechat_native_respnse
+
+      render :xml => res.to_xml(root: 'xml', dasherize: false)
+    else
+      res = order.wechat_native_err_respnse("签名失败")
+      render :xml => res.to_xml(root: 'xml', dasherize: false)
+    end
+  end
 end
