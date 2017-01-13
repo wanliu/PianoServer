@@ -157,7 +157,7 @@ module WxOrder
       appid: appid,
       mch_id: mch_id,
       nonstr: Devise.friendly_token,
-      prepay_id: prepay_id,
+      prepay_id: wx_prepay_id,
       result_code: "SUCCESS"
     }
 
@@ -173,7 +173,7 @@ module WxOrder
       appid: appid,
       mch_id: mch_id,
       nonstr: Devise.friendly_token,
-      prepay_id: prepay_id,
+      prepay_id: wx_prepay_id,
       result_code: "FAIL"
     }
 
