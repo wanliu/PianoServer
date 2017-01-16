@@ -29,6 +29,10 @@
       <%= image_tag "wxpay_logo_white.png", class: 'wx-pay-logo' %>微信支付<%= @bless.virtual_present_infor["price"] %>元
     </div>
   </div>
+
+  <% if params[:_qrcode_debug].present? %>
+    <%= image_tag @bless.wechat_native_qrcode_path %>
+  <% end %>
 </div>
 
 <script>
