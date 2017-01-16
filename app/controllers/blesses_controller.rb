@@ -1,8 +1,8 @@
 require 'weixin_api'
 
 class BlessesController < ApplicationController
-  skip_before_action :authenticate_user!, only: :wx_notify
-  skip_before_action :verify_authenticity_token, only: :wx_notify
+  skip_before_action :authenticate_user!, only: [:wx_notify, :native]
+  skip_before_action :verify_authenticity_token, only: [:wx_notify, :native]
 
   def wxpay
     @bless = Bless.find(params[:id])
@@ -78,24 +78,33 @@ class BlessesController < ApplicationController
 
     Rails.logger.info "微信扫码支付请求，#{qr_params.to_json}"
 
-    if WxPay::Sign.verify?(qr_params)
-      klass, id = qr_params["product_id"].split('_')
+    # if WxPay::Sign.verify?(qr_params)
+      if Settings.wxpay.wx_order_prefix.present?
+        klass, prefix, id = qr_params["product_id"].split('_')
+      else
+        klass, id = qr_params["product_id"].split('_')
+      end
+
       if "bless" == klass
         order = Bless.find_by(id: id)
       elsif "order" == klass
         order = Order.find_by(id: id)
       else
-        res = order.wechat_native_err_respnse("参数错误")
+        res = Order.new.wechat_native_err_response("参数错误")
         render :xml => res.to_xml(root: 'xml', dasherize: false)
         return
       end
 
-      res = order.wechat_native_respnse
-
-      render :xml => res.to_xml(root: 'xml', dasherize: false)
-    else
-      res = order.wechat_native_err_respnse("签名失败")
-      render :xml => res.to_xml(root: 'xml', dasherize: false)
-    end
+      if order.present?
+        res = order.wechat_native_response
+        render :xml => res.to_xml(root: 'xml', dasherize: false)
+      else
+        res = Order.new.wechat_native_err_response("参数错误")
+        render :xml => res.to_xml(root: 'xml', dasherize: false)
+      end
+    # else
+    #   res = Order.new.wechat_native_err_response("签名失败")
+    #   render :xml => res.to_xml(root: 'xml', dasherize: false)
+    # end
   end
 end

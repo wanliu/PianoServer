@@ -146,22 +146,22 @@ module WxOrder
       nonce_str: nonce_str
     }
     sign = WxPay::Sign.generate(params)
-
-    "weixin://wxpay/bizpayurl?sign=#{sign}&appid=#{appid}&mch_id=#{mch_id}&product_id=#{order_id}&time_stamp=#{time_stamp}&nonce_str=#{nonce_str}"
+    # "weixin：//wxpay/bizpayurl?appid=wx2421b1c4370ec43b&mch_id=10000100&nonce_str=f6808210402125e30663234f94c87a8c&product_id=1&time_stamp=1415949957&sign=512F68131DD251DA4A45DA79CC7EFE9D"
+    "weixin://wxpay/bizpayurl?appid=#{appid}&mch_id=#{mch_id}&product_id=#{order_id}&time_stamp=#{time_stamp}&nonce_str=#{nonce_str}&sign=#{sign}"
   end
 
-  def wechat_native_respnse
+  def wechat_native_response
     options = {
       return_code: "SUCCESS",
       return_msg: '',
       appid: appid,
       mch_id: mch_id,
-      nonstr: Devise.friendly_token,
+      nonce_str: Devise.friendly_token,
       prepay_id: wx_prepay_id,
       result_code: "SUCCESS"
     }
 
-    sign = WxPay::Sign.generate(params)
+    sign = WxPay::Sign.generate(options)
 
     options.merge(sign: sign)
   end
@@ -172,12 +172,12 @@ module WxOrder
       return_msg: err_msg,
       appid: appid,
       mch_id: mch_id,
-      nonstr: Devise.friendly_token,
+      nonce_str: Devise.friendly_token,
       prepay_id: wx_prepay_id,
       result_code: "FAIL"
     }
 
-    sign = WxPay::Sign.generate(params)
+    sign = WxPay::Sign.generate(options)
 
     options.merge(sign: sign)
   end
