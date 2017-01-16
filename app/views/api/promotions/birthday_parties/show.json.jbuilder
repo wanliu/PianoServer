@@ -8,7 +8,7 @@ if @birthday_party.order_id.present?
   title = order_item.title
   props_title = order_item.properties_title
   cake_price = order_item.price
-else
+elsif @birthday_party.cake.present?
   item = @birthday_party.cake.item
   title = item.title
   props_title = @birthday_party.properties_title

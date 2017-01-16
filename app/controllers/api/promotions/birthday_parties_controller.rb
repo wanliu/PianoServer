@@ -136,7 +136,7 @@ class Api::Promotions::BirthdayPartiesController < Api::BaseController
     end
 
     def birthday_party_params
-      params.require(:birthday_party).permit(:cake_id, :birth_day, :birthday_person, :message, :person_avatar, :data, :skip_validates)
+      params.require(:birthday_party).permit(:cake_id, :birth_day, :birthday_person, :message, :person_avatar, :data, :skip_validates, :hearts_limit)
     end
 
     def upload_avatar_params
