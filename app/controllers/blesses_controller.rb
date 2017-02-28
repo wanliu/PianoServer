@@ -1,7 +1,7 @@
 require 'weixin_api'
 
 class BlessesController < ApplicationController
-  skip_before_action :authenticate_user!, only: [:wx_notify, :native]
+  before_action :authenticate_user!, except: [:wx_notify, :native]
   skip_before_action :verify_authenticity_token, only: [:wx_notify, :native]
 
   def wxpay

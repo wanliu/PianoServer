@@ -47,7 +47,7 @@ class BirthdayPartiesController < ApplicationController
   def withdraw
     @birthday_party = current_user.birthday_parties.find(params[:id])
 
-    if @birthday_party.order.finish?
+    if @birthday_party.may_withdraw?
       wx_query_code = params[:code]
       openid = WeixinApi.code_to_openid(wx_query_code)
 
