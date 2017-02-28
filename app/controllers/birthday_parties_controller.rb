@@ -46,11 +46,8 @@ class BirthdayPartiesController < ApplicationController
 
   def withdraw
     @birthday_party = current_user.birthday_parties.find(params[:id])
-    party_order = @birthday_party.order
 
-    if party_order.present? && !party_order.finish?
-      @error = "订单尚未完成，请在订单完成（收货）后再试！"
-    else
+    if @birthday_party.may_withdraw?
       wx_query_code = params[:code]
       openid = WeixinApi.code_to_openid(wx_query_code)
 
@@ -58,6 +55,8 @@ class BirthdayPartiesController < ApplicationController
       @birthday_party.request_ip = request.ip
 
       @withdraw_statuses = @birthday_party.withdraw
+    else
+      @error = "订单尚未完成，请在订单完成（收货）后再试！"
     end
   end
 

@@ -25,7 +25,7 @@ class BirthdayParty < ActiveRecord::Base
 
   validates :cake, presence: true, unless: :skip_validations
   validates :user, presence: true, unless: :skip_validations
-  validates :order, presence: true, unless: :skip_validations
+  # validates :order, presence: true, unless: :skip_validations
   validates :message, presence: true, unless: :skip_validations
   validates :birth_day, presence: true
   validates :birthday_person, presence: true
@@ -56,7 +56,7 @@ class BirthdayParty < ActiveRecord::Base
   end
 
   def withdraw
-    return false unless order.finish?
+    return false if !may_withdraw?
 
     build_unwithdrew_redpacks
 
@@ -71,12 +71,25 @@ class BirthdayParty < ActiveRecord::Base
     update_column('withdrawable', get_withdrawable)
   end
 
+  # 没有订单的情况下，红星不在赠送红包的范围之内
   def get_withdrawable
-    free_hearts_withdrawable + charged_widthdrawable
+    # if order.present?
+      free_hearts_withdrawable + charged_widthdrawable
+    # else
+    #   charged_widthdrawable
+    # end
   end
 
   def download_avatar_media
     WxAvatarDownloader.perform_async(id)
+  end
+
+  def may_withdraw?
+    if order.present?
+      order.finish?
+    else
+      true
+    end
   end
 
   # TODO 使用后台任务，定时（每天一次／两次）计算排名，写入字段保存
