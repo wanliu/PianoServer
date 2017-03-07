@@ -9,12 +9,12 @@ class WechatCallbackController < ApplicationController
   skip_before_action :set_locale
 
   def redirect
-    callback = params[:callback]
+    callback = params[:c] || params[:callback]
 
-    if callback.include?('?')
-      redirect_to "#{params[:callback]}&code=#{params[:code]}"
+    if callback.include?('?') || callback.include?(ERB::Util.url_encode('?'))
+      redirect_to "#{callback}&code=#{params[:code]}"
     else
-      redirect_to "#{params[:callback]}?code=#{params[:code]}"
+      redirect_to "#{callback}?code=#{params[:code]}"
     end
   end
 end

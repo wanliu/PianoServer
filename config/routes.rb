@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   get 'wechat_callback/redirect'
+  get 'wc/r', to: 'wechat_callback#redirect'
 
   # resources :gifts, except: [:new, :edit]
   resources :birthday_parties, only: [:index] do
