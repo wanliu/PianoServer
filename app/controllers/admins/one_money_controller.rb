@@ -193,7 +193,7 @@ class Admins::OneMoneyController < Admins::BaseController
   end
 
   def state_item_all
-    OneMoney[parmas[:id].to_i].items.each do |pmo_item|
+    OneMoney[params[:id].to_i].items.each do |pmo_item|
       begin
         @item.set_status params[:status] if params[:status]
         @item.save

@@ -163,41 +163,43 @@ class Item < ActiveRecord::Base
   end
 
   scope :with_shop_or_product, -> (q) do
-    groups = q.split(/[,，。　 ]/)
-    shop_name = groups[0]
-    product = groups[1..-1].join('')
+    joins(:shop).where("items.title LIKE :name OR shops.name LIKE :name", {name: "%#{q}%"})
 
-    query = {
-      query: {
-        bool: {
-          must: [
-            {
-              term: {shop_name: shop_name }
-            }
-          ],
-          should: [],
-          minimum_should_match: 1
-        }
-      }
-    }
+    # groups = q.split(/[,，。　 ]/)
+    # shop_name = groups[0]
+    # product = groups[1..-1].join('')
 
-    if product.present?
-      if product.to_i > 0
-        query[:query][:bool][:should].push({
-          "range" => {"sid" => {"from" => product,"to" => product }}
-        })
-      elsif 1 == product.length
-        query[:query][:bool][:should].push({
-          "query_string" => {"default_field" => "title","query" => "*#{product}*" }
-        })
-      else
-        query[:query][:bool][:should].push({
-          match: { title: product }
-        })
-      end
-    end
+    # query = {
+    #   query: {
+    #     bool: {
+    #       must: [
+    #         {
+    #           term: {shop_name: shop_name }
+    #         }
+    #       ],
+    #       should: [],
+    #       minimum_should_match: 1
+    #     }
+    #   }
+    # }
 
-    Item.search(query).records #.results
+    # if product.present?
+    #   if product.to_i > 0
+    #     query[:query][:bool][:should].push({
+    #       "range" => {"sid" => {"from" => product,"to" => product }}
+    #     })
+    #   elsif 1 == product.length
+    #     query[:query][:bool][:should].push({
+    #       "query_string" => {"default_field" => "title","query" => "*#{product}*" }
+    #     })
+    #   else
+    #     query[:query][:bool][:should].push({
+    #       match: { title: product }
+    #     })
+    #   end
+    # end
+
+    # Item.search(query).records #.results
   end
 
   scope :search_leiyang_items, ->(params) do

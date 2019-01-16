@@ -19,6 +19,8 @@ class Brand < ActiveRecord::Base
   attr_reader :title
   attr_accessor :total
 
+  scope :search_by, -> (q) { where("name LIKE :query", {query: "%#{q}%"}) }
+
   def self.with_category(category_id, query = {}, &block)
     ids = [ category_id, *Category.find(category_id).descendants.pluck(:id) ]
     if block_given?
