@@ -132,7 +132,7 @@ promotions:
     enter_url: /one_money
     scripts:
       publish:
-        dir: /var/www/OneMoney
+        dir: /usr/src/app/OneMoney
         exec: make clean; make release NAME=$name ONE_MONEY=$one_money_id DR_CODE=$qrcode HOME_IMG=$home_img LIST_IMG=$list_img SIGN_URL=$sign_url WINNERS_NUM=$winners API_URL=$api_url
   daily_cheap:
     start_hour: 10
@@ -142,7 +142,7 @@ promotions:
     title_template: $year-$month-$day $weekday $start_hour:$start_minute 天天惠
     scripts:
       publish:
-        dir: /var/www/DailyCheap
+        dir: /usr/src/app/DailyCheap
         exec: make clean; make release NAME=$name ONE_MONEY=$one_money_id DR_CODE=$qrcode HOME_IMG=$home_img LIST_IMG=$list_img SIGN_URL=$sign_url WINNERS_NUM=$winners API_URL=$api_url
 
 sms:
