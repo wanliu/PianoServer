@@ -1,5 +1,5 @@
 app:
-  website: http://m.wanliu.biz
+  website: http://leiyang-street.jiejie.io
   name: 万流网
   title: 万流电商社区
   footer: "&copy; Wanliu.biz 2015  湘ICP备：13005289号-1"
@@ -21,13 +21,13 @@ system:
       avatar_url: //static.wanliu.biz/images/logo.png
       preview_url: //static.wanliu.biz/images/logo.png
 wanliu:
-  backend: http://www.wanliu.biz/api/v1/
+  backend: http://leiyang-street.jiejie.io/api/v1/
   pry_token: 87c87f8ef9699391e15202ca63cf1ebeb46314e04f2f6de002047c2f42ad57d936dc068888cb4e96c9be46b5bdb86de09fc5a00fce7092adf09f269d243af6c2
   subject_touch_token: cd74c43ecffc326040f9a314cf9d2e4afc534855bbf7a3c10a8486013e114ae97e69982de938839b4c21dd83fc27d18d3e002abedfc2c29b946e6ede69ac00e3
 pusher:
   socket_host: www.wanliu.biz
   socket_port: 8000
-  pusher_url: http://www.wanliu.biz:8000/api/v1/
+  pusher_url: http://leiyang-street.jiejie.io:8000/api/v1/
   pusher_token: '3lfj8845fafda[f]fj394u983tioj5jtoi5j9hp;f4f9dfghr;nnbncxaf[fe;094t45g;jgih='
 elasticsearch:
   url: http://192.168.0.131:9200
@@ -88,8 +88,8 @@ mail:
   port: 25
   user_name: service@wanliu.biz
   password: asdfasdf
-  domain: http://m.wanliu.biz/
-  url_host: http://m.wanliu.biz
+  domain: http://leiyang-street.jiejie.io/
+  url_host: http://leiyang-street.jiejie.io
   url_port: 80
 baidu:
   ditu:
@@ -119,13 +119,13 @@ promotions:
     seed_timeout:
       minutes: 720
 
-    ensure_url: http://m.wanliu.com/api/promotions/one_money/:id/ensure/:grab_id
+    ensure_url: http://leiyang-street.jiejie.io/api/promotions/one_money/:id/ensure/:grab_id
     discharge_express_fee_on: 64
     default:
-      callback: http://m.wanliu.biz/orders/yiyuan_confirm
+      callback: http://leiyang-street.jiejie.io/orders/yiyuan_confirm
       fare: 10
       max_free_fare: 68
-    default_callback: http://m.wanliu.biz/orders/yiyuan_confirm
+    default_callback: http://leiyang-street.jiejie.io/orders/yiyuan_confirm
     sms_to_supplier: true
     sms_to_supplier_template: '【万流网】你的商店有一个新的一元购订单，订单号：#o_id#，请及时查看！'
     wx_pay_discount: 5
@@ -137,7 +137,7 @@ promotions:
   daily_cheap:
     start_hour: 10
     end_hour: 16
-    default_callback: http://m.wanliu.biz/orders/yiyuan_confirm
+    default_callback: http://leiyang-street.jiejie.io/orders/yiyuan_confirm
     enter_url: /daily_cheap
     title_template: $year-$month-$day $weekday $start_hour:$start_minute 天天惠
     scripts:

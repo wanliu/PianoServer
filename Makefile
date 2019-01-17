@@ -96,8 +96,8 @@ launch: sync_config bundle migrate restart sidekiq schedule
 
 sidekiq:
 	# @-test -s tmp/pids/sidekiq.pid && kill -TERM `cat tmp/pids/sidekiq.pid`
-	@-ps -A u | grep sidekiq | awk '{ print $2}' | xargs kill
-	@bundle exec sidekiq -d
+	# @ps -A u | grep sidekiq | awk '{ print $2}' | xargs kill
+	@bundle exec sidekiq -d -e production
 
 schedule:
 	@bundle exec whenever -iw
@@ -121,7 +121,7 @@ upload: package
 	aws s3 cp /tmp/deploy-piano-server-$(LOG).tar.gz $(S3_STORAGE) $(PROFILE)
 
 ssh:
-	@aws s3 cp s3://wanliu/test.pem ~/.ssh/test.pem $(PROFILE)
-	@ssh -i ~/.ssh/test.pem ec2-user@test.wanliu.biz
+	# @aws s3 cp s3://wanliu/test.pem ~/.ssh/test.pem $(PROFILE)
+	@ssh -i ~/.ssh/test.pem ec2-user@ec2-52-81-21-171.cn-north-1.compute.amazonaws.com.cn
 
 deploy: precompile package upload
