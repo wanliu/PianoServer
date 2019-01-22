@@ -12,5 +12,5 @@ output = `wechat users`
 code = eval(output[('Using rails project config/wechat.yml default setting...'.length..-1)])
 openids = code["data"]["openid"]
 openids.each do |id|
-  `wechat custom_text #{id} "今日活动 10:00 开始，点击参与 http://m.wanliu.biz/daily_cheap/#{today}"`
+  `wechat custom_text #{id} "今日活动 10:00 开始，点击参与 http://leiyang-street.jiejie.io/daily_cheap/#{today}"`
 end

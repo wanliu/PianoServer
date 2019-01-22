@@ -25,7 +25,7 @@ wanliu:
   pry_token: 87c87f8ef9699391e15202ca63cf1ebeb46314e04f2f6de002047c2f42ad57d936dc068888cb4e96c9be46b5bdb86de09fc5a00fce7092adf09f269d243af6c2
   subject_touch_token: cd74c43ecffc326040f9a314cf9d2e4afc534855bbf7a3c10a8486013e114ae97e69982de938839b4c21dd83fc27d18d3e002abedfc2c29b946e6ede69ac00e3
 pusher:
-  socket_host: www.wanliu.biz
+  socket_host: leiyang-street.jiejie.io
   socket_port: 8000
   pusher_url: http://leiyang-street.jiejie.io:8000/api/v1/
   pusher_token: '3lfj8845fafda[f]fj394u983tioj5jtoi5j9hp;f4f9dfghr;nnbncxaf[fe;094t45g;jgih='

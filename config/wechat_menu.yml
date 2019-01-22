@@ -4,17 +4,17 @@ button:
   sub_button:
   - type: view
     name: "生日叭🎂"
-    url: http://m.wanliu.biz/cake_party/
+    url: http://leiyang-street.jiejie.io/cake_party/
     sub_button: []    
   - type: view
     name: "天天惠"
-    url: http://m.wanliu.biz/daily_cheap/
+    url: http://leiyang-street.jiejie.io/daily_cheap/
     sub_button: []
 - name: "耒阳商城"
   sub_button:
   - type: view
     name: "耒阳商城"
-    url: http://m.wanliu.biz/html/%E8%80%92%E9%98%B3%E8%A1%97%E4%B8%8A/
+    url: http://leiyang-street.jiejie.io/html/%E8%80%92%E9%98%B3%E8%A1%97%E4%B8%8A/
     sub_button: []
 - name: "我的订单"
   sub_button:
@@ -28,7 +28,7 @@ button:
     sub_button: []
   - type: view
     name: "我的生日趴"
-    url: http://m.wanliu.biz/birthday_parties
+    url: http://leiyang-street.jiejie.io/birthday_parties
     sub_button: []
   - type: view
     name: "我的订单"

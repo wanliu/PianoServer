@@ -38,7 +38,7 @@ namespace :daily_cheap do
       multi_item: Settings.promotions.daily_cheap.multi_item || 1,
       fare: Settings.promotions.daily_cheap.fare || 10,
       max_free_fare: Settings.promotions.daily_cheap.max_free_fare || 58.0,
-      callback: Settings.promotions.daily_cheap.default_callback || "http://m.wanliu.biz/orders/yiyuan_confirm"
+      callback: Settings.promotions.daily_cheap.default_callback || "http://leiyang-street.jiejie.io/orders/yiyuan_confirm"
     }
     daily_cheap = OneMoney.create({:title => title, :type => :daily_cheap, :start_at => start_at, :end_at => end_at}.merge(options))
     name = "%04d-%02d-%02d" % [start_at.year, start_at.month, start_at.day]
