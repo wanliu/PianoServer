@@ -163,7 +163,7 @@ class Item < ActiveRecord::Base
   end
 
   scope :with_shop_or_product, -> (q) do
-    joins(:shop).where("items.title LIKE :name OR shops.name LIKE :name", {name: "%#{q}%"})
+    includes(:shop).references(:order).where("items.title LIKE :name OR shops.name LIKE :name", {name: "%#{q}%"}).limit(20)
 
     # groups = q.split(/[,，。　 ]/)
     # shop_name = groups[0]
