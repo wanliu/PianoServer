@@ -1,40 +1,11 @@
 ---
 button:
-- name: "天天惠"
-  sub_button:
-  - type: view
-    name: "生日叭🎂"
-    url: http://leiyang-street.jiejie.io/cake_party/
-    sub_button: []    
-  - type: view
-    name: "天天惠"
-    url: http://leiyang-street.jiejie.io/daily_cheap/
-    sub_button: []
-- name: "耒阳商城"
-  sub_button:
-  - type: view
-    name: "耒阳商城"
-    url: http://leiyang-street.jiejie.io/html/%E8%80%92%E9%98%B3%E8%A1%97%E4%B8%8A/
-    sub_button: []
-- name: "我的订单"
-  sub_button:
-  - type: view
-    name: "关于我们"
-    url: http://koudaitong.com/v2/x/4a128w21
-    sub_button: []
-  - type: view
-    name: "意见反馈"
-    url: http://koudaitong.com/v2/x/dq0wg3ob
-    sub_button: []
-  - type: view
-    name: "我的生日趴"
-    url: http://leiyang-street.jiejie.io/birthday_parties
-    sub_button: []
-  - type: view
-    name: "我的订单"
-    url: http://koudaitong.com/v2/x/mqdq3pd1
-    sub_button: []
-  - type: view
-    name: "常见问题"
-    url: http://koudaitong.com/v2/x/uvztpoqt
-    sub_button: []
+- type: view
+  name: "天天惠"
+  url: http://leiyang-street.jiejie.io/daily_cheap/
+  sub_button: []
+
+- type: view
+  name: "我的订单"
+  url: http://leiyang-street.jiejie.io/orders
+  sub_button: []
