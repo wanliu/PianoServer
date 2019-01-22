@@ -1,7 +1,7 @@
 class Brand < ActiveRecord::Base
-  include Elasticsearch::Model
-  include Elasticsearch::Model::Callbacks
-  include ESModel
+  # include Elasticsearch::Model
+  # include Elasticsearch::Model::Callbacks
+  # include ESModel
   include PublicActivity::Model
   tracked
 

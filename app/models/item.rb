@@ -2,9 +2,9 @@ class Item < ActiveRecord::Base
   include DynamicProperty
   include ContentManagement::Model
   include PublicActivity::Model
-  include Elasticsearch::Model
+  # include Elasticsearch::Model
   # include Elasticsearch::Model::Callbacks
-  include ESModel
+  # include ESModel
 
   tracked
 
@@ -49,9 +49,9 @@ class Item < ActiveRecord::Base
 
   delegate :region_id, to: :shop, prefix: true
 
-  after_commit :create_elastic_index, on: :create
-  after_commit :update_elastic_index, on: :update
-  after_commit :destroy_elastic_index, on: :destroy
+  # after_commit :create_elastic_index, on: :create
+  # after_commit :update_elastic_index, on: :update
+  # after_commit :destroy_elastic_index, on: :destroy
 
   if Settings.dev.feature.dynamic_property
     validates :properties, properties: {
@@ -60,80 +60,80 @@ class Item < ActiveRecord::Base
     }
   end
 
-  settings(index: {
-      analysis: {
-        analyzer: {
-            pinyin_analyzer: {
-              tokenizer: "my_pinyin",
-              filter: ["word_delimiter"]
-              # filter: ["word_delimiter", "pinyin_edgeNGram"]
-            },
-            first_pinyin_analyzer: {
-              tokenizer: "first_pinyin",
-              filter: ["word_delimiter", "first_pinyin_edgeNGram"]
-            }
-        },
-        tokenizer: {
-          my_pinyin: {
-            type: "pinyin",
-            first_letter: "none",
-            padding_char: " "
-          },
-          first_pinyin: {
-            type: "pinyin",
-            first_letter: "only",
-            padding_char: ""
-          }
-        },
-        filter: {
-          # pinyin_edgeNGram: {
-          #   type: "edgeNGram",
-          #   min_gram: 2,
-          #   max_gram: 5
-          # },
-          first_pinyin_edgeNGram: {
-            type: "nGram",
-            min_gram: 2,
-            max_gram: 5
-          }
-        }
-      }
-    }) do
+  # settings(index: {
+  #     analysis: {
+  #       analyzer: {
+  #           pinyin_analyzer: {
+  #             tokenizer: "my_pinyin",
+  #             filter: ["word_delimiter"]
+  #             # filter: ["word_delimiter", "pinyin_edgeNGram"]
+  #           },
+  #           first_pinyin_analyzer: {
+  #             tokenizer: "first_pinyin",
+  #             filter: ["word_delimiter", "first_pinyin_edgeNGram"]
+  #           }
+  #       },
+  #       tokenizer: {
+  #         my_pinyin: {
+  #           type: "pinyin",
+  #           first_letter: "none",
+  #           padding_char: " "
+  #         },
+  #         first_pinyin: {
+  #           type: "pinyin",
+  #           first_letter: "only",
+  #           padding_char: ""
+  #         }
+  #       },
+  #       filter: {
+  #         # pinyin_edgeNGram: {
+  #         #   type: "edgeNGram",
+  #         #   min_gram: 2,
+  #         #   max_gram: 5
+  #         # },
+  #         first_pinyin_edgeNGram: {
+  #           type: "nGram",
+  #           min_gram: 2,
+  #           max_gram: 5
+  #         }
+  #       }
+  #     }
+  #   }) do
 
-    mappings dynamic: 'true' do
-      indexes :title,
-        type: 'string',
-        analyzer: 'ik',
-        fields: {
-          pinyin: {
-            type: 'string',
-            analyzer: 'pinyin_analyzer',
-            term_vector: "with_positions_offsets"
-          },
-          first_lt: {
-            type: 'string',
-            analyzer: 'first_pinyin_analyzer',
-            term_vector: "with_positions_offsets"
-          }
-        }
-      indexes :shop_name, type: 'string'
-      indexes :brand_id, type: 'long'
-      indexes :category_id, type: 'long'
-      indexes :shop_category_id, type: 'long'
-      indexes :shop_id, type: 'long'
-      indexes :current_stock, type: 'float'
-      indexes :description, type: 'string', analyzer: 'ik'
-      indexes :on_sale, type: 'boolean'
-      indexes :abandom, type: 'boolean'
-      indexes :price, type: 'float'
-      indexes :income_price, type: 'float'
-      indexes :public_price, type: 'float'
-      indexes :properties, type: 'object'
-      indexes :sid, type: 'long'
-      indexes :shop_region_id, type: 'long'
-      # indexes :pinyin, type: 'string', analyzer: 'pinyin_analyzer'
-    end
-  end
+  #   mappings dynamic: 'true' do
+  #     indexes :title,
+  #       type: 'string',
+  #       analyzer: 'ik',
+  #       fields: {
+  #         pinyin: {
+  #           type: 'string',
+  #           analyzer: 'pinyin_analyzer',
+  #           term_vector: "with_positions_offsets"
+  #         },
+  #         first_lt: {
+  #           type: 'string',
+  #           analyzer: 'first_pinyin_analyzer',
+  #           term_vector: "with_positions_offsets"
+  #         }
+  #       }
+  #     indexes :shop_name, type: 'string'
+  #     indexes :brand_id, type: 'long'
+  #     indexes :category_id, type: 'long'
+  #     indexes :shop_category_id, type: 'long'
+  #     indexes :shop_id, type: 'long'
+  #     indexes :current_stock, type: 'float'
+  #     indexes :description, type: 'string', analyzer: 'ik'
+  #     indexes :on_sale, type: 'boolean'
+  #     indexes :abandom, type: 'boolean'
+  #     indexes :price, type: 'float'
+  #     indexes :income_price, type: 'float'
+  #     indexes :public_price, type: 'float'
+  #     indexes :properties, type: 'object'
+  #     indexes :sid, type: 'long'
+  #     indexes :shop_region_id, type: 'long'
+  #     # indexes :pinyin, type: 'string', analyzer: 'pinyin_analyzer'
+  #   end
+  # end
 
   # definitions: -> (item) { Hash[item.definition_properties.map {|name, cfg| ["property_#{name}", cfg] }] }}
 
