@@ -75,7 +75,7 @@ class AuthorizeController < ApplicationController
     user = User.where('data @> ?', {weixin_openid: profile['openid']}.to_json)
            .first_or_initialize(attr)
 
-    user.assign_attributes(attr)
+    user.assign_attributes(attr.merge(remote_image_url: profile["headimgurl"]))
     user.save
     [user, !user.persisted?]
   end
