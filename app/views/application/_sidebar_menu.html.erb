@@ -17,7 +17,7 @@
     var purchase_amount = <%= current_user.orders.count %>;
     menu.insertSection('profile', 'orders', 'purchase-orders', '购买订单', { iconClass: 'glyphicon glyphicon-import', has_quantity: true, quantity: purchase_amount });
 
-    menu.insertSection('profile', "<%= birthday_parties_path %>", 'birthday_parties', '我的日生趴', { iconClass: 'glyphicon glyphicon-glass' });
+    // menu.insertSection('profile', "<%= birthday_parties_path %>", 'birthday_parties', '我的生日趴', { iconClass: 'glyphicon glyphicon-glass' });
 
     <% if Settings.dev.feature.favorites %>
       menu.insertSection('profile', 'favorites', 'favorites', '我的收藏', { iconClass: 'glyphicon glyphicon-heart' });
