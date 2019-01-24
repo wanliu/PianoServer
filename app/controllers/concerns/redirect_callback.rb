@@ -8,12 +8,21 @@ module RedirectCallback
 
   private
 
+  # add refresh_token(_rt) params to refresh weichat browser
   def callback_url
     url = session[:callback] || root_path
+
     if url.include?("?")
-      url + "&t=#{Time.now.to_i}"
+      rt_params = "_rt=#{Time.now.to_i}"
+
+      if url.include?("?_rt=") || url.include?("&_rt=")
+        url.sub(/_rt=\d+/, rt_params)
+      else
+        url + "&_rt=#{Time.now.to_i}"
+      end
+
     else
-      url + "?t=#{Time.now.to_i}"
+      url + "?_rt=#{Time.now.to_i}"
     end
   end
 
