@@ -75,7 +75,7 @@ class AuthorizeController < ApplicationController
            .first_or_initialize(attr)
 
     user.assign_attributes(attr.merge(remote_image_url: profile["headimgurl"]))
-    ok = user.save
+    ok = user.save(validate: false)
 
     if !ok
       logger.info ">>>>save user failed, error: #{user.errors.full_messages}"
