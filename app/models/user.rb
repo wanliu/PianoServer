@@ -48,7 +48,8 @@ class User < ActiveRecord::Base
   has_many :consumed_card_codes
 
   validates :username, presence: true, uniqueness: true
-  validates :mobile, presence: true, uniqueness: true
+  # validates :mobile, presence: true, uniqueness: true
+  validates :mobile, uniqueness: {allow_blank: true}
 
   after_commit :sync_to_pusher
 
