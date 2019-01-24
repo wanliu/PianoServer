@@ -173,7 +173,7 @@ module Admins::OneMoneyHelper
         Settings.promotions.one_money.enter_url
       end
 
-    File.join(enter_url, name)
+    File.join(enter_url, name) + "/"
   end
 
   def best_in_place_item(item, *args)
