@@ -9,7 +9,12 @@ module RedirectCallback
   private
 
   def callback_url
-    session[:callback] || root_path
+    url = session[:callback] || root_path
+    if url.include("?") {
+      url + "&t=#{Time.now.to_i}" 
+    } else {
+      url + "?t=#{Time.now.to_i}"
+    }
   end
 
   def set_callback
