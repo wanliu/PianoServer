@@ -30,7 +30,6 @@ class AuthorizeController < ApplicationController
         # access_token = wx_client.get_access_token
         profile = wx_client.get_oauth_userinfo(wx_client.app_id, access_token).result
 
-
         user, status = lookup_user(profile)
 
         # sign_in(:user, user) 在登陆前，竟然强制保存了 user.
@@ -76,7 +75,14 @@ class AuthorizeController < ApplicationController
            .first_or_initialize(attr)
 
     user.assign_attributes(attr.merge(remote_image_url: profile["headimgurl"]))
-    user.save
+    ok = user.save
+
+    if !ok
+      logger.info ">>>>save user failed, error: #{user.errors.full_messages}"
+    else
+      logger.info ">>>>user saved, #{user.inspect}"
+    end
+
     [user, !user.persisted?]
   end
 
